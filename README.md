@@ -6,25 +6,27 @@ The code is developed by Professor Robert Grant at University of Alberta.
 Jinyun Tang (jinyuntang@lbl.gov) helps maintaining the code on github.
 
 
-#Download
+# Download
+
 git clone https://github.com/jinyun1tang/ECOSYS.git
 
 You can also make a fork using the fork button on the upper right corner.
 
-#Build 
+# Build 
+
 Currently, the code is configured with intel compilers, icc and ifort. 
 
-*Type
+* Type
 
   ./build_ecosys make
 
-*Then follow the output information to locate the executable.
+* Then follow the output information to locate the executable.
 
-*To clean the build directory, type
+* To clean the build directory, type
 
   ./build_ecosys clean
 
-#Several useful git commands
+# Several useful git commands
 
   git log --graph
 
