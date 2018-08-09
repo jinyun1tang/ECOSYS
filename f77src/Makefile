@@ -28,22 +28,10 @@ SHELL=/bin/sh
 # parameter.  The new modules are not limited to fortran, but may be C, YACC,
 # LEX, or CAL.  An explicit rule will need to be added for PASCAL modules.
 #
-SRCS=	setparmult.f BLOCKDATA001.f day.f erosion.f exec.f extract.f \
-	foutp.f fouts.f grosub.f hfunc.f hour1.f \
-	main.f nitro.f outpd.f outph.f \
-	outsd.f outsh.f readq.f readi.f reads.f \
-	redist.f routp.f routq.f routs.f soil.f solute.f split.f \
-	starte.f startq.f starts.f stomate.f trnsfr.f trnsfrs.f uptake.f \
-	visual.f watsub.f wthr.f woutp.f woutq.f wouts.f splitc.f
-
-OBJS=	setparmult.o BLOCKDATA001.o day.o erosion.o exec.o extract.o \
-	foutp.o fouts.o grosub.o hfunc.o hour1.o \
-	main.o nitro.o outpd.o outph.o \
-	outsd.o outsh.o readq.o readi.o reads.o \
-	redist.o routp.o routq.o routs.o soil.o solute.o split.o \
-	starte.o startq.o starts.o stomate.o trnsfr.o trnsfrs.o uptake.o \
-	visual.o watsub.o wthr.o woutp.o woutq.o wouts.o splitc.o splits.o splitp.o
-
+SRCSF := $(wildcard ./*.f)
+SRCSC := $(wildcard ./*.c)
+OBJSF := $(SRCSF:./%.f=../bld/%.f.o)
+OBJSC := $(SRCSC:./%.c=../bld/%.c.o)
 # Tunable parameters
 #
 # CF		Name of the fortran compiling system to use
@@ -90,25 +78,29 @@ LDFLAGS = 	$(FFLAGS)
 #
 all:		$(CMD)
 
-.f.o:
-	$(CF) $(FFLAGS) -c $<
-.c.o:
+$(OBJSF): ../bld/%.f.o : ./%.f
+	$(CF)  $(FFLAGS) -c $< -o $@
+$(OBJSC): ../bld/%.c.o : ./%.c
 	$(CC) -c $(OPTSC) $< -o $@
+#.f.o:
+#	$(CF) $(FFLAGS) -c $< -o ../bld/$@
+#.c.o:
+#	$(CC) -c $(OPTSC) $< -o ../bld/$@
 
-$(CMD):$(OBJS)
-	$(CF) $(LDFLAGS) -o $(CMD) $(OBJS) $(LIBS)
+$(CMD):$(OBJSF) $(OBJSC)
+	$(CF) $(LDFLAGS) -o ../bld/$(CMD) $(OBJSF) $(OBJSC) $(LIBS)
 #
 
 # Make the profiled version of the command and call it ecosys.x.prof
 #
-$(CMD).prof:	$(OBJS)
-	$(CF) $(LDFLAGS) -o $(@) $(OBJS) $(PROFLIB) $(LIBS)
+$(CMD).prof:	$(OBJSF) $(OBJSC)
+	$(CF) $(LDFLAGS) -o ../bld/$(@) $(OBJSF) $(OBJSC) $(PROFLIB) $(LIBS)
 
 clean:
-	-rm -f $(CMD) *.o *.il
+	-rm -f ../bld/$(CMD) ../bld/*.o *.il
 
 clobber:	clean
-	-rm -f $(CMD) $(CMD).prof
+	-rm -f $(CMD) ../bld/$(CMD).prof
 
 void:	clobber
 	-rm -f $(SRCS) makefile

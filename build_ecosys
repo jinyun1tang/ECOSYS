@@ -1,0 +1,17 @@
+#!/bin/bash
+
+arg=$1
+if [ "$arg" == "clean" ]; then
+  echo "clean build directory"
+  cd f77src
+  make clean
+elif [ "$arg"=="make" ]; then
+  mkdir -p bld
+  cd f77src
+  make
+  cd ../
+  echo ""
+  echo "Please find ecosys executable in bld/"
+else
+  echo "use $0 as $0 make or $0 clean"
+fi
