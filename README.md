@@ -12,6 +12,9 @@ git clone https://github.com/jinyun1tang/ECOSYS.git
 
 You can also make a fork using the fork button on the upper right corner.
 
+## Be sure to make your own branch or your own fork. 
+## Please do not merge to the master, use pull request instead.
+
 # Build 
 
 Currently, the code is configured with intel compilers, icc and ifort. 
@@ -66,5 +69,8 @@ will do fast forward merge in case your local branch is not synchronized with yo
 
 will foget all your changes made in local directory. 
 
+  git diff
+  
+will list your changes that made the code different from the remote. 
 
 
