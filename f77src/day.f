@@ -248,96 +248,51 @@ C     TO TILLAGE EVENTS FROM ARRAY LOADED IN 'READS'
 C
       DO 9995 NX=NHW,NHE
       DO 9990 NY=NVN,NVS
-      IF(XTILL(NY,NX).GT.0.0.AND.ITILL(I,NY,NX).EQ.0)THEN
-      ITILL(I,NY,NX)=19
-      DCORP(I,NY,NX)=0.05
-      ENDIF
       IF(ITILL(I,NY,NX).EQ.0.OR.ITILL(I,NY,NX).GT.20)THEN
       CORP=0.0
       ELSE
-      IF(ITILL(I,NY,NX).EQ.1)THEN
-      CORP=0.90
-      ZS(NY,NX)=0.04
-      ENDIF
-      IF(ITILL(I,NY,NX).EQ.2)THEN
-      CORP=0.50
-      ZS(NY,NX)=0.02
-      ENDIF
-      IF(ITILL(I,NY,NX).EQ.3)THEN
-      CORP=0.75
-      ZS(NY,NX)=0.03
-      ENDIF
-      IF(ITILL(I,NY,NX).EQ.4)THEN
+      IF(ITILL(I,NY,NX).EQ.1.OR.ITILL(I,NY,NX).EQ.11)THEN
       CORP=0.10
-      ZS(NY,NX)=0.01
-      ENDIF
-      IF(ITILL(I,NY,NX).EQ.5)THEN
-      CORP=0.60
-      ZS(NY,NX)=0.02
-      ENDIF
-      IF(ITILL(I,NY,NX).EQ.6)THEN
-      CORP=0.42
       ZS(NY,NX)=0.04
       ENDIF
-      IF(ITILL(I,NY,NX).EQ.7)THEN
-      CORP=0.33
-      ZS(NY,NX)=0.04
-      ENDIF
-      IF(ITILL(I,NY,NX).EQ.8)THEN
-      CORP=0.75
-      ZS(NY,NX)=0.02
-      ENDIF
-      IF(ITILL(I,NY,NX).EQ.9)THEN
-      CORP=0.30
-      ZS(NY,NX)=0.01
-      ENDIF
-      IF(ITILL(I,NY,NX).EQ.10)THEN
+      IF(ITILL(I,NY,NX).EQ.2.OR.ITILL(I,NY,NX).EQ.12)THEN
       CORP=0.20
       ZS(NY,NX)=0.04
       ENDIF
-      IF(ITILL(I,NY,NX).EQ.11)THEN
+      IF(ITILL(I,NY,NX).EQ.3.OR.ITILL(I,NY,NX).EQ.13)THEN
       CORP=0.30
       ZS(NY,NX)=0.04
       ENDIF
-      IF(ITILL(I,NY,NX).EQ.12)THEN
-      CORP=0.05
+      IF(ITILL(I,NY,NX).EQ.4.OR.ITILL(I,NY,NX).EQ.14)THEN
+      CORP=0.40
       ZS(NY,NX)=0.04
       ENDIF
-      IF(ITILL(I,NY,NX).EQ.13)THEN
-      CORP=0.10
-      ZS(NY,NX)=0.04
-      ENDIF
-      IF(ITILL(I,NY,NX).EQ.14)THEN
-      CORP=0.05
-      ZS(NY,NX)=0.04
-      ENDIF
-      IF(ITILL(I,NY,NX).EQ.15)THEN
-      CORP=0.25
-      ZS(NY,NX)=0.04
-      ENDIF
-      IF(ITILL(I,NY,NX).EQ.16)THEN
-      CORP=0.15
-      ZS(NY,NX)=0.04
-      ENDIF
-      IF(ITILL(I,NY,NX).EQ.17)THEN
-      CORP=0.05
-      ZS(NY,NX)=0.04
-      ENDIF
-      IF(ITILL(I,NY,NX).EQ.18)THEN
-      CORP=0.10
-      ZS(NY,NX)=0.01
-      ENDIF
-      IF(ITILL(I,NY,NX).EQ.19)THEN
-      CORP=XTILL(NY,NX)
+      IF(ITILL(I,NY,NX).EQ.5.OR.ITILL(I,NY,NX).EQ.15)THEN
+      CORP=0.50
       ZS(NY,NX)=0.02
-      XTILL(NY,NX)=0.0
       ENDIF
-      IF(ITILL(I,NY,NX).EQ.20)THEN
-      CORP=1.00
+      IF(ITILL(I,NY,NX).EQ.6.OR.ITILL(I,NY,NX).EQ.16)THEN
+      CORP=0.60
+      ZS(NY,NX)=0.04
+      ENDIF
+      IF(ITILL(I,NY,NX).EQ.7.OR.ITILL(I,NY,NX).EQ.17)THEN
+      CORP=0.70
+      ZS(NY,NX)=0.04
+      ENDIF
+      IF(ITILL(I,NY,NX).EQ.8.OR.ITILL(I,NY,NX).EQ.18)THEN
+      CORP=0.80
+      ZS(NY,NX)=0.02
+      ENDIF
+      IF(ITILL(I,NY,NX).EQ.9.OR.ITILL(I,NY,NX).EQ.19)THEN
+      CORP=0.90
       ZS(NY,NX)=0.01
       ENDIF
+      IF(ITILL(I,NY,NX).EQ.10.OR.ITILL(I,NY,NX).EQ.20)THEN
+      CORP=1.00
+      ZS(NY,NX)=0.02
       ENDIF
-      XCORP(NY,NX)=AMAX1(1.0E-03,1.0-CORP)
+      ENDIF
+      XCORP(NY,NX)=AMAX1(1.0E-06,1.0-CORP)
 C
 C     AUTOMATIC IRRIGATION IF SELECTED
 C
