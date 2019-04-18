@@ -25,13 +25,13 @@ C
       CALL GETARG(2,BUF)
       CALL CHDIR(BUF)
       PREFIX='.\\'
-C     make output directory     
-      outdir=trim(buf)//'\\outputs\\' 
+C     make output directory
+      outdir=trim(buf)//'\\outputs\\'
       ELSE
       PREFIX='./'
-C     make output directory     
-      outdir=trim(buf)//'/outputs/' 
-      ENDIF 
+C     make output directory
+      outdir=trim(buf)//'/outputs/'
+      ENDIF
       call system('mkdir -p '//trim(outdir))
 C
 C     READ INPUT FILES
