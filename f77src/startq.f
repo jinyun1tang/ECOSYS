@@ -590,6 +590,7 @@ C
       UPNH4(NZ,NY,NX)=0.0
       UPNO3(NZ,NY,NX)=0.0
       UPH2P(NZ,NY,NX)=0.0
+      UPH1P(NZ,NY,NX)=0.0
       UPNF(NZ,NY,NX)=0.0
       DO 40 N=1,2
       DO 20 L=1,NL(NY,NX)
