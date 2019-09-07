@@ -56,7 +56,7 @@ CMD =		ecosys.x
 # WARNING:  SIMULTANEOUSLY PROFILING AND FLOWTRACING IS NOT RECOMMENDED
 #FFLAGS = -axP -xW -ipo -O3 -r8 -i4 -align dcommons -cpp -save
 #intel setup
-FFLAGS = -O2 -mp1 -r8 -i4 -align dcommons -cpp -auto-scalar
+FFLAGS = -O2 -mp1 -r8 -i4 -align dcommons -cpp -auto-scalar -fimf-arch-consistency=true
 #gfortran
 #FFLAGS = -O2
 
