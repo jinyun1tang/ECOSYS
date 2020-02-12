@@ -622,7 +622,7 @@ C
       DO 120 J=1,24
       RRIG(J,I,NY,NX)=0.0
 120   CONTINUE
-      PHQ(I,NY,NX)=0.0
+      PHQ(I,NY,NX)=7.0
       CN4Q(I,NY,NX)=0.0
       CNOQ(I,NY,NX)=0.0
       CPOQ(I,NY,NX)=0.0
