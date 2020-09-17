@@ -76,7 +76,6 @@ C
 4030  CONTINUE
       CLOSE(15)
       LUN=N+10
-C      OPEN(LUN,FILE=OUTS(N-20),STATUS='UNKNOWN')
       OPEN(LUN,FILE=trim(outdir)//OUTS(N-20),STATUS='UNKNOWN')
 C
 C     WRITE HEADINGS TO OUTPUT FILES
@@ -368,7 +367,7 @@ C
       IF(L.EQ.16)HEAD(M)='WTR_10'
       IF(L.EQ.17)HEAD(M)='WTR_11'
       IF(L.EQ.18)HEAD(M)='WTR_12'
-      IF(L.EQ.19)HEAD(M)='WTR_15'
+      IF(L.EQ.19)HEAD(M)='WTR_13'
       IF(L.EQ.20)HEAD(M)='SURF_WTR'
       IF(L.EQ.21)HEAD(M)='ICE_1'
       IF(L.EQ.22)HEAD(M)='ICE_2'
@@ -382,7 +381,7 @@ C
       IF(L.EQ.30)HEAD(M)='ICE_10'
       IF(L.EQ.31)HEAD(M)='ICE_11'
       IF(L.EQ.32)HEAD(M)='ICE_12'
-      IF(L.EQ.33)HEAD(M)='ICE_15'
+      IF(L.EQ.33)HEAD(M)='ICE_13'
       IF(L.EQ.34)HEAD(M)='SURF_ICE'
       IF(L.EQ.35)HEAD(M)='PSI_1'
       IF(L.EQ.36)HEAD(M)='PSI_2'
@@ -396,7 +395,7 @@ C
       IF(L.EQ.44)HEAD(M)='PSI_10'
       IF(L.EQ.45)HEAD(M)='PSI_11'
       IF(L.EQ.46)HEAD(M)='PSI_12'
-      IF(L.EQ.47)HEAD(M)='PSI_15'
+      IF(L.EQ.47)HEAD(M)='PSI_13'
       IF(L.EQ.48)HEAD(M)='SURF_ELEV'
       IF(L.EQ.49)HEAD(M)='ACTV_LYR'
       IF(L.EQ.50)HEAD(M)='WTR_TBL'
