@@ -103,7 +103,7 @@ C
       IF(L.EQ.16)HEAD(M)='CO2_12'
       IF(L.EQ.17)HEAD(M)='CO2_13'
       IF(L.EQ.18)HEAD(M)='CO2_14'
-      IF(L.EQ.19)HEAD(M)='CO2_15'
+      IF(L.EQ.19)HEAD(M)='CO2_LIT'
       IF(L.EQ.20)HEAD(M)='CH4_1'
       IF(L.EQ.21)HEAD(M)='CH4_2'
       IF(L.EQ.22)HEAD(M)='CH4_3'
@@ -454,6 +454,7 @@ C
       IF(L.EQ.45)HEAD(M)='NH4_RES'
       IF(L.EQ.46)HEAD(M)='NO3_RES'
       IF(L.EQ.47)HEAD(M)='ECO_HVST_N'
+      IF(L.EQ.48)HEAD(M)='NET_N_MIN'
       IF(L.EQ.49)HEAD(M)='FIRE_N'
       IF(L.EQ.50)HEAD(M)='N2_FLUX'
       ENDIF
@@ -509,6 +510,7 @@ C
       IF(L.EQ.43)HEAD(M)='PO4_RES'
       IF(L.EQ.44)HEAD(M)='EXCH_P_RES'
       IF(L.EQ.47)HEAD(M)='ECO_HVST_P'
+      IF(L.EQ.48)HEAD(M)='NET_P_MIN'
       ENDIF
 1029  CONTINUE
       NOUTS(N-20)=M

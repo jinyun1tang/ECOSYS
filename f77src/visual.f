@@ -213,13 +213,13 @@ C     ENDIF
       OUT(14)=TRN(NY,NX)*277.8/AREA(3,NU(NY,NX),NY,NX)
       OUT(15)=-TLE(NY,NX)*277.8/AREA(3,NU(NY,NX),NY,NX)
       OUT(16)=-TSH(NY,NX)*277.8/AREA(3,NU(NY,NX),NY,NX)
-      L=0
+      L=1
       DO 60 N=17,27
       OUT(N)=(VOLW(L,NY,NX)+AMIN1(VOLAH(L,NY,NX)
      2,VOLWH(L,NY,NX)))/VOLT(L,NY,NX)
       L=L+1
 60    CONTINUE
-      L=0
+      L=1
       DO 61 N=28,38
       OUT(N)=TKS(L,NY,NX)
       L=L+1
