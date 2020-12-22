@@ -1,0 +1,19 @@
+      COMMON/BLK20D/XOCFXS(0:4,JZ,JY,JX),XONFXS(0:4,JZ,JY,JX)           &
+     &,XOPFXS(0:4,JZ,JY,JX),XOAFXS(0:4,JZ,JY,JX),XCOFXS(JZ,JY,JX)       &
+     &,XCHFXS(JZ,JY,JX),XOXFXS(JZ,JY,JX),XHGFXS(JZ,JY,JX)               &
+     &,XNGFXS(JZ,JY,JX),XN2FXS(JZ,JY,JX),XN4FXW(JZ,JY,JX)               &
+     &,XN3FXW(JZ,JY,JX),XNOFXW(JZ,JY,JX),XH2PXS(JZ,JY,JX)               &
+     &,XN4FXB(JZ,JY,JX),XN3FXB(JZ,JY,JX),XNOFXB(JZ,JY,JX)               &
+     &,XH2BXB(JZ,JY,JX),XNXFXS(JZ,JY,JX),XALFXS(JZ,JY,JX)               &
+     &,XFEFXS(JZ,JY,JX),XHYFXS(JZ,JY,JX),XCAFXS(JZ,JY,JX)               &
+     &,XMGFXS(JZ,JY,JX),XNAFXS(JZ,JY,JX),XKAFXS(JZ,JY,JX)               &
+     &,XOHFXS(JZ,JY,JX),XSOFXS(JZ,JY,JX),XCLFXS(JZ,JY,JX)               &
+     &,XC3FXS(JZ,JY,JX),XHCFXS(JZ,JY,JX),XAL1XS(JZ,JY,JX)               &
+     &,XAL2XS(JZ,JY,JX),XAL3XS(JZ,JY,JX),XAL4XS(JZ,JY,JX)               &
+     &,XALSXS(JZ,JY,JX),XFE1XS(JZ,JY,JX),XFE2XS(JZ,JY,JX)               &
+     &,XFE3XS(JZ,JY,JX),XFE4XS(JZ,JY,JX),XFESXS(JZ,JY,JX)               &
+     &,XCAOXS(JZ,JY,JX),XCACXS(JZ,JY,JX)                                &
+     &,XCAHXS(JZ,JY,JX),XCASXS(JZ,JY,JX),XMGOXS(JZ,JY,JX)               &
+     &,XMGCXS(JZ,JY,JX),XMGHXS(JZ,JY,JX),XMGSXS(JZ,JY,JX)               &
+     &,XNACXS(JZ,JY,JX),XNASXS(JZ,JY,JX),XKASXS(JZ,JY,JX)               &
+     &,XH1PXS(JZ,JY,JX),XH1BXB(JZ,JY,JX)

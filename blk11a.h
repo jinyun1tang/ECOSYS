@@ -1,0 +1,27 @@
+      COMMON/BLK11A/BARE(JY,JX),CVRD(JY,JX),TCS(0:JZ,JY,JX)             &
+     &,TKS(0:JZ,JY,JX),TCW(JS,JY,JX),TKW(JS,JY,JX),RAC(JY,JX)           &
+     &,TSMX(0:JZ,JY,JX),TSMN(0:JZ,JY,JX),VHCP(0:JZ,JY,JX)               &
+     &,VHCPW(JS,JY,JX),VOLW(0:JZ,JY,JX),VOLI(0:JZ,JY,JX)                &
+     &,VOLP(0:JZ,JY,JX),VOLWH(JZ,JY,JX),VOLT(0:JZ,JY,JX)                &
+     &,VOLTI(0:JZ,JY,JX),VOLR(JY,JX),VOLWG(JY,JX),TVOLWC(JY,JX)         &
+     &,VOLSSL(JS,JY,JX),VOLWSL(JS,JY,JX),VOLISL(JS,JY,JX)               &
+     &,VOLSL(JS,JY,JX),VOLSS(JY,JX),VOLWS(JY,JX),VOLIS(JY,JX)           &
+     &,VOLS(JY,JX),THETW(0:JZ,JY,JX),THETI(0:JZ,JY,JX)                  &
+     &,THETP(0:JZ,JY,JX),PSISM(0:JZ,JY,JX),PSIST(JZ,JY,JX)              &
+     &,RSCS(JZ,JY,JX),VOLA(0:JZ,JY,JX),VOLAH(JZ,JY,JX)                  &
+     &,CNDH(JZ,JY,JX),CNDU(JZ,JY,JX),VOLWD(JY,JX)                       &
+     &,VHCM(0:JZ,JY,JX),VOLWX(0:JZ,JY,JX),STC(JZ,JY,JX)                 &
+     &,DTC(JZ,JY,JX),HCND(3,100,JZ,JY,JX),FINH(JZ,JY,JX)                &
+     &,FLWV(JZ,JY,JX),THAW(JZ,JY,JX),HTHAW(JZ,JY,JX)                    &
+     &,THAWH(JZ,JY,JX),VOLIH(JZ,JY,JX),DENSS(JS,JY,JX)                  &
+     &,DPTHS(JY,JX),DLYRS(JS,JY,JX),XFLWW(JS,JY,JX),XFLWS(JS,JY,JX)     &
+     &,XFLWI(JS,JY,JX),XHFLWW(JS,JY,JX),XWFLXS(JS,JY,JX)                &
+     &,XWFLXI(JS,JY,JX),XTHAWW(JS,JY,JX),FLWR(JY,JX),XW                 &
+     &,HFLWR(JY,JX),TFLWC(JY,JX),THRMG(JY,JX),HEATI(JY,JX)              &
+     &,HEATE(JY,JX),HEATS(JY,JX),HEATV(JY,JX),HEATH(JY,JX)              &
+     &,TEVAPG(JY,JX),HYST(JZ,JY,JX),VHCPWX(JY,JX),VHCPRX(JY,JX)         &
+     &,VHCPNX(JY,JX),VOLWRX(JY,JX),CDPTHS(0:JS,JY,JX)                   &
+     &,CGSGL(JZ,JY,JX),CLSGL(0:JZ,JY,JX),OGSGL(JZ,JY,JX)                &
+     &,OLSGL(0:JZ,JY,JX),ZGSGL(JZ,JY,JX),CHSGL(JZ,JY,JX)                &
+     &,CQSGL(0:JZ,JY,JX),VOLSI(JS,JY,JX)                                &
+     &,THETWZ(0:JZ,JY,JX),THETIZ(0:JZ,JY,JX)
