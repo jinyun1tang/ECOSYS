@@ -30,8 +30,10 @@ C
       DATA IFLGY,IYRX,IYRD/0,0,0/
       SAVE N1,N2,N1X,N2X,IFLGY,IYRX,IYRD
 C
-C     OPEN WEATHER AND OPTIONS FILES FROM
-C     FILE NAMES IN DATA ARRAYS LOADED IN 'MAIN'
+C     OPEN WEATHER(3, OPTIONS(4, AND LAND MANAGEMENT(9, FILES FROM
+C     FILE NAMES IN DATA ARRAYS LOADED IN MAIN.F
+C
+C     PREFIX=path for files in current or higher level directory
 C
       OPEN(3,FILE=TRIM(PREFIX)//DATAC(3,NE,NEX),STATUS='OLD')
       OPEN(4,FILE=TRIM(PREFIX)//DATAC(4,NE,NEX),STATUS='OLD')
@@ -40,6 +42,11 @@ C
       ENDIF
 C
 C     ARTIFICIAL SOIL WARMING
+C
+C     soiltemp=file with hourly soil temperatures from baseline run
+C     OUT=hourly soil temperatures from baseline run (oC)
+C     TKSZ=temperature used to calculate additional heat flux 
+C     for warming in watsub.f 
 C
 C     OPEN(6,FILE='soiltemp',STATUS='OLD')
 C23   READ(6,'(F8.3,4X,A8,I8,50E16.7E3)',END=27)DOY,CDATE,J
@@ -56,6 +63,19 @@ C     GO TO 23
 27    CONTINUE
 C
 C     READ START AND END DATES, WEATHER OPTIONS
+C
+C     IDATA(1),IDATA(2),IDATA(3)=start date of scenario DDMMYYYY
+C     IDATA(4),IDATA(5),IDATA(6)=end date of scenario DDMMYYYY
+C     IDATA(7),IDATA(8),IDATA(9)=start date of run DDMMYYYY
+C     DATA(18),DATA(19),DATA(20)=options for visualization in visual.f
+C     generating checkpoint files,resuming from earlier checkpt files 
+C     DRAD,DTMPX,DTMPN,DHUM,DPREC,DIRRI,DWIND,DCO2E,DCNR4,DCNOR
+C     =annual changes in radiation,max+min temperature,humidity,
+C     precip,irrign,windspeed,atm CO2 concn,NH4,NO3 concn in precip
+C     NPX=number of cycles per hour for water,heat,solute flux calcns
+C     NPY=number of cycles per NPX for gas flux calcns
+C     JOUT,IOUT,KOUT=output frequency for hourly,daily,checkpoint data
+C     ICLM=changes to weather data (0=none,1=step,2=transient)
 C
       READ(4,'(2I2,I4)')IDATA(1),IDATA(2),IDATA(3)
       READ(4,'(2I2,I4)')IDATA(4),IDATA(5),IDATA(6)
@@ -80,6 +100,12 @@ C
       DCNOR(N)=DCNOR(N-1)
 26    CONTINUE
       READ(4,*)NPX,NPY,JOUT,IOUT,KOUT,ICLM
+C
+C     INCREMENTS IN START AND END DATES FOR SUCCESSIVE SCENARIOS
+C     FROM LOOPS FOR SCENES, SCENARIOS IN RUNSCRIPT SET IN MAIN.F
+C
+C     IDATA(3),IDATA(6)=start,end year of current scene
+C
       NTZX=NTZ
       IF(IGO.EQ.0.OR.IDATA(3).NE.0)THEN
       IDATA(3)=IDATA(3)+(NT-1)*NF+(NTX-1)*NFX-NTZX
@@ -123,6 +149,10 @@ C    3,NA(NEX),ND(NEX),NAX
 C
 C     OPEN CHECKPOINT FILES FOR SOIL VARIABLES
 C
+C     IDATE=year label for checkpoint files
+C     DATA(1)=site file name
+C     W,N=water+heat,nutrient checkpoint files
+C
       IF(IGO.EQ.0)THEN
       IF(DATA(20).EQ.'YES')THEN
       IDATE=IDATA(9)
@@ -136,7 +166,12 @@ C
       OPEN(22,FILE=OUTN,STATUS='UNKNOWN')
       ENDIF
 C
-C     CALCULATE START AND FINISH DATES
+C     CALCULATE START AND FINISH DATES IN JULIAN DAYS
+C     FROM DATE INPUTS IN OPTION FILE
+C
+C     ISTART,IBEGIN=start dates for current scene
+C     IFIN,ILAST=end dates for current scene
+C     LYRC=number of days in current year
 C
       LPY=0
       LYRC=365
@@ -168,6 +203,18 @@ C
 C
 C     READ WEATHER DATA
 C
+C     DATAC(3=weather file
+C     TTYPE,CTYPE=time step,calendar format
+C     NI,NN=number of time,weather data variables
+C     IVAR,VAR=time,weather variable type
+C     TYP=weather variable units
+C     Z0G,IFLGW=windspeed meast height,flag for raising Z0G with vegn
+C     ZNOONG=time of solar noon
+C     PHRG,CN4RIG,CNORIG,CPORG,CALRG,CFERG,CCARG,CMGRG,CNARG,CKARG, 
+C     CSORG,CCLRG=pH,NH4,NO3,H2PO4,Al,Fe,Ca,Mg,Na,K,SO4,Cl 
+C     concentration in precipitation
+C     IDAT,DAT=time,weather variable
+C
       IF(DATAC(3,NE,NEX).NE.'NO')THEN
       IFLG3=0
       READ(3,'(2A1,2I2,50A1)')TTYPE,CTYPE,NI,NN,(IVAR(K),K=1,NI)
@@ -187,6 +234,11 @@ C
 C     READ DAILY WEATHER DATA AND CONVERT TO MODEL UNITS
 C
       IF(TTYPE.EQ.'D')THEN
+C
+C     DERIVE DAY I FROM TIME VARIABLES IVAR
+C
+C     IWTHR=weather data type:1=daily,2=hourly for first(L=1) or second(L=2) scene
+C
       IWTHR(L)=1
       DO 160 K=1,NI
       IF(IVAR(K).EQ.'M')THEN
@@ -215,6 +267,9 @@ C
       I=30*(M-1)+ICOR(M-1)+N+LPY
       ENDIF
       ENDIF
+C
+C     DERIVE START DATE FROM TIME VARIABLES
+C
       IF(IFLG3.EQ.0)THEN
       IBEGIN=I
       ISTART=MAX(ISTART,IBEGIN)
@@ -223,7 +278,20 @@ C
       IF(L.NE.1)THEN
       IF(I.LE.ILAST)GO TO 60
       ENDIF
+C
+C     CONVERT DAILY WEATHER VARIABLES TO MODEL UNITS 
+C     AND ENTER INTO MODEL ARRAYS
+C
+C     TMPX,TMPN=maximum,minimum temperature (OC) 
+C     SRAD=solar radiation (MJ m-2 d-1)
+C     WIND=windspeed (m h-1)
+C     DWPT=vapor pressure (kPa)
+C     RAIN=precipitation (mm d-1)
+C
       DO 65 K=1,NN
+C
+C     MAX,MIN REMPERATURE
+C
       IF(VAR(K).EQ.'M')THEN
       IF(TYP(K).EQ.'F')THEN
       TMPX(I)=(DAT(K)-32.0)*0.556
@@ -240,6 +308,9 @@ C
       ELSE
       TMPN(I)=DAT(K)
       ENDIF
+C
+C     SOLAR RADIATION
+C
       ELSEIF(VAR(K).EQ.'R')THEN
       IF(TYP(K).EQ.'L')THEN
       SRAD(I)=AMAX1(0.0,DAT(K)/23.87)
@@ -248,6 +319,9 @@ C
       ELSE
       SRAD(I)=AMAX1(0.0,DAT(K))
       ENDIF
+C
+C     WIND SPEED
+C
       ELSEIF(VAR(K).EQ.'W')THEN
       IF(TYP(K).EQ.'S')THEN
       WIND(I)=ABS(DAT(K))*3600.0
@@ -260,6 +334,9 @@ C
       ELSE
       WIND(I)=ABS(DAT(K))
       ENDIF
+C
+C     VAPOR PRESSURE
+C
       ELSEIF(VAR(K).EQ.'H')THEN
       IF(TYP(K).EQ.'D')THEN
       DWPT(1,I)=0.61*EXP(5360.0*(3.661E-03-1.0
@@ -301,6 +378,9 @@ C
       DWPT(1,I)=AMAX1(0.0,DAT(K))
       DWPT(2,I)=AMAX1(0.0,DAT(K))
       ENDIF
+C
+C     PRECIPITATION
+C
       ELSEIF(VAR(K).EQ.'P')THEN
       IF(TYP(K).EQ.'M')THEN
       RAIN(I)=AMAX1(0.0,DAT(K))/1.0E+03
@@ -322,6 +402,9 @@ C
 C     READ HOURLY WEATHER DATA AND CONVERT TO MODEL UNITS
 C
       ELSE
+C
+C     DERIVE DAY I AND HOUR J FROM TIME VARIABLES IVAR
+C
       IWTHR(L)=2
       DO 190 K=1,NI
       IF(IVAR(K).EQ.'M')THEN
@@ -361,6 +444,9 @@ C
       I=I-1
       IF(I.LT.1)GO TO 60
       ENDIF
+C
+C     DERIVE START DATE FROM TIME VARIABLES
+C
       IF(IFLG3.EQ.0)THEN
       IBEGIN=N
       ISTART=MAX(ISTART,IBEGIN)
@@ -369,8 +455,22 @@ C
       IF(L.NE.1)THEN
       IF(I.LE.ILAST)GO TO 60
       ENDIF
-      XWTHR(J,I)=0.0
+      XRADH(J,I)=0.0
+C
+C     CONVERT HOURLY WEATHER VARIABLES TO MODEL UNITS 
+C     AND ENTER INTO MODEL ARRAYS
+C
+C     TMPH=temperature (oC)
+C     SRADH=solar radiation (MJ m-2 h-1)
+C     WINDH=windspeed (m h-1)
+C     DWPTH=vapor pressure (kPa)
+C     RAINH=precipitation (mm h-1)
+C     XRADH=longwave radiation (MJ m-2 h-1)
+C
       DO 95 K=1,NN
+C
+C     TEMPERATURE
+C
       IF(VAR(K).EQ.'T')THEN
       IF(TYP(K).EQ.'F')THEN
       TMPH(J,I)=((DAT(K)+DATK(K))/IH-32.0)*0.556
@@ -379,6 +479,9 @@ C
       ELSE
       TMPH(J,I)=(DAT(K)+DATK(K))/IH
       ENDIF
+C
+C     SOLAR RADIATION
+C
       ELSEIF(VAR(K).EQ.'R')THEN
       IF(TYP(K).EQ.'W')THEN
       SRADH(J,I)=AMAX1(0.0,(DAT(K)+DATK(K))/IH*0.0036)
@@ -393,6 +496,9 @@ C     SRADH(J,I)=AMAX1(0.0,(DAT(K)+DATK(K))/IH*3.6*0.457)
       ELSE
       SRADH(J,I)=AMAX1(0.0,(DAT(K)+DATK(K))/IH)
       ENDIF
+C
+C     WIND SPEED
+C
       ELSEIF(VAR(K).EQ.'W')THEN
       IF(TYP(K).EQ.'S')THEN
       WINDH(J,I)=(DAT(K)+DATK(K))/IH*3600.0
@@ -404,6 +510,9 @@ C     SRADH(J,I)=AMAX1(0.0,(DAT(K)+DATK(K))/IH*3.6*0.457)
       WINDH(J,I)=(DAT(K)+DATK(K))/IH
       ENDIF
       ELSEIF(VAR(K).EQ.'H')THEN
+C
+C     VAPOR PRESSURE
+C
       IF(TYP(K).EQ.'D')THEN
       DWPTH(J,I)=0.61*EXP(5360.0*(3.661E-03-1.0/(273.15
      2+(DAT(K)+DATK(K))/IH)))
@@ -428,6 +537,9 @@ C     SRADH(J,I)=AMAX1(0.0,(DAT(K)+DATK(K))/IH*3.6*0.457)
       ELSE
       DWPTH(J,I)=AMAX1(0.0,(DAT(K)+DATK(K))/IH)
       ENDIF
+C
+C     PRECIPITATION
+C
       ELSEIF(VAR(K).EQ.'P')THEN
       IF(TYP(K).EQ.'M')THEN
       RAINH(J,I)=AMAX1(0.0,DAT(K)+DATK(K))/1.0E+03
@@ -444,15 +556,18 @@ C     SRADH(J,I)=AMAX1(0.0,(DAT(K)+DATK(K))/IH*3.6*0.457)
       ELSE
       RAINH(J,I)=AMAX1(0.0,DAT(K)+DATK(K))
       ENDIF
+C
+C     LONGWAVE RADIATION (OPTIONAL)
+C
       ELSEIF(VAR(K).EQ.'L')THEN
       IF(TYP(K).EQ.'W')THEN
-      XWTHR(J,I)=AMAX1(0.0,(DAT(K)+DATK(K))/IH*0.0036)
+      XRADH(J,I)=AMAX1(0.0,(DAT(K)+DATK(K))/IH*0.0036)
       ELSEIF(TYP(K).EQ.'J')THEN
-      XWTHR(J,I)=AMAX1(0.0,(DAT(K)+DATK(K))/IH*0.01)
+      XRADH(J,I)=AMAX1(0.0,(DAT(K)+DATK(K))/IH*0.01)
       ELSEIF(TYP(K).EQ.'K')THEN
-      XWTHR(J,I)=AMAX1(0.0,(DAT(K)+DATK(K))/IH*0.001)
+      XRADH(J,I)=AMAX1(0.0,(DAT(K)+DATK(K))/IH*0.001)
       ELSE
-      XWTHR(J,I)=AMAX1(0.0,(DAT(K)+DATK(K))/IH)
+      XRADH(J,I)=AMAX1(0.0,(DAT(K)+DATK(K))/IH)
       ENDIF
       ENDIF
       DATK(K)=0.0
@@ -466,6 +581,9 @@ C     SRADH(J,I)=AMAX1(0.0,(DAT(K)+DATK(K))/IH*3.6*0.457)
       JJ=24
       II=I-1
       ENDIF
+C
+C     INFILL 3-HOURLY WEATHER DATA
+C
       IF(II.LT.1)THEN
       TMPH(J-2,I)=TMPH(J,I)
       TMPH(J-1,I)=TMPH(J,I)
@@ -478,8 +596,8 @@ C     SRADH(J,I)=AMAX1(0.0,(DAT(K)+DATK(K))/IH*3.6*0.457)
       RAINH(J,I)=RAINH(J,I)/3.0
       RAINH(J-2,I)=RAINH(J,I)
       RAINH(J-1,I)=RAINH(J,I)
-      XWTHR(J-2,I)=XWTHR(J,I)
-      XWTHR(J-1,I)=XWTHR(J,I)
+      XRADH(J-2,I)=XRADH(J,I)
+      XRADH(J-1,I)=XRADH(J,I)
       ELSE
       TMPH(J-2,I)=0.667*TMPH(JJ,II)+0.333*TMPH(J,I)
       TMPH(J-1,I)=0.333*TMPH(JJ,II)+0.667*TMPH(J,I)
@@ -492,8 +610,8 @@ C     SRADH(J,I)=AMAX1(0.0,(DAT(K)+DATK(K))/IH*3.6*0.457)
       RAINH(J,I)=RAINH(J,I)/3.0
       RAINH(J-2,I)=RAINH(J,I)
       RAINH(J-1,I)=RAINH(J,I)
-      XWTHR(J-2,I)=0.667*XWTHR(JJ,II)+0.333*XWTHR(J,I)
-      XWTHR(J-1,I)=0.333*XWTHR(JJ,II)+0.667*XWTHR(J,I)
+      XRADH(J-2,I)=0.667*XRADH(JJ,II)+0.333*XRADH(J,I)
+      XRADH(J-1,I)=0.333*XRADH(JJ,II)+0.667*XRADH(J,I)
       ENDIF
       ENDIF
       IF(IFLGY.EQ.1.AND.I.EQ.IYRD.AND.J.EQ.24)THEN
@@ -521,7 +639,7 @@ C
       WINDH(J,I+1)=WINDH(J,I)
       DWPTH(J,I+1)=DWPTH(J,I)
       RAINH(J,I+1)=RAINH(J,I)
-      XWTHR(J,I+1)=XWTHR(J,I)
+      XRADH(J,I+1)=XRADH(J,I)
 130   CONTINUE
       ENDIF
       IX=I+1
@@ -547,7 +665,7 @@ C
       IX=365
       ENDIF
 C
-C     CALCULATE PRECIPITATION COMPOSITION
+C     CALCULATE PRECIPITATION CONCENTRATIONS IN MOLE UNITS
 C
       CN4RIG=CN4RIG/14.0
       CNORIG=CNORIG/14.0
@@ -582,6 +700,9 @@ C
       CCLR(NY,NX)=CCLRG
 8975  CONTINUE
 8970  CONTINUE
+C
+C     DERIVE END DATES FROM TIME VARIABLES
+C
       ICHECK=0
       IF(TTYPE.EQ.'H'.AND.J.NE.24)ICHECK=1
       IEND=IX-ICHECK
@@ -640,12 +761,16 @@ C
 9985  CONTINUE
 9980  CONTINUE
 C
-C     READ LAND MANAGEMENT FILE STORED
-C     IN FILE NAME DATA ARRAY LOADED IN 'MAIN'.
+C     READ LAND MANAGEMENT FILE DATAC(9 LOADED IN 'MAIN'.
 C     THIS FILE CONTAINS NAMES OF TILLAGE, IRRIGATION
 C     AND FERTILIZER FILES
 C
       IF(DATAC(9,NE,NEX).NE.'NO')THEN
+C
+C     NH1,NV1,NH2,NV2=N,W and S,E corners of landscape unit
+C     DATA(8),DATA(5),DATA(6)=disturbance,fertilizer,irrigation files
+C     PREFIX=path for files in current or higher level directory
+C
 150   READ(13,*,END=200)NH1,NV1,NH2,NV2
       READ(13,*)DATA(8),DATA(5),DATA(6)
       IF(DATA(8).NE.'NO')THEN
@@ -661,6 +786,12 @@ C
 C     READ TILLAGE INPUT FILE
 C
       IF(DATA(8).NE.'NO')THEN
+C
+C     DY=date DDMMYYYY
+C     IPLOW,DPLOW=intensity,depth of disturbance
+C     ITILL=soil disturbance type 1-20:tillage,21=litter removal,22=fire,23-24=drainage
+C     DCORP=intensity (fire) or depth (tillage,drainage) of disturbance 
+C
 295   CONTINUE
       READ(10,*,END=305)DY,IPLOW,DPLOW
       LPY=0
@@ -690,6 +821,18 @@ C
 C     READ FERTLIZER INPUT FILE
 C
       IF(DATA(5).NE.'NO')THEN
+C
+C     DY=date DDMMYYYY
+C     *A,*B=broadcast,banded fertilizer application
+C     Z4,Z3,ZU,ZO=NH4,NH3,urea,NO3
+C     PM*,PH*=Ca(H2PO4)2,apatite
+C     CAC,CAS=CaCO3,CaSO4
+C     *1,*2=litter,manure amendments
+C     RSC,RSN,RSC=amendment C,N,P content
+C     FDPTHI=application depth
+C     ROWX=band row width
+C     IRO,IR1,IR2=fertilizer,litter,manure type
+C
 1500  CONTINUE
       READ(8,*,END=85)DY,Z4A,Z3A,ZUA,ZOA,Z4B,Z3B,ZUB,ZOB
      2,PMA,PMB,PHA,CAC,CAS,RSC1,RSN1,RSP1,RSC2,RSN2,RSP2,FDPTHI
@@ -709,6 +852,8 @@ C     IF(IDY2.GE.7)IDY=IDY+0.5*(NTX-1)
 1530  CONTINUE
       DO 8985 NX=NH1,NH2
       DO 8980 NY=NV1,NV2
+C
+C     ENTER AMENDMENTS INTO MODEL ARRAYS
 C
 C     NH4,NH3,UREA,NO3 BROADCAST (A) AND BANDED (B)
 C
@@ -742,12 +887,12 @@ C
       FERT(18,IDY,NY,NX)=RSN2
       FERT(19,IDY,NY,NX)=RSP2
 C
-C     DEPTH OF APPLICATION
+C     DEPTH AND WIDTH OF APPLICATION
 C
       FDPTH(IDY,NY,NX)=FDPTHI
       ROWI(IDY,NY,NX)=ROWX
 C
-C     TYPE OF PLANT OR ANIMAL RESIDUE
+C     TYPE OF FERTILIZER,PLANT OR ANIMAL RESIDUE
 C
       IYTYP(0,IDY,NY,NX)=IR0
       IYTYP(1,IDY,NY,NX)=IR1
@@ -763,8 +908,23 @@ C     READ IRRIGATION INPUT FILE
 C
       IF(DATA(6).NE.'NO')THEN
       IF(DATA(6)(1:4).EQ.'auto')THEN
-      READ(2,*,END=105)DST,DEN,IFLGVX,FIRRX,CIRRX,DIRRX,WDPTHI,PHQX
-     2,CN4QX,CNOQX,CPOQX,CALQX,CFEQX,CCAQX,CMGQX,CNAQX,CKAQX,CSOQX,CCLQX
+C
+C     AUTOMATED IRRIGATION
+C
+C     DST,DEN=start,end dates,hours DDMMHHHH
+C     IFLGVX=flag for irrigation criterion,0=SWC,1=canopy water potl 
+C     FIRRX=depletion of SWC from CIRRX to WP(IFLGV=0),or minimum canopy 
+C     water potential(IFLGV=1), to trigger irrigation
+C     CIRRX= fraction of FC to which irrigation will raise SWC
+C     DIRRX= depth to which water depletion and rewatering is calculated
+C     WDPTHI=depth at which irrigation is applied 
+C     PHQX,CN4QX,CNOQX,CPOQX,CALQX,CFEQX,CCAQX,CMGQX,CNAQX,CKAQX, 
+C     CSOQX,CCLQX=pH,NH4,NO3,H2PO4,Al,Fe,Ca,Mg,Na,K,SO4,Cl 
+C     concentration in irrigation water
+C
+      READ(2,*,END=105)DST,DEN,IFLGVX,FIRRX,CIRRX,DIRRX,WDPTHI
+     2,PHQX,CN4QX,CNOQX,CPOQX,CALQX,CFEQX,CCAQX,CMGQX,CNAQX,CKAQX
+     3,CSOQX,CCLQX
       LPY=0
       IDY1=INT(DST/1.0E+06)
       IDY2=INT(DST/1.0E+04-IDY1*1.0E+02)
@@ -789,6 +949,9 @@ C
 5535  IDYE=IDY1
 5530  CONTINUE
       IHRE=IDY3
+C
+C     TRANSFER INPUTS TO MODEL ARRAYS 
+C
       DO 7965 NX=NH1,NH2
       DO 7960 NY=NV1,NV2
       IFLGV(NY,NX)=IFLGVX
@@ -817,7 +980,16 @@ C
 7960  CONTINUE
 7965  CONTINUE
       ELSE
+C
+C     SCHEDULED IRRIGATION
+C
 2500  CONTINUE
+C
+C     DY,RR,JST,JEN=date DDMMYYYY,amount (mm),start and end hours
+C     PHQX,CN4QX,CNOQX,CPOQX,CALQX,CFEQX,CCAQX,CMGQX,CNAQX,CKAQX, 
+C     CSOQX,CCLQX=pH,NH4,NO3,H2PO4,Al,Fe,Ca,Mg,Na,K,SO4,Cl 
+C     concentration in irrigation water
+C
       READ(2,*,END=105)DY,RR,JST,JEN,WDPTHI,PHQX,CN4QX,CNOQX,CPOQX
      2,CALQX,CFEQX,CCAQX,CMGQX,CNAQX,CKAQX,CSOQX,CCLQX
       LPY=0
@@ -837,6 +1009,9 @@ C
       DO 2535 J=1,24
       IF(J.GE.JST.AND.J.LE.JEN)RRIG(J,IDY,NY,NX)=RRH/1000.0
 2535  CONTINUE
+C
+C     TRANSFER INPUTS TO MODEL ARRAYS 
+C
       PHQ(IDY,NY,NX)=PHQX
       CN4Q(IDY,NY,NX)=CN4QX/14.0
       CNOQ(IDY,NY,NX)=CNOQX/14.0

@@ -37,6 +37,16 @@ C
 C
 C     INITIALIZE SHOOT GROWTH VARIABLES
 C
+C     IFLGC=PFT flag:0=not active,1=active
+C     IYR0,IDAY0,IYRH,IDAYH=year,day of planting,arvesting
+C     PPI,PPX=initial,current population (m-2)
+C     CF,CFI=current,initial clumping factor
+C     RSMH=cuticular resistance to water (h m-1)
+C     RCMX=cuticular resistance to CO2 (s m-1)
+C     CNWS,CPWS=protein:N,protein:P ratios
+C     CWSRT=maximum root protein concentration (g g-1)
+C     O2I=intercellular O2 concentration in C3,C4 PFT (umol mol-1)
+C
       DO 9995 NX=NHWQ,NHEQ
       DO 9990 NY=NVNQ,NVSQ
       NZ2X=MIN(NZ2Q,NP(NY,NX)) 
@@ -69,8 +79,11 @@ C     IF(DATAP(NZ,NY,NX).NE.'NO')THEN
       O2I(NZ,NY,NX)=3.96E+05
       ENDIF
 C
-C     FRACTIONS OF FOLIAR AND NON-FOLIAR LITTER ALLOCATED
-C     TO PROTEIN, CH2O, CELLULOSE, LIGNIN
+C     FRACTIONS OF PLANT LITTER ALLOCATED TO KINETIC COMPONENTS
+C     PROTEIN(*,1),CH2O(*,2),CELLULOSE(*,3),LIGNIN(*,4) IN SOIL LITTER
+C
+C     CFOPC=fraction of plant litter allocated in nonstructural(0,*),
+C     foliar(1,*),non-foliar(2,*),stalk(3,*),root(4,*), coarse woody (5,*)
 C
 C     NONSTRUCTURAL
 C
@@ -143,7 +156,6 @@ C
 C     FRACTIONS OF WOODY LITTER ALLOCATED TO
 C     PROTEIN, CH2O, CELLULOSE, LIGNIN
 C
-C
 C     NON-VASCULAR
 C
       IF(IGTYP(NZ,NY,NX).EQ.0)THEN
@@ -171,7 +183,6 @@ C
 C
 C     FRACTIONS OF FINE ROOT LITTER ALLOCATED TO
 C     PROTEIN, CH2O, CELLULOSE, LIGNIN PC&E 25:601-608
-C
 C
 C     NON-VASCULAR
 C
@@ -213,7 +224,10 @@ C
       CFOPC(5,3,NZ,NY,NX)=0.660
       CFOPC(5,4,NZ,NY,NX)=0.295
 C
-C     N AND P FRACTIONS IN PLANT LITTER
+C     INITIALIZE C-N AND C-P RATIOS IN PLANT LITTER
+C
+C     CNOPC,CPOPC=fractions to allocate N,P to kinetic components
+C     CFOPN,CFOPP=distribution of litter N,P to kinetic components
 C
       CNOPC(1)=0.020
       CNOPC(2)=0.010
@@ -238,6 +252,9 @@ C
 C
 C     CONCURRENT NODE GROWTH
 C
+C     FNOD=scales node number for perennial vegetation (e.g. trees)
+C     NNOD=number of concurrently growing nodes
+C
       IF(IBTYP(NZ,NY,NX).EQ.0.OR.IGTYP(NZ,NY,NX).LE.1)THEN
       FNOD(NZ,NY,NX)=1.0
       IF(GROUPI(NZ,NY,NX).LE.10)THEN
@@ -251,6 +268,15 @@ C
       FNOD(NZ,NY,NX)=AMAX1(1.0,0.04/XRLA(NZ,NY,NX))
       NNOD(NZ,NY,NX)=24
       ENDIF
+C
+C     PFT THERMAL ACCLIMATION
+C
+C     ZTYP,ZTYPI=dynamic,initial thermal adaptation zone from PFT file
+C     OFFST=shift in Arrhenius curve for thermal adaptation (oC)
+C     TCZ,TCX=threshold temperature for leafout,leafoff
+C     HTC=high temperature threshold for grain number loss (oC)
+C     SSTX=sensitivity to HTC (seeds oC-1 above HTC)
+C
       TCZD=5.00
       TCXD=12.00
       ZTYP(NZ,NY,NX)=ZTYPI(NZ,NY,NX)
@@ -272,13 +298,26 @@ C
 C
 C     SEED CHARACTERISTICS
 C
+C     SDVL,SDLG,SDAR=seed volume(m3),length(m),area(m2)
+C     GRDM=seed C mass (g) from PFT file
+C
       SDVL(NZ,NY,NX)=GRDM(NZ,NY,NX)*5.0E-06
       SDLG(NZ,NY,NX)=2.0*(0.75*SDVL(NZ,NY,NX)/3.1416)**0.33
       SDAR(NZ,NY,NX)=4.0*3.1416*(SDLG(NZ,NY,NX)/2.0)**2
 C
-C     INITIALIZE ROOT DIMENSIONS, UPTAKE PARAMETERS
+C     INITIALIZE ROOT(N=1),MYCORRHIZAL(N=2) DIMENSIONS, UPTAKE PARAMETERS
 C
-C     IF(DATAM(NZ,NY,NX).NE.'NO')THEN
+C     SDPTH=seeding depth(m) from PFT management file
+C     CDPTHZ=depth to soil layer bottom from surface(m)
+C     NG,NIX,NINR=seeding,upper,lower rooting layer
+C     CNRTS,CPRTS=N,P root growth yield
+C     RRAD1M,RRAD2M=maximum primary,secondary mycorrhizal radius (m)
+C     PORT=mycorrhizal porosity
+C     UPMXZH,UPKMZH,UPMNZH=NH4 max uptake(g m-2 h-1),Km(uM),min concn (uM)      
+C     UPMXZO,UPKMZO,UPMNZO=NO3 max uptake(g m-2 h-1),Km(uM), min concn (uM)      
+C     UPMXPO,UPKMPO,UPMNPO=H2PO4 max uptake(g m-2 h-1),Km(uM),min concn (uM)      
+C     RSRR,RSRA=radial,axial root resistivity (m2 MPa-1 h-1)
+C
       SDPTH(NZ,NY,NX)=SDPTHI(NZ,NY,NX)
       DO 9795 L=NU(NY,NX),NL(NY,NX)
       IF(SDPTH(NZ,NY,NX).GE.CDPTHZ(L-1,NY,NX)
@@ -290,13 +329,6 @@ C     IF(DATAM(NZ,NY,NX).NE.'NO')THEN
 9790  CONTINUE
       ENDIF
 9795  CONTINUE
-C     ELSE
-C     NG(NZ,NY,NX)=NU(NY,NX)
-C     NIX(NZ,NY,NX)=NU(NY,NX)
-C     DO 9785 NR=1,10
-C     NINR(NR,NZ,NY,NX)=NU(NY,NX)
-9785  CONTINUE
-C     ENDIF
       CNRTS(NZ,NY,NX)=CNRT(NZ,NY,NX)*DMRT(NZ,NY,NX)
       CPRTS(NZ,NY,NX)=CPRT(NZ,NY,NX)*DMRT(NZ,NY,NX)
       RRAD1M(2,NZ,NY,NX)=5.0E-06
@@ -311,8 +343,15 @@ C     ENDIF
       UPMXPO(2,NZ,NY,NX)=UPMXPO(1,NZ,NY,NX)
       UPKMPO(2,NZ,NY,NX)=UPKMPO(1,NZ,NY,NX)
       UPMNPO(2,NZ,NY,NX)=UPMNPO(1,NZ,NY,NX)
-      RSRR(2,NZ,NY,NX)=2.5E+03
+      RSRR(2,NZ,NY,NX)=1.0E+04
       RSRA(2,NZ,NY,NX)=1.0E+12
+C
+C     PORTX=tortuosity for gas transport
+C     RRADP=path length for radial diffusion within root (m)
+C     DMVL=volume:C ratio (m3 g-1)
+C     RTLG1X,RTLG2X=specific primary,secondary root length (m g-1)
+C     RTAR1X,RTAR2X=specific primary,secondary root area (m2 g-1)
+C
       DO 500 N=1,2
       PORTX(N,NZ,NY,NX)=PORT(N,NZ,NY,NX)**1.33
       RRADP(N,NZ,NY,NX)=LOG(1.0/SQRT(AMAX1(0.01,PORT(N,NZ,NY,NX))))
@@ -329,6 +368,8 @@ C    2*SQRT(0.25*(1.0-PORT(N,NZ,NY,NX)))
 C
 C     INITIALIZE PLANT PHENOLOGY
 C
+C     PP=population (grid cell-1)
+C
       PP(NZ,NY,NX)=PPX(NZ,NY,NX)*AREA(3,NU(NY,NX),NY,NX)
       IFLGI(NZ,NY,NX)=0
       IDTHP(NZ,NY,NX)=0
@@ -343,7 +384,6 @@ C
       IFLGF(NB,NZ,NY,NX)=0
       IFLGR(NB,NZ,NY,NX)=0
       IFLGQ(NB,NZ,NY,NX)=0
-      IFLGD(NB,NZ,NY,NX)=0
       GROUP(NB,NZ,NY,NX)=GROUPI(NZ,NY,NX)
       PSTG(NB,NZ,NY,NX)=XTLI(NZ,NY,NX)
       PSTGI(NB,NZ,NY,NX)=PSTG(NB,NZ,NY,NX)
@@ -573,6 +613,11 @@ C
 C
 C     INITIALIZE PLANT HEAT AND WATER STATUS
 C
+C     VHCPC=canopy heat capacity (MJ m-3 K-1)
+C     TCC,TKC=canopy temperature for growth (oC,K)
+C     TCG,TKG=canopy temperature for phenology (oC,K)
+C     PSILT,PSILO,PSILG=canopy total,osmotic,turgor water potl(MPa)
+C
       VHCPC(NZ,NY,NX)=4.19*WTSHT(NZ,NY,NX)*10.0E-06
       ENGYX(NZ,NY,NX)=0.0
       DTKC(NZ,NY,NX)=0.0
@@ -587,7 +632,11 @@ C
       EP(NZ,NY,NX)=0.0
       FRADP(NZ,NY,NX)=0.0
 C
-C     INITIALIZE ROOT MORPHOLOGY AND BIOMASS
+C     INITIALIZE ROOT(N=1),MYCORRHIZAL(N=2) MORPHOLOGY AND BIOMASS
+C
+C     PSIRT,PSIRO,PSIRG=root,myco total,osmotic,turgor water potl(MPa)
+C     CO2A,CO2P=root,myco gaseous,aqueous CO2 content (g)
+C     OXYA,OXYP=root,myco gaseous,aqueous O2 content (g)
 C
       NRT(NZ,NY,NX)=0
       UPNH4(NZ,NY,NX)=0.0
@@ -625,16 +674,20 @@ C
       RUPNH4(N,L,NZ,NY,NX)=0.0
       RUPNO3(N,L,NZ,NY,NX)=0.0
       RUPH2P(N,L,NZ,NY,NX)=0.0
+      RUPH1P(N,L,NZ,NY,NX)=0.0
       RUPNHB(N,L,NZ,NY,NX)=0.0
       RUPNOB(N,L,NZ,NY,NX)=0.0
       RUPH2B(N,L,NZ,NY,NX)=0.0
+      RUPH1B(N,L,NZ,NY,NX)=0.0
       ROXYP(N,L,NZ,NY,NX)=0.0
       RUNNHP(N,L,NZ,NY,NX)=0.0
       RUNNBP(N,L,NZ,NY,NX)=0.0
       RUNNOP(N,L,NZ,NY,NX)=0.0
       RUNNXP(N,L,NZ,NY,NX)=0.0
-      RUPPOP(N,L,NZ,NY,NX)=0.0
-      RUPPBP(N,L,NZ,NY,NX)=0.0
+      RUPP2P(N,L,NZ,NY,NX)=0.0
+      RUPP1P(N,L,NZ,NY,NX)=0.0
+      RUPP2B(N,L,NZ,NY,NX)=0.0
+      RUPP1B(N,L,NZ,NY,NX)=0.0
       CCO2A=CCO2EI(NY,NX)
       CCO2P=0.030*EXP(-2.621-0.0317*ATCA(NY,NX))*CO2EI(NY,NX)
       CO2A(N,L,NZ,NY,NX)=CCO2A*RTVLP(N,L,NZ,NY,NX)
@@ -647,6 +700,14 @@ C
       COXYP=0.032*EXP(-6.175-0.0211*ATCA(NY,NX))*OXYE(NY,NX)
       OXYA(N,L,NZ,NY,NX)=COXYA*RTVLP(N,L,NZ,NY,NX)
       OXYP(N,L,NZ,NY,NX)=COXYP*RTVLW(N,L,NZ,NY,NX)
+      CH4A(N,L,NZ,NY,NX)=0.0
+      CH4P(N,L,NZ,NY,NX)=0.0
+      Z2OA(N,L,NZ,NY,NX)=0.0
+      Z2OP(N,L,NZ,NY,NX)=0.0
+      ZH3A(N,L,NZ,NY,NX)=0.0
+      ZH3P(N,L,NZ,NY,NX)=0.0
+      H2GA(N,L,NZ,NY,NX)=0.0
+      H2GP(N,L,NZ,NY,NX)=0.0
       WFR(N,L,NZ,NY,NX)=1.0
       DO 30 NR=1,10
       RTN2(N,L,NR,NZ,NY,NX)=0.0
@@ -683,6 +744,18 @@ C
 C
 C     INITIALIZE SEED MORPHOLOGY AND BIOMASS
 C
+C     WTRVC,WTRVN,WTRVP=C,N,P in storage reserves (g)
+C     WTLFB,WTLFBN,WTLFBP=C,N,P in leaves (g)
+C     WTLSB=C in leaves+petioles (g)
+C     FDM-dry matter fraction (g DM C g FM C-1)
+C     VOLWP,VOLWC=water volume in,on canopy (m3)
+C     CPOOL,ZPOOL,PPOOL=C,N,P in canopy nonstructural pools (g)
+C     WTRT1,WTRT1N,WTRT1P=C,N,P in primary root layer (g)
+C     RTWT1,RTWT1N,RTWT1P=total C,N,P in primary root (g)
+C     WTRTL,WTRTD=total root C mass (g)
+C     WSRTL=total root protein C mass (g)
+C     CPOOLR,ZPOOLR,PPOOLR=C,N,P in root,myco nonstructural pools (g)
+C
       WTRVX(NZ,NY,NX)=GRDM(NZ,NY,NX)*PP(NZ,NY,NX)
       WTRVC(NZ,NY,NX)=WTRVX(NZ,NY,NX)
       WTRVN(NZ,NY,NX)=CNGR(NZ,NY,NX)*WTRVC(NZ,NY,NX)
@@ -716,6 +789,9 @@ C     ENDIF
       ZEROQ(NZ,NY,NX)=ZERO*PP(NZ,NY,NX)/AREA(3,NU(NY,NX),NY,NX)
       ZEROL(NZ,NY,NX)=ZERO*PP(NZ,NY,NX)*1.0E+06
 9985  CONTINUE
+C
+C     FILL OUT UNUSED ARRAYS
+C
       DO 9986 NZ=NP(NY,NX)+1,5
       TCSN0(NZ,NY,NX)=0.0
       TZSN0(NZ,NY,NX)=0.0

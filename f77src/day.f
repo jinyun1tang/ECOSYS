@@ -39,6 +39,8 @@ C
 C
 C     WRITE DATE
 C
+C     CDATE=DDMMYYYY
+C
       N=0
       NN=0
       DO 500 M=1,12
@@ -73,6 +75,10 @@ C
       TSMX(L,NY,NX)=-9999
       TSMN(L,NY,NX)=9999
 945   CONTINUE
+C
+C     RESET ANNUAL FLUX ACCUMULATORS AT START OF ANNUAL CYCLE
+C     ALAT=latitude +ve=N,-ve=S
+C
       IF((ALAT(NY,NX).GE.0.0.AND.I.EQ.1)
      2.OR.(ALAT(NY,NX).LT.0.0.AND.I.EQ.1))THEN
       UORGF(NY,NX)=0.0
@@ -167,6 +173,9 @@ C
 C
 C     CALCULATE DAYLENGTH FROM SOLAR ANGLE
 C
+C     DYLX,DLYN=daylength of previous,current day
+C     ALAT=latitude
+C
       XI=I
       IF(I.EQ.366)XI=365.5
       DECDAY=XI+100
@@ -181,6 +190,10 @@ C
       ELSE
       DYLN(NY,NX)=12.0*(1.0+2.0/3.1416*ASIN(TWILGT+AZI/DEC))
       ENDIF
+C
+C     TIME STEP OF WEARHER DATA
+C     ITYPE 1=daily,2=hourly
+C
       IF(IGO.EQ.0.OR.I.LE.ILAST)THEN
       ITYPE=IWTHR(1)
       ELSE
@@ -189,6 +202,14 @@ C
 C
 C     PARAMETERS FOR CALCULATING HOURLY RADIATION, TEMPERATURE
 C     AND VAPOR PRESSURE FROM DAILY VALUES
+C
+C     DLYN=daylength
+C     SRAD=daily radiation from weather file
+C     RMAX=maximum hourly radiation
+C     I2,I,I3=previous,current,next day
+C     TMPX,TMPN=maximum,minimum daily temperature from weather file
+C     DWPT=daily vapor pressure from weather file
+C     TAVG*,AMP*,VAVG*,VMP*=daily avgs, amps to calc hourly values in wthr.f 
 C
       IF(ITYPE.EQ.1)THEN
       IF(IETYP(NY,NX).GE.-1)THEN
@@ -220,9 +241,19 @@ C
       ENDIF
 C
 C     MODIFIERS TO TEMPERATURE, RADIATION, WIND, HUMIDITY, PRECIPITATION,
-C     IRRIGATION AND CO2 INPUTS FROM CLIMATE CHANGES ENTERED IN 'READS'
+C     IRRIGATION AND CO2 INPUTS FROM CLIMATE CHANGES ENTERED IN OPTION 
+C     FILE IN 'READS'
+C
+C     ICLM=type of climate change 1=step,2=incremental
+C     TDTPX,TDTPN=change in max,min temperature
+C     TDRAD,TDWND,TDHUM=change in radiation,windspeed,vapor pressure
+C     TDPRC,TDIRRI=change in precipitation,irrigation
+C     TDCO2,TDCN4,TDCNO=change in atm CO2,NH4,NO3 concn in precipitation      
 C
       DO 600 N=1,12
+C
+C     STEP CHANGES
+C
       IF(ICLM.EQ.1)THEN
       TDTPX(NY,NX,N)=DTMPX(N)
       TDTPN(NY,NX,N)=DTMPN(N)
@@ -234,6 +265,9 @@ C
       TDCO2(NY,NX,N)=DCO2E(N)
       TDCN4(NY,NX,N)=DCN4R(N)
       TDCNO(NY,NX,N)=DCNOR(N)
+C
+C     INCRENENTAL CHANGES
+C
       ELSEIF(ICLM.EQ.2)THEN
       TDTPX(NY,NX,N)=TDTPX(NY,NX,N)+DTMPX(N)/LYRC
       TDTPN(NY,NX,N)=TDTPN(NY,NX,N)+DTMPN(N)/LYRC
@@ -253,7 +287,10 @@ C
       DO 9990 NY=NVN,NVS
 C
 C     ATTRIBUTE MIXING COEFFICIENTS AND SURFACE ROUGHNESS PARAMETERS
-C     TO TILLAGE EVENTS FROM ARRAY LOADED IN 'READS'
+C     TO TILLAGE EVENTS FROM SOIL MANAGEMENT FILE IN 'READS'
+C
+C     ITILL=soil disturbance type 1-20:tillage,21=litter removal,22=fire,23-24=drainage
+C     CORP=soil mixing fraction used in redist.f
 C
       IF(ITILL(I,NY,NX).LE.10)THEN
       CORP=AMIN1(1.0,AMAX1(0.0,ITILL(I,NY,NX)/10.0))
@@ -266,14 +303,31 @@ C     WRITE(*,2227)'TILL',I,ITILL(I,NY,NX),CORP,XCORP(NY,NX)
 C
 C     AUTOMATIC IRRIGATION IF SELECTED
 C
+C     DATA(6)=irrigation file name
+C     IIRRA=start,finish dates(1,2),hours(3,4) of automated irrigation
+C     DIRRX=depth to which water depletion and rewatering is calculated(1)
+C     DIRRA=depth to,at which irrigation is applied(1,2) 
+C     POROS,FC,WP=water content at saturation,field capacity,wilting point
+C     CIRRA= fraction of FC to which irrigation will raise SWC
+C     FW=fraction of soil layer in irrigation zone
+C     FZ=SWC at which irrigation is triggered 
+C     VOLX,VOLW,VOLI=total,water,ice volume
+C     IFLGV=flag for irrigation criterion,0=SWC,1=canopy water potential 
+C     FIRRA=depletion of SWC from CIRRA to WP(IFLGV=0),or minimum canopy 
+C     water potential(IFLGV=1), to trigger irrigation
+C     RR=total irrigation requirement
+C     RRIG=hourly irrigation amount applied in wthr.f
+C
       IF(DATA(6)(1:4).EQ.'auto')THEN
       IF(I.GE.IIRRA(1,NY,NX).AND.I.LE.IIRRA(2,NY,NX))THEN
       TFZ=0.0
       TWP=0.0
       TVW=0.0
+      DIRRA1=DIRRA(1,NY,NX)+CDPTH(NU(NY,NX)-1,NY,NX)
+      DIRRA2=DIRRA(2,NY,NX)+CDPTH(NU(NY,NX)-1,NY,NX)
       DO 165 L=NU(NY,NX),NL(NY,NX)
-      IF(CDPTH(L-1,NY,NX).LT.DIRRA(1,NY,NX))THEN
-      FW=AMIN1(1.0,(DIRRA(1,NY,NX)-CDPTH(L-1,NY,NX))
+      IF(CDPTH(L-1,NY,NX).LT.DIRRA1)THEN
+      FW=AMIN1(1.0,(DIRRA1-CDPTH(L-1,NY,NX))
      2/(CDPTH(L,NY,NX)-CDPTH(L-1,NY,NX)))
       FZ=AMIN1(POROS(L,NY,NX),WP(L,NY,NX)+CIRRA(NY,NX)
      2*(FC(L,NY,NX)-WP(L,NY,NX)))
@@ -290,9 +344,9 @@ C
       RRIG(J,I,NY,NX)=RR/(IIRRA(4,NY,NX)-IIRRA(3,NY,NX)+1)
 170   CONTINUE
       WDPTH(I,NY,NX)=DIRRA(2,NY,NX)
-      WRITE(19,2222)'auto',IYRC,I,IIRRA(3,NY,NX),IIRRA(4,NY,NX)
+      WRITE(*,2222)'auto',IYRC,I,IIRRA(3,NY,NX),IIRRA(4,NY,NX)
      2,IFLGV(NY,NX),RR,TFZ,TVW,TWP,FIRRA(NY,NX),PSILZ(1,NY,NX)
-     2,CIRRA(NY,NX),DIRRA(1,NY,NX),WDPTH(I,NY,NX)
+     2,CIRRA(NY,NX),DIRRA1,WDPTH(I,NY,NX)
      3,(RRIG(J,I,NY,NX),J=1,24)
 2222  FORMAT(A8,5I6,40E12.4)
       ENDIF
