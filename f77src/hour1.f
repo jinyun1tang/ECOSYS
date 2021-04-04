@@ -63,7 +63,7 @@ C
      5,ZD50(JY,JX),IALBS(4,4)
 C
 C     *SG=diffusivity (m2 h-1):CG=CO2g,CL=CO2s,CH=CH4g,CQ=CH4s,OG=O2g
-C     OL=O2s,ZG=N2g,ZL=N2g,Z2=N2Og,ZV=N2Os,ZH=NH3g,ZN=NH3s,ZO=NO3
+C     OL=O2s,ZG=N2g,ZL=N2s,Z2=N2Og,ZV=N2Os,ZH=NH3g,ZN=NH3s,ZO=NO3
 C     PO=H2PO4,OC=DOC,ON=DON,OP=DOP,OA=acetate,WG=H2Og,AL=Al,FE=Fe
 C     HY=H,CA=Ca,GM=Mg,AN=Na,AK=K,OH=OH,C3=CO3,HC=HCO3,SO=SO4,CL=Cl
 C     HG=H2g,HL=H2s
@@ -90,16 +90,15 @@ C
 C
 C     ALBRW,ALBPW=stalk albedo for shortwave,PAR, VISC=water viscosity
 C     BKDSX=maximm soil bulk density, ZW=snowpack surface roughness (m)
-C     CFW=stalk clumping factor, FPSISR=parameter for litter water
-C     potential, FORGW=minimum SOC or organic soil (g Mg-1), THETPW=minimum
-C     air-filled porosity for saturation (m3 m-3), CML,CM0=tortuosity
-C     effect on porosity in diffusivity, RAM=minimum boundary layer
-C     resistance (h m-1)
+C     CFW=stalk clumping factor,FORGW=minimum SOC or organic soil (g Mg-1)
+C     THETPW=minimum air-filled porosity for saturation (m3 m-3)
+C     CML,CM0=tortuosity effect on porosity in diffusivity
+C     RAM=minimum boundary layer resistance (h m-1)
 C
       PARAMETER (ALBRW=0.1,ALBPW=0.1,ABSRW=1.0-ALBRW,ABSPW=1.0-ALBPW)
-      PARAMETER (VISC=0.28E-12,BKDSX=1.89,ZW=0.01,CFW=0.5,FPSISR=-4.0
+      PARAMETER (VISC=0.28E-12,BKDSX=1.89,ZW=0.01,CFW=0.5
      2,FORGW=0.25E+06,DTHETW=1.0E-06,THETPW=0.01,THETWP=1.0-THETPW 
-     3,CML=2.1,CM0=2.1,RAM=2.78E-03)
+     3,RAM=2.78E-03)
 C
 C     XVOLWC=foliar water retention capacity (m3 m-2)
 C     THETRX=litter water retention capacity (m3 g C-1) 
@@ -137,6 +136,8 @@ C     CONCENTRATIONS OF CO2, CH4, O2, N2, N2O, NH3, H2 IN ATMOSPHERE,
 C     PRECIPITATION AND IRRIGATION FROM MIXING RATIOS READ IN 'READS'
 C
 C     C*E,C*R,C*Q=atmospheric,precipitation,irrigation solute concentrations
+C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
+C             :*ZN3*=NH3,*H2G*=H2
 C
       DO 9145 NX=NHW,NHE
       DO 9140 NY=NVN,NVS
@@ -583,17 +584,70 @@ C
 9905  CONTINUE
       ENDIF
 C
-C     RESET SOIL PHYSICAL PROPERTIES (DENSITY, TEXTURE)
+C     RESET SURFACE LITTER PHYSICAL PROPERTIES (DENSITY, TEXTURE)
 C     AFTER DISTURBANCES (E.G. TILLAGE, EROSION)
 C
 C     IFLGS=disturbance flag
 C     XHS,XH=rate constants for substrate limitations in snowpack,soil fluxes
 C     BKDS,BKDSI=current,initial bulk density
 C
+      VOLWRX(NY,NX)=AMAX1(0.0,THETRX(0)*RC0(0,NY,NX)
+     2+THETRX(1)*RC0(1,NY,NX)+THETRX(2)*RC0(2,NY,NX))
+      VOLR(NY,NX)=AMAX1(0.0,RC0(0,NY,NX)*1.0E-06/BKRS(0)
+     2+RC0(1,NY,NX)*1.0E-06/BKRS(1)+RC0(2,NY,NX)*1.0E-06/BKRS(2))
+      IF(VOLR(NY,NX).GT.ZEROS(NY,NX))THEN
+      POROS0(NY,NX)=VOLWRX(NY,NX)/VOLR(NY,NX)
+      ELSE
+      POROS0(NY,NX)=THETRX(1)/BKRS(1)
+      ENDIF
 C     WRITE(*,1116)'IFLGS',IYRC,I,J,IFLGS(NY,NX)
 1116  FORMAT(A8,4I6) 
       IF(IFLGS(NY,NX).NE.0)THEN
       BKDS(0,NY,NX)=BKDS(NUI(NY,NX),NY,NX)
+      PSL(0,NY,NX)=LOG(POROS0(NY,NX))
+      FCL(0,NY,NX)=LOG(FC(0,NY,NX))
+      WPL(0,NY,NX)=LOG(WP(0,NY,NX))
+      PSD(0,NY,NX)=PSL(0,NY,NX)-FCL(0,NY,NX)
+      FCD(0,NY,NX)=FCL(0,NY,NX)-WPL(0,NY,NX)
+      SRP(0,NY,NX)=1.00
+      THETY(0,NY,NX)=EXP((PSIMX(NY,NX)-LOG(-PSIHY))
+     2*FCD(0,NY,NX)/PSIMD(NY,NX)+FCL(0,NY,NX))
+      SUM2=0.0
+      DO 1220 K=1,100
+      XK=K-1
+      THETK(K)=POROS0(NY,NX)-(XK/100.0*POROS0(NY,NX))
+      IF(THETK(K).LT.FC(0,NY,NX))THEN
+      PSISK(K)=AMAX1(PSIHY,-EXP(PSIMX(NY,NX)
+     2+((FCL(0,NY,NX)-LOG(THETK(K)))
+     3/FCD(0,NY,NX)*PSIMD(NY,NX))))
+      ELSEIF(THETK(K).LT.POROS0(NY,NX))THEN 
+      PSISK(K)=-EXP(PSIMS(NY,NX)
+     2+(((PSL(0,NY,NX)-LOG(THETK(K)))
+     3/PSD(0,NY,NX))**SRP(0,NY,NX)*PSISD(NY,NX)))
+      ELSE
+      PSISK(K)=PSISE(0,NY,NX)
+      ENDIF
+      SUM2=SUM2+(2*K-1)/(PSISK(K)**2)
+1220  CONTINUE
+      DO 1235 K=1,100
+      SUM1=0.0
+      XK=K-1
+      YK=((100.0-XK)/100.0)**1.33
+      DO 1230 M=K,100
+      SUM1=SUM1+(2*M+1-2*K)/(PSISK(M)**2)
+1230  CONTINUE
+      HCND(3,K,0,NY,NX)=SCNV(0,NY,NX)*YK*SUM1/SUM2
+      HCND(1,K,0,NY,NX)=0.0
+      HCND(2,K,0,NY,NX)=0.0
+C     WRITE(*,3534)'PSI',I,J,K,THETK(K),PSISK(K),HCND(3,K,0,NY,NX) 
+C    2,PSL(0,NY,NX),LOG(THETK(K)),POROS0(NY,NX),FC(0,NY,NX),WP(0,NY,NX)
+C    3,SRP(0,NY,NX),VOLWRX(NY,NX),VOLR(NY,NX)
+3534  FORMAT(A8,3I4,12E12.4)
+1235  CONTINUE
+C
+C     RESET SOIL PHYSICAL PROPERTIES (DENSITY, TEXTURE)
+C     AFTER DISTURBANCES (E.G. TILLAGE, EROSION)
+C
       DO 9975 L=NUI(NY,NX),NLI(NY,NX)
 C
 C     AREA,DLYR=lateral(1,2), vertical(3) area,thickness of soil layer 
@@ -619,7 +673,7 @@ C
 C     BKVL=soil mass
 C     C*=concentration,ORGC=SOC,SAND=sand,SILT=silt,CLAY=clay
 C     PTDS=particle density
-C     POROS,POROQ=porosity,tortuosity used in diffusivity
+C     POROS=porosity used in diffusivity
 C     VOLA,VOLW,VOLI,VOLP=total,water-,ice-,air-filled micropore volume
 C     VOLAH,VOLWH,VOLIH,VOLPH=total,water-,ice-,air-filled macropore volume
 C     EHUM=fraction of microbial decomposition product allocated to humus 
@@ -655,7 +709,6 @@ C
       PTDS=0.0
       POROS(L,NY,NX)=1.0
       ENDIF
-      POROQ(L,NY,NX)=1.0+CML*POROS(L,NY,NX)
 C     VOLA(L,NY,NX)=AMAX1(POROS(L,NY,NX)*VOLY(L,NY,NX)
 C    2,VOLW(L,NY,NX)+VOLI(L,NY,NX))
 C     VOLAH(L,NY,NX)=AMAX1(FHOL(L,NY,NX)*VOLT(L,NY,NX)
@@ -916,8 +969,6 @@ C     FCR=litter water content at -0.01 MPa
 C     THETY=litter hygroscopic water content
 C
       CORGC(0,NY,NX)=0.55E+06
-      FCR(NY,NX)=(-0.01/PSISE(0,NY,NX))**(1.0/FPSISR)
-      THETY(0,NY,NX)=(PSIHY/PSISE(0,NY,NX))**(1.0/FPSISR)
 C
 C     SOIL SURFACE WATER STORAGE CAPACITY
 C
@@ -1969,10 +2020,6 @@ C     THETWZ,THETIZ,DPTH0=litter excess water,ice,water+ice depth
 C     DLYR=litter thickness
 C     PSISM,PSISE=litter matric,saturation water potential
 C
-      VOLWRX(NY,NX)=AMAX1(0.0,THETRX(0)*RC0(0,NY,NX)
-     2+THETRX(1)*RC0(1,NY,NX)+THETRX(2)*RC0(2,NY,NX))
-      VOLR(NY,NX)=AMAX1(0.0,RC0(0,NY,NX)*1.0E-06/BKRS(0)
-     2+RC0(1,NY,NX)*1.0E-06/BKRS(1)+RC0(2,NY,NX)*1.0E-06/BKRS(2))
       TVOLG0=AMAX1(0.0,VOLW(0,NY,NX)+VOLI(0,NY,NX)-VOLWRX(NY,NX))
       VOLT(0,NY,NX)=TVOLG0+VOLR(NY,NX)
       IF(VOLT(0,NY,NX).GT.ZEROS2(NY,NX))THEN
@@ -1995,20 +2042,32 @@ C
       THETI(0,NY,NX)=0.0
       THETP(0,NY,NX)=0.0
       ENDIF
-      THETWZ(0,NY,NX)=AMAX1(0.0,(VOLW(0,NY,NX)-VOLWRX(NY,NX))
+      THETWZ0=AMAX1(0.0,(VOLW(0,NY,NX)-VOLWRX(NY,NX))
      2/AREA(3,NU(NY,NX),NY,NX))
-      THETIZ(0,NY,NX)=AMAX1(0.0,(VOLI(0,NY,NX)-VOLWRX(NY,NX))
+      THETIZ0=AMAX1(0.0,(VOLI(0,NY,NX)-VOLWRX(NY,NX))
      2/AREA(3,NU(NY,NX),NY,NX))
-      DPTH0(NY,NX)=THETWZ(0,NY,NX)+THETIZ(0,NY,NX)
+C     THETWZ(0,NY,NX)=THETWZ0
+C     THETIZ(0,NY,NX)=THETIZ0
+      THETWZ(0,NY,NX)=AMAX1(0.0,AMIN1(1.0
+     2,VOLW(0,NY,NX)/VOLR(NY,NX)))
+      THETIZ(0,NY,NX)=AMAX1(0.0,AMIN1(1.0
+     2,VOLI(0,NY,NX)/VOLR(NY,NX)))
+      DPTH0(NY,NX)=THETWZ0+THETIZ0
       DLYR(3,0,NY,NX)=VOLX(0,NY,NX)/AREA(3,0,NY,NX)
-      IF(ORGC(0,NY,NX).GT.ZEROS(NY,NX)
+      IF(VOLR(NY,NX).GT.ZEROS(NY,NX)
      2.AND.VOLW(0,NY,NX).GT.ZEROS2(NY,NX))THEN
-      IF(VOLWRX(NY,NX).GT.ZEROS(NY,NX))THEN
-      THETWR=AMAX1(1.0E-02,AMIN1(1.0,VOLW(0,NY,NX)/VOLWRX(NY,NX)))
+      THETWR=AMIN1(VOLWRX(NY,NX),VOLW(0,NY,NX))/VOLR(NY,NX)
+      IF(THETWR.LT.FC(0,NY,NX))THEN
+      PSISM(0,NY,NX)=AMAX1(PSIHY,-EXP(PSIMX(NY,NX)
+     2+((FCL(0,NY,NX)-LOG(THETWR))
+     3/FCD(0,NY,NX)*PSIMD(NY,NX))))
+      ELSEIF(THETWR.LT.POROS(0,NY,NX))THEN 
+      PSISM(0,NY,NX)=-EXP(PSIMS(NY,NX)
+     2+(((PSL(0,NY,NX)-LOG(THETWR))
+     3/PSD(0,NY,NX))**SRP(0,NY,NX)*PSISD(NY,NX)))
       ELSE
-      THETWR=1.0
+      PSISM(0,NY,NX)=PSISE(0,NY,NX)
       ENDIF
-      PSISM(0,NY,NX)=PSISE(0,NY,NX)*THETWR**FPSISR
 C
 C     LITTER NH4,NH3,NO3,NO2,HPO4,H2PO4 CONCENTRATIONS
 C
@@ -2057,15 +2116,12 @@ C
 C
 C     LITTER GAS CONCENTRATIOS 
 C    
-C     POROQ=tortuosity for diffusivity
 C     C*G=soil gas gaseous concentration
 C     *E=atmospheric concentration
 C     TKS,TCS=litter temperature (K,C)
 C     S*L=gas solubility
 C     C*S=soil gas aqueous concentration
 C     
-C
-      POROQ(0,NY,NX)=1.0+CM0*POROS(0,NY,NX)
       CCO2G(0,NY,NX)=CO2E(NY,NX)*5.36E-04*273.15/TKS(0,NY,NX)
       CCH4G(0,NY,NX)=CH4E(NY,NX)*5.36E-04*273.15/TKS(0,NY,NX)
       COXYG(0,NY,NX)=OXYE(NY,NX)*1.43E-03*273.15/TKS(0,NY,NX)
@@ -2209,7 +2265,7 @@ C
 C     SAZI,SCOS=solar azimuth,cosine of solar angle
 C     BETAG=incident solar angle at ground surface
 C     GCOS,GSIN=cos,sin of ground surface
-C     ZNOON=hour of solar noon
+C     ZNOON=hour of solar noon from weather file
 C
       IF(SSIN(NY,NX).GT.ZERO)THEN
       SAZI=0.2618*(ZNOON(NY,NX)-J)+4.7124
@@ -2793,8 +2849,8 @@ C     ZZ=reference height for wind speed
 C
       ARLSC=ARLFC(NY,NX)+ARSTC(NY,NX)
       IF(ARLSC.GT.ZEROS(NY,NX)
-     2.AND.ZT(NY,NX).GT.DPTHS(NY,NX)
-     3.AND.ZT(NY,NX).GT.DPTH0(NY,NX))THEN
+     2.AND.ZT(NY,NX).GT.DPTHS(NY,NX)-ZERO
+     3.AND.ZT(NY,NX).GT.DPTH0(NY,NX)-ZERO)THEN
       ARLSG=ARLSC/AREA(3,NU(NY,NX),NY,NX)
       ZX=EXP(-0.5*ARLSG)
       ZY=1.0-ZX

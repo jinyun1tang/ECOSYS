@@ -36,6 +36,7 @@ C     FVLWB,FCH4F=maximum SWC,CH4 emission fraction for combustion
 C     PSIHY=hygroscopic water potential (MPa)
 C     FCI,WPI=FC,WP for water retention by ice (MPa)
 C     CDPTHSI=depth to bottom of snowpack layers
+C     POROQ=Penman Water Linear Reduction tortuosity used in gas flux calculations
 C 
       PARAMETER (DCKR=0.25,DCKM=2.5E+04,PSIPS=-0.5E-03,RDN=57.29577951)
       DATA OMCI/0.005,0.050,0.005,0.050,0.050,0.005,0.050,0.050,0.005
@@ -50,10 +51,11 @@ C
       DATA OMCA/0.06,0.02,0.01,0.0,0.01,0.0,0.0/
       DATA CNRH/3.33E-02,3.33E-02,3.33E-02,5.00E-02,12.50E-02/
       DATA CPRH/3.33E-03,3.33E-03,3.33E-03,5.00E-03,12.50E-03/
-      DATA BKRS/0.050,0.0167,0.0167/
+      DATA BKRS/0.050,0.0167,0.050/
       DATA FORGC,FVLWB,FCH4F/0.1E+06,1.0,0.01/
       DATA PSIHY,FCI,WPI/-2500.0,0.05,0.025/
       DATA CDPTHSI/0.05,0.15,0.30,0.60,1.00/
+      DATA POROQ/0.66/
 C
 C     NPH=no. of cycles h-1 for water, heat and solute flux calculns
 C     NPT=number of cycles NPH-1 for gas flux calculations
@@ -192,13 +194,13 @@ C
       CPOFC(2,1)=0.0020
       CPOFC(3,1)=0.0020
       CPOFC(4,1)=0.0020
-      CNOFC(1,2)=0.005
-      CNOFC(2,2)=0.005
-      CNOFC(3,2)=0.005
+      CNOFC(1,2)=0.020
+      CNOFC(2,2)=0.020
+      CNOFC(3,2)=0.020
       CNOFC(4,2)=0.020
-      CPOFC(1,2)=0.0005
-      CPOFC(2,2)=0.0005
-      CPOFC(3,2)=0.0005
+      CPOFC(1,2)=0.0020
+      CPOFC(2,2)=0.0020
+      CPOFC(3,2)=0.0020
       CPOFC(4,2)=0.0020
       FL(1)=0.55
       FL(2)=0.45
@@ -1051,7 +1053,7 @@ C
       THW(L,NY,NX)=FC(L,NY,NX)
       ELSEIF(THW(L,NY,NX).EQ.0.0)THEN 
       THW(L,NY,NX)=WP(L,NY,NX)
-      ELSE
+      ELSEIF(THW(L,NY,NX).LT.0.0)THEN 
       THW(L,NY,NX)=0.0
       ENDIF
       IF(THI(L,NY,NX).GT.1.0)THEN
@@ -1063,7 +1065,7 @@ C
       ELSEIF(THI(L,NY,NX).EQ.0.0)THEN 
       THI(L,NY,NX)=AMAX1(0.0,AMIN1(WP(L,NY,NX)
      2,POROS(L,NY,NX)-THW(L,NY,NX)))
-      ELSE
+      ELSEIF(THI(L,NY,NX).LT.0.0)THEN 
       THI(L,NY,NX)=0.0
       ENDIF
       THETW(L,NY,NX)=THW(L,NY,NX)

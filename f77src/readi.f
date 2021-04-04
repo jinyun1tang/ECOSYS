@@ -36,7 +36,7 @@ C
       OPEN(20,FILE='logfile3',STATUS='UNKNOWN')
       OPEN(1,FILE=TRIM(PREFIX)//DATA(1),STATUS='OLD')
       OPEN(7,FILE=TRIM(PREFIX)//DATA(2),STATUS='OLD')
-      WRITE(18,5000)'  24 MAR 2021'
+      WRITE(18,5000)'  02 APR 2021'
 5000  FORMAT(A16)
       NF=1
       NFX=1
@@ -154,10 +154,10 @@ C
 C
 C     SURFACE PROPERTIES 
 C
-C     PSIFC,PSIWP=water potls at field capacity,wilting point (MPa)
+C     PSIFC,PSIWP=water potentials at field capacity,wilting point (MPa)
 C     ALBS=wet soil albedo
 C     PH=litter pH
-C     RSC,RSC,RSP=C,N,P in fine(1),woody(0),manure(2) surface litter (g m-2)
+C     RSC,RSC,RSP=C,N,P in fine(1,0),woody(0,0),manure(2,0) surface litter (g m-2)
 C     IXTYP=surface litter type:1=plant,2=manure 
 C     NUI,NJ=number of soil surface layer,maximum rooting layer
 C     NL1,NL2=number of additional layers below NJ with,without data in file
@@ -294,6 +294,9 @@ C
       RSC(1,0,NY,NX)=AMAX1(1.0E-06,RSC(1,0,NY,NX))
       RSN(1,0,NY,NX)=AMAX1(0.04E-06,RSN(1,0,NY,NX))
       RSP(1,0,NY,NX)=AMAX1(0.004E-06,RSP(1,0,NY,NX))
+      FC(0,NY,NX)=0.0667
+      WP(0,NY,NX)=0.0333
+      SCNV(0,NY,NX)=10.0*0.098
 C
 C     FILL OUT SOIL BOUNDARY LAYERS ABOVE ROOTING ZONE (NOT USED)
 C
@@ -452,8 +455,8 @@ C     BKDSI(L,NY,NX)=BKDSI(L,NY,NX)/(1.0-FHOL(L,NY,NX))
       FMPR(L,NY,NX)=(1.0-ROCK(L,NY,NX))*(1.0-FHOL(L,NY,NX))
 C     FC(L,NY,NX)=FC(L,NY,NX)/(1.0-FHOL(L,NY,NX))
 C     WP(L,NY,NX)=WP(L,NY,NX)/(1.0-FHOL(L,NY,NX))
-      SCNV(L,NY,NX)=0.1*SCNV(L,NY,NX)*FMPR(L,NY,NX)
-      SCNH(L,NY,NX)=0.1*SCNH(L,NY,NX)*FMPR(L,NY,NX)
+      SCNV(L,NY,NX)=0.098*SCNV(L,NY,NX)*FMPR(L,NY,NX)
+      SCNH(L,NY,NX)=0.098*SCNH(L,NY,NX)*FMPR(L,NY,NX)
       CCLAY(L,NY,NX)=AMAX1(0.0,1.0E+03-(CSAND(L,NY,NX)
      2+CSILT(L,NY,NX)))
       CORGC(L,NY,NX)=CORGC(L,NY,NX)*1.0E+03

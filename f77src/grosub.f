@@ -136,8 +136,9 @@ C
       DATA RCCQ/0.417,0.833,0.833,0.833/
 C
 C     RTSK=relative primary root sink strength 0.25=shallow,4.0=deep root profile
-C     FXRN=rate constant for plant-bacteria nonstructural C,N,P exchange (h-1)
-C     FXFB,FXFR=rate constant for leaf,root-storage nonstructl C,N,P exchange (h-1)
+C     FXRN=rate constant for plant-bacteria nonstructl C,N,P exchange (h-1)
+C     FXFB=rate constant for leaf-storage nonstructl C,N,P exchange (h-1)
+C     FXFR=rate constant for root-storage nonstructl C,N,P exchange (h-1)
 C     FPART=parameter for allocating nonstructural C to shoot organs
 C     FXSH,FXRT=shoot-root partitioning of storage C during leafout 
 C     FRSV=rate constant for remobiln of storage C,N,P during leafout (h-1)
@@ -151,8 +152,8 @@ C     FVRN=fraction of hours required for leafoff to initiate remobilization
 C
       DATA RTSK/0.25,1.0,4.0,4.0/
       DATA FXRN/0.25,0.125,0.0625,0.225,0.075,0.025/
-      DATA FXFB/1.0E-02,1.0E-02,1.0E-05,2.5E-05/
-      DATA FXFR/1.0E-05,1.0E-05,1.0E-05,1.0E-05/
+      DATA FXFB/1.0E-02,1.0E-02,1.0E-05,1.0E-04/
+      DATA FXFR/1.0E-02,1.0E-02,1.0E-05,1.0E-05/
       DATA FPART1/1.00/,FPART2/0.40/
       DATA FXSH/0.50,0.75/,FXRT/0.50,0.25/
       DATA FRSV/0.025,0.025,0.001,0.001/
@@ -693,17 +694,18 @@ C     RADP=total PAR absorbed by canopy
 C     CO2Q=canopy air CO2 concentration
 C
       IF(IDAY(1,NB,NZ,NY,NX).NE.0)THEN
+C     IF(NZ.EQ.1.OR.NZ.EQ.4)THEN
+C     WRITE(*,5651)'CHECK1',I,J,NZ,NB,IDAY(1,NB,NZ,NY,NX)
+C    2,FDBK(NB,NZ,NY,NX),RADP(NZ,NY,NX),CO2Q(NZ,NY,NX)
+C    3,ARLF(1,NB,NZ,NY,NX)
+5651  FORMAT(A8,5I4,12E12.4)
+C     ENDIF
       IF(FDBK(NB,NZ,NY,NX).NE.0)THEN
       IF(SSIN(NY,NX).GT.0.0.AND.RADP(NZ,NY,NX).GT.0.0
      2.AND.CO2Q(NZ,NY,NX).GT.0.0)THEN
       CO2F=0.0
       CH2O=0.0
       IF(IGTYP(NZ,NY,NX).NE.0.OR.WFNC.GT.0.0)THEN
-C     IF(NZ.EQ.1.OR.NZ.EQ.4)THEN
-C     WRITE(*,5651)'CHECK1',I,J,NZ,NB,IDAY(1,NB,NZ,NY,NX)
-C    2,FDBK(NB,NZ,NY,NX),RADP(NZ,NY,NX),CO2Q(NZ,NY,NX),WFNC
-5651  FORMAT(A8,5I4,12E12.4)
-C     ENDIF
 C
 C     FOR EACH NODE
 C
@@ -835,14 +837,14 @@ C     VCO2(ICO2I,I,NZ)=VCO2(ICO2I,I,NZ)
 C    2+(VL*SURFX(N,L,K,NB,NZ,NY,NX)*TAUS(L+1,NY,NX))*0.0432
 C     IF(NB.EQ.1.AND.M.EQ.1.AND.N.EQ.3.AND.K.EQ.KLEAF(NB,NZ,NY,NX)
 C    2.AND.(I/10)*10.EQ.I.AND.J.EQ.12)THEN
-C     WRITE(20,4444)'VLD4',IYRC,I,J,NZ,L,M,N,K,VL,PAR(N,M,L,NZ,NY,NX) 
+C     WRITE(*,4444)'VLD4',IYRC,I,J,NZ,L,M,N,K,VL,PAR(N,M,L,NZ,NY,NX) 
 C    2,PAR(N,M,L,NZ,NY,NX)*TAUS(L+1,NY,NX)+PARDIF(N,M,L,NZ,NY,NX)
 C    3*TAU0(L+1,NY,NX)
 C    2,RAPS,TKC(NZ,NY,NX),CO2Q(NZ,NY,NX),ETGR4(K,NB,NZ,NY,NX)
 C    3,CBXN4(K,NB,NZ,NY,NX),VGRO4(K,NB,NZ,NY,NX),EGRO
 C    3,FDBK4(K,NB,NZ,NY,NX),CH2O4(K),WFN4,VGROX,EGROX
 C    4,VCGR4(K,NB,NZ,NY,NX),CO2X,CO2C,CBXNX
-C    5,RS,RSL
+C    5,RS,RSL,SURFX(N,L,K,NB,NZ,NY,NX)
 4444  FORMAT(A8,8I4,40E12.4)
 C     ENDIF
 C
@@ -984,7 +986,7 @@ C    2,RAPS,TKC(NZ,NY,NX),CO2Q(NZ,NY,NX),ETGR4(K,NB,NZ,NY,NX)
 C    3,CBXN4(K,NB,NZ,NY,NX),VGRO4(K,NB,NZ,NY,NX),EGRO
 C    3,FDBK4(K,NB,NZ,NY,NX),CH2O4(K),WFN4,VGROX,EGROX
 C    4,VCGR4(K,NB,NZ,NY,NX),CO2X,CO2C,CBXNX
-C    5,RS,RSL
+C    5,RS,RSL,SURFX(N,L,K,NB,NZ,NY,NX)
 4455  FORMAT(A8,8I4,40E12.4)
 C
 C     C3 CARBOXYLATION REACTIONS IN IN BUNDLE SHEATH OF C4 PLANTS 
@@ -3125,7 +3127,7 @@ C
       WGLFLP(L,K,NB,NZ,NY,NX)=WGLFLP(L,K,NB,NZ,NY,NX)+YWGLFP
       ARLFV(L,NZ,NY,NX)=ARLFV(L,NZ,NY,NX)+YARLF
       WGLFV(L,NZ,NY,NX)=WGLFV(L,NZ,NY,NX)+YWGLF
-C     IF(J.EQ.12)THEN
+C     IF(NZ.EQ.2)THEN
 C     WRITE(*,4813)'GRO',I,J,NZ,NB,K,KK,L,LHTLFL,LHTLFU
 C    2,FRACL,HTLFU,HTLFL,ZL(L-1,NY,NX),ARLFB(NB,NZ,NY,NX) 
 C    3,ARLF(K,NB,NZ,NY,NX),WTLFB(NB,NZ,NY,NX),WGLF(K,NB,NZ,NY,NX)
@@ -3253,20 +3255,20 @@ C     SURFXX=0.0
       DO 500 K=1,25
 C     ARLFXB=ARLFXB+ARLF(K,NB,NZ,NY,NX)
       IF(ARLF(K,NB,NZ,NY,NX).GT.0.0
-     2.AND.ZC(NZ,NY,NX).GT.DPTHS(NY,NX))THEN
+     2.AND.ZC(NZ,NY,NX).GT.DPTHS(NY,NX)-ZERO)THEN
       DO 700 L=JC,1,-1
 C     ARLFXL=ARLFXL+ARLFL(L,K,NB,NZ,NY,NX) 
       DO 800 N=1,4
       SURF(N,L,K,NB,NZ,NY,NX)=AMAX1(0.0,CLASS(N,NZ,NY,NX)
      2*0.25*ARLFL(L,K,NB,NZ,NY,NX))
 C     SURFXX=SURFXX+SURF(N,L,K,NB,NZ,NY,NX)
-C     IF(I.EQ.151.AND.(NZ.EQ.1.OR.NZ.EQ.4))THEN
+C     IF(NZ.EQ.2)THEN
 C     WRITE(*,6363)'SURF',I,J,NX,NY,NZ,NB,K,L,N
 C    2,ARLFL(L,K,NB,NZ,NY,NX)
 C    2,SURF(N,L,K,NB,NZ,NY,NX),CLASS(N,NZ,NY,NX),ARLF(K,NB,NZ,NY,NX)
 C    3,DPTHS(NY,NX),ARLFXB,ARLFXL,SURFXX,ARLF(0,NB,NZ,NY,NX)
-C    4,ARLFB(NB,NZ,NY,NX)
-6363  FORMAT(A8,9I4,12E16.8)
+C    4,ARLFB(NB,NZ,NY,NX),ZC(NZ,NY,NX)
+6363  FORMAT(A8,9I4,20E12.4)
 C     ENDIF 
 800   CONTINUE
 700   CONTINUE
@@ -3980,7 +3982,8 @@ C     CPOOLR,ZPOOLR,PPOOLR=non-structural C,N,P mass in root
 C     WTRVC,WTRVN,WTRVP=storage C,N,P
 C     ISTYP=growth habit:0=annual,1=perennial from PFT file
 C     UPNH4R,UPPO4R=N,P transfer from storage to root
-C     FRSV=rate constant for remobiln of storage C,N,P during leafout C     FXRT=root partitioning of storage C during leafout 
+C     FRSV=rate constant for remobiln of storage C,N,P during leafout 
+C     FXRT=root partitioning of storage C during leafout 
 C 
       CPOOLM=0.0
       ZPOOLM=0.0
@@ -6639,11 +6642,11 @@ C
       CNL=0.0
       CPL=0.0
       ENDIF
-      XFRCX=FXFR(IBTYP(NZ,NY,NX))
+      XFRCX=FXFR(IGTYP(NZ,NY,NX))
      2*AMAX1(0.0,CPOOLR(N,L,NZ,NY,NX))
-      XFRNX=FXFR(IBTYP(NZ,NY,NX))
+      XFRNX=FXFR(IGTYP(NZ,NY,NX))
      2*AMAX1(0.0,ZPOOLR(N,L,NZ,NY,NX))*(1.0+CNL)
-      XFRPX=FXFR(IBTYP(NZ,NY,NX))
+      XFRPX=FXFR(IGTYP(NZ,NY,NX))
      2*AMAX1(0.0,PPOOLR(N,L,NZ,NY,NX))*(1.0+CPL)
       XFRC=AMIN1(XFRCX,XFRNX/CNMN,XFRPX/CPMN)
       XFRN=AMIN1(XFRNX,XFRC*CNMX,XFRPX*CNMX/CPMN*0.5)
@@ -6918,8 +6921,10 @@ C    2/AREA(3,NU(NY,NX),NY,NX)))
       HVST(NZ,I,NY,NX)=ZL(L-1,NY,NX)+((ARLFY-ARLFR)
      2/ARLFT(L,NY,NX))*(ZL(L,NY,NX)-ZL(L-1,NY,NX))
       ENDIF
-      ARLFR=ARLFR+ARLFT(L,NY,NX)
+      ELSE
+      HVST(NZ,I,NY,NX)=0.0
       ENDIF 
+      ARLFR=ARLFR+ARLFT(L,NY,NX)
 C     WRITE(*,6544)'HVST',I,J,L,NZ,IHVST(NZ,I,NY,NX),ARLFC(NY,NX) 
 C    2,ARLFT(L,NY,NX),ARLFY,ARLFR,ZL(L,NY,NX),ZL(L-1,NY,NX)
 C    3,ARLFV(L,NZ,NY,NX),HVST(NZ,I,NY,NX)
