@@ -269,7 +269,7 @@ C
 C
 C     INITIALIZE SURFACE SOLUTE FLUXES FROM ATMOSPHERE
 C
-C     X*FLS,X*FHS=solute flux in macropores,micropores
+C     X*FLS,X*FHS=hourly solute flux in macropores,micropores
 C
       DO 8855 K=0,4
       IF(K.LE.2)THEN
@@ -327,7 +327,7 @@ C
 C     HOURLY SOLUTE FLUXES FROM ATMOSPHERE TO SOIL SURFACE
 C     IF RAINFALL AND IRRIGATION IS ZERO IF SNOWPACK IS PRESENT
 C
-C     X*FLS,X*FHS=solute flux to macropores,micropores
+C     X*FLS,X*FHS=hourly solute flux to macropores,micropores
 C
       XCOFLS(3,0,NY,NX)=0.0
       XCHFLS(3,0,NY,NX)=0.0
@@ -701,8 +701,8 @@ C     R*FLU,R*FBU=subsurface solute flux in non-band,band
 C     solute codes:*OC*=DOC,*ON:=DON,*OP*=DOP,*OA*=acetate,*N4*=NH4,*NO*=NO3
 C                 :*NX*=NO2,*HP*=H2PO4,*H1*=HPO4
 C     C*Q=irrigation solute concentrations
-C     VLNH4,VLNO3,VLPO4=non-band volume fraction
-C     VLNHB,VLNOB,VLPOB=band volume fraction
+C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
+C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
 C
       RCOFLU(L,NY,NX)=FLU(L,NY,NX)*CCOQ(NY,NX)
       RCHFLU(L,NY,NX)=FLU(L,NY,NX)*CCHQ(NY,NX)
@@ -1043,7 +1043,7 @@ C     VHCPWM,VHCPWX=current,minimum volumetric heat capacity of snowpack
 C     VOLWSL=snowpack water content
 C     FLQWM=snowpack water flux
 C     R*BLS=solute flux in snowpack
-C     X*BLS=cumulative solute flux in snowpack
+C     X*BLS=hourly solute flux in snowpack
 C     CO2W,CH4W,OXYW,ZNGW,ZN2W,ZN4W,ZN3W,ZNOW,Z1PW,ZHPW=CO2,CH4,O2,N2,N2O,H2 content in snowpack
 C
       ICHKL=0
@@ -1095,8 +1095,8 @@ C
 C     VOLWSL=snowpack water content
 C     FLQRM,FLQSM,FLQHM=total water flux to litter,soil micropore,macropore
 C     CVRD,BARE=litter cover fraction,1-CVRD
-C     VLNH4,VLNO3,VLPO4=non-band volume fraction
-C     VLNHB,VLNOB,VLPOB=band volume fraction
+C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
+C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
 C     R*S0=solute flux to surface litter
 C     R*S1,R*B1=solute flux to soil surface non-band,band 
 C     CO2W,CH4W,OXYW,ZNGW,ZN2W,ZN4W,ZN3W,ZNOW,Z1PW,ZHPW=CO2,CH4,O2,N2,N2O,H2 content in snowpack
@@ -1179,8 +1179,8 @@ C     LAYER RESISTANCES 'PARGM' FROM 'WATSUB'
 C
 C     VOLWM,VOLWHM,VOLPM,FLPM=micropore,macropore water volume, air volume and change in air volume 
 C     FLWM,FLWHM=water flux into soil micropore,macropore 
-C     VLNH4,VLNO3,VLPO4=non-band volume fraction
-C     VLNHB,VLNOB,VLPOB=band volume fraction
+C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
+C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
 C     FLVM,FLM=air,water flux in gas flux calculations
 C     XNPT=1/number of cycles NPH-1 for gas flux calculations
 C
@@ -1561,12 +1561,12 @@ C     OF WATER FLUX AND MICROPORE GAS OR SOLUTE CONCENTRATIONS
 C     IN RESIDUE
 C
 C     VOLWM=litter water volume
-C     RFL*=soil-litter solute flux
+C     RFL*=soil-litter convective solute flux
 C     gas code: *CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,*NH*=NH3,*HG*=H2
 C     solute code:*OC*=DOC,*ON:=DON,*OP*=DOP,*OA*=acetate,*N4*=NH4,*NO*=NO3
 C                 :*NX*=NO2,*HP*=H2PO4,*H1*=HPO4
-C     VLNH4,VLNO3,VLPO4=non-band volume fraction
-C     VLNHB,VLNOB,VLPOB=band volume fraction
+C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
+C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
 C
       IF(FLWRM1.GT.0.0)THEN   
       IF(VOLWM(M,0,NY,NX).GT.ZEROS2(NY,NX))THEN
@@ -1605,12 +1605,12 @@ C     OF WATER FLUX AND MICROPORE GAS OR SOLUTE CONCENTRATIONS
 C     IN SOIL SURFACE
 C
 C     VOLWM=soil surface water volume
-C     RFL*=soil-litter solute flux
+C     RFL*=soil-litter convective solute flux
 C     gas code: *CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,*NH*=NH3,*HG*=H2
 C     solute code:*OC*=DOC,*ON:=DON,*OP*=DOP,*OA*=acetate,*N4*=NH4,*NO*=NO3
 C                 :*NX*=NO2,*HP*=H2PO4,*H1*=HPO4
-C     VLNH4,VLNO3,VLPO4=non-band volume fraction
-C     VLNHB,VLNOB,VLPOB=band volume fraction
+C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
+C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
 C
       ELSE
       IF(VOLWM(M,NU(NY,NX),NY,NX).GT.ZEROS2(NY,NX))THEN
@@ -1720,7 +1720,7 @@ C
 C     DIFFUSIVE FLUXES BETWEEN CURRENT AND ADJACENT GRID CELL
 C     MICROPORES
 C
-C     DFV*=solute flux between litter and soil surfae
+C     DFV*=diffusive solute flux between litter and soil surface
 C     DIF*=aqueous diffusivity-dispersivity between litter and soil surface
 C     solute code:CL=CO2,CQ=CH4,OL=O2,ZL=N2,ZV=N2O,HL=H2,OC=DOC,ON=DON,OP=DOP
 C                :OA=acetate,ZO=NO3,PO=H*PO4
@@ -1780,6 +1780,15 @@ C
 C     TOTAL MICROPORE AND MACROPORE SOLUTE TRANSPORT FLUXES BETWEEN
 C     ADJACENT GRID CELLS = CONVECTIVE + DIFFUSIVE FLUXES
 C
+C     R*FLS=total convective + diffusive solute flux into litter, soil surface
+C     R*FLW,R*FLB=total convective + diffusive solute flux in non-band,band
+C     solute code:*OC*=DOC,*ON:=DON,*OP*=DOP,*OA*=acetate,*N4*=NH4,*NO*=NO3
+C                 :*NX*=NO2,*H2P*=H2PO4,*H1P*=HPO4
+C     gas code: *CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,*NH*=NH3,*HG*=H2
+C     R*FL0,R*FL1=convective flux into surface litter, soil surface
+C     RFL*=convective flux between surface litter and soil surface 
+C     DFV*=diffusive solute flux between litter and soil surface
+C
       DO 9760 K=0,2
       ROCFLS(K,3,0,NY,NX)=ROCFL0(K,NY,NX)-RFLOC(K)-DFVOC(K)
       RONFLS(K,3,0,NY,NX)=RONFL0(K,NY,NX)-RFLON(K)-DFVON(K)
@@ -1835,6 +1844,9 @@ C     ENDIF
       RH2BFB(3,NU(NY,NX),NY,NX)=RH2BF2(NY,NX)+RH2BFB1+RFLPOB+DFVPOB
 C
 C     ACCUMULATE HOURLY FLUXES
+C
+C     X*FLS=hourly convective + diffusive solute flux
+C     X*FLW,X*FLB= hourly convective + diffusive solute flux in non-band,band
 C
       DO 9761 K=0,2
       XOCFLS(K,3,0,NY,NX)=XOCFLS(K,3,0,NY,NX)
@@ -1908,10 +1920,19 @@ C
       XH2BFB(3,NU(NY,NX),NY,NX)=XH2BFB(3,NU(NY,NX),NY,NX)+RH2BFB1
      2+RFLPOB+DFVPOB
 C
-C     MACROPORE-MICROPORE SOLUTE EXCHANGE IN SOIL
+C     MACROPORE-MICROPORE CONVECTIVE SOLUTE EXCHANGE IN SOIL
 C     SURFACE LAYER FROM WATER EXCHANGE IN 'WATSUB' AND
 C     FROM MACROPORE OR MICROPORE SOLUTE CONCENTRATIONS
 C
+C     FINHM=macro-micropore water transfer from watsub.f 
+C     VOLWM,VOLWHM=micropore,macropore water volume
+C     RFL*=convective macropore-micropore solute transfer 
+C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
+C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
+C     solute code:*OC*=DOC,*ON:=DON,*OP*=DOP,*OA*=acetate,*N4*=NH4,*NO*=NO3
+C                 :*NX*=NO2,*PO4*=H2PO4,*P14*=HPO4
+C     gas code: *CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,*NH*=NH3,*HG*=H2
+C     *H2,*2=macropore,micropore solute content
 C
 C     MACROPORE TO MICROPORE TRANSFER
 C
@@ -2037,6 +2058,16 @@ C
 C     DIFFUSIVE FLUXES OF SOLUTES BETWEEN MICROPORES AND
 C     MACROPORES FROM AQUEOUS DIFFUSIVITIES AND CONCENTRATION DIFFERENCES
 C
+C     VOLWM,VOLWHM=micropore,macropore water volume
+C     XFRS*VOLT=maximum macropore volume for solute transfer
+C     DFV*=diffusive macropore-micropore solute transfer 
+C     solute code:*OC*=DOC,*ON:=DON,*OP*=DOP,*OA*=acetate,*N4*=NH4,*NO*=NO3
+C                 :*NX*=NO2,*PO4*=H2PO4,*P14*=HPO4
+C     gas code: *CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,*NH*=NH3,*HG*=H2
+C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
+C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
+C     XNPH=1/no. of cycles h-1 for water, heat and solute flux calculations
+C     *H2,*2=macropore,micropore solute content
 C
 C     DIFFUSIVE FLUXES OF SOLUTES BETWEEN MICROPORES AND
 C     MACROPORES FROM AQUEOUS DIFFUSIVITIES AND CONCENTRATION DIFFERENCES
@@ -2154,6 +2185,13 @@ C
 C
 C     TOTAL CONVECTIVE +DIFFUSIVE TRANSFER BETWEEN MACROPOES AND MICROPORES
 C
+C     R*FXS=total convective + diffusive solute flux between macropores and micropores
+C     RFL*=convective flux between macropores and micropores 
+C     DFV*=diffusive solute flux between macropores and micropores 
+C     solute code:*OC*=DOC,*ON:=DON,*OP*=DOP,*OA*=acetate,*N4*=NH4,*NO*=NO3
+C                 :*NX*=NO2,*H2P*=H2PO4,*H1P*=HPO4
+C     gas code: *CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,*NH*=NH3,*HG*=H2
+C
       DO 9940 K=0,4
       ROCFXS(K,NU(NY,NX),NY,NX)=RFLOC(K)+DFVOC(K)
       RONFXS(K,NU(NY,NX),NY,NX)=RFLON(K)+DFVON(K)
@@ -2180,6 +2218,12 @@ C
       RH2BXB(NU(NY,NX),NY,NX)=RFLPOB+DFVPOB
 C
 C     ACCUMULATE HOURLY FLUXES
+C
+C     X*FXS=hourly convective + diffusive solute flux between macropores and micropores
+C     R*FXS=total convective + diffusive solute flux between macropores and micropores
+C     solute code:*OC*=DOC,*ON:=DON,*OP*=DOP,*OA*=acetate,*N4*=NH4,*NO*=NO3
+C                 :*NX*=NO2,*H2P*=H2PO4,*H1P*=HPO4
+C     gas code: *CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,*NH*=NH3,*HG*=H2
 C
       DO 9935 K=0,4
       XOCFXS(K,NU(NY,NX),NY,NX)=XOCFXS(K,NU(NY,NX),NY,NX)
