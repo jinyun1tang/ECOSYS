@@ -1281,7 +1281,7 @@ C     SURFACE VOLATILIZATION-DISSOLUTION FROM DIFFERENCES
 C     BETWEEN ATMOSPHERIC AND RESIDUE SURFACE EQUILIBRIUM
 C     CONCENTRATIONS
 C
-C     R*DFR,X*DFR=current,cumulative gas exchange between atmosphere and surface litter water
+C     R*DFR,X*DFR=current,hourly gas exchange between atmosphere and surface litter water
 C     gas code: *CO*=CO2,*CH*=CH4,*OX*=O2,*NG*=N2,*N2*=N2O,*N3*=NH3,*HG*=H2
 C     C*E=atmospheric gas concentration from hour1.f
 C     C*Q=equilibrium gas concentration at litter surface
@@ -2282,6 +2282,9 @@ C     SOLUTE TRANSPORT FROM WATER OVERLAND FLOW
 C     IN 'WATSUB' AND FROM SOLUTE CONCENTRATIONS
 C     IN SOIL SURFACE LAYER
 C
+C     N2,N1=NY,NX of source grid cell
+C     N5,N4=NY,NX of destination grid cell
+c
       N1=NX
       N2=NY
 C
@@ -2306,7 +2309,15 @@ C
 C
 C     IF NO OVERLAND FLOW THEN NO TRANSPORT
 C
-      IF(QRM(M,N,N5,N4).EQ.0.0.OR.THETIZ(0,N2,N1).GT.ZERO)THEN
+C     QRM=runoff from watsub.f
+C     THETI0=free ice in litter
+C     RQR*=solute in runoff
+C     solute code:*OC*=DOC,*ON:=DON,*OP*=DOP,*OA*=acetate,*N4*=NH4,*NO*=NO3
+C                 :*NX*=NO2,*H2P*=H2PO4,*H1P*=HPO4
+C     VOLWM=litter water volume from watsub.f
+C     *S2=litter solute content
+C
+      IF(QRM(M,N,N5,N4).EQ.0.0.OR.THETI0(N2,N1).GT.ZERO)THEN
       DO 9840 K=0,4
       RQROC(K,N,N5,N4)=0.0
       RQRON(K,N,N5,N4)=0.0
@@ -2383,6 +2394,9 @@ C
 C
 C     ACCUMULATE HOURLY FLUXES
 C
+C     X*QRS=hourly solute in runoff
+C     RQR*=solute in runoff
+C
       DO 9825 K=0,4
       XOCQRS(K,N,N5,N4)=XOCQRS(K,N,N5,N4)+RQROC(K,N,N5,N4)
       XONQRS(K,N,N5,N4)=XONQRS(K,N,N5,N4)+RQRON(K,N,N5,N4)
@@ -2403,6 +2417,14 @@ C
       XP4QRW(N,N5,N4)=XP4QRW(N,N5,N4)+RQRH2P(N,N5,N4)
 C
 C     IF NO SNOW DRIFT THEN NO TRANSPORT
+C
+C     QSM=snow transfer from watsub.f
+C     RQS*=solute in snow transfer
+C     gas code: *CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,*NH*=NH3,*HG*=H2
+C     solute code:*OC*=DOC,*ON:=DON,*OP*=DOP,*OA*=acetate,*N4*=NH4,*NO*=NO3
+C                 :*NX*=NO2,*HP*=H2PO4,*H1*=HPO4
+C     VOLS=volume of snowpack from watsub.f
+C     *W2=solute content of snowpack
 C
       IF(QSM(M,N,N5,N4).EQ.0.0)THEN
       RQSCOS(N,N5,N4)=0.0
@@ -2457,6 +2479,9 @@ C
 C
 C     ACCUMULATE HOURLY FLUXES
 C
+C     X*QSS=hourly solute in snow transfer
+C     RQS*=solute in snow transfer
+C
       XCOQSS(N,N5,N4)=XCOQSS(N,N5,N4)+RQSCOS(N,N5,N4)
       XCHQSS(N,N5,N4)=XCHQSS(N,N5,N4)+RQSCHS(N,N5,N4)
       XOXQSS(N,N5,N4)=XOXQSS(N,N5,N4)+RQSOXS(N,N5,N4)
@@ -2480,6 +2505,20 @@ C     VOLATILIZATION-DISSOLUTION OF GASES IN RESIDUE AND SOIL SURFACE
 C     LAYERS FROM GASEOUS CONCENTRATIONS VS. THEIR AQUEOUS
 C     EQUIVALENTS DEPENDING ON SOLUBILITY FROM 'HOUR1'
 C     AND TRANSFER COEFFICIENT 'DFGS' FROM 'WATSUB'
+C
+C     VOLT=litter volume from hour1.f
+C     VOLWM,VOLPM=micropore water volume, air volume from watsub.f
+C     VOLW*=equivalent aqueous volume for gas
+C     S*L=solubility of gas in water from hour1.f
+C     C*G=gas concentration
+C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
+C             :*ZN3*=NH3,*H2G*=H2
+C     R*DFG=surface gas volatilization
+C     DFGS=rate constant for air-water gas exchange from watsub.f
+C     *S2=litter solute content
+C     solute code:*OC*=DOC,*ON:=DON,*OP*=DOP,*OA*=acetate,*N4*=NH4,*NO*=NO3
+C                 :*NX*=NO2,*H2P*=H2PO4,*H1P*=HPO4
+C     R*DXR=gas exchange between atmosphere and surface litter water for gas flux calculations
 C
       IF(VOLT(0,NY,NX).GT.ZEROS2(NY,NX) 
      2.AND.VOLPM(M,0,NY,NX).GT.ZEROS2(NY,NX)
@@ -2553,6 +2592,9 @@ C     ENDIF
 C
 C     ACCUMULATE HOURLY FLUXES
 C
+C     X*DFG=hourly surface gas volatilization
+C     R*DFG=surface gas volatilization
+C
       XCODFG(0,NY,NX)=XCODFG(0,NY,NX)+RCODFG(0,NY,NX)
       XCHDFG(0,NY,NX)=XCHDFG(0,NY,NX)+RCHDFG(0,NY,NX)
       XOXDFG(0,NY,NX)=XOXDFG(0,NY,NX)+ROXDFG(0,NY,NX)
@@ -2574,10 +2616,22 @@ C     SURFACE GAS EXCHANGE FROM GAS DIFFUSIVITY THROUGH
 C     SOIL SURFACE LAYER AND THROUGH ATMOSPHERE BOUNDARY
 C     LAYER
 C
+C     THETPM=air-filled porosity from watsub.f
+C     BKDS=bulk density
+C
       IF(THETPM(M,NU(NY,NX),NY,NX).GT.THETX
      2.AND.BKDS(NU(NY,NX),NY,NX).GT.ZERO)THEN
 C
 C     GASEOUS DIFFUSIVITIES
+C
+C     DFLG2=air-filled porosity effect on gaseous diffusivity
+C     POROQ=Penman Water Linear Reduction tortuosity from starts.f
+C     POROS=total porosity
+C     DLYR=soil layer thickness
+C     D*G=gaseous diffusivity
+C     *SGL2= gaseous diffusivity in water
+C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
+C             :*ZN3*=NH3,*H2G*=H2
 C
       DFLG2=AMAX1(0.0,THETPM(M,NU(NY,NX),NY,NX))*POROQ
      2*THETPM(M,NU(NY,NX),NY,NX)/POROS(NU(NY,NX),NY,NX)
@@ -4586,7 +4640,7 @@ C
 C
 C     NO RUNOFF
 C
-      IF(QRM(M,N,M5,M4).EQ.0.0.OR.THETIZ(0,M2,M1).GT.ZERO)THEN
+      IF(QRM(M,N,M5,M4).EQ.0.0.OR.THETI0(M2,M1).GT.ZERO)THEN
       DO 9570 K=0,4
       RQROC(K,N,M5,M4)=0.0
       RQRON(K,N,M5,M4)=0.0

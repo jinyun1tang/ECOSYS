@@ -83,7 +83,7 @@ C
       IF(NHE.GT.NHW)NDIM=NDIM+1
       IF(NVS.GT.NVN)NDIM=NDIM+1
       XDIM=1.0/NDIM
-      ZERO=1.0E-16
+      ZERO=1.0E-15
       ZERO2=1.0E-08
       TAREA=0.0
       THETX=1.0E-03
