@@ -1041,7 +1041,12 @@ C
       IDY1=INT(DY/1.0E+06)
       IDY2=INT(DY/1.0E+04-IDY1*1.0E+02)
       IDY3=INT(DY-(IDY1*1.0E+06+IDY2*1.0E+04))
-      IF(MOD(IDY3,4))2520,2510,2520
+C      IF(MOD(IDY3,4))2520,2510,2520
+      if(mod(idy3,4)==0)then
+        goto 2510
+      else
+        goto 2520
+      endif
 2510  IF(IDY2.GT.2)LPY=1
 2520  IF(IDY2.EQ.1)GO TO 2525
       IDY=30*(IDY2-1)+ICOR(IDY2-1)+IDY1+LPY
