@@ -1,6 +1,6 @@
       SUBROUTINE day(I,NHW,NHE,NVN,NVS)
 C
-C     THIS SUBROUTINE REINITIALIZES DAILY VARIABLES USED IN OTHER 
+C     THIS SUBROUTINE REINITIALIZES DAILY VARIABLES USED IN OTHER
 C     SUBROUTINES E.G. LAND MANAGEMENT
 C
       include "parameters.h"
@@ -45,7 +45,12 @@ C
       NN=0
       DO 500 M=1,12
       N=30*M+ICOR(M)
-      IF(MOD(IDATA(3),4))520,510,520
+C      IF(MOD(IDATA(3),4))520,510,520
+      if(mod(idata(3),4)==0)then
+        goto 510
+      else
+        goto 520
+      endif
 510   IF(M.GE.2)N=N+1
 520   IF(I.LE.N)THEN
       N1=I-NN
@@ -136,7 +141,7 @@ C
      2-TCSNC(NZ,NY,NX)+TCO2T(NZ,NY,NX)-VCO2F(NZ,NY,NX)-VCH4F(NZ,NY,NX)
       RSETN(NZ,NY,NX)=RSETN(NZ,NY,NX)+TZUPTK(NZ,NY,NX)+TNH3C(NZ,NY,NX)
      2-TZSNC(NZ,NY,NX)-VNH3F(NZ,NY,NX)-VN2OF(NZ,NY,NX)+TZUPFX(NZ,NY,NX)
-      RSETP(NZ,NY,NX)=RSETP(NZ,NY,NX)+TPUPTK(NZ,NY,NX) 
+      RSETP(NZ,NY,NX)=RSETP(NZ,NY,NX)+TPUPTK(NZ,NY,NX)
      2-TPSNC(NZ,NY,NX)-VPO4F(NZ,NY,NX)
       CARBN(NZ,NY,NX)=0.0
       TCUPTK(NZ,NY,NX)=0.0
@@ -209,7 +214,7 @@ C     RMAX=maximum hourly radiation
 C     I2,I,I3=previous,current,next day
 C     TMPX,TMPN=maximum,minimum daily temperature from weather file
 C     DWPT=daily vapor pressure from weather file
-C     TAVG*,AMP*,VAVG*,VMP*=daily avgs, amps to calc hourly values in wthr.f 
+C     TAVG*,AMP*,VAVG*,VMP*=daily avgs, amps to calc hourly values in wthr.f
 C
       IF(ITYPE.EQ.1)THEN
       IF(IETYP(NY,NX).GE.-1)THEN
@@ -241,14 +246,14 @@ C
       ENDIF
 C
 C     MODIFIERS TO TEMPERATURE, RADIATION, WIND, HUMIDITY, PRECIPITATION,
-C     IRRIGATION AND CO2 INPUTS FROM CLIMATE CHANGES ENTERED IN OPTION 
+C     IRRIGATION AND CO2 INPUTS FROM CLIMATE CHANGES ENTERED IN OPTION
 C     FILE IN 'READS'
 C
 C     ICLM=type of climate change 1=step,2=incremental
 C     TDTPX,TDTPN=change in max,min temperature
 C     TDRAD,TDWND,TDHUM=change in radiation,windspeed,vapor pressure
 C     TDPRC,TDIRRI=change in precipitation,irrigation
-C     TDCO2,TDCN4,TDCNO=change in atm CO2,NH4,NO3 concn in precipitation      
+C     TDCO2,TDCN4,TDCNO=change in atm CO2,NH4,NO3 concn in precipitation
 C
       DO 600 N=1,12
 C
@@ -294,7 +299,7 @@ C     CORP=soil mixing fraction used in redist.f
 C
       IF(ITILL(I,NY,NX).LE.10)THEN
       CORP=AMIN1(1.0,AMAX1(0.0,ITILL(I,NY,NX)/10.0))
-      ELSEIF(ITILL(I,NY,NX).LE.20)THEN      
+      ELSEIF(ITILL(I,NY,NX).LE.20)THEN
       CORP=AMIN1(1.0,AMAX1(0.0,(ITILL(I,NY,NX)-10.0)/10.0))
       ENDIF
       XCORP(NY,NX)=1.0-CORP
@@ -306,14 +311,14 @@ C
 C     DATA(6)=irrigation file name
 C     IIRRA=start,finish dates(1,2),hours(3,4) of automated irrigation
 C     DIRRX=depth to which water depletion and rewatering is calculated(1)
-C     DIRRA=depth to,at which irrigation is applied(1,2) 
+C     DIRRA=depth to,at which irrigation is applied(1,2)
 C     POROS,FC,WP=water content at saturation,field capacity,wilting point
 C     CIRRA= fraction of FC to which irrigation will raise SWC
 C     FW=fraction of soil layer in irrigation zone
-C     FZ=SWC at which irrigation is triggered 
+C     FZ=SWC at which irrigation is triggered
 C     VOLX,VOLW,VOLI=total,water,ice volume
-C     IFLGV=flag for irrigation criterion,0=SWC,1=canopy water potential 
-C     FIRRA=depletion of SWC from CIRRA to WP(IFLGV=0),or minimum canopy 
+C     IFLGV=flag for irrigation criterion,0=SWC,1=canopy water potential
+C     FIRRA=depletion of SWC from CIRRA to WP(IFLGV=0),or minimum canopy
 C     water potential(IFLGV=1), to trigger irrigation
 C     RR=total irrigation requirement
 C     RRIG=hourly irrigation amount applied in wthr.f

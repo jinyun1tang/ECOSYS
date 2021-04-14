@@ -45,8 +45,8 @@ C     ARTIFICIAL SOIL WARMING
 C
 C     soiltemp=file with hourly soil temperatures from baseline run
 C     OUT=hourly soil temperatures from baseline run (oC)
-C     TKSZ=temperature used to calculate additional heat flux 
-C     for warming in watsub.f 
+C     TKSZ=temperature used to calculate additional heat flux
+C     for warming in watsub.f
 C
 C     OPEN(6,FILE='soiltemp',STATUS='OLD')
 C23   READ(6,'(F8.3,4X,A8,I8,50E16.7E3)',END=27)DOY,CDATE,J
@@ -68,7 +68,7 @@ C     IDATA(1),IDATA(2),IDATA(3)=start date of scenario DDMMYYYY
 C     IDATA(4),IDATA(5),IDATA(6)=end date of scenario DDMMYYYY
 C     IDATA(7),IDATA(8),IDATA(9)=start date of run DDMMYYYY
 C     DATA(18),DATA(19),DATA(20)=options for visualization in visual.f
-C     generating checkpoint files,resuming from earlier checkpt files 
+C     generating checkpoint files,resuming from earlier checkpt files
 C     DRAD,DTMPX,DTMPN,DHUM,DPREC,DIRRI,DWIND,DCO2E,DCNR4,DCNOR
 C     =annual changes in radiation,max+min temperature,humidity,
 C     precip,irrign,windspeed,atm CO2 concn,NH4,NO3 concn in precip
@@ -142,7 +142,7 @@ C
       ENDIF
       ENDIF
       ENDIF
-C     WRITE(*,7766)'IDATA3',IGO,IDATA(3),IDATA(6),IYRR,IYRC 
+C     WRITE(*,7766)'IDATA3',IGO,IDATA(3),IDATA(6),IYRR,IYRC
 C    2,NE,NT,NEX,NF,NTX,NFX,NTZ,NTZX,N1,N2,N1X,N2X
 C    3,NA(NEX),ND(NEX),NAX
 7766  FORMAT(A8,30I8)
@@ -177,7 +177,12 @@ C
       LYRC=365
       LYRX=365
       DO 575 N=1,7,3
-      IF(MOD(IDATA(N+2),4))520,510,520
+C      IF(MOD(IDATA(N+2),4))520,510,520
+      if(mod(idata(n+2),4)==0)then
+        goto 510
+      else
+        goto 520
+      endif
 510   IF(IDATA(N+1).GT.2)LPY=1
       IF(N.EQ.1)LYRC=366
 520   IF(IDATA(N+1).EQ.1)GO TO 525
@@ -187,7 +192,12 @@ C
 527   IF(N.EQ.1)ISTART=IDY
       IF(N.EQ.4)IFIN=IDY
       IF(N.EQ.7)IRUN=IDY
-      IF(MOD(IDATA(N+2)-1,4))575,530,575
+C      IF(MOD(IDATA(N+2)-1,4))575,530,575
+      if(mod(idata(n+2)-1,4)==0)then
+        goto 530
+      else
+        goto 575
+      endif
 530   IF(N.EQ.1)LYRX=366
 575   CONTINUE
       IF(IGO.EQ.0)THEN
@@ -210,8 +220,8 @@ C     IVAR,VAR=time,weather variable type
 C     TYP=weather variable units
 C     Z0G,IFLGW=windspeed meast height,flag for raising Z0G with vegn
 C     ZNOONG=time of solar noon
-C     PHRG,CN4RIG,CNORIG,CPORG,CALRG,CFERG,CCARG,CMGRG,CNARG,CKARG, 
-C     CSORG,CCLRG=pH,NH4,NO3,H2PO4,Al,Fe,Ca,Mg,Na,K,SO4,Cl 
+C     PHRG,CN4RIG,CNORIG,CPORG,CALRG,CFERG,CCARG,CMGRG,CNARG,CKARG,
+C     CSORG,CCLRG=pH,NH4,NO3,H2PO4,Al,Fe,Ca,Mg,Na,K,SO4,Cl
 C     concentration in precipitation
 C     IDAT,DAT=time,weather variable
 C
@@ -249,7 +259,12 @@ C
       IF(IVAR(K).EQ.'Y')THEN
       IFLGY=1
       IYRX=IDAT(K)+(NTX-1)*NFX
-      IF(MOD(IDAT(K),4))170,175,170
+C      IF(MOD(IDAT(K),4))170,175,170
+      if(mod(idat(k),4)==0)then
+        goto 175
+      else
+        goto 170
+      endif
 175   IYRD=366
 170   IYRD=365
       ENDIF
@@ -259,7 +274,12 @@ C
       I=N
       ELSE
       LPY=0
-      IF(MOD(IDATA(3),4))70,75,70
+C      IF(MOD(IDATA(3),4))70,75,70
+      if(mod(idata(3),4)==0)then
+        goto 75
+      else
+        goto 70
+      endif
 75    IF(M.GT.2)LPY=1
 70    IF(M.EQ.1)THEN
       I=N
@@ -279,10 +299,10 @@ C
       IF(I.LE.ILAST)GO TO 60
       ENDIF
 C
-C     CONVERT DAILY WEATHER VARIABLES TO MODEL UNITS 
+C     CONVERT DAILY WEATHER VARIABLES TO MODEL UNITS
 C     AND ENTER INTO MODEL ARRAYS
 C
-C     TMPX,TMPN=maximum,minimum temperature (OC) 
+C     TMPX,TMPN=maximum,minimum temperature (OC)
 C     SRAD=solar radiation (MJ m-2 d-1)
 C     WIND=windspeed (m h-1)
 C     DWPT=vapor pressure (kPa)
@@ -423,7 +443,12 @@ C
       I=N
       ELSE
       LPY=0
-      IF(MOD(IDATA(3),4))100,115,100
+C      IF(MOD(IDATA(3),4))100,115,100
+      if(mod(idata(3),4)==0)then
+        goto 115
+      else
+        goto 100
+      endif
 115   IF(M.GT.2)LPY=1
 100   IF(M.EQ.1)THEN
       I=N
@@ -457,7 +482,7 @@ C
       ENDIF
       XRADH(J,I)=0.0
 C
-C     CONVERT HOURLY WEATHER VARIABLES TO MODEL UNITS 
+C     CONVERT HOURLY WEATHER VARIABLES TO MODEL UNITS
 C     AND ENTER INTO MODEL ARRAYS
 C
 C     TMPH=temperature (oC)
@@ -790,7 +815,7 @@ C
 C     DY=date DDMMYYYY
 C     IPLOW,DPLOW=intensity,depth of disturbance
 C     ITILL=soil disturbance type 1-20:tillage,21=litter removal,22=fire,23-24=drainage
-C     DCORP=intensity (fire) or depth (tillage,drainage) of disturbance 
+C     DCORP=intensity (fire) or depth (tillage,drainage) of disturbance
 C
 295   CONTINUE
       READ(10,*,END=305)DY,IPLOW,DPLOW
@@ -798,7 +823,12 @@ C
       IDY1=INT(DY/1.0E+06)
       IDY2=INT(DY/1.0E+04-IDY1*1.0E+02)
       IDY3=INT(DY-(IDY1*1.0E+06+IDY2*1.0E+04))
-      IF(MOD(IDY3,4))3520,3510,3520
+C      IF(MOD(IDY3,4))3520,3510,3520
+      if(mod(idy3,4)==0)then
+        goto 3510
+      else
+        goto 3520
+      endif
 3510  IF(IDY2.GT.2)LPY=1
 3520  IF(IDY2.EQ.1)GO TO 3535
       IDY=30*(IDY2-1)+ICOR(IDY2-1)+IDY1+LPY
@@ -841,7 +871,12 @@ C
       IDY1=INT(DY/1.0E+06)
       IDY2=INT(DY/1.0E+04-IDY1*1.0E+02)
       IDY3=INT(DY-(IDY1*1.0E+06+IDY2*1.0E+04))
-      IF(MOD(IDY3,4))1520,1510,1520
+C      IF(MOD(IDY3,4))1520,1510,1520
+      if(mod(idy3,4)==0)then
+        goto 1510
+      else
+        goto 1520
+      endif
 1510  IF(IDY2.GT.2)LPY=1
 1520  IF(IDY2.EQ.1)GO TO 1525
       IDY=30*(IDY2-1)+ICOR(IDY2-1)+IDY1+LPY
@@ -912,14 +947,14 @@ C
 C     AUTOMATED IRRIGATION
 C
 C     DST,DEN=start,end dates,hours DDMMHHHH
-C     IFLGVX=flag for irrigation criterion,0=SWC,1=canopy water potl 
-C     FIRRX=depletion of SWC from CIRRX to WP(IFLGV=0),or minimum canopy 
+C     IFLGVX=flag for irrigation criterion,0=SWC,1=canopy water potl
+C     FIRRX=depletion of SWC from CIRRX to WP(IFLGV=0),or minimum canopy
 C     water potential(IFLGV=1), to trigger irrigation
 C     CIRRX= fraction of FC to which irrigation will raise SWC
 C     DIRRX= depth to which water depletion and rewatering is calculated
-C     WDPTHI=depth at which irrigation is applied 
-C     PHQX,CN4QX,CNOQX,CPOQX,CALQX,CFEQX,CCAQX,CMGQX,CNAQX,CKAQX, 
-C     CSOQX,CCLQX=pH,NH4,NO3,H2PO4,Al,Fe,Ca,Mg,Na,K,SO4,Cl 
+C     WDPTHI=depth at which irrigation is applied
+C     PHQX,CN4QX,CNOQX,CPOQX,CALQX,CFEQX,CCAQX,CMGQX,CNAQX,CKAQX,
+C     CSOQX,CCLQX=pH,NH4,NO3,H2PO4,Al,Fe,Ca,Mg,Na,K,SO4,Cl
 C     concentration in irrigation water
 C
       READ(2,*,END=105)DST,DEN,IFLGVX,FIRRX,CIRRX,DIRRX,WDPTHI
@@ -929,7 +964,12 @@ C
       IDY1=INT(DST/1.0E+06)
       IDY2=INT(DST/1.0E+04-IDY1*1.0E+02)
       IDY3=INT(DST-(IDY1*1.0E+06+IDY2*1.0E+04))
-      IF(MOD(IDY3,4))4520,4510,4520
+C      IF(MOD(IDY3,4))4520,4510,4520
+      if(mod(idy3,4)==0)then
+        goto 4510
+      else
+        goto 4520
+      endif
 4510  IF(IDY2.GT.2)LPY=1
 4520  IF(IDY2.EQ.1)GO TO 4535
       IDYS=30*(IDY2-1)+ICOR(IDY2-1)+IDY1+LPY
@@ -941,7 +981,12 @@ C
       IDY1=INT(DEN/1.0E+06)
       IDY2=INT(DEN/1.0E+04-IDY1*1.0E+02)
       IDY3=INT(DEN-(IDY1*1.0E+06+IDY2*1.0E+04))
-      IF(MOD(IDY3,4))5520,5510,5520
+C      IF(MOD(IDY3,4))5520,5510,5520
+      if(mod(idy3,4)==0)then
+        goto 5510
+      else
+        goto 5520
+      endif
 5510  IF(IDY2.GT.2)LPY=1
 5520  IF(IDY2.EQ.1)GO TO 5535
       IDYE=30*(IDY2-1)+ICOR(IDY2-1)+IDY1+LPY
@@ -950,7 +995,7 @@ C
 5530  CONTINUE
       IHRE=IDY3
 C
-C     TRANSFER INPUTS TO MODEL ARRAYS 
+C     TRANSFER INPUTS TO MODEL ARRAYS
 C
       DO 7965 NX=NH1,NH2
       DO 7960 NY=NV1,NV2
@@ -986,8 +1031,8 @@ C
 2500  CONTINUE
 C
 C     DY,RR,JST,JEN=date DDMMYYYY,amount (mm),start and end hours
-C     PHQX,CN4QX,CNOQX,CPOQX,CALQX,CFEQX,CCAQX,CMGQX,CNAQX,CKAQX, 
-C     CSOQX,CCLQX=pH,NH4,NO3,H2PO4,Al,Fe,Ca,Mg,Na,K,SO4,Cl 
+C     PHQX,CN4QX,CNOQX,CPOQX,CALQX,CFEQX,CCAQX,CMGQX,CNAQX,CKAQX,
+C     CSOQX,CCLQX=pH,NH4,NO3,H2PO4,Al,Fe,Ca,Mg,Na,K,SO4,Cl
 C     concentration in irrigation water
 C
       READ(2,*,END=105)DY,RR,JST,JEN,WDPTHI,PHQX,CN4QX,CNOQX,CPOQX
@@ -1010,7 +1055,7 @@ C
       IF(J.GE.JST.AND.J.LE.JEN)RRIG(J,IDY,NY,NX)=RRH/1000.0
 2535  CONTINUE
 C
-C     TRANSFER INPUTS TO MODEL ARRAYS 
+C     TRANSFER INPUTS TO MODEL ARRAYS
 C
       PHQ(IDY,NY,NX)=PHQX
       CN4Q(IDY,NY,NX)=CN4QX/14.0
@@ -1039,5 +1084,3 @@ C
       IMNG=1
       RETURN
       END
-
-

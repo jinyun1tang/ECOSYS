@@ -30,14 +30,14 @@ C     OMCI,ORCI=allocation of biomass,residue to kinetic components
 C     OMCK,ORCK,OQCK,OHCK=fractions of SOC in biomass,litter,DOC,adsorbed C
 C     OMCF,OMCA=hetero,autotrophic microbial biomass composition in SOC
 C     CNRH,CPRH=default N:C,P:C ratios in SOC complexes
-C     BKRS=dry bulk density of woody(0),fine(1),manure(2) litter 
+C     BKRS=dry bulk density of woody(0),fine(1),manure(2) litter
 C     FORGC=minimum SOC for organic soil (g Mg-1)
 C     FVLWB,FCH4F=maximum SWC,CH4 emission fraction for combustion
 C     PSIHY=hygroscopic water potential (MPa)
 C     FCI,WPI=FC,WP for water retention by ice (MPa)
 C     CDPTHSI=depth to bottom of snowpack layers
 C     POROQ=Penman Water Linear Reduction tortuosity used in gas flux calculations
-C 
+C
       PARAMETER (DCKR=0.25,DCKM=2.5E+04,PSIPS=-0.5E-03,RDN=57.29577951)
       DATA OMCI/0.005,0.050,0.005,0.050,0.050,0.005,0.050,0.050,0.005
      2,0.005,0.050,0.005,0.005,0.050,0.005/
@@ -73,7 +73,7 @@ C
       XNPT=1.0/NPT
       XNPG=1.0/NPG
       XNPR=1.0/NPR
-      XNPS=1.0/NPS     
+      XNPS=1.0/NPS
       XNPY=XNPH*XNPS
       XNPZ=XNPH*XNPR
       XNPQ=XNPZ*XNPS
@@ -151,7 +151,7 @@ C
       TYSIN=TYSIN+YSIN(N)
       DO 225 L=1,4
       DAZI=COS(ZAZI(L)-YAZI(N))
-      DO 225 M=1,4
+      DO 226 M=1,4
       OMEGY=ZCOS(M)*YSIN(N)+ZSIN(M)*YCOS(N)*DAZI
       OMEGA(N,M,L)=ABS(OMEGY)
       OMEGX(N,M,L)=OMEGA(N,M,L)/YSIN(N)
@@ -170,13 +170,14 @@ C
       ELSE
       IALBY(N,M,L)=2
       ENDIF
+226   CONTINUE
 225   CONTINUE
 230   CONTINUE
 C
 C     INITIALIZE C-N AND C-P RATIOS OF RESIDUE AND SOIL
 C
 C     CNOFC,CPOFC=fractions to allocate N,P to kinetic components
-C     CNOMC,CPOMC=maximum N:C and P:C ratios in microbial biomass  
+C     CNOMC,CPOMC=maximum N:C and P:C ratios in microbial biomass
 C
       CNOFC(1,0)=0.005
       CNOFC(2,0)=0.005
@@ -205,7 +206,7 @@ C
       FL(1)=0.55
       FL(2)=0.45
       DO 95 K=0,5
-      DO 95 N=1,7
+      DO 96 N=1,7
       IF(K.LE.4.AND.N.EQ.3)THEN
       CNOMC(1,N,K)=0.15
       CNOMC(2,N,K)=0.09
@@ -219,6 +220,7 @@ C
       ENDIF
       CNOMC(3,N,K)=FL(1)*CNOMC(1,N,K)+FL(2)*CNOMC(2,N,K)
       CPOMC(3,N,K)=FL(1)*CPOMC(1,N,K)+FL(2)*CPOMC(2,N,K)
+96    CONTINUE
 95    CONTINUE
 C
 C     CALCULATE ELEVATION OF EACH GRID CELL
@@ -268,7 +270,7 @@ C
       IRCHG(2,1,NY,NX)=0
       IRCHG(1,2,NY,NX)=1
       IRCHG(2,2,NY,NX)=0
-      ENDIF      
+      ENDIF
       SLOPE(3,NY,NX)=-1.0
       GSIN(NY,NX)=SLOPE(0,NY,NX)
       GCOS(NY,NX)=SQRT(1.0-GSIN(NY,NX)**2)
@@ -311,7 +313,7 @@ C
       WRITE(*,1111)'ALT',NX,NY,((IRCHG(NN,N,NY,NX),NN=1,2),N=1,2)
      2,ALT(NY,NX),DH(NY,NX),DV(NY,NX),ASP(NY,NX),SL(NY,NX)
      3,SLOPE(0,NY,NX),SLOPE(1,NY,NX),SLOPE(2,NY,NX)
-     4,GSIN(NY,NX),GCOSA(NY,NX),GSINA(NY,NX) 
+     4,GSIN(NY,NX),GCOSA(NY,NX),GSINA(NY,NX)
 1111  FORMAT(A8,6I4,20E12.4)
 9980  CONTINUE
 9985  CONTINUE
@@ -436,7 +438,7 @@ C
       CCO2EI(NY,NX)=CO2EI(NY,NX)*5.36E-04*273.15/ATKA(NY,NX)
       CCO2E(NY,NX)=CO2E(NY,NX)*5.36E-04*273.15/ATKA(NY,NX)
       CCH4E(NY,NX)=CH4E(NY,NX)*5.36E-04*273.15/ATKA(NY,NX)
-      COXYE(NY,NX)=OXYE(NY,NX)*1.43E-03*273.15/ATKA(NY,NX) 
+      COXYE(NY,NX)=OXYE(NY,NX)*1.43E-03*273.15/ATKA(NY,NX)
       CZ2GE(NY,NX)=Z2GE(NY,NX)*1.25E-03*273.15/ATKA(NY,NX)
       CZ2OE(NY,NX)=Z2OE(NY,NX)*1.25E-03*273.15/ATKA(NY,NX)
       CNH3E(NY,NX)=ZNH3E(NY,NX)*6.25E-04*273.15/ATKA(NY,NX)
@@ -493,7 +495,7 @@ C
      2*AREA(3,L,NY,NX)
       VOLT(L,NY,NX)=VOLR(NY,NX)
       VOLX(L,NY,NX)=VOLT(L,NY,NX)
-      VOLY(L,NY,NX)=VOLX(L,NY,NX) 
+      VOLY(L,NY,NX)=VOLX(L,NY,NX)
       VOLTI(L,NY,NX)=VOLT(L,NY,NX)
       BKVL(L,NY,NX)=2.00E-06*ORGC(L,NY,NX)
       DLYRI(3,L,NY,NX)=VOLX(L,NY,NX)/AREA(3,L,NY,NX)
@@ -508,7 +510,7 @@ C
       DPTHZ(L,NY,NX)=0.5*(CDPTHZ(L,NY,NX)+CDPTHZ(L-1,NY,NX))
       VOLT(L,NY,NX)=AREA(3,L,NY,NX)*DLYR(3,L,NY,NX)
       VOLX(L,NY,NX)=VOLT(L,NY,NX)*FMPR(L,NY,NX)
-      VOLY(L,NY,NX)=VOLX(L,NY,NX) 
+      VOLY(L,NY,NX)=VOLX(L,NY,NX)
       VOLTI(L,NY,NX)=VOLT(L,NY,NX)
       BKVL(L,NY,NX)=BKDS(L,NY,NX)*VOLX(L,NY,NX)
       RTDNT(L,NY,NX)=0.0
@@ -561,13 +563,13 @@ C
      2+VOLISL(L-1,NY,NX)*DENSI+VOLSSL(L,NY,NX)+VOLWSL(L,NY,NX)
      2+VOLISL(L,NY,NX)*DENSI)
       ENDIF
-      DENSS(L,NY,NX)=DENS0(NY,NX) 
+      DENSS(L,NY,NX)=DENS0(NY,NX)
       VOLSL(L,NY,NX)=VOLSSL(L,NY,NX)/DENSS(L,NY,NX)
      2+VOLWSL(L,NY,NX)+VOLISL(L,NY,NX)
       VOLSI(L,NY,NX)=DLYRSI*DH(NY,NX)*DV(NY,NX)
       CDPTHS(L,NY,NX)=CDPTHS(L-1,NY,NX)+DLYRS(L,NY,NX)
       TKW(L,NY,NX)=AMIN1(273.15,ATKA(NY,NX))
-      TCW(L,NY,NX)=AMIN1(0.0,ATCA(NY,NX)) 
+      TCW(L,NY,NX)=AMIN1(0.0,ATCA(NY,NX))
       VHCPW(L,NY,NX)=2.095*VOLSSL(L,NY,NX)+4.19*VOLWSL(L,NY,NX)
      2+1.9274*VOLISL(L,NY,NX)
 9580  CONTINUE
@@ -577,7 +579,7 @@ C
 C     VHCPWX,VHCPRX,VHCPNX=minimum heat capacities for solving
 C     snowpack,surface litter,soil layer water and heat fluxes
 C     DPTHSK=depth at which soil heat sink-source calculated
-C     TCNDG=assumed thermal conductivity below lower soil boundary 
+C     TCNDG=assumed thermal conductivity below lower soil boundary
 C     (MJ m-1 K-1 h-1)
 C     TKSD=deep source/sink temperature from geothermal flux(K)
 C
@@ -694,7 +696,7 @@ C     CORGCX(4)=AMAX1(0.0,CORGCZ-CORGCX(3))
 C     CORGNX(3)=AMIN1(CNRH(3)*CORGCX(3),CORGNZ)
 C     CORGNX(4)=AMAX1(0.0,CORGNZ-CORGNX(3))
 C     CORGPX(3)=AMIN1(CPRH(3)*CORGCX(3),CORGPZ)
-C     CORGPX(4)=AMAX1(0.0,CORGPZ-CORGPX(3)) 
+C     CORGPX(4)=AMAX1(0.0,CORGPZ-CORGPX(3))
       CORGL=AMAX1(0.0,CORGC(L,NY,NX)-CORGR(L,NY,NX))
       TORGL(L)=TORGC+CORGL*BKVL(L,NY,NX)/AREA(3,L,NY,NX)*0.5
       TORGC=TORGC+CORGL*BKVL(L,NY,NX)/AREA(3,L,NY,NX)
@@ -704,7 +706,7 @@ C     PARAMETERS TO ALLOCATE HUMUS TO LESS OR MORE RECALCITRANT FRACTIONS
 C
 C     TORGL=accumulated humus down to soil layer (g m-2)
 C     TORGM=TORGL used to calculate allocation (g m-2)
-C     HCX=shape parameter for depth effect on allocation 
+C     HCX=shape parameter for depth effect on allocation
 C
       TORGM=AMAX1(2.0E+03,AMIN1(5.0E+03,0.25*TORGL(NJ(NY,NX))))
       IF(TORGM.GT.ZERO)THEN
@@ -757,7 +759,7 @@ C
       CORGNX(3)=AMIN1(CNRH(3)*CORGCX(3),CORGNZ)
       CORGNX(4)=AMAX1(0.0,CORGNZ-CORGNX(3))
       CORGPX(3)=AMIN1(CPRH(3)*CORGCX(3),CORGPZ)
-      CORGPX(4)=AMAX1(0.0,CORGPZ-CORGPX(3)) 
+      CORGPX(4)=AMAX1(0.0,CORGPZ-CORGPX(3))
       ELSE
       CORGCX(3)=0.0
       CORGCX(4)=0.0
@@ -780,7 +782,7 @@ C
       IF(L.EQ.0)THEN
 C
 C     CFOSC=fraction of litter in protein(1),nonstructural(2)
-C     cellulose(3) and lignin(4) 
+C     cellulose(3) and lignin(4)
 C
 C     PREVIOUS COARSE WOODY RESIDUE
 C
@@ -919,7 +921,7 @@ C
 C
 C     OTHER
 C
-      ELSE 
+      ELSE
       CFOSC(1,2,L,NY,NX)=0.138
       CFOSC(2,2,L,NY,NX)=0.401
       CFOSC(3,2,L,NY,NX)=0.316
@@ -994,23 +996,23 @@ C     PARTITION HUMUS
 C
 C     CFOSC=fraction of humus in less(1),more(2) resistant component
 C
-      FC1=FC0*FCX 
+      FC1=FC0*FCX
       CFOSC(1,4,L,NY,NX)=FC1
       CFOSC(2,4,L,NY,NX)=1.0-FC1
       CFOSC(3,4,L,NY,NX)=0.00
       CFOSC(4,4,L,NY,NX)=0.00
 C
-C     MICROBIAL DETRITUS ALLOCATED TO HUMUS MAINTAINS 
+C     MICROBIAL DETRITUS ALLOCATED TO HUMUS MAINTAINS
 C     HUMUS PARTITIONING TO COMPONENTS
 C
 C     CFOMC=fraction of microbial litter allocated to humus components
 C
       CFOMC(1,L,NY,NX)=3.0*FC1/(2.0*FC1+1.0)
       CFOMC(2,L,NY,NX)=1.0-CFOMC(1,L,NY,NX)
-C     WRITE(*,5432)'PART',L,FC0,FC1,FCX,HCX,TORGM,TORGL(L) 
+C     WRITE(*,5432)'PART',L,FC0,FC1,FCX,HCX,TORGM,TORGL(L)
 C    2,CORGCX(4),CORGNX(4),CORGPX(4),DPTH(L,NY,NX),DTBLZ(NY,NX)
 C    3,CDPTH(NU(NY,NX),NY,NX),CDPTHG,CORGC(L,NY,NX),FORGC
-C    4,EXP(HCX*TORGL(L)) 
+C    4,EXP(HCX*TORGL(L))
 5432  FORMAT(A8,I4,20E12.4)
       ENDIF
 C
@@ -1049,23 +1051,23 @@ C
       IF(ISOIL(1,L,NY,NX).EQ.0.AND.ISOIL(2,L,NY,NX).EQ.0)THEN
       IF(THW(L,NY,NX).GT.1.0)THEN
       THW(L,NY,NX)=POROS(L,NY,NX)
-      ELSEIF(THW(L,NY,NX).EQ.1.0)THEN 
+      ELSEIF(THW(L,NY,NX).EQ.1.0)THEN
       THW(L,NY,NX)=FC(L,NY,NX)
-      ELSEIF(THW(L,NY,NX).EQ.0.0)THEN 
+      ELSEIF(THW(L,NY,NX).EQ.0.0)THEN
       THW(L,NY,NX)=WP(L,NY,NX)
-      ELSEIF(THW(L,NY,NX).LT.0.0)THEN 
+      ELSEIF(THW(L,NY,NX).LT.0.0)THEN
       THW(L,NY,NX)=0.0
       ENDIF
       IF(THI(L,NY,NX).GT.1.0)THEN
       THI(L,NY,NX)=AMAX1(0.0,AMIN1(POROS(L,NY,NX)
      2,POROS(L,NY,NX)-THW(L,NY,NX)))
-      ELSEIF(THI(L,NY,NX).EQ.1.0)THEN 
+      ELSEIF(THI(L,NY,NX).EQ.1.0)THEN
       THI(L,NY,NX)=AMAX1(0.0,AMIN1(FC(L,NY,NX)
      2,POROS(L,NY,NX)-THW(L,NY,NX)))
-      ELSEIF(THI(L,NY,NX).EQ.0.0)THEN 
+      ELSEIF(THI(L,NY,NX).EQ.0.0)THEN
       THI(L,NY,NX)=AMAX1(0.0,AMIN1(WP(L,NY,NX)
      2,POROS(L,NY,NX)-THW(L,NY,NX)))
-      ELSEIF(THI(L,NY,NX).LT.0.0)THEN 
+      ELSEIF(THI(L,NY,NX).LT.0.0)THEN
       THI(L,NY,NX)=0.0
       ENDIF
       THETW(L,NY,NX)=THW(L,NY,NX)
@@ -1119,7 +1121,7 @@ C
       THETP(L,NY,NX)=0.95-THETW(L,NY,NX)
       THETI(L,NY,NX)=0.0
       ENDIF
-      THETWZ(L,NY,NX)=THETW(L,NY,NX) 
+      THETWZ(L,NY,NX)=THETW(L,NY,NX)
       THETIZ(L,NY,NX)=THETI(L,NY,NX)
 C     WRITE(*,2425)'VOLW',NX,NY,L,ISOIL(1,L,NY,NX),ISOIL(2,L,NY,NX)
 C    2,VOLW(L,NY,NX),THETW(L,NY,NX),VOLX(L,NY,NX),POROS(L,NY,NX)
@@ -1229,13 +1231,13 @@ C
       IF(K.LE.2)THEN
       OSCM(K)=DCKR*CORGCX(K)*BKVL(L,NY,NX)
       ELSE
-      OSCM(K)=FCX*CORGCX(K)*BKVL(L,NY,NX)*DCKM/(CORGCX(4)+DCKM) 
+      OSCM(K)=FCX*CORGCX(K)*BKVL(L,NY,NX)*DCKM/(CORGCX(4)+DCKM)
       ENDIF
       ELSE
       IF(K.LE.2)THEN
       OSCM(K)=DCKR*CORGCX(K)*VOLT(L,NY,NX)
       ELSE
-      OSCM(K)=FCX*CORGCX(K)*VOLT(L,NY,NX)*DCKM/(CORGCX(4)+DCKM) 
+      OSCM(K)=FCX*CORGCX(K)*VOLT(L,NY,NX)*DCKM/(CORGCX(4)+DCKM)
       ENDIF
       ENDIF
 C     WRITE(*,2424)'OSCM',NX,NY,L,K,OSCM(K),CORGCX(K)
@@ -1257,15 +1259,15 @@ C
 C     MICROBIAL C, N AND P
 C
 C     OMC,OMN,OMP=microbial C,N,P
-C     OMCI=microbial biomass content in litter 
-C     OMCF,OMCA=hetero,autotrophic biomass composition in litter 
+C     OMCI=microbial biomass content in litter
+C     OMCF,OMCA=hetero,autotrophic biomass composition in litter
 C     CNOMC,CPOMC=maximum N:C and P:C ratios in microbial biomass
-C     OSCX,OSNX,OSPX=remaining unallocated SOC,SON,SOP  
+C     OSCX,OSNX,OSPX=remaining unallocated SOC,SON,SOP
 C
       DO 7990 N=1,7
       DO 7985 M=1,3
-      OMC(M,N,5,L,NY,NX)=0.0 
-      OMN(M,N,5,L,NY,NX)=0.0 
+      OMC(M,N,5,L,NY,NX)=0.0
+      OMN(M,N,5,L,NY,NX)=0.0
       OMP(M,N,5,L,NY,NX)=0.0
 7985  CONTINUE
 7990  CONTINUE
@@ -1274,16 +1276,16 @@ C
       OMC1=AMAX1(0.0,OSCM(K)*OMCI(M,K)*OMCF(N)*FOSCI)
       OMN1=AMAX1(0.0,OMC1*CNOMC(M,N,K)*FOSNI)
       OMP1=AMAX1(0.0,OMC1*CPOMC(M,N,K)*FOSPI)
-      OMC(M,N,K,L,NY,NX)=OMC1 
-      OMN(M,N,K,L,NY,NX)=OMN1 
-      OMP(M,N,K,L,NY,NX)=OMP1 
+      OMC(M,N,K,L,NY,NX)=OMC1
+      OMN(M,N,K,L,NY,NX)=OMN1
+      OMP(M,N,K,L,NY,NX)=OMP1
       OSCX(KK)=OSCX(KK)+OMC1
       OSNX(KK)=OSNX(KK)+OMN1
       OSPX(KK)=OSPX(KK)+OMP1
       DO 8992 NN=1,7
-      OMC(M,NN,5,L,NY,NX)=OMC(M,NN,5,L,NY,NX)+OMC1*OMCA(NN) 
-      OMN(M,NN,5,L,NY,NX)=OMN(M,NN,5,L,NY,NX)+OMN1*OMCA(NN) 
-      OMP(M,NN,5,L,NY,NX)=OMP(M,NN,5,L,NY,NX)+OMP1*OMCA(NN) 
+      OMC(M,NN,5,L,NY,NX)=OMC(M,NN,5,L,NY,NX)+OMC1*OMCA(NN)
+      OMN(M,NN,5,L,NY,NX)=OMN(M,NN,5,L,NY,NX)+OMN1*OMCA(NN)
+      OMP(M,NN,5,L,NY,NX)=OMP(M,NN,5,L,NY,NX)+OMP1*OMCA(NN)
       OSCX(KK)=OSCX(KK)+OMC1*OMCA(NN)
       OSNX(KK)=OSNX(KK)+OMN1*OMCA(NN)
       OSPX(KK)=OSPX(KK)+OMP1*OMCA(NN)
@@ -1294,7 +1296,7 @@ C
 C     MICROBIAL RESIDUE C, N AND P
 C
 C     ORC,ORN,ORP=microbial residue C,N,P
-C     ORCI=allocation of microbial residue to kinetic components 
+C     ORCI=allocation of microbial residue to kinetic components
 C
       DO 8985 M=1,2
       ORC(M,K,L,NY,NX)=X*AMAX1(0.0,OSCM(K)*ORCI(M,K)*FOSCI)
@@ -1372,7 +1374,7 @@ C
 6975  CONTINUE
       ENDIF
       DO 6990 K=0,5
-      DO 6990 N=1,7
+      DO 6991 N=1,7
       OC=OC+OMC(3,N,K,L,NY,NX)
       ON=ON+OMN(3,N,K,L,NY,NX)
       OP=OP+OMP(3,N,K,L,NY,NX)
@@ -1392,7 +1394,7 @@ C
       RINOOR(N,K,NY,NX)=0.0
       RIPOOR(N,K,NY,NX)=0.0
       ENDIF
-      DO 6990 M=1,3
+      DO 6992 M=1,3
       OC=OC+OMC(M,N,K,L,NY,NX)
       ON=ON+OMN(M,N,K,L,NY,NX)
       OP=OP+OMP(M,N,K,L,NY,NX)
@@ -1400,6 +1402,8 @@ C
       RC=RC+OMC(M,N,K,L,NY,NX)
       ENDIF
       RC0(K,NY,NX)=RC0(K,NY,NX)+OMC(M,N,K,L,NY,NX)
+6992  CONTINUE
+6991  CONTINUE
 6990  CONTINUE
       DO 6995 K=0,4
       DO 6985 M=1,2
@@ -1505,5 +1509,3 @@ C
 9895  CONTINUE
       RETURN
       END
-
-

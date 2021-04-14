@@ -42,8 +42,8 @@ OBJSC := $(SRCSC:./%.c=../bld/%.c.o)
 #
 CF =		ifort
 CC =            icc
-#CF =gf6
-#CC =gcc6
+CF =gf10
+CC =gcc10
 #LIBS =		-lpgsse2
 # CF =		ifort
 # LIBS =
@@ -59,7 +59,7 @@ CMD =		ecosys.x
 FFLAGS = -O2 -mp1 -r8 -i4 -align dcommons -cpp -auto-scalar -fimf-arch-consistency=true
 FFLAGS = -O2 -mp1 -r8 -i4 -align dcommons -auto-scalar -fimf-arch-consistency=true
 #gfortran
-#FFLAGS = -O2
+FFLAGS = -O2 -fdefault-double-8
 
 #FFLAGS = -O2 -check uninit -check bounds -mp1 -r8 -i4 -align dcommons -cpp -auto-scalar
 #FFLAGS = -O2 -check uninit -mp1 -r8 -i4 -align dcommons -cpp -auto-scalar

@@ -23,7 +23,7 @@ C
       PARAMETER (TWILGT=0.06976)
       DO 9995 NX=NHW,NHE
       DO 9990 NY=NVN,NVS
-      DO 9985 NZ=1,NP(NY,NX)	
+      DO 9985 NZ=1,NP(NY,NX)
 C
 C     OPEN PFT(11), PFT MANAGEMENT(12) FILES FROM
 C     FILE NAMES IN DATA ARRAYS LOADED IN MAIN.F
@@ -32,7 +32,7 @@ C     PREFIX=path for files in current or higher level directory
 C     DATAP=PFT file name
 C
       IF(DATAP(NZ,NY,NX).NE.'NO')THEN
-C     WRITE(*,2233)'READQ',NX,NY,NZ,IETYP(NY,NX),DATAP(NZ,NY,NX) 
+C     WRITE(*,2233)'READQ',NX,NY,NZ,IETYP(NY,NX),DATAP(NZ,NY,NX)
 2233  FORMAT(A8,4I4,2A16)
       OPEN(11,FILE=TRIM(PREFIX)//DATAP(NZ,NY,NX),STATUS='OLD')
       ENDIF
@@ -75,7 +75,7 @@ C     RUBP,PEPC=fraction of leaf protein in rubisco, PEP carboxylase
 C     ETMX=specific chlorophyll activity (umol e- g-1 s-1)
 C     CHL=fraction of leaf protein in mesophyll(C3), bundle sheath(C4) chlorophyll
 C     CHL4=fraction of leaf protein in mesophyll chlorophyll(C4)
-C     FCO2=intercellular:atmospheric CO2 concentration ratio 
+C     FCO2=intercellular:atmospheric CO2 concentration ratio
 C
       READ(11,*)VCMX(NZ,NY,NX),VOMX(NZ,NY,NX),VCMX4(NZ,NY,NX)
      2,XKCO2(NZ,NY,NX),XKO2(NZ,NY,NX),XKCO24(NZ,NY,NX)
@@ -96,7 +96,7 @@ C     CTC=chilling temperature for CO2 fixation, seed loss (oC)
 C     VRNLI,VRNXI=hour requirement for spring leafout,autumn leafoff
 C     WDLF=leaf length:width ratio
 C     PB=nonstructural C concentration needed for branching
-C     GROUPX,XTLI=node number required for floral initiation,at planting  
+C     GROUPX,XTLI=node number required for floral initiation,at planting
 C     XDL=critical photoperiod (h):<0=maximum daylength from site file
 C     XPPD=photoperiod sensitivity (node h-1)
 C
@@ -116,7 +116,7 @@ C     SDMX=maximum seed number per STMX
 C     GRMX=maximum seed size per SDMX (g)
 C     GRDM=seed size at planting (g)
 C     GFILL=grain filling rate at 25 oC (g seed-1 h-1)
-C     WTSTDI=mass of dead standing biomass at planting 
+C     WTSTDI=mass of dead standing biomass at planting
 C
       READ(11,*)SLA1(NZ,NY,NX),SSL1(NZ,NY,NX),SNL1(NZ,NY,NX)
       READ(11,*)(CLASS(N,NZ,NY,NX),N=1,4),CFI(NZ,NY,NX),ANGBR(NZ,NY,NX)
@@ -139,9 +139,9 @@ C
 C
 C     ROOT UPTAKE PARAMETERS
 C
-C     UPMXZH,UPKMZH,UPMNZH=NH4 max uptake (g m-2 h-1),Km (uM), min concn (uM)      
-C     UPMXZO,UPKMZO,UPMNZO=NO3 max uptake (g m-2 h-1),Km (uM), min concn (uM)      
-C     UPMXPO,UPKMPO,UPMNPO=H2PO4 max uptake (g m-2 h-1),Km (uM), min concn (uM)      
+C     UPMXZH,UPKMZH,UPMNZH=NH4 max uptake (g m-2 h-1),Km (uM), min concn (uM)
+C     UPMXZO,UPKMZO,UPMNZO=NO3 max uptake (g m-2 h-1),Km (uM), min concn (uM)
+C     UPMXPO,UPKMPO,UPMNPO=H2PO4 max uptake (g m-2 h-1),Km (uM), min concn (uM)
 C
       READ(11,*)UPMXZH(1,NZ,NY,NX),UPKMZH(1,NZ,NY,NX),UPMNZH(1,NZ,NY,NX)
       READ(11,*)UPMXZO(1,NZ,NY,NX),UPKMZO(1,NZ,NY,NX),UPMNZO(1,NZ,NY,NX)
@@ -211,7 +211,7 @@ C
       VRNL(NB,NZ,NY,NX)=VRNLI
       VRNX(NB,NZ,NY,NX)=VRNXI
       ENDIF
-5     CONTINUE         
+5     CONTINUE
       CLOSE(11)
       ENDIF
 C     WRITE(*,1111)'CRITICAL DAYLENGTH',IGO,NZ,XDL(NZ,NY,NX)
@@ -260,9 +260,9 @@ C     4=grazing,5=fire,6=insect
 C     JCUT=terminate PFT:0=no,1=yes,2=yes,but reseed
 C     HCUT:>0=cutting height,<0=fraction of LAI removed
 C     PCUT=thinning:fraction of population removed
-C     ECUT11,ECUT12,ECUT13,ECUT14=fraction of leaf,non-foliar,woody,standing dead 
+C     ECUT11,ECUT12,ECUT13,ECUT14=fraction of leaf,non-foliar,woody,standing dead
 C     removed from PFT
-C     ECUT21,ECUT22,ECUT23,ECUT124=fraction of leaf,non-foliar,woody,standing dead 
+C     ECUT21,ECUT22,ECUT23,ECUT124=fraction of leaf,non-foliar,woody,standing dead
 C     removed from ecosystem
 C
       READ(12,*,END=540)DY,ICUT,JCUT,HCUT,PCUT
@@ -277,7 +277,12 @@ C
       IMO=INT(DY/1.0E+04-IDX*1.0E+02)
       IYR=INT(DY-(IDX*1.0E+06+IMO*1.0E+04))
       LPY=0
-      IF(MOD(IYR,4))520,510,520
+C      IF(MOD(IYR,4))520,510,520
+      if(mod(iyr,4)==0)then
+        goto 510
+      else
+        goto 520
+      endif
 510   IF(IMO.GT.2)LPY=1
 520   IF(IMO.EQ.1)GO TO 525
       IDY=30*(IMO-1)+ICOR(IMO-1)+IDX+LPY
@@ -288,7 +293,7 @@ C
 C     IDY=IDY-0.5*(NTX-1)
       IDAY0(NZ,NY,NX)=IDY
 C     IF(ISTYP(NZ,NY,NX).EQ.0)THEN
-      IYR=IYR+(NT-1)*NF+(NTX-1)*NFX-NTZX 
+      IYR=IYR+(NT-1)*NF+(NTX-1)*NFX-NTZX
 C     ENDIF
       IYR0(NZ,NY,NX)=MIN(IYR,IYRC)
       IDAYX(NZ,NY,NX)=IDAY0(NZ,NY,NX)
@@ -299,7 +304,7 @@ C     ENDIF
       IF(IDY.GT.0.AND.JCUT.EQ.1)THEN
 C     IDY=IDY+0.5*(NTX-1)
       IDAYH(NZ,NY,NX)=IDY
-      IYR=IYR+(NT-1)*NF+(NTX-1)*NFX-NTZX 
+      IYR=IYR+(NT-1)*NF+(NTX-1)*NFX-NTZX
       IYRH(NZ,NY,NX)=MIN(IYR,IYRC)
       ENDIF
 C
@@ -310,11 +315,11 @@ C     JHVST=terminate PFT:0=no,1=yes,2=yes,and reseed
 C     HVST=IHVST=0-2:>0=cutting height,<0=fraction of LAI removed
 C          IHVST=3:reduction of clumping factor
 C          IHVST=4 or 6:animal or insect biomass(g LM m2),IHVST=5:fire
-C     THIN=IHVST=0-3,5: fraction of population removed, 
+C     THIN=IHVST=0-3,5: fraction of population removed,
 C          IHVST=4 or 6:specific herbivory rate (g DM g-1 LM d-1)
-C     EHVST(1,1,EHVST(1,2,EHVST(1,3,EHVST(1,4=fraction of 
+C     EHVST(1,1,EHVST(1,2,EHVST(1,3,EHVST(1,4=fraction of
 C           leaf,non-foliar,woody, standing dead removed from PFT
-C     EHVST(2,1,EHVST(2,2,EHVST(2,3,EHVST(2,4=fraction of 
+C     EHVST(2,1,EHVST(2,2,EHVST(2,3,EHVST(2,4=fraction of
 C           leaf,non-foliar,woody, standing dead removed from ecosystem
 C
       IHVST(NZ,IDY,NY,NX)=ICUT
@@ -334,7 +339,12 @@ C     IF ANIMAL OR INSECT GRAZING LOAD ALL DATES BETWEEN FIRST AND LAST
 C
       IF(IHVST(NZ,IDY,NY,NX).EQ.4.OR.IHVST(NZ,IDY,NY,NX).EQ.6)THEN
       NN=NN+1
-      IF(MOD(NN,2))570,560,570
+C      IF(MOD(NN,2))570,560,570
+      if(mod(nn,2)==0)then
+        goto 560
+      else
+        goto 570
+      endif
 560   IDYE=IDY
       DO 580 IDYG=IDYS+1,IDYE-1
       IHVST(NZ,IDYG,NY,NX)=ICUT
@@ -348,7 +358,7 @@ C
       EHVST(2,1,NZ,IDYG,NY,NX)=ECUT21
       EHVST(2,2,NZ,IDYG,NY,NX)=ECUT22
       EHVST(2,3,NZ,IDYG,NY,NX)=ECUT23
-      EHVST(2,4,NZ,IDYG,NY,NX)=ECUT24      
+      EHVST(2,4,NZ,IDYG,NY,NX)=ECUT24
 580   CONTINUE
 570   IDYS=IDY
       ENDIF
