@@ -395,7 +395,7 @@ C
       IF(L.EQ.44)HEAD(M)='PSI_10'
       IF(L.EQ.45)HEAD(M)='PSI_11'
       IF(L.EQ.46)HEAD(M)='PSI_12'
-      IF(L.EQ.47)HEAD(M)='PSI_13'
+      IF(L.EQ.47)HEAD(M)='PSI_SURF'
       IF(L.EQ.48)HEAD(M)='SURF_ELEV'
       IF(L.EQ.49)HEAD(M)='ACTV_LYR'
       IF(L.EQ.50)HEAD(M)='WTR_TBL'
