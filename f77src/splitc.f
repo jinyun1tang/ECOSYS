@@ -12,7 +12,7 @@
       character*1024 str
       integer nz,nx,ny,n
       integer :: failure
-      character(len=*), parameter :: modfile=__FILE__
+      character(len=*), parameter :: modfile='splitc'
       nz=1
       do nx=nhw,nhe
          do ny=nvn,nvs
@@ -26,13 +26,13 @@
 C          call splits(NHW,NHE,NVN,NVS,OUTS(N))
           call splits(NHW,NHE,NVN,NVS,outdir,OUTS(N), failure)
           if(failure==1)call endrun('Fail to process file '//
-     2trim(outdir)//trim(OUTS(N))//' in '//trim(modfile),__LINE__)
+     2trim(outdir)//trim(OUTS(N))//' in '//trim(modfile),29)
           str='rm -f ' // OUTS(N)
           call system (str)
 C          call splitp(NHW,NHE,NVN,NVS,nz,OUTP(N))
           call splitp(NHW,NHE,NVN,NVS,nz,outdir, OUTP(N), failure)
           if(failure==1)call endrun('Fail to process file '//
-     2trim(outdir)//trim(OUTP(N))//' in '//trim(modfile),__LINE__)
+     2trim(outdir)//trim(OUTP(N))//' in '//trim(modfile),35)
           str = 'rm -f ' // OUTP(N)
           call system (str)
         endif
