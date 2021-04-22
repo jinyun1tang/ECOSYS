@@ -59,7 +59,7 @@ CMD =		ecosys.x
 FFLAGS = -O2 -mp1 -r8 -i4 -align dcommons -cpp -auto-scalar -fimf-arch-consistency=true
 FFLAGS = -O2 -mp1 -r8 -i4 -align dcommons -auto-scalar -fimf-arch-consistency=true
 #gfortran
-FFLAGS = -O3 -fdefault-double-8 -ffast-math
+FFLAGS = -O3 -fdefault-double-8 -ffast-math -std=gnu -pedantic -DCPRGNU -DCPP
 
 #FFLAGS = -O2 -check uninit -check bounds -mp1 -r8 -i4 -align dcommons -cpp -auto-scalar
 #FFLAGS = -O2 -check uninit -mp1 -r8 -i4 -align dcommons -cpp -auto-scalar
