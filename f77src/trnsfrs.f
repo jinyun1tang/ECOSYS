@@ -101,20 +101,20 @@ C
      2,CASGL2(JZ,JY,JX),GMSGL2(JZ,JY,JX),ANSGL2(JZ,JY,JX)
      3,AKSGL2(JZ,JY,JX),OHSGL2(JZ,JY,JX),C3SGL2(JZ,JY,JX)
      4,HCSGL2(JZ,JY,JX),SOSGL2(JZ,JY,JX),CLSXL2(JZ,JY,JX)
-     5,RQRAL(2,JV,JH),RQRFE(2,JV,JH),RQRHY(2,JV,JH),RQRCA(2,JV,JH)
-     6,RQRMG(2,JV,JH),RQRNA(2,JV,JH),RQRKA(2,JV,JH),RQROH(2,JV,JH)
-     7,RQRSO(2,JV,JH),RQRCL(2,JV,JH),RQRC3(2,JV,JH),RQRHC(2,JV,JH)
-     8,RQRAL1(2,JV,JH),RQRAL2(2,JV,JH),RQRAL3(2,JV,JH)
-     9,RQRAL4(2,JV,JH),RQRALS(2,JV,JH),RQRFE1(2,JV,JH)
-     1,RQRFE2(2,JV,JH),RQRFE3(2,JV,JH),RQRFE4(2,JV,JH)
-     2,RQRFES(2,JV,JH),RQRCAO(2,JV,JH),RQRCAC(2,JV,JH)
-     3,RQRCAH(2,JV,JH),RQRCAS(2,JV,JH),RQRMGO(2,JV,JH),RQRMGC(2,JV,JH)
-     4,RQRMGH(2,JV,JH),RQRMGS(2,JV,JH),RQRNAC(2,JV,JH),RQRNAS(2,JV,JH)
-     5,RQRKAS(2,JV,JH),RQRH0P(2,JV,JH),RQRH3P(2,JV,JH)
-     6,RQRF1P(2,JV,JH),RQRF2P(2,JV,JH),RQRC0P(2,JV,JH),RQRC1P(2,JV,JH)
-     7,RQRC2P(2,JV,JH),RQRM1P(2,JV,JH),RQRH0B(2,JV,JH) 
-     8,RQRH3B(2,JV,JH),RQRF1B(2,JV,JH),RQRF2B(2,JV,JH),RQRC0B(2,JV,JH)
-     9,RQRC1B(2,JV,JH),RQRC2B(2,JV,JH),RQRM1B(2,JV,JH)
+     5,RQRAL(2,2,JV,JH),RQRFE(2,2,JV,JH),RQRHY(2,2,JV,JH)
+     5,RQRCA(2,2,JV,JH),RQRMG(2,2,JV,JH),RQRNA(2,2,JV,JH)
+     6,RQRKA(2,2,JV,JH),RQROH(2,2,JV,JH),RQRSO(2,2,JV,JH)
+     7,RQRCL(2,2,JV,JH),RQRC3(2,2,JV,JH),RQRHC(2,2,JV,JH)
+     8,RQRAL1(2,2,JV,JH),RQRAL2(2,2,JV,JH),RQRAL3(2,2,JV,JH)
+     9,RQRAL4(2,2,JV,JH),RQRALS(2,2,JV,JH),RQRFE1(2,2,JV,JH)
+     1,RQRFE2(2,2,JV,JH),RQRFE3(2,2,JV,JH),RQRFE4(2,2,JV,JH)
+     2,RQRFES(2,2,JV,JH),RQRCAO(2,2,JV,JH),RQRCAC(2,2,JV,JH)
+     3,RQRCAH(2,2,JV,JH),RQRCAS(2,2,JV,JH),RQRMGO(2,2,JV,JH)
+     4,RQRMGC(2,2,JV,JH),RQRMGH(2,2,JV,JH),RQRMGS(2,2,JV,JH)
+     5,RQRNAC(2,2,JV,JH),RQRNAS(2,2,JV,JH),RQRKAS(2,2,JV,JH)
+     5,RQRH0P(2,2,JV,JH),RQRH3P(2,2,JV,JH),RQRF1P(2,2,JV,JH)
+     6,RQRF2P(2,2,JV,JH),RQRC0P(2,2,JV,JH),RQRC1P(2,2,JV,JH)
+     7,RQRC2P(2,2,JV,JH),RQRM1P(2,2,JV,JH)
      5,RQSAL(2,JV,JH),RQSFE(2,JV,JH),RQSHY(2,JV,JH),RQSCA(2,JV,JH)
      6,RQSMG(2,JV,JH),RQSNA(2,JV,JH),RQSKA(2,JV,JH),RQSOH(2,JV,JH)
      7,RQSSO(2,JV,JH),RQSCL(2,JV,JH),RQSC3(2,JV,JH),RQSHC(2,JV,JH)
@@ -308,10 +308,20 @@ C
      3,RC1PF1(JY,JX),RC2PF1(JY,JX),RM1PF1(JY,JX),RH0BF2(JY,JX)
      4,RH3BF2(JY,JX),RF1BF2(JY,JX),RF2BF2(JY,JX),RC0BF2(JY,JX)
      5,RC1BF2(JY,JX),RC2BF2(JY,JX),RM1BF2(JY,JX)
+      DIMENSION RQRAL0(JY,JX),RQRFE0(JY,JX),RQRHY0(JY,JX)
+     2,RQRCA0(JY,JX),RQRMG0(JY,JX),RQRNA0(JY,JX),RQRKA0(JY,JX)
+     3,RQROH0(JY,JX),RQRSO0(JY,JX),RQRCL0(JY,JX),RQRC30(JY,JX)
+     4,RQRHC0(JY,JX),RQRAL10(JY,JX),RQRAL20(JY,JX),RQRAL30(JY,JX)
+     5,RQRAL40(JY,JX),RQRALS0(JY,JX),RQRFE10(JY,JX),RQRFE20(JY,JX)
+     6,RQRFE30(JY,JX),RQRFE40(JY,JX),RQRFES0(JY,JX),RQRCAO0(JY,JX)
+     7,RQRCAC0(JY,JX),RQRCAH0(JY,JX),RQRCAS0(JY,JX),RQRMGO0(JY,JX)
+     8,RQRMGC0(JY,JX),RQRMGH0(JY,JX),RQRMGS0(JY,JX),RQRNAC0(JY,JX)
+     9,RQRNAS0(JY,JX),RQRKAS0(JY,JX),RQRH0P0(JY,JX),RQRH3P0(JY,JX)
+     1,RQRF1P0(JY,JX),RQRF2P0(JY,JX),RQRC0P0(JY,JX),RQRC1P0(JY,JX)
+     2,RQRC2P0(JY,JX),RQRM1P0(JY,JX)
       DIMENSION THETW1(JZ,JY,JX),FLWU(JZ,JY,JX)
      2,POSGL2(JZ,JY,JX)
       PARAMETER (VFLWX=0.5,XFRS=0.05)
-      XNPX=1.0*XNPH 
 C
 C     TIME STEPS FOR SOLUTE FLUX CALCULATIONS
 C
@@ -322,6 +332,21 @@ C
 C     HOURLY SOLUTE FLUXES FROM ATMOSPHERE TO SNOWPACK
 C     IN SNOWFALL AND IRRIGATION ACCORDING TO CONCENTRATIONS
 C     ENTERED IN WEATHER AND IRRIGATION FILES
+C
+C     PRECW,PRECR=snow,rain 
+C     VHCPWM,VHCPWX=current,minimum volumetric heat capacity of snowpack
+C     X*BLS=hourly solute flux to snowpack
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C     FLQGQ,FLQGI=water flux to snowpack from rain,irrigation
+C     C*R,C*Q=precipitation,irrigation solute concentrations
 C
       IF(PRECW(NY,NX).GT.0.0.OR.(PRECR(NY,NX).GT.0.0
      2.AND.VHCPWM(1,1,NY,NX).GT.VHCPWX(NY,NX)))THEN
@@ -410,6 +435,8 @@ C
 C
 C     HOURLY SOLUTE FLUXES FROM ATMOSPHERE TO SOIL SURFACE
 C     IN RAINFALL AND IRRIGATION ARE ZERO IF SNOWPACK IS PRESENT
+C
+C     X*FLS,X*FLB=hourly solute flux to micropores in non-band,band 
 C
       XALFLS(3,0,NY,NX)=0.0
       XFEFLS(3,0,NY,NX)=0.0
@@ -511,6 +538,23 @@ C
 C
 C     HOURLY SOLUTE FLUXES FROM ATMOSPHERE TO SNOWPACK
 C     IN SNOWFALL AND IRRIGATION IS ZERO IF SNOWPACK IS ABSENT
+C
+C     PRECQ,PRECI=snow+rain,irrigation
+C     X*BLS=hourly solute flux to snowpack
+C     X*FLS,X*FLB=hourly solute flux to surface litter,soil surface micropore non-band,band
+C     FLQRQ,FLQRI=water flux to surface litter from rain,irrigation
+C     FLQGQ,FLQGI=water flux to soil surface from rain,irrigation
+C     C*R,C*Q=precipitation,irrigation solute concentrations
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
 C
       XALBLS(1,NY,NX)=0.0
       XFEBLS(1,NY,NX)=0.0
@@ -873,6 +917,61 @@ C
 C     GAS AND SOLUTE FLUXES AT SUB-HOURLY FLUX TIME STEP
 C     ENTERED IN SITE FILE
 C
+C
+C     XNPH=1/no. of cycles h-1 for water, heat and solute flux calculations
+C     R*BLS,R*FL0,R*FL1,R*FL2=solute flux to snowpack,surface litter,soil surface non-band,band 
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C
+      RALBLS(1,NY,NX)=XALBLS(1,NY,NX)*XNPH
+      RFEBLS(1,NY,NX)=XFEBLS(1,NY,NX)*XNPH
+      RHYBLS(1,NY,NX)=XHYBLS(1,NY,NX)*XNPH
+      RCABLS(1,NY,NX)=XCABLS(1,NY,NX)*XNPH
+      RMGBLS(1,NY,NX)=XMGBLS(1,NY,NX)*XNPH
+      RNABLS(1,NY,NX)=XNABLS(1,NY,NX)*XNPH
+      RKABLS(1,NY,NX)=XKABLS(1,NY,NX)*XNPH
+      ROHBLS(1,NY,NX)=XOHBLS(1,NY,NX)*XNPH
+      RSOBLS(1,NY,NX)=XSOBLS(1,NY,NX)*XNPH
+      RCLBLS(1,NY,NX)=XCLBLS(1,NY,NX)*XNPH
+      RC3BLS(1,NY,NX)=XC3BLS(1,NY,NX)*XNPH
+      RHCBLS(1,NY,NX)=XHCBLS(1,NY,NX)*XNPH
+      RAL1BS(1,NY,NX)=XAL1BS(1,NY,NX)*XNPH
+      RAL2BS(1,NY,NX)=XAL2BS(1,NY,NX)*XNPH
+      RAL3BS(1,NY,NX)=XAL3BS(1,NY,NX)*XNPH
+      RAL4BS(1,NY,NX)=XAL4BS(1,NY,NX)*XNPH
+      RALSBS(1,NY,NX)=XALSBS(1,NY,NX)*XNPH
+      RFE1BS(1,NY,NX)=XFE1BS(1,NY,NX)*XNPH
+      RFE2BS(1,NY,NX)=XFE2BS(1,NY,NX)*XNPH
+      RFE3BS(1,NY,NX)=XFE3BS(1,NY,NX)*XNPH
+      RFE4BS(1,NY,NX)=XFE4BS(1,NY,NX)*XNPH
+      RFESBS(1,NY,NX)=XFESBS(1,NY,NX)*XNPH
+      RCAOBS(1,NY,NX)=XCAOBS(1,NY,NX)*XNPH
+      RCACBS(1,NY,NX)=XCACBS(1,NY,NX)*XNPH
+      RCAHBS(1,NY,NX)=XCAHBS(1,NY,NX)*XNPH
+      RCASBS(1,NY,NX)=XCASBS(1,NY,NX)*XNPH
+      RMGOBS(1,NY,NX)=XMGOBS(1,NY,NX)*XNPH
+      RMGCBS(1,NY,NX)=XMGCBS(1,NY,NX)*XNPH
+      RMGHBS(1,NY,NX)=XMGHBS(1,NY,NX)*XNPH
+      RMGSBS(1,NY,NX)=XMGSBS(1,NY,NX)*XNPH
+      RNACBS(1,NY,NX)=XNACBS(1,NY,NX)*XNPH
+      RNASBS(1,NY,NX)=XNASBS(1,NY,NX)*XNPH
+      RKASBS(1,NY,NX)=XKASBS(1,NY,NX)*XNPH
+      RH0PBS(1,NY,NX)=XH0PBS(1,NY,NX)*XNPH
+      RH3PBS(1,NY,NX)=XH3PBS(1,NY,NX)*XNPH
+      RF1PBS(1,NY,NX)=XF1PBS(1,NY,NX)*XNPH
+      RF2PBS(1,NY,NX)=XF2PBS(1,NY,NX)*XNPH
+      RC0PBS(1,NY,NX)=XC0PBS(1,NY,NX)*XNPH
+      RC1PBS(1,NY,NX)=XC1PBS(1,NY,NX)*XNPH
+      RC2PBS(1,NY,NX)=XC2PBS(1,NY,NX)*XNPH
+      RM1PBS(1,NY,NX)=XM1PBS(1,NY,NX)*XNPH
       RALFL0(NY,NX)=XALFLS(3,0,NY,NX)*XNPH
       RFEFL0(NY,NX)=XFEFLS(3,0,NY,NX)*XNPH
       RHYFL0(NY,NX)=XHYFLS(3,0,NY,NX)*XNPH
@@ -966,6 +1065,16 @@ C
 C
 C     INITIAL SOLUTES IN SNOWPACK
 C
+C     Z*W=solute content in snowpacl
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-C
       DO 20 L=1,JS
       ZALW2(L,NY,NX)=ZALW(L,NY,NX)
       ZFEW2(L,NY,NX)=ZFEW(L,NY,NX)
@@ -1010,7 +1119,11 @@ C
       ZMG1PW2(L,NY,NX)=ZMG1PW(L,NY,NX)
 20    CONTINUE
 C
-C     HOURLY SOLUTE FLUXES FROM SOLUTE.F 
+C     SOLUTE FLUXES FROM SOLUTE.F 
+C
+C     XNPH=1/no. of cycles h-1 for water, heat and solute flux calculations
+C     RZ*2=solute flux at time step for flux calculations
+C     TR*=solute transformations from solute.f
 C
       DO 10 L=NU(NY,NX),NL(NY,NX)
       RZAL2(L,NY,NX)=-TRAL(L,NY,NX)*XNPH
@@ -1063,7 +1176,13 @@ C
       RZC2PB2(L,NY,NX)=-TRC2B(L,NY,NX)*XNPH
       RZM1PB2(L,NY,NX)=-TRM1B(L,NY,NX)*XNPH
 C
-C     HOURLY SOLUTE FLUXES FROM SUBSURFACE IRRIGATION
+C     SOLUTE FLUXES FROM SUBSURFACE IRRIGATION
+C
+C     FLU=subsurface water flux from watsub.f
+C     R*FLU,R*FBU=subsurface solute flux in non-band,band
+C     C*Q=irrigation solute concentrations
+C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
+C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
 C
       FLWU(L,NY,NX)=TUPWTR(L,NY,NX)*XNPH
       RALFLU(L,NY,NX)=FLU(L,NY,NX)*CALQ(I,NY,NX)
@@ -1118,6 +1237,9 @@ C
 C
 C     SUB-HOURLY SOLUTE FLUXES FROM SUBSURFACE IRRIGATION
 C
+C     R*FLZ,R*FBZ=subsurface solute flux in non-band,band
+C     XNPH=1/no. of cycles h-1 for water, heat and solute flux calculations
+C
       RALFLZ(L,NY,NX)=RALFLU(L,NY,NX)*XNPH
       RFEFLZ(L,NY,NX)=RFEFLU(L,NY,NX)*XNPH
       RHYFLZ(L,NY,NX)=RHYFLU(L,NY,NX)*XNPH
@@ -1170,6 +1292,10 @@ C
 C
 C     SOLUTE DIFFUSIVITIES AT SUB-HOURLY TIME STEP
 C
+C     XNPH=1/no. of cycles h-1 for water, heat and solute flux calculations
+C     *SGL*=solute diffusivity from hour1.f
+C     solute code:PO=PO4,AL=Al,FE=Fe,HY=H,CA=Ca,GM=Mg,AN=Na,AK=KOH=OH
+C                :SO=SO4,CL=Cl,C3=CO3,HC=HCO3
       POSGL2(L,NY,NX)=POSGL(L,NY,NX)*XNPH
       ALSGL2(L,NY,NX)=ALSGL(L,NY,NX)*XNPH
       FESGL2(L,NY,NX)=FESGL(L,NY,NX)*XNPH
@@ -1186,7 +1312,19 @@ C
 C
 C     STATE VARIABLES FOR SOLUTES USED IN 'TRNSFRS'
 C     TO STORE SUB-HOURLY CHANGES DURING FLUX CALCULATIONS
-C     INCLUDING TRANSFORMATIONS FROM REACTIONS IN ?SOLUTE?
+C     INCLUDING TRANSFORMATIONS FROM REACTIONS IN SOLUTE.F
+C
+C     Z*,Z*2=soil solute contents
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
 C
       ZAL2(L,NY,NX)=ZAL(L,NY,NX)
       ZFE2(L,NY,NX)=ZFE(L,NY,NX)
@@ -1298,7 +1436,7 @@ C
       DO 9890 NY=NVN,NVS
       IF(ISALTG.NE.0)THEN
 C
-C     RESET SOLUTE RUNOFF FLUX ACCUMULATORS
+C     INITIALIZE SOLUTE RUNOFF NET FLUX ACCUMULATORS
 C
       TQRAL(NY,NX)=0.0
       TQRFE(NY,NX)=0.0
@@ -1383,7 +1521,7 @@ C
       TQSC2P(NY,NX)=0.0
       TQSM1P(NY,NX)=0.0
 C
-C     RESET SNOWPACK FLUX ACCUMULATORS
+C     INITIALIZE SNOWPACK NET FLUX ACCUMULATORS
 C
       DO 9855 L=1,JS
       TALBLS(L,NY,NX)=0.0
@@ -1429,7 +1567,7 @@ C
       TM1PBS(L,NY,NX)=0.0
 9855  CONTINUE
 C
-C     RESET SOIL SOLUTE FLUX ACCUMULATORS
+C     INITIALIZE SOIL SOLUTE NET FLUX ACCUMULATORS
 C
       DO 9885 L=NU(NY,NX),NL(NY,NX)
       TALFLS(L,NY,NX)=0.0
@@ -1533,6 +1671,18 @@ C
 C
 C     ADD SINKS FROM SOLUTE.F   
 C
+C     RZ*2=solute flux at time step for flux calculations
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C
       ZAL2(L,NY,NX)=ZAL2(L,NY,NX)-RZAL2(L,NY,NX) 
       ZFE2(L,NY,NX)=ZFE2(L,NY,NX)-RZFE2(L,NY,NX) 
       ZHY2(L,NY,NX)=ZHY2(L,NY,NX)-RZHY2(L,NY,NX) 
@@ -1587,6 +1737,12 @@ C
 C     SOLUTE FLUXES FROM MELTING SNOWPACK TO
 C     SOIL SURFACE FROM SNOWMELT IN 'WATSUB' AND
 C     CONCENTRATIONS IN SNOWPACK
+C
+C     VHCPWM,VHCPWX=current,minimum volumetric heat capacity of snowpack
+C     VOLWSL=snowpack water content
+C     FLQWM=snowpack water flux
+C     R*BLS=solute flux in snowpack
+C     X*BLS=hourly solute flux in snowpack
 C
       ICHKL=0
       DO 9775 L=1,JS
@@ -1724,6 +1880,17 @@ C
       RC2PBS(L2,NY,NX)=0.0
       RM1PBS(L2,NY,NX)=0.0
       ENDIF
+C
+C     SNOWPACK SOLUTE DISCHARGE TO SURFACE LITTER, SOIL SURFACE
+C
+C     VOLWSL=snowpack water content
+C     FLQRM,FLQSM,FLQHM=total water flux to litter,soil micropore,macropore
+C     CVRD,BARE=litter cover fraction,1-CVRD
+C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
+C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
+C     R*S0=solute flux to surface litter
+C     R*S1,R*B1=solute flux to soil surface non-band,band 
+C
       IF(ICHKL.EQ.0)THEN
       IF(VOLWSL(L,NY,NX).GT.ZEROS2(NY,NX))THEN
       VFLWR=AMAX1(0.0,AMIN1(1.0,FLQRM(M,NY,NX)/VOLWSL(L,NY,NX)))
@@ -1926,11 +2093,29 @@ C
 C     CONVECTIVE SOLUTE EXCHANGE BETWEEN RESIDUE AND SOIL SURFACE
 C
       FLWRM1=FLWRM(M,NY,NX) 
+C 
+C     FLWRM=litter-soil water flux from watsub.f
 C
 C     IF WATER FLUX FROM 'WATSUB' IS FROM RESIDUE TO
 C     SOIL SURFACE THEN CONVECTIVE TRANSPORT IS THE PRODUCT
 C     OF WATER FLUX AND MICROPORE GAS OR SOLUTE CONCENTRATIONS
 C     IN RESIDUE
+C
+C     VOLWM=litter water volume
+C     RFL*=soil-litter convective solute flux
+C     Z*2=litter solute content
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
+C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
 C
       IF(FLWRM1.GT.0.0)THEN   
       IF(VOLWM(M,0,NY,NX).GT.ZEROS2(NY,NX))THEN
@@ -1993,6 +2178,22 @@ C     SOIL SURFACE THEN CONVECTIVE TRANSPORT IS THE PRODUCT
 C     OF WATER FLUX AND MICROPORE GAS OR SOLUTE CONCENTRATIONS
 C     IN SOIL SURFACE
 C
+C     VOLWM=litter water volume
+C     RFL*=soil-litter convective solute flux
+C     Z*2=soil solute content
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
+C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
+C
       ELSE
       IF(VOLWM(M,NU(NY,NX),NY,NX).GT.ZEROS2(NY,NX))THEN
       VFLW=AMIN1(0.0,AMAX1(-VFLWX,FLWRM1/VOLWM(M,NU(NY,NX),NY,NX)))
@@ -2054,11 +2255,17 @@ C     DIFFUSIVE FLUXES OF GASES AND SOLUTES BETWEEN RESIDUE AND
 C     SOIL SURFACE FROM AQUEOUS DIFFUSIVITIES
 C     AND CONCENTRATION DIFFERENCES
 C
+C     VOLT,DLYR,AREA=soil surface volume, thickness, area
+C     VOLWM=micropore water-filled porosity from watsub.f
+C
       IF((VOLT(0,NY,NX).GT.ZEROS(NY,NX) 
      2.AND.VOLWM(M,0,NY,NX).GT.ZEROS2(NY,NX))
      3.AND.(VOLWM(M,NU(NY,NX),NY,NX).GT.ZEROS2(NY,NX)))THEN
 C
 C     MICROPORE CONCENTRATIONS FROM WATER IN RESIDUE AND SOIL SURFACE
+C
+C     C*1,C*2=solute concentration in litter, soil
+C     Z*1,Z*2=solute content in litter, soil
 C
       VOLWPA=VOLWM(M,NU(NY,NX),NY,NX)*VLPO4(NU(NY,NX),NY,NX)
       VOLWPB=VOLWM(M,NU(NY,NX),NY,NX)*VLPOB(NU(NY,NX),NY,NX)
@@ -2177,6 +2384,25 @@ C
 C
 C     DIFFUSIVITIES IN RESIDUE AND SOIL SURFACE
 C
+C     DLYR0,DLYR1=litter, soil surface thickness    
+C     TORT=tortuosity from hour1.f 
+C     CVRD,BARE=litter cover fraction,1-CVRD
+C     DISP=dispersivity parameter
+C     FLWRM=litter-soil water flux from watsub.f
+C     DIF*=aqueous diffusivity-dispersivity in soil surface 
+C     *SGL*=solute diffusivity from hour1.f
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C     DIF*=aqueous diffusivity-dispersivity between litter and soil surface
+C
       DLYR0=AMAX1(ZERO2,DLYR(3,0,NY,NX))
       TORT0=TORT(M,0,NY,NX)*CVRD(NY,NX)
       DLYR1=AMAX1(ZERO2,DLYR(3,NU(NY,NX),NY,NX))
@@ -2210,6 +2436,24 @@ C
      2*AREA(3,NU(NY,NX),NY,NX)
       DIFHC=(HCSGL2(NU(NY,NX),NY,NX)*TORTL+DISPN)
      2*AREA(3,NU(NY,NX),NY,NX)
+C
+C     DIFFUSIVE FLUXES BETWEEN CURRENT AND ADJACENT GRID CELL
+C     MICROPORES
+C
+C     DFV*S,DFV*B=diffusive solute flux between litter and soil surface in non-band,band
+C     DIF*=aqueous diffusivity-dispersivity between litter and soil surface
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C     C*1,C*2=solute concentration in litter,soil surface
+C
       DFVAL=DIFAL*(CAL1-CAL2)
       DFVFE=DIFFE*(CFE1-CFE2)
       DFVHY=DIFHY*(CHY1-CHY2)
@@ -2314,6 +2558,23 @@ C
 C     TOTAL MICROPORE AND MACROPORE SOLUTE TRANSPORT FLUXES BETWEEN
 C     ADJACENT GRID CELLS = CONVECTIVE + DIFFUSIVE FLUXES
 C
+C
+C     R*FLS=convective + diffusive solute flux between litter, soil surface
+C     R*FLW,R*FLB=convective + diffusive solute flux into soil in non-band,band
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C     R*FL0,R*FL1=convective flux into surface litter, soil surface
+C     RFL*=convective flux between surface litter and soil surface 
+C     DFV*=diffusive solute flux between litter and soil surface
+C
       RALFLS(3,0,NY,NX)=RALFL0(NY,NX)+RALFLS0-RFLAL-DFVAL
       RFEFLS(3,0,NY,NX)=RFEFL0(NY,NX)+RFEFLS0-RFLFE-DFVFE
       RHYFLS(3,0,NY,NX)=RHYFL0(NY,NX)+RHYFLS0-RFLHY-DFVHY
@@ -2413,7 +2674,10 @@ C
       RC2BFB(3,NU(NY,NX),NY,NX)=RC2BF2(NY,NX)+RC2BFB1+RFLC2B+DFVC2B
       RM1BFB(3,NU(NY,NX),NY,NX)=RM1BF2(NY,NX)+RM1BFB1+RFLM1B+DFVM1B
 C
-C     ACCUMULATE HOURLY FLUXES
+C     ACCUMULATE HOURLY FLUXES FOR USE IN REDIST.F
+C
+C     X*FLS=hourly convective + diffusive solute flux
+C     X*FLW,X*FLB= hourly convective + diffusive solute flux in non-band,band
 C
       XALFLS(3,0,NY,NX)=XALFLS(3,0,NY,NX)+RALFLS0-RFLAL-DFVAL 
       XFEFLS(3,0,NY,NX)=XFEFLS(3,0,NY,NX)+RFEFLS0-RFLFE-DFVFE 
@@ -2567,6 +2831,22 @@ C     MACROPORE-MICROPORE SOLUTE EXCHANGE IN SOIL
 C     SURFACE LAYER FROM WATER EXCHANGE IN 'WATSUB' AND
 C     FROM MACROPORE OR MICROPORE SOLUTE CONCENTRATIONS
 C
+C     FINHM=macro-micropore water transfer from watsub.f 
+C     VOLWM,VOLWHM=micropore,macropore water volume
+C     RFL*=convective macropore-micropore solute transfer 
+C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
+C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C     *H2,*2=macropore,micropore solute content
 C
 C     MACROPORE TO MICROPORE TRANSFER
 C
@@ -2775,173 +3055,191 @@ C
 C     DIFFUSIVE FLUXES OF SOLUTES BETWEEN MICROPORES AND
 C     MACROPORES FROM AQUEOUS DIFFUSIVITIES AND CONCENTRATION DIFFERENCES
 C
+C     VOLWM,VOLWHM=micropore,macropore water volume
+C     XFRS*VOLT=maximum macropore volume for solute transfer
+C     DFV*=diffusive macropore-micropore solute transfer 
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
+C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
+C     XNPH=1/no. of cycles h-1 for water, heat and solute flux calculations
+C     *H2,*2=macropore,micropore solute content
+C
       IF(VOLWHM(M,NU(NY,NX),NY,NX).GT.ZEROS2(NY,NX))THEN
       VOLWHS=AMIN1(XFRS*VOLT(NU(NY,NX),NY,NX)
      2,VOLWHM(M,NU(NY,NX),NY,NX))
       VOLWT=VOLWM(M,NU(NY,NX),NY,NX)+VOLWHS 
-      DFVAL=XNPX*(AMAX1(0.0,ZALH2(NU(NY,NX),NY,NX))
+      DFVAL=XNPH*(AMAX1(0.0,ZALH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZAL2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVFE=XNPX*(AMAX1(0.0,ZFEH2(NU(NY,NX),NY,NX))
+      DFVFE=XNPH*(AMAX1(0.0,ZFEH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZFE2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVHY=XNPX*(AMAX1(0.0,ZHYH2(NU(NY,NX),NY,NX))
+      DFVHY=XNPH*(AMAX1(0.0,ZHYH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZHY2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVCA=XNPX*(AMAX1(0.0,ZCCH2(NU(NY,NX),NY,NX))
+      DFVCA=XNPH*(AMAX1(0.0,ZCCH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZCA2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVMG=XNPX*(AMAX1(0.0,ZMAH2(NU(NY,NX),NY,NX))
+      DFVMG=XNPH*(AMAX1(0.0,ZMAH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZMG2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVNA=XNPX*(AMAX1(0.0,ZNAH2(NU(NY,NX),NY,NX))
+      DFVNA=XNPH*(AMAX1(0.0,ZNAH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZNA2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVKA=XNPX*(AMAX1(0.0,ZKAH2(NU(NY,NX),NY,NX))
+      DFVKA=XNPH*(AMAX1(0.0,ZKAH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZKA2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVOH=XNPX*(AMAX1(0.0,ZOHH2(NU(NY,NX),NY,NX))
+      DFVOH=XNPH*(AMAX1(0.0,ZOHH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZOH2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVSO=XNPX*(AMAX1(0.0,ZSO4H2(NU(NY,NX),NY,NX))
+      DFVSO=XNPH*(AMAX1(0.0,ZSO4H2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZSO42(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVCL=XNPX*(AMAX1(0.0,ZCLH2(NU(NY,NX),NY,NX))
+      DFVCL=XNPH*(AMAX1(0.0,ZCLH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZCL2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVC3=XNPX*(AMAX1(0.0,ZCO3H2(NU(NY,NX),NY,NX))
+      DFVC3=XNPH*(AMAX1(0.0,ZCO3H2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZCO32(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVHC=XNPX*(AMAX1(0.0,ZHCOH2(NU(NY,NX),NY,NX))
+      DFVHC=XNPH*(AMAX1(0.0,ZHCOH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZHCO32(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVAL1=XNPX*(AMAX1(0.0,ZAL1H2(NU(NY,NX),NY,NX))
+      DFVAL1=XNPH*(AMAX1(0.0,ZAL1H2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZAL12(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVAL2=XNPX*(AMAX1(0.0,ZAL2H2(NU(NY,NX),NY,NX))
+      DFVAL2=XNPH*(AMAX1(0.0,ZAL2H2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZAL22(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVAL3=XNPX*(AMAX1(0.0,ZAL3H2(NU(NY,NX),NY,NX))
+      DFVAL3=XNPH*(AMAX1(0.0,ZAL3H2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZAL32(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVAL4=XNPX*(AMAX1(0.0,ZAL4H2(NU(NY,NX),NY,NX))
+      DFVAL4=XNPH*(AMAX1(0.0,ZAL4H2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZAL42(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVALS=XNPX*(AMAX1(0.0,ZALSH2(NU(NY,NX),NY,NX))
+      DFVALS=XNPH*(AMAX1(0.0,ZALSH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZALS2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVFE1=XNPX*(AMAX1(0.0,ZFE1H2(NU(NY,NX),NY,NX))
+      DFVFE1=XNPH*(AMAX1(0.0,ZFE1H2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZFE12(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVF22=XNPX*(AMAX1(0.0,ZFE2H2(NU(NY,NX),NY,NX))
+      DFVF22=XNPH*(AMAX1(0.0,ZFE2H2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZFE22(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVFE3=XNPX*(AMAX1(0.0,ZFE3H2(NU(NY,NX),NY,NX))
+      DFVFE3=XNPH*(AMAX1(0.0,ZFE3H2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZFE32(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVFE4=XNPX*(AMAX1(0.0,ZFE4H2(NU(NY,NX),NY,NX))
+      DFVFE4=XNPH*(AMAX1(0.0,ZFE4H2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZFE42(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVFES=XNPX*(AMAX1(0.0,ZFESH2(NU(NY,NX),NY,NX))
+      DFVFES=XNPH*(AMAX1(0.0,ZFESH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZFES2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVCAO=XNPX*(AMAX1(0.0,ZCAOH2(NU(NY,NX),NY,NX))
+      DFVCAO=XNPH*(AMAX1(0.0,ZCAOH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZCAO2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVCAC=XNPX*(AMAX1(0.0,ZCACH2(NU(NY,NX),NY,NX))
+      DFVCAC=XNPH*(AMAX1(0.0,ZCACH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZCAC2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVCAH=XNPX*(AMAX1(0.0,ZCAHH2(NU(NY,NX),NY,NX))
+      DFVCAH=XNPH*(AMAX1(0.0,ZCAHH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZCAH2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVCAS=XNPX*(AMAX1(0.0,ZCASH2(NU(NY,NX),NY,NX))
+      DFVCAS=XNPH*(AMAX1(0.0,ZCASH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZCAS2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVMGO=XNPX*(AMAX1(0.0,ZMGOH2(NU(NY,NX),NY,NX))
+      DFVMGO=XNPH*(AMAX1(0.0,ZMGOH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZMGO2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVMGC=XNPX*(AMAX1(0.0,ZMGCH2(NU(NY,NX),NY,NX))
+      DFVMGC=XNPH*(AMAX1(0.0,ZMGCH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZMGC2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVMGH=XNPX*(AMAX1(0.0,ZMGHH2(NU(NY,NX),NY,NX))
+      DFVMGH=XNPH*(AMAX1(0.0,ZMGHH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZMGH2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVMGS=XNPX*(AMAX1(0.0,ZMGSH2(NU(NY,NX),NY,NX))
+      DFVMGS=XNPH*(AMAX1(0.0,ZMGSH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZMGS2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVNAC=XNPX*(AMAX1(0.0,ZNACH2(NU(NY,NX),NY,NX))
+      DFVNAC=XNPH*(AMAX1(0.0,ZNACH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZNAC2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVNAS=XNPX*(AMAX1(0.0,ZNASH2(NU(NY,NX),NY,NX))
+      DFVNAS=XNPH*(AMAX1(0.0,ZNASH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZNAS2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVKAS=XNPX*(AMAX1(0.0,ZKASH2(NU(NY,NX),NY,NX))
+      DFVKAS=XNPH*(AMAX1(0.0,ZKASH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZKAS2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVNAC=XNPX*(AMAX1(0.0,ZNACH2(NU(NY,NX),NY,NX))
+      DFVNAC=XNPH*(AMAX1(0.0,ZNACH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZNAC2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
-      DFVH0P=XNPX*(AMAX1(0.0,H0P4H2(NU(NY,NX),NY,NX))
+      DFVH0P=XNPH*(AMAX1(0.0,H0P4H2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,H0PO42(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
      2*VLPO4(NU(NY,NX),NY,NX)
-      DFVH3P=XNPX*(AMAX1(0.0,H3P4H2(NU(NY,NX),NY,NX))
+      DFVH3P=XNPH*(AMAX1(0.0,H3P4H2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,H3PO42(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
      2*VLPO4(NU(NY,NX),NY,NX)
-      DFVF1P=XNPX*(AMAX1(0.0,ZF1PH2(NU(NY,NX),NY,NX))
+      DFVF1P=XNPH*(AMAX1(0.0,ZF1PH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZFE1P2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
      2*VLPO4(NU(NY,NX),NY,NX)
-      DFVF2P=XNPX*(AMAX1(0.0,ZF2PH2(NU(NY,NX),NY,NX))
+      DFVF2P=XNPH*(AMAX1(0.0,ZF2PH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZFE2P2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
      2*VLPO4(NU(NY,NX),NY,NX)
-      DFVC0P=XNPX*(AMAX1(0.0,ZC0PH2(NU(NY,NX),NY,NX))
+      DFVC0P=XNPH*(AMAX1(0.0,ZC0PH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZCA0P2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
      2*VLPO4(NU(NY,NX),NY,NX)
-      DFVC1P=XNPX*(AMAX1(0.0,ZC1PH2(NU(NY,NX),NY,NX))
+      DFVC1P=XNPH*(AMAX1(0.0,ZC1PH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZCA1P2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
      2*VLPO4(NU(NY,NX),NY,NX)
-      DFVC2P=XNPX*(AMAX1(0.0,ZC2PH2(NU(NY,NX),NY,NX))
+      DFVC2P=XNPH*(AMAX1(0.0,ZC2PH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZCA2P2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
      2*VLPO4(NU(NY,NX),NY,NX)
-      DFVM1P=XNPX*(AMAX1(0.0,ZM1PH2(NU(NY,NX),NY,NX))
+      DFVM1P=XNPH*(AMAX1(0.0,ZM1PH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZMG1P2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
      2*VLPO4(NU(NY,NX),NY,NX)
-      DFVH0B=XNPX*(AMAX1(0.0,H0PBH2(NU(NY,NX),NY,NX))
+      DFVH0B=XNPH*(AMAX1(0.0,H0PBH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,H0POB2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
      2*VLPOB(NU(NY,NX),NY,NX)
-      DFVH3B=XNPX*(AMAX1(0.0,H3PBH2(NU(NY,NX),NY,NX))
+      DFVH3B=XNPH*(AMAX1(0.0,H3PBH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,H3POB2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
      2*VLPOB(NU(NY,NX),NY,NX)
-      DFVF1B=XNPX*(AMAX1(0.0,ZF1BH2(NU(NY,NX),NY,NX))
+      DFVF1B=XNPH*(AMAX1(0.0,ZF1BH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZF1PB2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
      2*VLPOB(NU(NY,NX),NY,NX)
-      DFVF2B=XNPX*(AMAX1(0.0,ZF2BH2(NU(NY,NX),NY,NX))
+      DFVF2B=XNPH*(AMAX1(0.0,ZF2BH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZF2PB2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
      2*VLPOB(NU(NY,NX),NY,NX)
-      DFVC0B=XNPX*(AMAX1(0.0,ZC0BH2(NU(NY,NX),NY,NX))
+      DFVC0B=XNPH*(AMAX1(0.0,ZC0BH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZC0PB2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
      2*VLPOB(NU(NY,NX),NY,NX)
-      DFVC1B=XNPX*(AMAX1(0.0,ZC1BH2(NU(NY,NX),NY,NX))
+      DFVC1B=XNPH*(AMAX1(0.0,ZC1BH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZC1PB2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
      2*VLPOB(NU(NY,NX),NY,NX)
-      DFVC2B=XNPX*(AMAX1(0.0,ZC2BH2(NU(NY,NX),NY,NX))
+      DFVC2B=XNPH*(AMAX1(0.0,ZC2BH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZC2PB2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
      2*VLPOB(NU(NY,NX),NY,NX)
-      DFVM1B=XNPX*(AMAX1(0.0,ZM1BH2(NU(NY,NX),NY,NX))
+      DFVM1B=XNPH*(AMAX1(0.0,ZM1BH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZM1PB2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
      2*VLPOB(NU(NY,NX),NY,NX)
@@ -2996,6 +3294,23 @@ C
       DFVC2B=0.0
       DFVM1B=0.0
       ENDIF
+C
+C     TOTAL CONVECTIVE +DIFFUSIVE TRANSFER BETWEEN MACROPOES AND MICROPORES
+C
+C     R*FXS=convective + diffusive solute flux between macropores and micropores
+C     RFL*=convective flux between macropores and micropores 
+C     DFV*=diffusive solute flux between macropores and micropores 
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C
       RALFXS(NU(NY,NX),NY,NX)=RFLAL+DFVAL
       RFEFXS(NU(NY,NX),NY,NX)=RFLFE+DFVFE
       RHYFXS(NU(NY,NX),NY,NX)=RFLHY+DFVHY
@@ -3046,7 +3361,20 @@ C
       RC2BXB(NU(NY,NX),NY,NX)=RFLC2B+DFVC2B
       RM1BXB(NU(NY,NX),NY,NX)=RFLM1B+DFVM1B
 C
-C     ACCUMULATE HOURLY FLUXES
+C     ACCUMULATE HOURLY FLUXES FOR USE IN REDIST.F
+C
+C     X*FXS=hourly convective + diffusive solute flux between macropores and micropores
+C     R*FXS=total convective + diffusive solute flux between macropores and micropores
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
 C
       XALFXS(NU(NY,NX),NY,NX)=XALFXS(NU(NY,NX),NY,NX)
      2+RALFXS(NU(NY,NX),NY,NX)
@@ -3151,231 +3479,540 @@ C     SOLUTE TRANSPORT FROM WATER OVERLAND FLOW
 C     IN 'WATSUB' AND FROM SOLUTE CONCENTRATIONS
 C     IN SOIL SURFACE LAYER
 C
+C     QRM=runoff from watsub.f
+C     RQR*0=solute in runoff
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C     VOLWM=litter water volume from watsub.f
+C     *S2=litter solute content
+C     N2,N1=NY,NX of source grid cell
+C     N5,N4=NY,NX of destination grid cell
+C     X*QRS=accumulated hourly solute in runoff
+C
+C
       N1=NX
       N2=NY
+      IF(QRM(M,N2,N1).GT.ZEROS(N2,N1))THEN
+      IF(VOLWM(M,0,N2,N1).GT.ZEROS2(N2,N1))THEN
+      VFLW=AMIN1(VFLWX,QRM(M,N2,N1)/VOLWM(M,0,N2,N1))
+      ELSE
+      VFLW=VFLWX 
+      ENDIF
+      RQRAL0(N2,N1)=VFLW*AMAX1(0.0,ZAL2(0,N2,N1)) 
+      RQRFE0(N2,N1)=VFLW*AMAX1(0.0,ZFE2(0,N2,N1))
+      RQRHY0(N2,N1)=VFLW*AMAX1(0.0,ZHY2(0,N2,N1))
+      RQRCA0(N2,N1)=VFLW*AMAX1(0.0,ZCA2(0,N2,N1))
+      RQRMG0(N2,N1)=VFLW*AMAX1(0.0,ZMG2(0,N2,N1))
+      RQRNA0(N2,N1)=VFLW*AMAX1(0.0,ZNA2(0,N2,N1))
+      RQRKA0(N2,N1)=VFLW*AMAX1(0.0,ZKA2(0,N2,N1))
+      RQROH0(N2,N1)=VFLW*AMAX1(0.0,ZOH2(0,N2,N1))
+      RQRSO0(N2,N1)=VFLW*AMAX1(0.0,ZSO42(0,N2,N1)) 
+      RQRCL0(N2,N1)=VFLW*AMAX1(0.0,ZCL2(0,N2,N1))
+      RQRC30(N2,N1)=VFLW*AMAX1(0.0,ZCO32(0,N2,N1))
+      RQRHC0(N2,N1)=VFLW*AMAX1(0.0,ZHCO32(0,N2,N1))
+      RQRAL10(N2,N1)=VFLW*AMAX1(0.0,ZAL12(0,N2,N1))
+      RQRAL20(N2,N1)=VFLW*AMAX1(0.0,ZAL22(0,N2,N1))
+      RQRAL30(N2,N1)=VFLW*AMAX1(0.0,ZAL32(0,N2,N1))
+      RQRAL40(N2,N1)=VFLW*AMAX1(0.0,ZAL42(0,N2,N1))
+      RQRALS0(N2,N1)=VFLW*AMAX1(0.0,ZALS2(0,N2,N1))
+      RQRFE10(N2,N1)=VFLW*AMAX1(0.0,ZFE12(0,N2,N1))
+      RQRFE20(N2,N1)=VFLW*AMAX1(0.0,ZFE22(0,N2,N1))
+      RQRFE30(N2,N1)=VFLW*AMAX1(0.0,ZFE32(0,N2,N1))
+      RQRFE40(N2,N1)=VFLW*AMAX1(0.0,ZFE42(0,N2,N1))
+      RQRFES0(N2,N1)=VFLW*AMAX1(0.0,ZFES2(0,N2,N1))
+      RQRCAO0(N2,N1)=VFLW*AMAX1(0.0,ZCAO2(0,N2,N1))
+      RQRCAC0(N2,N1)=VFLW*AMAX1(0.0,ZCAC2(0,N2,N1))
+      RQRCAH0(N2,N1)=VFLW*AMAX1(0.0,ZCAH2(0,N2,N1)) 
+      RQRCAS0(N2,N1)=VFLW*AMAX1(0.0,ZCAS2(0,N2,N1))
+      RQRMGO0(N2,N1)=VFLW*AMAX1(0.0,ZMGO2(0,N2,N1))
+      RQRMGC0(N2,N1)=VFLW*AMAX1(0.0,ZMGC2(0,N2,N1))
+      RQRMGH0(N2,N1)=VFLW*AMAX1(0.0,ZMGH2(0,N2,N1))
+      RQRMGS0(N2,N1)=VFLW*AMAX1(0.0,ZMGS2(0,N2,N1))
+      RQRNAC0(N2,N1)=VFLW*AMAX1(0.0,ZNAC2(0,N2,N1))
+      RQRNAS0(N2,N1)=VFLW*AMAX1(0.0,ZNAS2(0,N2,N1))
+      RQRKAS0(N2,N1)=VFLW*AMAX1(0.0,ZKAS2(0,N2,N1))
+      RQRH0P0(N2,N1)=VFLW*AMAX1(0.0,H0PO42(0,N2,N1))
+      RQRH3P0(N2,N1)=VFLW*AMAX1(0.0,H3PO42(0,N2,N1))
+      RQRF1P0(N2,N1)=VFLW*AMAX1(0.0,ZFE1P2(0,N2,N1))
+      RQRF2P0(N2,N1)=VFLW*AMAX1(0.0,ZFE2P2(0,N2,N1))
+      RQRC0P0(N2,N1)=VFLW*AMAX1(0.0,ZCA0P2(0,N2,N1))
+      RQRC1P0(N2,N1)=VFLW*AMAX1(0.0,ZCA1P2(0,N2,N1))
+      RQRC2P0(N2,N1)=VFLW*AMAX1(0.0,ZCA2P2(0,N2,N1))
+      RQRM1P0(N2,N1)=VFLW*AMAX1(0.0,ZMG1P2(0,N2,N1))
+      ELSE
+      RQRAL0(N2,N1)=0.0
+      RQRFE0(N2,N1)=0.0
+      RQRHY0(N2,N1)=0.0
+      RQRCA0(N2,N1)=0.0
+      RQRMG0(N2,N1)=0.0
+      RQRNA0(N2,N1)=0.0
+      RQRKA0(N2,N1)=0.0
+      RQROH0(N2,N1)=0.0
+      RQRSO0(N2,N1)=0.0 
+      RQRCL0(N2,N1)=0.0
+      RQRC30(N2,N1)=0.0
+      RQRHC0(N2,N1)=0.0
+      RQRAL10(N2,N1)=0.0
+      RQRAL20(N2,N1)=0.0
+      RQRAL30(N2,N1)=0.0
+      RQRAL40(N2,N1)=0.0
+      RQRALS0(N2,N1)=0.0
+      RQRFE10(N2,N1)=0.0
+      RQRFE20(N2,N1)=0.0
+      RQRFE30(N2,N1)=0.0
+      RQRFE40(N2,N1)=0.0
+      RQRFES0(N2,N1)=0.0
+      RQRCAO0(N2,N1)=0.0
+      RQRCAC0(N2,N1)=0.0
+      RQRCAH0(N2,N1)=0.0
+      RQRCAS0(N2,N1)=0.0
+      RQRMGO0(N2,N1)=0.0
+      RQRMGC0(N2,N1)=0.0
+      RQRMGH0(N2,N1)=0.0
+      RQRMGS0(N2,N1)=0.0
+      RQRNAC0(N2,N1)=0.0
+      RQRNAS0(N2,N1)=0.0
+      RQRKAS0(N2,N1)=0.0
+      RQRH0P0(N2,N1)=0.0
+      RQRH3P0(N2,N1)=0.0
+      RQRF1P0(N2,N1)=0.0
+      RQRF2P0(N2,N1)=0.0
+      RQRC0P0(N2,N1)=0.0
+      RQRC1P0(N2,N1)=0.0
+      RQRC2P0(N2,N1)=0.0
+      RQRM1P0(N2,N1)=0.0
+      ENDIF
 C
 C     LOCATE INTERNAL BOUNDARIES BETWEEN ADJACENT GRID CELLS
 C
       DO 4310 N=1,2
+      DO 4305 NN=1,2
       IF(N.EQ.1)THEN
-      IF(NX.EQ.NHE)THEN
-      GO TO 4310
+      IF(NX.EQ.NHE.AND.NN.EQ.1
+     2.OR.NX.EQ.NHW.AND.NN.EQ.2)THEN
+      GO TO 4305
       ELSE
       N4=NX+1
       N5=NY
+      N4B=NX-1
+      N5B=NY
       ENDIF
       ELSEIF(N.EQ.2)THEN
-      IF(NY.EQ.NVS)THEN
-      GO TO 4310
+      IF(NY.EQ.NVS.AND.NN.EQ.1
+     2.OR.NY.EQ.NVN.AND.NN.EQ.2)THEN
+      GO TO 4305
       ELSE
       N4=NX
       N5=NY+1
+      N4B=NX
+      N5B=NY-1
       ENDIF
       ENDIF
 C
-C     IF NO OVERLAND FLOW THEN NO TRANSPORT
-C
-      IF(QRM(M,N,N5,N4).EQ.0.0.OR.THETIZ(0,N2,N1).GT.ZERO)THEN
-      RQRAL(N,N5,N4)=0.0
-      RQRFE(N,N5,N4)=0.0
-      RQRHY(N,N5,N4)=0.0
-      RQRCA(N,N5,N4)=0.0
-      RQRMG(N,N5,N4)=0.0
-      RQRNA(N,N5,N4)=0.0
-      RQRKA(N,N5,N4)=0.0
-      RQROH(N,N5,N4)=0.0
-      RQRSO(N,N5,N4)=0.0
-      RQRCL(N,N5,N4)=0.0
-      RQRC3(N,N5,N4)=0.0
-      RQRHC(N,N5,N4)=0.0
-      RQRAL1(N,N5,N4)=0.0
-      RQRAL2(N,N5,N4)=0.0
-      RQRAL3(N,N5,N4)=0.0
-      RQRAL4(N,N5,N4)=0.0
-      RQRALS(N,N5,N4)=0.0
-      RQRFE1(N,N5,N4)=0.0
-      RQRFE2(N,N5,N4)=0.0
-      RQRFE3(N,N5,N4)=0.0
-      RQRFE4(N,N5,N4)=0.0
-      RQRFES(N,N5,N4)=0.0
-      RQRCAO(N,N5,N4)=0.0
-      RQRCAC(N,N5,N4)=0.0
-      RQRCAH(N,N5,N4)=0.0
-      RQRCAS(N,N5,N4)=0.0
-      RQRMGO(N,N5,N4)=0.0
-      RQRMGC(N,N5,N4)=0.0
-      RQRMGH(N,N5,N4)=0.0
-      RQRMGS(N,N5,N4)=0.0
-      RQRNAC(N,N5,N4)=0.0
-      RQRNAS(N,N5,N4)=0.0
-      RQRKAS(N,N5,N4)=0.0
-      RQRH0P(N,N5,N4)=0.0
-      RQRH3P(N,N5,N4)=0.0
-      RQRF1P(N,N5,N4)=0.0
-      RQRF2P(N,N5,N4)=0.0
-      RQRC0P(N,N5,N4)=0.0
-      RQRC1P(N,N5,N4)=0.0
-      RQRC2P(N,N5,N4)=0.0
-      RQRM1P(N,N5,N4)=0.0
-      RQRH0B(N,N5,N4)=0.0
-      RQRH3B(N,N5,N4)=0.0
-      RQRF1B(N,N5,N4)=0.0
-      RQRF2B(N,N5,N4)=0.0
-      RQRC0B(N,N5,N4)=0.0
-      RQRC1B(N,N5,N4)=0.0
-      RQRC2B(N,N5,N4)=0.0
-      RQRM1B(N,N5,N4)=0.0
+C     QRM=runoff from watsub.f
+C     RQR*=solute in runoff
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
 C
 C     IF OVERLAND FLOW IS FROM CURRENT TO ADJACENT GRID CELL
 C
-      ELSEIF(QRM(M,N,N5,N4).GT.0.0)THEN
-      IF(VOLWM(M,0,N2,N1).GT.ZEROS2(N2,N1))THEN
-      VFLW=AMAX1(0.0,AMIN1(VFLWX,QRM(M,N,N5,N4)
-     2/VOLWM(M,0,N2,N1)))
+      IF(QRM(M,N2,N1).GT.ZEROS(N2,N1))THEN
+      IF(NN.EQ.1)THEN
+      FQRM=QRMN(M,N,2,N5,N4)/QRM(M,N2,N1)
+      RQRAL(N,2,N5,N4)=RQRAL0(N2,N1)*FQRM
+      RQRFE(N,2,N5,N4)=RQRFE0(N2,N1)*FQRM
+      RQRHY(N,2,N5,N4)=RQRHY0(N2,N1)*FQRM
+      RQRCA(N,2,N5,N4)=RQRCA0(N2,N1)*FQRM
+      RQRMG(N,2,N5,N4)=RQRMG0(N2,N1)*FQRM
+      RQRNA(N,2,N5,N4)=RQRNA0(N2,N1)*FQRM
+      RQRKA(N,2,N5,N4)=RQRKA0(N2,N1)*FQRM
+      RQROH(N,2,N5,N4)=RQROH0(N2,N1)*FQRM
+      RQRSO(N,2,N5,N4)=RQRSO0(N2,N1)*FQRM
+      RQRCL(N,2,N5,N4)=RQRCL0(N2,N1)*FQRM
+      RQRC3(N,2,N5,N4)=RQRC30(N2,N1)*FQRM
+      RQRHC(N,2,N5,N4)=RQRHC0(N2,N1)*FQRM
+      RQRAL1(N,2,N5,N4)=RQRAL10(N2,N1)*FQRM
+      RQRAL2(N,2,N5,N4)=RQRAL20(N2,N1)*FQRM
+      RQRAL3(N,2,N5,N4)=RQRAL30(N2,N1)*FQRM
+      RQRAL4(N,2,N5,N4)=RQRAL40(N2,N1)*FQRM
+      RQRALS(N,2,N5,N4)=RQRALS0(N2,N1)*FQRM
+      RQRFE1(N,2,N5,N4)=RQRFE10(N2,N1)*FQRM
+      RQRFE2(N,2,N5,N4)=RQRFE20(N2,N1)*FQRM
+      RQRFE3(N,2,N5,N4)=RQRFE30(N2,N1)*FQRM
+      RQRFE4(N,2,N5,N4)=RQRFE40(N2,N1)*FQRM
+      RQRFES(N,2,N5,N4)=RQRFES0(N2,N1)*FQRM
+      RQRCAO(N,2,N5,N4)=RQRCAO0(N2,N1)*FQRM
+      RQRCAC(N,2,N5,N4)=RQRCAC0(N2,N1)*FQRM
+      RQRCAH(N,2,N5,N4)=RQRCAH0(N2,N1)*FQRM
+      RQRCAS(N,2,N5,N4)=RQRCAS0(N2,N1)*FQRM
+      RQRMGO(N,2,N5,N4)=RQRMGO0(N2,N1)*FQRM
+      RQRMGC(N,2,N5,N4)=RQRMGC0(N2,N1)*FQRM
+      RQRMGH(N,2,N5,N4)=RQRMGH0(N2,N1)*FQRM
+      RQRMGS(N,2,N5,N4)=RQRMGS0(N2,N1)*FQRM
+      RQRNAC(N,2,N5,N4)=RQRNAC0(N2,N1)*FQRM
+      RQRNAS(N,2,N5,N4)=RQRNAS0(N2,N1)*FQRM
+      RQRKAS(N,2,N5,N4)=RQRKAS0(N2,N1)*FQRM
+      RQRH0P(N,2,N5,N4)=RQRH0P0(N2,N1)*FQRM
+      RQRH3P(N,2,N5,N4)=RQRH3P0(N2,N1)*FQRM
+      RQRF1P(N,2,N5,N4)=RQRF1P0(N2,N1)*FQRM
+      RQRF2P(N,2,N5,N4)=RQRF2P0(N2,N1)*FQRM
+      RQRC0P(N,2,N5,N4)=RQRC0P0(N2,N1)*FQRM
+      RQRC1P(N,2,N5,N4)=RQRC1P0(N2,N1)*FQRM
+      RQRC2P(N,2,N5,N4)=RQRC2P0(N2,N1)*FQRM
+      RQRM1P(N,2,N5,N4)=RQRM1P0(N2,N1)*FQRM
+C
+C     ACCUMULATE HOURLY FLUXES FOR USE IN REDIST.F
+C
+C     XQR*=hourly solute in runoff
+C     RQR*=solute in runoff
+C
+      XQRAL(N,2,N5,N4)=XQRAL(N,2,N5,N4)+RQRAL(N,2,N5,N4)
+      XQRFE(N,2,N5,N4)=XQRFE(N,2,N5,N4)+RQRFE(N,2,N5,N4)
+      XQRHY(N,2,N5,N4)=XQRHY(N,2,N5,N4)+RQRHY(N,2,N5,N4)
+      XQRCA(N,2,N5,N4)=XQRCA(N,2,N5,N4)+RQRCA(N,2,N5,N4)
+      XQRMG(N,2,N5,N4)=XQRMG(N,2,N5,N4)+RQRMG(N,2,N5,N4)
+      XQRNA(N,2,N5,N4)=XQRNA(N,2,N5,N4)+RQRNA(N,2,N5,N4)
+      XQRKA(N,2,N5,N4)=XQRKA(N,2,N5,N4)+RQRKA(N,2,N5,N4)
+      XQROH(N,2,N5,N4)=XQROH(N,2,N5,N4)+RQROH(N,2,N5,N4)
+      XQRSO(N,2,N5,N4)=XQRSO(N,2,N5,N4)+RQRSO(N,2,N5,N4)
+      XQRCL(N,2,N5,N4)=XQRCL(N,2,N5,N4)+RQRCL(N,2,N5,N4)
+      XQRC3(N,2,N5,N4)=XQRC3(N,2,N5,N4)+RQRC3(N,2,N5,N4)
+      XQRHC(N,2,N5,N4)=XQRHC(N,2,N5,N4)+RQRHC(N,2,N5,N4)
+      XQRAL1(N,2,N5,N4)=XQRAL1(N,2,N5,N4)+RQRAL1(N,2,N5,N4)
+      XQRAL2(N,2,N5,N4)=XQRAL2(N,2,N5,N4)+RQRAL2(N,2,N5,N4)
+      XQRAL3(N,2,N5,N4)=XQRAL3(N,2,N5,N4)+RQRAL3(N,2,N5,N4)
+      XQRAL4(N,2,N5,N4)=XQRAL4(N,2,N5,N4)+RQRAL4(N,2,N5,N4)
+      XQRALS(N,2,N5,N4)=XQRALS(N,2,N5,N4)+RQRALS(N,2,N5,N4)
+      XQRFE1(N,2,N5,N4)=XQRFE1(N,2,N5,N4)+RQRFE1(N,2,N5,N4)
+      XQRFE2(N,2,N5,N4)=XQRFE2(N,2,N5,N4)+RQRFE2(N,2,N5,N4)
+      XQRFE3(N,2,N5,N4)=XQRFE3(N,2,N5,N4)+RQRFE3(N,2,N5,N4)
+      XQRFE4(N,2,N5,N4)=XQRFE4(N,2,N5,N4)+RQRFE4(N,2,N5,N4)
+      XQRFES(N,2,N5,N4)=XQRFES(N,2,N5,N4)+RQRFES(N,2,N5,N4)
+      XQRCAO(N,2,N5,N4)=XQRCAO(N,2,N5,N4)+RQRCAO(N,2,N5,N4)
+      XQRCAC(N,2,N5,N4)=XQRCAC(N,2,N5,N4)+RQRCAC(N,2,N5,N4)
+      XQRCAH(N,2,N5,N4)=XQRCAH(N,2,N5,N4)+RQRCAH(N,2,N5,N4)
+      XQRCAS(N,2,N5,N4)=XQRCAS(N,2,N5,N4)+RQRCAS(N,2,N5,N4)
+      XQRMGO(N,2,N5,N4)=XQRMGO(N,2,N5,N4)+RQRMGO(N,2,N5,N4)
+      XQRMGC(N,2,N5,N4)=XQRMGC(N,2,N5,N4)+RQRMGC(N,2,N5,N4)
+      XQRMGH(N,2,N5,N4)=XQRMGH(N,2,N5,N4)+RQRMGH(N,2,N5,N4)
+      XQRMGS(N,2,N5,N4)=XQRMGS(N,2,N5,N4)+RQRMGS(N,2,N5,N4)
+      XQRNAC(N,2,N5,N4)=XQRNAC(N,2,N5,N4)+RQRNAC(N,2,N5,N4)
+      XQRNAS(N,2,N5,N4)=XQRNAS(N,2,N5,N4)+RQRNAS(N,2,N5,N4)
+      XQRKAS(N,2,N5,N4)=XQRKAS(N,2,N5,N4)+RQRKAS(N,2,N5,N4)
+      XQRH0P(N,2,N5,N4)=XQRH0P(N,2,N5,N4)+RQRH0P(N,2,N5,N4)
+      XQRH3P(N,2,N5,N4)=XQRH3P(N,2,N5,N4)+RQRH3P(N,2,N5,N4)
+      XQRF1P(N,2,N5,N4)=XQRF1P(N,2,N5,N4)+RQRF1P(N,2,N5,N4)
+      XQRF2P(N,2,N5,N4)=XQRF2P(N,2,N5,N4)+RQRF2P(N,2,N5,N4)
+      XQRC0P(N,2,N5,N4)=XQRC0P(N,2,N5,N4)+RQRC0P(N,2,N5,N4)
+      XQRC1P(N,2,N5,N4)=XQRC1P(N,2,N5,N4)+RQRC1P(N,2,N5,N4)
+      XQRC2P(N,2,N5,N4)=XQRC2P(N,2,N5,N4)+RQRC2P(N,2,N5,N4)
+      XQRM1P(N,2,N5,N4)=XQRM1P(N,2,N5,N4)+RQRM1P(N,2,N5,N4)
       ELSE
-      VFLW=VFLWX
+      RQRAL(N,2,N5,N4)=0.0
+      RQRFE(N,2,N5,N4)=0.0
+      RQRHY(N,2,N5,N4)=0.0
+      RQRCA(N,2,N5,N4)=0.0
+      RQRMG(N,2,N5,N4)=0.0
+      RQRNA(N,2,N5,N4)=0.0
+      RQRKA(N,2,N5,N4)=0.0
+      RQROH(N,2,N5,N4)=0.0
+      RQRSO(N,2,N5,N4)=0.0
+      RQRCL(N,2,N5,N4)=0.0
+      RQRC3(N,2,N5,N4)=0.0
+      RQRHC(N,2,N5,N4)=0.0
+      RQRAL1(N,2,N5,N4)=0.0
+      RQRAL2(N,2,N5,N4)=0.0
+      RQRAL3(N,2,N5,N4)=0.0
+      RQRAL4(N,2,N5,N4)=0.0
+      RQRALS(N,2,N5,N4)=0.0
+      RQRFE1(N,2,N5,N4)=0.0
+      RQRFE2(N,2,N5,N4)=0.0
+      RQRFE3(N,2,N5,N4)=0.0
+      RQRFE4(N,2,N5,N4)=0.0
+      RQRFES(N,2,N5,N4)=0.0
+      RQRCAO(N,2,N5,N4)=0.0
+      RQRCAC(N,2,N5,N4)=0.0
+      RQRCAH(N,2,N5,N4)=0.0
+      RQRCAS(N,2,N5,N4)=0.0
+      RQRMGO(N,2,N5,N4)=0.0
+      RQRMGC(N,2,N5,N4)=0.0
+      RQRMGH(N,2,N5,N4)=0.0
+      RQRMGS(N,2,N5,N4)=0.0
+      RQRNAC(N,2,N5,N4)=0.0
+      RQRNAS(N,2,N5,N4)=0.0
+      RQRKAS(N,2,N5,N4)=0.0
+      RQRH0P(N,2,N5,N4)=0.0
+      RQRH3P(N,2,N5,N4)=0.0
+      RQRF1P(N,2,N5,N4)=0.0
+      RQRF2P(N,2,N5,N4)=0.0
+      RQRC0P(N,2,N5,N4)=0.0
+      RQRC1P(N,2,N5,N4)=0.0
+      RQRC2P(N,2,N5,N4)=0.0
+      RQRM1P(N,2,N5,N4)=0.0
       ENDIF
-      RQRAL(N,N5,N4)=VFLW*AMAX1(0.0,ZAL2(0,N2,N1)) 
-      RQRFE(N,N5,N4)=VFLW*AMAX1(0.0,ZFE2(0,N2,N1))
-      RQRHY(N,N5,N4)=VFLW*AMAX1(0.0,ZHY2(0,N2,N1))
-      RQRCA(N,N5,N4)=VFLW*AMAX1(0.0,ZCA2(0,N2,N1))
-      RQRMG(N,N5,N4)=VFLW*AMAX1(0.0,ZMG2(0,N2,N1))
-      RQRNA(N,N5,N4)=VFLW*AMAX1(0.0,ZNA2(0,N2,N1))
-      RQRKA(N,N5,N4)=VFLW*AMAX1(0.0,ZKA2(0,N2,N1))
-      RQROH(N,N5,N4)=VFLW*AMAX1(0.0,ZOH2(0,N2,N1))
-      RQRSO(N,N5,N4)=VFLW*AMAX1(0.0,ZSO42(0,N2,N1)) 
-      RQRCL(N,N5,N4)=VFLW*AMAX1(0.0,ZCL2(0,N2,N1))
-      RQRC3(N,N5,N4)=VFLW*AMAX1(0.0,ZCO32(0,N2,N1))
-      RQRHC(N,N5,N4)=VFLW*AMAX1(0.0,ZHCO32(0,N2,N1))
-      RQRAL1(N,N5,N4)=VFLW*AMAX1(0.0,ZAL12(0,N2,N1))
-      RQRAL2(N,N5,N4)=VFLW*AMAX1(0.0,ZAL22(0,N2,N1))
-      RQRAL3(N,N5,N4)=VFLW*AMAX1(0.0,ZAL32(0,N2,N1))
-      RQRAL4(N,N5,N4)=VFLW*AMAX1(0.0,ZAL42(0,N2,N1))
-      RQRALS(N,N5,N4)=VFLW*AMAX1(0.0,ZALS2(0,N2,N1))
-      RQRFE1(N,N5,N4)=VFLW*AMAX1(0.0,ZFE12(0,N2,N1))
-      RQRFE2(N,N5,N4)=VFLW*AMAX1(0.0,ZFE22(0,N2,N1))
-      RQRFE3(N,N5,N4)=VFLW*AMAX1(0.0,ZFE32(0,N2,N1))
-      RQRFE4(N,N5,N4)=VFLW*AMAX1(0.0,ZFE42(0,N2,N1))
-      RQRFES(N,N5,N4)=VFLW*AMAX1(0.0,ZFES2(0,N2,N1))
-      RQRCAO(N,N5,N4)=VFLW*AMAX1(0.0,ZCAO2(0,N2,N1))
-      RQRCAC(N,N5,N4)=VFLW*AMAX1(0.0,ZCAC2(0,N2,N1))
-      RQRCAH(N,N5,N4)=VFLW*AMAX1(0.0,ZCAH2(0,N2,N1)) 
-      RQRCAS(N,N5,N4)=VFLW*AMAX1(0.0,ZCAS2(0,N2,N1))
-      RQRMGO(N,N5,N4)=VFLW*AMAX1(0.0,ZMGO2(0,N2,N1))
-      RQRMGC(N,N5,N4)=VFLW*AMAX1(0.0,ZMGC2(0,N2,N1))
-      RQRMGH(N,N5,N4)=VFLW*AMAX1(0.0,ZMGH2(0,N2,N1))
-      RQRMGS(N,N5,N4)=VFLW*AMAX1(0.0,ZMGS2(0,N2,N1))
-      RQRNAC(N,N5,N4)=VFLW*AMAX1(0.0,ZNAC2(0,N2,N1))
-      RQRNAS(N,N5,N4)=VFLW*AMAX1(0.0,ZNAS2(0,N2,N1))
-      RQRKAS(N,N5,N4)=VFLW*AMAX1(0.0,ZKAS2(0,N2,N1))
-      RQRH0P(N,N5,N4)=VFLW*AMAX1(0.0,H0PO42(0,N2,N1))
-      RQRH3P(N,N5,N4)=VFLW*AMAX1(0.0,H3PO42(0,N2,N1))
-      RQRF1P(N,N5,N4)=VFLW*AMAX1(0.0,ZFE1P2(0,N2,N1))
-      RQRF2P(N,N5,N4)=VFLW*AMAX1(0.0,ZFE2P2(0,N2,N1))
-      RQRC0P(N,N5,N4)=VFLW*AMAX1(0.0,ZCA0P2(0,N2,N1))
-      RQRC1P(N,N5,N4)=VFLW*AMAX1(0.0,ZCA1P2(0,N2,N1))
-      RQRC2P(N,N5,N4)=VFLW*AMAX1(0.0,ZCA2P2(0,N2,N1))
-      RQRM1P(N,N5,N4)=VFLW*AMAX1(0.0,ZMG1P2(0,N2,N1))
 C
-C     IF OVERLAND FLOW IS TO CURRENT FROM ADJACENT GRID CELL
+C     IF OVERLAND FLOW IS FROM CURRENT TO ADJACENT GRID CELL
 C
-      ELSEIF(QRM(M,N,N5,N4).LT.0.0)THEN
-      IF(VOLWM(M,0,N5,N4).GT.ZEROS2(N5,N4))THEN
-      VFLW=AMIN1(0.0,AMAX1(-VFLWX,QRM(M,N,N5,N4)
-     2/VOLWM(M,0,N5,N4)))
+      IF(NN.EQ.2)THEN
+      IF(N4B.GT.0.AND.N5B.GT.0)THEN
+      FQRM=QRMN(M,N,1,N5B,N4B)/QRM(M,N2,N1)
+      RQRAL(N,1,N5B,N4B)=RQRAL0(N2,N1)*FQRM
+      RQRFE(N,1,N5B,N4B)=RQRFE0(N2,N1)*FQRM
+      RQRHY(N,1,N5B,N4B)=RQRHY0(N2,N1)*FQRM
+      RQRCA(N,1,N5B,N4B)=RQRCA0(N2,N1)*FQRM
+      RQRMG(N,1,N5B,N4B)=RQRMG0(N2,N1)*FQRM
+      RQRNA(N,1,N5B,N4B)=RQRNA0(N2,N1)*FQRM
+      RQRKA(N,1,N5B,N4B)=RQRKA0(N2,N1)*FQRM
+      RQROH(N,1,N5B,N4B)=RQROH0(N2,N1)*FQRM
+      RQRSO(N,1,N5B,N4B)=RQRSO0(N2,N1)*FQRM
+      RQRCL(N,1,N5B,N4B)=RQRCL0(N2,N1)*FQRM
+      RQRC3(N,1,N5B,N4B)=RQRC30(N2,N1)*FQRM
+      RQRHC(N,1,N5B,N4B)=RQRHC0(N2,N1)*FQRM
+      RQRAL1(N,1,N5B,N4B)=RQRAL10(N2,N1)*FQRM
+      RQRAL2(N,1,N5B,N4B)=RQRAL20(N2,N1)*FQRM
+      RQRAL3(N,1,N5B,N4B)=RQRAL30(N2,N1)*FQRM
+      RQRAL4(N,1,N5B,N4B)=RQRAL40(N2,N1)*FQRM
+      RQRALS(N,1,N5B,N4B)=RQRALS0(N2,N1)*FQRM
+      RQRFE1(N,1,N5B,N4B)=RQRFE10(N2,N1)*FQRM
+      RQRFE2(N,1,N5B,N4B)=RQRFE20(N2,N1)*FQRM
+      RQRFE3(N,1,N5B,N4B)=RQRFE30(N2,N1)*FQRM
+      RQRFE4(N,1,N5B,N4B)=RQRFE40(N2,N1)*FQRM
+      RQRFES(N,1,N5B,N4B)=RQRFES0(N2,N1)*FQRM
+      RQRCAO(N,1,N5B,N4B)=RQRCAO0(N2,N1)*FQRM
+      RQRCAC(N,1,N5B,N4B)=RQRCAC0(N2,N1)*FQRM
+      RQRCAH(N,1,N5B,N4B)=RQRCAH0(N2,N1)*FQRM
+      RQRCAS(N,1,N5B,N4B)=RQRCAS0(N2,N1)*FQRM
+      RQRMGO(N,1,N5B,N4B)=RQRMGO0(N2,N1)*FQRM
+      RQRMGC(N,1,N5B,N4B)=RQRMGC0(N2,N1)*FQRM
+      RQRMGH(N,1,N5B,N4B)=RQRMGH0(N2,N1)*FQRM
+      RQRMGS(N,1,N5B,N4B)=RQRMGS0(N2,N1)*FQRM
+      RQRNAC(N,1,N5B,N4B)=RQRNAC0(N2,N1)*FQRM
+      RQRNAS(N,1,N5B,N4B)=RQRNAS0(N2,N1)*FQRM
+      RQRKAS(N,1,N5B,N4B)=RQRKAS0(N2,N1)*FQRM
+      RQRH0P(N,1,N5B,N4B)=RQRH0P0(N2,N1)*FQRM
+      RQRH3P(N,1,N5B,N4B)=RQRH3P0(N2,N1)*FQRM
+      RQRF1P(N,1,N5B,N4B)=RQRF1P0(N2,N1)*FQRM
+      RQRF2P(N,1,N5B,N4B)=RQRF2P0(N2,N1)*FQRM
+      RQRC0P(N,1,N5B,N4B)=RQRC0P0(N2,N1)*FQRM
+      RQRC1P(N,1,N5B,N4B)=RQRC1P0(N2,N1)*FQRM
+      RQRC2P(N,1,N5B,N4B)=RQRC2P0(N2,N1)*FQRM
+      RQRM1P(N,1,N5B,N4B)=RQRM1P0(N2,N1)*FQRM 
+C
+C     ACCUMULATE HOURLY FLUXES FOR USE IN REDIST.F
+C
+C     XQR*=hourly solute in runoff
+C     RQR*=solute in runoff
+C
+      XQRAL(N,1,N5B,N4B)=XQRAL(N,1,N5B,N4B)+RQRAL(N,1,N5B,N4B)
+      XQRFE(N,1,N5B,N4B)=XQRFE(N,1,N5B,N4B)+RQRFE(N,1,N5B,N4B)
+      XQRHY(N,1,N5B,N4B)=XQRHY(N,1,N5B,N4B)+RQRHY(N,1,N5B,N4B)
+      XQRCA(N,1,N5B,N4B)=XQRCA(N,1,N5B,N4B)+RQRCA(N,1,N5B,N4B)
+      XQRMG(N,1,N5B,N4B)=XQRMG(N,1,N5B,N4B)+RQRMG(N,1,N5B,N4B)
+      XQRNA(N,1,N5B,N4B)=XQRNA(N,1,N5B,N4B)+RQRNA(N,1,N5B,N4B)
+      XQRKA(N,1,N5B,N4B)=XQRKA(N,1,N5B,N4B)+RQRKA(N,1,N5B,N4B)
+      XQROH(N,1,N5B,N4B)=XQROH(N,1,N5B,N4B)+RQROH(N,1,N5B,N4B)
+      XQRSO(N,1,N5B,N4B)=XQRSO(N,1,N5B,N4B)+RQRSO(N,1,N5B,N4B)
+      XQRCL(N,1,N5B,N4B)=XQRCL(N,1,N5B,N4B)+RQRCL(N,1,N5B,N4B)
+      XQRC3(N,1,N5B,N4B)=XQRC3(N,1,N5B,N4B)+RQRC3(N,1,N5B,N4B)
+      XQRHC(N,1,N5B,N4B)=XQRHC(N,1,N5B,N4B)+RQRHC(N,1,N5B,N4B)
+      XQRAL1(N,1,N5B,N4B)=XQRAL1(N,1,N5B,N4B)+RQRAL1(N,1,N5B,N4B)
+      XQRAL2(N,1,N5B,N4B)=XQRAL2(N,1,N5B,N4B)+RQRAL2(N,1,N5B,N4B)
+      XQRAL3(N,1,N5B,N4B)=XQRAL3(N,1,N5B,N4B)+RQRAL3(N,1,N5B,N4B)
+      XQRAL4(N,1,N5B,N4B)=XQRAL4(N,1,N5B,N4B)+RQRAL4(N,1,N5B,N4B)
+      XQRALS(N,1,N5B,N4B)=XQRALS(N,1,N5B,N4B)+RQRALS(N,1,N5B,N4B)
+      XQRFE1(N,1,N5B,N4B)=XQRFE1(N,1,N5B,N4B)+RQRFE1(N,1,N5B,N4B)
+      XQRFE2(N,1,N5B,N4B)=XQRFE2(N,1,N5B,N4B)+RQRFE2(N,1,N5B,N4B)
+      XQRFE3(N,1,N5B,N4B)=XQRFE3(N,1,N5B,N4B)+RQRFE3(N,1,N5B,N4B)
+      XQRFE4(N,1,N5B,N4B)=XQRFE4(N,1,N5B,N4B)+RQRFE4(N,1,N5B,N4B)
+      XQRFES(N,1,N5B,N4B)=XQRFES(N,1,N5B,N4B)+RQRFES(N,1,N5B,N4B)
+      XQRCAO(N,1,N5B,N4B)=XQRCAO(N,1,N5B,N4B)+RQRCAO(N,1,N5B,N4B)
+      XQRCAC(N,1,N5B,N4B)=XQRCAC(N,1,N5B,N4B)+RQRCAC(N,1,N5B,N4B)
+      XQRCAH(N,1,N5B,N4B)=XQRCAH(N,1,N5B,N4B)+RQRCAH(N,1,N5B,N4B)
+      XQRCAS(N,1,N5B,N4B)=XQRCAS(N,1,N5B,N4B)+RQRCAS(N,1,N5B,N4B)
+      XQRMGO(N,1,N5B,N4B)=XQRMGO(N,1,N5B,N4B)+RQRMGO(N,1,N5B,N4B)
+      XQRMGC(N,1,N5B,N4B)=XQRMGC(N,1,N5B,N4B)+RQRMGC(N,1,N5B,N4B)
+      XQRMGH(N,1,N5B,N4B)=XQRMGH(N,1,N5B,N4B)+RQRMGH(N,1,N5B,N4B)
+      XQRMGS(N,1,N5B,N4B)=XQRMGS(N,1,N5B,N4B)+RQRMGS(N,1,N5B,N4B)
+      XQRNAC(N,1,N5B,N4B)=XQRNAC(N,1,N5B,N4B)+RQRNAC(N,1,N5B,N4B)
+      XQRNAS(N,1,N5B,N4B)=XQRNAS(N,1,N5B,N4B)+RQRNAS(N,1,N5B,N4B)
+      XQRKAS(N,1,N5B,N4B)=XQRKAS(N,1,N5B,N4B)+RQRKAS(N,1,N5B,N4B)
+      XQRH0P(N,1,N5B,N4B)=XQRH0P(N,1,N5B,N4B)+RQRH0P(N,1,N5B,N4B)
+      XQRH3P(N,1,N5B,N4B)=XQRH3P(N,1,N5B,N4B)+RQRH3P(N,1,N5B,N4B)
+      XQRF1P(N,1,N5B,N4B)=XQRF1P(N,1,N5B,N4B)+RQRF1P(N,1,N5B,N4B)
+      XQRF2P(N,1,N5B,N4B)=XQRF2P(N,1,N5B,N4B)+RQRF2P(N,1,N5B,N4B)
+      XQRC0P(N,1,N5B,N4B)=XQRC0P(N,1,N5B,N4B)+RQRC0P(N,1,N5B,N4B)
+      XQRC1P(N,1,N5B,N4B)=XQRC1P(N,1,N5B,N4B)+RQRC1P(N,1,N5B,N4B)
+      XQRC2P(N,1,N5B,N4B)=XQRC2P(N,1,N5B,N4B)+RQRC2P(N,1,N5B,N4B)
+      XQRM1P(N,1,N5B,N4B)=XQRM1P(N,1,N5B,N4B)+RQRM1P(N,1,N5B,N4B)
       ELSE
-      VFLW=-VFLWX
+      RQRAL(N,1,N5B,N4B)=0.0
+      RQRFE(N,1,N5B,N4B)=0.0
+      RQRHY(N,1,N5B,N4B)=0.0
+      RQRCA(N,1,N5B,N4B)=0.0
+      RQRMG(N,1,N5B,N4B)=0.0
+      RQRNA(N,1,N5B,N4B)=0.0
+      RQRKA(N,1,N5B,N4B)=0.0
+      RQROH(N,1,N5B,N4B)=0.0
+      RQRSO(N,1,N5B,N4B)=0.0
+      RQRCL(N,1,N5B,N4B)=0.0
+      RQRC3(N,1,N5B,N4B)=0.0
+      RQRHC(N,1,N5B,N4B)=0.0
+      RQRAL1(N,1,N5B,N4B)=0.0
+      RQRAL2(N,1,N5B,N4B)=0.0
+      RQRAL3(N,1,N5B,N4B)=0.0
+      RQRAL4(N,1,N5B,N4B)=0.0
+      RQRALS(N,1,N5B,N4B)=0.0
+      RQRFE1(N,1,N5B,N4B)=0.0
+      RQRFE2(N,1,N5B,N4B)=0.0
+      RQRFE3(N,1,N5B,N4B)=0.0
+      RQRFE4(N,1,N5B,N4B)=0.0
+      RQRFES(N,1,N5B,N4B)=0.0
+      RQRCAO(N,1,N5B,N4B)=0.0
+      RQRCAC(N,1,N5B,N4B)=0.0
+      RQRCAH(N,1,N5B,N4B)=0.0
+      RQRCAS(N,1,N5B,N4B)=0.0
+      RQRMGO(N,1,N5B,N4B)=0.0
+      RQRMGC(N,1,N5B,N4B)=0.0
+      RQRMGH(N,1,N5B,N4B)=0.0
+      RQRMGS(N,1,N5B,N4B)=0.0
+      RQRNAC(N,1,N5B,N4B)=0.0
+      RQRNAS(N,1,N5B,N4B)=0.0
+      RQRKAS(N,1,N5B,N4B)=0.0
+      RQRH0P(N,1,N5B,N4B)=0.0
+      RQRH3P(N,1,N5B,N4B)=0.0
+      RQRF1P(N,1,N5B,N4B)=0.0
+      RQRF2P(N,1,N5B,N4B)=0.0
+      RQRC0P(N,1,N5B,N4B)=0.0
+      RQRC1P(N,1,N5B,N4B)=0.0
+      RQRC2P(N,1,N5B,N4B)=0.0
+      RQRM1P(N,1,N5B,N4B)=0.0 
       ENDIF
-      RQRAL(N,N5,N4)=VFLW*AMAX1(0.0,ZAL2(0,N5,N4)) 
-      RQRFE(N,N5,N4)=VFLW*AMAX1(0.0,ZFE2(0,N5,N4))
-      RQRHY(N,N5,N4)=VFLW*AMAX1(0.0,ZHY2(0,N5,N4))
-      RQRCA(N,N5,N4)=VFLW*AMAX1(0.0,ZCA2(0,N5,N4))
-      RQRMG(N,N5,N4)=VFLW*AMAX1(0.0,ZMG2(0,N5,N4))
-      RQRNA(N,N5,N4)=VFLW*AMAX1(0.0,ZNA2(0,N5,N4))
-      RQRKA(N,N5,N4)=VFLW*AMAX1(0.0,ZKA2(0,N5,N4))
-      RQROH(N,N5,N4)=VFLW*AMAX1(0.0,ZOH2(0,N5,N4))
-      RQRSO(N,N5,N4)=VFLW*AMAX1(0.0,ZSO42(0,N5,N4))
-      RQRCL(N,N5,N4)=VFLW*AMAX1(0.0,ZCL2(0,N5,N4))
-      RQRC3(N,N5,N4)=VFLW*AMAX1(0.0,ZCO32(0,N5,N4))
-      RQRHC(N,N5,N4)=VFLW*AMAX1(0.0,ZHCO32(0,N5,N4))
-      RQRAL1(N,N5,N4)=VFLW*AMAX1(0.0,ZAL12(0,N5,N4))
-      RQRAL2(N,N5,N4)=VFLW*AMAX1(0.0,ZAL22(0,N5,N4))
-      RQRAL3(N,N5,N4)=VFLW*AMAX1(0.0,ZAL32(0,N5,N4))
-      RQRAL4(N,N5,N4)=VFLW*AMAX1(0.0,ZAL42(0,N5,N4))
-      RQRALS(N,N5,N4)=VFLW*AMAX1(0.0,ZALS2(0,N5,N4))
-      RQRFE1(N,N5,N4)=VFLW*AMAX1(0.0,ZFE12(0,N5,N4))
-      RQRFE2(N,N5,N4)=VFLW*AMAX1(0.0,ZFE22(0,N5,N4))
-      RQRFE3(N,N5,N4)=VFLW*AMAX1(0.0,ZFE32(0,N5,N4))
-      RQRFE4(N,N5,N4)=VFLW*AMAX1(0.0,ZFE42(0,N5,N4))
-      RQRFES(N,N5,N4)=VFLW*AMAX1(0.0,ZFES2(0,N5,N4))
-      RQRCAO(N,N5,N4)=VFLW*AMAX1(0.0,ZCAO2(0,N5,N4))
-      RQRCAC(N,N5,N4)=VFLW*AMAX1(0.0,ZCAC2(0,N5,N4))
-      RQRCAH(N,N5,N4)=VFLW*AMAX1(0.0,ZCAH2(0,N5,N4))
-      RQRCAS(N,N5,N4)=VFLW*AMAX1(0.0,ZCAS2(0,N5,N4))
-      RQRMGO(N,N5,N4)=VFLW*AMAX1(0.0,ZMGO2(0,N5,N4))
-      RQRMGC(N,N5,N4)=VFLW*AMAX1(0.0,ZMGC2(0,N5,N4)) 
-      RQRMGH(N,N5,N4)=VFLW*AMAX1(0.0,ZMGH2(0,N5,N4))
-      RQRMGS(N,N5,N4)=VFLW*AMAX1(0.0,ZMGS2(0,N5,N4))
-      RQRNAC(N,N5,N4)=VFLW*AMAX1(0.0,ZNAC2(0,N5,N4))
-      RQRNAS(N,N5,N4)=VFLW*AMAX1(0.0,ZNAS2(0,N5,N4))
-      RQRKAS(N,N5,N4)=VFLW*AMAX1(0.0,ZKAS2(0,N5,N4))
-      RQRH0P(N,N5,N4)=VFLW*AMAX1(0.0,H0PO42(0,N5,N4))
-      RQRH3P(N,N5,N4)=VFLW*AMAX1(0.0,H3PO42(0,N5,N4))
-      RQRF1P(N,N5,N4)=VFLW*AMAX1(0.0,ZFE1P2(0,N5,N4))
-      RQRF2P(N,N5,N4)=VFLW*AMAX1(0.0,ZFE2P2(0,N5,N4))
-      RQRC0P(N,N5,N4)=VFLW*AMAX1(0.0,ZCA0P2(0,N5,N4))
-      RQRC1P(N,N5,N4)=VFLW*AMAX1(0.0,ZCA1P2(0,N5,N4))
-      RQRC2P(N,N5,N4)=VFLW*AMAX1(0.0,ZCA2P2(0,N5,N4))
-      RQRM1P(N,N5,N4)=VFLW*AMAX1(0.0,ZMG1P2(0,N5,N4))
+      ENDIF
+      ELSE
+      RQRAL(N,2,N5,N4)=0.0
+      RQRFE(N,2,N5,N4)=0.0
+      RQRHY(N,2,N5,N4)=0.0
+      RQRCA(N,2,N5,N4)=0.0
+      RQRMG(N,2,N5,N4)=0.0
+      RQRNA(N,2,N5,N4)=0.0
+      RQRKA(N,2,N5,N4)=0.0
+      RQROH(N,2,N5,N4)=0.0
+      RQRSO(N,2,N5,N4)=0.0
+      RQRCL(N,2,N5,N4)=0.0
+      RQRC3(N,2,N5,N4)=0.0
+      RQRHC(N,2,N5,N4)=0.0
+      RQRAL1(N,2,N5,N4)=0.0
+      RQRAL2(N,2,N5,N4)=0.0
+      RQRAL3(N,2,N5,N4)=0.0
+      RQRAL4(N,2,N5,N4)=0.0
+      RQRALS(N,2,N5,N4)=0.0
+      RQRFE1(N,2,N5,N4)=0.0
+      RQRFE2(N,2,N5,N4)=0.0
+      RQRFE3(N,2,N5,N4)=0.0
+      RQRFE4(N,2,N5,N4)=0.0
+      RQRFES(N,2,N5,N4)=0.0
+      RQRCAO(N,2,N5,N4)=0.0
+      RQRCAC(N,2,N5,N4)=0.0
+      RQRCAH(N,2,N5,N4)=0.0
+      RQRCAS(N,2,N5,N4)=0.0
+      RQRMGO(N,2,N5,N4)=0.0
+      RQRMGC(N,2,N5,N4)=0.0
+      RQRMGH(N,2,N5,N4)=0.0
+      RQRMGS(N,2,N5,N4)=0.0
+      RQRNAC(N,2,N5,N4)=0.0
+      RQRNAS(N,2,N5,N4)=0.0
+      RQRKAS(N,2,N5,N4)=0.0
+      RQRH0P(N,2,N5,N4)=0.0
+      RQRH3P(N,2,N5,N4)=0.0
+      RQRF1P(N,2,N5,N4)=0.0
+      RQRF2P(N,2,N5,N4)=0.0
+      RQRC0P(N,2,N5,N4)=0.0
+      RQRC1P(N,2,N5,N4)=0.0
+      RQRC2P(N,2,N5,N4)=0.0
+      RQRM1P(N,2,N5,N4)=0.0
+      IF(N4B.GT.0.AND.N5B.GT.0)THEN
+      RQRAL(N,1,N5B,N4B)=0.0
+      RQRFE(N,1,N5B,N4B)=0.0
+      RQRHY(N,1,N5B,N4B)=0.0
+      RQRCA(N,1,N5B,N4B)=0.0
+      RQRMG(N,1,N5B,N4B)=0.0
+      RQRNA(N,1,N5B,N4B)=0.0
+      RQRKA(N,1,N5B,N4B)=0.0
+      RQROH(N,1,N5B,N4B)=0.0
+      RQRSO(N,1,N5B,N4B)=0.0
+      RQRCL(N,1,N5B,N4B)=0.0
+      RQRC3(N,1,N5B,N4B)=0.0
+      RQRHC(N,1,N5B,N4B)=0.0
+      RQRAL1(N,1,N5B,N4B)=0.0
+      RQRAL2(N,1,N5B,N4B)=0.0
+      RQRAL3(N,1,N5B,N4B)=0.0
+      RQRAL4(N,1,N5B,N4B)=0.0
+      RQRALS(N,1,N5B,N4B)=0.0
+      RQRFE1(N,1,N5B,N4B)=0.0
+      RQRFE2(N,1,N5B,N4B)=0.0
+      RQRFE3(N,1,N5B,N4B)=0.0
+      RQRFE4(N,1,N5B,N4B)=0.0
+      RQRFES(N,1,N5B,N4B)=0.0
+      RQRCAO(N,1,N5B,N4B)=0.0
+      RQRCAC(N,1,N5B,N4B)=0.0
+      RQRCAH(N,1,N5B,N4B)=0.0
+      RQRCAS(N,1,N5B,N4B)=0.0
+      RQRMGO(N,1,N5B,N4B)=0.0
+      RQRMGC(N,1,N5B,N4B)=0.0
+      RQRMGH(N,1,N5B,N4B)=0.0
+      RQRMGS(N,1,N5B,N4B)=0.0
+      RQRNAC(N,1,N5B,N4B)=0.0
+      RQRNAS(N,1,N5B,N4B)=0.0
+      RQRKAS(N,1,N5B,N4B)=0.0
+      RQRH0P(N,1,N5B,N4B)=0.0
+      RQRH3P(N,1,N5B,N4B)=0.0
+      RQRF1P(N,1,N5B,N4B)=0.0
+      RQRF2P(N,1,N5B,N4B)=0.0
+      RQRC0P(N,1,N5B,N4B)=0.0
+      RQRC1P(N,1,N5B,N4B)=0.0
+      RQRC2P(N,1,N5B,N4B)=0.0
+      RQRM1P(N,1,N5B,N4B)=0.0
+      ENDIF
       ENDIF
 C
-C     ACCUMULATE HOURLY FLUXES
+C     SNOW DRIFT 
 C
-      XQRAL(N,N5,N4)=XQRAL(N,N5,N4)+RQRAL(N,N5,N4)
-      XQRFE(N,N5,N4)=XQRFE(N,N5,N4)+RQRFE(N,N5,N4)
-      XQRHY(N,N5,N4)=XQRHY(N,N5,N4)+RQRHY(N,N5,N4)
-      XQRCA(N,N5,N4)=XQRCA(N,N5,N4)+RQRCA(N,N5,N4)
-      XQRMG(N,N5,N4)=XQRMG(N,N5,N4)+RQRMG(N,N5,N4)
-      XQRNA(N,N5,N4)=XQRNA(N,N5,N4)+RQRNA(N,N5,N4)
-      XQRKA(N,N5,N4)=XQRKA(N,N5,N4)+RQRKA(N,N5,N4)
-      XQROH(N,N5,N4)=XQROH(N,N5,N4)+RQROH(N,N5,N4)
-      XQRSO(N,N5,N4)=XQRSO(N,N5,N4)+RQRSO(N,N5,N4)
-      XQRCL(N,N5,N4)=XQRCL(N,N5,N4)+RQRCL(N,N5,N4)
-      XQRC3(N,N5,N4)=XQRC3(N,N5,N4)+RQRC3(N,N5,N4)
-      XQRHC(N,N5,N4)=XQRHC(N,N5,N4)+RQRHC(N,N5,N4)
-      XQRAL1(N,N5,N4)=XQRAL1(N,N5,N4)+RQRAL1(N,N5,N4)
-      XQRAL2(N,N5,N4)=XQRAL2(N,N5,N4)+RQRAL2(N,N5,N4)
-      XQRAL3(N,N5,N4)=XQRAL3(N,N5,N4)+RQRAL3(N,N5,N4)
-      XQRAL4(N,N5,N4)=XQRAL4(N,N5,N4)+RQRAL4(N,N5,N4)
-      XQRALS(N,N5,N4)=XQRALS(N,N5,N4)+RQRALS(N,N5,N4)
-      XQRFE1(N,N5,N4)=XQRFE1(N,N5,N4)+RQRFE1(N,N5,N4)
-      XQRFE2(N,N5,N4)=XQRFE2(N,N5,N4)+RQRFE2(N,N5,N4)
-      XQRFE3(N,N5,N4)=XQRFE3(N,N5,N4)+RQRFE3(N,N5,N4)
-      XQRFE4(N,N5,N4)=XQRFE4(N,N5,N4)+RQRFE4(N,N5,N4)
-      XQRFES(N,N5,N4)=XQRFES(N,N5,N4)+RQRFES(N,N5,N4)
-      XQRCAO(N,N5,N4)=XQRCAO(N,N5,N4)+RQRCAO(N,N5,N4)
-      XQRCAC(N,N5,N4)=XQRCAC(N,N5,N4)+RQRCAC(N,N5,N4)
-      XQRCAH(N,N5,N4)=XQRCAH(N,N5,N4)+RQRCAH(N,N5,N4)
-      XQRCAS(N,N5,N4)=XQRCAS(N,N5,N4)+RQRCAS(N,N5,N4)
-      XQRMGO(N,N5,N4)=XQRMGO(N,N5,N4)+RQRMGO(N,N5,N4)
-      XQRMGC(N,N5,N4)=XQRMGC(N,N5,N4)+RQRMGC(N,N5,N4)
-      XQRMGH(N,N5,N4)=XQRMGH(N,N5,N4)+RQRMGH(N,N5,N4)
-      XQRMGS(N,N5,N4)=XQRMGS(N,N5,N4)+RQRMGS(N,N5,N4)
-      XQRNAC(N,N5,N4)=XQRNAC(N,N5,N4)+RQRNAC(N,N5,N4)
-      XQRNAS(N,N5,N4)=XQRNAS(N,N5,N4)+RQRNAS(N,N5,N4)
-      XQRKAS(N,N5,N4)=XQRKAS(N,N5,N4)+RQRKAS(N,N5,N4)
-      XQRH0P(N,N5,N4)=XQRH0P(N,N5,N4)+RQRH0P(N,N5,N4)
-      XQRH3P(N,N5,N4)=XQRH3P(N,N5,N4)+RQRH3P(N,N5,N4)
-      XQRF1P(N,N5,N4)=XQRF1P(N,N5,N4)+RQRF1P(N,N5,N4)
-      XQRF2P(N,N5,N4)=XQRF2P(N,N5,N4)+RQRF2P(N,N5,N4)
-      XQRC0P(N,N5,N4)=XQRC0P(N,N5,N4)+RQRC0P(N,N5,N4)
-      XQRC1P(N,N5,N4)=XQRC1P(N,N5,N4)+RQRC1P(N,N5,N4)
-      XQRC2P(N,N5,N4)=XQRC2P(N,N5,N4)+RQRC2P(N,N5,N4)
-      XQRM1P(N,N5,N4)=XQRM1P(N,N5,N4)+RQRM1P(N,N5,N4)
+C     QSM=snow transfer from watsub.f
+C     RQS*=solute flux in snow transfer
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C     VOLS=volume of snowpack from watsub.f
+C     *W2=solute content of snowpack
+C
+      IF(NN.EQ.1)THEN
 C
 C     IF NO SNOW DRIFT THEN NO TRANSPORT
 C
-      IF(QSM(M,N,N5,N4).EQ.0.0)THEN
+      IF(ABS(QSM(M,N,N5,N4)).LE.ZEROS2(N2,N1))THEN
       RQSAL(N,N5,N4)=0.0
       RQSFE(N,N5,N4)=0.0
       RQSHY(N,N5,N4)=0.0
@@ -3470,7 +4107,7 @@ C
 C
 C     IF DRIFT IS TO CURRENT FROM ADJACENT GRID CELL
 C
-      ELSEIF(QSM(M,N,N5,N4).LT.0.0)THEN
+      ELSEIF(QSM(M,N,N5,N4).LT.-ZEROS2(N2,N1))THEN
       IF(VOLS(N5,N4).GT.ZEROS2(N5,N4))THEN
       VFLW=AMIN1(0.0,AMAX1(-VFLWX,QSM(M,N,N5,N4)/VOLS(N5,N4)))
       ELSE
@@ -3519,7 +4156,10 @@ C
       RQSM1P(N,N5,N4)=VFLW*AMAX1(0.0,ZMG1PW2(1,N5,N4))
       ENDIF
 C
-C     ACCUMULATE HOURLY FLUXES
+C     ACCUMULATE HOURLY FLUXES FOR USE IN REDIST.F
+C
+C     XQS*=hourly solute in snow transfer
+C     RQS*=solute in snow transfer
 C
       XQSAL(N,N5,N4)=XQSAL(N,N5,N4)+RQSAL(N,N5,N4)
       XQSFE(N,N5,N4)=XQSFE(N,N5,N4)+RQSFE(N,N5,N4)
@@ -3548,7 +4188,7 @@ C
       XQSCAH(N,N5,N4)=XQSCAH(N,N5,N4)+RQSCAH(N,N5,N4)
       XQSCAS(N,N5,N4)=XQSCAS(N,N5,N4)+RQSCAS(N,N5,N4)
       XQSMGO(N,N5,N4)=XQSMGO(N,N5,N4)+RQSMGO(N,N5,N4)
-      XQRMGC(N,N5,N4)=XQSMGC(N,N5,N4)+RQSMGC(N,N5,N4)
+      XQSMGC(N,N5,N4)=XQSMGC(N,N5,N4)+RQSMGC(N,N5,N4)
       XQSMGH(N,N5,N4)=XQSMGH(N,N5,N4)+RQSMGH(N,N5,N4)
       XQSMGS(N,N5,N4)=XQSMGS(N,N5,N4)+RQSMGS(N,N5,N4)
       XQSNAC(N,N5,N4)=XQSNAC(N,N5,N4)+RQSNAC(N,N5,N4)
@@ -3562,9 +4202,14 @@ C
       XQSC1P(N,N5,N4)=XQSC1P(N,N5,N4)+RQSC1P(N,N5,N4)
       XQSC2P(N,N5,N4)=XQSC2P(N,N5,N4)+RQSC2P(N,N5,N4)
       XQSM1P(N,N5,N4)=XQSM1P(N,N5,N4)+RQSM1P(N,N5,N4)
+      ENDIF
+4305  CONTINUE
 4310  CONTINUE
 C
 C     SOLUTE FLUXES BETWEEN ADJACENT GRID CELLS
+C
+C     N3,N2,N1=L,NY,NX of source grid cell
+C     N6,N5,N4=L,NY,NX of destination grid cell
 C
       IFLGB=0
       DO 125 L=1,NL(NY,NX)
@@ -3611,6 +4256,14 @@ C
 C     SOLUTE FLUXES BETWEEN ADJACENT GRID CELLS FROM
 C     WATER CONTENTS AND WATER FLUXES 'FLQM' FROM 'WATSUB'
 C
+C     VOLX,VOLY=soil volume excluding rock, macropore
+C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
+C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
+C     VOLWM,VOLWHM=micropore,macropore water-filled porosity from watsub.f
+C     THETW=volumetric water content
+C     FLPM=change in air volume 
+C     XNPT=1/number of cycles NPH-1 for gas flux calculations
+C
       IF(VOLX(N3,N2,N1).GT.ZEROS2(NY,NX))THEN
       IF(N3.GE.NUM(N2,N1).AND.N6.GE.NUM(N5,N4)
      2.AND.N3.LE.NL(N2,N1).AND.N6.LE.NL(N5,N4))THEN
@@ -3618,6 +4271,26 @@ C
       THETW1(N6,N5,N4)=AMAX1(0.0,VOLWM(M,N6,N5,N4)/VOLY(N6,N5,N4))
 C
 C     SOLUTE TRANSPORT IN MICROPORES
+C
+C     IF MICROPORE WATER FLUX FROM 'WATSUB' IS FROM CURRENT TO
+C     ADJACENT GRID CELL THEN CONVECTIVE TRANSPORT IS THE PRODUCT
+C     OF WATER FLUX AND MICROPORE GAS OR SOLUTE CONCENTRATIONS
+C     IN CURRENT GRID CELL
+C
+C     FLWM=water flux through soil micropore from watsub.f 
+C     VOLWM=micropore water-filled porosity from watsub.f
+C     RFL*S=solute diffusive flux through micropore
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C     *S2,*B2=micropore solute content in non-band,band
 C
       IF(FLWM(M,N,N6,N5,N4).GT.0.0)THEN
 C
@@ -3754,8 +4427,24 @@ C
      3.AND.VOLWM(M,N3,N2,N1).GT.ZEROS2(N2,N1)
      4.AND.VOLWM(M,N6,N5,N4).GT.ZEROS2(N5,N4))THEN
 C
+C     VOLWM=micropore water-filled porosity from watsub.f
+C     THETW=volumetric water content
+C
 C     MICROPORE CONCENTRATIONS FROM WATER-FILLED POROSITY
 C     IN CURRENT AND ADJACENT GRID CELLS
+C
+C     C*1,C*2=solute concentration in source,destination layer
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C     *S2,*B2=soil solute content in non-band,band
 C
       VLWPA1=VOLWM(M,N3,N2,N1)*VLPO4(N3,N2,N1)
       VLWPB1=VOLWM(M,N3,N2,N1)*VLPOB(N3,N2,N1)
@@ -3906,6 +4595,28 @@ C
 C
 C     DIFFUSIVITIES IN CURRENT AND ADJACENT GRID CELL MICROPORES
 C
+C     DLYR=soil layer thickness
+C     TORT=micropore tortuosity from hour1.f 
+C     DISP=dispersivity parameter
+C     FLWM=water flux through soil micropore from watsub.f 
+C     DIF*=aqueous diffusivity-dispersivity through micropore
+C     *SGL2=solute diffusivity from hour1.f
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C     XDPTH=cross-sectional area/distance between layers
+C     C*1,C*2=micropore solute concentration in source,destination layer
+C     DFV*=diffusive solute transfer through soil micropore 
+C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
+C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
+C
       DLYR1=AMAX1(ZERO2,DLYR(N,N3,N2,N1))
       DLYR2=AMAX1(ZERO2,DLYR(N,N6,N5,N4))
       TORTL=(TORT(M,N3,N2,N1)*DLYR1+TORT(M,N6,N5,N4)*DLYR2)
@@ -3925,6 +4636,10 @@ C
       DIFCL=(CLSXL2(N6,N5,N4)*TORTL+DISPN)*XDPTH(N,N6,N5,N4)
       DIFC3=(C3SGL2(N6,N5,N4)*TORTL+DISPN)*XDPTH(N,N6,N5,N4)
       DIFHC=(HCSGL2(N6,N5,N4)*TORTL+DISPN)*XDPTH(N,N6,N5,N4)
+C
+C     DIFFUSIVE FLUXES BETWEEN CURRENT AND ADJACENT GRID CELL
+C     MICROPORES
+C
       DFVAL=DIFAL*(CAL1-CAL2)
       DFVFE=DIFFE*(CFE1-CFE2)
       DFVHY=DIFHY*(CHY1-CHY2)
@@ -3958,10 +4673,6 @@ C
       DFVNAC=DIFNA*(CNAC1-CNAC2)
       DFVNAS=DIFNA*(CNAS1-CNAS2)
       DFVKAS=DIFKA*(CKAS1-CKAS2)
-C
-C     DIFFUSIVE FLUXES BETWEEN CURRENT AND ADJACENT GRID CELL
-C     MICROPORES
-C
       DFVH0P=DIFPO*(C0PO41-C0PO42)*VLPO4(N6,N5,N4)
       DFVH3P=DIFPO*(C3PO41-C3PO42)*VLPO4(N6,N5,N4)
       DFVF1P=DIFPO*(CFE1P1-CFE1P2)*VLPO4(N6,N5,N4)
@@ -4032,12 +4743,32 @@ C
 C
 C     SOLUTE TRANSPORT IN MACROPORES
 C
+C     FLWHM=water flux through soil macropore from watsub.f 
+C
       IF(FLWHM(M,N,N6,N5,N4).GT.0.0)THEN
 C
 C     IF MACROPORE WATER FLUX FROM 'WATSUB' IS FROM CURRENT TO
 C     ADJACENT GRID CELL THEN CONVECTIVE TRANSPORT IS THE PRODUCT
 C     OF WATER FLUX AND MACROPORE GAS OR SOLUTE CONCENTRATIONS
 C     IN CURRENT GRID CELL
+C
+C     VOLWHM=macropore water-filled porosity from watsub.f
+C     VOLWAH=macropore porosity
+C     RFH*=solute diffusive flux through macropore
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C     *SH2,*BH2=macropore solute content in non-band,band
+C     R*FXS=convective + diffusive solute flux between macropores and micropores
+C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
+C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
 C
       IF(VOLWHM(M,N3,N2,N1).GT.ZEROS2(N2,N1))THEN
       VFLW=AMAX1(0.0,AMIN1(VFLWX,FLWHM(M,N,N6,N5,N4)
@@ -4046,7 +4777,7 @@ C
       VFLW=VFLWX
       ENDIF
 C
-C     ACCOUNT FOR OVERLAND FLOW IF IN SURFACE SOIL LAYER
+C     ACCOUNT FOR MACROPORE-MICROPORE EXCHANGE IN VERTICAL FLUX
 C
       IF(N.EQ.3.AND.VOLAH(N6,N5,N4).GT.VOLWHM(M,N6,N5,N4))THEN
       RFHAL=VFLW*AMAX1(0.0,(ZALH2(N3,N2,N1)
@@ -4148,7 +4879,7 @@ C
       RFHM1B=VFLW*AMAX1(0.0,(ZM1BH2(N3,N2,N1)
      2-AMIN1(0.0,RM1BXB(NU(N2,N1),N2,N1))))*VLPOB(N3,N2,N1)
 C
-C     IF NOT IN SURFACE LAYER
+C     OTHERWISE
 C
       ELSE
       RFHAL=VFLW*AMAX1(0.0,ZALH2(N3,N2,N1))
@@ -4322,10 +5053,28 @@ C     DIFFUSIVE FLUXES OF GASES AND SOLUTES BETWEEN CURRENT AND
 C     ADJACENT GRID CELL MACROPORES FROM AQUEOUS DIFFUSIVITIES
 C     AND CONCENTRATION DIFFERENCES
 C
+C     VOLWHM=macropore water-filled porosity from watsub.f
+C     THETY=hygroscopic water content
+C     VOLAH=total macropore volume
+C
       IF(VOLWHM(M,N3,N2,N1).GT.THETY(N3,N2,N1)*VOLAH(N3,N2,N1)
      2.AND.VOLWHM(M,N6,N5,N4).GT.THETY(N6,N5,N4)*VOLAH(N6,N5,N4))THEN
 C
 C     MACROPORE CONCENTRATIONS IN CURRENT AND ADJACENT GRID CELLS
+C
+C     C*H1,C*H2=macropore solute concentration in source,destination layer 
+C     *H2=macropore solute content
+C     VOLWHM=macropore water content 
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
 C
       CAL1=AMAX1(0.0,ZALH2(N3,N2,N1)/VOLWHM(M,N3,N2,N1))
       CFE1=AMAX1(0.0,ZFEH2(N3,N2,N1)/VOLWHM(M,N3,N2,N1))
@@ -4427,6 +5176,28 @@ C
       CM1PB2=AMAX1(0.0,ZM1BH2(N6,N5,N4)/VOLWHM(M,N6,N5,N4))
 C
 C     DIFFUSIVITIES IN CURRENT AND ADJACENT GRID CELL MACROPORES
+C
+C     DLYR=soil layer thickness
+C     TORTH=macropore tortuosity from hour1.f 
+C     DISP=dispersivity parameter
+C     FLWHM=water flux through soil macropore from watsub.f 
+C     DIF*=aqueous diffusivity-dispersivity through macropore
+C     *SGL2=solute diffusivity from hour1.f
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C     XDPTH=cross-sectional area/distance between layers
+C     C*H1,C*H2=macropore solute concentration in source,destination layer
+C     DFH*=diffusive solute transfer through soil macropore 
+C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
+C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
 C
       DLYR1=AMAX1(ZERO2,DLYR(N,N3,N2,N1))
       DLYR2=AMAX1(ZERO2,DLYR(N,N6,N5,N4))
@@ -4555,6 +5326,25 @@ C
 C     TOTAL MICROPORE AND MACROPORE SOLUTE TRANSPORT
 C     FLUXES = CONVECTIVE + DIFFUSIVE FLUXES
 C
+C     R*FLS=convective + diffusive solute flux through micropores
+C     R*FLW,R*FLB=convective + diffusive solute flux through micropores in non-band,band
+C     R*FHS=convective + diffusive solute flux through macropores
+C     R*FHW,R*FHB=convective + diffusive solute flux through macropores in non-band,band
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C     RFL*=convective flux through micropores 
+C     DFV*=diffusive solute flux through micropores
+C     RFH*=convective flux through macropores 
+C     DFH*=diffusive solute flux through macropores
+C
       RALFLS(N,N6,N5,N4)=RFLAL+DFVAL
       RFEFLS(N,N6,N5,N4)=RFLFE+DFVFE
       RHYFLS(N,N6,N5,N4)=RFLHY+DFVHY
@@ -4654,7 +5444,16 @@ C
       RC2BHB(N,N6,N5,N4)=RFHC2B+DFHC2B
       RM1BHB(N,N6,N5,N4)=RFHM1B+DFHM1B
 C
-C     ACCUMULATE HOURLY FLUXES
+C     ACCUMULATE HOURLY FLUXES FOR USE IN REDIST.F
+C
+C     X*FLS=hourly convective + diffusive solute flux through micropores
+C     X*FLW,X*FLB= hourly convective + diffusive solute flux through micropores in non-band,band
+C     X*FHS=hourly convective + diffusive solute flux through macropores
+C     X*FHW,X*FHB= hourly convective + diffusive solute flux through macropores in non-band,band
+C     R*FLS=convective + diffusive solute flux through micropores
+C     R*FLW,X*FLB=convective + diffusive solute flux through micropores in non-band,band
+C     R*FHS=convective + diffusive solute flux through macropores
+C     R*FHW,X*FHB=convective + diffusive solute flux through macropores in non-band,band
 C
       XALFLS(N,N6,N5,N4)=XALFLS(N,N6,N5,N4)+RALFLS(N,N6,N5,N4)
       XFEFLS(N,N6,N5,N4)=XFEFLS(N,N6,N5,N4)+RFEFLS(N,N6,N5,N4)
@@ -4760,6 +5559,27 @@ C     LAYER FROM WATER EXCHANGE IN 'WATSUB' AND
 C     FROM MACROPORE OR MICROPORE SOLUTE CONCENTRATIONS
 C
       IF(N.EQ.3)THEN
+C
+C     MACROPORE-MICROPORE CONVECTIVE SOLUTE EXCHANGE IN SOIL
+C     LAYER FROM WATER EXCHANGE IN 'WATSUB' AND
+C     FROM MACROPORE OR MICROPORE SOLUTE CONCENTRATIONS
+C
+C     FINHM=macro-micropore water transfer from watsub.f 
+C     VOLWM,VOLWHM=micropore,macropore water volume
+C     RFL*=convective macropore-micropore solute transfer 
+C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
+C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C     *H2,*2=macropore,micropore solute content
 C
 C     MACROPORE TO MICROPORE TRANSFER
 C
@@ -4968,127 +5788,138 @@ C
 C     DIFFUSIVE FLUXES OF SOLUTES BETWEEN MICROPORES AND
 C     MACROPORES FROM AQUEOUS DIFFUSIVITIES AND CONCENTRATION DIFFERENCES
 C
-C
-C     DIFFUSIVE FLUXES OF SOLUTES BETWEEN MICROPORES AND
-C     MACROPORES FROM AQUEOUS DIFFUSIVITIES AND CONCENTRATION DIFFERENCES
+C     VOLWM,VOLWHM=micropore,macropore water-filled porosity from watsub.f
+C     DFV*S,DFV*B=diffusive solute flux between macro- and micropore in non-band,band
+C     XNPH=1/no. of cycles h-1 for water, heat and solute flux calculations
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C     *2,*H2=solute content of micropores,macropores
 C
       IF(VOLWHM(M,N6,N5,N4).GT.ZEROS2(NY,NX))THEN
       VOLWHS=AMIN1(XFRS*VOLT(N6,N5,N4),VOLWHM(M,N6,N5,N4))
       VOLWT=VOLWM(M,N6,N5,N4)+VOLWHS 
-      DFVAL=XNPX*(AMAX1(0.0,ZALH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVAL=XNPH*(AMAX1(0.0,ZALH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZAL2(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVFE=XNPX*(AMAX1(0.0,ZFEH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVFE=XNPH*(AMAX1(0.0,ZFEH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZFE2(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVHY=XNPX*(AMAX1(0.0,ZHYH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVHY=XNPH*(AMAX1(0.0,ZHYH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZHY2(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVCA=XNPX*(AMAX1(0.0,ZCCH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVCA=XNPH*(AMAX1(0.0,ZCCH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZCA2(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVMG=XNPX*(AMAX1(0.0,ZMAH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVMG=XNPH*(AMAX1(0.0,ZMAH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZMG2(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVNA=XNPX*(AMAX1(0.0,ZNAH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVNA=XNPH*(AMAX1(0.0,ZNAH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZNA2(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVKA=XNPX*(AMAX1(0.0,ZKAH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVKA=XNPH*(AMAX1(0.0,ZKAH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZKA2(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVOH=XNPX*(AMAX1(0.0,ZOHH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVOH=XNPH*(AMAX1(0.0,ZOHH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZOH2(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVSO=XNPX*(AMAX1(0.0,ZSO4H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVSO=XNPH*(AMAX1(0.0,ZSO4H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZSO42(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVCL=XNPX*(AMAX1(0.0,ZCLH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVCL=XNPH*(AMAX1(0.0,ZCLH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZCL2(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVC3=XNPX*(AMAX1(0.0,ZCO3H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVC3=XNPH*(AMAX1(0.0,ZCO3H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZCO32(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVHC=XNPX*(AMAX1(0.0,ZHCOH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVHC=XNPH*(AMAX1(0.0,ZHCOH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZHCO32(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVAL1=XNPX*(AMAX1(0.0,ZAL1H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVAL1=XNPH*(AMAX1(0.0,ZAL1H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZAL12(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVAL2=XNPX*(AMAX1(0.0,ZAL2H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVAL2=XNPH*(AMAX1(0.0,ZAL2H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZAL22(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVAL3=XNPX*(AMAX1(0.0,ZAL3H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVAL3=XNPH*(AMAX1(0.0,ZAL3H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZAL32(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVAL4=XNPX*(AMAX1(0.0,ZAL4H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVAL4=XNPH*(AMAX1(0.0,ZAL4H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZAL42(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVALS=XNPX*(AMAX1(0.0,ZALSH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVALS=XNPH*(AMAX1(0.0,ZALSH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZALS2(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVFE1=XNPX*(AMAX1(0.0,ZFE1H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVFE1=XNPH*(AMAX1(0.0,ZFE1H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZFE12(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVF22=XNPX*(AMAX1(0.0,ZFE2H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVF22=XNPH*(AMAX1(0.0,ZFE2H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZFE22(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVFE3=XNPX*(AMAX1(0.0,ZFE3H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVFE3=XNPH*(AMAX1(0.0,ZFE3H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZFE32(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVFE4=XNPX*(AMAX1(0.0,ZFE4H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVFE4=XNPH*(AMAX1(0.0,ZFE4H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZFE42(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVFES=XNPX*(AMAX1(0.0,ZFESH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVFES=XNPH*(AMAX1(0.0,ZFESH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZFES2(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVCAO=XNPX*(AMAX1(0.0,ZCAOH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVCAO=XNPH*(AMAX1(0.0,ZCAOH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZCAO2(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVCAC=XNPX*(AMAX1(0.0,ZCACH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVCAC=XNPH*(AMAX1(0.0,ZCACH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZCAC2(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVCAH=XNPX*(AMAX1(0.0,ZCAHH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVCAH=XNPH*(AMAX1(0.0,ZCAHH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZCAH2(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVCAS=XNPX*(AMAX1(0.0,ZCASH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVCAS=XNPH*(AMAX1(0.0,ZCASH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZCAS2(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVMGO=XNPX*(AMAX1(0.0,ZMGOH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVMGO=XNPH*(AMAX1(0.0,ZMGOH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZMGO2(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVMGC=XNPX*(AMAX1(0.0,ZMGCH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVMGC=XNPH*(AMAX1(0.0,ZMGCH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZMGC2(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVMGH=XNPX*(AMAX1(0.0,ZMGHH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVMGH=XNPH*(AMAX1(0.0,ZMGHH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZMGH2(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVMGS=XNPX*(AMAX1(0.0,ZMGSH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVMGS=XNPH*(AMAX1(0.0,ZMGSH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZMGS2(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVNAC=XNPX*(AMAX1(0.0,ZNACH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVNAC=XNPH*(AMAX1(0.0,ZNACH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZNAC2(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVNAS=XNPX*(AMAX1(0.0,ZNASH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVNAS=XNPH*(AMAX1(0.0,ZNASH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZNAS2(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVKAS=XNPX*(AMAX1(0.0,ZKASH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVKAS=XNPH*(AMAX1(0.0,ZKASH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZKAS2(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVNAC=XNPX*(AMAX1(0.0,ZNACH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVNAC=XNPH*(AMAX1(0.0,ZNACH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZNAC2(N6,N5,N4))*VOLWHS)/VOLWT
-      DFVH0P=XNPX*(AMAX1(0.0,H0P4H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVH0P=XNPH*(AMAX1(0.0,H0P4H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,H0PO42(N6,N5,N4))*VOLWHS)/VOLWT
      2*VLPO4(N6,N5,N4)
-      DFVH3P=XNPX*(AMAX1(0.0,H3P4H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVH3P=XNPH*(AMAX1(0.0,H3P4H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,H3PO42(N6,N5,N4))*VOLWHS)/VOLWT
      2*VLPO4(N6,N5,N4)
-      DFVF1P=XNPX*(AMAX1(0.0,ZF1PH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVF1P=XNPH*(AMAX1(0.0,ZF1PH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZFE1P2(N6,N5,N4))*VOLWHS)/VOLWT
      2*VLPO4(N6,N5,N4)
-      DFVF2P=XNPX*(AMAX1(0.0,ZF2PH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVF2P=XNPH*(AMAX1(0.0,ZF2PH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZFE2P2(N6,N5,N4))*VOLWHS)/VOLWT
      2*VLPO4(N6,N5,N4)
-      DFVC0P=XNPX*(AMAX1(0.0,ZC0PH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVC0P=XNPH*(AMAX1(0.0,ZC0PH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZCA0P2(N6,N5,N4))*VOLWHS)/VOLWT
      2*VLPO4(N6,N5,N4)
-      DFVC1P=XNPX*(AMAX1(0.0,ZC1PH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVC1P=XNPH*(AMAX1(0.0,ZC1PH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZCA1P2(N6,N5,N4))*VOLWHS)/VOLWT
      2*VLPO4(N6,N5,N4)
-      DFVC2P=XNPX*(AMAX1(0.0,ZC2PH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVC2P=XNPH*(AMAX1(0.0,ZC2PH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZCA2P2(N6,N5,N4))*VOLWHS)/VOLWT
      2*VLPO4(N6,N5,N4)
-      DFVM1P=XNPX*(AMAX1(0.0,ZM1PH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVM1P=XNPH*(AMAX1(0.0,ZM1PH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZMG1P2(N6,N5,N4))*VOLWHS)/VOLWT
      2*VLPO4(N6,N5,N4)
-      DFVH0B=XNPX*(AMAX1(0.0,H0PBH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVH0B=XNPH*(AMAX1(0.0,H0PBH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,H0POB2(N6,N5,N4))*VOLWHS)/VOLWT
      2*VLPOB(N6,N5,N4)
-      DFVH3B=XNPX*(AMAX1(0.0,H3PBH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVH3B=XNPH*(AMAX1(0.0,H3PBH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,H3POB2(N6,N5,N4))*VOLWHS)/VOLWT
      2*VLPOB(N6,N5,N4)
-      DFVF1B=XNPX*(AMAX1(0.0,ZF1BH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVF1B=XNPH*(AMAX1(0.0,ZF1BH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZF1PB2(N6,N5,N4))*VOLWHS)/VOLWT
      2*VLPOB(N6,N5,N4)
-      DFVF2B=XNPX*(AMAX1(0.0,ZF2BH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVF2B=XNPH*(AMAX1(0.0,ZF2BH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZF2PB2(N6,N5,N4))*VOLWHS)/VOLWT
      2*VLPOB(N6,N5,N4)
-      DFVC0B=XNPX*(AMAX1(0.0,ZC0BH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVC0B=XNPH*(AMAX1(0.0,ZC0BH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZC0PB2(N6,N5,N4))*VOLWHS)/VOLWT
      2*VLPOB(N6,N5,N4)
-      DFVC1B=XNPX*(AMAX1(0.0,ZC1BH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVC1B=XNPH*(AMAX1(0.0,ZC1BH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZC1PB2(N6,N5,N4))*VOLWHS)/VOLWT
      2*VLPOB(N6,N5,N4)
-      DFVC2B=XNPX*(AMAX1(0.0,ZC2BH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVC2B=XNPH*(AMAX1(0.0,ZC2BH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZC2PB2(N6,N5,N4))*VOLWHS)/VOLWT
      2*VLPOB(N6,N5,N4)
-      DFVM1B=XNPX*(AMAX1(0.0,ZM1BH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
+      DFVM1B=XNPH*(AMAX1(0.0,ZM1BH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZM1PB2(N6,N5,N4))*VOLWHS)/VOLWT
      2*VLPOB(N6,N5,N4)
       ELSE
@@ -5143,7 +5974,21 @@ C
       DFVM1B=0.0
       ENDIF
 C
-C     ACCUMULATE HOURLY FLUXES
+C     TOTAL CONVECTIVE +DIFFUSIVE TRANSFER BETWEEN MACROPOES AND MICROPORES
+C
+C     R*FXS,R*FXB=total convective + diffusive solute flux between macro- and micropore in non-band,band
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C     RFL*=convective flux between macro- and micropore 
+C     DFV*=diffusive solute flux between macro- and micropore 
 C
       RALFXS(N6,N5,N4)=RFLAL+DFVAL
       RFEFXS(N6,N5,N4)=RFLFE+DFVFE
@@ -5195,7 +6040,10 @@ C
       RC2BXB(N6,N5,N4)=RFLC2B+DFVC2B
       RM1BXB(N6,N5,N4)=RFLM1B+DFVM1B
 C
-C     ACCUMULATE HOURLY FLUXES
+C     ACCUMULATE HOURLY FLUXES FOR USE IN REDIST.F
+C
+C     X*FXS,X*FXB= hourly convective + diffusive solute flux between macro- and micropore in non-band,band
+C     R*FXS,R*FXB=convective + diffusive solute flux between macro- and micropore in non-band,band
 C
       XALFXS(N6,N5,N4)=XALFXS(N6,N5,N4)+RALFXS(N6,N5,N4)
       XFEFXS(N6,N5,N4)=XFEFXS(N6,N5,N4)+RFEFXS(N6,N5,N4)
@@ -5459,22 +6307,27 @@ C
 C
 C     BOUNDARY SOLUTE AND GAS FLUXES
 C
+C     N3,N2,N1=L,NY,NX of source grid cell
+C     M6,M5,M4=L,NY,NX of destination grid cell
+C
       DO 9595 NX=NHW,NHE
       DO 9590 NY=NVN,NVS
       IF(ISALTG.NE.0)THEN
       DO 9585 L=NU(NY,NX),NL(NY,NX)
+      N1=NX
+      N2=NY
+      N3=L
 C
 C     LOCATE ALL EXTERNAL BOUNDARIES AND SET BOUNDARY CONDITIONS
 C     ENTERED IN 'READS'
 C
-      N1=NX
-      N2=NY
-      N3=L
       DO 9580 N=1,3
       DO 9575 NN=1,2
       IF(N.EQ.1)THEN
       N4=NX+1
       N5=NY
+      N4B=NX-1
+      N5B=NY
       N6=L
       IF(NN.EQ.1)THEN
       IF(NX.EQ.NHE)THEN
@@ -5485,6 +6338,9 @@ C
       M5=NY
       M6=L
       XN=-1.0
+      RCHQF=RCHQE(M2,M1)
+      RCHGFU=RCHGEU(M2,M1)
+      RCHGFT=RCHGET(M2,M1)
       ELSE
       GO TO 9575
       ENDIF
@@ -5497,6 +6353,9 @@ C
       M5=NY
       M6=L
       XN=1.0
+      RCHQF=RCHQW(M5,M4)
+      RCHGFU=RCHGWU(M5,M4)
+      RCHGFT=RCHGWT(M5,M4)
       ELSE
       GO TO 9575
       ENDIF
@@ -5504,6 +6363,8 @@ C
       ELSEIF(N.EQ.2)THEN
       N4=NX
       N5=NY+1
+      N4B=NX
+      N5B=NY-1
       N6=L
       IF(NN.EQ.1)THEN
       IF(NY.EQ.NVS)THEN
@@ -5514,6 +6375,9 @@ C
       M5=NY+1
       M6=L
       XN=-1.0
+      RCHQF=RCHQS(M2,M1)
+      RCHGFU=RCHGSU(M2,M1)
+      RCHGFT=RCHGST(M2,M1)
       ELSE
       GO TO 9575
       ENDIF
@@ -5526,6 +6390,9 @@ C
       M5=NY
       M6=L
       XN=1.0
+      RCHQF=RCHQN(M5,M4)
+      RCHGFU=RCHGNU(M5,M4)
+      RCHGFT=RCHGNT(M5,M4)
       ELSE
       GO TO 9575
       ENDIF
@@ -5557,157 +6424,258 @@ C
 C     SURFACE SOLUTE TRANSPORT FROM BOUNDARY SURFACE
 C     RUNOFF IN WATSUB AND CONCENTRATIONS IN THE SURFACE SOIL LAYER
 C
-      IF(M3.EQ.NU(M2,M1).AND.N.NE.3)THEN
 C
-C     NO RUNOFF
+C     SURFACE SOLUTE TRANSPORT FROM BOUNDARY SURFACE
+C     RUNOFF IN 'WATSUB' AND CONCENTRATIONS IN THE SURFACE SOIL LAYER
 C
-      IF(QRM(M,N,M5,M4).EQ.0.0.OR.THETIZ(0,M2,M1).GT.ZERO)THEN
-      RQRAL(N,M5,M4)=0.0
-      RQRFE(N,M5,M4)=0.0
-      RQRHY(N,M5,M4)=0.0
-      RQRCA(N,M5,M4)=0.0
-      RQRMG(N,M5,M4)=0.0
-      RQRNA(N,M5,M4)=0.0
-      RQRKA(N,M5,M4)=0.0
-      RQROH(N,M5,M4)=0.0
-      RQRSO(N,M5,M4)=0.0
-      RQRCL(N,M5,M4)=0.0
-      RQRC3(N,M5,M4)=0.0
-      RQRHC(N,M5,M4)=0.0
-      RQRAL1(N,M5,M4)=0.0
-      RQRAL2(N,M5,M4)=0.0
-      RQRAL3(N,M5,M4)=0.0
-      RQRAL4(N,M5,M4)=0.0
-      RQRALS(N,M5,M4)=0.0
-      RQRFE1(N,M5,M4)=0.0
-      RQRFE2(N,M5,M4)=0.0
-      RQRFE3(N,M5,M4)=0.0
-      RQRFE4(N,M5,M4)=0.0
-      RQRFES(N,M5,M4)=0.0
-      RQRCAO(N,M5,M4)=0.0
-      RQRCAC(N,M5,M4)=0.0
-      RQRCAH(N,M5,M4)=0.0
-      RQRCAS(N,M5,M4)=0.0
-      RQRMGO(N,M5,M4)=0.0
-      RQRMGC(N,M5,M4)=0.0
-      RQRMGH(N,M5,M4)=0.0
-      RQRMGS(N,M5,M4)=0.0
-      RQRNAC(N,M5,M4)=0.0
-      RQRNAS(N,M5,M4)=0.0
-      RQRKAS(N,M5,M4)=0.0
-      RQRH0P(N,M5,M4)=0.0
-      RQRH3P(N,M5,M4)=0.0
-      RQRF1P(N,M5,M4)=0.0
-      RQRF2P(N,M5,M4)=0.0
-      RQRC0P(N,M5,M4)=0.0
-      RQRC1P(N,M5,M4)=0.0
-      RQRC2P(N,M5,M4)=0.0
-      RQRM1P(N,M5,M4)=0.0
+C     QRM =runoff from watsub.f 
+C     RQR*=solute in runoff
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C
+      IF(L.EQ.NUM(M2,M1).AND.N.NE.3)THEN
+      IF(IRCHG(NN,N,N2,N1).EQ.0.OR.RCHQF.EQ.0.0
+     2.OR.QRM(M,N2,N1).LE.ZEROS(N2,N1))THEN
+      RQRAL(N,NN,M5,M4)=0.0
+      RQRFE(N,NN,M5,M4)=0.0
+      RQRHY(N,NN,M5,M4)=0.0
+      RQRCA(N,NN,M5,M4)=0.0
+      RQRMG(N,NN,M5,M4)=0.0
+      RQRNA(N,NN,M5,M4)=0.0
+      RQRKA(N,NN,M5,M4)=0.0
+      RQROH(N,NN,M5,M4)=0.0
+      RQRSO(N,NN,M5,M4)=0.0
+      RQRCL(N,NN,M5,M4)=0.0
+      RQRC3(N,NN,M5,M4)=0.0
+      RQRHC(N,NN,M5,M4)=0.0
+      RQRAL1(N,NN,M5,M4)=0.0
+      RQRAL2(N,NN,M5,M4)=0.0
+      RQRAL3(N,NN,M5,M4)=0.0
+      RQRAL4(N,NN,M5,M4)=0.0
+      RQRALS(N,NN,M5,M4)=0.0
+      RQRFE1(N,NN,M5,M4)=0.0
+      RQRFE2(N,NN,M5,M4)=0.0
+      RQRFE3(N,NN,M5,M4)=0.0
+      RQRFE4(N,NN,M5,M4)=0.0
+      RQRFES(N,NN,M5,M4)=0.0
+      RQRCAO(N,NN,M5,M4)=0.0
+      RQRCAC(N,NN,M5,M4)=0.0
+      RQRCAH(N,NN,M5,M4)=0.0
+      RQRCAS(N,NN,M5,M4)=0.0
+      RQRMGO(N,NN,M5,M4)=0.0
+      RQRMGC(N,NN,M5,M4)=0.0
+      RQRMGH(N,NN,M5,M4)=0.0
+      RQRMGS(N,NN,M5,M4)=0.0
+      RQRNAC(N,NN,M5,M4)=0.0
+      RQRNAS(N,NN,M5,M4)=0.0
+      RQRKAS(N,NN,M5,M4)=0.0
+      RQRH0P(N,NN,M5,M4)=0.0
+      RQRH3P(N,NN,M5,M4)=0.0
+      RQRF1P(N,NN,M5,M4)=0.0
+      RQRF2P(N,NN,M5,M4)=0.0
+      RQRC0P(N,NN,M5,M4)=0.0
+      RQRC1P(N,NN,M5,M4)=0.0
+      RQRC2P(N,NN,M5,M4)=0.0
+      RQRM1P(N,NN,M5,M4)=0.0
+      ELSE
 C
 C     SOLUTE LOSS FROM RUNOFF DEPENDING ON ASPECT
 C     AND BOUNDARY CONDITIONS SET IN SITE FILE
 C
-      ELSEIF(NN.EQ.1.AND.QRM(M,N,M5,M4).GT.0.0
-     2.OR.NN.EQ.2.AND.QRM(M,N,M5,M4).LT.0.0)THEN
-      IF(VOLWM(M,0,M2,M1).GT.ZEROS2(M2,M1))THEN
-      VFLW=AMAX1(0.0,AMIN1(VFLWX,QRM(M,N,M5,M4)
-     2/VOLWM(M,0,M2,M1)))
-      ELSE
-      VFLW=0.0
-      ENDIF
-      RQRAL(N,M5,M4)=VFLW*AMAX1(0.0,ZAL2(0,M2,M1)) 
-      RQRFE(N,M5,M4)=VFLW*AMAX1(0.0,ZFE2(0,M2,M1))
-      RQRHY(N,M5,M4)=VFLW*AMAX1(0.0,ZHY2(0,M2,M1))
-      RQRCA(N,M5,M4)=VFLW*AMAX1(0.0,ZCA2(0,M2,M1))
-      RQRMG(N,M5,M4)=VFLW*AMAX1(0.0,ZMG2(0,M2,M1))
-      RQRNA(N,M5,M4)=VFLW*AMAX1(0.0,ZNA2(0,M2,M1))
-      RQRKA(N,M5,M4)=VFLW*AMAX1(0.0,ZKA2(0,M2,M1))
-      RQROH(N,M5,M4)=VFLW*AMAX1(0.0,ZOH2(0,M2,M1))
-      RQRSO(N,M5,M4)=VFLW*AMAX1(0.0,ZSO42(0,M2,M1)) 
-      RQRCL(N,M5,M4)=VFLW*AMAX1(0.0,ZCL2(0,M2,M1))
-      RQRC3(N,M5,M4)=VFLW*AMAX1(0.0,ZCO32(0,M2,M1))
-      RQRHC(N,M5,M4)=VFLW*AMAX1(0.0,ZHCO32(0,M2,M1))
-      RQRAL1(N,M5,M4)=VFLW*AMAX1(0.0,ZAL12(0,M2,M1))
-      RQRAL2(N,M5,M4)=VFLW*AMAX1(0.0,ZAL22(0,M2,M1))
-      RQRAL3(N,M5,M4)=VFLW*AMAX1(0.0,ZAL32(0,M2,M1))
-      RQRAL4(N,M5,M4)=VFLW*AMAX1(0.0,ZAL42(0,M2,M1))
-      RQRALS(N,M5,M4)=VFLW*AMAX1(0.0,ZALS2(0,M2,M1))
-      RQRFE1(N,M5,M4)=VFLW*AMAX1(0.0,ZFE12(0,M2,M1))
-      RQRFE2(N,M5,M4)=VFLW*AMAX1(0.0,ZFE22(0,M2,M1))
-      RQRFE3(N,M5,M4)=VFLW*AMAX1(0.0,ZFE32(0,M2,M1))
-      RQRFE4(N,M5,M4)=VFLW*AMAX1(0.0,ZFE42(0,M2,M1))
-      RQRFES(N,M5,M4)=VFLW*AMAX1(0.0,ZFES2(0,M2,M1))
-      RQRCAO(N,M5,M4)=VFLW*AMAX1(0.0,ZCAO2(0,M2,M1))
-      RQRCAC(N,M5,M4)=VFLW*AMAX1(0.0,ZCAC2(0,M2,M1))
-      RQRCAH(N,M5,M4)=VFLW*AMAX1(0.0,ZCAH2(0,M2,M1))
-      RQRCAS(N,M5,M4)=VFLW*AMAX1(0.0,ZCAS2(0,M2,M1))
-      RQRMGO(N,M5,M4)=VFLW*AMAX1(0.0,ZMGO2(0,M2,M1))
-      RQRMGC(N,M5,M4)=VFLW*AMAX1(0.0,ZMGC2(0,M2,M1))
-      RQRMGH(N,M5,M4)=VFLW*AMAX1(0.0,ZMGH2(0,M2,M1))
-      RQRMGS(N,M5,M4)=VFLW*AMAX1(0.0,ZMGS2(0,M2,M1))
-      RQRNAC(N,M5,M4)=VFLW*AMAX1(0.0,ZNAC2(0,M2,M1)) 
-      RQRNAS(N,M5,M4)=VFLW*AMAX1(0.0,ZNAS2(0,M2,M1)) 
-      RQRKAS(N,M5,M4)=VFLW*AMAX1(0.0,ZKAS2(0,M2,M1))
-      RQRH0P(N,M5,M4)=VFLW*AMAX1(0.0,H0PO42(0,M2,M1))
-      RQRH3P(N,M5,M4)=VFLW*AMAX1(0.0,H3PO42(0,M2,M1))
-      RQRF1P(N,M5,M4)=VFLW*AMAX1(0.0,ZFE1P2(0,M2,M1))
-      RQRF2P(N,M5,M4)=VFLW*AMAX1(0.0,ZFE2P2(0,M2,M1))
-      RQRC0P(N,M5,M4)=VFLW*AMAX1(0.0,ZCA0P2(0,M2,M1))
-      RQRC1P(N,M5,M4)=VFLW*AMAX1(0.0,ZCA1P2(0,M2,M1))
-      RQRC2P(N,M5,M4)=VFLW*AMAX1(0.0,ZCA2P2(0,M2,M1))
-      RQRM1P(N,M5,M4)=VFLW*AMAX1(0.0,ZMG1P2(0,M2,M1))
-C     WRITE(19,1114)'RUNS',I,J,M,M1,M2,M3,N,NN,QRM(M,N,M5,M4)
-C    2,VFLW,RQRH0P(N,M5,M4)*31.0
-C    3,RQRH3P(N,M5,M4)*31.0
-C    4,RQRHY(N,M5,M4),RQROH(N,M5,M4),ZHY2(0,M2,M1),ZOH2(0,M2,M1)
-1114  FORMAT(A8,8I4,20F16.9)
+      IF((NN.EQ.1.AND.QRMN(M,N,NN,M5,M4).GT.ZEROS(N2,N1))
+     2.OR.(NN.EQ.2.AND.QRMN(M,N,NN,M5,M4).LT.ZEROS(N2,N1)))THEN
+      FQRM=QRMN(M,N,NN,M5,M4)/QRM(M,N2,N1)
+      RQRAL(N,NN,M5,M4)=RQRAL0(N2,N1)*FQRM
+      RQRFE(N,NN,M5,M4)=RQRFE0(N2,N1)*FQRM
+      RQRHY(N,NN,M5,M4)=RQRHY0(N2,N1)*FQRM
+      RQRCA(N,NN,M5,M4)=RQRCA0(N2,N1)*FQRM
+      RQRMG(N,NN,M5,M4)=RQRMG0(N2,N1)*FQRM
+      RQRNA(N,NN,M5,M4)=RQRNA0(N2,N1)*FQRM
+      RQRKA(N,NN,M5,M4)=RQRKA0(N2,N1)*FQRM
+      RQROH(N,NN,M5,M4)=RQROH0(N2,N1)*FQRM
+      RQRSO(N,NN,M5,M4)=RQRSO0(N2,N1)*FQRM
+      RQRCL(N,NN,M5,M4)=RQRCL0(N2,N1)*FQRM
+      RQRC3(N,NN,M5,M4)=RQRC30(N2,N1)*FQRM
+      RQRHC(N,NN,M5,M4)=RQRHC0(N2,N1)*FQRM
+      RQRAL1(N,NN,M5,M4)=RQRAL10(N2,N1)*FQRM
+      RQRAL2(N,NN,M5,M4)=RQRAL20(N2,N1)*FQRM
+      RQRAL3(N,NN,M5,M4)=RQRAL30(N2,N1)*FQRM
+      RQRAL4(N,NN,M5,M4)=RQRAL40(N2,N1)*FQRM
+      RQRALS(N,NN,M5,M4)=RQRALS0(N2,N1)*FQRM
+      RQRFE1(N,NN,M5,M4)=RQRFE10(N2,N1)*FQRM
+      RQRFE2(N,NN,M5,M4)=RQRFE20(N2,N1)*FQRM
+      RQRFE3(N,NN,M5,M4)=RQRFE30(N2,N1)*FQRM
+      RQRFE4(N,NN,M5,M4)=RQRFE40(N2,N1)*FQRM
+      RQRFES(N,NN,M5,M4)=RQRFES0(N2,N1)*FQRM
+      RQRCAO(N,NN,M5,M4)=RQRCAO0(N2,N1)*FQRM
+      RQRCAC(N,NN,M5,M4)=RQRCAC0(N2,N1)*FQRM
+      RQRCAH(N,NN,M5,M4)=RQRCAH0(N2,N1)*FQRM
+      RQRCAS(N,NN,M5,M4)=RQRCAS0(N2,N1)*FQRM
+      RQRMGO(N,NN,M5,M4)=RQRMGO0(N2,N1)*FQRM
+      RQRMGC(N,NN,M5,M4)=RQRMGC0(N2,N1)*FQRM
+      RQRMGH(N,NN,M5,M4)=RQRMGH0(N2,N1)*FQRM
+      RQRMGS(N,NN,M5,M4)=RQRMGS0(N2,N1)*FQRM
+      RQRNAC(N,NN,M5,M4)=RQRNAC0(N2,N1)*FQRM
+      RQRNAS(N,NN,M5,M4)=RQRNAS0(N2,N1)*FQRM
+      RQRKAS(N,NN,M5,M4)=RQRKAS0(N2,N1)*FQRM
+      RQRH0P(N,NN,M5,M4)=RQRH0P0(N2,N1)*FQRM
+      RQRH3P(N,NN,M5,M4)=RQRH3P0(N2,N1)*FQRM
+      RQRF1P(N,NN,M5,M4)=RQRF1P0(N2,N1)*FQRM
+      RQRF2P(N,NN,M5,M4)=RQRF2P0(N2,N1)*FQRM
+      RQRC0P(N,NN,M5,M4)=RQRC0P0(N2,N1)*FQRM
+      RQRC1P(N,NN,M5,M4)=RQRC1P0(N2,N1)*FQRM
+      RQRC2P(N,NN,M5,M4)=RQRC2P0(N2,N1)*FQRM
+      RQRM1P(N,NN,M5,M4)=RQRM1P0(N2,N1)*FQRM
+C
+C     ACCUMULATE HOURLY FLUXES FOR USE IN REDIST.F
+C
+C     X*QRS=hourly solute in runoff
+C     RQR*=solute in runoff
+C
+      XQRAL(N,NN,M5,M4)=XQRAL(N,NN,M5,M4)+RQRAL(N,NN,M5,M4)
+      XQRFE(N,NN,M5,M4)=XQRFE(N,NN,M5,M4)+RQRFE(N,NN,M5,M4)
+      XQRHY(N,NN,M5,M4)=XQRHY(N,NN,M5,M4)+RQRHY(N,NN,M5,M4)
+      XQRCA(N,NN,M5,M4)=XQRCA(N,NN,M5,M4)+RQRCA(N,NN,M5,M4)
+      XQRMG(N,NN,M5,M4)=XQRMG(N,NN,M5,M4)+RQRMG(N,NN,M5,M4)
+      XQRNA(N,NN,M5,M4)=XQRNA(N,NN,M5,M4)+RQRNA(N,NN,M5,M4)
+      XQRKA(N,NN,M5,M4)=XQRKA(N,NN,M5,M4)+RQRKA(N,NN,M5,M4)
+      XQROH(N,NN,M5,M4)=XQROH(N,NN,M5,M4)+RQROH(N,NN,M5,M4)
+      XQRSO(N,NN,M5,M4)=XQRSO(N,NN,M5,M4)+RQRSO(N,NN,M5,M4)
+      XQRCL(N,NN,M5,M4)=XQRCL(N,NN,M5,M4)+RQRCL(N,NN,M5,M4)
+      XQRC3(N,NN,M5,M4)=XQRC3(N,NN,M5,M4)+RQRC3(N,NN,M5,M4)
+      XQRHC(N,NN,M5,M4)=XQRHC(N,NN,M5,M4)+RQRHC(N,NN,M5,M4)
+      XQRAL1(N,NN,M5,M4)=XQRAL1(N,NN,M5,M4)+RQRAL1(N,NN,M5,M4)
+      XQRAL2(N,NN,M5,M4)=XQRAL2(N,NN,M5,M4)+RQRAL2(N,NN,M5,M4)
+      XQRAL3(N,NN,M5,M4)=XQRAL3(N,NN,M5,M4)+RQRAL3(N,NN,M5,M4)
+      XQRAL4(N,NN,M5,M4)=XQRAL4(N,NN,M5,M4)+RQRAL4(N,NN,M5,M4)
+      XQRALS(N,NN,M5,M4)=XQRALS(N,NN,M5,M4)+RQRALS(N,NN,M5,M4)
+      XQRFE1(N,NN,M5,M4)=XQRFE1(N,NN,M5,M4)+RQRFE1(N,NN,M5,M4)
+      XQRFE2(N,NN,M5,M4)=XQRFE2(N,NN,M5,M4)+RQRFE2(N,NN,M5,M4)
+      XQRFE3(N,NN,M5,M4)=XQRFE3(N,NN,M5,M4)+RQRFE3(N,NN,M5,M4)
+      XQRFE4(N,NN,M5,M4)=XQRFE4(N,NN,M5,M4)+RQRFE4(N,NN,M5,M4)
+      XQRFES(N,NN,M5,M4)=XQRFES(N,NN,M5,M4)+RQRFES(N,NN,M5,M4)
+      XQRCAO(N,NN,M5,M4)=XQRCAO(N,NN,M5,M4)+RQRCAO(N,NN,M5,M4)
+      XQRCAC(N,NN,M5,M4)=XQRCAC(N,NN,M5,M4)+RQRCAC(N,NN,M5,M4)
+      XQRCAH(N,NN,M5,M4)=XQRCAH(N,NN,M5,M4)+RQRCAH(N,NN,M5,M4)
+      XQRCAS(N,NN,M5,M4)=XQRCAS(N,NN,M5,M4)+RQRCAS(N,NN,M5,M4)
+      XQRMGO(N,NN,M5,M4)=XQRMGO(N,NN,M5,M4)+RQRMGO(N,NN,M5,M4)
+      XQRMGC(N,NN,M5,M4)=XQRMGC(N,NN,M5,M4)+RQRMGC(N,NN,M5,M4)
+      XQRMGH(N,NN,M5,M4)=XQRMGH(N,NN,M5,M4)+RQRMGH(N,NN,M5,M4)
+      XQRMGS(N,NN,M5,M4)=XQRMGS(N,NN,M5,M4)+RQRMGS(N,NN,M5,M4)
+      XQRNAC(N,NN,M5,M4)=XQRNAC(N,NN,M5,M4)+RQRNAC(N,NN,M5,M4)
+      XQRNAS(N,NN,M5,M4)=XQRNAS(N,NN,M5,M4)+RQRNAS(N,NN,M5,M4)
+      XQRKAS(N,NN,M5,M4)=XQRKAS(N,NN,M5,M4)+RQRKAS(N,NN,M5,M4)
+      XQRH0P(N,NN,M5,M4)=XQRH0P(N,NN,M5,M4)+RQRH0P(N,NN,M5,M4)
+      XQRH3P(N,NN,M5,M4)=XQRH3P(N,NN,M5,M4)+RQRH3P(N,NN,M5,M4)
+      XQRF1P(N,NN,M5,M4)=XQRF1P(N,NN,M5,M4)+RQRF1P(N,NN,M5,M4)
+      XQRF2P(N,NN,M5,M4)=XQRF2P(N,NN,M5,M4)+RQRF2P(N,NN,M5,M4)
+      XQRC0P(N,NN,M5,M4)=XQRC0P(N,NN,M5,M4)+RQRC0P(N,NN,M5,M4)
+      XQRC1P(N,NN,M5,M4)=XQRC1P(N,NN,M5,M4)+RQRC1P(N,NN,M5,M4)
+      XQRC2P(N,NN,M5,M4)=XQRC2P(N,NN,M5,M4)+RQRC2P(N,NN,M5,M4)
+      XQRM1P(N,NN,M5,M4)=XQRM1P(N,NN,M5,M4)+RQRM1P(N,NN,M5,M4)
 C
 C     SOLUTE GAIN FROM RUNON DEPENDING ON ASPECT
 C     AND BOUNDARY CONDITIONS SET IN SITE FILE
 C
-      ELSE 
-      RQRAL(N,M5,M4)=0.0
-      RQRFE(N,M5,M4)=0.0
-      RQRHY(N,M5,M4)=0.0
-      RQRCA(N,M5,M4)=0.0
-      RQRMG(N,M5,M4)=0.0
-      RQRNA(N,M5,M4)=0.0
-      RQRKA(N,M5,M4)=0.0
-      RQROH(N,M5,M4)=0.0
-      RQRSO(N,M5,M4)=0.0
-      RQRCL(N,M5,M4)=0.0
-      RQRC3(N,M5,M4)=0.0
-      RQRHC(N,M5,M4)=0.0
-      RQRAL1(N,M5,M4)=0.0 
-      RQRAL2(N,M5,M4)=0.0
-      RQRAL3(N,M5,M4)=0.0 
-      RQRAL4(N,M5,M4)=0.0
-      RQRALS(N,M5,M4)=0.0
-      RQRFE1(N,M5,M4)=0.0
-      RQRFE2(N,M5,M4)=0.0
-      RQRFE3(N,M5,M4)=0.0
-      RQRFE4(N,M5,M4)=0.0
-      RQRFES(N,M5,M4)=0.0
-      RQRCAO(N,M5,M4)=0.0
-      RQRCAC(N,M5,M4)=0.0
-      RQRCAH(N,M5,M4)=0.0
-      RQRCAS(N,M5,M4)=0.0
-      RQRMGO(N,M5,M4)=0.0
-      RQRMGC(N,M5,M4)=0.0
-      RQRMGH(N,M5,M4)=0.0
-      RQRMGS(N,M5,M4)=0.0
-      RQRNAC(N,M5,M4)=0.0
-      RQRNAS(N,M5,M4)=0.0
-      RQRKAS(N,M5,M4)=0.0
-      RQRH0P(N,M5,M4)=0.0
-      RQRH3P(N,M5,M4)=0.0
-      RQRF1P(N,M5,M4)=0.0
-      RQRF2P(N,M5,M4)=0.0
-      RQRC0P(N,M5,M4)=0.0
-      RQRC1P(N,M5,M4)=0.0
-      RQRC2P(N,M5,M4)=0.0
-      RQRM1P(N,M5,M4)=0.0
+      ELSEIF((NN.EQ.2.AND.QRMN(M,N,NN,M5,M4).GT.ZEROS(N2,N1))
+     2.OR.(NN.EQ.1.AND.QRMN(M,N,NN,M5,M4).LT.ZEROS(N2,N1)))THEN
+      RQRAL(N,NN,M5,M4)=0.0
+      RQRFE(N,NN,M5,M4)=0.0
+      RQRHY(N,NN,M5,M4)=0.0
+      RQRCA(N,NN,M5,M4)=0.0
+      RQRMG(N,NN,M5,M4)=0.0
+      RQRNA(N,NN,M5,M4)=0.0
+      RQRKA(N,NN,M5,M4)=0.0
+      RQROH(N,NN,M5,M4)=0.0
+      RQRSO(N,NN,M5,M4)=0.0
+      RQRCL(N,NN,M5,M4)=0.0
+      RQRC3(N,NN,M5,M4)=0.0
+      RQRHC(N,NN,M5,M4)=0.0
+      RQRAL1(N,NN,M5,M4)=0.0 
+      RQRAL2(N,NN,M5,M4)=0.0
+      RQRAL3(N,NN,M5,M4)=0.0 
+      RQRAL4(N,NN,M5,M4)=0.0
+      RQRALS(N,NN,M5,M4)=0.0
+      RQRFE1(N,NN,M5,M4)=0.0
+      RQRFE2(N,NN,M5,M4)=0.0
+      RQRFE3(N,NN,M5,M4)=0.0
+      RQRFE4(N,NN,M5,M4)=0.0
+      RQRFES(N,NN,M5,M4)=0.0
+      RQRCAO(N,NN,M5,M4)=0.0
+      RQRCAC(N,NN,M5,M4)=0.0
+      RQRCAH(N,NN,M5,M4)=0.0
+      RQRCAS(N,NN,M5,M4)=0.0
+      RQRMGO(N,NN,M5,M4)=0.0
+      RQRMGC(N,NN,M5,M4)=0.0
+      RQRMGH(N,NN,M5,M4)=0.0
+      RQRMGS(N,NN,M5,M4)=0.0
+      RQRNAC(N,NN,M5,M4)=0.0
+      RQRNAS(N,NN,M5,M4)=0.0
+      RQRKAS(N,NN,M5,M4)=0.0
+      RQRH0P(N,NN,M5,M4)=0.0
+      RQRH3P(N,NN,M5,M4)=0.0
+      RQRF1P(N,NN,M5,M4)=0.0
+      RQRF2P(N,NN,M5,M4)=0.0
+      RQRC0P(N,NN,M5,M4)=0.0
+      RQRC1P(N,NN,M5,M4)=0.0
+      RQRC2P(N,NN,M5,M4)=0.0
+      RQRM1P(N,NN,M5,M4)=0.0
+      ELSE
+      RQRAL(N,NN,M5,M4)=0.0
+      RQRFE(N,NN,M5,M4)=0.0
+      RQRHY(N,NN,M5,M4)=0.0
+      RQRCA(N,NN,M5,M4)=0.0
+      RQRMG(N,NN,M5,M4)=0.0
+      RQRNA(N,NN,M5,M4)=0.0
+      RQRKA(N,NN,M5,M4)=0.0
+      RQROH(N,NN,M5,M4)=0.0
+      RQRSO(N,NN,M5,M4)=0.0
+      RQRCL(N,NN,M5,M4)=0.0
+      RQRC3(N,NN,M5,M4)=0.0
+      RQRHC(N,NN,M5,M4)=0.0
+      RQRAL1(N,NN,M5,M4)=0.0 
+      RQRAL2(N,NN,M5,M4)=0.0
+      RQRAL3(N,NN,M5,M4)=0.0 
+      RQRAL4(N,NN,M5,M4)=0.0
+      RQRALS(N,NN,M5,M4)=0.0
+      RQRFE1(N,NN,M5,M4)=0.0
+      RQRFE2(N,NN,M5,M4)=0.0
+      RQRFE3(N,NN,M5,M4)=0.0
+      RQRFE4(N,NN,M5,M4)=0.0
+      RQRFES(N,NN,M5,M4)=0.0
+      RQRCAO(N,NN,M5,M4)=0.0
+      RQRCAC(N,NN,M5,M4)=0.0
+      RQRCAH(N,NN,M5,M4)=0.0
+      RQRCAS(N,NN,M5,M4)=0.0
+      RQRMGO(N,NN,M5,M4)=0.0
+      RQRMGC(N,NN,M5,M4)=0.0
+      RQRMGH(N,NN,M5,M4)=0.0
+      RQRMGS(N,NN,M5,M4)=0.0
+      RQRNAC(N,NN,M5,M4)=0.0
+      RQRNAS(N,NN,M5,M4)=0.0
+      RQRKAS(N,NN,M5,M4)=0.0
+      RQRH0P(N,NN,M5,M4)=0.0
+      RQRH3P(N,NN,M5,M4)=0.0
+      RQRF1P(N,NN,M5,M4)=0.0
+      RQRF2P(N,NN,M5,M4)=0.0
+      RQRC0P(N,NN,M5,M4)=0.0
+      RQRC1P(N,NN,M5,M4)=0.0
+      RQRC2P(N,NN,M5,M4)=0.0
+      RQRM1P(N,NN,M5,M4)=0.0
       ENDIF
+      ENDIF
+C
+C     BOUNDARY SNOW FLUX
+C
+      IF(NN.EQ.1)THEN
       RQSAL(N,M5,M4)=0.0
       RQSFE(N,M5,M4)=0.0
       RQSHY(N,M5,M4)=0.0
@@ -5749,53 +6717,25 @@ C
       RQSC1P(N,M5,M4)=0.0
       RQSC2P(N,M5,M4)=0.0
       RQSM1P(N,M5,M4)=0.0
-C
-C     ACCUMULATE HOURLY FLUXES
-C
-      XQRAL(N,M5,M4)=XQRAL(N,M5,M4)+RQRAL(N,M5,M4)
-      XQRFE(N,M5,M4)=XQRFE(N,M5,M4)+RQRFE(N,M5,M4)
-      XQRHY(N,M5,M4)=XQRHY(N,M5,M4)+RQRHY(N,M5,M4)
-      XQRCA(N,M5,M4)=XQRCA(N,M5,M4)+RQRCA(N,M5,M4)
-      XQRMG(N,M5,M4)=XQRMG(N,M5,M4)+RQRMG(N,M5,M4)
-      XQRNA(N,M5,M4)=XQRNA(N,M5,M4)+RQRNA(N,M5,M4)
-      XQRKA(N,M5,M4)=XQRKA(N,M5,M4)+RQRKA(N,M5,M4)
-      XQROH(N,M5,M4)=XQROH(N,M5,M4)+RQROH(N,M5,M4)
-      XQRSO(N,M5,M4)=XQRSO(N,M5,M4)+RQRSO(N,M5,M4)
-      XQRCL(N,M5,M4)=XQRCL(N,M5,M4)+RQRCL(N,M5,M4)
-      XQRC3(N,M5,M4)=XQRC3(N,M5,M4)+RQRC3(N,M5,M4)
-      XQRHC(N,M5,M4)=XQRHC(N,M5,M4)+RQRHC(N,M5,M4)
-      XQRAL1(N,M5,M4)=XQRAL1(N,M5,M4)+RQRAL1(N,M5,M4)
-      XQRAL2(N,M5,M4)=XQRAL2(N,M5,M4)+RQRAL2(N,M5,M4)
-      XQRAL3(N,M5,M4)=XQRAL3(N,M5,M4)+RQRAL3(N,M5,M4)
-      XQRAL4(N,M5,M4)=XQRAL4(N,M5,M4)+RQRAL4(N,M5,M4)
-      XQRALS(N,M5,M4)=XQRALS(N,M5,M4)+RQRALS(N,M5,M4)
-      XQRFE1(N,M5,M4)=XQRFE1(N,M5,M4)+RQRFE1(N,M5,M4)
-      XQRFE2(N,M5,M4)=XQRFE2(N,M5,M4)+RQRFE2(N,M5,M4)
-      XQRFE3(N,M5,M4)=XQRFE3(N,M5,M4)+RQRFE3(N,M5,M4)
-      XQRFE4(N,M5,M4)=XQRFE4(N,M5,M4)+RQRFE4(N,M5,M4)
-      XQRFES(N,M5,M4)=XQRFES(N,M5,M4)+RQRFES(N,M5,M4)
-      XQRCAO(N,M5,M4)=XQRCAO(N,M5,M4)+RQRCAO(N,M5,M4)
-      XQRCAC(N,M5,M4)=XQRCAC(N,M5,M4)+RQRCAC(N,M5,M4)
-      XQRCAH(N,M5,M4)=XQRCAH(N,M5,M4)+RQRCAH(N,M5,M4)
-      XQRCAS(N,M5,M4)=XQRCAS(N,M5,M4)+RQRCAS(N,M5,M4)
-      XQRMGO(N,M5,M4)=XQRMGO(N,M5,M4)+RQRMGO(N,M5,M4)
-      XQRMGC(N,M5,M4)=XQRMGC(N,M5,M4)+RQRMGC(N,M5,M4)
-      XQRMGH(N,M5,M4)=XQRMGH(N,M5,M4)+RQRMGH(N,M5,M4)
-      XQRMGS(N,M5,M4)=XQRMGS(N,M5,M4)+RQRMGS(N,M5,M4)
-      XQRNAC(N,M5,M4)=XQRNAC(N,M5,M4)+RQRNAC(N,M5,M4)
-      XQRNAS(N,M5,M4)=XQRNAS(N,M5,M4)+RQRNAS(N,M5,M4)
-      XQRKAS(N,M5,M4)=XQRKAS(N,M5,M4)+RQRKAS(N,M5,M4)
-      XQRH0P(N,M5,M4)=XQRH0P(N,M5,M4)+RQRH0P(N,M5,M4)
-      XQRH3P(N,M5,M4)=XQRH3P(N,M5,M4)+RQRH3P(N,M5,M4)
-      XQRF1P(N,M5,M4)=XQRF1P(N,M5,M4)+RQRF1P(N,M5,M4)
-      XQRF2P(N,M5,M4)=XQRF2P(N,M5,M4)+RQRF2P(N,M5,M4)
-      XQRC0P(N,M5,M4)=XQRC0P(N,M5,M4)+RQRC0P(N,M5,M4)
-      XQRC1P(N,M5,M4)=XQRC1P(N,M5,M4)+RQRC1P(N,M5,M4)
-      XQRC2P(N,M5,M4)=XQRC2P(N,M5,M4)+RQRC2P(N,M5,M4)
-      XQRM1P(N,M5,M4)=XQRM1P(N,M5,M4)+RQRM1P(N,M5,M4)
+      ENDIF
       ENDIF
 C
 C     SOLUTE LOSS WITH SUBSURFACE MICROPORE WATER LOSS
+C
+C     FLWM=water flux through soil micropore from watsub.f 
+C     VOLWM=micropore water-filled porosity from watsub.f
+C     R*FLS=convective solute flux through micropores
+C     R*FLW,R*FLB=convective solute flux through micropores in non-band,band
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
 C
       IF(VOLX(N3,N2,N1).GT.ZEROS(NY,NX))THEN
       IF(NCN(M2,M1).NE.3.OR.N.EQ.3)THEN
@@ -5945,6 +6885,20 @@ C
 C
 C     SOLUTE LOSS WITH SUBSURFACE MACROPORE WATER LOSS
 C
+C     FLWHM=water flux through soil macropore from watsub.f 
+C     VOLWHM=macropore water-filled porosity from watsub.f
+C     RFH*S=solute diffusive flux through macropore
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C
       IF(NN.EQ.1.AND.FLWHM(M,N,M6,M5,M4).GT.0.0
      2.OR.NN.EQ.2.AND.FLWHM(M,N,M6,M5,M4).LT.0.0)THEN
       IF(VOLWHM(M,M3,M2,M1).GT.ZEROS2(M2,M1))THEN
@@ -6073,7 +7027,12 @@ C
       RM1BHB(N,M6,M5,M4)=0.0
       ENDIF
 C
-C     ACCUMULATE HOURLY FLUXES
+C     ACCUMULATE HOURLY FLUXES FOR USE IN REDIST.F
+C
+C     X*FLS,X*FLW,X*FLB=hourly solute flux in non-band,band micropores 
+C     X*FHS,X*FHW,X*FHB=hourly solute flux in non-band,band macropores 
+C     R*FLS,R*FLW,R*FLB=solute flux in non-band,band micropores 
+C     R*FHS,R*FHW,R*FHB=solute flux in non-band,band macropores 
 C
       XALFLS(N,M6,M5,M4)=XALFLS(N,M6,M5,M4)+RALFLS(N,M6,M5,M4)
       XFEFLS(N,M6,M5,M4)=XFEFLS(N,M6,M5,M4)+RFEFLS(N,M6,M5,M4)
@@ -6182,49 +7141,156 @@ C
       IF(L.EQ.NUM(N2,N1))THEN
       IF(N.NE.3)THEN
 C
-C     TOTAL OVERLAND FLUX
+C     NET OVERLAND SOLUTE FLUX IN WATER
 C
-      TQRAL(N2,N1)=TQRAL(N2,N1)+RQRAL(N,N2,N1)-RQRAL(N,N5,N4)
-      TQRFE(N2,N1)=TQRFE(N2,N1)+RQRFE(N,N2,N1)-RQRFE(N,N5,N4)
-      TQRHY(N2,N1)=TQRHY(N2,N1)+RQRHY(N,N2,N1)-RQRHY(N,N5,N4)
-      TQRCA(N2,N1)=TQRCA(N2,N1)+RQRCA(N,N2,N1)-RQRCA(N,N5,N4)
-      TQRMG(N2,N1)=TQRMG(N2,N1)+RQRMG(N,N2,N1)-RQRMG(N,N5,N4)
-      TQRNA(N2,N1)=TQRNA(N2,N1)+RQRNA(N,N2,N1)-RQRNA(N,N5,N4)
-      TQRKA(N2,N1)=TQRKA(N2,N1)+RQRKA(N,N2,N1)-RQRKA(N,N5,N4)
-      TQROH(N2,N1)=TQROH(N2,N1)+RQROH(N,N2,N1)-RQROH(N,N5,N4)
-      TQRSO(N2,N1)=TQRSO(N2,N1)+RQRSO(N,N2,N1)-RQRSO(N,N5,N4)
-      TQRCL(N2,N1)=TQRCL(N2,N1)+RQRCL(N,N2,N1)-RQRCL(N,N5,N4)
-      TQRC3(N2,N1)=TQRC3(N2,N1)+RQRC3(N,N2,N1)-RQRC3(N,N5,N4)
-      TQRHC(N2,N1)=TQRHC(N2,N1)+RQRHC(N,N2,N1)-RQRHC(N,N5,N4)
-      TQRAL1(N2,N1)=TQRAL1(N2,N1)+RQRAL1(N,N2,N1)-RQRAL1(N,N5,N4)
-      TQRAL2(N2,N1)=TQRAL2(N2,N1)+RQRAL2(N,N2,N1)-RQRAL2(N,N5,N4)
-      TQRAL3(N2,N1)=TQRAL3(N2,N1)+RQRAL3(N,N2,N1)-RQRAL3(N,N5,N4)
-      TQRAL4(N2,N1)=TQRAL4(N2,N1)+RQRAL4(N,N2,N1)-RQRAL4(N,N5,N4)
-      TQRALS(N2,N1)=TQRALS(N2,N1)+RQRALS(N,N2,N1)-RQRALS(N,N5,N4)
-      TQRFE1(N2,N1)=TQRFE1(N2,N1)+RQRFE1(N,N2,N1)-RQRFE1(N,N5,N4)
-      TQRFE2(N2,N1)=TQRFE2(N2,N1)+RQRFE2(N,N2,N1)-RQRFE2(N,N5,N4)
-      TQRFE3(N2,N1)=TQRFE3(N2,N1)+RQRFE3(N,N2,N1)-RQRFE3(N,N5,N4)
-      TQRFE4(N2,N1)=TQRFE4(N2,N1)+RQRFE4(N,N2,N1)-RQRFE4(N,N5,N4)
-      TQRFES(N2,N1)=TQRFES(N2,N1)+RQRFES(N,N2,N1)-RQRFES(N,N5,N4)
-      TQRCAO(N2,N1)=TQRCAO(N2,N1)+RQRCAO(N,N2,N1)-RQRCAO(N,N5,N4)
-      TQRCAC(N2,N1)=TQRCAC(N2,N1)+RQRCAC(N,N2,N1)-RQRCAC(N,N5,N4)
-      TQRCAH(N2,N1)=TQRCAH(N2,N1)+RQRCAH(N,N2,N1)-RQRCAH(N,N5,N4)
-      TQRCAS(N2,N1)=TQRCAS(N2,N1)+RQRCAS(N,N2,N1)-RQRCAS(N,N5,N4)
-      TQRMGO(N2,N1)=TQRMGO(N2,N1)+RQRMGO(N,N2,N1)-RQRMGO(N,N5,N4)
-      TQRMGC(N2,N1)=TQRMGC(N2,N1)+RQRMGC(N,N2,N1)-RQRMGC(N,N5,N4)
-      TQRMGH(N2,N1)=TQRMGH(N2,N1)+RQRMGH(N,N2,N1)-RQRMGH(N,N5,N4)
-      TQRMGS(N2,N1)=TQRMGS(N2,N1)+RQRMGS(N,N2,N1)-RQRMGS(N,N5,N4)
-      TQRNAC(N2,N1)=TQRNAC(N2,N1)+RQRNAC(N,N2,N1)-RQRNAC(N,N5,N4)
-      TQRNAS(N2,N1)=TQRNAS(N2,N1)+RQRNAS(N,N2,N1)-RQRNAS(N,N5,N4)
-      TQRKAS(N2,N1)=TQRKAS(N2,N1)+RQRKAS(N,N2,N1)-RQRKAS(N,N5,N4)
-      TQRH0P(N2,N1)=TQRH0P(N2,N1)+RQRH0P(N,N2,N1)-RQRH0P(N,N5,N4)
-      TQRH3P(N2,N1)=TQRH3P(N2,N1)+RQRH3P(N,N2,N1)-RQRH3P(N,N5,N4)
-      TQRF1P(N2,N1)=TQRF1P(N2,N1)+RQRF1P(N,N2,N1)-RQRF1P(N,N5,N4)
-      TQRF2P(N2,N1)=TQRF2P(N2,N1)+RQRF2P(N,N2,N1)-RQRF2P(N,N5,N4)
-      TQRC0P(N2,N1)=TQRC0P(N2,N1)+RQRC0P(N,N2,N1)-RQRC0P(N,N5,N4)
-      TQRC1P(N2,N1)=TQRC1P(N2,N1)+RQRC1P(N,N2,N1)-RQRC1P(N,N5,N4)
-      TQRC2P(N2,N1)=TQRC2P(N2,N1)+RQRC2P(N,N2,N1)-RQRC2P(N,N5,N4)
-      TQRM1P(N2,N1)=TQRM1P(N2,N1)+RQRM1P(N,N2,N1)-RQRM1P(N,N5,N4)
+C     TQR*=net overland solute flux
+C     RQR*=overland solute flux
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C
+      DO 1202 NN=1,2
+      TQRAL(N2,N1)=TQRAL(N2,N1)+RQRAL(N,NN,N2,N1)
+      TQRFE(N2,N1)=TQRFE(N2,N1)+RQRFE(N,NN,N2,N1)
+      TQRHY(N2,N1)=TQRHY(N2,N1)+RQRHY(N,NN,N2,N1)
+      TQRCA(N2,N1)=TQRCA(N2,N1)+RQRCA(N,NN,N2,N1)
+      TQRMG(N2,N1)=TQRMG(N2,N1)+RQRMG(N,NN,N2,N1)
+      TQRNA(N2,N1)=TQRNA(N2,N1)+RQRNA(N,NN,N2,N1)
+      TQRKA(N2,N1)=TQRKA(N2,N1)+RQRKA(N,NN,N2,N1)
+      TQROH(N2,N1)=TQROH(N2,N1)+RQROH(N,NN,N2,N1)
+      TQRSO(N2,N1)=TQRSO(N2,N1)+RQRSO(N,NN,N2,N1)
+      TQRCL(N2,N1)=TQRCL(N2,N1)+RQRCL(N,NN,N2,N1)
+      TQRC3(N2,N1)=TQRC3(N2,N1)+RQRC3(N,NN,N2,N1)
+      TQRHC(N2,N1)=TQRHC(N2,N1)+RQRHC(N,NN,N2,N1)
+      TQRAL1(N2,N1)=TQRAL1(N2,N1)+RQRAL1(N,NN,N2,N1)
+      TQRAL2(N2,N1)=TQRAL2(N2,N1)+RQRAL2(N,NN,N2,N1)
+      TQRAL3(N2,N1)=TQRAL3(N2,N1)+RQRAL3(N,NN,N2,N1)
+      TQRAL4(N2,N1)=TQRAL4(N2,N1)+RQRAL4(N,NN,N2,N1)
+      TQRALS(N2,N1)=TQRALS(N2,N1)+RQRALS(N,NN,N2,N1)
+      TQRFE1(N2,N1)=TQRFE1(N2,N1)+RQRFE1(N,NN,N2,N1)
+      TQRFE2(N2,N1)=TQRFE2(N2,N1)+RQRFE2(N,NN,N2,N1)
+      TQRFE3(N2,N1)=TQRFE3(N2,N1)+RQRFE3(N,NN,N2,N1)
+      TQRFE4(N2,N1)=TQRFE4(N2,N1)+RQRFE4(N,NN,N2,N1)
+      TQRFES(N2,N1)=TQRFES(N2,N1)+RQRFES(N,NN,N2,N1)
+      TQRCAO(N2,N1)=TQRCAO(N2,N1)+RQRCAO(N,NN,N2,N1)
+      TQRCAC(N2,N1)=TQRCAC(N2,N1)+RQRCAC(N,NN,N2,N1)
+      TQRCAH(N2,N1)=TQRCAH(N2,N1)+RQRCAH(N,NN,N2,N1)
+      TQRCAS(N2,N1)=TQRCAS(N2,N1)+RQRCAS(N,NN,N2,N1)
+      TQRMGO(N2,N1)=TQRMGO(N2,N1)+RQRMGO(N,NN,N2,N1)
+      TQRMGC(N2,N1)=TQRMGC(N2,N1)+RQRMGC(N,NN,N2,N1)
+      TQRMGH(N2,N1)=TQRMGH(N2,N1)+RQRMGH(N,NN,N2,N1)
+      TQRMGS(N2,N1)=TQRMGS(N2,N1)+RQRMGS(N,NN,N2,N1)
+      TQRNAC(N2,N1)=TQRNAC(N2,N1)+RQRNAC(N,NN,N2,N1)
+      TQRNAS(N2,N1)=TQRNAS(N2,N1)+RQRNAS(N,NN,N2,N1)
+      TQRKAS(N2,N1)=TQRKAS(N2,N1)+RQRKAS(N,NN,N2,N1)
+      TQRH0P(N2,N1)=TQRH0P(N2,N1)+RQRH0P(N,NN,N2,N1)
+      TQRH3P(N2,N1)=TQRH3P(N2,N1)+RQRH3P(N,NN,N2,N1)
+      TQRF1P(N2,N1)=TQRF1P(N2,N1)+RQRF1P(N,NN,N2,N1)
+      TQRF2P(N2,N1)=TQRF2P(N2,N1)+RQRF2P(N,NN,N2,N1)
+      TQRC0P(N2,N1)=TQRC0P(N2,N1)+RQRC0P(N,NN,N2,N1)
+      TQRC1P(N2,N1)=TQRC1P(N2,N1)+RQRC1P(N,NN,N2,N1)
+      TQRC2P(N2,N1)=TQRC2P(N2,N1)+RQRC2P(N,NN,N2,N1)
+      TQRM1P(N2,N1)=TQRM1P(N2,N1)+RQRM1P(N,NN,N2,N1) 
+      IF(IFLBM(M,N,NN,N5,N4).EQ.0)THEN
+      TQRAL(N2,N1)=TQRAL(N2,N1)-RQRAL(N,NN,N5,N4)
+      TQRFE(N2,N1)=TQRFE(N2,N1)-RQRFE(N,NN,N5,N4)
+      TQRHY(N2,N1)=TQRHY(N2,N1)-RQRHY(N,NN,N5,N4)
+      TQRCA(N2,N1)=TQRCA(N2,N1)-RQRCA(N,NN,N5,N4)
+      TQRMG(N2,N1)=TQRMG(N2,N1)-RQRMG(N,NN,N5,N4)
+      TQRNA(N2,N1)=TQRNA(N2,N1)-RQRNA(N,NN,N5,N4)
+      TQRKA(N2,N1)=TQRKA(N2,N1)-RQRKA(N,NN,N5,N4)
+      TQROH(N2,N1)=TQROH(N2,N1)-RQROH(N,NN,N5,N4)
+      TQRSO(N2,N1)=TQRSO(N2,N1)-RQRSO(N,NN,N5,N4)
+      TQRCL(N2,N1)=TQRCL(N2,N1)-RQRCL(N,NN,N5,N4)
+      TQRC3(N2,N1)=TQRC3(N2,N1)-RQRC3(N,NN,N5,N4)
+      TQRHC(N2,N1)=TQRHC(N2,N1)-RQRHC(N,NN,N5,N4)
+      TQRAL1(N2,N1)=TQRAL1(N2,N1)-RQRAL1(N,NN,N5,N4)
+      TQRAL2(N2,N1)=TQRAL2(N2,N1)-RQRAL2(N,NN,N5,N4)
+      TQRAL3(N2,N1)=TQRAL3(N2,N1)-RQRAL3(N,NN,N5,N4)
+      TQRAL4(N2,N1)=TQRAL4(N2,N1)-RQRAL4(N,NN,N5,N4)
+      TQRALS(N2,N1)=TQRALS(N2,N1)-RQRALS(N,NN,N5,N4)
+      TQRFE1(N2,N1)=TQRFE1(N2,N1)-RQRFE1(N,NN,N5,N4)
+      TQRFE2(N2,N1)=TQRFE2(N2,N1)-RQRFE2(N,NN,N5,N4)
+      TQRFE3(N2,N1)=TQRFE3(N2,N1)-RQRFE3(N,NN,N5,N4)
+      TQRFE4(N2,N1)=TQRFE4(N2,N1)-RQRFE4(N,NN,N5,N4)
+      TQRFES(N2,N1)=TQRFES(N2,N1)-RQRFES(N,NN,N5,N4)
+      TQRCAO(N2,N1)=TQRCAO(N2,N1)-RQRCAO(N,NN,N5,N4)
+      TQRCAC(N2,N1)=TQRCAC(N2,N1)-RQRCAC(N,NN,N5,N4)
+      TQRCAH(N2,N1)=TQRCAH(N2,N1)-RQRCAH(N,NN,N5,N4)
+      TQRCAS(N2,N1)=TQRCAS(N2,N1)-RQRCAS(N,NN,N5,N4)
+      TQRMGO(N2,N1)=TQRMGO(N2,N1)-RQRMGO(N,NN,N5,N4)
+      TQRMGC(N2,N1)=TQRMGC(N2,N1)-RQRMGC(N,NN,N5,N4)
+      TQRMGH(N2,N1)=TQRMGH(N2,N1)-RQRMGH(N,NN,N5,N4)
+      TQRMGS(N2,N1)=TQRMGS(N2,N1)-RQRMGS(N,NN,N5,N4)
+      TQRNAC(N2,N1)=TQRNAC(N2,N1)-RQRNAC(N,NN,N5,N4)
+      TQRNAS(N2,N1)=TQRNAS(N2,N1)-RQRNAS(N,NN,N5,N4)
+      TQRKAS(N2,N1)=TQRKAS(N2,N1)-RQRKAS(N,NN,N5,N4)
+      TQRH0P(N2,N1)=TQRH0P(N2,N1)-RQRH0P(N,NN,N5,N4)
+      TQRH3P(N2,N1)=TQRH3P(N2,N1)-RQRH3P(N,NN,N5,N4)
+      TQRF1P(N2,N1)=TQRF1P(N2,N1)-RQRF1P(N,NN,N5,N4)
+      TQRF2P(N2,N1)=TQRF2P(N2,N1)-RQRF2P(N,NN,N5,N4)
+      TQRC0P(N2,N1)=TQRC0P(N2,N1)-RQRC0P(N,NN,N5,N4)
+      TQRC1P(N2,N1)=TQRC1P(N2,N1)-RQRC1P(N,NN,N5,N4)
+      TQRC2P(N2,N1)=TQRC2P(N2,N1)-RQRC2P(N,NN,N5,N4)
+      TQRM1P(N2,N1)=TQRM1P(N2,N1)-RQRM1P(N,NN,N5,N4)
+      ENDIF
+      IF(N4B.GT.0.AND.N5B.GT.0.AND.NN.EQ.1)THEN
+      TQRAL(N2,N1)=TQRAL(N2,N1)-RQRAL(N,NN,N5B,N4B)
+      TQRFE(N2,N1)=TQRFE(N2,N1)-RQRFE(N,NN,N5B,N4B)
+      TQRHY(N2,N1)=TQRHY(N2,N1)-RQRHY(N,NN,N5B,N4B)
+      TQRCA(N2,N1)=TQRCA(N2,N1)-RQRCA(N,NN,N5B,N4B)
+      TQRMG(N2,N1)=TQRMG(N2,N1)-RQRMG(N,NN,N5B,N4B)
+      TQRNA(N2,N1)=TQRNA(N2,N1)-RQRNA(N,NN,N5B,N4B)
+      TQRKA(N2,N1)=TQRKA(N2,N1)-RQRKA(N,NN,N5B,N4B)
+      TQROH(N2,N1)=TQROH(N2,N1)-RQROH(N,NN,N5B,N4B)
+      TQRSO(N2,N1)=TQRSO(N2,N1)-RQRSO(N,NN,N5B,N4B)
+      TQRCL(N2,N1)=TQRCL(N2,N1)-RQRCL(N,NN,N5B,N4B)
+      TQRC3(N2,N1)=TQRC3(N2,N1)-RQRC3(N,NN,N5B,N4B)
+      TQRHC(N2,N1)=TQRHC(N2,N1)-RQRHC(N,NN,N5B,N4B)
+      TQRAL1(N2,N1)=TQRAL1(N2,N1)-RQRAL1(N,NN,N5B,N4B)
+      TQRAL2(N2,N1)=TQRAL2(N2,N1)-RQRAL2(N,NN,N5B,N4B)
+      TQRAL3(N2,N1)=TQRAL3(N2,N1)-RQRAL3(N,NN,N5B,N4B)
+      TQRAL4(N2,N1)=TQRAL4(N2,N1)-RQRAL4(N,NN,N5B,N4B)
+      TQRALS(N2,N1)=TQRALS(N2,N1)-RQRALS(N,NN,N5B,N4B)
+      TQRFE1(N2,N1)=TQRFE1(N2,N1)-RQRFE1(N,NN,N5B,N4B)
+      TQRFE2(N2,N1)=TQRFE2(N2,N1)-RQRFE2(N,NN,N5B,N4B)
+      TQRFE3(N2,N1)=TQRFE3(N2,N1)-RQRFE3(N,NN,N5B,N4B)
+      TQRFE4(N2,N1)=TQRFE4(N2,N1)-RQRFE4(N,NN,N5B,N4B)
+      TQRFES(N2,N1)=TQRFES(N2,N1)-RQRFES(N,NN,N5B,N4B)
+      TQRCAO(N2,N1)=TQRCAO(N2,N1)-RQRCAO(N,NN,N5B,N4B)
+      TQRCAC(N2,N1)=TQRCAC(N2,N1)-RQRCAC(N,NN,N5B,N4B)
+      TQRCAH(N2,N1)=TQRCAH(N2,N1)-RQRCAH(N,NN,N5B,N4B)
+      TQRCAS(N2,N1)=TQRCAS(N2,N1)-RQRCAS(N,NN,N5B,N4B)
+      TQRMGO(N2,N1)=TQRMGO(N2,N1)-RQRMGO(N,NN,N5B,N4B)
+      TQRMGC(N2,N1)=TQRMGC(N2,N1)-RQRMGC(N,NN,N5B,N4B)
+      TQRMGH(N2,N1)=TQRMGH(N2,N1)-RQRMGH(N,NN,N5B,N4B)
+      TQRMGS(N2,N1)=TQRMGS(N2,N1)-RQRMGS(N,NN,N5B,N4B)
+      TQRNAC(N2,N1)=TQRNAC(N2,N1)-RQRNAC(N,NN,N5B,N4B)
+      TQRNAS(N2,N1)=TQRNAS(N2,N1)-RQRNAS(N,NN,N5B,N4B)
+      TQRKAS(N2,N1)=TQRKAS(N2,N1)-RQRKAS(N,NN,N5B,N4B)
+      TQRH0P(N2,N1)=TQRH0P(N2,N1)-RQRH0P(N,NN,N5B,N4B)
+      TQRH3P(N2,N1)=TQRH3P(N2,N1)-RQRH3P(N,NN,N5B,N4B)
+      TQRF1P(N2,N1)=TQRF1P(N2,N1)-RQRF1P(N,NN,N5B,N4B)
+      TQRF2P(N2,N1)=TQRF2P(N2,N1)-RQRF2P(N,NN,N5B,N4B)
+      TQRC0P(N2,N1)=TQRC0P(N2,N1)-RQRC0P(N,NN,N5B,N4B)
+      TQRC1P(N2,N1)=TQRC1P(N2,N1)-RQRC1P(N,NN,N5B,N4B)
+      TQRC2P(N2,N1)=TQRC2P(N2,N1)-RQRC2P(N,NN,N5B,N4B)
+      TQRM1P(N2,N1)=TQRM1P(N2,N1)-RQRM1P(N,NN,N5B,N4B)
+      ENDIF
+1202  CONTINUE
+C
+C     NET OVERLAND SOLUTE FLUX IN SNOW
+C
+C     TQS*=net solute flux in snow transfer
+C     RQS*=solute flux in snow transfer
+C
       TQSAL(N2,N1)=TQSAL(N2,N1)+RQSAL(N,N2,N1)-RQSAL(N,N5,N4)
       TQSFE(N2,N1)=TQSFE(N2,N1)+RQSFE(N,N2,N1)-RQSFE(N,N5,N4)
       TQSHY(N2,N1)=TQSHY(N2,N1)+RQSHY(N,N2,N1)-RQSHY(N,N5,N4)
@@ -6266,10 +7332,20 @@ C
       TQSC1P(N2,N1)=TQSC1P(N2,N1)+RQSC1P(N,N2,N1)-RQSC1P(N,N5,N4)
       TQSC2P(N2,N1)=TQSC2P(N2,N1)+RQSC2P(N,N2,N1)-RQSC2P(N,N5,N4)
       TQSM1P(N2,N1)=TQSM1P(N2,N1)+RQSM1P(N,N2,N1)-RQSM1P(N,N5,N4)
+C
+C     NET SOLUTE FLUX IN SNOWPACK
+C
+C     VHCPWM,VHCPWX=current,minimum volumetric heat capacity of snowpack
+C     T*BLS=net solute flux in snowpack
+C     R*BLS=solute flux in snowpack
+C
       ELSEIF(N.EQ.3)THEN
       DO 1205 LS=1,JS
       IF(VHCPWM(M,LS,NY,NX).GT.VHCPWX(NY,NX))THEN
       LS2=MIN(JS,LS+1)
+C
+C     IF LOWER LAYER IS IN THE SNOWPACK
+C
       IF(LS.LT.JS.AND.VHCPWM(M,LS2,N2,N1).GT.VHCPWX(N2,N1))THEN
       TALBLS(LS,NY,NX)=TALBLS(LS,NY,NX)+RALBLS(LS,NY,NX)
      2-RALBLS(LS2,NY,NX)
@@ -6354,6 +7430,9 @@ C
       TM1PBS(LS,NY,NX)=TM1PBS(LS,NY,NX)+RM1PBS(LS,NY,NX)
      2-RM1PBS(LS2,NY,NX)
       ELSE
+C
+C     IF LOWER LAYER IS THE LITTER AND SOIL SURFACE
+C
       TALBLS(LS,NY,NX)=TALBLS(LS,NY,NX)+RALBLS(LS,NY,NX)
      2-RALFLS(3,0,N2,N1)-RALFLS(3,NUM(N2,N1),N2,N1)
 C    3-RALFHS(3,NUM(N2,N1),N2,N1)
@@ -6492,6 +7571,23 @@ C    3-RM1PHS(3,NUM(N2,N1),N2,N1)-RM1BFB(3,NUM(N2,N1),N2,N1)
       ENDIF
 C
 C     TOTAL SOLUTE FLUX IN MICROPORES AND MACROPORES
+C
+C     T*FLS=net convective + diffusive solute flux through micropores
+C     R*FLS=convective + diffusive solute flux through micropores
+C     R*FLW,R*FLB=convective + diffusive solute flux through micropores in non-band,band
+C     T*FHS=net convective + diffusive solute flux through macropores
+C     R*FHS=convective + diffusive solute flux through macropores
+C     R*FHW,R*FHB=convective + diffusive solute flux through macropores in non-band,band
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
 C
       IF(NCN(N2,N1).NE.3.OR.N.EQ.3)THEN
       DO 1200 LL=N6,NL(NY,NX)
@@ -6814,47 +7910,20 @@ C
 C     STATE VARIABLES FOR SOLUTES IN MICROPORES AND MACROPORES IN
 C     SOIL SURFACE LAYER FROM OVERLAND FLOW
 C
-      ZAL2(0,NY,NX)=ZAL2(0,NY,NX)+TQRAL(NY,NX)+RALFLS(3,0,NY,NX)
-      ZFE2(0,NY,NX)=ZFE2(0,NY,NX)+TQRFE(NY,NX)+RFEFLS(3,0,NY,NX)
-      ZHY2(0,NY,NX)=ZHY2(0,NY,NX)+TQRHY(NY,NX)+RHYFLS(3,0,NY,NX)
-      ZCA2(0,NY,NX)=ZCA2(0,NY,NX)+TQRCA(NY,NX)+RCAFLS(3,0,NY,NX)
-      ZMG2(0,NY,NX)=ZMG2(0,NY,NX)+TQRMG(NY,NX)+RMGFLS(3,0,NY,NX)
-      ZNA2(0,NY,NX)=ZNA2(0,NY,NX)+TQRNA(NY,NX)+RNAFLS(3,0,NY,NX)
-      ZKA2(0,NY,NX)=ZKA2(0,NY,NX)+TQRKA(NY,NX)+RKAFLS(3,0,NY,NX)
-      ZOH2(0,NY,NX)=ZOH2(0,NY,NX)+TQROH(NY,NX)+ROHFLS(3,0,NY,NX)
-      ZSO42(0,NY,NX)=ZSO42(0,NY,NX)+TQRSO(NY,NX)+RSOFLS(3,0,NY,NX)
-      ZCL2(0,NY,NX)=ZCL2(0,NY,NX)+TQRCL(NY,NX)+RCLFLS(3,0,NY,NX)
-      ZCO32(0,NY,NX)=ZCO32(0,NY,NX)+TQRC3(NY,NX)+RC3FLS(3,0,NY,NX)
-      ZHCO32(0,NY,NX)=ZHCO32(0,NY,NX)+TQRHC(NY,NX)+RHCFLS(3,0,NY,NX)
-      ZAL12(0,NY,NX)=ZAL12(0,NY,NX)+TQRAL1(NY,NX)+RAL1FS(3,0,NY,NX)
-      ZAL22(0,NY,NX)=ZAL22(0,NY,NX)+TQRAL2(NY,NX)+RAL2FS(3,0,NY,NX)
-      ZAL32(0,NY,NX)=ZAL32(0,NY,NX)+TQRAL3(NY,NX)+RAL3FS(3,0,NY,NX)
-      ZAL42(0,NY,NX)=ZAL42(0,NY,NX)+TQRAL4(NY,NX)+RAL4FS(3,0,NY,NX)
-      ZALS2(0,NY,NX)=ZALS2(0,NY,NX)+TQRALS(NY,NX)+RALSFS(3,0,NY,NX)
-      ZFE12(0,NY,NX)=ZFE12(0,NY,NX)+TQRFE1(NY,NX)+RFE1FS(3,0,NY,NX)
-      ZFE22(0,NY,NX)=ZFE22(0,NY,NX)+TQRFE2(NY,NX)+RFE2FS(3,0,NY,NX)
-      ZFE32(0,NY,NX)=ZFE32(0,NY,NX)+TQRFE3(NY,NX)+RFE3FS(3,0,NY,NX)
-      ZFE42(0,NY,NX)=ZFE42(0,NY,NX)+TQRFE4(NY,NX)+RFE4FS(3,0,NY,NX)
-      ZFES2(0,NY,NX)=ZFES2(0,NY,NX)+TQRFES(NY,NX)+RFESFS(3,0,NY,NX)
-      ZCAO2(0,NY,NX)=ZCAO2(0,NY,NX)+TQRCAO(NY,NX)+RCAOFS(3,0,NY,NX)
-      ZCAC2(0,NY,NX)=ZCAC2(0,NY,NX)+TQRCAC(NY,NX)+RCACFS(3,0,NY,NX)
-      ZCAH2(0,NY,NX)=ZCAH2(0,NY,NX)+TQRCAH(NY,NX)+RCAHFS(3,0,NY,NX)
-      ZCAS2(0,NY,NX)=ZCAS2(0,NY,NX)+TQRCAS(NY,NX)+RCASFS(3,0,NY,NX)
-      ZMGO2(0,NY,NX)=ZMGO2(0,NY,NX)+TQRMGO(NY,NX)+RMGOFS(3,0,NY,NX)
-      ZMGC2(0,NY,NX)=ZMGC2(0,NY,NX)+TQRMGC(NY,NX)+RMGCFS(3,0,NY,NX)
-      ZMGH2(0,NY,NX)=ZMGH2(0,NY,NX)+TQRMGH(NY,NX)+RMGHFS(3,0,NY,NX)
-      ZMGS2(0,NY,NX)=ZMGS2(0,NY,NX)+TQRMGS(NY,NX)+RMGSFS(3,0,NY,NX)
-      ZNAC2(0,NY,NX)=ZNAC2(0,NY,NX)+TQRNAC(NY,NX)+RNACFS(3,0,NY,NX)
-      ZNAS2(0,NY,NX)=ZNAS2(0,NY,NX)+TQRNAS(NY,NX)+RNASFS(3,0,NY,NX)
-      ZKAS2(0,NY,NX)=ZKAS2(0,NY,NX)+TQRKAS(NY,NX)+RKASFS(3,0,NY,NX)
-      H0PO42(0,NY,NX)=H0PO42(0,NY,NX)+TQRH0P(NY,NX)+RH0PFS(3,0,NY,NX)
-      H3PO42(0,NY,NX)=H3PO42(0,NY,NX)+TQRH3P(NY,NX)+RH3PFS(3,0,NY,NX)
-      ZFE1P2(0,NY,NX)=ZFE1P2(0,NY,NX)+TQRF1P(NY,NX)+RF1PFS(3,0,NY,NX)
-      ZFE2P2(0,NY,NX)=ZFE2P2(0,NY,NX)+TQRF2P(NY,NX)+RF2PFS(3,0,NY,NX)
-      ZCA0P2(0,NY,NX)=ZCA0P2(0,NY,NX)+TQRC0P(NY,NX)+RC0PFS(3,0,NY,NX)
-      ZCA1P2(0,NY,NX)=ZCA1P2(0,NY,NX)+TQRC1P(NY,NX)+RC1PFS(3,0,NY,NX)
-      ZCA2P2(0,NY,NX)=ZCA2P2(0,NY,NX)+TQRC2P(NY,NX)+RC2PFS(3,0,NY,NX)
-      ZMG1P2(0,NY,NX)=ZMG1P2(0,NY,NX)+TQRM1P(NY,NX)+RM1PFS(3,0,NY,NX)
+C     *W2=solute content of snowpack
+C     TQS*=net overland solute flux in snow 
+C     T*BLS=net solute flux in snowpack
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C
       ZALW2(1,NY,NX)=ZALW2(1,NY,NX)+TQSAL(NY,NX)
       ZFEW2(1,NY,NX)=ZFEW2(1,NY,NX)+TQSFE(NY,NX)
       ZHYW2(1,NY,NX)=ZHYW2(1,NY,NX)+TQSHY(NY,NX)
@@ -6940,9 +8009,87 @@ C
       ZMG1PW2(L,NY,NX)=ZMG1PW2(L,NY,NX)+TM1PBS(L,NY,NX)
 9670  CONTINUE
 C
+C     STATE VARIABLES FOR SOLUTES IN SURFACE RESIDUE FROM OVERLAND 
+C     FLOW AND SURFACE FLUX
+C
+C     *S2=litter solute content
+C     R*DFR=gas exchange between atmosphere and surface litter water
+C     R*DFS=gas exchange between atmosphere and soil surface water
+C     R*FLS=convective + diffusive solute flux into litter,soil surface 
+C     R*FLW,R*FLB=convective + diffusive solute flux into litter from non-band,band
+C     TQR*=net overland solute flux
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C
+      ZAL2(0,NY,NX)=ZAL2(0,NY,NX)+TQRAL(NY,NX)+RALFLS(3,0,NY,NX)
+      ZFE2(0,NY,NX)=ZFE2(0,NY,NX)+TQRFE(NY,NX)+RFEFLS(3,0,NY,NX)
+      ZHY2(0,NY,NX)=ZHY2(0,NY,NX)+TQRHY(NY,NX)+RHYFLS(3,0,NY,NX)
+      ZCA2(0,NY,NX)=ZCA2(0,NY,NX)+TQRCA(NY,NX)+RCAFLS(3,0,NY,NX)
+      ZMG2(0,NY,NX)=ZMG2(0,NY,NX)+TQRMG(NY,NX)+RMGFLS(3,0,NY,NX)
+      ZNA2(0,NY,NX)=ZNA2(0,NY,NX)+TQRNA(NY,NX)+RNAFLS(3,0,NY,NX)
+      ZKA2(0,NY,NX)=ZKA2(0,NY,NX)+TQRKA(NY,NX)+RKAFLS(3,0,NY,NX)
+      ZOH2(0,NY,NX)=ZOH2(0,NY,NX)+TQROH(NY,NX)+ROHFLS(3,0,NY,NX)
+      ZSO42(0,NY,NX)=ZSO42(0,NY,NX)+TQRSO(NY,NX)+RSOFLS(3,0,NY,NX)
+      ZCL2(0,NY,NX)=ZCL2(0,NY,NX)+TQRCL(NY,NX)+RCLFLS(3,0,NY,NX)
+      ZCO32(0,NY,NX)=ZCO32(0,NY,NX)+TQRC3(NY,NX)+RC3FLS(3,0,NY,NX)
+      ZHCO32(0,NY,NX)=ZHCO32(0,NY,NX)+TQRHC(NY,NX)+RHCFLS(3,0,NY,NX)
+      ZAL12(0,NY,NX)=ZAL12(0,NY,NX)+TQRAL1(NY,NX)+RAL1FS(3,0,NY,NX)
+      ZAL22(0,NY,NX)=ZAL22(0,NY,NX)+TQRAL2(NY,NX)+RAL2FS(3,0,NY,NX)
+      ZAL32(0,NY,NX)=ZAL32(0,NY,NX)+TQRAL3(NY,NX)+RAL3FS(3,0,NY,NX)
+      ZAL42(0,NY,NX)=ZAL42(0,NY,NX)+TQRAL4(NY,NX)+RAL4FS(3,0,NY,NX)
+      ZALS2(0,NY,NX)=ZALS2(0,NY,NX)+TQRALS(NY,NX)+RALSFS(3,0,NY,NX)
+      ZFE12(0,NY,NX)=ZFE12(0,NY,NX)+TQRFE1(NY,NX)+RFE1FS(3,0,NY,NX)
+      ZFE22(0,NY,NX)=ZFE22(0,NY,NX)+TQRFE2(NY,NX)+RFE2FS(3,0,NY,NX)
+      ZFE32(0,NY,NX)=ZFE32(0,NY,NX)+TQRFE3(NY,NX)+RFE3FS(3,0,NY,NX)
+      ZFE42(0,NY,NX)=ZFE42(0,NY,NX)+TQRFE4(NY,NX)+RFE4FS(3,0,NY,NX)
+      ZFES2(0,NY,NX)=ZFES2(0,NY,NX)+TQRFES(NY,NX)+RFESFS(3,0,NY,NX)
+      ZCAO2(0,NY,NX)=ZCAO2(0,NY,NX)+TQRCAO(NY,NX)+RCAOFS(3,0,NY,NX)
+      ZCAC2(0,NY,NX)=ZCAC2(0,NY,NX)+TQRCAC(NY,NX)+RCACFS(3,0,NY,NX)
+      ZCAH2(0,NY,NX)=ZCAH2(0,NY,NX)+TQRCAH(NY,NX)+RCAHFS(3,0,NY,NX)
+      ZCAS2(0,NY,NX)=ZCAS2(0,NY,NX)+TQRCAS(NY,NX)+RCASFS(3,0,NY,NX)
+      ZMGO2(0,NY,NX)=ZMGO2(0,NY,NX)+TQRMGO(NY,NX)+RMGOFS(3,0,NY,NX)
+      ZMGC2(0,NY,NX)=ZMGC2(0,NY,NX)+TQRMGC(NY,NX)+RMGCFS(3,0,NY,NX)
+      ZMGH2(0,NY,NX)=ZMGH2(0,NY,NX)+TQRMGH(NY,NX)+RMGHFS(3,0,NY,NX)
+      ZMGS2(0,NY,NX)=ZMGS2(0,NY,NX)+TQRMGS(NY,NX)+RMGSFS(3,0,NY,NX)
+      ZNAC2(0,NY,NX)=ZNAC2(0,NY,NX)+TQRNAC(NY,NX)+RNACFS(3,0,NY,NX)
+      ZNAS2(0,NY,NX)=ZNAS2(0,NY,NX)+TQRNAS(NY,NX)+RNASFS(3,0,NY,NX)
+      ZKAS2(0,NY,NX)=ZKAS2(0,NY,NX)+TQRKAS(NY,NX)+RKASFS(3,0,NY,NX)
+      H0PO42(0,NY,NX)=H0PO42(0,NY,NX)+TQRH0P(NY,NX)+RH0PFS(3,0,NY,NX)
+      H3PO42(0,NY,NX)=H3PO42(0,NY,NX)+TQRH3P(NY,NX)+RH3PFS(3,0,NY,NX)
+      ZFE1P2(0,NY,NX)=ZFE1P2(0,NY,NX)+TQRF1P(NY,NX)+RF1PFS(3,0,NY,NX)
+      ZFE2P2(0,NY,NX)=ZFE2P2(0,NY,NX)+TQRF2P(NY,NX)+RF2PFS(3,0,NY,NX)
+      ZCA0P2(0,NY,NX)=ZCA0P2(0,NY,NX)+TQRC0P(NY,NX)+RC0PFS(3,0,NY,NX)
+      ZCA1P2(0,NY,NX)=ZCA1P2(0,NY,NX)+TQRC1P(NY,NX)+RC1PFS(3,0,NY,NX)
+      ZCA2P2(0,NY,NX)=ZCA2P2(0,NY,NX)+TQRC2P(NY,NX)+RC2PFS(3,0,NY,NX)
+      ZMG1P2(0,NY,NX)=ZMG1P2(0,NY,NX)+TQRM1P(NY,NX)+RM1PFS(3,0,NY,NX)
+C
 C     STATE VARIABLES FOR GASES AND FOR SOLUTES IN MICROPORES AND
 C     MACROPORES IN SOIL LAYERS FROM SUBSURFACE FLOW, EQUILIBRIUM
 C     REACTIONS IN SOLUTE
+C
+C     *S2,*B2=micropore solute content in non-band,band
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C     T*FLS=net convective + diffusive solute flux through micropores
+C     T*FHS=net convective + diffusive solute flux through macropores
+C     R*FXS=convective + diffusive solute flux between macropores and micropores
+C     R*FLZ,R*FBZ=subsurface solute flux in non-band,band
 C
       DO 9685 L=NU(NY,NX),NL(NY,NX)
       IF(VOLX(L,NY,NX).GT.ZEROS2(NY,NX))THEN
@@ -7110,3 +8257,4 @@ C     ENDIF
 30    CONTINUE
       RETURN
       END
+

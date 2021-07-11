@@ -56,7 +56,7 @@ C     IWTYP=phenology type:0=evergreen,1=cold deciduous,2=drought deciduous,3=1+
 C     IPTYP=photoperiod type:0=day neutral,1=short day,2=long day
 C     IBTYP=turnover:if IGTYP=0 or 1:all above-ground:0,1=rapid(deciduous),2=very slow(evergreen),3=slow(semi-deciduous)
 C                   :if IGTYP=2:trees:1=rapid(deciduous),2=very slow(coniferous),3=slow(semi-deciduous)
-C     IRTYP=storage organ:1=above ground,2=below ground
+C     IRTYP=storage organ:0=above ground,1=below ground
 C     MY=mycorrhizal:1=no,2=yes
 C     ZTYPI=thermal adaptation zone:1=arctic,boreal,2=cool temperate,
 C     3=warm temperate,4=subtropical,5=tropical
@@ -254,12 +254,15 @@ C
 C
 C     HARVESTING
 C
-C     DY=harvesting date DDMMYYYY
+C     DY=if harvesting: harvesting date DDMMYYYY
+C       =if grazing: first grazing date DDMMYYYY, followed by last grazing date in next line
 C     ICUT=harvest type:0=none,1=grain,2=all above-ground,3=pruning
 C     4=grazing,5=fire,6=insect
 C     JCUT=terminate PFT:0=no,1=yes,2=yes,but reseed
-C     HCUT:>0=cutting height,<0=fraction of LAI removed
-C     PCUT=thinning:fraction of population removed
+C     HCUT=if harvesting: >0=cutting height,<0=fraction of LAI removed
+C         =if grazing: grazer biomass (g FW m-2)
+C     PCUT=if harvesting: thinning,fraction of population removed
+C         =if grazing: grazer consumption rate (g DW g FW-1 d-1)
 C     ECUT11,ECUT12,ECUT13,ECUT14=fraction of leaf,non-foliar,woody,standing dead 
 C     removed from PFT
 C     ECUT21,ECUT22,ECUT23,ECUT124=fraction of leaf,non-foliar,woody,standing dead 

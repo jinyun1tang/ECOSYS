@@ -34,6 +34,13 @@ C
 C
 C     TOTAL LITTERFALL OF ALL PLANT SPECIES
 C
+C     ZCSNC,ZZSNC,ZPSNC=total C,N,P litterfall 
+C     HCSNC,HZSNC,HPSNC=hourly PFT C,N,P litterfall from grosub.f 
+C     WTSTGT=total standing dead C,N,P mass
+C     WTSTG=PFT standing dead C,N,P mass
+C     CSNC,ZSNC,PSNC=cumulative PFT C,N,P litterfall from grosub.f
+C     CSNT,ZSNT,PSNT=cumulative total C,N,P litterfall
+C
       ZCSNC(NY,NX)=ZCSNC(NY,NX)+HCSNC(NZ,NY,NX)
       ZZSNC(NY,NX)=ZZSNC(NY,NX)+HZSNC(NZ,NY,NX)
       ZPSNC(NY,NX)=ZPSNC(NY,NX)+HPSNC(NZ,NY,NX)
@@ -59,6 +66,11 @@ C
 C
 C     TOTAL LEAF AREA OF ALL PLANT SPECIES
 C
+C     ARLFT,ARSTT=total leaf,stalk area of combined canopy layer
+C     ARLFV,ARSTV=PFT leaf,stalk area in canopy layer
+C     WGLFT=total leaf C of combined canopy layer
+C     WGLFV=PFT leaf C in canopy layer
+C
       DO 910 L=1,JC
       ARLFT(L,NY,NX)=ARLFT(L,NY,NX)+ARLFV(L,NZ,NY,NX)
       WGLFT(L,NY,NX)=WGLFT(L,NY,NX)+WGLFV(L,NZ,NY,NX)
@@ -72,6 +84,14 @@ C
 C
 C     TOTAL ROOT DENSITY
 C
+C     RTDNT=total root length density 
+C     RTDNP=PFT root length density per plant
+C     UPWTR=total water uptake
+C     UPWTR=PFT root water uptake
+C     TUPHT=total convective heat in root water uptake
+C     TKS=soil temperature
+C     PP=PFT population
+C
       IF(N.EQ.1)THEN
       RTDNT(L,NY,NX)=RTDNT(L,NY,NX)+RTDNP(N,L,NZ,NY,NX)
      2*PP(NZ,NY,NX)/AREA(3,L,NY,NX)
@@ -84,6 +104,11 @@ C
      2*4.19*TKS(L,NY,NX)
 C
 C     ROOT GAS CONTENTS FROM FLUXES IN 'UPTAKE'
+C
+C     *A,*P=PFT root gaseous, aqueous gas content
+C     gas code:CO=CO2,OX=O2,CH=CH4,N2=N2O,NH=NH3,H2=H2
+C     R*FLA=root gaseous-atmosphere CO2 exchange
+C     R*DFA=root aqueous-gaseous CO2 exchange
 C
       CO2A(N,L,NZ,NY,NX)=CO2A(N,L,NZ,NY,NX)+RCOFLA(N,L,NZ,NY,NX)
      2-RCODFA(N,L,NZ,NY,NX)
@@ -112,6 +137,9 @@ C
 C
 C     TOTAL ROOT GAS CONTENTS
 C
+C     TL*P=total root gas content
+C     *A,*P=PFT root gaseous, aqueous gas content
+C
       TLCO2P(L,NY,NX)=TLCO2P(L,NY,NX)+CO2P(N,L,NZ,NY,NX)
      2+CO2A(N,L,NZ,NY,NX)
       TLOXYP(L,NY,NX)=TLOXYP(L,NY,NX)+OXYP(N,L,NZ,NY,NX)
@@ -136,7 +164,16 @@ C    5,RCHDFA(N,L,NZ,NY,NX),RUPCHS(N,L,NZ,NY,NX),RCHFLA(N,L,NZ,NY,NX)
 5566  FORMAT(A8,7I4,20E12.4)
 C     ENDIF
 C
-C     TOTAL ROOT GAS FLUXES
+C     TOTAL ROOT BOUNDARY GAS FLUXES
+C
+C     T*FLA=total root gaseous-atmosphere CO2 exchange
+C     R*FLA=PFT root gaseous-atmosphere CO2 exchange
+C     gas code:CO=CO2,OX=O2,CH=CH4,N2=N2O,NH=NH3,H2=H2
+C     TUP*S,TUP*B=total root-soil gas, solute exchange in non-band,band
+C     RUP*S,RUP*B*=PFT root-soil gas, solute exchange in non-band,band
+C     gas code:CO=CO2,OX=O2,CH=CH4,N2=N2O,NH=NH3,H2=H2
+C     solute code:NH4=NH4,NO3=NO3,H2P=H2PO4,H1P=H1PO4 in non-band
+C                :NHB=NH4,NOB=NO3,H2B=H2PO4,H1B=H1PO4 in band
 C
       TCOFLA(L,NY,NX)=TCOFLA(L,NY,NX)+RCOFLA(N,L,NZ,NY,NX)
       TOXFLA(L,NY,NX)=TOXFLA(L,NY,NX)+ROXFLA(N,L,NZ,NY,NX)
@@ -175,6 +212,9 @@ C     ENDIF
 C
 C     TOTAL ROOT C,N,P EXUDATION
 C
+C     TDFOMC,TDFOMN,TDFOMP=total nonstructl C,N,P exchange
+C     RDFOMC,RDFOMN,RDFOMP=PFT nonstructl C,N,P exchange 
+C
       DO 195 K=0,4
       TDFOMC(K,L,NY,NX)=TDFOMC(K,L,NY,NX)-RDFOMC(N,K,L,NZ,NY,NX)
       TDFOMN(K,L,NY,NX)=TDFOMN(K,L,NY,NX)-RDFOMN(N,K,L,NZ,NY,NX)
@@ -184,6 +224,25 @@ C
 C     TOTAL ROOT O2, NH4, NO3, PO4 UPTAKE CONTRIBUTES TO
 C     TOTAL ROOT + MICROBIAL UPTAKE USED TO CALCULATE
 C     COMPETITION CONSTRAINTS
+C
+C     ROXYX=O2 demand by all microbial,root,myco populations 
+C     RNH4X=NH4 demand in non-band by all microbial,root,myco populations
+C     RNO3X=NO3 demand in non-band by all microbial,root,myco populations
+C     RPO4X=H2PO4 demand in non-band by all microbial,root,myco populations
+C     RP14X=HPO4 demand in non-band by all microbial,root,myco populations
+C     RNHBX=NH4 demand in band by all microbial,root,myco populations
+C     RN3BX=NO3 demand in band by all microbial,root,myco populations
+C     RPOBX=H2PO4 demand in band by all microbial,root,myco populations
+C     RP1BX=HPO4 demand in band by all microbial,root,myco populations
+C     ROXYP=O2 demand by each root,myco population
+C     RUNNHP=NH4 demand in non-band by each root population
+C     RUNNOP=NO3 demand in non-band by each root population
+C     RUPP2P=H2PO4 demand in non-band by each root population
+C     RUPP1P=HPO4 demand in non-band by each root population
+C     RUNNBP=NH4 demand in band by each root population
+C     RUNNXB=NO3 demand in band by each root population
+C     RUPP2B=H2PO4 demand in band by each root population
+C     RUPP1B=HPO4 demand in band by each root population
 C
       ROXYX(L,NY,NX)=ROXYX(L,NY,NX)+ROXYP(N,L,NZ,NY,NX)
       RNH4X(L,NY,NX)=RNH4X(L,NY,NX)+RUNNHP(N,L,NZ,NY,NX)
@@ -203,11 +262,39 @@ C     ENDIF
 C
 C     TOTAL ROOT N2 FIXATION BY ALL PLANT SPECIES
 C
+C     TUPNF=total root N2 fixation
+C     RUPNF=PFT root N2 fixation
+C
       DO 85 L=NU(NY,NX),NI(NZ,NY,NX)
       TUPNF(L,NY,NX)=TUPNF(L,NY,NX)+RUPNF(L,NZ,NY,NX)
 85    CONTINUE
 C
 C     TOTAL ENERGY, WATER, CO2 FLUXES
+C
+C     TRN=total net SW+LW absorbed by canopy
+C     RAD1=PFT net SW+LW absorbed by canopy
+C     TLE=total canopy latent heat flux
+C     EFLXC=PFT canopy latent heat flux
+C     TSH=total canopy sensible heat flux
+C     SFLXC=PFT canopy sensible heat flux
+C     TGH=total canopy storage heat flux
+C     HFLXC=PFT canopy storage heat flux
+C     TCCAN=total net CO2 fixation
+C     CNET=PFT net CO2 fixation
+C     TVOLWP,TVOLWC=total water volume in canopy,on canopy surfaces
+C     VOLWP,VOLWC=PFT water volume in canopy,on canopy surfaces
+C     TEVAPP,TEVAPC=total water flux to,from canopy,canopy surfaces 
+C     EVAPC,EP=water flux to,from canopy surfaces, inside canopy
+C     TENGYC=total canopy water heat content
+C     ENGYC=PFT canopy water heat content
+C     ARLFC,ARSTC=total leaf,stalk area
+C     ARLFP,ARSTP=PFT leaf,stalk area
+C     ZCSNC,ZZSNC,ZPSNC=total net root-soil C,N,P exchange 
+C     HCUPTK,HZUPTK,HPUPTK=PFT net root-soil C,N,P exchange 
+C     TBALC,TBALN,TBALP=total C,N,P balance
+C     BALC,BALN,BALP=PFT C,N,P balance
+C     TCO2Z,TOXYZ,TCH4Z,TN2OZ,TNH3Z,TH2GZ=total loss of root CO2, O2, CH4, N2O, NH3, H2
+C     RCO2Z,ROXYZ,RCH4Z,RN2OZ,RNH3Z,RH2GZ=PFT loss of root CO2, O2, CH4, N2O, NH3, H2
 C
       TRN(NY,NX)=TRN(NY,NX)+RAD1(NZ,NY,NX)
       TLE(NY,NX)=TLE(NY,NX)+EFLXC(NZ,NY,NX)
@@ -242,6 +329,9 @@ C
       TH2GZ(NY,NX)=TH2GZ(NY,NX)+RH2GZ(NZ,NY,NX)
 C
 C     TOTAL CANOPY NH3 EXCHANGE AND EXUDATION
+C
+C     RNH3B,RNH3C=PFT NH3 flux between atmosphere and branch,canopy
+C     TNH3C=total NH3 flux between atmosphere and canopy
 C
       RNH3C(NZ,NY,NX)=0.0
       DO 80 NB=1,NBR(NZ,NY,NX)
