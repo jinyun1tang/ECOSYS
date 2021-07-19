@@ -65,6 +65,7 @@ C
      8,TP1FLS(JZ,JY,JX),TP1FHS(JZ,JY,JX),TH1BFB(JZ,JY,JX)
      9,TH1BHB(JZ,JY,JX),VOLW1(JZ,JY,JX),VOLI1(JZ,JY,JX)
      1,VOLWH1(JZ,JY,JX),VOLIH1(JZ,JY,JX),CDPTHX(JZ,JY,JX)
+     2,CDPTHY(0:JZ,JY,JX) 
       DIMENSION TQR(JY,JX),THQR(JY,JX),TQS(JY,JX),TQW(JY,JX)
      2,TQI(JY,JX),THQS(JY,JX),TFLWS(JS,JY,JX),TFLWW(JS,JY,JX)
      3,TFLWI(JS,JY,JX),THFLWW(JS,JY,JX),TOCQRS(0:4,JY,JX)
@@ -181,7 +182,7 @@ C
      6,TKASBS(JS,JY,JX),TH0PBS(JS,JY,JX),TH3PBS(JS,JY,JX)
      7,TF1PBS(JS,JY,JX),TF2PBS(JS,JY,JX),TC0PBS(JS,JY,JX)
      8,TC1PBS(JS,JY,JX),TC2PBS(JS,JY,JX),TM1PBS(JS,JY,JX)
-      PARAMETER (FSINK=0.001,ZEROC=0.1E-03)
+      PARAMETER (ZEROC=0.1E-03)
       DATA SG/0.0/
       DATA TDORGC,TDYLXC/0.0,0.0/
       DATA TDVOLI,TDLYXF/0.0,0.0/
@@ -196,12 +197,21 @@ C
       DO 9990 NY=NVN,NVS
       TXCO2(NY,NX)=0.0
       DORGE(NY,NX)=0.0
+      WQRH(NY,NX)=0.0
 C
-C     ADD ABOVE-GROUND LITTERFALL FROM 'EXTRACT' TO SURFACE RESIDUE
+C     ADD ABOVE-GROUND LITTERFALL FROM EXTRACT.F TO SURFACE RESIDUE
+C
+C     OSC,OSN,OSP=SOC,SON,SOP
+C     CSNT,ZSNT,PSNT=total C,N,P litterfall
+C     ORGC=total SOC
+C     RAINR,HRAINR=water,heat in litterfall
+C     FLWR,HFLWR=water,heat flux into litter
+C     HEATIN=cumulative net surface heat transfer
 C
       DO 6965 K=0,1
       DO 6965 M=1,4
       OSC(M,K,0,NY,NX)=OSC(M,K,0,NY,NX)+CSNT(M,K,0,NY,NX)
+      OSA(M,K,0,NY,NX)=OSA(M,K,0,NY,NX)+CSNT(M,K,0,NY,NX)*OMCI(1,K)
       OSN(M,K,0,NY,NX)=OSN(M,K,0,NY,NX)+ZSNT(M,K,0,NY,NX)
       OSP(M,K,0,NY,NX)=OSP(M,K,0,NY,NX)+PSNT(M,K,0,NY,NX)
       ORGC(0,NY,NX)=ORGC(0,NY,NX)+CSNT(M,K,0,NY,NX)
@@ -212,16 +222,40 @@ C
       CRAIN=CRAIN+RAINR
       HEATIN=HEATIN+HRAINR
 C     IF((I/30)*30.EQ.I.AND.J.EQ.15)THEN
-C     WRITE(*,8486)'OSC0',I,J,L,K,M,OSC(M,K,0,NY,NX)
+C     WRITE(*,8486)'OSC0',I,J,K,M,OSC(M,K,0,NY,NX)
 C    2,OSN(M,K,0,NY,NX),OSP(M,K,0,NY,NX),CSNT(M,K,0,NY,NX)
 C    3,ZSNT(M,K,0,NY,NX),PSNT(M,K,0,NY,NX)
-8486  FORMAT(A8,5I4,12E12.4)
+C    4,RAINR,HRAINR,FLWR(NY,NX),HFLWR(NY,NX)
+8486  FORMAT(A8,4I4,20E12.4)
 C     ENDIF
 6965  CONTINUE
 C
-C     GAS AND SOLUTE EXCHANGE WITHIN SURFACE RESIDUE ADDED TO ECOSYSTEM
+C     GAS AND SOLUTE EXCHANGE WITHIN SURFACE LITTER ADDED TO ECOSYSTEM
 C     TOTALS FOR CALCULATING COMPETITION CONSTRAINTS ON MICROBIAL
-C     AND ROOT POPULATIONS
+C     AND ROOT POPULATIONS IN NITRO.F AND UPTAKE.F
+C
+C     ROXYX=O2 demand by all microbial,root,myco populations 
+C     RNH4X=NH4 demand in non-band by all microbial,root,myco populations
+C     RNO3X=NO3 demand in non-band by all microbial,root,myco populations
+C     RPO4X=H2PO4 demand in non-band by all microbial,root,myco populations
+C     RP14X=HPO4 demand in non-band by all microbial,root,myco populations
+C     RNHBX=NH4 demand in band by all microbial,root,myco populations
+C     RN3BX=NO3 demand in band by all microbial,root,myco populations
+C     RPOBX=H2PO4 demand in band by all microbial,root,myco populations
+C     RP1BX=HPO4 demand in band by all microbial,root,myco populations
+C     ROXYS=O2 demand from DOC,DOA oxidation
+C     RVMX4=demand for NH4 oxidation
+C     RVMX3=demand for NO3 reduction
+C     RVMX2=demand for NO2 oxidation
+C     RVMX1=demand for N2O reduction 
+C     RINHO,RINHOR=substrate-unlimited NH4 immobilization 
+C     RINOO,RINOOR=substrate-unlimited NO3 immobilization 
+C     RIPOO,RIPOOR=substrate-unlimited H2PO4 immobilization
+C     RIPO1,RIPO1R=substrate-unlimited HPO4 immobilization
+C     ROQCX,ROQAX=total DOC,DOA demand from DOC,DOA oxidation
+C     ROQCS,ROQAS=DOC,DOA demand from DOC,DOA oxidation
+C     RNO2X=total demand for NO2 reduction
+C     RVMXC=demand for NO2 reduction
 C
       DO 8990 K=0,5
       IF(K.NE.3.AND.K.NE.4)THEN
@@ -248,23 +282,163 @@ C
 8990  CONTINUE
       RNO2X(0,NY,NX)=RNO2X(0,NY,NX)+RVMXC(0,NY,NX)
 C
-C     ADD RESIDUE C,N,P TO SUBSURFACE SEDIMENT BELOW A POND SURFACE
+C     SINK ALL SOLID C,N,P IN POND
 C
-      DO 9885 L=0,NL(NY,NX)-1
-      IF(((L.EQ.0.AND.BKDS(L+1,NY,NX).LE.ZERO
-     2.AND.VOLW(L+1,NY,NX).GT.ZEROS2(NY,NX)
-     3.AND.VOLI(L+1,NY,NX).LE.ZEROS2(NY,NX))
-     4.OR.(L.GT.0.AND.BKVL(L,NY,NX).LE.ZERO))
-     5.AND.VOLW(L,NY,NX).GT.ZEROS2(NY,NX)
-     6.AND.VOLI(L,NY,NX).LE.ZEROS2(NY,NX))THEN
+C     BKDS=bulk density
+C     DLYR=layer depth
+C     VLS=hourly sinking rate from hour1.f
+C     FSINK=hourly rate for sediment sinking
+C
+      DO 9885 L=NL(NY,NX)-1,0,-1
+      IF(BKDS(L,NY,NX).LE.ZERO.AND.DLYR(3,L,NY,NX).GT.ZERO)THEN
       DO 9880 LL=L+1,NL(NY,NX)
-      IF(BKVL(LL,NY,NX).GT.ZEROS(NY,NX))GO TO 9881
+      IF(DLYR(3,LL,NY,NX).GT.ZEROS(NY,NX))GO TO 9881
 9880  CONTINUE
 9881  CONTINUE
-      DO 1970 K=0,5
-      IF(K.NE.3.AND.K.NE.4)THEN
+      FSINK=AMIN1(1.0,VLS(NY,NX)/DLYR(3,L,NY,NX))
+C
+C     SOIL MINERALS
+C
+C     *ER=sediment flux from erosion.f
+C     sediment code:XSED=total,XSAN=sand,XSIL=silt,XCLA=clay
+C
+      FSAN=FSINK*SAND(L,NY,NX)
+      FSIL=FSINK*SILT(L,NY,NX)
+      FCLA=FSINK*CLAY(L,NY,NX)
+      FCEC=FSINK*XCEC(L,NY,NX)
+      FAEC=FSINK*XAEC(L,NY,NX)
+      SAND(L,NY,NX)=SAND(L,NY,NX)-FSAN
+      SILT(L,NY,NX)=SILT(L,NY,NX)-FSIL
+      CLAY(L,NY,NX)=CLAY(L,NY,NX)-FCLA
+      XCEC(L,NY,NX)=XCEC(L,NY,NX)-FCEC
+      XAEC(L,NY,NX)=XAEC(L,NY,NX)-FAEC
+      SAND(LL,NY,NX)=SAND(LL,NY,NX)+FSAN
+      SILT(LL,NY,NX)=SILT(LL,NY,NX)+FSIL
+      CLAY(LL,NY,NX)=CLAY(LL,NY,NX)+FCLA
+      XCEC(LL,NY,NX)=XCEC(LL,NY,NX)+FCEC
+      XAEC(LL,NY,NX)=XAEC(LL,NY,NX)+FAEC
+C
+C     FERTILIZER POOLS
+C
+C     *ER=sediment flux from erosion.f
+C     sediment code:NH4,NH3,NHU,NO3=NH4,NH3,urea,NO3 
+C
+      FNH4=FSINK*ZNH4FA(L,NY,NX)
+      FNH3=FSINK*ZNH3FA(L,NY,NX)
+      FNHU=FSINK*ZNHUFA(L,NY,NX)
+      FNO3=FSINK*ZNO3FA(L,NY,NX)
+      ZNH4FA(L,NY,NX)=ZNH4FA(L,NY,NX)-FNH4
+      ZNH3FA(L,NY,NX)=ZNH3FA(L,NY,NX)-FNH3
+      ZNHUFA(L,NY,NX)=ZNHUFA(L,NY,NX)-FNHU
+      ZNO3FA(L,NY,NX)=ZNO3FA(L,NY,NX)-FNO3
+      ZNH4FA(LL,NY,NX)=ZNH4FA(LL,NY,NX)+FNH4
+      ZNH3FA(LL,NY,NX)=ZNH3FA(LL,NY,NX)+FNH3
+      ZNHUFA(LL,NY,NX)=ZNHUFA(LL,NY,NX)+FNHU
+      ZNO3FA(LL,NY,NX)=ZNO3FA(LL,NY,NX)+FNO3
+C
+C     EXCHANGEABLE CATIONS AND ANIONS
+C
+C     sediment code
+C       :XN4=adsorbed NH4 
+C       :XHY,XAL,XFE,XCA,XMG,XNA,XKA,XHC,AL2,FE2
+C        =adsorbed H,Al,Fe,Ca,Mg,Na,K,HCO3,AlOH2,FeOH2
+C       :XOH0,XOH1,XOH2=adsorbed R-,R-OH,R-OH2 
+C       :XH1P,XH2P=adsorbed HPO4,H2PO4 
+C
+      FN4=FSINK*XN4(L,NY,NX)
+      FHY=FSINK*XHY(L,NY,NX)
+      FAL=FSINK*XAL(L,NY,NX)
+      FFE=FSINK*XFE(L,NY,NX)
+      FCA=FSINK*XCA(L,NY,NX)
+      FMG=FSINK*XMG(L,NY,NX)
+      FNA=FSINK*XNA(L,NY,NX)
+      FKA=FSINK*XKA(L,NY,NX)
+      FHC=FSINK*XHC(L,NY,NX)
+      FAL2=FSINK*XALO2(L,NY,NX)
+      FFE2=FSINK*XFEO2(L,NY,NX)
+      FOH0=FSINK*XOH0(L,NY,NX)
+      FOH1=FSINK*XOH1(L,NY,NX)
+      FOH2=FSINK*XOH2(L,NY,NX)
+      FH1P=FSINK*XH1P(L,NY,NX)
+      FH2P=FSINK*XH2P(L,NY,NX)
+      XN4(L,NY,NX)=XN4(L,NY,NX)-FN4
+      XHY(L,NY,NX)=XHY(L,NY,NX)-FHY
+      XAL(L,NY,NX)=XAL(L,NY,NX)-FAL
+      XFE(L,NY,NX)=XFE(L,NY,NX)-FFE
+      XCA(L,NY,NX)=XCA(L,NY,NX)-FCA
+      XMG(L,NY,NX)=XMG(L,NY,NX)-FMG
+      XNA(L,NY,NX)=XNA(L,NY,NX)-FNA
+      XKA(L,NY,NX)=XKA(L,NY,NX)-FKA
+      XHC(L,NY,NX)=XHC(L,NY,NX)-FHC
+      XALO2(L,NY,NX)=XALO2(L,NY,NX)-FAL2
+      XFEO2(L,NY,NX)=XFEO2(L,NY,NX)-FFE2
+      XOH0(L,NY,NX)=XOH0(L,NY,NX)-FOH0
+      XOH1(L,NY,NX)=XOH1(L,NY,NX)-FOH1
+      XOH2(L,NY,NX)=XOH2(L,NY,NX)-FOH2
+      XH1P(L,NY,NX)=XH1P(L,NY,NX)-FH1P
+      XH2P(L,NY,NX)=XH2P(L,NY,NX)-FH2P
+      XN4(LL,NY,NX)=XN4(LL,NY,NX)+FN4
+      XHY(LL,NY,NX)=XHY(LL,NY,NX)+FHY
+      XAL(LL,NY,NX)=XAL(LL,NY,NX)+FAL
+      XFE(LL,NY,NX)=XFE(LL,NY,NX)+FFE
+      XCA(LL,NY,NX)=XCA(LL,NY,NX)+FCA
+      XMG(LL,NY,NX)=XMG(LL,NY,NX)+FMG
+      XNA(LL,NY,NX)=XNA(LL,NY,NX)+FNA
+      XKA(LL,NY,NX)=XKA(LL,NY,NX)+FKA
+      XHC(LL,NY,NX)=XHC(LL,NY,NX)+FHC
+      XALO2(LL,NY,NX)=XALO2(LL,NY,NX)+FAL2
+      XFEO2(LL,NY,NX)=XFEO2(LL,NY,NX)+FFE2
+      XOH0(LL,NY,NX)=XOH0(LL,NY,NX)+FOH0
+      XOH1(LL,NY,NX)=XOH1(LL,NY,NX)+FOH1
+      XOH2(LL,NY,NX)=XOH2(LL,NY,NX)+FOH2
+      XH1P(LL,NY,NX)=XH1P(LL,NY,NX)+FH1P
+      XH2P(LL,NY,NX)=XH2P(LL,NY,NX)+FH2P
+
+C
+C     PRECIPITATES
+C
+C     sediment code
+C       :PALO,PFEO=precip AlOH,FeOH 
+C       :PCAC,PCAS=precip CaCO3,CaSO4
+C       :PALP,PFEP=precip AlPO4,FEPO4 
+C       :PCPM,PCPD,PCPH=precip CaH2PO4,CaHPO4,apatite 
+C
+      FALO=FSINK*PALOH(L,NY,NX)
+      FFEO=FSINK*PFEOH(L,NY,NX)
+      FCAC=FSINK*PCACO(L,NY,NX)
+      FCAS=FSINK*PCASO(L,NY,NX)
+      FALP=FSINK*PALPO(L,NY,NX)
+      FFEP=FSINK*PFEPO(L,NY,NX)
+      FCPD=FSINK*PCAPD(L,NY,NX)
+      FCPH=FSINK*PCAPH(L,NY,NX)
+      FCPM=FSINK*PCAPM(L,NY,NX)
+      PALOH(L,NY,NX)=PALOH(L,NY,NX)-FALO
+      PFEOH(L,NY,NX)=PFEOH(L,NY,NX)-FFEO
+      PCACO(L,NY,NX)=PCACO(L,NY,NX)-FCAC
+      PCASO(L,NY,NX)=PCASO(L,NY,NX)-FCAS
+      PALPO(L,NY,NX)=PALPO(L,NY,NX)-FALP
+      PFEPO(L,NY,NX)=PFEPO(L,NY,NX)-FFEP
+      PCAPD(L,NY,NX)=PCAPD(L,NY,NX)-FCPD
+      PCAPH(L,NY,NX)=PCAPH(L,NY,NX)-FCPH
+      PCAPM(L,NY,NX)=PCAPM(L,NY,NX)-FCPM
+      PALOH(LL,NY,NX)=PALOH(LL,NY,NX)+FALO
+      PFEOH(LL,NY,NX)=PFEOH(LL,NY,NX)+FFEO
+      PCACO(LL,NY,NX)=PCACO(LL,NY,NX)+FCAC
+      PCASO(LL,NY,NX)=PCASO(LL,NY,NX)+FCAS
+      PALPO(LL,NY,NX)=PALPO(LL,NY,NX)+FALP
+      PFEPO(LL,NY,NX)=PFEPO(LL,NY,NX)+FFEP
+      PCAPD(LL,NY,NX)=PCAPD(LL,NY,NX)+FCPD
+      PCAPH(LL,NY,NX)=PCAPH(LL,NY,NX)+FCPH
+      PCAPM(LL,NY,NX)=PCAPM(LL,NY,NX)+FCPM
 C
 C     MICROBIAL C,N,P
+C
+      DO 1970 K=0,5
+      IF(K.NE.3.AND.K.NE.4)THEN
+C     OMC,OMN,OMP=microbial C,N,P
+C     ORC,ORN,ORP=microbial residue C,N,P
+C     OHC,OHN,OHP,OHA=adsorbed C,N,P,acetate
+C     OSC,OAA,OSN,OSP=SOC,colonized SOC,SON,SOP
 C
       DO 1960 N=1,7
       DO 1960 M=1,3
@@ -311,7 +485,7 @@ C
       OHP(K,L,NY,NX)=OHP(K,L,NY,NX)-FOHP
       OHA(K,L,NY,NX)=OHA(K,L,NY,NX)-FOHA
 C
-C     PLANT RESIDUE C,N,P
+C     SOC,N,P
 C
       DO 1930 M=1,4
       FOSC=FSINK*OSC(M,K,L,NY,NX)
@@ -337,6 +511,11 @@ C
 C
 C     LOCATE EXTERNAL BOUNDARIES
 C
+C     N2,N1=NY,NX of source grid cell
+C     N5,N4=NY,NX of destination grid cell
+C
+      N1=NX
+      N2=NY
       DO 9980 N=1,3
       DO 9975 NN=1,2
       IF(N.EQ.1)THEN
@@ -396,232 +575,271 @@ C
 C
 C     RUNOFF BOUNDARY FLUXES OF WATER AND HEAT
 C
+C     QR,QS,QW,QI=runoff from surface water, snowpack snow,water,ice from watsub.f
+C     CRUN,URUN=cumulative water and snow runoff
+C     HEATOU=cumulative heat loss through lateral and lower boundaries
+C 
       IF(N.NE.3.AND.L.EQ.NU(NY,NX))THEN
-      WQR=XN*(QR(N,N5,N4)+QS(N,N5,N4)+QW(N,N5,N4)+QI(N,N5,N4))
-      IF(WQR.NE.0.0)THEN
-      CRUN=CRUN-WQR
-      URUN(NY,NX)=URUN(NY,NX)-WQR
-      HEATOU=HEATOU-XN*(HQR(N,N5,N4)+HQS(N,N5,N4))
+      WQRN=XN*QR(N,NN,N5,N4)
+      WQRH(N2,N1)=WQRH(N2,N1)+WQRN
+      IF(ABS(WQRN).GT.ZEROS(N5,N4))THEN
+      CRUN=CRUN-WQRN
+      URUN(NY,NX)=URUN(NY,NX)-WQRN
+      HQRN=XN*HQR(N,NN,N5,N4)
+      HEATOU=HEATOU-HQRN
 C
 C     RUNOFF BOUNDARY FLUXES OF C, N AND P
 C
-      CXR=XN*(XCOQRS(N,N5,N4)+XCHQRS(N,N5,N4)
-     2+XCOQSS(N,N5,N4)+XCHQSS(N,N5,N4))
-      CQR=0.0
-      DO 2575 K=0,4
-      CQR=CQR+XN*(XOCQRS(K,N,N5,N4)+XOAQRS(K,N,N5,N4))
-2575  CONTINUE
-      TCOU=TCOU-CQR-CXR
-      UDOCQ(NY,NX)=UDOCQ(NY,NX)-CQR
-      UDICQ(NY,NX)=UDICQ(NY,NX)-CXR
-      OXR=XN*(XOXQRS(N,N5,N4)+XOXQSS(N,N5,N4))
-      OXYGOU=OXYGOU-OXR 
-      HGR=XN*XHGQRS(N,N5,N4)
-      H2GOU=H2GOU+HGR
-      ZXR=XN*(XN4QRW(N,N5,N4)+XN3QRW(N,N5,N4) 
-     2+XNOQRW(N,N5,N4)+XNXQRS(N,N5,N4)+XN4QSS(N,N5,N4)
-     3+XN3QSS(N,N5,N4)+XNOQSS(N,N5,N4))
-      ZGR=XN*(XN2QRS(N,N5,N4)+XNGQRS(N,N5,N4)
-     2+XN2QSS(N,N5,N4)+XNGQSS(N,N5,N4))
+C     X*QRS,X*QSS=solute in runoff, snow drift from trnsfr.f
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C             :OC=DOC,OA=acetate,ON=DON,OP=DOP 
+C             :N4=NH4,N3=NH3,NO=NO3,NX=NO2,PI=HPO4,P4=H2PO4 in non-band
+C     XN=direction indicator
+C     TCOU,OXYGOU,H2GOU,TZOU,TPOU=cumulative C,O2,H2,N,P loss through lateral and lower boundaries
+C     UDOCQ,UDICQ=dissolved organic,inorganic C loss through runoff  
+C     UDONQ,UDINQ=dissolved organic,inorganic N loss through runoff
+C     UDOPQ,UDIPQ=dissolved organic,inorganic P loss through runoff
+C
+      CXR=XN*(XCOQRS(N,NN,N5,N4)+XCHQRS(N,NN,N5,N4))
+      ZXR=XN*(XN4QRW(N,NN,N5,N4)+XN3QRW(N,NN,N5,N4) 
+     2+XNOQRW(N,NN,N5,N4)+XNXQRS(N,NN,N5,N4))
+      ZGR=XN*(XN2QRS(N,NN,N5,N4)+XNGQRS(N,NN,N5,N4))
+      PXR=XN*(XP4QRW(N,NN,N5,N4)+XP1QRW(N,NN,N5,N4))
+      COR=0.0
       ZOR=0.0
-      DO 2875 K=0,4
-      ZOR=ZOR+XN*XONQRS(K,N,N5,N4)
-2875  CONTINUE
-      TZOU=TZOU-ZXR-ZGR-ZOR
-      UDONQ(NY,NX)=UDONQ(NY,NX)-ZOR
-      UDINQ(NY,NX)=UDINQ(NY,NX)-ZXR
-      PXR=XN*(XP4QRW(N,N5,N4)+XP4QSS(N,N5,N4)
-     2+XP1QRW(N,N5,N4)+XP1QSS(N,N5,N4))
       POR=0.0
-      DO 2775 K=0,4
-      POR=POR+XN*XOPQRS(K,N,N5,N4)
-2775  CONTINUE
+      DO 2575 K=0,4
+      COR=COR+XN*(XOCQRS(K,N,NN,N5,N4)+XOAQRS(K,N,NN,N5,N4))
+      ZOR=ZOR+XN*XONQRS(K,N,NN,N5,N4)
+      POR=POR+XN*XOPQRS(K,N,NN,N5,N4)
+2575  CONTINUE
+      TCOU=TCOU-CXR-COR 
+      TZOU=TZOU-ZXR-ZOR-ZGR 
       TPOU=TPOU-PXR-POR
+      UDOCQ(NY,NX)=UDOCQ(NY,NX)-COR
+      UDICQ(NY,NX)=UDICQ(NY,NX)-CXR
+      UDONQ(NY,NX)=UDONQ(NY,NX)-ZOR
+      UDINQ(NY,NX)=UDINQ(NY,NX)-ZXR-ZGR
       UDOPQ(NY,NX)=UDOPQ(NY,NX)-POR
       UDIPQ(NY,NX)=UDIPQ(NY,NX)-PXR
+      OXR=XN*XOXQRS(N,NN,N5,N4)
+      OXYGOU=OXYGOU-OXR 
+      HGR=XN*XHGQRS(N,NN,N5,N4)
+      H2GOU=H2GOU+HGR
+C     WRITE(*,6636)'XPO',I,J,N4,N5,N,XN
+C    2,COR,CXR,ZOR,ZXR,POR,PXR
+C    2,XP4QRW(N,NN,N5,N4),XP1QRW(N,NN,N5,N4)
+6636  FORMAT(A8,5I4,40E12.4)
 C
 C     RUNOFF BOUNDARY FLUXES OF SOLUTES
 C
+C     ISALTG=salt flag
+C     XQR*,XQS*=solute loss in runoff,snow drift from trnsfrs.f
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C     XN=direction indicator
+C     TPOU,TIONOU=total P,salt loss through lateral and lower boundaries
+C
       IF(ISALTG.NE.0)THEN
-      PSS=XN*31.0*(XQRH0P(N,N5,N4)+XQSH0P(N,N5,N4)+XQRC0P(N,N5,N4)
-     2+XQSC0P(N,N5,N4)+XQRF1P(N,N5,N4)+XQRC1P(N,N5,N4)+XQRM1P(N,N5,N4)
-     3+XQSF1P(N,N5,N4)+XQSC1P(N,N5,N4)+XQSM1P(N,N5,N4)+XQRH3P(N,N5,N4)
-     4+XQRF2P(N,N5,N4)+XQRC2P(N,N5,N4)+XQSH3P(N,N5,N4)+XQSF2P(N,N5,N4)
-     5+XQSC2P(N,N5,N4))
+      PSS=XN*31.0*(XQRH0P(N,NN,N5,N4)
+     2+XQRC0P(N,NN,N5,N4)+XQRF1P(N,NN,N5,N4)+XQRC1P(N,NN,N5,N4)
+     3+XQRM1P(N,NN,N5,N4)+XQRH3P(N,NN,N5,N4)+XQRF2P(N,NN,N5,N4)
+     4+XQRC2P(N,NN,N5,N4))
+      SS1=XN*(XQRAL(N,NN,N5,N4)+XQRFE(N,NN,N5,N4)+XQRHY(N,NN,N5,N4)
+     2+XQRCA(N,NN,N5,N4)+XQRMG(N,NN,N5,N4)+XQRNA(N,NN,N5,N4)
+     3+XQRKA(N,NN,N5,N4)+XQROH(N,NN,N5,N4)+XQRSO(N,NN,N5,N4)
+     4+XQRCL(N,NN,N5,N4)+XQRC3(N,NN,N5,N4)+XQRH0P(N,NN,N5,N4)) 
+      SS2=XN*2.0*(XQRHC(N,NN,N5,N4)+XQRAL1(N,NN,N5,N4)
+     2+XQRALS(N,NN,N5,N4)+XQRFE1(N,NN,N5,N4)+XQRFES(N,NN,N5,N4)
+     3+XQRCAO(N,NN,N5,N4)+XQRCAC(N,NN,N5,N4)+XQRCAS(N,NN,N5,N4)
+     4+XQRMGO(N,NN,N5,N4)+XQRMGC(N,NN,N5,N4)+XQRMGS(N,NN,N5,N4)
+     5+XQRNAC(N,NN,N5,N4)+XQRNAS(N,NN,N5,N4)+XQRKAS(N,NN,N5,N4)
+     6+XQRC0P(N,NN,N5,N4)) 
+      SS3=XN*3.0*(XQRAL2(N,NN,N5,N4)+XQRFE2(N,NN,N5,N4)
+     2+XQRCAH(N,NN,N5,N4)+XQRMGH(N,NN,N5,N4)+XQRF1P(N,NN,N5,N4)
+     3+XQRC1P(N,NN,N5,N4)+XQRM1P(N,NN,N5,N4)) 
+      SS4=XN*4.0*(XQRAL3(N,NN,N5,N4)+XQRFE3(N,NN,N5,N4)
+     2+XQRH3P(N,NN,N5,N4)+XQRF2P(N,NN,N5,N4)+XQRC2P(N,NN,N5,N4))
+     5+XN*5.0*(XQRAL4(N,NN,N5,N4)+XQRFE4(N,NN,N5,N4))
+      PSS=PSS+XN*31.0*XQSH0P(N,N5,N4)
       TPOU=TPOU-PSS
-      SS1=XN*(XQRAL(N,N5,N4)+XQRFE(N,N5,N4)+XQRHY(N,N5,N4)
-     2+XQRCA(N,N5,N4)+XQRMG(N,N5,N4)+XQRNA(N,N5,N4)+XQRKA(N,N5,N4)
-     3+XQROH(N,N5,N4)+XQRSO(N,N5,N4)+XQRCL(N,N5,N4)+XQRC3(N,N5,N4)
-     4+XQRH0P(N,N5,N4)+XQSAL(N,N5,N4)+XQSFE(N,N5,N4)
-     5+XQSHY(N,N5,N4)+XQSCA(N,N5,N4)+XQSMG(N,N5,N4)+XQSNA(N,N5,N4)
-     6+XQSKA(N,N5,N4)+XQSOH(N,N5,N4)+XQSSO(N,N5,N4)+XQSCL(N,N5,N4)
-     3+XQSC3(N,N5,N4)+XQSH0P(N,N5,N4)) 
-      SS2=XN*2.0*(XQRHC(N,N5,N4)+XQRAL1(N,N5,N4)+XQRALS(N,N5,N4)
-     2+XQRFE1(N,N5,N4)+XQRFES(N,N5,N4)+XQRCAO(N,N5,N4)+XQRCAC(N,N5,N4)
-     3+XQRCAS(N,N5,N4)+XQRMGO(N,N5,N4)+XQRMGC(N,N5,N4)+XQRMGS(N,N5,N4)
-     4+XQRNAC(N,N5,N4)+XQRNAS(N,N5,N4)+XQRKAS(N,N5,N4)
-     5+XQRC0P(N,N5,N4)+XQSHC(N,N5,N4)+XQSAL1(N,N5,N4)+XQSALS(N,N5,N4)
-     2+XQSFE1(N,N5,N4)+XQSFES(N,N5,N4)+XQSCAO(N,N5,N4)+XQSCAC(N,N5,N4)
-     3+XQSCAS(N,N5,N4)+XQSMGO(N,N5,N4)+XQSMGC(N,N5,N4)+XQSMGS(N,N5,N4)
-     4+XQSNAC(N,N5,N4)+XQSNAS(N,N5,N4)+XQSKAS(N,N5,N4)+XQSC0P(N,N5,N4)) 
-      SS3=XN*3.0*(XQRAL2(N,N5,N4)+XQRFE2(N,N5,N4)+XQRCAH(N,N5,N4)
-     2+XQRMGH(N,N5,N4)+XQRF1P(N,N5,N4)+XQRC1P(N,N5,N4)+XQRM1P(N,N5,N4)
-     3+XQSAL2(N,N5,N4)+XQSFE2(N,N5,N4)+XQSCAH(N,N5,N4)+XQSMGH(N,N5,N4)
-     2+XQSF1P(N,N5,N4)+XQSC1P(N,N5,N4)+XQSM1P(N,N5,N4)) 
-      SS4=XN*4.0*(XQRAL3(N,N5,N4)+XQRFE3(N,N5,N4)+XQRH3P(N,N5,N4)
-     2+XQRF2P(N,N5,N4)+XQRC2P(N,N5,N4)+XQSAL3(N,N5,N4)+XQSFE3(N,N5,N4)
-     3+XQSH3P(N,N5,N4)+XQSF2P(N,N5,N4)+XQSC2P(N,N5,N4))
-     5+XN*5.0*(XQRAL4(N,N5,N4)+XQRFE4(N,N5,N4)
-     6+XQSAL4(N,N5,N4)+XQSFE4(N,N5,N4))
       SSR=SS1+SS2+SS3+SS4
       TIONOU=TIONOU-SSR
       UIONOU(NY,NX)=UIONOU(NY,NX)-SSR
 C     WRITE(20,3336)'SSR',I,J,N,N5,N4,SSR,SS1,SS2,SS3,SS4,TIONOU
 3336  FORMAT(A8,5I6,20F16.9)
 C
-C     SURFACE FLUX ELECTRICAL CONDUCTIVITY
+C     SURFACE RUNOFF ELECTRICAL CONDUCTIVITY
 C
-      WX=QR(N,N5,N4)
+C     QR=surface runoff from watsub.f
+C     XQR*=solute in runoff from trnsfrs.f
+C     ECNDQ=electrical conductivity of runoff
+C
+      WX=QR(N,NN,N5,N4)
       IF(ABS(WX).GT.ZEROS(N5,N4))THEN
-      ECHY=0.337*AMAX1(0.0,XQRHY(N,N5,N4)/WX)
-      ECOH=0.192*AMAX1(0.0,XQROH(N,N5,N4)/WX)
-      ECAL=0.056*AMAX1(0.0,XQRAL(N,N5,N4)*3.0/WX)
-      ECFE=0.051*AMAX1(0.0,XQRFE(N,N5,N4)*3.0/WX)
-      ECCA=0.060*AMAX1(0.0,XQRCA(N,N5,N4)*2.0/WX)
-      ECMG=0.053*AMAX1(0.0,XQRMG(N,N5,N4)*2.0/WX)
-      ECNA=0.050*AMAX1(0.0,XQRNA(N,N5,N4)/WX)
-      ECKA=0.070*AMAX1(0.0,XQRKA(N,N5,N4)/WX)
-      ECCO=0.072*AMAX1(0.0,XQRC3(N,N5,N4)*2.0/WX)
-      ECHC=0.044*AMAX1(0.0,XQRHC(N,N5,N4)/WX)
-      ECSO=0.080*AMAX1(0.0,XQRSO(N,N5,N4)*2.0/WX)
-      ECCL=0.076*AMAX1(0.0,XQRCL(N,N5,N4)/WX)
-      ECNO=0.071*AMAX1(0.0,XNOQRW(N,N5,N4)/(WX*14.0))
+      ECHY=0.337*AMAX1(0.0,XQRHY(N,NN,N5,N4)/WX)
+      ECOH=0.192*AMAX1(0.0,XQROH(N,NN,N5,N4)/WX)
+      ECAL=0.056*AMAX1(0.0,XQRAL(N,NN,N5,N4)*3.0/WX)
+      ECFE=0.051*AMAX1(0.0,XQRFE(N,NN,N5,N4)*3.0/WX)
+      ECCA=0.060*AMAX1(0.0,XQRCA(N,NN,N5,N4)*2.0/WX)
+      ECMG=0.053*AMAX1(0.0,XQRMG(N,NN,N5,N4)*2.0/WX)
+      ECNA=0.050*AMAX1(0.0,XQRNA(N,NN,N5,N4)/WX)
+      ECKA=0.070*AMAX1(0.0,XQRKA(N,NN,N5,N4)/WX)
+      ECCO=0.072*AMAX1(0.0,XQRC3(N,NN,N5,N4)*2.0/WX)
+      ECHC=0.044*AMAX1(0.0,XQRHC(N,NN,N5,N4)/WX)
+      ECSO=0.080*AMAX1(0.0,XQRSO(N,NN,N5,N4)*2.0/WX)
+      ECCL=0.076*AMAX1(0.0,XQRCL(N,NN,N5,N4)/WX)
+      ECNO=0.071*AMAX1(0.0,XNOQRW(N,NN,N5,N4)/(WX*14.0))
       ECNDQ=ECHY+ECOH+ECAL+ECFE+ECCA+ECMG+ECNA+ECKA
      2+ECCO+ECHC+ECSO+ECCL+ECNO
-C     WRITE(*,9991)'ECNDQ',IYRC,I,J,N4,N5,N6,N,WX,ECNDQ
+C     WRITE(*,9991)'ECNDQ',IYRC,I,J,N4,N5,N,NN,WX,ECNDQ
 9991  FORMAT(A8,7I4,2E12.4)
       ELSE
       ECNDQ=0.0
       ENDIF
       ENDIF
 C
-C     RUNOFF BOUNDARY FLUXES OF SEDIMENT
+C     RUNOFF BOUNDARY FLUXES OF SEDIMENT FROM EROSION
+C
+C     IRSNG=erosion flag
+C     *ER=sediment flux from erosion.f
+C     sediment code:XSED=total,XSAN=sand,XSIL=silt,XCLA=clay
+C     TSEDOU,USEDOU=cumulative sediment loss through lateral and lower boundaries
 C
       IF(N.NE.3.AND.IERSNG.EQ.1.OR.IERSNG.EQ.3)THEN
-      IF(ABS(XSEDER(N,N5,N4)).GT.ZEROS(NY,NX))THEN
-      ER=XN*(XSANER(N,N5,N4)+XSILER(N,N5,N4)+XCLAER(N,N5,N4))
+      IF(ABS(XSEDER(N,NN,N5,N4)).GT.ZEROS(N5,N4))THEN
+      ER=XN*XSEDER(N,NN,N5,N4)
       TSEDOU=TSEDOU-ER
       USEDOU(NY,NX)=USEDOU(NY,NX)-ER
 C
+C
+C     RUNOFF BOUNDARY FLUXES OF ORGANIC MATTER FROM EROSION
+C
+C     *ER=sediment flux from erosion.f
+C     sediment code:OMC,OMN,OMP=microbial C,N,P; ORC=microbial residue C,N,P
+C                  :OHC,OHN,OHP=adsorbed C,N,P; OSC,OSN,OSP=humus C,N,P
+C     TSEDOU,USEDOU=cumulative sediment loss through lateral and lower boundaries
+C     UDOCQ,UDICQ=dissolved organic,inorganic C loss through lateral and lower boundaries  
+C     UDONQ,UDINQ=dissolved organic,inorganic N loss through lateral and lower boundaries  
+C     UDOPQ,UDIPQ=dissolved organic,inorganic P loss through lateral and lower boundaries  
+C     TCOU,TZOU,TPOU=total C,N,P loss through lateral and lower boundaries
+C
 C     MICROBIAL C IN RUNOFF SEDIMENT
 C
-      CQE=0.0
       CXE=0.0
+      ZXE=XN*14.0*(XN4ER(N,NN,N5,N4)+XNBER(N,NN,N5,N4))
+      ZPE=XN*14.0*(XNH4ER(N,NN,N5,N4)+XNH3ER(N,NN,N5,N4)
+     2+XNHUER(N,NN,N5,N4)+XNO3ER(N,NN,N5,N4)+XNH4EB(N,NN,N5,N4)
+     3+XNH3EB(N,NN,N5,N4)+XNHUEB(N,NN,N5,N4)+XNO3EB(N,NN,N5,N4))
+      PXE=XN*31.0*(XH1PER(N,NN,N5,N4)+XH2PER(N,NN,N5,N4)
+     4+XH1PEB(N,NN,N5,N4)+XH2PEB(N,NN,N5,N4))
+      PPE=XN*(31.0*(PALPER(N,NN,N5,N4)+PFEPER(N,NN,N5,N4)
+     2+PCPDER(N,NN,N5,N4)+PALPEB(N,NN,N5,N4)
+     3+PFEPEB(N,NN,N5,N4)+PCPDEB(N,NN,N5,N4))
+     7+62.0*(PCPMER(N,NN,N5,N4)+PCPMEB(N,NN,N5,N4))
+     8+93.0*(PCPHER(N,NN,N5,N4)+PCPHEB(N,NN,N5,N4)))
+      COE=0.0
+      ZOE=0.0
+      POE=0.0
       DO 3580 K=0,5
       DO 3580 NO=1,7
       DO 3580 M=1,3
-      CQE=CQE+XN*OMCER(M,NO,K,N,N5,N4)
+      COE=COE+XN*OMCER(M,NO,K,N,NN,N5,N4)
+      ZOE=ZOE+XN*OMNER(M,NO,K,N,NN,N5,N4)
+      POE=POE+XN*OMPER(M,NO,K,N,NN,N5,N4)
 3580  CONTINUE
 C
 C     MICROBIAL RESIDUE C IN RUNOFF SEDIMENT
 C
       DO 3575 K=0,4
       DO 3570 M=1,2
-      CQE=CQE+XN*ORCER(M,K,N,N5,N4)
+      COE=COE+XN*ORCER(M,K,N,NN,N5,N4)
+      ZOE=ZOE+XN*ORNER(M,K,N,NN,N5,N4)
+      POE=POE+XN*ORPER(M,K,N,NN,N5,N4)
 3570  CONTINUE
 C
 C     DOC, ADSORBED AND HUMUS C IN RUNOFF SEDIMENT
 C
-      CQE=CQE+XN*(OHCER(K,N,N5,N4)+OHAER(K,N,N5,N4))
+      COE=COE+XN*(OHCER(K,N,NN,N5,N4)+OHAER(K,N,NN,N5,N4))
+      ZOE=ZOE+XN*OHNER(K,N,NN,N5,N4)
+      POE=POE+XN*OHPER(K,N,NN,N5,N4)
       DO 3565 M=1,4
-      CQE=CQE+XN*OSCER(M,K,N,N5,N4)
+      COE=COE+XN*OSCER(M,K,N,NN,N5,N4)
+      ZOE=ZOE+XN*OSNER(M,K,N,NN,N5,N4)
+      POE=POE+XN*OSPER(M,K,N,NN,N5,N4)
 3565  CONTINUE
 3575  CONTINUE
-      TCOU=TCOU-CQE-CXE
-      UDOCQ(NY,NX)=UDOCQ(NY,NX)-CQE
+      TCOU=TCOU-COE-CXE
+      TZOU=TZOU-ZOE-ZXE-ZPE
+      TPOU=TPOU-POE-PXE-PPE
+      UDOCQ(NY,NX)=UDOCQ(NY,NX)-COE
       UDICQ(NY,NX)=UDICQ(NY,NX)-CXE
-      TSEDOU=TSEDOU-CQE*1.0E-06
-      USEDOU(NY,NX)=USEDOU(NY,NX)-CQE*1.0E-06
+      UDONQ(NY,NX)=UDONQ(NY,NX)-ZOE
+      UDINQ(NY,NX)=UDINQ(NY,NX)-ZXE-ZPE
+      UDOPQ(NY,NX)=UDOPQ(NY,NX)-POE
+      UDIPQ(NY,NX)=UDIPQ(NY,NX)-PXE-PPE
+C     WRITE(*,6635)'POE',I,J,N4,N5,N,NN
+C    2,COE,CXE,ZOE,ZXE,ZPE
+C    3,POE,PXE,PPE,TPOU,XSEDER(N,NN,N5,N4) 
+C    3,XN,TCOU,TZOU,TPOU
+6635  FORMAT(A8,6I4,20F17.8)
 C
-C     MICROBIAL N IN RUNOFF SEDIMENT
+C     ADSORBED AND PRECIPITATED SALTS IN RUNOFF SEDIMENTS
 C
-      ZXE=0.0
-      ZGE=0.0
-      ZQE=0.0
-      DO 6880 K=0,5
-      DO 6880 NO=1,7
-      DO 6880 M=1,2
-      ZQE=ZQE+XN*OMNER(M,NO,K,N,N5,N4)
-6880  CONTINUE
-C
-C     MICROBIAL RESIDUE N IN RUNOFF SEDIMENT
-C
-      DO 6875 K=0,4
-      DO 6870 M=1,2
-      ZQE=ZQE+XN*ORNER(M,K,N,N5,N4)
-6870  CONTINUE
-C
-C     DON, ADSORBED AND HUMUS N IN RUNOFF SEDIMENT
-C
-      ZQE=ZQE+XN*OHNER(K,N,N5,N4)
-      DO 6865 M=1,4
-      ZQE=ZQE+XN*OSNER(M,K,N,N5,N4)
-6865  CONTINUE
-6875  CONTINUE
-      TZOU=TZOU-ZQE-ZXE-ZGE
-      UDONQ(NY,NX)=UDONQ(NY,NX)-ZQE
-      UDINQ(NY,NX)=UDINQ(NY,NX)-ZXE
-C
-C     MICROBIAL P IN RUNOFF SEDIMENT
-C
-      PXE=0.0
-      PQE=0.0
-      DO 6780 K=0,5
-      DO 6780 NO=1,7
-      DO 6780 M=1,2
-      PQE=PQE+XN*OMPER(M,NO,K,N,N5,N4)
-6780  CONTINUE
-C
-C     MICROBIAL RESIDUE P IN RUNOFF SEDIMENT
-C
-      DO 6775 K=0,4
-      DO 6770 M=1,2
-      PQE=PQE+XN*ORPER(M,K,N,N5,N4)
-6770  CONTINUE
-C
-C     DOP, ADSORBED AND HUMUS P IN RUNOFF SEDIMENT
-C
-      PQE=PQE+XN*OHPER(K,N,N5,N4)
-      DO 6765 M=1,4
-      PQE=PQE+XN*OSPER(M,K,N,N5,N4)
-6765  CONTINUE
-6775  CONTINUE
-      TPOU=TPOU-PQE-PXE
-      UDOPQ(NY,NX)=UDOPQ(NY,NX)-PQE
-      UDIPQ(NY,NX)=UDIPQ(NY,NX)-PXE
-C
-C     SOLUTES IN RUNOFF SEDIMENTS
+C     ISALTG=salt flag
+C     *ER=sediment flux from erosion.f
+C     sediment code
+C       :NH4,NH3,NHU,NO3=fertilizer NH4,NH3,urea,NO3 in non-band
+C       :NH4B,NH3B,NHUB,NO3B=fertilizer NH4,NH3,urea,NO3 in band
+C       :XN4,XNB=adsorbed NH4 in non-band,band
+C       :XHY,XAL,XFE,XCA,XMG,XNA,XKA,XHC,AL2,FE2
+C        =adsorbed H,Al,Fe,Ca,Mg,Na,K,HCO3,AlOH2,FeOH2
+C       :XOH0,XOH1,XOH2=adsorbed R-,R-OH,R-OH2 in non-band
+C       :XOH0B,XOH1B,XOH2B=adsorption sites R-,R-OH,R-OH2 in band
+C       :XH1P,XH2P=adsorbed HPO4,H2PO4 in non-band
+C       :XH1PB,XP2PB=adsorbed HPO4,H2PO4 in band
+C       :PALO,PFEO=precip AlOH,FeOH 
+C       :PCAC,PCAS=precip CaCO3,CaSO4
+C       :PALP,PFEP=precip AlPO4,FEPO4 in non-band
+C       :PALPB,PFEPB=precip AlPO4,FEPO4 in band
+C       :PCPM,PCPD,PCPH=precip CaH2PO4,CaHPO4,apatite in non-band
+C       :PCPMB,PCPDB,PCPHB=precip CaH2PO4,CaHPO4,apatite in band
+C     TIONOU,UIONOU=total salt loss through lateral and lower boundaries
 C
       IF(ISALTG.NE.0)THEN
-      SQ1=XN*(XOH0ER(N,N5,N4)
-     5+XOH0EB(N,N5,N4)+XHYER(N,N5,N4)+XALER(N,N5,N4)+XCAER(N,N5,N4)
-     6+XMGER(N,N5,N4)+XNAER(N,N5,N4)+XKAER(N,N5,N4)+XHCER(N,N5,N4)
-     7+XNH3ER(N,N5,N4)+XNHUER(N,N5,N4)+XNO3ER(N,N5,N4)+XNH3EB(N,N5,N4)
-     8+XNHUEB(N,N5,N4)+XNO3EB(N,N5,N4))
-      SQ2=XN*2.0*(XN4ER(N,N5,N4)
-     6+XNBER(N,N5,N4)+XOH1ER(N,N5,N4)+XOH1EB(N,N5,N4)+PCACER(N,N5,N4)
-     7+PCASER(N,N5,N4)+PALPER(N,N5,N4)+PFEPER(N,N5,N4)+PALPEB(N,N5,N4)
-     8+PFEPEB(N,N5,N4)+XNH4ER(N,N5,N4)+XNH4EB(N,N5,N4))
-      SQ3=XN*3.0*(XAL2ER(N,N5,N4)
-     4+XOH2ER(N,N5,N4)+XH1PER(N,N5,N4)+XOH2EB(N,N5,N4)+XH1PEB(N,N5,N4)
-     5+PCPDER(N,N5,N4)+PCPDEB(N,N5,N4))
-      SQ4=XN*4.0*(XH2PER(N,N5,N4)+XH2PEB(N,N5,N4)+PALOER(N,N5,N4)
-     4+PFEOER(N,N5,N4))
-     6+XN*7.0*(PCPMER(N,N5,N4)+PCPMEB(N,N5,N4))
-     7+XN*9.0*(PCPHER(N,N5,N4)+PCPHEB(N,N5,N4))
-      SQE=SQ1+SQ2+SQ3+SQ4
-      TIONOU=TIONOU-SQE
-      UIONOU(NY,NX)=UIONOU(NY,NX)-SQE
+      SEF=XN*(XNH3ER(N,NN,N5,N4)+XNHUER(N,NN,N5,N4)+XNO3ER(N,NN,N5,N4)
+     5+XNH3EB(N,NN,N5,N4)+XNHUEB(N,NN,N5,N4)+XNO3EB(N,NN,N5,N4))
+     2+2.0*(XNH4ER(N,NN,N5,N4)+XNH4EB(N,NN,N5,N4))
+      SEX=XN*(XHYER(N,NN,N5,N4)+XALER(N,NN,N5,N4)
+     2+XFEER(N,NN,N5,N4)+XCAER(N,NN,N5,N4)+XMGER(N,NN,N5,N4) 
+     3+XNAER(N,NN,N5,N4)+XKAER(N,NN,N5,N4)+XHCER(N,NN,N5,N4)
+     4+XOH0ER(N,NN,N5,N4)+XOH0EB(N,NN,N5,N4))
+     5+XN*2.0*(XN4ER(N,NN,N5,N4)+XNBER(N,NN,N5,N4)
+     6+XOH1ER(N,NN,N5,N4)+XOH1EB(N,NN,N5,N4))
+     7+XN*3.0*(XAL2ER(N,NN,N5,N4)+XFE2ER(N,NN,N5,N4)
+     8+XOH2ER(N,NN,N5,N4)+XOH2EB(N,NN,N5,N4)
+     9+XH1PER(N,NN,N5,N4)+XH1PEB(N,NN,N5,N4))
+     1+XN*4.0*(XH2PER(N,NN,N5,N4)+XH2PEB(N,NN,N5,N4))
+      SEP=XN*2.0*(PCACER(N,NN,N5,N4)+PCASER(N,NN,N5,N4)
+     2+PALPER(N,NN,N5,N4)+PFEPER(N,NN,N5,N4) 
+     3+PALPEB(N,NN,N5,N4)+PFEPEB(N,NN,N5,N4)) 
+     4+XN*3.0*(PCPDER(N,NN,N5,N4)+PCPDEB(N,NN,N5,N4)) 
+     5+XN*4.0*(PALOER(N,NN,N5,N4)+PFEOER(N,NN,N5,N4))
+     6+XN*7.0*(PCPMER(N,NN,N5,N4)+PCPMEB(N,NN,N5,N4))
+     7+XN*9.0*(PCPHER(N,NN,N5,N4)+PCPHEB(N,NN,N5,N4))
+      SET=SEF+SEX+SEP
+      TIONOU=TIONOU-SET
+      UIONOU(NY,NX)=UIONOU(NY,NX)-SET
+C     WRITE(*,3342)'SET',I,J,N4,N5,NN,N,SET,SEF,SEX,SEP,TIONOU
+3342  FORMAT(A8,6I4,12F18.6) 
       ENDIF
       ENDIF
       ENDIF
@@ -630,13 +848,17 @@ C
 C
 C     SUBSURFACE BOUNDARY FLUXES OF WATER AND HEAT
 C
+C     FLW,FLWH,HFLW=micropore,macropore,heat flux through lateral and lower boundaries from watsub.f
+C     VOLWOU,HEATOU=cumulative water, heat loss through lateral and lower boundaries
+C     UVOLO,HVOLO=cumulative,hourly water loss through lateral and lower boundaries
+C
       IF(NCN(NY,NX).NE.3.OR.N.EQ.3)THEN
       HEATOU=HEATOU-XN*HFLW(N,N6,N5,N4)
       WO=XN*(FLW(N,N6,N5,N4)+FLWH(N,N6,N5,N4))
       IF(WO.NE.0)THEN
       VOLWOU=VOLWOU-WO
-      HVOLO(NY,NX)=HVOLO(NY,NX)-WO
-      UVOLO(NY,NX)=UVOLO(NY,NX)-WO
+      HVOLO(N2,N1)=HVOLO(N2,N1)-WO
+      UVOLO(N2,N1)=UVOLO(N2,N1)-WO
 C     IF((I/10)*10.EQ.I.AND.J.EQ.15)THEN
 C     WRITE(*,3488)'UVOLO',I,J,N6,N5,N4,N,XN,WO
 C    2,UVOLO(NY,NX),FLW(N,N6,N5,N4),FLWH(N,N6,N5,N4)
@@ -645,33 +867,36 @@ C     ENDIF
 C
 C     SUBSURFACE BOUNDARY FLUXES OF CO2 AND DOC
 C
+C     X*FLS,X*FHS=solute flux in macropores,micropores from trnsfr.f
+C     X*FLG=convective+diffusive gas flux from trnsfr.f 
+C     TCOU=cumulative C loss through lateral and lower boundaries
+C     UDOCD,UDICD=dissolved organic,inorganic C loss through subsurface boundaries  
+C
+C     SUBSURFACE BOUNDARY FLUXES OF N2O, N2, NH4, NH3, NO3, NO2 AND DON
+C
+C     X*FLS,X*FHS,X*FLB,X*FHB=solute flux in macropores,micropores in non-band,band from trnsfr.f
+C     X*FLG=convective+diffusive gas flux from trnsfr.f 
+C     TZOU=cumulative N loss through lateral and lower boundaries
+C     UDOND,UDIND=dissolved organic,inorganic N loss through subsurface boundaries  
+C
+C     SUBSURFACE BOUNDARY FLUXES OF PO4 AND DOP
+C
+C     X*FLS,X*FHS,X*FLB,X*FHB=solute flux in macropores,micropores in non-band,band from trnsfr.f
+C     TPOU=cumulative P loss through lateral and lower boundaries
+C     UDOPD,UDIPD=dissolved organic,inorganic P loss through subsurface boundaries  
+C
       COD=0.0
+      ZOD=0.0
+      POD=0.0
       DO 450 K=0,4
       COD=COD+XN*(XOCFLS(K,N,N6,N5,N4)+XOAFLS(K,N,N6,N5,N4)
      4+XOCFHS(K,N,N6,N5,N4)+XOAFHS(K,N,N6,N5,N4))
+      ZOD=ZOD+XN*(XONFLS(K,N,N6,N5,N4)+XONFHS(K,N,N6,N5,N4))
+      POD=POD+XN*(XOPFLS(K,N,N6,N5,N4)+XOPFHS(K,N,N6,N5,N4))
 450   CONTINUE
       CXD=XN*(XCOFLS(N,N6,N5,N4)+XCOFHS(N,N6,N5,N4)
      2+XCOFLG(N,N6,N5,N4)+XCHFLS(N,N6,N5,N4)
      3+XCHFHS(N,N6,N5,N4)+XCHFLG(N,N6,N5,N4))
-      TCOU=TCOU-COD-CXD
-      UDOCD(NY,NX)=UDOCD(NY,NX)-COD
-      UDICD(NY,NX)=UDICD(NY,NX)-CXD
-C
-C     SUBSURFACE BOUNDARY FLUXES OF O2
-C
-      OOD=XN*(XOXFLS(N,N6,N5,N4)+XOXFHS(N,N6,N5,N4)
-     2+XOXFLG(N,N6,N5,N4))
-      OXYGOU=OXYGOU-OOD
-      HOD=XN*(XHGFLS(N,N6,N5,N4)+XHGFHS(N,N6,N5,N4)
-     2+XHGFLG(N,N6,N5,N4))
-      H2GOU=H2GOU-HOD
-C
-C     SUBSURFACE BOUNDARY FLUXES OF N2O, N2, NH4, NH3, NO3, NO2 AND DON
-C
-      ZOD=0.0
-      DO 455 K=0,4
-      ZOD=ZOD+XN*(XONFLS(K,N,N6,N5,N4)+XONFHS(K,N,N6,N5,N4))
-455   CONTINUE
       ZXD=XN*(XN4FLW(N,N6,N5,N4)+XN3FLW(N,N6,N5,N4)+XNOFLW(N,N6,N5,N4) 
      2+XN4FLB(N,N6,N5,N4)+XN3FLB(N,N6,N5,N4)+XNOFLB(N,N6,N5,N4)
      3+XNXFLS(N,N6,N5,N4)+XNXFLB(N,N6,N5,N4)
@@ -681,24 +906,39 @@ C
       ZGD=XN*(XNGFLS(N,N6,N5,N4)+XNGFLG(N,N6,N5,N4)+XNGFHS(N,N6,N5,N4)
      2+XN2FLS(N,N6,N5,N4)+XN2FLG(N,N6,N5,N4)+XN2FHS(N,N6,N5,N4) 
      3+XN3FLG(N,N6,N5,N4))
-      TZOU=TZOU-ZOD-ZXD-ZGD
-      UDOND(NY,NX)=UDOND(NY,NX)-ZOD
-      UDIND(NY,NX)=UDIND(NY,NX)-ZXD
-C
-C     SUBSURFACE BOUNDARY FLUXES OF PO4 AND DOP
-C
-      POD=0.0
-      DO 460 K=0,4
-      POD=POD+XN*(XOPFLS(K,N,N6,N5,N4)+XOPFHS(K,N,N6,N5,N4))
-460   CONTINUE
       PXD=XN*(XH2PFS(N,N6,N5,N4)+XH2BFB(N,N6,N5,N4)
      2+XH2PHS(N,N6,N5,N4)+XH2BHB(N,N6,N5,N4)+XH1PFS(N,N6,N5,N4)
      3+XH1BFB(N,N6,N5,N4)+XH1PHS(N,N6,N5,N4)+XH1BHB(N,N6,N5,N4))
+      TCOU=TCOU-COD-CXD
+      TZOU=TZOU-ZOD-ZXD-ZGD
       TPOU=TPOU-POD-PXD
-      UDOPD(NY,NX)=UDOPD(NY,NX)-POD
-      UDIPD(NY,NX)=UDIPD(NY,NX)-PXD
+      UDOCD(N2,N1)=UDOCD(N2,N1)-COD
+      UDICD(N2,N1)=UDICD(N2,N1)-CXD
+      UDOND(N2,N1)=UDOND(N2,N1)-ZOD
+      UDIND(N2,N1)=UDIND(N2,N1)-ZXD
+      UDOPD(N2,N1)=UDOPD(N2,N1)-POD
+      UDIPD(N2,N1)=UDIPD(N2,N1)-PXD
+C
+C     SUBSURFACE BOUNDARY FLUXES OF O2
+C
+C     X*FLS,X*FHS=solute flux in macropores,micropores from trnsfr.f
+C     X*FLG=convective+diffusive gas flux from trnsfr.f 
+C     OXYGOU,H2GOU=cumulative O2,H2 loss through lateral and lower boundaries
+C
+      OOD=XN*(XOXFLS(N,N6,N5,N4)+XOXFHS(N,N6,N5,N4)
+     2+XOXFLG(N,N6,N5,N4))
+      OXYGOU=OXYGOU-OOD
+      HOD=XN*(XHGFLS(N,N6,N5,N4)+XHGFHS(N,N6,N5,N4)
+     2+XHGFLG(N,N6,N5,N4))
+      H2GOU=H2GOU-HOD
 C
 C     SUBSURFACE BOUNDARY FLUXES OF SOLUTES
+C
+C     X*FLS=hourly convective + diffusive solute flux through micropores from trnsfrs.f
+C     X*FLW,X*FLB= hourly convective + diffusive solute flux through micropores in non-band,band from trnsfrs.f
+C     X*FHS=hourly convective + diffusive solute flux through macropores from trnsfrs.f
+C     X*FHW,X*FHB= hourly convective + diffusive solute flux through macropores in non-band,band from trnsfrs.f
+C     TIONOU,UIONOU=total salt loss through lateral and lower boundaries
 C
       IF(ISALTG.NE.0)THEN
       PQD=XN*31.0*(XH0PFS(N,N6,N5,N4)+XH0BFB(N,N6,N5,N4)
@@ -754,7 +994,7 @@ C
      9+5.0*(XAL4HS(N,N6,N5,N4)+XAL4HS(N,N6,N5,N4)))
       SO=SSD+SHD
       TIONOU=TIONOU-SO
-      UIONOU(NY,NX)=UIONOU(NY,NX)-SO
+      UIONOU(N2,N1)=UIONOU(N2,N1)-SO
 C     IF(I.EQ.180.AND.J.EQ.12)THEN
 C     WRITE(*,3337)'SSD',I,J,N,N6,N5,N4,SSD
 C    2,XALFLS(N,N6,N5,N4),XFEFLS(N,N6,N5,N4),XHYFLS(N,N6,N5,N4)
@@ -781,8 +1021,15 @@ C     ENDIF
 C
 C     SUBSURFACE FLUX ELECTRICAL CONDUCTIVITY
 C
+C     FLW,FLWH=micropore,macropore flux through lateral and lower boundaries from watsub.f
+C     X*FLS=hourly convective + diffusive solute flux through micropores from trnsfrs.f
+C     X*FLW,X*FLB= hourly convective + diffusive solute flux through micropores in non-band,band from trnsfrs.f
+C     X*FHS=hourly convective + diffusive solute flux through macropores from trnsfrs.f
+C     X*FHW,X*FHB= hourly convective + diffusive solute flux through macropores in non-band,band from trnsfrs.f
+C     ECNDQ=electrical conductivity of water flux
+C
       WX=FLW(N,N6,N5,N4)+FLWH(N,N6,N5,N4)
-      IF(ABS(WX).GT.ZEROS(NY,NX))THEN
+      IF(ABS(WX).GT.ZEROS(N2,N1))THEN
       ECHY=0.337*AMAX1(0.0,(XHYFLS(N,N6,N5,N4)
      2+XHYFHS(N,N6,N5,N4))/WX)
       ECOH=0.192*AMAX1(0.0,(XOHFLS(N,N6,N5,N4)
@@ -824,10 +1071,69 @@ C     ENDIF
       ENDIF
       ENDIF
 9975  CONTINUE
+C
+C     WATER, HEAT, SOLUTES IN SNOW DRIFT
+C
+      IF(N.NE.3.AND.L.EQ.NU(NY,NX))THEN
+      WQRS=XN*(QS(N,N5,N4)+QW(N,N5,N4)+QI(N,N5,N4))
+      IF(ABS(WQRS).GT.ZEROS(N5,N4))THEN
+      CRUN=CRUN-WQRS
+      URUN(NY,NX)=URUN(NY,NX)-WQRS
+      HQRS=XN*HQS(N,N5,N4)
+      HEATOU=HEATOU-HQRS 
+      CXS=XN*(XCOQSS(N,N5,N4)+XCHQSS(N,N5,N4))
+      ZXS=XN*(XN4QSS(N,N5,N4)+XN3QSS(N,N5,N4)+XNOQSS(N,N5,N4))
+      ZGS=XN*(XN2QSS(N,N5,N4)+XNGQSS(N,N5,N4))
+      PXS=XN*(XP4QSS(N,N5,N4)+XP1QSS(N,N5,N4))
+      TCOU=TCOU-CXS
+      TZOU=TZOU-ZXS-ZGS 
+      TPOU=TPOU-PXS
+      UDICQ(NY,NX)=UDICQ(NY,NX)-CXR
+      UDINQ(NY,NX)=UDINQ(NY,NX)-ZXR-ZGR
+      UDIPQ(NY,NX)=UDIPQ(NY,NX)-PXR
+      OXS=XN*XOXQSS(N,N5,N4)
+      OXYGOU=OXYGOU-OXS 
+      IF(ISALTG.NE.0)THEN
+      PSS=XN*31.0*(XQSC0P(N,N5,N4)+XQSF1P(N,N5,N4)+XQSC1P(N,N5,N4)
+     2+XQSM1P(N,N5,N4)+XQSH3P(N,N5,N4)+XQSF2P(N,N5,N4)
+     3+XQSC2P(N,N5,N4))
+      TPOU=TPOU-PSS
+      SS1=XN*(XQSAL(N,N5,N4)+XQSFE(N,N5,N4)
+     2+XQSHY(N,N5,N4)+XQSCA(N,N5,N4)+XQSMG(N,N5,N4)+XQSNA(N,N5,N4)
+     3+XQSKA(N,N5,N4)+XQSOH(N,N5,N4)+XQSSO(N,N5,N4)+XQSCL(N,N5,N4)
+     4+XQSC3(N,N5,N4)+XQSH0P(N,N5,N4)) 
+      SS2=XN*2.0*(XQSHC(N,N5,N4)+XQSAL1(N,N5,N4)+XQSALS(N,N5,N4)
+     2+XQSFE1(N,N5,N4)+XQSFES(N,N5,N4)+XQSCAO(N,N5,N4)+XQSCAC(N,N5,N4)
+     3+XQSCAS(N,N5,N4)+XQSMGO(N,N5,N4)+XQSMGC(N,N5,N4)+XQSMGS(N,N5,N4)
+     4+XQSNAC(N,N5,N4)+XQSNAS(N,N5,N4)+XQSKAS(N,N5,N4)+XQSC0P(N,N5,N4)) 
+      SS3=XN*3.0*(XQSAL2(N,N5,N4)+XQSFE2(N,N5,N4)+XQSCAH(N,N5,N4)
+     2+XQSMGH(N,N5,N4)+XQSF1P(N,N5,N4)+XQSC1P(N,N5,N4)+XQSM1P(N,N5,N4)) 
+      SS4=XN*4.0*(XQSAL3(N,N5,N4)+XQSFE3(N,N5,N4)
+     2+XQSH3P(N,N5,N4)+XQSF2P(N,N5,N4)+XQSC2P(N,N5,N4))
+     5+XN*5.0*(XQSAL4(N,N5,N4)+XQSFE4(N,N5,N4))
+      SSR=SS1+SS2+SS3+SS4
+      TIONOU=TIONOU-SSR
+      UIONOU(NY,NX)=UIONOU(NY,NX)-SSR
+      ENDIF
+      ENDIF
+      ENDIF
 9980  CONTINUE
 9985  CONTINUE
 C
 C     CHANGE EXTERNAL WATER TABLE DEPTH THROUGH DISTURBANCE
+C
+C     ZNOON=hour of solar noon from weather file
+C     ITILL=soil disturbance type 1-20:tillage,21=litter removal,22=fire,23-24=drainage
+C     DCORP=intensity (fire) or depth (tillage,drainage) of disturbance 
+C     CDPTH(NU=soil surface elevation
+C     DTBLI,DTBLDI=depth of natural,artificial water table from readi.f
+C     DTBLX,DTBLZ=current,initial natural water table depth
+C     DTBLY,DTBLD=current,initial artificial water table depth
+C     IDTBL=water table flag from readi.f
+C        :0=none
+C        :1,2=natural stationary,mobile
+C        :3,4=artificial stationary,mobile
+C     HVOLO=hourly water loss through lateral and lower boundaries 
 C
       IF(J.EQ.INT(ZNOON(NY,NX)).AND.ITILL(I,NY,NX).EQ.23)THEN
       DCORPW=DCORP(I,NY,NX)+CDPTH(NU(NY,NX)-1,NY,NX)
@@ -852,17 +1158,16 @@ C
 C     SET DEPTH OF MOBILE EXTERNAL WATER TABLE
 C
       IF(IDTBL(NY,NX).EQ.2.OR.IDTBL(NY,NX).EQ.4)THEN
-      DTBLX(NY,NX)=DTBLX(NY,NX)-0.0*HVOLO(NY,NX)/AREA(3,NU(NY,NX),NY,NX)
-     2-0.00167*(DTBLX(NY,NX)-DTBLZ(NY,NX)-CDPTH(NU(NY,NX)-1,NY,NX))
+C     DTBLX(NY,NX)=DTBLX(NY,NX)-0.0*HVOLO(NY,NX)/AREA(3,NU(NY,NX),NY,NX)
+C    2-0.00167*(DTBLX(NY,NX)-DTBLZ(NY,NX)-CDPTH(NU(NY,NX)-1,NY,NX))
+      DTBLX(NY,NX)=DTBLZ(NY,NX)+CDPTH(NU(NY,NX)-1,NY,NX)
       ENDIF
       IF(IDTBL(NY,NX).EQ.4)THEN
       DTBLY(NY,NX)=DTBLY(NY,NX)-0.0*HVOLO(NY,NX)/AREA(3,NU(NY,NX),NY,NX)
      2-0.00167*(DTBLY(NY,NX)-DTBLD(NY,NX))
       ENDIF
 C
-C     TOTAL FLUXES FOR EACH GRID CELL FROM ALL INTERNAL AND BOUNDARY FLUXES
-C     CALCULATED IN 'WATSUB', NITRO', 'SOLUTE', 'EXTRACT', 'TRNSFR',
-C     'TRNSFRS' AND 'REDIST' ABOVE
+C     INITIALIZE NET WATER AND HEAT FLUXES FOR RUNOFF 
 C
       TQR(NY,NX)=0.0
       THQR(NY,NX)=0.0
@@ -870,6 +1175,9 @@ C
       TQW(NY,NX)=0.0
       TQI(NY,NX)=0.0
       THQS(NY,NX)=0.0
+C
+C     INITIALIZE NET SOLUTE AND GAS FLUXES FOR RUNOFF 
+C
       DO 9960 K=0,2
       TOCQRS(K,NY,NX)=0.0
       TONQRS(K,NY,NX)=0.0
@@ -993,6 +1301,9 @@ C
       TQSC1P(NY,NX)=0.0
       TQSC2P(NY,NX)=0.0
       TQSM1P(NY,NX)=0.0
+C
+C     INITIALIZE NET SOLUTE AND GAS FLUXES FROM SNOWPACK DRIFT
+C
       DO 9950 L=1,JS
       TALBLS(L,NY,NX)=0.0
       TFEBLS(L,NY,NX)=0.0
@@ -1037,6 +1348,9 @@ C
       TM1PBS(L,NY,NX)=0.0
 9950  CONTINUE
       ENDIF
+C
+C     INITIALIZE NET SEDIMENT FLUXES FROM EROSION
+C
       IF(IERSNG.EQ.1.OR.IERSNG.EQ.3)THEN
       TSEDER(NY,NX)=0.0
       TSANER(NY,NX)=0.0
@@ -1089,12 +1403,11 @@ C
       TCPHEB(NY,NX)=0.0
       TCPMEB(NY,NX)=0.0
       DO 9480 K=0,5
-      DO 9480 NN=1,7
-      TOMCER(3,NN,K,NY,NX)=0.0
-      DO 9480 M=1,2
-      TOMCER(M,NN,K,NY,NX)=0.0
-      TOMNER(M,NN,K,NY,NX)=0.0
-      TOMPER(M,NN,K,NY,NX)=0.0
+      DO 9480 NO=1,7
+      DO 9480 M=1,3
+      TOMCER(M,NO,K,NY,NX)=0.0
+      TOMNER(M,NO,K,NY,NX)=0.0
+      TOMPER(M,NO,K,NY,NX)=0.0
 9480  CONTINUE
       DO 9475 K=0,4
       DO 9470 M=1,2
@@ -1114,15 +1427,30 @@ C
 9465  CONTINUE
 9475  CONTINUE
       ENDIF
-      LG=0
-      LX=0
+C
+C     INITIALIZE NET SNOWPACK FLUXES WITHIN SNOWPACK 
+C
       DO 8475 L=1,JS
       TFLWS(L,NY,NX)=0.0
       TFLWW(L,NY,NX)=0.0
       TFLWI(L,NY,NX)=0.0
       THFLWW(L,NY,NX)=0.0  
 8475  CONTINUE
+      LG=0
+      LX=0
       DO 8575 L=NU(NY,NX),NL(NY,NX)
+C
+C     IDENTIFY LAYERS FOR BUBBLE FLUX TRANSFER
+C
+C     LG=lowest soil layer with gas phase
+C     V*G2=molar gas content
+C     *G=soil gas content
+C     VOLP=soil air-filled porosity
+C     VTATM=molar gas content at atmospheric pressure
+C     VTGAS=total molar gas contest 
+C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
+C             :*ZN3*=NH3,*H2G*=H2
+C
       VCO2G2=CO2G(L,NY,NX)/12.0
       VCH4G2=CH4G(L,NY,NX)/12.0
       VOXYG2=OXYG(L,NY,NX)/32.0
@@ -1141,6 +1469,9 @@ C    2,VOLP(L,NY,NX),TKS(L,NY,NX),VTGAS,VTATM
       VOLI1(L,NY,NX)=VOLI(L,NY,NX) 
       VOLWH1(L,NY,NX)=VOLWH(L,NY,NX)
       VOLIH1(L,NY,NX)=VOLIH(L,NY,NX)
+C
+C     INITIALIZE WATER AND HEAT NET FLUX ACCUMULATORS WITHIN SOIL
+C
       TFLW(L,NY,NX)=0.0
       TFLWX(L,NY,NX)=0.0
       TFLWH(L,NY,NX)=0.0
@@ -1148,6 +1479,9 @@ C    2,VOLP(L,NY,NX),TKS(L,NY,NX),VTGAS,VTATM
       TTHAW(L,NY,NX)=0.0
       TTHAWH(L,NY,NX)=0.0
       THTHAW(L,NY,NX)=0.0
+C
+C     INITIALIZE GAS AND SOLUTE NET FLUX ACCUMULATORS WITHIN SOIL
+C
       DO 8595 K=0,4
       TOCFLS(K,L,NY,NX)=0.0
       TONFLS(K,L,NY,NX)=0.0
@@ -1301,6 +1635,12 @@ C    2,VOLP(L,NY,NX),TKS(L,NY,NX),VTGAS,VTATM
       TC2BHB(L,NY,NX)=0.0
       TM1BHB(L,NY,NX)=0.0
       ENDIF
+C
+C     NET WATER, HEAT, GAS, SOLUTE, SEDIMENT FLUX
+C
+C     N3,N2,N1=L,NY,NX of source grid cell
+C     N6,N5,N4=L,NY,NX of destination grid cell
+C
       N1=NX
       N2=NY
       N3=L
@@ -1308,10 +1648,14 @@ C    2,VOLP(L,NY,NX),TKS(L,NY,NX),VTGAS,VTATM
       IF(N.EQ.1)THEN
       N4=NX+1
       N5=NY
+      N4B=NX-1
+      N5B=NY
       N6=L
       ELSEIF(N.EQ.2)THEN
       N4=NX
       N5=NY+1
+      N4B=NX
+      N5B=NY-1
       N6=L
       ELSEIF(N.EQ.3)THEN
       N4=NX
@@ -1319,42 +1663,106 @@ C    2,VOLP(L,NY,NX),TKS(L,NY,NX),VTGAS,VTATM
       N6=L+1
       ENDIF
 C
-C     TOTAL FLUXES FROM OVERLAND FLOW
+C     NET WATER, SNOW AND HEAT FLUXES FROM RUNOFF
 C
       IF(L.EQ.NUM(N2,N1))THEN
       IF(N.NE.3)THEN
-      TQR(N2,N1)=TQR(N2,N1)+QR(N,N2,N1)-QR(N,N5,N4)
-      THQR(N2,N1)=THQR(N2,N1)+HQR(N,N2,N1)-HQR(N,N5,N4)
+C
+C     TQR,TQS,TQW,TQI=net water and snowpack snow,water,ice runoff
+C     THQR,THQS=net convective heat from surface water and snow runoff
+C     QR,HQR=runoff, convective heat from runoff from watsub.f
+C     QS,QW,QI=snow,water,ice transfer from watsub.f
+C     HQS=convective heat transfer from snow,water,ice transfer from watsub.f
+C
+      DO 1202 NN=1,2
+      TQR(N2,N1)=TQR(N2,N1)+QR(N,NN,N2,N1) 
+      THQR(N2,N1)=THQR(N2,N1)+HQR(N,NN,N2,N1)
+      DO 8590 K=0,2
+      TOCQRS(K,N2,N1)=TOCQRS(K,N2,N1)+XOCQRS(K,N,NN,N2,N1)
+      TONQRS(K,N2,N1)=TONQRS(K,N2,N1)+XONQRS(K,N,NN,N2,N1)
+      TOPQRS(K,N2,N1)=TOPQRS(K,N2,N1)+XOPQRS(K,N,NN,N2,N1)
+      TOAQRS(K,N2,N1)=TOAQRS(K,N2,N1)+XOAQRS(K,N,NN,N2,N1)
+8590  CONTINUE
+      TCOQRS(N2,N1)=TCOQRS(N2,N1)+XCOQRS(N,NN,N2,N1)
+      TCHQRS(N2,N1)=TCHQRS(N2,N1)+XCHQRS(N,NN,N2,N1)
+      TOXQRS(N2,N1)=TOXQRS(N2,N1)+XOXQRS(N,NN,N2,N1)
+      TNGQRS(N2,N1)=TNGQRS(N2,N1)+XNGQRS(N,NN,N2,N1)
+      TN2QRS(N2,N1)=TN2QRS(N2,N1)+XN2QRS(N,NN,N2,N1)
+      THGQRS(N2,N1)=THGQRS(N2,N1)+XHGQRS(N,NN,N2,N1)
+      TN4QRS(N2,N1)=TN4QRS(N2,N1)+XN4QRW(N,NN,N2,N1)
+      TN3QRS(N2,N1)=TN3QRS(N2,N1)+XN3QRW(N,NN,N2,N1)
+      TNOQRS(N2,N1)=TNOQRS(N2,N1)+XNOQRW(N,NN,N2,N1)
+      TNXQRS(N2,N1)=TNXQRS(N2,N1)+XNXQRS(N,NN,N2,N1)
+      TP1QRS(N2,N1)=TP1QRS(N2,N1)+XP1QRW(N,NN,N2,N1)
+      TPOQRS(N2,N1)=TPOQRS(N2,N1)+XP4QRW(N,NN,N2,N1)
+      IF(IFLBH(N,NN,N5,N4).EQ.0)THEN
+      TQR(N2,N1)=TQR(N2,N1)-QR(N,NN,N5,N4)
+      THQR(N2,N1)=THQR(N2,N1)-HQR(N,NN,N5,N4)
+      DO 8591 K=0,2
+      TOCQRS(K,N2,N1)=TOCQRS(K,N2,N1)-XOCQRS(K,N,NN,N5,N4)
+      TONQRS(K,N2,N1)=TONQRS(K,N2,N1)-XONQRS(K,N,NN,N5,N4)
+      TOPQRS(K,N2,N1)=TOPQRS(K,N2,N1)-XOPQRS(K,N,NN,N5,N4)
+      TOAQRS(K,N2,N1)=TOAQRS(K,N2,N1)-XOAQRS(K,N,NN,N5,N4)
+8591  CONTINUE
+      TCOQRS(N2,N1)=TCOQRS(N2,N1)-XCOQRS(N,NN,N5,N4)
+      TCHQRS(N2,N1)=TCHQRS(N2,N1)-XCHQRS(N,NN,N5,N4)
+      TOXQRS(N2,N1)=TOXQRS(N2,N1)-XOXQRS(N,NN,N5,N4)
+      TNGQRS(N2,N1)=TNGQRS(N2,N1)-XNGQRS(N,NN,N5,N4)
+      TN2QRS(N2,N1)=TN2QRS(N2,N1)-XN2QRS(N,NN,N5,N4)
+      THGQRS(N2,N1)=THGQRS(N2,N1)-XHGQRS(N,NN,N5,N4)
+      TN4QRS(N2,N1)=TN4QRS(N2,N1)-XN4QRW(N,NN,N5,N4)
+      TN3QRS(N2,N1)=TN3QRS(N2,N1)-XN3QRW(N,NN,N5,N4)
+      TNOQRS(N2,N1)=TNOQRS(N2,N1)-XNOQRW(N,NN,N5,N4)
+      TNXQRS(N2,N1)=TNXQRS(N2,N1)-XNXQRS(N,NN,N5,N4)
+      TP1QRS(N2,N1)=TP1QRS(N2,N1)-XP1QRW(N,NN,N5,N4)
+      TPOQRS(N2,N1)=TPOQRS(N2,N1)-XP4QRW(N,NN,N5,N4)
+      ENDIF
+C     WRITE(*,6631)'TQR',I,J,N1,N2,N4,N5,N,NN
+C    2,IFLBH(N,NN,N5,N4)
+C    2,TQR(N2,N1),QR(N,NN,N2,N1),QR(N,NN,N5,N4) 
+      IF(N4B.GT.0.AND.N5B.GT.0.AND.NN.EQ.1)THEN
+      TQR(N2,N1)=TQR(N2,N1)-QR(N,NN,N5B,N4B)
+      THQR(N2,N1)=THQR(N2,N1)-HQR(N,NN,N5B,N4B)
+      DO 8592 K=0,2
+      TOCQRS(K,N2,N1)=TOCQRS(K,N2,N1)-XOCQRS(K,N,NN,N5B,N4B)
+      TONQRS(K,N2,N1)=TONQRS(K,N2,N1)-XONQRS(K,N,NN,N5B,N4B)
+      TOPQRS(K,N2,N1)=TOPQRS(K,N2,N1)-XOPQRS(K,N,NN,N5B,N4B)
+      TOAQRS(K,N2,N1)=TOAQRS(K,N2,N1)-XOAQRS(K,N,NN,N5B,N4B)
+8592  CONTINUE
+      TCOQRS(N2,N1)=TCOQRS(N2,N1)-XCOQRS(N,NN,N5B,N4B)
+      TCHQRS(N2,N1)=TCHQRS(N2,N1)-XCHQRS(N,NN,N5B,N4B)
+      TOXQRS(N2,N1)=TOXQRS(N2,N1)-XOXQRS(N,NN,N5B,N4B)
+      TNGQRS(N2,N1)=TNGQRS(N2,N1)-XNGQRS(N,NN,N5B,N4B)
+      TN2QRS(N2,N1)=TN2QRS(N2,N1)-XN2QRS(N,NN,N5B,N4B)
+      THGQRS(N2,N1)=THGQRS(N2,N1)-XHGQRS(N,NN,N5B,N4B)
+      TN4QRS(N2,N1)=TN4QRS(N2,N1)-XN4QRW(N,NN,N5B,N4B)
+      TN3QRS(N2,N1)=TN3QRS(N2,N1)-XN3QRW(N,NN,N5B,N4B)
+      TNOQRS(N2,N1)=TNOQRS(N2,N1)-XNOQRW(N,NN,N5B,N4B)
+      TNXQRS(N2,N1)=TNXQRS(N2,N1)-XNXQRS(N,NN,N5B,N4B)
+      TP1QRS(N2,N1)=TP1QRS(N2,N1)-XP1QRW(N,NN,N5B,N4B)
+      TPOQRS(N2,N1)=TPOQRS(N2,N1)-XP4QRW(N,NN,N5B,N4B)
+C     WRITE(*,6631)'TQRB',I,J,N1,N2,N4B,N5B,N,NN
+C    2,IFLBH(N,NN,N5B,N4B)
+C    2,TQR(N2,N1),QR(N,NN,N5B,N4B) 
+6631  FORMAT(A8,9I4,12E12.4) 
+      ENDIF
+1202  CONTINUE
       TQS(N2,N1)=TQS(N2,N1)+QS(N,N2,N1)-QS(N,N5,N4)
       TQW(N2,N1)=TQW(N2,N1)+QW(N,N2,N1)-QW(N,N5,N4)
       TQI(N2,N1)=TQI(N2,N1)+QI(N,N2,N1)-QI(N,N5,N4)
       THQS(N2,N1)=THQS(N2,N1)+HQS(N,N2,N1)-HQS(N,N5,N4)
-C     WRITE(*,6631)'TQR',I,J,N1,N2,N4,N5,N
-C    2,TQR(N2,N1),QR(N,N2,N1),QR(N,N5,N4),VOLW(0,N2,N1)
-C    3,VOLWRX(N2,N1),VOLWG(N2,N1)
-6631  FORMAT(A8,7I4,12E12.4) 
-      DO 8590 K=0,2
-      TOCQRS(K,N2,N1)=TOCQRS(K,N2,N1)+XOCQRS(K,N,N2,N1)
-     2-XOCQRS(K,N,N5,N4)
-      TONQRS(K,N2,N1)=TONQRS(K,N2,N1)+XONQRS(K,N,N2,N1)
-     2-XONQRS(K,N,N5,N4)
-      TOPQRS(K,N2,N1)=TOPQRS(K,N2,N1)+XOPQRS(K,N,N2,N1)
-     2-XOPQRS(K,N,N5,N4)
-      TOAQRS(K,N2,N1)=TOAQRS(K,N2,N1)+XOAQRS(K,N,N2,N1)
-     2-XOAQRS(K,N,N5,N4)
-8590  CONTINUE
-      TCOQRS(N2,N1)=TCOQRS(N2,N1)+XCOQRS(N,N2,N1)-XCOQRS(N,N5,N4)
-      TCHQRS(N2,N1)=TCHQRS(N2,N1)+XCHQRS(N,N2,N1)-XCHQRS(N,N5,N4)
-      TOXQRS(N2,N1)=TOXQRS(N2,N1)+XOXQRS(N,N2,N1)-XOXQRS(N,N5,N4)
-      TNGQRS(N2,N1)=TNGQRS(N2,N1)+XNGQRS(N,N2,N1)-XNGQRS(N,N5,N4)
-      TN2QRS(N2,N1)=TN2QRS(N2,N1)+XN2QRS(N,N2,N1)-XN2QRS(N,N5,N4)
-      THGQRS(N2,N1)=THGQRS(N2,N1)+XHGQRS(N,N2,N1)-XHGQRS(N,N5,N4)
-      TN4QRS(N2,N1)=TN4QRS(N2,N1)+XN4QRW(N,N2,N1)-XN4QRW(N,N5,N4)
-      TN3QRS(N2,N1)=TN3QRS(N2,N1)+XN3QRW(N,N2,N1)-XN3QRW(N,N5,N4)
-      TNOQRS(N2,N1)=TNOQRS(N2,N1)+XNOQRW(N,N2,N1)-XNOQRW(N,N5,N4)
-      TNXQRS(N2,N1)=TNXQRS(N2,N1)+XNXQRS(N,N2,N1)-XNXQRS(N,N5,N4)
-      TP1QRS(N2,N1)=TP1QRS(N2,N1)+XP1QRW(N,N2,N1)-XP1QRW(N,N5,N4)
-      TPOQRS(N2,N1)=TPOQRS(N2,N1)+XP4QRW(N,N2,N1)-XP4QRW(N,N5,N4)
+C
+C     NET GAS AND SOLUTE FLUXES FROM RUNOFF AND SNOWPACK
+C
+C     T*QRS=net overland solute flux from runoff
+C     X*QRS=solute in runoff from trnsfr.f
+C     T*QSS=net overland solute flux from snowpack
+C     X*QSS=solute in snowpack flux from trnsfr.f
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
+C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
+C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
+C
       TCOQSS(N2,N1)=TCOQSS(N2,N1)+XCOQSS(N,N2,N1)-XCOQSS(N,N5,N4)
       TCHQSS(N2,N1)=TCHQSS(N2,N1)+XCHQSS(N,N2,N1)-XCHQSS(N,N5,N4)
       TOXQSS(N2,N1)=TOXQSS(N2,N1)+XOXQSS(N,N2,N1)-XOXQSS(N,N5,N4)
@@ -1365,48 +1773,154 @@ C    3,VOLWRX(N2,N1),VOLWG(N2,N1)
       TNOQSS(N2,N1)=TNOQSS(N2,N1)+XNOQSS(N,N2,N1)-XNOQSS(N,N5,N4)
       TP1QSS(N2,N1)=TP1QSS(N2,N1)+XP1QSS(N,N2,N1)-XP1QSS(N,N5,N4)
       TPOQSS(N2,N1)=TPOQSS(N2,N1)+XP4QSS(N,N2,N1)-XP4QSS(N,N5,N4)
+C
+C     NET SALT FLUXES FROM RUNOFF AND SNOWPACK
+C
+C     TQR*=net overland solute flux in runoff
+C     XQR*=solute in runoff from trnsfrs.f
+C     TQS*=net overland solute flux in snow drift
+C     XQS*=solute in snow drift from trnsfrs.f
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C
       IF(ISALTG.NE.0)THEN
-      TQRAL(N2,N1)=TQRAL(N2,N1)+XQRAL(N,N2,N1)-XQRAL(N,N5,N4)
-      TQRFE(N2,N1)=TQRFE(N2,N1)+XQRFE(N,N2,N1)-XQRFE(N,N5,N4)
-      TQRHY(N2,N1)=TQRHY(N2,N1)+XQRHY(N,N2,N1)-XQRHY(N,N5,N4)
-      TQRCA(N2,N1)=TQRCA(N2,N1)+XQRCA(N,N2,N1)-XQRCA(N,N5,N4)
-      TQRMG(N2,N1)=TQRMG(N2,N1)+XQRMG(N,N2,N1)-XQRMG(N,N5,N4)
-      TQRNA(N2,N1)=TQRNA(N2,N1)+XQRNA(N,N2,N1)-XQRNA(N,N5,N4)
-      TQRKA(N2,N1)=TQRKA(N2,N1)+XQRKA(N,N2,N1)-XQRKA(N,N5,N4)
-      TQROH(N2,N1)=TQROH(N2,N1)+XQROH(N,N2,N1)-XQROH(N,N5,N4)
-      TQRSO(N2,N1)=TQRSO(N2,N1)+XQRSO(N,N2,N1)-XQRSO(N,N5,N4)
-      TQRCL(N2,N1)=TQRCL(N2,N1)+XQRCL(N,N2,N1)-XQRCL(N,N5,N4)
-      TQRC3(N2,N1)=TQRC3(N2,N1)+XQRC3(N,N2,N1)-XQRC3(N,N5,N4)
-      TQRHC(N2,N1)=TQRHC(N2,N1)+XQRHC(N,N2,N1)-XQRHC(N,N5,N4)
-      TQRAL1(N2,N1)=TQRAL1(N2,N1)+XQRAL1(N,N2,N1)-XQRAL1(N,N5,N4)
-      TQRAL2(N2,N1)=TQRAL2(N2,N1)+XQRAL2(N,N2,N1)-XQRAL2(N,N5,N4)
-      TQRAL3(N2,N1)=TQRAL3(N2,N1)+XQRAL3(N,N2,N1)-XQRAL3(N,N5,N4)
-      TQRAL4(N2,N1)=TQRAL4(N2,N1)+XQRAL4(N,N2,N1)-XQRAL4(N,N5,N4)
-      TQRALS(N2,N1)=TQRALS(N2,N1)+XQRALS(N,N2,N1)-XQRALS(N,N5,N4)
-      TQRFE1(N2,N1)=TQRFE1(N2,N1)+XQRFE1(N,N2,N1)-XQRFE1(N,N5,N4)
-      TQRFE2(N2,N1)=TQRFE2(N2,N1)+XQRFE2(N,N2,N1)-XQRFE2(N,N5,N4)
-      TQRFE3(N2,N1)=TQRFE3(N2,N1)+XQRFE3(N,N2,N1)-XQRFE3(N,N5,N4)
-      TQRFE4(N2,N1)=TQRFE4(N2,N1)+XQRFE4(N,N2,N1)-XQRFE4(N,N5,N4)
-      TQRFES(N2,N1)=TQRFES(N2,N1)+XQRFES(N,N2,N1)-XQRFES(N,N5,N4)
-      TQRCAO(N2,N1)=TQRCAO(N2,N1)+XQRCAO(N,N2,N1)-XQRCAO(N,N5,N4)
-      TQRCAC(N2,N1)=TQRCAC(N2,N1)+XQRCAC(N,N2,N1)-XQRCAC(N,N5,N4)
-      TQRCAH(N2,N1)=TQRCAH(N2,N1)+XQRCAH(N,N2,N1)-XQRCAH(N,N5,N4)
-      TQRCAS(N2,N1)=TQRCAS(N2,N1)+XQRCAS(N,N2,N1)-XQRCAS(N,N5,N4)
-      TQRMGO(N2,N1)=TQRMGO(N2,N1)+XQRMGO(N,N2,N1)-XQRMGO(N,N5,N4)
-      TQRMGC(N2,N1)=TQRMGC(N2,N1)+XQRMGC(N,N2,N1)-XQRMGC(N,N5,N4)
-      TQRMGH(N2,N1)=TQRMGH(N2,N1)+XQRMGH(N,N2,N1)-XQRMGH(N,N5,N4)
-      TQRMGS(N2,N1)=TQRMGS(N2,N1)+XQRMGS(N,N2,N1)-XQRMGS(N,N5,N4)
-      TQRNAC(N2,N1)=TQRNAC(N2,N1)+XQRNAC(N,N2,N1)-XQRNAC(N,N5,N4)
-      TQRNAS(N2,N1)=TQRNAS(N2,N1)+XQRNAS(N,N2,N1)-XQRNAS(N,N5,N4)
-      TQRKAS(N2,N1)=TQRKAS(N2,N1)+XQRKAS(N,N2,N1)-XQRKAS(N,N5,N4)
-      TQRH0P(N2,N1)=TQRH0P(N2,N1)+XQRH0P(N,N2,N1)-XQRH0P(N,N5,N4)
-      TQRH3P(N2,N1)=TQRH3P(N2,N1)+XQRH3P(N,N2,N1)-XQRH3P(N,N5,N4)
-      TQRF1P(N2,N1)=TQRF1P(N2,N1)+XQRF1P(N,N2,N1)-XQRF1P(N,N5,N4)
-      TQRF2P(N2,N1)=TQRF2P(N2,N1)+XQRF2P(N,N2,N1)-XQRF2P(N,N5,N4)
-      TQRC0P(N2,N1)=TQRC0P(N2,N1)+XQRC0P(N,N2,N1)-XQRC0P(N,N5,N4)
-      TQRC1P(N2,N1)=TQRC1P(N2,N1)+XQRC1P(N,N2,N1)-XQRC1P(N,N5,N4)
-      TQRC2P(N2,N1)=TQRC2P(N2,N1)+XQRC2P(N,N2,N1)-XQRC2P(N,N5,N4)
-      TQRM1P(N2,N1)=TQRM1P(N2,N1)+XQRM1P(N,N2,N1)-XQRM1P(N,N5,N4)
+      DO 1203 NN=1,2
+      TQRAL(N2,N1)=TQRAL(N2,N1)+XQRAL(N,NN,N2,N1)
+      TQRFE(N2,N1)=TQRFE(N2,N1)+XQRFE(N,NN,N2,N1)
+      TQRHY(N2,N1)=TQRHY(N2,N1)+XQRHY(N,NN,N2,N1)
+      TQRCA(N2,N1)=TQRCA(N2,N1)+XQRCA(N,NN,N2,N1)
+      TQRMG(N2,N1)=TQRMG(N2,N1)+XQRMG(N,NN,N2,N1)
+      TQRNA(N2,N1)=TQRNA(N2,N1)+XQRNA(N,NN,N2,N1)
+      TQRKA(N2,N1)=TQRKA(N2,N1)+XQRKA(N,NN,N2,N1)
+      TQROH(N2,N1)=TQROH(N2,N1)+XQROH(N,NN,N2,N1)
+      TQRSO(N2,N1)=TQRSO(N2,N1)+XQRSO(N,NN,N2,N1)
+      TQRCL(N2,N1)=TQRCL(N2,N1)+XQRCL(N,NN,N2,N1)
+      TQRC3(N2,N1)=TQRC3(N2,N1)+XQRC3(N,NN,N2,N1)
+      TQRHC(N2,N1)=TQRHC(N2,N1)+XQRHC(N,NN,N2,N1)
+      TQRAL1(N2,N1)=TQRAL1(N2,N1)+XQRAL1(N,NN,N2,N1)
+      TQRAL2(N2,N1)=TQRAL2(N2,N1)+XQRAL2(N,NN,N2,N1)
+      TQRAL3(N2,N1)=TQRAL3(N2,N1)+XQRAL3(N,NN,N2,N1)
+      TQRAL4(N2,N1)=TQRAL4(N2,N1)+XQRAL4(N,NN,N2,N1)
+      TQRALS(N2,N1)=TQRALS(N2,N1)+XQRALS(N,NN,N2,N1)
+      TQRFE1(N2,N1)=TQRFE1(N2,N1)+XQRFE1(N,NN,N2,N1)
+      TQRFE2(N2,N1)=TQRFE2(N2,N1)+XQRFE2(N,NN,N2,N1)
+      TQRFE3(N2,N1)=TQRFE3(N2,N1)+XQRFE3(N,NN,N2,N1)
+      TQRFE4(N2,N1)=TQRFE4(N2,N1)+XQRFE4(N,NN,N2,N1)
+      TQRFES(N2,N1)=TQRFES(N2,N1)+XQRFES(N,NN,N2,N1)
+      TQRCAO(N2,N1)=TQRCAO(N2,N1)+XQRCAO(N,NN,N2,N1)
+      TQRCAC(N2,N1)=TQRCAC(N2,N1)+XQRCAC(N,NN,N2,N1)
+      TQRCAH(N2,N1)=TQRCAH(N2,N1)+XQRCAH(N,NN,N2,N1)
+      TQRCAS(N2,N1)=TQRCAS(N2,N1)+XQRCAS(N,NN,N2,N1)
+      TQRMGO(N2,N1)=TQRMGO(N2,N1)+XQRMGO(N,NN,N2,N1)
+      TQRMGC(N2,N1)=TQRMGC(N2,N1)+XQRMGC(N,NN,N2,N1)
+      TQRMGH(N2,N1)=TQRMGH(N2,N1)+XQRMGH(N,NN,N2,N1)
+      TQRMGS(N2,N1)=TQRMGS(N2,N1)+XQRMGS(N,NN,N2,N1)
+      TQRNAC(N2,N1)=TQRNAC(N2,N1)+XQRNAC(N,NN,N2,N1)
+      TQRNAS(N2,N1)=TQRNAS(N2,N1)+XQRNAS(N,NN,N2,N1)
+      TQRKAS(N2,N1)=TQRKAS(N2,N1)+XQRKAS(N,NN,N2,N1)
+      TQRH0P(N2,N1)=TQRH0P(N2,N1)+XQRH0P(N,NN,N2,N1)
+      TQRH3P(N2,N1)=TQRH3P(N2,N1)+XQRH3P(N,NN,N2,N1)
+      TQRF1P(N2,N1)=TQRF1P(N2,N1)+XQRF1P(N,NN,N2,N1)
+      TQRF2P(N2,N1)=TQRF2P(N2,N1)+XQRF2P(N,NN,N2,N1)
+      TQRC0P(N2,N1)=TQRC0P(N2,N1)+XQRC0P(N,NN,N2,N1)
+      TQRC1P(N2,N1)=TQRC1P(N2,N1)+XQRC1P(N,NN,N2,N1)
+      TQRC2P(N2,N1)=TQRC2P(N2,N1)+XQRC2P(N,NN,N2,N1)
+      TQRM1P(N2,N1)=TQRM1P(N2,N1)+XQRM1P(N,NN,N2,N1)
+      IF(IFLBH(N,NN,N5,N4).EQ.0)THEN
+      TQRAL(N2,N1)=TQRAL(N2,N1)-XQRAL(N,NN,N5,N4)
+      TQRFE(N2,N1)=TQRFE(N2,N1)-XQRFE(N,NN,N5,N4)
+      TQRHY(N2,N1)=TQRHY(N2,N1)-XQRHY(N,NN,N5,N4)
+      TQRCA(N2,N1)=TQRCA(N2,N1)-XQRCA(N,NN,N5,N4)
+      TQRMG(N2,N1)=TQRMG(N2,N1)-XQRMG(N,NN,N5,N4)
+      TQRNA(N2,N1)=TQRNA(N2,N1)-XQRNA(N,NN,N5,N4)
+      TQRKA(N2,N1)=TQRKA(N2,N1)-XQRKA(N,NN,N5,N4)
+      TQROH(N2,N1)=TQROH(N2,N1)-XQROH(N,NN,N5,N4)
+      TQRSO(N2,N1)=TQRSO(N2,N1)-XQRSO(N,NN,N5,N4)
+      TQRCL(N2,N1)=TQRCL(N2,N1)-XQRCL(N,NN,N5,N4)
+      TQRC3(N2,N1)=TQRC3(N2,N1)-XQRC3(N,NN,N5,N4)
+      TQRHC(N2,N1)=TQRHC(N2,N1)-XQRHC(N,NN,N5,N4)
+      TQRAL1(N2,N1)=TQRAL1(N2,N1)+XQRAL1(N,NN,N2,N1)
+      TQRAL2(N2,N1)=TQRAL2(N2,N1)+XQRAL2(N,NN,N2,N1)
+      TQRAL3(N2,N1)=TQRAL3(N2,N1)+XQRAL3(N,NN,N2,N1)
+      TQRAL4(N2,N1)=TQRAL4(N2,N1)+XQRAL4(N,NN,N2,N1)
+      TQRALS(N2,N1)=TQRALS(N2,N1)+XQRALS(N,NN,N2,N1)
+      TQRFE1(N2,N1)=TQRFE1(N2,N1)+XQRFE1(N,NN,N2,N1)
+      TQRFE2(N2,N1)=TQRFE2(N2,N1)+XQRFE2(N,NN,N2,N1)
+      TQRFE3(N2,N1)=TQRFE3(N2,N1)+XQRFE3(N,NN,N2,N1)
+      TQRFE4(N2,N1)=TQRFE4(N2,N1)+XQRFE4(N,NN,N2,N1)
+      TQRFES(N2,N1)=TQRFES(N2,N1)+XQRFES(N,NN,N2,N1)
+      TQRCAO(N2,N1)=TQRCAO(N2,N1)+XQRCAO(N,NN,N2,N1)
+      TQRCAC(N2,N1)=TQRCAC(N2,N1)+XQRCAC(N,NN,N2,N1)
+      TQRCAH(N2,N1)=TQRCAH(N2,N1)+XQRCAH(N,NN,N2,N1)
+      TQRCAS(N2,N1)=TQRCAS(N2,N1)+XQRCAS(N,NN,N2,N1)
+      TQRMGO(N2,N1)=TQRMGO(N2,N1)+XQRMGO(N,NN,N2,N1)
+      TQRMGC(N2,N1)=TQRMGC(N2,N1)+XQRMGC(N,NN,N2,N1)
+      TQRMGH(N2,N1)=TQRMGH(N2,N1)+XQRMGH(N,NN,N2,N1)
+      TQRMGS(N2,N1)=TQRMGS(N2,N1)+XQRMGS(N,NN,N2,N1)
+      TQRNAC(N2,N1)=TQRNAC(N2,N1)+XQRNAC(N,NN,N2,N1)
+      TQRNAS(N2,N1)=TQRNAS(N2,N1)+XQRNAS(N,NN,N2,N1)
+      TQRKAS(N2,N1)=TQRKAS(N2,N1)+XQRKAS(N,NN,N2,N1)
+      TQRH0P(N2,N1)=TQRH0P(N2,N1)+XQRH0P(N,NN,N2,N1)
+      TQRH3P(N2,N1)=TQRH3P(N2,N1)+XQRH3P(N,NN,N2,N1)
+      TQRF1P(N2,N1)=TQRF1P(N2,N1)+XQRF1P(N,NN,N2,N1)
+      TQRF2P(N2,N1)=TQRF2P(N2,N1)+XQRF2P(N,NN,N2,N1)
+      TQRC0P(N2,N1)=TQRC0P(N2,N1)+XQRC0P(N,NN,N2,N1)
+      TQRC1P(N2,N1)=TQRC1P(N2,N1)+XQRC1P(N,NN,N2,N1)
+      TQRC2P(N2,N1)=TQRC2P(N2,N1)+XQRC2P(N,NN,N2,N1)
+      TQRM1P(N2,N1)=TQRM1P(N2,N1)+XQRM1P(N,NN,N2,N1)
+      ENDIF
+      IF(N4B.GT.0.AND.N5B.GT.0.AND.NN.EQ.1)THEN
+      TQRAL(N2,N1)=TQRAL(N2,N1)-XQRAL(N,NN,N5B,N4B)
+      TQRFE(N2,N1)=TQRFE(N2,N1)-XQRFE(N,NN,N5B,N4B)
+      TQRHY(N2,N1)=TQRHY(N2,N1)-XQRHY(N,NN,N5B,N4B)
+      TQRCA(N2,N1)=TQRCA(N2,N1)-XQRCA(N,NN,N5B,N4B)
+      TQRMG(N2,N1)=TQRMG(N2,N1)-XQRMG(N,NN,N5B,N4B)
+      TQRNA(N2,N1)=TQRNA(N2,N1)-XQRNA(N,NN,N5B,N4B)
+      TQRKA(N2,N1)=TQRKA(N2,N1)-XQRKA(N,NN,N5B,N4B)
+      TQROH(N2,N1)=TQROH(N2,N1)-XQROH(N,NN,N5B,N4B)
+      TQRSO(N2,N1)=TQRSO(N2,N1)-XQRSO(N,NN,N5B,N4B)
+      TQRCL(N2,N1)=TQRCL(N2,N1)-XQRCL(N,NN,N5B,N4B)
+      TQRC3(N2,N1)=TQRC3(N2,N1)-XQRC3(N,NN,N5B,N4B)
+      TQRHC(N2,N1)=TQRHC(N2,N1)-XQRHC(N,NN,N5B,N4B)
+      TQRAL1(N2,N1)=TQRAL1(N2,N1)-XQRAL1(N,NN,N5B,N4B)
+      TQRAL2(N2,N1)=TQRAL2(N2,N1)-XQRAL2(N,NN,N5B,N4B)
+      TQRAL3(N2,N1)=TQRAL3(N2,N1)-XQRAL3(N,NN,N5B,N4B)
+      TQRAL4(N2,N1)=TQRAL4(N2,N1)-XQRAL4(N,NN,N5B,N4B)
+      TQRALS(N2,N1)=TQRALS(N2,N1)-XQRALS(N,NN,N5B,N4B)
+      TQRFE1(N2,N1)=TQRFE1(N2,N1)-XQRFE1(N,NN,N5B,N4B)
+      TQRFE2(N2,N1)=TQRFE2(N2,N1)-XQRFE2(N,NN,N5B,N4B)
+      TQRFE3(N2,N1)=TQRFE3(N2,N1)-XQRFE3(N,NN,N5B,N4B)
+      TQRFE4(N2,N1)=TQRFE4(N2,N1)-XQRFE4(N,NN,N5B,N4B)
+      TQRFES(N2,N1)=TQRFES(N2,N1)-XQRFES(N,NN,N5B,N4B)
+      TQRCAO(N2,N1)=TQRCAO(N2,N1)-XQRCAO(N,NN,N5B,N4B)
+      TQRCAC(N2,N1)=TQRCAC(N2,N1)-XQRCAC(N,NN,N5B,N4B)
+      TQRCAH(N2,N1)=TQRCAH(N2,N1)-XQRCAH(N,NN,N5B,N4B)
+      TQRCAS(N2,N1)=TQRCAS(N2,N1)-XQRCAS(N,NN,N5B,N4B)
+      TQRMGO(N2,N1)=TQRMGO(N2,N1)-XQRMGO(N,NN,N5B,N4B)
+      TQRMGC(N2,N1)=TQRMGC(N2,N1)-XQRMGC(N,NN,N5B,N4B)
+      TQRMGH(N2,N1)=TQRMGH(N2,N1)-XQRMGH(N,NN,N5B,N4B)
+      TQRMGS(N2,N1)=TQRMGS(N2,N1)-XQRMGS(N,NN,N5B,N4B)
+      TQRNAC(N2,N1)=TQRNAC(N2,N1)-XQRNAC(N,NN,N5B,N4B)
+      TQRNAS(N2,N1)=TQRNAS(N2,N1)-XQRNAS(N,NN,N5B,N4B)
+      TQRKAS(N2,N1)=TQRKAS(N2,N1)-XQRKAS(N,NN,N5B,N4B)
+      TQRH0P(N2,N1)=TQRH0P(N2,N1)-XQRH0P(N,NN,N5B,N4B)
+      TQRH3P(N2,N1)=TQRH3P(N2,N1)-XQRH3P(N,NN,N5B,N4B)
+      TQRF1P(N2,N1)=TQRF1P(N2,N1)-XQRF1P(N,NN,N5B,N4B)
+      TQRF2P(N2,N1)=TQRF2P(N2,N1)-XQRF2P(N,NN,N5B,N4B)
+      TQRC0P(N2,N1)=TQRC0P(N2,N1)-XQRC0P(N,NN,N5B,N4B)
+      TQRC1P(N2,N1)=TQRC1P(N2,N1)-XQRC1P(N,NN,N5B,N4B)
+      TQRC2P(N2,N1)=TQRC2P(N2,N1)-XQRC2P(N,NN,N5B,N4B)
+      TQRM1P(N2,N1)=TQRM1P(N2,N1)-XQRM1P(N,NN,N5B,N4B)
+      ENDIF
+1203  CONTINUE
       TQSAL(N2,N1)=TQSAL(N2,N1)+XQSAL(N,N2,N1)-XQSAL(N,N5,N4)
       TQSFE(N2,N1)=TQSFE(N2,N1)+XQSFE(N,N2,N1)-XQSFE(N,N5,N4)
       TQSHY(N2,N1)=TQSHY(N2,N1)+XQSHY(N,N2,N1)-XQSHY(N,N5,N4)
@@ -1449,10 +1963,24 @@ C    3,VOLWRX(N2,N1),VOLWG(N2,N1)
       TQSC2P(N2,N1)=TQSC2P(N2,N1)+XQSC2P(N,N2,N1)-XQSC2P(N,N5,N4)
       TQSM1P(N2,N1)=TQSM1P(N2,N1)+XQSM1P(N,N2,N1)-XQSM1P(N,N5,N4)
       ENDIF
+C
+C     NET WATER AND HEAT FLUXES THROUGH SNOWPACK     
+C
+C     VHCPW,VHCPWX=current, minimum snowpack heat capacities
+C     TFLWS,TFLWW,TFLWI=net fluxes of snow,water,ice in snowpack
+C     THFLWW=convective heat fluxes of snow,water,ice in snowpack
+C     XFLWS,XFLWW,XFLWI=snow,water,ice transfer from watsub.f
+C     XHFLWW=convective heat flux from snow,water,ice transfer from watsub.f 
+C     FLSW,FLSWH,FLSWR=water flux from lowest snow layer to soil macropore,micropore,litter
+C     HFLSW,HFLSWR=heat flux from lowest snow layer to soil,litter
+C
       ELSEIF(N.EQ.3)THEN
       DO 1205 LS=1,JS
       IF(VHCPW(LS,NY,NX).GT.VHCPWX(NY,NX))THEN
       LS2=MIN(JS,LS+1)
+C
+C     IF LOWER LAYER IS IN THE SNOWPACK
+C
       IF(LS.LT.JS.AND.VHCPW(LS2,N2,N1).GT.VHCPWX(N2,N1))THEN
       TFLWS(LS,N2,N1)=TFLWS(LS,N2,N1)+XFLWS(LS,N2,N1)
      2-XFLWS(LS2,N2,N1)
@@ -1469,6 +1997,16 @@ C     WRITE(*,7754)'LS',I,J,N1,N2,LS,LS2,TFLWW(LS,N2,N1),XFLWW(LS,N2,N1)
 C    2,XFLWW(LS2,N2,N1)
 7754  FORMAT(A8,6I4,100E14.6)
 C     ENDIF
+C
+C     NET SOLUTE FLUXES THROUGH SNOWPACK     
+C
+C     T*BLS=net solute flux in snowpack
+C     X*BLS=solute flux in snowpack from trnsfr.f
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
+C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
+C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
+C
       TCOBLS(LS,N2,N1)=TCOBLS(LS,N2,N1)+XCOBLS(LS,N2,N1)
      2-XCOBLS(LS2,N2,N1)
       TCHBLS(LS,N2,N1)=TCHBLS(LS,N2,N1)+XCHBLS(LS,N2,N1)
@@ -1489,6 +2027,22 @@ C     ENDIF
      2-XH1PBS(LS2,N2,N1)
       TH2PBS(LS,N2,N1)=TH2PBS(LS,N2,N1)+XH2PBS(LS,N2,N1)
      2-XH2PBS(LS2,N2,N1)
+C
+C     NET SALT FLUXES THROUGH SNOWPACK     
+C
+C     T*BLS=net solute flux in snowpack
+C     X*BLS=solute flux in snowpack from trnsfrs.f
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C
       IF(ISALTG.NE.0)THEN
       TALBLS(LS,N2,N1)=TALBLS(LS,N2,N1)+XALBLS(LS,N2,N1)
      2-XALBLS(LS2,N2,N1)
@@ -1573,6 +2127,9 @@ C     ENDIF
       TM1PBS(LS,N2,N1)=TM1PBS(LS,N2,N1)+XM1PBS(LS,N2,N1)
      2-XM1PBS(LS2,N2,N1)
       ENDIF
+C
+C     IF LOWER LAYER IS THE LITTER AND SOIL SURFACE
+C
       ELSE
       TFLWS(LS,N2,N1)=TFLWS(LS,N2,N1)+XFLWS(LS,N2,N1)
       TFLWW(LS,N2,N1)=TFLWW(LS,N2,N1)+XFLWW(LS,N2,N1)
@@ -1754,6 +2311,9 @@ C     ENDIF
      3-XM1BFB(3,NUM(N2,N1),N2,N1)
       ENDIF
       ENDIF
+C
+C     WATER,GAS,SOLUTE,SALT FLUXES INTO SNOWPACK SURFACE
+C
       ELSEIF(LS.EQ.1)THEN
       IF(XFLWS(LS,N2,N1).NE.0.0)THEN
       TFLWS(LS,N2,N1)=TFLWS(LS,N2,N1)+XFLWS(LS,N2,N1)
@@ -1820,109 +2380,273 @@ C     ENDIF
 C
 C     TOTAL FLUXES FROM SEDIMENT TRANSPORT
 C
+C     T*ER=net sediment flux
+C     X*ER=sediment flux from erosion.f
+C     sediment code:XSED=total,XSAN=sand,XSIL=silt,XCLA=clay
+C       :OMC,OMN,OMP=microbial C,N,P; ORC=microbial residue C,N,P
+C       :OHC,OHN,OHP=adsorbed C,N,P; OSC,OSN,OSP=humus C,N,P
+C       :NH4,NH3,NHU,NO3=fertilizer NH4,NH3,urea,NO3 in non-band
+C       :NH4B,NH3B,NHUB,NO3B=fertilizer NH4,NH3,urea,NO3 in band
+C       :XN4,XNB=adsorbed NH4 in non-band,band
+C       :XHY,XAL,XFE,XCA,XMG,XNA,XKA,XHC,AL2,FE2
+C        =adsorbed H,Al,Fe,Ca,Mg,Na,K,HCO3,AlOH2,FeOH2
+C       :XOH0,XOH1,XOH2=adsorbed R-,R-OH,R-OH2 in non-band
+C       :XOH0B,XOH1B,XOH2B=adsorption sites R-,R-OH,R-OH2 in band
+C       :XH1P,XH2P=adsorbed HPO4,H2PO4 in non-band
+C       :XH1PB,XP2PB=adsorbed HPO4,H2PO4 in band
+C       :PALO,PFEO=precip AlOH,FeOH 
+C       :PCAC,PCAS=precip CaCO3,CaSO4
+C       :PALP,PFEP=precip AlPO4,FEPO4 in non-band
+C       :PALPB,PFEPB=precip AlPO4,FEPO4 in band
+C       :PCPM,PCPD,PCPH=precip CaH2PO4,CaHPO4,apatite in non-band
+C       :PCPMB,PCPDB,PCPHB=precip CaH2PO4,CaHPO4,apatite in band
+C
       IF(N.NE.3.AND.(IERSNG.EQ.1.OR.IERSNG.EQ.3))THEN
-      IF(ABS(XSEDER(N,N2,N1)).GT.ZEROS(N2,N1)
-     3.OR.ABS(XSEDER(N,N5,N4)).GT.ZEROS(N5,N4))THEN
-      TSEDER(N2,N1)=TSEDER(N2,N1)+XSEDER(N,N2,N1)-XSEDER(N,N5,N4)
-C     WRITE(*,8487)'TSEDER',I,J,N1,N2,N4,N5,N,TSEDER(N2,N1)
-C    2,XSEDER(N,N2,N1),XSEDER(N,N5,N4),SED(NY,NX)
-C    3,QR(N,N2,N1),QR(N,N5,N4),TSED(N2,N1)
-8487  FORMAT(A8,7I4,12E12.4)
-      TSANER(N2,N1)=TSANER(N2,N1)+XSANER(N,N2,N1)-XSANER(N,N5,N4)
-      TSILER(N2,N1)=TSILER(N2,N1)+XSILER(N,N2,N1)-XSILER(N,N5,N4)
-      TCLAER(N2,N1)=TCLAER(N2,N1)+XCLAER(N,N2,N1)-XCLAER(N,N5,N4)
-      TCECER(N2,N1)=TCECER(N2,N1)+XCECER(N,N2,N1)-XCECER(N,N5,N4)
-      TAECER(N2,N1)=TAECER(N2,N1)+XAECER(N,N2,N1)-XAECER(N,N5,N4)
-      TNH4ER(N2,N1)=TNH4ER(N2,N1)+XNH4ER(N,N2,N1)-XNH4ER(N,N5,N4)
-      TNH3ER(N2,N1)=TNH3ER(N2,N1)+XNH3ER(N,N2,N1)-XNH3ER(N,N5,N4)
-      TNHUER(N2,N1)=TNHUER(N2,N1)+XNHUER(N,N2,N1)-XNHUER(N,N5,N4)
-      TNO3ER(N2,N1)=TNO3ER(N2,N1)+XNO3ER(N,N2,N1)-XNO3ER(N,N5,N4)
-      TNH4EB(N2,N1)=TNH4EB(N2,N1)+XNH4EB(N,N2,N1)-XNH4EB(N,N5,N4)
-      TNH3EB(N2,N1)=TNH3EB(N2,N1)+XNH3EB(N,N2,N1)-XNH3EB(N,N5,N4)
-      TNHUEB(N2,N1)=TNHUEB(N2,N1)+XNHUEB(N,N2,N1)-XNHUEB(N,N5,N4)
-      TNO3EB(N2,N1)=TNO3EB(N2,N1)+XNO3EB(N,N2,N1)-XNO3EB(N,N5,N4)
-      TN4ER(N2,N1)=TN4ER(N2,N1)+XN4ER(N,N2,N1)-XN4ER(N,N5,N4)
-      TNBER(N2,N1)=TNBER(N2,N1)+XNBER(N,N2,N1)-XNBER(N,N5,N4)
-      THYER(N2,N1)=THYER(N2,N1)+XHYER(N,N2,N1)-XHYER(N,N5,N4)
-      TALER(N2,N1)=TALER(N2,N1)+XALER(N,N2,N1)-XALER(N,N5,N4)
-      TFEER(N2,N1)=TFEER(N2,N1)+XFEER(N,N2,N1)-XFEER(N,N5,N4)
-      TCAER(N2,N1)=TCAER(N2,N1)+XCAER(N,N2,N1)-XCAER(N,N5,N4)
-      TMGER(N2,N1)=TMGER(N2,N1)+XMGER(N,N2,N1)-XMGER(N,N5,N4)
-      TNAER(N2,N1)=TNAER(N2,N1)+XNAER(N,N2,N1)-XNAER(N,N5,N4)
-      TKAER(N2,N1)=TKAER(N2,N1)+XKAER(N,N2,N1)-XKAER(N,N5,N4)
-      THCER(N2,N1)=THCER(N2,N1)+XHCER(N,N2,N1)-XHCER(N,N5,N4)
-      TAL2ER(N2,N1)=TAL2ER(N2,N1)+XAL2ER(N,N2,N1)-XAL2ER(N,N5,N4)
-      TFE2ER(N2,N1)=TFE2ER(N2,N1)+XFE2ER(N,N2,N1)-XFE2ER(N,N5,N4)
-      TOH0ER(N2,N1)=TOH0ER(N2,N1)+XOH0ER(N,N2,N1)-XOH0ER(N,N5,N4)
-      TOH1ER(N2,N1)=TOH1ER(N2,N1)+XOH1ER(N,N2,N1)-XOH1ER(N,N5,N4)
-      TOH2ER(N2,N1)=TOH2ER(N2,N1)+XOH2ER(N,N2,N1)-XOH2ER(N,N5,N4)
-      TH1PER(N2,N1)=TH1PER(N2,N1)+XH1PER(N,N2,N1)-XH1PER(N,N5,N4)
-      TH2PER(N2,N1)=TH2PER(N2,N1)+XH2PER(N,N2,N1)-XH2PER(N,N5,N4)
-      TOH0EB(N2,N1)=TOH0EB(N2,N1)+XOH0EB(N,N2,N1)-XOH0EB(N,N5,N4)
-      TOH1EB(N2,N1)=TOH1EB(N2,N1)+XOH1EB(N,N2,N1)-XOH1EB(N,N5,N4)
-      TOH2EB(N2,N1)=TOH2EB(N2,N1)+XOH2EB(N,N2,N1)-XOH2EB(N,N5,N4)
-      TH1PEB(N2,N1)=TH1PEB(N2,N1)+XH1PEB(N,N2,N1)-XH1PEB(N,N5,N4)
-      TH2PEB(N2,N1)=TH2PEB(N2,N1)+XH2PEB(N,N2,N1)-XH2PEB(N,N5,N4)
-      TALOER(N2,N1)=TALOER(N2,N1)+PALOER(N,N2,N1)-PALOER(N,N5,N4)
-      TFEOER(N2,N1)=TFEOER(N2,N1)+PFEOER(N,N2,N1)-PFEOER(N,N5,N4)
-      TCACER(N2,N1)=TCACER(N2,N1)+PCACER(N,N2,N1)-PCACER(N,N5,N4)
-      TCASER(N2,N1)=TCASER(N2,N1)+PCASER(N,N2,N1)-PCASER(N,N5,N4)
-      TALPER(N2,N1)=TALPER(N2,N1)+PALPER(N,N2,N1)-PALPER(N,N5,N4)
-      TFEPER(N2,N1)=TFEPER(N2,N1)+PFEPER(N,N2,N1)-PFEPER(N,N5,N4)
-      TCPDER(N2,N1)=TCPDER(N2,N1)+PCPDER(N,N2,N1)-PCPDER(N,N5,N4)
-      TCPHER(N2,N1)=TCPHER(N2,N1)+PCPHER(N,N2,N1)-PCPHER(N,N5,N4)
-      TCPMER(N2,N1)=TCPMER(N2,N1)+PCPMER(N,N2,N1)-PCPMER(N,N5,N4)
-      TALPEB(N2,N1)=TALPEB(N2,N1)+PALPEB(N,N2,N1)-PALPEB(N,N5,N4)
-      TFEPEB(N2,N1)=TFEPEB(N2,N1)+PFEPEB(N,N2,N1)-PFEPEB(N,N5,N4)
-      TCPDEB(N2,N1)=TCPDEB(N2,N1)+PCPDEB(N,N2,N1)-PCPDEB(N,N5,N4)
-      TCPHEB(N2,N1)=TCPHEB(N2,N1)+PCPHEB(N,N2,N1)-PCPHEB(N,N5,N4)
-      TCPMEB(N2,N1)=TCPMEB(N2,N1)+PCPMEB(N,N2,N1)-PCPMEB(N,N5,N4)
+      DO 9350 NN=1,2
+      IF(ABS(XSEDER(N,NN,N2,N1)).GT.ZEROS(N2,N1)
+     3.OR.ABS(XSEDER(N,NN,N5,N4)).GT.ZEROS(N5,N4))THEN
+      TSEDER(N2,N1)=TSEDER(N2,N1)+XSEDER(N,NN,N2,N1)
+      TSANER(N2,N1)=TSANER(N2,N1)+XSANER(N,NN,N2,N1)
+      TSILER(N2,N1)=TSILER(N2,N1)+XSILER(N,NN,N2,N1)
+      TCLAER(N2,N1)=TCLAER(N2,N1)+XCLAER(N,NN,N2,N1)
+      TCECER(N2,N1)=TCECER(N2,N1)+XCECER(N,NN,N2,N1)
+      TAECER(N2,N1)=TAECER(N2,N1)+XAECER(N,NN,N2,N1)
+      TNH4ER(N2,N1)=TNH4ER(N2,N1)+XNH4ER(N,NN,N2,N1)
+      TNH3ER(N2,N1)=TNH3ER(N2,N1)+XNH3ER(N,NN,N2,N1)
+      TNHUER(N2,N1)=TNHUER(N2,N1)+XNHUER(N,NN,N2,N1)
+      TNO3ER(N2,N1)=TNO3ER(N2,N1)+XNO3ER(N,NN,N2,N1)
+      TNH4EB(N2,N1)=TNH4EB(N2,N1)+XNH4EB(N,NN,N2,N1)
+      TNH3EB(N2,N1)=TNH3EB(N2,N1)+XNH3EB(N,NN,N2,N1)
+      TNHUEB(N2,N1)=TNHUEB(N2,N1)+XNHUEB(N,NN,N2,N1)
+      TNO3EB(N2,N1)=TNO3EB(N2,N1)+XNO3EB(N,NN,N2,N1)
+      TN4ER(N2,N1)=TN4ER(N2,N1)+XN4ER(N,NN,N2,N1)
+      TNBER(N2,N1)=TNBER(N2,N1)+XNBER(N,NN,N2,N1)
+      THYER(N2,N1)=THYER(N2,N1)+XHYER(N,NN,N2,N1)
+      TALER(N2,N1)=TALER(N2,N1)+XALER(N,NN,N2,N1)
+      TFEER(N2,N1)=TFEER(N2,N1)+XFEER(N,NN,N2,N1)
+      TCAER(N2,N1)=TCAER(N2,N1)+XCAER(N,NN,N2,N1)
+      TMGER(N2,N1)=TMGER(N2,N1)+XMGER(N,NN,N2,N1)
+      TNAER(N2,N1)=TNAER(N2,N1)+XNAER(N,NN,N2,N1)
+      TKAER(N2,N1)=TKAER(N2,N1)+XKAER(N,NN,N2,N1)
+      THCER(N2,N1)=THCER(N2,N1)+XHCER(N,NN,N2,N1)
+      TAL2ER(N2,N1)=TAL2ER(N2,N1)+XAL2ER(N,NN,N2,N1)
+      TFE2ER(N2,N1)=TFE2ER(N2,N1)+XFE2ER(N,NN,N2,N1)
+      TOH0ER(N2,N1)=TOH0ER(N2,N1)+XOH0ER(N,NN,N2,N1)
+      TOH1ER(N2,N1)=TOH1ER(N2,N1)+XOH1ER(N,NN,N2,N1)
+      TOH2ER(N2,N1)=TOH2ER(N2,N1)+XOH2ER(N,NN,N2,N1)
+      TH1PER(N2,N1)=TH1PER(N2,N1)+XH1PER(N,NN,N2,N1)
+      TH2PER(N2,N1)=TH2PER(N2,N1)+XH2PER(N,NN,N2,N1)
+      TOH0EB(N2,N1)=TOH0EB(N2,N1)+XOH0EB(N,NN,N2,N1)
+      TOH1EB(N2,N1)=TOH1EB(N2,N1)+XOH1EB(N,NN,N2,N1)
+      TOH2EB(N2,N1)=TOH2EB(N2,N1)+XOH2EB(N,NN,N2,N1)
+      TH1PEB(N2,N1)=TH1PEB(N2,N1)+XH1PEB(N,NN,N2,N1)
+      TH2PEB(N2,N1)=TH2PEB(N2,N1)+XH2PEB(N,NN,N2,N1)
+      TALOER(N2,N1)=TALOER(N2,N1)+PALOER(N,NN,N2,N1)
+      TFEOER(N2,N1)=TFEOER(N2,N1)+PFEOER(N,NN,N2,N1)
+      TCACER(N2,N1)=TCACER(N2,N1)+PCACER(N,NN,N2,N1)
+      TCASER(N2,N1)=TCASER(N2,N1)+PCASER(N,NN,N2,N1)
+      TALPER(N2,N1)=TALPER(N2,N1)+PALPER(N,NN,N2,N1)
+      TFEPER(N2,N1)=TFEPER(N2,N1)+PFEPER(N,NN,N2,N1)
+      TCPDER(N2,N1)=TCPDER(N2,N1)+PCPDER(N,NN,N2,N1)
+      TCPHER(N2,N1)=TCPHER(N2,N1)+PCPHER(N,NN,N2,N1)
+      TCPMER(N2,N1)=TCPMER(N2,N1)+PCPMER(N,NN,N2,N1)
+      TALPEB(N2,N1)=TALPEB(N2,N1)+PALPEB(N,NN,N2,N1)
+      TFEPEB(N2,N1)=TFEPEB(N2,N1)+PFEPEB(N,NN,N2,N1)
+      TCPDEB(N2,N1)=TCPDEB(N2,N1)+PCPDEB(N,NN,N2,N1)
+      TCPHEB(N2,N1)=TCPHEB(N2,N1)+PCPHEB(N,NN,N2,N1)
+      TCPMEB(N2,N1)=TCPMEB(N2,N1)+PCPMEB(N,NN,N2,N1)
       DO 9380 K=0,5
-      DO 9380 NN=1,7
-      TOMCER(3,NN,K,N2,N1)=TOMCER(3,NN,K,N2,N1)
-     2+OMCER(3,NN,K,N,N2,N1)-OMCER(3,NN,K,N,N5,N4)
-      DO 9380 M=1,2
-      TOMCER(M,NN,K,N2,N1)=TOMCER(M,NN,K,N2,N1)
-     2+OMCER(M,NN,K,N,N2,N1)-OMCER(M,NN,K,N,N5,N4)
-      TOMNER(M,NN,K,N2,N1)=TOMNER(M,NN,K,N2,N1)
-     2+OMNER(M,NN,K,N,N2,N1)-OMNER(M,NN,K,N,N5,N4)
-      TOMPER(M,NN,K,N2,N1)=TOMPER(M,NN,K,N2,N1)
-     2+OMPER(M,NN,K,N,N2,N1)-OMPER(M,NN,K,N,N5,N4)
+      DO 9380 NO=1,7
+      DO 9380 M=1,3
+      TOMCER(M,NO,K,N2,N1)=TOMCER(M,NO,K,N2,N1)+OMCER(M,NO,K,N,NN,N2,N1) 
+      TOMNER(M,NO,K,N2,N1)=TOMNER(M,NO,K,N2,N1)+OMNER(M,NO,K,N,NN,N2,N1)
+      TOMPER(M,NO,K,N2,N1)=TOMPER(M,NO,K,N2,N1)+OMPER(M,NO,K,N,NN,N2,N1)
 9380  CONTINUE
       DO 9375 K=0,4
       DO 9370 M=1,2
-      TORCER(M,K,N2,N1)=TORCER(M,K,N2,N1)
-     2+ORCER(M,K,N,N2,N1)-ORCER(M,K,N,N5,N4)
-      TORNER(M,K,N2,N1)=TORNER(M,K,N2,N1)
-     2+ORNER(M,K,N,N2,N1)-ORNER(M,K,N,N5,N4)
-      TORPER(M,K,N2,N1)=TORPER(M,K,N2,N1)
-     2+ORPER(M,K,N,N2,N1)-ORPER(M,K,N,N5,N4)
+      TORCER(M,K,N2,N1)=TORCER(M,K,N2,N1)+ORCER(M,K,N,NN,N2,N1)
+      TORNER(M,K,N2,N1)=TORNER(M,K,N2,N1)+ORNER(M,K,N,NN,N2,N1)
+      TORPER(M,K,N2,N1)=TORPER(M,K,N2,N1)+ORPER(M,K,N,NN,N2,N1) 
 9370  CONTINUE
-      TOHCER(K,N2,N1)=TOHCER(K,N2,N1)
-     2+OHCER(K,N,N2,N1)-OHCER(K,N,N5,N4)
-      TOHNER(K,N2,N1)=TOHNER(K,N2,N1)
-     2+OHNER(K,N,N2,N1)-OHNER(K,N,N5,N4)
-      TOHPER(K,N2,N1)=TOHPER(K,N2,N1)
-     2+OHPER(K,N,N2,N1)-OHPER(K,N,N5,N4)
-      TOHAER(K,N2,N1)=TOHAER(K,N2,N1)
-     2+OHAER(K,N,N2,N1)-OHAER(K,N,N5,N4)
+      TOHCER(K,N2,N1)=TOHCER(K,N2,N1)+OHCER(K,N,NN,N2,N1) 
+      TOHNER(K,N2,N1)=TOHNER(K,N2,N1)+OHNER(K,N,NN,N2,N1)
+      TOHPER(K,N2,N1)=TOHPER(K,N2,N1)+OHPER(K,N,NN,N2,N1)
+      TOHAER(K,N2,N1)=TOHAER(K,N2,N1)+OHAER(K,N,NN,N2,N1) 
       DO 9365 M=1,4
-      TOSCER(M,K,N2,N1)=TOSCER(M,K,N2,N1)
-     2+OSCER(M,K,N,N2,N1)-OSCER(M,K,N,N5,N4)
-      TOSAER(M,K,N2,N1)=TOSAER(M,K,N2,N1)
-     2+OSAER(M,K,N,N2,N1)-OSAER(M,K,N,N5,N4)
-      TOSNER(M,K,N2,N1)=TOSNER(M,K,N2,N1)
-     2+OSNER(M,K,N,N2,N1)-OSNER(M,K,N,N5,N4)
-      TOSPER(M,K,N2,N1)=TOSPER(M,K,N2,N1)
-     2+OSPER(M,K,N,N2,N1)-OSPER(M,K,N,N5,N4)
+      TOSCER(M,K,N2,N1)=TOSCER(M,K,N2,N1)+OSCER(M,K,N,NN,N2,N1) 
+      TOSAER(M,K,N2,N1)=TOSAER(M,K,N2,N1)+OSAER(M,K,N,NN,N2,N1) 
+      TOSNER(M,K,N2,N1)=TOSNER(M,K,N2,N1)+OSNER(M,K,N,NN,N2,N1)
+      TOSPER(M,K,N2,N1)=TOSPER(M,K,N2,N1)+OSPER(M,K,N,NN,N2,N1) 
 9365  CONTINUE
 9375  CONTINUE
+C     IF(NN.EQ.2)THEN
+      TSEDER(N2,N1)=TSEDER(N2,N1)-XSEDER(N,NN,N5,N4)
+      TSANER(N2,N1)=TSANER(N2,N1)-XSANER(N,NN,N5,N4)
+      TSILER(N2,N1)=TSILER(N2,N1)-XSILER(N,NN,N5,N4)
+      TCLAER(N2,N1)=TCLAER(N2,N1)-XCLAER(N,NN,N5,N4)
+      TCECER(N2,N1)=TCECER(N2,N1)-XCECER(N,NN,N5,N4)
+      TAECER(N2,N1)=TAECER(N2,N1)-XAECER(N,NN,N5,N4)
+      TNH4ER(N2,N1)=TNH4ER(N2,N1)-XNH4ER(N,NN,N5,N4)
+      TNH3ER(N2,N1)=TNH3ER(N2,N1)-XNH3ER(N,NN,N5,N4)
+      TNHUER(N2,N1)=TNHUER(N2,N1)-XNHUER(N,NN,N5,N4)
+      TNO3ER(N2,N1)=TNO3ER(N2,N1)-XNO3ER(N,NN,N5,N4)
+      TNH4EB(N2,N1)=TNH4EB(N2,N1)-XNH4EB(N,NN,N5,N4)
+      TNH3EB(N2,N1)=TNH3EB(N2,N1)-XNH3EB(N,NN,N5,N4)
+      TNHUEB(N2,N1)=TNHUEB(N2,N1)-XNHUEB(N,NN,N5,N4)
+      TNO3EB(N2,N1)=TNO3EB(N2,N1)-XNO3EB(N,NN,N5,N4)
+      TN4ER(N2,N1)=TN4ER(N2,N1)-XN4ER(N,NN,N5,N4)
+      TNBER(N2,N1)=TNBER(N2,N1)-XNBER(N,NN,N5,N4)
+      THYER(N2,N1)=THYER(N2,N1)-XHYER(N,NN,N5,N4)
+      TALER(N2,N1)=TALER(N2,N1)-XALER(N,NN,N5,N4)
+      TFEER(N2,N1)=TFEER(N2,N1)-XFEER(N,NN,N5,N4)
+      TCAER(N2,N1)=TCAER(N2,N1)-XCAER(N,NN,N5,N4)
+      TMGER(N2,N1)=TMGER(N2,N1)-XMGER(N,NN,N5,N4)
+      TNAER(N2,N1)=TNAER(N2,N1)-XNAER(N,NN,N5,N4)
+      TKAER(N2,N1)=TKAER(N2,N1)-XKAER(N,NN,N5,N4)
+      THCER(N2,N1)=THCER(N2,N1)-XHCER(N,NN,N5,N4)
+      TAL2ER(N2,N1)=TAL2ER(N2,N1)-XAL2ER(N,NN,N5,N4)
+      TFE2ER(N2,N1)=TFE2ER(N2,N1)-XFE2ER(N,NN,N5,N4)
+      TOH0ER(N2,N1)=TOH0ER(N2,N1)-XOH0ER(N,NN,N5,N4)
+      TOH1ER(N2,N1)=TOH1ER(N2,N1)-XOH1ER(N,NN,N5,N4)
+      TOH2ER(N2,N1)=TOH2ER(N2,N1)-XOH2ER(N,NN,N5,N4)
+      TH1PER(N2,N1)=TH1PER(N2,N1)-XH1PER(N,NN,N5,N4)
+      TH2PER(N2,N1)=TH2PER(N2,N1)-XH2PER(N,NN,N5,N4)
+      TOH0EB(N2,N1)=TOH0EB(N2,N1)-XOH0EB(N,NN,N5,N4)
+      TOH1EB(N2,N1)=TOH1EB(N2,N1)-XOH1EB(N,NN,N5,N4)
+      TOH2EB(N2,N1)=TOH2EB(N2,N1)-XOH2EB(N,NN,N5,N4)
+      TH1PEB(N2,N1)=TH1PEB(N2,N1)-XH1PEB(N,NN,N5,N4)
+      TH2PEB(N2,N1)=TH2PEB(N2,N1)-XH2PEB(N,NN,N5,N4)
+      TALOER(N2,N1)=TALOER(N2,N1)-PALOER(N,NN,N5,N4)
+      TFEOER(N2,N1)=TFEOER(N2,N1)-PFEOER(N,NN,N5,N4)
+      TCACER(N2,N1)=TCACER(N2,N1)-PCACER(N,NN,N5,N4)
+      TCASER(N2,N1)=TCASER(N2,N1)-PCASER(N,NN,N5,N4)
+      TALPER(N2,N1)=TALPER(N2,N1)-PALPER(N,NN,N5,N4)
+      TFEPER(N2,N1)=TFEPER(N2,N1)-PFEPER(N,NN,N5,N4)
+      TCPDER(N2,N1)=TCPDER(N2,N1)-PCPDER(N,NN,N5,N4)
+      TCPHER(N2,N1)=TCPHER(N2,N1)-PCPHER(N,NN,N5,N4)
+      TCPMER(N2,N1)=TCPMER(N2,N1)-PCPMER(N,NN,N5,N4)
+      TALPEB(N2,N1)=TALPEB(N2,N1)-PALPEB(N,NN,N5,N4)
+      TFEPEB(N2,N1)=TFEPEB(N2,N1)-PFEPEB(N,NN,N5,N4)
+      TCPDEB(N2,N1)=TCPDEB(N2,N1)-PCPDEB(N,NN,N5,N4)
+      TCPHEB(N2,N1)=TCPHEB(N2,N1)-PCPHEB(N,NN,N5,N4)
+      TCPMEB(N2,N1)=TCPMEB(N2,N1)-PCPMEB(N,NN,N5,N4)
+      DO 7380 K=0,5
+      DO 7380 NO=1,7
+      DO 7380 M=1,3
+      TOMCER(M,NO,K,N2,N1)=TOMCER(M,NO,K,N2,N1)-OMCER(M,NO,K,N,NN,N5,N4)
+      TOMNER(M,NO,K,N2,N1)=TOMNER(M,NO,K,N2,N1)-OMNER(M,NO,K,N,NN,N5,N4)
+      TOMPER(M,NO,K,N2,N1)=TOMPER(M,NO,K,N2,N1)-OMPER(M,NO,K,N,NN,N5,N4)
+7380  CONTINUE
+      DO 7375 K=0,4
+      DO 7370 M=1,2
+      TORCER(M,K,N2,N1)=TORCER(M,K,N2,N1)-ORCER(M,K,N,NN,N5,N4)
+      TORNER(M,K,N2,N1)=TORNER(M,K,N2,N1)-ORNER(M,K,N,NN,N5,N4)
+      TORPER(M,K,N2,N1)=TORPER(M,K,N2,N1)-ORPER(M,K,N,NN,N5,N4)
+7370  CONTINUE
+      TOHCER(K,N2,N1)=TOHCER(K,N2,N1)-OHCER(K,N,NN,N5,N4)
+      TOHNER(K,N2,N1)=TOHNER(K,N2,N1)-OHNER(K,N,NN,N5,N4)
+      TOHPER(K,N2,N1)=TOHPER(K,N2,N1)-OHPER(K,N,NN,N5,N4)
+      TOHAER(K,N2,N1)=TOHAER(K,N2,N1)-OHAER(K,N,NN,N5,N4)
+      DO 7365 M=1,4
+      TOSCER(M,K,N2,N1)=TOSCER(M,K,N2,N1)-OSCER(M,K,N,NN,N5,N4)
+      TOSAER(M,K,N2,N1)=TOSAER(M,K,N2,N1)-OSAER(M,K,N,NN,N5,N4)
+      TOSNER(M,K,N2,N1)=TOSNER(M,K,N2,N1)-OSNER(M,K,N,NN,N5,N4)
+      TOSPER(M,K,N2,N1)=TOSPER(M,K,N2,N1)-OSPER(M,K,N,NN,N5,N4)
+7365  CONTINUE
+7375  CONTINUE
+C     ENDIF
       ENDIF
+      IF(N4B.GT.0.AND.N5B.GT.0.AND.NN.EQ.1)THEN
+      IF(ABS(XSEDER(N,NN,N5B,N4B)).GT.ZEROS(N5,N4))THEN
+      TSEDER(N2,N1)=TSEDER(N2,N1)-XSEDER(N,NN,N5B,N4B)
+      TSANER(N2,N1)=TSANER(N2,N1)-XSANER(N,NN,N5B,N4B)
+      TSILER(N2,N1)=TSILER(N2,N1)-XSILER(N,NN,N5B,N4B)
+      TCLAER(N2,N1)=TCLAER(N2,N1)-XCLAER(N,NN,N5B,N4B)
+      TCECER(N2,N1)=TCECER(N2,N1)-XCECER(N,NN,N5B,N4B)
+      TAECER(N2,N1)=TAECER(N2,N1)-XAECER(N,NN,N5B,N4B)
+      TNH4ER(N2,N1)=TNH4ER(N2,N1)-XNH4ER(N,NN,N5B,N4B)
+      TNH3ER(N2,N1)=TNH3ER(N2,N1)-XNH3ER(N,NN,N5B,N4B)
+      TNHUER(N2,N1)=TNHUER(N2,N1)-XNHUER(N,NN,N5B,N4B)
+      TNO3ER(N2,N1)=TNO3ER(N2,N1)-XNO3ER(N,NN,N5B,N4B)
+      TNH4EB(N2,N1)=TNH4EB(N2,N1)-XNH4EB(N,NN,N5B,N4B)
+      TNH3EB(N2,N1)=TNH3EB(N2,N1)-XNH3EB(N,NN,N5B,N4B)
+      TNHUEB(N2,N1)=TNHUEB(N2,N1)-XNHUEB(N,NN,N5B,N4B)
+      TNO3EB(N2,N1)=TNO3EB(N2,N1)-XNO3EB(N,NN,N5B,N4B)
+      TN4ER(N2,N1)=TN4ER(N2,N1)-XN4ER(N,NN,N5B,N4B)
+      TNBER(N2,N1)=TNBER(N2,N1)-XNBER(N,NN,N5B,N4B)
+      THYER(N2,N1)=THYER(N2,N1)-XHYER(N,NN,N5B,N4B)
+      TALER(N2,N1)=TALER(N2,N1)-XALER(N,NN,N5B,N4B)
+      TFEER(N2,N1)=TFEER(N2,N1)-XFEER(N,NN,N5B,N4B)
+      TCAER(N2,N1)=TCAER(N2,N1)-XCAER(N,NN,N5B,N4B)
+      TMGER(N2,N1)=TMGER(N2,N1)-XMGER(N,NN,N5B,N4B)
+      TNAER(N2,N1)=TNAER(N2,N1)-XNAER(N,NN,N5B,N4B)
+      TKAER(N2,N1)=TKAER(N2,N1)-XKAER(N,NN,N5B,N4B)
+      THCER(N2,N1)=THCER(N2,N1)-XHCER(N,NN,N5B,N4B)
+      TAL2ER(N2,N1)=TAL2ER(N2,N1)-XAL2ER(N,NN,N5B,N4B)
+      TFE2ER(N2,N1)=TFE2ER(N2,N1)-XFE2ER(N,NN,N5B,N4B)
+      TOH0ER(N2,N1)=TOH0ER(N2,N1)-XOH0ER(N,NN,N5B,N4B)
+      TOH1ER(N2,N1)=TOH1ER(N2,N1)-XOH1ER(N,NN,N5B,N4B)
+      TOH2ER(N2,N1)=TOH2ER(N2,N1)-XOH2ER(N,NN,N5B,N4B)
+      TH1PER(N2,N1)=TH1PER(N2,N1)-XH1PER(N,NN,N5B,N4B)
+      TH2PER(N2,N1)=TH2PER(N2,N1)-XH2PER(N,NN,N5B,N4B)
+      TOH0EB(N2,N1)=TOH0EB(N2,N1)-XOH0EB(N,NN,N5B,N4B)
+      TOH1EB(N2,N1)=TOH1EB(N2,N1)-XOH1EB(N,NN,N5B,N4B)
+      TOH2EB(N2,N1)=TOH2EB(N2,N1)-XOH2EB(N,NN,N5B,N4B)
+      TH1PEB(N2,N1)=TH1PEB(N2,N1)-XH1PEB(N,NN,N5B,N4B)
+      TH2PEB(N2,N1)=TH2PEB(N2,N1)-XH2PEB(N,NN,N5B,N4B)
+      TALOER(N2,N1)=TALOER(N2,N1)-PALOER(N,NN,N5B,N4B)
+      TFEOER(N2,N1)=TFEOER(N2,N1)-PFEOER(N,NN,N5B,N4B)
+      TCACER(N2,N1)=TCACER(N2,N1)-PCACER(N,NN,N5B,N4B)
+      TCASER(N2,N1)=TCASER(N2,N1)-PCASER(N,NN,N5B,N4B)
+      TALPER(N2,N1)=TALPER(N2,N1)-PALPER(N,NN,N5B,N4B)
+      TFEPER(N2,N1)=TFEPER(N2,N1)-PFEPER(N,NN,N5B,N4B)
+      TCPDER(N2,N1)=TCPDER(N2,N1)-PCPDER(N,NN,N5B,N4B)
+      TCPHER(N2,N1)=TCPHER(N2,N1)-PCPHER(N,NN,N5B,N4B)
+      TCPMER(N2,N1)=TCPMER(N2,N1)-PCPMER(N,NN,N5B,N4B)
+      TALPEB(N2,N1)=TALPEB(N2,N1)-PALPEB(N,NN,N5B,N4B)
+      TFEPEB(N2,N1)=TFEPEB(N2,N1)-PFEPEB(N,NN,N5B,N4B)
+      TCPDEB(N2,N1)=TCPDEB(N2,N1)-PCPDEB(N,NN,N5B,N4B)
+      TCPHEB(N2,N1)=TCPHEB(N2,N1)-PCPHEB(N,NN,N5B,N4B)
+      TCPMEB(N2,N1)=TCPMEB(N2,N1)-PCPMEB(N,NN,N5B,N4B)
+      DO 8380 K=0,5
+      DO 8380 NO=1,7
+      DO 8380 M=1,3
+      TOMCER(M,NO,K,N2,N1)=TOMCER(M,NO,K,N2,N1)
+     2-OMCER(M,NO,K,N,NN,N5B,N4B)
+      TOMNER(M,NO,K,N2,N1)=TOMNER(M,NO,K,N2,N1)
+     2-OMNER(M,NO,K,N,NN,N5B,N4B)
+      TOMPER(M,NO,K,N2,N1)=TOMPER(M,NO,K,N2,N1)
+     2-OMPER(M,NO,K,N,NN,N5B,N4B)
+8380  CONTINUE
+      DO 8375 K=0,4
+      DO 8370 M=1,2
+      TORCER(M,K,N2,N1)=TORCER(M,K,N2,N1)-ORCER(M,K,N,NN,N5B,N4B)
+      TORNER(M,K,N2,N1)=TORNER(M,K,N2,N1)-ORNER(M,K,N,NN,N5B,N4B)
+      TORPER(M,K,N2,N1)=TORPER(M,K,N2,N1)-ORPER(M,K,N,NN,N5B,N4B)
+8370  CONTINUE
+      TOHCER(K,N2,N1)=TOHCER(K,N2,N1)-OHCER(K,N,NN,N5B,N4B)
+      TOHNER(K,N2,N1)=TOHNER(K,N2,N1)-OHNER(K,N,NN,N5B,N4B)
+      TOHPER(K,N2,N1)=TOHPER(K,N2,N1)-OHPER(K,N,NN,N5B,N4B)
+      TOHAER(K,N2,N1)=TOHAER(K,N2,N1)-OHAER(K,N,NN,N5B,N4B)
+      DO 8365 M=1,4
+      TOSCER(M,K,N2,N1)=TOSCER(M,K,N2,N1)-OSCER(M,K,N,NN,N5B,N4B)
+      TOSAER(M,K,N2,N1)=TOSAER(M,K,N2,N1)-OSAER(M,K,N,NN,N5B,N4B)
+      TOSNER(M,K,N2,N1)=TOSNER(M,K,N2,N1)-OSNER(M,K,N,NN,N5B,N4B)
+      TOSPER(M,K,N2,N1)=TOSPER(M,K,N2,N1)-OSPER(M,K,N,NN,N5B,N4B)
+8365  CONTINUE
+8375  CONTINUE
+      ENDIF
+      ENDIF 
+9350  CONTINUE
       ENDIF
       ENDIF
 C
-C     TOTAL HEAT, WATER, GAS AND SOLUTE FLUXES BETWEEN ADJACENT
+C     NET HEAT, WATER FLUXES BETWEEN ADJACENT
 C     GRID CELLS
+C
+C     TFLW,TFLWH,TFLWH=net micropore,macropore water flux, heat flux
+C     FLW,FLWH,HFLW=micropore,macropore water flux, heat flux from watsub.f
+C     FLWNU,FLWHNU,HFLWNU=lake surface water flux, heat flux from watsub.f if lake surface disappears
 C
       IF(NCN(N2,N1).NE.3.OR.N.EQ.3)THEN
       DO 1200 LL=N6,NL(N5,N4)
@@ -1954,6 +2678,16 @@ C    3,THFLW(N3,N2,N1),HFLW(N,N3,N2,N1),HFLW(N,N6,N5,N4)
 C    2,HFLWNU(N5,N4),VOLW(N3,N2,N1)
 6632  FORMAT(A8,10I4,12E16.8)
 C     ENDIF
+C
+C     NET SOLUTE FLUXES BETWEEN ADJACENT GRID CELLS
+C
+C     T*FLS,T*FHS=net convective+diffusive solute flux through micropores,macropores
+C     X*FLS,X*FHS=convective+diffusive solute flux through micropores, macropores from trnsfr.f
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
+C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
+C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
+C
       DO 8585 K=0,4
       TOCFLS(K,N3,N2,N1)=TOCFLS(K,N3,N2,N1)+XOCFLS(K,N,N3,N2,N1)
      2-XOCFLS(K,N,N6,N5,N4)
@@ -2044,6 +2778,13 @@ C     ENDIF
      2-XH1BHB(N,N6,N5,N4)
       TH2BHB(N3,N2,N1)=TH2BHB(N3,N2,N1)+XH2BHB(N,N3,N2,N1)
      2-XH2BHB(N,N6,N5,N4)
+C
+C     NET GAS FLUXES BETWEEN ADJACENT GRID CELLS
+C
+C     T*FLG=net convective+diffusive gas flux
+C     X*FLG=convective+diffusive gas flux from trnsfr.f
+C     gas code:*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,*NH*=NH3,*HG*=H2
+C
       TCOFLG(N3,N2,N1)=TCOFLG(N3,N2,N1)+XCOFLG(N,N3,N2,N1)
      2-XCOFLG(N,N6,N5,N4)
       TCHFLG(N3,N2,N1)=TCHFLG(N3,N2,N1)+XCHFLG(N,N3,N2,N1)
@@ -2058,6 +2799,22 @@ C     ENDIF
      2-XN3FLG(N,N6,N5,N4)
       THGFLG(N3,N2,N1)=THGFLG(N3,N2,N1)+XHGFLG(N,N3,N2,N1)
      2-XHGFLG(N,N6,N5,N4)
+C
+C     NET SALT FLUXES BETWEEN ADJACENT GRID CELLS
+C
+C     T*FLS,T*FHS=net convective+diffusive solute flux through micropores,macropores
+C     X*FLS,X*FHS=convective+diffusive solute flux through micropores, macropores from trnsfrs.f
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
+C
       IF(ISALTG.NE.0)THEN
       TALFLS(N3,N2,N1)=TALFLS(N3,N2,N1)+XALFLS(N,N3,N2,N1)
      2-XALFLS(N,N6,N5,N4)
@@ -2420,6 +3177,14 @@ C     ENDIF
       ENDIF
       ENDIF
 8580  CONTINUE
+C
+C     NET FREEZE-THAW
+C
+C     TTHAW,TTHAWH=net freeze-thaw flux in micropores,macropores 
+C     THTHAW=net freeze-thaw latent heat flux
+C     THAW,THAWH=freeze-thaw flux in micropores,macropores from watsub.f
+C     HTHAW=freeze-thaw latent heat flux from watsub.f 
+C
       TTHAW(N3,N2,N1)=TTHAW(N3,N2,N1)+THAW(N3,N2,N1)
       TTHAWH(N3,N2,N1)=TTHAWH(N3,N2,N1)+THAWH(N3,N2,N1)
       THTHAW(N3,N2,N1)=THTHAW(N3,N2,N1)+HTHAW(N3,N2,N1)
@@ -2438,6 +3203,11 @@ C
 C
 C     ADD CHANGES IN SNOW, WATER AND ICE
 C
+C     VOLSSL,VOLWSL,VOLISL=snow water equivalent,water,ice volume in snowpack layer
+C     TFLWS,TFLWW,TFLWI=net fluxes of snow,water,ice in snowpack
+C     XWFLXS,XWFLXI=freeze-thaw flux from watsub.f
+C     
+C
       VOLSSL(L,NY,NX)=VOLSSL(L,NY,NX)+TFLWS(L,NY,NX)-XWFLXS(L,NY,NX) 
       VOLWSL(L,NY,NX)=VOLWSL(L,NY,NX)+TFLWW(L,NY,NX)+XWFLXS(L,NY,NX)
      2+XWFLXI(L,NY,NX) 
@@ -2446,6 +3216,11 @@ C
 C
 C     ACCUMULATE SNOW MASS FOR CALCULATING COMPRESSION
 C
+C     VOLWSI=accumulated water equivalent volume in snowpack
+C     XFLWS=snow transfer from watsub.f
+C     VOLSF=snowfall volume
+C     DENSS=snow density in layer
+C 
       IF(L.EQ.1)THEN
       VOLSWI=VOLSWI+0.5*(VOLSSL(L,NY,NX)+VOLWSL(L,NY,NX)
      2+VOLISL(L,NY,NX)*DENSI)
@@ -2467,6 +3242,20 @@ C
       ENDIF
 C
 C     SNOWPACK COMPRESSION
+C
+C     DDENS1,DDENS2=temperature, compression effect on snow density
+C     DENSS=snow density in layer
+C     VOLSSL,VOLWSL,VOLISL=snow water equivalent,water,ice volume in snowpack layer
+C     VOLSL=snowpack layer volume
+C     DLYRS=snowpack layer depth
+C     CDPTHS=cumulative depth to bottom of snowpack layer
+C     VHCPW=snowpack layer heat capacity
+C     TKW,TCW=snowpack layer temperature K,oC
+C     THFLWW=convective heat fluxes of snow,water,ice in snowpack
+C     XTHAWW=latent heat flux from freeze-thaw from watsub.f
+C     HEATIN=cumulative net surface heat transfer
+C     VOLSS,VOLWS,VOLIS=total snow water equivalent, water, ice content of snowpack
+C     VOLS,DPTHS=total snowpack volume, depth
 C
       IF(DENSS(L,NY,NX).LT.0.25)THEN
       DDENS1=DENSS(L,NY,NX)*1.0E-05*EXP(0.04*TCW(L,NY,NX))
@@ -2538,6 +3327,14 @@ C     ENDIF
       ENDIF
       ENDIF
       TCW(L,NY,NX)=TKW(L,NY,NX)-273.15
+C
+C     SNOWPACK SOLUTE CONTENT
+C
+C     *W2=solute content of snowpack
+C     T*BLS=net solute flux in snowpack
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C             :N4=NH4,N3=NH3,NO=NO3,1P=HPO4,HP=H2PO4 
+C
       CO2W(L,NY,NX)=CO2W(L,NY,NX)+TCOBLS(L,NY,NX)
       CH4W(L,NY,NX)=CH4W(L,NY,NX)+TCHBLS(L,NY,NX)
       OXYW(L,NY,NX)=OXYW(L,NY,NX)+TOXBLS(L,NY,NX)
@@ -2548,6 +3345,17 @@ C     ENDIF
       ZNOW(L,NY,NX)=ZNOW(L,NY,NX)+TNOBLW(L,NY,NX)
       Z1PW(L,NY,NX)=Z1PW(L,NY,NX)+TH1PBS(L,NY,NX)
       ZHPW(L,NY,NX)=ZHPW(L,NY,NX)+TH2PBS(L,NY,NX)
+C
+C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
+C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
+C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
+C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C
       IF(ISALTG.NE.0)THEN
       ZALW(L,NY,NX)=ZALW(L,NY,NX)+TALBLS(L,NY,NX)
       ZFEW(L,NY,NX)=ZFEW(L,NY,NX)+TFEBLS(L,NY,NX)
@@ -2636,9 +3444,8 @@ C
       DO 9770 L=1,JS
       DENSS(L,NY,NX)=DENS0(NY,NX)
 9770  CONTINUE
-      VOLW(NUM(NY,NX),NY,NX)=VOLW(NUM(NY,NX),NY,NX)+FLWW
-      VOLI(NUM(NY,NX),NY,NX)=VOLI(NUM(NY,NX),NY,NX)+FLWI
-     2+FLWS/DENSI
+      VOLW(0,NY,NX)=VOLW(0,NY,NX)+FLWW
+      VOLI(0,NY,NX)=VOLI(0,NY,NX)+FLWI+FLWS/DENSI
       ENGY=VHCP(NUM(NY,NX),NY,NX)*TKS(NUM(NY,NX),NY,NX)
       VHCP(NUM(NY,NX),NY,NX)=VHCM(NUM(NY,NX),NY,NX)
      2+4.19*(VOLW(NUM(NY,NX),NY,NX)+VOLWH(NUM(NY,NX),NY,NX))
@@ -2650,7 +3457,6 @@ C
       ELSE
       TKS(NUM(NY,NX),NY,NX)=TKA(NY,NX)
       ENDIF
-      VOLWX(NUM(NY,NX),NY,NX)=VOLW(NUM(NY,NX),NY,NX)
       ENGY2=VHCP(NUM(NY,NX),NY,NX)*TKS(NUM(NY,NX),NY,NX)
 C     WRITE(*,2222)'SNW',I,J,IYRC,NX,NY,HEATIN
 C    2,(2.095-1.9274)*FLWS/DENSI*TKSX,HFLWS,ENGY
@@ -2671,11 +3477,11 @@ C
       VOLW(0,NY,NX)=VOLW(0,NY,NX)+FLWR(NY,NX)+THAWR(NY,NX)
      2+TQR(NY,NX) 
       VOLI(0,NY,NX)=VOLI(0,NY,NX)-THAWR(NY,NX)/DENSI
-      ENGYR=VHCPZ*TKS(0,NY,NX)
+      ENGYZ=VHCPZ*TKS(0,NY,NX)
       VHCP(0,NY,NX)=2.496E-06*ORGC(0,NY,NX)+4.19*VOLW(0,NY,NX)
      2+1.9274*VOLI(0,NY,NX)
       IF(VHCP(0,NY,NX).GT.VHCPRX(NY,NX))THEN
-      TKS(0,NY,NX)=(ENGYR+HFLWR(NY,NX)+HTHAWR(NY,NX)+HFLXO
+      TKS(0,NY,NX)=(ENGYZ+HFLWR(NY,NX)+HTHAWR(NY,NX)+HFLXO
      2+THQR(NY,NX))/VHCP(0,NY,NX)
       HEATIN=HEATIN+HFLXO
       ELSE
@@ -2690,11 +3496,13 @@ C
       TSMX(0,NY,NX)=AMAX1(TSMX(0,NY,NX),TCS(0,NY,NX))
       TSMN(0,NY,NX)=AMIN1(TSMN(0,NY,NX),TCS(0,NY,NX))
 C     UVOLW(NY,NX)=UVOLW(NY,NX)-VOLW(0,NY,NX)-VOLI(0,NY,NX)*DENSI
-C     IF(J.EQ.15)THEN
-C     WRITE(*,6633)'VOLWR',I,J,NX,NY,L,VOLW(0,NY,NX),VOLI(0,NY,NX)
+C     IF(I.GT.350.AND.NX.EQ.1)THEN
+C     WRITE(*,6634)'VOLWR',I,J,NX,NY,VOLW(0,NY,NX),VOLI(0,NY,NX)
 C    2,ORGC(0,NY,NX),FLWR(NY,NX),TQR(NY,NX),THAWR(NY,NX) 
 C    3,TKS(0,NY,NX),HFLWR(NY,NX),HFLXO,THQR(NY,NX) 
 C    4,HTHAWR(NY,NX),VHCP(0,NY,NX),TKS(NUM(NY,NX),NY,NX)
+C    5,ENGYR,ENGYZ,VHCPZ,VHCPRX(NY,NX)
+6634  FORMAT(A8,4I4,30E14.6)
 C     ENDIF
 C
 C     SURFACE BOUNDARY WATER FLUXES
@@ -3062,7 +3870,7 @@ C    2,XH2PS(0,NY,NX),TPOQRS(NY,NX)
 C
 C     OVERLAND FLOW
 C
-      IF(TQR(NY,NX).NE.0.0)THEN
+      IF(ABS(TQR(NY,NX)).GT.ZEROS(NY,NX))THEN
 C
 C     DOC, DON, DOP
 C
@@ -3135,6 +3943,7 @@ C
       ZCA2P(0,NY,NX)=ZCA2P(0,NY,NX)+TQRC2P(NY,NX)
       ZMG1P(0,NY,NX)=ZMG1P(0,NY,NX)+TQRM1P(NY,NX)
       ENDIF
+      ENDIF
 C
 C     INTERNAL SURFACE SEDIMENT TRANSPORT
 C
@@ -3205,16 +4014,18 @@ C
 C
 C     ORGANIC CONSTITUENTS
 C
+      DORGP=0.0
       DO 9280 K=0,5
-      DO 9280 NN=1,7
+      DO 9280 NO=1,7
       DO 9280 M=1,3
-      OMC(M,NN,K,NU(NY,NX),NY,NX)=OMC(M,NN,K,NU(NY,NX),NY,NX)
-     2+TOMCER(M,NN,K,NY,NX)
-      OMN(M,NN,K,NU(NY,NX),NY,NX)=OMN(M,NN,K,NU(NY,NX),NY,NX)
-     2+TOMNER(M,NN,K,NY,NX)
-      OMP(M,NN,K,NU(NY,NX),NY,NX)=OMP(M,NN,K,NU(NY,NX),NY,NX)
-     2+TOMPER(M,NN,K,NY,NX)
-      DORGE(NY,NX)=DORGE(NY,NX)+TOMCER(M,NN,K,NY,NX)
+      OMC(M,NO,K,NU(NY,NX),NY,NX)=OMC(M,NO,K,NU(NY,NX),NY,NX)
+     2+TOMCER(M,NO,K,NY,NX)
+      OMN(M,NO,K,NU(NY,NX),NY,NX)=OMN(M,NO,K,NU(NY,NX),NY,NX)
+     2+TOMNER(M,NO,K,NY,NX)
+      OMP(M,NO,K,NU(NY,NX),NY,NX)=OMP(M,NO,K,NU(NY,NX),NY,NX)
+     2+TOMPER(M,NO,K,NY,NX)
+      DORGE(NY,NX)=DORGE(NY,NX)+TOMCER(M,NO,K,NY,NX)
+      DORGP=DORGP+TOMPER(M,NO,K,NY,NX)
 9280  CONTINUE
       DO 9275 K=0,4
       DO 9270 M=1,2
@@ -3225,12 +4036,14 @@ C
       ORP(M,K,NU(NY,NX),NY,NX)=ORP(M,K,NU(NY,NX),NY,NX)
      2+TORPER(M,K,NY,NX)
       DORGE(NY,NX)=DORGE(NY,NX)+TORCER(M,K,NY,NX)
+      DORGP=DORGP+TORPER(M,K,NY,NX)
 9270  CONTINUE
       OHC(K,NU(NY,NX),NY,NX)=OHC(K,NU(NY,NX),NY,NX)+TOHCER(K,NY,NX)
       OHN(K,NU(NY,NX),NY,NX)=OHN(K,NU(NY,NX),NY,NX)+TOHNER(K,NY,NX)
       OHP(K,NU(NY,NX),NY,NX)=OHP(K,NU(NY,NX),NY,NX)+TOHPER(K,NY,NX)
       OHA(K,NU(NY,NX),NY,NX)=OHA(K,NU(NY,NX),NY,NX)+TOHAER(K,NY,NX)
       DORGE(NY,NX)=DORGE(NY,NX)+TOHCER(K,NY,NX)+TOHAER(K,NY,NX)
+      DORGP=DORGP+TOHPER(K,NY,NX) 
       DO 9265 M=1,4
       OSC(M,K,NU(NY,NX),NY,NX)=OSC(M,K,NU(NY,NX),NY,NX)
      2+TOSCER(M,K,NY,NX)
@@ -3241,9 +4054,11 @@ C
       OSP(M,K,NU(NY,NX),NY,NX)=OSP(M,K,NU(NY,NX),NY,NX)
      2+TOSPER(M,K,NY,NX)
       DORGE(NY,NX)=DORGE(NY,NX)+TOSCER(M,K,NY,NX) 
+      DORGP=DORGP+TOSPER(M,K,NY,NX) 
 9265  CONTINUE
 9275  CONTINUE
-      ENDIF
+C     WRITE(*,6637)'DORGP',I,J,NY,NX,DORGP,TSEDER(NY,NX)
+6637  FORMAT(A8,4I4,12E12.4)
       ENDIF
 C
 C     OVERLAND SNOW REDISTRIBUTION
@@ -3545,8 +4360,8 @@ C    2,Z4S,Z4X,Z4F,ZOS,ZOF,ZG
 C    2,ZSI,ZGI,ZGB,Z2B,ZHB
 C    3,ZXR,ZGR,ZOR,ZXB,TRN3S(0,NY,NX) 
 C    3,ZN4W(NY,NX),ZN3W(NY,NX),ZNOW(NY,NX),ZNGW(NY,NX),ZN2W(NY,NX) 
-C     WRITE(20,3338)'SBP',I,J,TLPO4,TPIN,TPOU,PI,PXR,POR,PSS
-C    2,PXB,POS,POX,POP 
+C     WRITE(20,3338)'SBP',I,J,POS,POX,POP,PSS,PXR,PXB,POR
+C    2,TLPO4,TPIN,TPOU
 C    2,XH1PS(0,NY,NX),XH2PS(0,NY,NX),H1PO4(0,NY,NX),H2PO4(0,NY,NX)
 C    3,XH1P(0,NY,NX),XH2P(0,NY,NX),PALPO(0,NY,NX),PFEPO(0,NY,NX) 
 C    6,PCAPD(0,NY,NX),PCAPM(0,NY,NX),PCAPH(0,NY,NX),TRH1P(0,NY,NX)
@@ -3578,15 +4393,10 @@ C
       VOLIXX=VOLI(L,NY,NX)
       VOLW(L,NY,NX)=VOLW(L,NY,NX)+TFLW(L,NY,NX)+FINH(L,NY,NX)
      2+TTHAW(L,NY,NX)+TUPWTR(L,NY,NX)+FLU(L,NY,NX) 
-      IF(VOLW(L,NY,NX).GT.ZEROS2(NY,NX))THEN
       VOLWX(L,NY,NX)=VOLWX(L,NY,NX)+TFLWX(L,NY,NX)+FINH(L,NY,NX)
-     2+TTHAW(L,NY,NX)+TUPWTR(L,NY,NX)*VOLWX(L,NY,NX)/VOLW(L,NY,NX)
-     3+FLU(L,NY,NX)+FLWV(L,NY,NX)
-      VOLWX(L,NY,NX)=AMAX1(THETY(L,NY,NX)*VOLX(L,NY,NX)
-     2,AMIN1(VOLW(L,NY,NX),VOLWX(L,NY,NX)))
-      ELSE
-      VOLWX(L,NY,NX)=0.0
-      ENDIF
+     2+TTHAW(L,NY,NX)+TUPWTR(L,NY,NX)+FLU(L,NY,NX) 
+      VOLWX(L,NY,NX)=AMIN1(VOLW(L,NY,NX)
+     2,VOLWX(L,NY,NX)+0.01*(VOLW(L,NY,NX)-VOLWX(L,NY,NX)))
       VOLI(L,NY,NX)=VOLI(L,NY,NX)-TTHAW(L,NY,NX)/DENSI
       VOLWH(L,NY,NX)=VOLWH(L,NY,NX)+TFLWH(L,NY,NX)-FINH(L,NY,NX)
      2+TTHAWH(L,NY,NX)
@@ -3640,7 +4450,7 @@ C
       TSMX(L,NY,NX)=AMAX1(TSMX(L,NY,NX),TCS(L,NY,NX))
       TSMN(L,NY,NX)=AMIN1(TSMN(L,NY,NX),TCS(L,NY,NX))
       UN2GS(NY,NX)=UN2GS(NY,NX)+XN2GS(L,NY,NX)
-C     IF(J.EQ.15)THEN
+C     IF(NX.EQ.1)THEN
 C     WRITE(*,6547)'VOLW',I,J,NX,NY,L,VOLW(L,NY,NX),VOLI(L,NY,NX)
 C    2,VOLW(L,NY,NX)+VOLI(L,NY,NX),VOLP(L,NY,NX),VOLA(L,NY,NX)
 C    3,VOLWH(L,NY,NX),VOLIH(L,NY,NX),VOLAH(L,NY,NX)
@@ -3662,7 +4472,7 @@ C    4,VOLIH(L,NY,NX),TFLW(L,NY,NX),FINH(L,NY,NX),TTHAW(L,NY,NX)
 C    5,TUPWTR(L,NY,NX),FLU(L,NY,NX),TQR(NY,NX) 
 C    6,HFLW(3,L,NY,NX),HFLW(3,L+1,NY,NX)
 C    7,ENGY+THFLW(L,NY,NX)+THTHAW(L,NY,NX)+TUPHT(L,NY,NX)+HWFLU(L,NY,NX)
-6633  FORMAT(A8,5I4,40F16.8)
+6633  FORMAT(A8,5I4,40E16.8)
 C     ENDIF
 C
 C     RESIDUE FROM PLANT LITTERFALL
@@ -3670,6 +4480,7 @@ C
       DO 8565 K=0,1
       DO 8565 M=1,4
       OSC(M,K,L,NY,NX)=OSC(M,K,L,NY,NX)+CSNT(M,K,L,NY,NX)
+      OSA(M,K,L,NY,NX)=OSA(M,K,L,NY,NX)+CSNT(M,K,L,NY,NX)*OMCI(1,K)
       OSN(M,K,L,NY,NX)=OSN(M,K,L,NY,NX)+ZSNT(M,K,L,NY,NX)
       OSP(M,K,L,NY,NX)=OSP(M,K,L,NY,NX)+PSNT(M,K,L,NY,NX)
 C     IF((I/30)*30.EQ.I.AND.J.EQ.15)THEN
@@ -4137,7 +4948,13 @@ C     ENDIF
      8+93.0*(PCAPH(L,NY,NX)+PCPHB(L,NY,NX))
       TLPO4=TLPO4+POS+POX+POP
       UPO4(NY,NX)=UPO4(NY,NX)+POX
-      UPP4(NY,NX)=UPP4(NY,NX)+POP 
+      UPP4(NY,NX)=UPP4(NY,NX)+POP
+C     IF(L.EQ.NU(NY,NX))THEN 
+C     WRITE(*,2233)'TLPO4',I,J,NX,NY,L
+C    2,POS,POX,POP,TLPO4,TSEDER(NY,NX) 
+C    3,TH1PEB(NY,NX),TH2PEB(NY,NX),XH1PB(L,NY,NX),XH2PB(L,NY,NX)
+2233  FORMAT(A8,5I4,30F17.8)
+C     ENDIF
 C
 C     TOTAL SOC,SON,SOP
 C    
@@ -4255,6 +5072,10 @@ C    4,OQN(K,L,NY,NX),OQNH(K,L,NY,NX),OHN(K,L,NY,NX)
       TLORGP=TLORGP+OP
       UORGP(NY,NX)=UORGP(NY,NX)+OP
       TSEDSO=TSEDSO+(DC+OC)*1.0E-06
+C     IF(L.EQ.NU(NY,NX))THEN 
+C     WRITE(*,2234)'TLORGP',I,J,NX,NY,L,TLRSDP,TLORGP,DP,OP 
+2234  FORMAT(A8,5I4,20F16.6)
+C     ENDIF
 C
 C     TOTAL SALT IONS
 C
@@ -4475,17 +5296,35 @@ C     ENDIF
      4+ZFE2PH(L,NY,NX)+ZCA2PH(L,NY,NX)+H3POBH(L,NY,NX) 
      5+ZFE2BH(L,NY,NX)+ZCA2BH(L,NY,NX))
      6+5.0*(ZALO4H(L,NY,NX)+ZFEO4H(L,NY,NX))
-      SSX=XHY(L,NY,NX)+XAL(L,NY,NX)+XFE(L,NY,NX)+XCA(L,NY,NX) 
-     2+XMG(L,NY,NX)+XNA(L,NY,NX)+XKA(L,NY,NX)+XHC(L,NY,NX)
-     4+3.0*(XALO2(L,NY,NX)+XFEO2(L,NY,NX))
-      SSP=2.0*(PCACO(L,NY,NX)+PCASO(L,NY,NX))
-     2+4.0*(PALOH(L,NY,NX)+PFEOH(L,NY,NX))
-      SSI=SSS+SSH+SSX+SSP 
-      TION=TION+SSI
-      UION(NY,NX)=UION(NY,NX)+SSI
+C
+C     TOTAL FERILIZER,EXCHANGEABLE CATIONS AND ANIONS, PRECIPITATES
+C
+      SSF=ZNH3FA(L,NY,NX)+ZNHUFA(L,NY,NX)+ZNO3FA(L,NY,NX)
+     5+ZNH3FB(L,NY,NX)+ZNHUFB(L,NY,NX)+ZNO3FB(L,NY,NX)
+     2+2.0*(ZNH4FA(L,NY,NX)+ZNH4FB(L,NY,NX))
+      SSX=XHY(L,NY,NX)+XAL(L,NY,NX)
+     2+XFE(L,NY,NX)+XCA(L,NY,NX)+XMG(L,NY,NX) 
+     3+XNA(L,NY,NX)+XKA(L,NY,NX)+XHC(L,NY,NX)
+     4+XOH0(L,NY,NX)+XOH0B(L,NY,NX)
+     5+2.0*(XN4(L,NY,NX)+XNB(L,NY,NX)
+     6+XOH1(L,NY,NX)+XOH1B(L,NY,NX))
+     7+3.0*(XALO2(L,NY,NX)+XFEO2(L,NY,NX)
+     8+XOH2(L,NY,NX)+XOH2B(L,NY,NX)
+     9+XH1P(L,NY,NX)+XH1PB(L,NY,NX))
+     1+4.0*(XH2P(L,NY,NX)+XH2PB(L,NY,NX))
+      SSP=2.0*(PCACO(L,NY,NX)+PCASO(L,NY,NX)
+     2+PALPO(L,NY,NX)+PFEPO(L,NY,NX) 
+     3+PALPB(L,NY,NX)+PFEPB(L,NY,NX)) 
+     4+3.0*(PCAPD(L,NY,NX)+PCPDB(L,NY,NX)) 
+     5+4.0*(PALOH(L,NY,NX)+PFEOH(L,NY,NX))
+     6+7.0*(PCAPM(L,NY,NX)+PCPMB(L,NY,NX))
+     7+9.0*(PCAPH(L,NY,NX)+PCPHB(L,NY,NX))
+      SST=SSS+SSH+SSF+SSX+SSP 
+      TION=TION+SST 
+      UION(NY,NX)=UION(NY,NX)+SST
 C     IF(I.EQ.180.AND.J.EQ.12)THEN
-C     WRITE(*,3339)'SSS',I,J,L,SSS,ZHY(L,NY,NX),ZAL(L,NY,NX)
-C    2,ZFE(L,NY,NX),ZCA(L,NY,NX)
+C     WRITE(*,3341)'SSS',I,J,NX,NY,L,SST,SSS,SSH,SSF,SSX,SSP,TION 
+C    2 ZHY(L,NY,NX),ZAL(L,NY,NX),ZFE(L,NY,NX),ZCA(L,NY,NX)
 C    2,ZMG(L,NY,NX),ZNA(L,NY,NX),ZKA(L, NY,NX),ZOH(L,NY,NX)
 C    3,ZSO4(L,NY,NX),ZCL(L,NY,NX),ZCO3(L,NY,NX),H0PO4(L,NY,NX)
 C    4,H0POB(L,NY,NX)
@@ -4501,10 +5340,11 @@ C    3,ZALOH3(L,NY,NX),ZFEOH3(L,NY,NX),H3PO4(L,NY,NX)
 C    3,ZFE2P(L,NY,NX),ZCA2P(L,NY,NX),H3POB(L,NY,NX),ZFE2PB(L,NY,NX)
 C    5,ZCA2PB(L,NY,NX)
 C    6,ZALOH4(L,NY,NX),ZFEOH4(L,NY,NX)
-C     WRITE(*,3339)'SSX',I,J,L,SSX,XHY(L,NY,NX),XAL(L,NY,NX)
+C     WRITE(*,3341)'SSX',I,J,NX,NY,L,SSX,XHY(L,NY,NX),XAL(L,NY,NX)
 C    2,XFE(L,NY,NX),XCA(L,NY,NX),XMG(L,NY,NX),XNA(L,NY,NX)
 C    3,XKA(L,NY,NX),XHC(L,NY,NX),XALO2(L,NY,NX),XFEO2(L,NY,NX)
 C    4,PCACO(L,NY,NX),PCASO(L,NY,NX),PALOH(L,NY,NX),PFEOH(L,NY,NX)
+3341  FORMAT(A8,5I4,20F14.6)
 C     ENDIF 
 C   
 C     SOIL ELECTRICAL CONDUCTIVITY 
@@ -4797,6 +5637,7 @@ C
       ENDIF
       DO 225 LX=NL(NY,NX),NU(NY,NX),-1
       CDPTHX(LX,NY,NX)=CDPTH(LX,NY,NX)
+      CDPTHY(LX,NY,NX)=CDPTH(LX,NY,NX)
 C
 C     POND
 C
@@ -4926,8 +5767,9 @@ C     EROSION
 C
       IF((IERSNG.EQ.1.OR.IERSNG.EQ.3)
      2.AND.ABS(TSEDER(NY,NX)).GT.ZEROS(NY,NX))THEN
-      IF(LX.EQ.NU(NY,NX))THEN
-      DDLYXE=-TSEDER(NY,NX)/(AREA(3,LX,NY,NX)*BKDS(NU(NY,NX),NY,NX))
+      IF(LX.EQ.NL(NY,NX))THEN
+      DDLYXE=-TSEDER(NY,NX)/(BKVLNU(NY,NX)/VOLX(NU(NY,NX),NY,NX))
+      ENDIF
       DDLYX(LX,5)=DDLYXE 
       DDLYR(LX,5)=DDLYXE 
       IFLGL(LX,5)=1
@@ -4936,19 +5778,12 @@ C
       DDLYR(LX,5)=0.0
       IFLGL(LX,5)=0
       ENDIF
-      ELSE
-      DDLYX(LX,5)=0.0
-      DDLYR(LX,5)=0.0
-      IFLGL(LX,5)=0
-      ENDIF
-C     IF(NY.EQ.3)THEN
-C     WRITE(*,1121)'SED',I,J,NX,NY,LX,DDLYX(LX,5),DDLYR(LX,5)
-C    2,DDLYXE,TSEDER(NY,NX),BKDS(NU(NY,NX),NY,NX),DLYR(3,LX+1,NY,NX)
-1121  FORMAT(A8,5I4,20E14.6) 
 C     IF(LX.EQ.NU(NY,NX))THEN
-C     WRITE(*,1121)'SED0',I,J,NX,NY,LX,DDLYX(LX-1,5),DDLYR(LX-1,5)
-C    2,DDLYXE,TSEDER(NY,NX),BKDS(NU(NY,NX),NY,NX),DLYR(3,LX,NY,NX)
-C     ENDIF
+C     WRITE(*,1121)'SED',I,J,NX,NY,LX,DDLYXE,DDLYX(LX,5)
+C    2,TSEDER(NY,NX),BKDS(NU(NY,NX),NY,NX),DLYR(3,LX,NY,NX)
+C    3,BKVLNU(NY,NX),VOLX(NU(NY,NX),NY,NX)
+C    4,BKVLNU(NY,NX)/VOLX(NU(NY,NX),NY,NX)
+1121  FORMAT(A8,5I4,20E14.6) 
 C     ENDIF
 C
 C     SOC GAIN OR LOSS
@@ -4992,8 +5827,10 @@ C    2+DLYRI(3,LX,NY,NX)-DLYR(3,LX,NY,NX)
       DDLYR(LX,1)=0.0
       IFLGL(LX,1)=0
 C     IF(LX.LE.4)THEN
-C     WRITE(*,1111)'SOC',I,J,NX,NY,LX,IFLGL(LX,6),DDLYX(LX,6) 
-C    2,DDLYR(LX,6),DDLYXC,DORGC(LX,NY,NX),BKDSI(LX,NY,NX)
+C     WRITE(*,1111)'SOC',I,J,NX,NY,LX,IFLGL(LX,6),DDLYX(LX,6)
+C    2,DDLYR(LX,6),DDLYXC,DORGC(LX,NY,NX),BKDS(LX,NY,NX)
+C    3,DLYRI(3,LX,NY,NX),DLYR(3,LX,NY,NX)
+C    4,DLYRI(3,LX,NY,NX)-DLYR(3,LX,NY,NX)
 C    5,TDORGC,TDYLXC,CDPTH(0,NY,NX)
 1111  FORMAT(A8,6I4,40E16.8)
 C     IF(LX.EQ.NU(NY,NX).OR.BKDS(LX-1,NY,NX).LE.ZERO)THEN
@@ -5017,9 +5854,11 @@ C
       IF(BKDS(LX,NY,NX).LE.ZERO)THEN
       IF(IFLGL(LX,NN).NE.0)THEN
       CDPTH(LX,NY,NX)=CDPTH(LX,NY,NX)+DDLYR(LX,NN)
+      CDPTHY(LX,NY,NX)=CDPTHY(LX,NY,NX)+DDLYR(LX,NN)
       IF(LX.NE.NU(NY,NX).AND.IFLGL(LX,1).EQ.2)THEN
       DO 201 LL=LX-1,0,-1
       CDPTH(LL,NY,NX)=CDPTH(LL,NY,NX)+DDLYX(LX,NN)
+      CDPTHY(LL,NY,NX)=CDPTHY(LL,NY,NX)+DDLYX(LX,NN)
 C     WRITE(*,1116)'DDLYRZ',I,J,NX,NY,LX,LL,IFLGL(LX,1),IFLGL(LX-1,1)
 C    2,DDLYX(LX,NN),CDPTH(LL,NY,NX),DLYR(3,LX,NY,NX)
 C    2,VOLW(LX,NY,NX),DVOLW(LX,NY,NX),AREA(3,LX,NY,NX)
@@ -5040,6 +5879,8 @@ C     ENDIF
       IF(LX.EQ.NU(NY,NX))THEN
       CDPTH(LX-1,NY,NX)=CDPTH(LX,NY,NX)
      2-(VOLW(LX,NY,NX)+VOLI(LX,NY,NX))/AREA(3,LX,NY,NX)
+      CDPTHY(LX-1,NY,NX)=CDPTHY(LX,NY,NX)
+     2-(VOLW(LX,NY,NX)+VOLI(LX,NY,NX))/AREA(3,LX,NY,NX)
 C     WRITE(*,1128)'POND0',I,J,NX,NY,LX,NN,IFLGL(LX-1,NN)
 C    2,DDLYR(LX-1,NN),DDLYR(LX,NN),CDPTH(LX-1,NY,NX),CDPTH(LX,NY,NX) 
 C    4,DLYR(3,LX,NY,NX) 
@@ -5055,11 +5896,13 @@ C     FREEZE-THAW
 C
       IF(NN.EQ.4)THEN 
       CDPTH(LX,NY,NX)=CDPTH(LX,NY,NX)+DDLYR(LX,NN)
+C     CDPTHY(LX,NY,NX)=CDPTHY(LX,NY,NX)+DDLYR(LX,NN)
 C     WRITE(*,1127)'DFREEZ',I,J,NX,NY,LX,IFLGL(LX,NN)
 C    2,DDLYR(LX,NN),CDPTH(LX,NY,NX),DLYR(3,LX,NY,NX),DDLYXF 
 C    5,CDPTH(LX,NY,NX)-CDPTH(LX-1,NY,NX)
       IF(LX.EQ.NU(NY,NX))THEN
       CDPTH(LX-1,NY,NX)=CDPTH(LX-1,NY,NX)+DDLYR(LX-1,NN)
+C     CDPTHY(LX-1,NY,NX)=CDPTHY(LX-1,NY,NX)+DDLYR(LX-1,NN)
 C     WRITE(*,1127)'DFREEZ0',I,J,NX,NY,LX,IFLGL(LX-1,NN)
 C    2,DDLYR(LX-1,NN),DDLYR(LX,NN),CDPTH(LX-1,NY,NX)
 C    3,CDPTH(LX,NY,NX),DLYR(3,LX,NY,NX),DDLYXF
@@ -5072,11 +5915,13 @@ C     SET SURFACE ELEVATION FOR SOIL EROSION
 C
       IF(NN.EQ.5.AND.IFLGL(LX,NN).EQ.1)THEN
       CDPTH(LX,NY,NX)=CDPTH(LX,NY,NX)+DDLYR(LX,NN)
+      CDPTHY(LX,NY,NX)=CDPTHY(LX,NY,NX)+DDLYR(LX,NN)
 C     WRITE(*,1122)'CDSED',I,J,NX,NY,LX,IFLGL(LX,5),DDLYR(LX,5)
 C    2,CDPTH(LX,NY,NX),DLYR(3,LX,NY,NX)
 1122  FORMAT(A8,6I4,12E16.8)
       IF(LX.EQ.NU(NY,NX))THEN
       CDPTH(LX-1,NY,NX)=CDPTH(LX-1,NY,NX)+DDLYR(LX,NN) 
+      CDPTHY(LX-1,NY,NX)=CDPTHY(LX-1,NY,NX)+DDLYR(LX,NN) 
 C     WRITE(*,1122)'CDSED0',I,J,NX,NY,LX,IFLGL(LX,5),DDLYR(LX,5)
 C    2,CDPTH(LX-1,NY,NX),CDPTH(LX,NY,NX),DLYR(3,LX,NY,NX)
       ENDIF
@@ -5086,6 +5931,7 @@ C     SET SOIL LAYER DEPTHS FOR CHANGES IN SOC
 C
       IF(NN.EQ.6.AND.IFLGL(LX,NN).EQ.1)THEN
       CDPTH(LX,NY,NX)=CDPTH(LX,NY,NX)+DDLYR(LX,NN)
+      CDPTHY(LX,NY,NX)=CDPTHY(LX,NY,NX)+DDLYR(LX,NN)
 C     IF(NX.EQ.1)THEN
 C     WRITE(*,1128)'DSOC',I,J,NX,NY,LX,NN,IFLGL(LX,NN) 
 C    2,DDLYR(LX,NN),DDLYXC,CDPTH(LX,NY,NX),DLYR(3,LX,NY,NX)
@@ -5094,6 +5940,7 @@ C    3,CDPTH(0,NY,NX)
 C     ENDIF
       IF(LX.EQ.NU(NY,NX).OR.BKDS(LX-1,NY,NX).LE.ZERO)THEN
       CDPTH(LX-1,NY,NX)=CDPTH(LX-1,NY,NX)+DDLYR(LX-1,NN)
+      CDPTHY(LX-1,NY,NX)=CDPTHY(LX-1,NY,NX)+DDLYR(LX-1,NN)
 C     IF(NX.EQ.1)THEN
 C     WRITE(*,1128)'DSOC0',I,J,NX,NY,LX,NN,IFLGL(LX-1,NN) 
 C    2,DDLYR(LX-1,NN),DDLYXC,CDPTH(LX-1,NY,NX) 
@@ -5103,6 +5950,7 @@ C     ENDIF
       DO 255 LY=LX-2,0,-1
       IF(BKDS(LY+1,NY,NX).LE.ZERO)THEN
       CDPTH(LY,NY,NX)=CDPTH(LY,NY,NX)+DDLYR(LX-1,NN)
+      CDPTHY(LY,NY,NX)=CDPTHY(LY,NY,NX)+DDLYR(LX-1,NN)
 C     WRITE(*,1129)'DCDPTH',I,J,NX,NY,LX,LY,NN,IFLGL(LX,NN)
 C    2,DDLYR(LX-1,NN),CDPTH(LY,NY,NX),DLYR(3,LY,NY,NX)
 C    3,CDPTH(0,NY,NX)
@@ -5129,8 +5977,8 @@ C
       DLYR(3,L,NY,NX)=CDPTH(L,NY,NX)-CDPTH(L-1,NY,NX)
       DLYRXX=DLYR(3,L,NY,NX)
       IF(IFLGL(L,1).EQ.0.AND.IFLGL(L+1,1).NE.0)THEN
-      IF(BKDS(L,NY,NX).LE.ZERO)THEN
       DDLYRX(NN)=0.0
+      IF(BKDS(L,NY,NX).LE.ZERO)THEN
       DDLYRY(L)=DLYRI(3,L,NY,NX)-DLYR(3,L,NY,NX)
       ELSE
       DDLYRY(L)=0.0
@@ -5138,9 +5986,7 @@ C
       ICHKL=1
       ELSEIF(IFLGL(L,1).EQ.2.AND.(IFLGL(L+1,1).EQ.0
      3.OR.DLYR(3,L,NY,NX).LE.DLYRI(3,L,NY,NX)))THEN 
-      IF(BKDS(L,NY,NX).LE.ZERO)THEN
       DDLYRX(NN)=0.0
-      ENDIF
       IF(L.EQ.NU(NY,NX).OR.ICHKL.EQ.0)THEN
       DDLYRY(L)=0.0
       ELSE
@@ -5149,23 +5995,15 @@ C
       IF(IFLGL(L,1).EQ.2.AND.IFLGL(L+1,1).EQ.0)ICHKL=0
       ELSE
       IF(ICHKL.EQ.0)THEN
-      IF(BKDS(L,NY,NX).LE.ZERO)THEN
       DDLYRX(NN)=DLYRI(3,L,NY,NX)-DLYR(3,L,NY,NX)
-      ENDIF
-      DDLYRY(L)=DLYRI(3,L,NY,NX)-DLYR(3,L,NY,NX)
+      DDLYRY(L)=DDLYRX(NN)
       ELSE
-      IF(BKDS(L,NY,NX).LE.ZERO)THEN
       DDLYRX(NN)=0.0
-      ENDIF
       DDLYRY(L)=DDLYRY(L-1)
       ENDIF 
       ENDIF
-      IF(BKDS(L,NY,NX).LE.ZERO)THEN
-      IF(DLYR(3,L,NY,NX).LE.ZERO2)THEN
-      DDLYRY(L)=-DLYR(3,L,NY,NX)
-      ENDIF
-      ENDIF
       CDPTH(L,NY,NX)=CDPTH(L,NY,NX)+DDLYRY(L)
+C     CDPTHY(L,NY,NX)=CDPTHY(L,NY,NX)+DDLYRY(L)
       DLYR(3,L,NY,NX)=DLYR(3,L,NY,NX)+DDLYRY(L)
       DPTH(L,NY,NX)=0.5*(CDPTH(L,NY,NX)+CDPTH(L-1,NY,NX))
       CDPTHZ(L,NY,NX)=CDPTH(L,NY,NX)-CDPTH(NU(NY,NX)-1,NY,NX)
@@ -5176,27 +6014,28 @@ C
       ENDIF
       IF(L.EQ.NU(NY,NX))THEN
       DPTHZ(L,NY,NX)=0.5*CDPTHZ(L,NY,NX)
-      DDLYRX(NN)=DDLYRX(NN)+DDLYR(L,5)
+C     DDLYRX(NN)=DDLYRX(NN)+DDLYR(L,5)
       ELSE
       DPTHZ(L,NY,NX)=0.5*(CDPTHZ(L,NY,NX)+CDPTHZ(L-1,NY,NX))
       ENDIF
       IF(BKDS(L,NY,NX).GT.ZERO)THEN
-      DDLYRX(NN)=CDPTH(L,NY,NX)-CDPTHX(L,NY,NX)
+C     DDLYRX(NN)=CDPTH(L,NY,NX)-CDPTHX(L,NY,NX)
+      DDLYRX(NN)=CDPTHY(L,NY,NX)-CDPTHX(L,NY,NX)
       ENDIF
-C     IF(L.EQ.5)THEN
-C     WRITE(*,1114)'DDLYR',I,J,NX,NY,L,NN,IFLGL(L,NN),IFLGL(L+1,NN)
-C    2,ICHKL,DDLYRX(NN),DDLYRY(L),(DDLYR(L,NM),NM=1,6) 
+C     IF(NX.EQ.1)THEN
+C     WRITE(*,1114)'DDLYR',I,J,NX,NY,L,NN,IFLGL(L,1),IFLGL(L+1,1)
+C    2,ICHKL,DDLYRX(NN),DDLYRY(L),(DDLYR(L,NM),NM=1,6)
 C    2,DVOLI(L,NY,NX),TSEDER(NY,NX),DORGC(L,NY,NX),DORGE(NY,NX)
-C    3,CDPTH(L-1,NY,NX) 
 C    4,VOLTI(L,NY,NX),VOLT(L,NY,NX),VOLA(L,NY,NX),VOLW(L,NY,NX)
+C    4,VOLI(L,NY,NX),VOLP(L,NY,NX),DVOLW(L,NY,NX),DVOLI(L,NY,NX)
+C    5,DLYRI(3,L,NY,NX),DLYR(3,L,NY,NX),DLYRI(3,L+1,NY,NX)
+C    5,DLYR(3,L+1,NY,NX),CDPTH(L-1,NY,NX),CDPTH(L,NY,NX)
 C    4,VOLI(L,NY,NX),VOLP(L,NY,NX),DVOLW(L,NY,NX) 
 C    5,VOLW(L,NY,NX)+VOLI(L,NY,NX) 
-C    5,DLYRI(3,L,NY,NX),DLYR(3,L,NY,NX),DLYRI(3,L+1,NY,NX)
-C    5,DLYR(3,L+1,NY,NX),),DLYRXX,CDPTH(L,NY,NX) 
 C    5,BKDS(L,NY,NX),BKDSI(L,NY,NX) 
 C    6,DTBLZ(NY,NX),DTBLX(NY,NX)
 C    7,VOLAH(L,NY,NX),VOLWH(L,NY,NX),VOLIH(L,NY,NX) 
-C    8,ORGC(0,NY,NX),VOLW(0,NY,NX) 
+C    8,ORGCX(L,NY,NX),ORGC(L,NY,NX)
 1114  FORMAT(A8,9I4,40E16.8) 
 C     ENDIF
 C
@@ -5233,34 +6072,37 @@ C
 C     RESET POND SURFACE LAYER NUMBER IF GAIN FROM PRECIPITATION
 C
       ELSEIF(NN.EQ.3)THEN
-      VOLT(0,NY,NX)=VOLW(0,NY,NX)+VOLI(0,NY,NX)
-      VOLX(0,NY,NX)=VOLT(0,NY,NX) 
-      TVOLWX=AMAX1(0.0,VOLT(0,NY,NX)-VOLWRX(NY,NX))
+      XVOLWP=AMAX1(0.0,VOLW(0,NY,NX)-VOLWD(NY,NX))
       IF(L.EQ.NU(NY,NX).AND.CDPTH(0,NY,NX).GT.CDPTHI(NY,NX)
-     2.AND.TVOLWX.GT.VOLWD(NY,NX)+VHCPNX(NY,NX)/4.19)THEN
-      IF((BKDS(L,NY,NX).GT.ZERO.AND.NU(NY,NX).GT.NUI(NY,NX))
-     3.OR.(BKDS(L,NY,NX).LE.ZERO))THEN
+     2.AND.XVOLWP.GT.VOLWD(NY,NX)+VHCPNX(NY,NX)/4.19)THEN
+C     IF((BKDS(L,NY,NX).GT.ZERO.AND.NU(NY,NX).GT.NUI(NY,NX))
+C    2.OR.(BKDS(L,NY,NX).LE.ZERO))THEN
+      IF(BKDS(L,NY,NX).GT.ZERO.AND.NU(NY,NX).GT.NUI(NY,NX))THEN
       NU(NY,NX)=NUI(NY,NX)
       NUM(NY,NX)=NUI(NY,NX)
-      DDLYRX(NN)=(VOLWD(NY,NX)-TVOLWX)/AREA(3,0,NY,NX)
+      DDLYRX(NN)=(VOLWD(NY,NX)-XVOLWP)/AREA(3,0,NY,NX)
       IFLGL(L,NN)=1
-      DLYR(3,0,NY,NX)=VOLX(0,NY,NX)/AREA(3,0,NY,NX)+DDLYRX(3)
-      DLYR(3,NU(NY,NX),NY,NX)=DLYR(3,NU(NY,NX),NY,NX)-DDLYRX(3)
+      DLYR0=(AMAX1(0.0,VOLW(0,NY,NX)+VOLI(0,NY,NX)-VOLWRX(NY,NX))
+     2+VOLR(NY,NX))/AREA(3,0,NY,NX)
+      DLYR(3,0,NY,NX)=DLYR0+DDLYRX(NN)
+      DLYR(3,NU(NY,NX),NY,NX)=DLYR(3,NU(NY,NX),NY,NX)-DDLYRX(NN)
       IF(L.GT.2)THEN
       DO 260 LL=L-2,NU(NY,NX),-1
       CDPTH(LL,NY,NX)=CDPTH(L-1,NY,NX)
+      CDPTHY(LL,NY,NX)=CDPTHY(L-1,NY,NX)
 260   CONTINUE
       ENDIF
       CDPTH(0,NY,NX)=CDPTH(NU(NY,NX),NY,NX)-DLYR(3,NU(NY,NX),NY,NX)
+      CDPTHY(0,NY,NX)=CDPTHY(NU(NY,NX),NY,NX)-DLYR(3,NU(NY,NX),NY,NX)
       DPTH(NU(NY,NX),NY,NX)=0.5*(CDPTH(NU(NY,NX),NY,NX)
      2+CDPTH(0,NY,NX))
       CDPTHZ(NU(NY,NX),NY,NX)=DLYR(3,NU(NY,NX),NY,NX)
       DPTHZ(NU(NY,NX),NY,NX)=0.5*CDPTHZ(NU(NY,NX),NY,NX)
 C     WRITE(*,5597)'SURFY',I,J,NX,NY,L,NUI(NY,NX),NU(NY,NX)
-C    2,NUM(NY,NX),IFLGL(L,NN),VOLWD(NY,NX),TVOLWX,DDLYRX(NN) 
-C    2,DLYR(3,0,NY,NX),DLYR(3,NU(NY,NX),NY,NX),ORGC(0,NY,NX)
+C    2,NUM(NY,NX),IFLGL(L,NN),VOLWD(NY,NX),XVOLWP,DDLYRX(NN) 
+C    2,DLYR0,DLYR(3,0,NY,NX),DLYR(3,NU(NY,NX),NY,NX),ORGC(0,NY,NX)
 C    2,VOLW(0,NY,NX),VOLX(0,NY,NX),VOLW(NU(NY,NX),NY,NX) 
-C    3,CDPTH(0,NY,NX),CDPTH(NU(NY,NX),NY,NX),CDPTHI(NY,NX)
+C    3,CDPTH(0,NY,NX),CDPTH(NU(NY,NX),NY,NX),VOLR(NY,NX)
 5597  FORMAT(A8,9I4,20E16.8)
       ELSE
       DDLYRX(NN)=0.0 
@@ -5341,18 +6183,21 @@ C
       ENDIF
       ENDIF
       ENDIF
-C     WRITE(*,5599)'FX',I,J,NX,NY,L,L0,L1,NN,FO,FX,DDLYRX(NN)
-C    2,DLYR(3,L0,NY,NX),DLYR(3,L,NY,NX) 
+C     WRITE(*,5601)'FX',I,J,NX,NY,L,L0,L1,NN,FO,FX
+C    2,DDLYRX(NN),VOLW(L0,NY,NX),BKDS(L0,NY,NX),DPTWI
+C    3,DLYR(3,L1,NY,NX),DLYR(3,L0,NY,NX) 
+5601  FORMAT(A8,8I4,20E12.4)
       IF(FX.GT.ZERO)THEN
+      IFLGS(NY,NX)=1
       FY=1.0-FX
       IF(FY.LE.ZERO2)FY=0.0
       IF(BKDS(L0,NY,NX).LE.ZERO)THEN
-C     IF(NY.EQ.3)THEN
-C     WRITE(*,5598)'POND1',I,J,NX,NY,L,L0,L1,NU(NY,NX),NN,FX,FY 
-C    2,DDLYRX(NN),VOLY(L0,NY,NX),VOLA(L0,NY,NX),VOLW(L0,NY,NX)
+C     IF(NX.EQ.1)THEN
+C     WRITE(*,5599)'POND1',I,J,NX,NY,L,L0,L1,NU(NY,NX),NN,FX,FY 
+C    2,DDLYRX(NN),VOLY(L0,NY,NX),VOLX(L0,NY,NX),VOLW(L0,NY,NX)
 C    3,VOLI(L0,NY,NX),VOLY(L1,NY,NX),VOLX(L1,NY,NX),VOLW(L1,NY,NX) 
 C    4,VOLI(L1,NY,NX),CDPTH(L0,NY,NX),CDPTH(L1,NY,NX)
-C    5,ORGC(L0,NY,NX),ORGC(L1,NY,NX)
+C    5,(OSC(M,1,L0,NY,NX),M=1,4),(OSC(M,1,L1,NY,NX),M=1,4)
 C    6,DLYR(3,L0,NY,NX),DLYR(3,L1,NY,NX)
 C    5,TKS(L0,NY,NX),TKS(L1,NY,NX)
 C    5,VHCP(L0,NY,NX),VHCP(L1,NY,NX)
@@ -5368,10 +6213,10 @@ C    6,(WTRT2(1,L0,NR,1,NY,NX),NR=1,NRT(1,NY,NX))
 C    6,WTRTL(1,L0,1,NY,NX),WTNDL(L0,1,NY,NX)
 C    6,CPOOLR(1,L0,1,NY,NX),ZPOOLR(1,L0,1,NY,NX)
 C    6,OXYA(1,L0,1,NY,NX),OXYP(1,L0,1,NY,NX) 
-5599  FORMAT(A8,8I4,100E16.8)
+5599  FORMAT(A8,9I4,60E16.8)
 C     ENDIF
 C
-C     TARGET SOIL LAYER
+C     TARGET POND LAYER
 C
       IF(L0.NE.0)THEN
       SAND(L1,NY,NX)=SAND(L1,NY,NX)
@@ -5386,10 +6231,10 @@ C
      2+FX*XAEC(L0,NY,NX)
       ENDIF
 C     IF(BKDS(L1,NY,NX).LE.ZERO)THEN
-      VOLT(L1,NY,NX)=VOLT(L1,NY,NX)
-     2+FX*VOLT(L0,NY,NX)
-      VOLX(L1,NY,NX)=VOLX(L1,NY,NX)
-     2+FX*VOLX(L0,NY,NX)
+C     VOLT(L1,NY,NX)=VOLT(L1,NY,NX)
+C    2+FX*VOLT(L0,NY,NX)
+C     VOLX(L1,NY,NX)=VOLX(L1,NY,NX)
+C    2+FX*VOLX(L0,NY,NX)
 C     ENDIF
       VOLW(L1,NY,NX)=VOLW(L1,NY,NX)
      2+FX*VOLW(L0,NY,NX)
@@ -5815,7 +6660,7 @@ C
 8900  CONTINUE
       ENDIF
 C
-C     SOURCE SOIL LAYER
+C     SOURCE POND LAYER
 C
       IF(L0.NE.0)THEN
       SAND(L0,NY,NX)=FY*SAND(L0,NY,NX)
@@ -5825,8 +6670,8 @@ C
       XAEC(L0,NY,NX)=FY*XAEC(L0,NY,NX)
       ENDIF
 C     IF(BKDS(L0,NY,NX).LE.ZERO)THEN
-      VOLT(L0,NY,NX)=FY*VOLT(L0,NY,NX)
-      VOLX(L0,NY,NX)=FY*VOLX(L0,NY,NX)
+C     VOLT(L0,NY,NX)=FY*VOLT(L0,NY,NX)
+C     VOLX(L0,NY,NX)=FY*VOLX(L0,NY,NX)
 C     ENDIF
       VOLW(L0,NY,NX)=FY*VOLW(L0,NY,NX)
       VOLI(L0,NY,NX)=FY*VOLI(L0,NY,NX)
@@ -6069,14 +6914,15 @@ C
       IF(BKDS(L0,NY,NX).LE.ZERO.AND.BKDS(L1,NY,NX).LE.ZERO
      3.AND.VOLW(L0,NY,NX)+VOLI(L0,NY,NX).LE.ZEROS(NY,NX))THEN
       CDPTH(L1,NY,NX)=CDPTH(L0,NY,NX)
+      CDPTHY(L1,NY,NX)=CDPTHY(L0,NY,NX)
       ENDIF
       ENDIF
-C     IF(NY.EQ.3)THEN
-C     WRITE(*,5598)'POND2',I,J,NX,NY,L,L0,L1,NU(NY,NX),NN,FX,FY 
-C    2,DDLYRX(NN),VOLY(L0,NY,NX),VOLA(L0,NY,NX),VOLW(L0,NY,NX)
+C     IF(NX.EQ.1)THEN
+C     WRITE(*,5599)'POND2',I,J,NX,NY,L,L0,L1,NU(NY,NX),NN,FX,FY 
+C    2,DDLYRX(NN),VOLY(L0,NY,NX),VOLX(L0,NY,NX),VOLW(L0,NY,NX)
 C    3,VOLI(L0,NY,NX),VOLY(L1,NY,NX),VOLX(L1,NY,NX),VOLW(L1,NY,NX) 
 C    4,VOLI(L1,NY,NX),CDPTH(L0,NY,NX),CDPTH(L1,NY,NX)
-C    5,ORGC(L0,NY,NX),ORGC(L1,NY,NX)
+C    5,(OSC(M,1,L0,NY,NX),M=1,4),(OSC(M,1,L1,NY,NX),M=1,4)
 C    6,DLYR(3,L0,NY,NX),DLYR(3,L1,NY,NX)
 C    5,TKS(L0,NY,NX),TKS(L1,NY,NX)
 C    5,VHCP(L0,NY,NX),VHCP(L1,NY,NX)
@@ -6094,14 +6940,17 @@ C    6,CPOOLR(1,L0,1,NY,NX),ZPOOLR(1,L0,1,NY,NX)
 C    6,OXYA(1,L0,1,NY,NX),OXYP(1,L0,1,NY,NX) 
 C     ENDIF
       ELSE
-C     IF(L0.EQ.4.OR.L1.EQ.4)THEN
-C     WRITE(*,5599)'SOIL1',I,J,NX,NY,L,L0,L1,NN,DDLYRX(NN),FX,FWO 
+C     IF(NX.EQ.1)THEN
+C     WRITE(*,5591)'SOIL1',I,J,NX,NY,L,L0,L1,NN,DDLYRX(NN),FX,FO
 C    1,ZNH4SH(L0,NY,NX),ZNH4SH(L1,NY,NX)
 C    1,BKDS(L0,NY,NX),BKDS(L1,NY,NX),FXBKDS,FXVOLW
 C    5,ORGC(L0,NY,NX),ORGC(L1,NY,NX),CORGCI(L0,NY,NX),CORGCI(L1,NY,NX)
+C    5,CLAY(L0,NY,NX),CLAY(L1,NY,NX),SILT(L0,NY,NX),SILT(L1,NY,NX)
+C    5,SAND(L0,NY,NX),SAND(L1,NY,NX),ORGC(L0,NY,NX),ORGC(L1,NY,NX)
 C    2,VOLA(L0,NY,NX),VOLW(L0,NY,NX),VOLI(L0,NY,NX),VOLP(L0,NY,NX)
 C    3,VOLA(L1,NY,NX),VOLW(L1,NY,NX),VOLI(L1,NY,NX),VOLP(L1,NY,NX)
-C    3,VOLY(L0,NY,NX),VOLY(L1,NY,NX),VOLY(L0,NY,NX)+VOLY(L1,NY,NX)
+C    3,VOLX(L0,NY,NX),VOLX(L1,NY,NX),VOLY(L0,NY,NX)+VOLY(L1,NY,NX)
+C    6,DLYR(3,L0,NY,NX),DLYR(3,L1,NY,NX)
 C    4,VOLA(L0,NY,NX)+VOLA(L1,NY,NX),VOLW(L0,NY,NX)+VOLW(L1,NY,NX)
 C    4,VOLI(L0,NY,NX)+VOLI(L1,NY,NX),VOLP(L0,NY,NX)+VOLP(L1,NY,NX)
 C    4,CDPTH(L0,NY,NX),CDPTH(L1,NY,NX)
@@ -6127,6 +6976,7 @@ C    6,WTRTL(1,L0,2,NY,NX),WTNDL(L0,2,NY,NX)
 C    6,CPOOLR(1,L0,2,NY,NX),ZPOOLR(1,L0,2,NY,NX)
 C    6,OXYG(L0,NY,NX),OXYS(L0,NY,NX) 
 C    6,OXYG(L1,NY,NX),OXYS(L1,NY,NX) 
+5591  FORMAT(A8,8I4,60E16.8)
 C     ENDIF
 C
 C     MOVE ALL MATTER WITH CHANGES IN LAYER DEPTHS
@@ -6135,7 +6985,7 @@ C
       IF(DLYR(3,L1,NY,NX).GT.ZERO
      2.AND.DLYR(3,L0,NY,NX).GT.ZERO)THEN
 C
-C     FERTILIZER BANDS
+C     SOIL FERTILIZER BANDS
 C
       IF(IFNHB(NY,NX).EQ.1.AND.ROWN(NY,NX).GT.0.0)THEN
       IF(L.EQ.NU(NY,NX).OR.CDPTH(L-1,NY,NX).LT.DPNH4(NY,NX))THEN
@@ -6227,9 +7077,9 @@ C
 C     SOIL MINERALS
 C
       IF(L0.EQ.L.OR.BKDSI(L0,NY,NX).LE.ZERO)THEN
-      FBO=FO
+      FBO=FX
       ELSE
-      FBO=AMIN1(0.5,FO*BKDSI(L1,NY,NX)/BKDSI(L0,NY,NX))
+      FBO=AMIN1(0.1,FX*BKDSI(L1,NY,NX)/BKDSI(L0,NY,NX))
       ENDIF
 C     BKDS(L1,NY,NX)=(1.0-FO)*BKDS(L1,NY,NX)+FO*BKDSI(L0,NY,NX)
       PH(L1,NY,NX)=(1.0-FO)*PH(L1,NY,NX)+FO*PH(L0,NY,NX)
@@ -6246,7 +7096,7 @@ C     BKDS(L1,NY,NX)=(1.0-FO)*BKDS(L1,NY,NX)+FO*BKDSI(L0,NY,NX)
       ROCK(L1,NY,NX)=ROCK(L1,NY,NX)+FXROCK
       ROCK(L0,NY,NX)=ROCK(L0,NY,NX)-FXROCK
 C
-C     WATER AND HEAT
+C     SOIL WATER AND HEAT
 C
       IF(FHOL(L1,NY,NX).GT.ZERO.AND.FHOL(L0,NY,NX).GT.ZERO)THEN
       IF(L0.EQ.L.OR.FHOLI(L0,NY,NX).LE.ZERO)THEN
@@ -6277,7 +7127,11 @@ C     SCNV(L0,NY,NX)=SCNV(L0,NY,NX)-FXSCNV
 C     FXSCNH=FWO*SCNH(L0,NY,NX)
 C     SCNH(L1,NY,NX)=SCNH(L1,NY,NX)+FXSCNH
 C     SCNH(L0,NY,NX)=SCNH(L0,NY,NX)-FXSCNH
+      IF(L0.EQ.0)THEN
+      FXVOLW=FX*AMAX1(0.0,XVOLWP-VOLWD(NY,NX))
+      ELSE
       FXVOLW=FWO*VOLW(L0,NY,NX)
+      ENDIF
       VOLW(L1,NY,NX)=VOLW(L1,NY,NX)+FXVOLW
       VOLW(L0,NY,NX)=VOLW(L0,NY,NX)-FXVOLW
 C     IF(VOLI(L1,NY,NX).GT.ZEROS(NY,NX))THEN
@@ -6321,7 +7175,7 @@ C     ENDIF
       ENDIF
       TCS(L0,NY,NX)=TKS(L0,NY,NX)-273.15
 C
-C     FERTILIZER
+C     SOIL FERTILIZER
 C
       FXZNH4FA=AMIN1(FX*ZNH4FA(L,NY,NX),ZNH4FA(L0,NY,NX))
       ZNH4FA(L1,NY,NX)=ZNH4FA(L1,NY,NX)+FXZNH4FA 
@@ -6348,7 +7202,7 @@ C
       ZNO3FB(L1,NY,NX)=ZNO3FB(L1,NY,NX)+FXZNO3FB 
       ZNO3FB(L0,NY,NX)=ZNO3FB(L0,NY,NX)-FXZNO3FB
 C
-C     N,P SOLUTES IN BAND, NON-BAND
+C     SOIL N,P SOLUTES IN BAND, NON-BAND
 C 
       FXZNH4S=FWO*ZNH4S(L0,NY,NX)
       ZNH4S(L1,NY,NX)=ZNH4S(L1,NY,NX)+FXZNH4S 
@@ -6381,7 +7235,7 @@ C
       H2PO4(L1,NY,NX)=H2PO4(L1,NY,NX)+FXH2PO4
       H2PO4(L0,NY,NX)=H2PO4(L0,NY,NX)-FXH2PO4
 C
-C     SALT SOLUTES
+C     SOIL SALT SOLUTES
 C
       IF(ISALTG.NE.0)THEN
       FXZAL=FWO*ZAL(L0,NY,NX)
@@ -6509,7 +7363,7 @@ C
       ZMG1P(L0,NY,NX)=ZMG1P(L0,NY,NX)-FXZMG1P 
       ENDIF
 C
-C     SOLUTES IN BAND
+C     SOIL SOLUTES IN BAND
 C
       IF(L0.NE.0)THEN
       FXH1POB=FWO*H1POB(L0,NY,NX)
@@ -6545,7 +7399,7 @@ C
       ZMG1PB(L0,NY,NX)=ZMG1PB(L0,NY,NX)-FXZMG1PB 
       ENDIF
 C
-C     ADSORBED CATIONS IN BAND, NON-BAND
+C     SOIL ADSORBED CATIONS IN BAND, NON-BAND
 C
       IF(L0.EQ.L.OR.CEC(L0,NY,NX).LE.ZERO)THEN
       FCO=FO
@@ -6592,7 +7446,7 @@ C
       XFEO2(L1,NY,NX)=XFEO2(L1,NY,NX)+FXXFEO2
       XFEO2(L0,NY,NX)=XFEO2(L0,NY,NX)-FXXFEO2
 C
-C     ADSORBED ANIONS IN BAND, NON-BAND
+C     SOIL ADSORBED ANIONS IN BAND, NON-BAND
 C
       IF(L0.EQ.L.OR.AEC(L0,NY,NX).LE.ZERO)THEN
       FAO=FO
@@ -6633,7 +7487,7 @@ C
       XH2PB(L1,NY,NX)=XH2PB(L1,NY,NX)+FXXH2PB 
       XH2PB(L0,NY,NX)=XH2PB(L0,NY,NX)-FXXH2PB 
 C
-C     PRECIPITATES IN BAND, NON-BAND
+C     SOIL PRECIPITATES IN BAND, NON-BAND
 C
       FXPALOH=AMIN1(FX*PALOH(L,NY,NX),PALOH(L0,NY,NX))
       PALOH(L1,NY,NX)=PALOH(L1,NY,NX)+FXPALOH 
@@ -6678,7 +7532,7 @@ C
       PCPMB(L1,NY,NX)=PCPMB(L1,NY,NX)+FXPCPMB 
       PCPMB(L0,NY,NX)=PCPMB(L0,NY,NX)-FXPCPMB
 C
-C     GASEOUS GASES 
+C     SOIL GASEOUS GASES 
 C
       FXCO2G=FWO*CO2G(L0,NY,NX)
       CO2G(L1,NY,NX)=CO2G(L1,NY,NX)+FXCO2G 
@@ -6703,7 +7557,7 @@ C
       H2GG(L0,NY,NX)=H2GG(L0,NY,NX)-FXH2GG 
       ENDIF
 C
-C     AQUEOUS GASES
+C     SOIL AQUEOUS GASES
 C
       IF(L0.NE.0)THEN
       FXCO2S=FWO*CO2S(L0,NY,NX)
@@ -6725,7 +7579,7 @@ C
       H2GS(L1,NY,NX)=H2GS(L1,NY,NX)+FXH2GS 
       H2GS(L0,NY,NX)=H2GS(L0,NY,NX)-FXH2GS
 C
-C     MACROPORE N,P SOLUTES
+C     SOIL MACROPORE N,P SOLUTES
 C 
       IF(FHOL(L1,NY,NX).GT.ZERO.AND.FHOL(L0,NY,NX).GT.ZERO)THEN
       FXZNH4SH=FHO*ZNH4SH(L0,NY,NX)
@@ -6765,7 +7619,7 @@ C
       H2POBH(L1,NY,NX)=H2POBH(L1,NY,NX)+FXH2POBH
       H2POBH(L0,NY,NX)=H2POBH(L0,NY,NX)-FXH2POBH
 C
-C     MACROPORE SOLUBLE SALTS
+C     SOIL MACROPORE SOLUBLE SALTS
 C 
       IF(ISALTG.NE.0)THEN
       FXZALH=FHO*ZALH(L0,NY,NX)
@@ -6917,7 +7771,7 @@ C
       ZMG1BH(L0,NY,NX)=ZMG1BH(L0,NY,NX)-FXZMG1BH 
       ENDIF
 C
-C     MACROPORE AQUEOUS GASES
+C     SOIL MACROPORE AQUEOUS GASES
 C
       FXCO2SH=FHO*CO2SH(L0,NY,NX)
       CO2SH(L1,NY,NX)=CO2SH(L1,NY,NX)+FXCO2SH 
@@ -6937,7 +7791,7 @@ C
       ENDIF 
       ENDIF
 C
-C     ORGANIC MATTER
+C     SOIL ORGANIC MATTER
 C
       IF(IFLGL(L,3).EQ.0.AND.L0.NE.0
      2.AND.VOLX(L0,NY,NX).GT.ZEROS(NY,NX)
@@ -7154,7 +8008,7 @@ C
       RTLGA(N,L0,NZ,NY,NX)=RTLGA(N,L0,NZ,NY,NX)-FXRTLGA 
 8896  CONTINUE
 C
-C     NODULES
+C     ROOT NODULES
 C
       FXWTNDL=FRO*WTNDL(L0,NZ,NY,NX) 
       WTNDL(L1,NZ,NY,NX)=WTNDL(L1,NZ,NY,NX)+FXWTNDL 
@@ -7178,23 +8032,28 @@ C
 8901  CONTINUE
       ENDIF
 6005  CONTINUE
-      ENDIF
       IF(NN.EQ.1)THEN
       IF(BKDS(L0,NY,NX).LE.ZERO.AND.BKDS(L1,NY,NX).LE.ZERO
      3.AND.VOLW(L0,NY,NX)+VOLI(L0,NY,NX).LE.ZEROS(NY,NX))THEN
       CDPTH(L1,NY,NX)=CDPTH(L0,NY,NX)
+      CDPTHY(L1,NY,NX)=CDPTHY(L0,NY,NX)
       ENDIF
-C     IF(L0.EQ.4.OR.L1.EQ.4)THEN
-C     WRITE(*,5599)'SOIL2',I,J,NX,NY,L,L0,L1,NN,DDLYRX(NN),FX,FO 
+      ENDIF
+C     IF(NX.EQ.1)THEN
+C     WRITE(*,5591)'SOIL2',I,J,NX,NY,L,L0,L1,NN,DDLYRX(NN),FX,FO 
 C    1,ZNH4SH(L0,NY,NX),ZNH4SH(L1,NY,NX),FXZNH4SH 
 C    1,BKDS(L0,NY,NX),BKDS(L1,NY,NX),FXBKDS,FXVOLW
 C    5,ORGC(L0,NY,NX),ORGC(L1,NY,NX),CORGCI(L0,NY,NX),CORGCI(L1,NY,NX)
+C    5,CLAY(L0,NY,NX),CLAY(L1,NY,NX),SILT(L0,NY,NX),SILT(L1,NY,NX)
+C    5,SAND(L0,NY,NX),SAND(L1,NY,NX),ORGC(L0,NY,NX),ORGC(L1,NY,NX)
 C    2,VOLA(L0,NY,NX),VOLW(L0,NY,NX),VOLI(L0,NY,NX),VOLP(L0,NY,NX)
 C    3,VOLA(L1,NY,NX),VOLW(L1,NY,NX),VOLI(L1,NY,NX),VOLP(L1,NY,NX)
 C    3,VOLY(L0,NY,NX),VOLY(L1,NY,NX),VOLY(L0,NY,NX)+VOLY(L1,NY,NX)
+C    6,DLYR(3,L0,NY,NX),DLYR(3,L1,NY,NX)
 C    4,VOLA(L0,NY,NX)+VOLA(L1,NY,NX),VOLW(L0,NY,NX)+VOLW(L1,NY,NX)
 C    4,VOLI(L0,NY,NX)+VOLI(L1,NY,NX),VOLP(L0,NY,NX)+VOLP(L1,NY,NX)
 C    4,CDPTH(L0,NY,NX),CDPTH(L1,NY,NX)
+C    5,(OSC(M,4,L0,NY,NX),M=1,2),(OSC(M,4,L1,NY,NX),M=1,2)
 C    6,((OSC(M,4,L0,NY,NX)+OSC(M,4,L1,NY,NX)),M=1,2)
 C    5,(OQC(K,L0,NY,NX),K=0,4),(OQC(K,L1,NY,NX),K=0,4)
 C    6,DLYR(3,L0,NY,NX),DLYR(3,L1,NY,NX)
@@ -7229,7 +8088,9 @@ C
       IF(L.EQ.NL(NY,NX)-1.AND.CDPTH(NL(NY,NX),NY,NX)
      2-CDPTH(L,NY,NX).LE.ZEROC)THEN
       CDPTH(L,NY,NX)=CDPTH(L,NY,NX)+DLYR(3,NL(NY,NX),NY,NX)
+      CDPTHY(L,NY,NX)=CDPTHY(L,NY,NX)+DLYR(3,NL(NY,NX),NY,NX)
       CDPTH(NL(NY,NX),NY,NX)=CDPTH(L,NY,NX)
+      CDPTHY(NL(NY,NX),NY,NX)=CDPTHY(L,NY,NX)
       DLYR(3,NL(NY,NX),NY,NX)=0.0
       NL(NY,NX)=L
 C     WRITE(*,5595)'ERSNX2',I,J,NX,NY,L,NLI(NY,NX),NL(NY,NX)
@@ -7282,6 +8143,7 @@ C     EXTENT OF MIXING
 C
       IFLGS(NY,NX)=1
       CORP=1.0-XCORP(NY,NX)
+      ENGYP(NY,NX)=0.0
 C
 C     TEMPORARY ACCUMULATORS
 C
@@ -8365,6 +9227,32 @@ C
 2001  CONTINUE
       ENDIF
 C
+C     OUTPUT FOR SOIL WATER, ICE CONTENTS
+C
+      THETWZ(0,NY,NX)=AMAX1(0.0,(VOLW(0,NY,NX)-VOLWRX(NY,NX))
+     2/AREA(3,0,NY,NX))
+      THETIZ(0,NY,NX)=AMAX1(0.0,(VOLI(0,NY,NX)-VOLWRX(NY,NX))
+     2/AREA(3,0,NY,NX))
+C     THETWZ(0,NY,NX)=AMAX1(0.0,AMIN1(1.0
+C    2,VOLW(0,NY,NX)/VOLR(NY,NX)))
+C     THETIZ(0,NY,NX)=AMAX1(0.0,AMIN1(1.0
+C    2,VOLI(0,NY,NX)/VOLR(NY,NX)))
+      DO 9945 L=NUI(NY,NX),NL(NY,NX)
+      VOLXX=AREA(3,L,NY,NX)*DLYR(3,L,NY,NX)*FMPR(L,NY,NX)
+      VOLTX=VOLXX+VOLAH(L,NY,NX)
+      THETWZ(L,NY,NX)=(VOLW(L,NY,NX)+AMIN1(VOLAH(L,NY,NX)
+     2,VOLWH(L,NY,NX)))/VOLTX
+      THETIZ(L,NY,NX)=(VOLI(L,NY,NX)+AMIN1(VOLAH(L,NY,NX)
+     2,VOLIH(L,NY,NX)))/VOLTX
+C     IF(NX.EQ.1)THEN
+C     WRITE(*,1189)'THETWZ',I,J,NX,NY,L
+C    2,THETWZ(L,NY,NX),THETIZ(L,NY,NX),VOLW(L,NY,NX) 
+C    2,VOLWH(L,NY,NX),VOLI(L,NY,NX),VOLIH(L,NY,NX)
+C    2,VOLTX,VOLXX,DLYR(3,L,NY,NX)
+1189  FORMAT(A8,5I4,20E12.4)
+C     ENDIF
+9945  CONTINUE
+C
 C     CHECK MATERIAL BALANCES
 C
       IF(I.EQ.365.AND.J.EQ.24)THEN
@@ -8403,15 +9291,16 @@ C    6,(VOLI(L,NY,NX)*DENSI,L=0,NL(NY,NX))
 C    6,TQS(NY,NX),TQW(NY,NX),TQI(NY,NX),TVOLWC(NY,NX)
 C    7,TVOLWP(NY,NX),(TUPWTR(L,NY,NX),L=1,JZ)
 C     WRITE(20,2222)'TLH',I,J,IYRC,NX,NY,HEATSO-HEATIN+HEATOU
-C    2,HEATSO,HEATIN,HEATOU
-C    I,HTHAWR(NY,NX),HFLXD,4.19*TKA(NY,NX)*PRECA(NY,NX)
+C    2,HEATSO,HEATIN,HEATOU,HEATH(NY,NX),HRAINR
+C    I,HTHAWR(NY,NX),HFLXD,HFLXO,4.19*TKA(NY,NX)*PRECA(NY,NX)
 C    I,2.095*TKA(NY,NX)*PRECW(NY,NX),HEATH(NY,NX),THFLXC(NY,NX)
-C    I,(XTHAWW(L,NY,NX),L=1,JS),HTHAWR(NY,NX)
+C    I,(XTHAWW(L,NY,NX),L=1,JS) 
 C    I,(THTHAW(L,NY,NX),L=NU(NY,NX),NL(NY,NX))
 C    I,(TUPHT(L,NY,NX),L=NU(NY,NX),NL(NY,NX))
 C    O,4.19*TKA(NY,NX)*PRECU(NY,NX),THQS(NY,NX)
 C    S,((VHCP(L,NY,NX)*TKS(L,NY,NX)),L=0,NL(NY,NX))
 C    S,((VHCPW(L,NY,NX)*TKW(L,NY,NX)),L=1,JS)
+C    S,VHCP(0,NY,NX),VHCPRX(NY,NX)
 C     WRITE(19,2224)'TLO',I,J,IYRC,NX,NY,OXYGSO-OXYGIN+OXYGOU 
 C    2,OXYGSO,OXYGIN,OXYGOU
 C    3,XOXDFS(NY,NX),XOXFLG(3,NU(NY,NX),NY,NX)
@@ -8464,7 +9353,7 @@ C    2,TSEDSO,TSEDOU,USEDOU(NY,NX),DLYR(3,NU(NY,NX),NY,NX)
 C    3,BKVL(NU(NY,NX),NY,NX),SAND(NU(NY,NX),NY,NX)
 C    4,SILT(NU(NY,NX),NY,NX),CLAY(NU(NY,NX),NY,NX)
 C    5,ORGC(NU(NY,NX),NY,NX)
-2222  FORMAT(A8,5I6,240F18.10)
+2222  FORMAT(A8,5I6,240F18.6)
 2223  FORMAT(A8,6I6,160F16.6)
 2224  FORMAT(A8,5I6,160F16.6)
 C     ENDIF

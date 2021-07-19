@@ -276,14 +276,13 @@ C     PRECII,PRECUI=surface,subsurface irrigation
 C     RRIG=irrigation from soil management file in reads.f
 C
       WDPTHD=WDPTH(I,NY,NX)+CDPTH(NU(NY,NX)-1,NY,NX)
-      IF(WDPTH(I,NY,NX)+CDPTH(NU(NY,NX)-1,NY,NX)
-     2.LE.CDPTH(NU(NY,NX),NY,NX))THEN
+C     IF(WDPTHD.LE.CDPTH(NU(NY,NX),NY,NX))THEN
       PRECII(NY,NX)=RRIG(J,I,NY,NX)
       PRECUI(NY,NX)=0.0
-      ELSE
-      PRECII(NY,NX)=0.0
-      PRECUI(NY,NX)=RRIG(J,I,NY,NX)
-      ENDIF
+C     ELSE
+C     PRECII(NY,NX)=0.0
+C     PRECUI(NY,NX)=RRIG(J,I,NY,NX)
+C     ENDIF
 9960  CONTINUE
 9965  CONTINUE
 C

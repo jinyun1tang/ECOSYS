@@ -57,7 +57,7 @@ C
       PARAMETER (FMN=1.0E-06,RACM=0.00139,RACX=0.0278,RZ=0.0139)
       PARAMETER(DSTK=0.225,VSTK=1.0E-06/DSTK)
       PARAMETER(SNH3X=2.852E+02,EMMC=0.97,EMODW=50.0)
-      PARAMETER(ZCKI=1.0E-01,PCKI=1.0E-02,ZPKI=ZCKI/PCKI
+      PARAMETER(ZCKI=0.5E-01,PCKI=0.5E-02,ZPKI=ZCKI/PCKI
      2,PZKI=PCKI/ZCKI)
       PARAMETER(FEXUC=0.5E-03,FEXUN=1.0E-02,FEXUP=1.0E-02)
       REAL*4 RI,TKGO,TKSO 
@@ -554,6 +554,7 @@ C     PSILT=canopy total water potential
 C     EX=canopy-atmosphere water flux
 C     RA,RZ=canopy boundary layer,surface resistance
 C     EVAPC=water flux to,from canopy surfaces
+C     VOLWC=water volume on canopy surfaces
 C     EP=water flux to,from inside canopy
 C     EFLXC=canopy latent heat flux
 C     VFLXC=convective heat flux from EFLXC
@@ -1689,6 +1690,8 @@ C     DURING ROOT UPTAKE DEPENDING ON CONCENTRATION DIFFERENCES
 C     CALCULATED FROM SOLUBILITIES, AND TRANSFER COEFFICIENT
 C
 C     R*DF1=root gas exchange between gaseous-aqueous phases
+C     R*FL1=root gas exchange with atmosphere
+C     gas code:CO=CO2,OX=O2,CH=CH4,N2=N2O,NH=NH3,H2=H2
 C     CO2A1,CO2P1=gaseous,aqueous CO2 in root 
 C     OXYA1,OXYP1=gaseous,aqueous O2 in root 
 C     CH4A1,CH4P1=gaseous,aqueous CH4 in root 
@@ -1697,7 +1700,6 @@ C     ZH3A1,ZH3P1=gaseous,aqueous NH3 in root
 C     H2GA1,H2GP1=gaseous,aqueous H2 in root
 C     RTVLW,RTVLP=root aqueous,gaseous volume
 C     VOLW*=RTVLW*gas solubility
-C     R*FL1=root gas exchange with atmosphere
 C     C*E,C*A1=atmosphere,root gas concentration
 C     DF*A=root-atmosphere gas conductance
 C
@@ -1789,18 +1791,9 @@ C     ENDIF
 C
 C     ACCUMULATE ROOT-ATMOSPHERE GAS EXCHANGE TO HOURLY TIME SCALE
 C
-C     RCODFA=root gaseous-atmosphere CO2 exchange
-C     ROXDFA=root gaseous-atmosphere O2 exchange
-C     RCHDFA=root gaseous-atmosphere CH4 exchange
-C     RN2DFA=root gaseous-atmosphere N2O exchange
-C     RNHDFA=root gaseous-atmosphere NH3 exchange
-C     RH2DFA=root gaseous-atmosphere H2 exchange
-C     RCOFLA=root aqueous-gaseous CO2 exchange
-C     ROXFLA=root aqueous-gaseous O2 exchange
-C     RCHFLA=root aqueous-gaseous CH4 exchange
-C     RN2FLA=root aqueous-gaseous N2O exchange
-C     RNHFLA=root aqueous-gaseous NH3 exchange
-C     RHGFLA=root aqueous-gaseous H2 exchange
+C     R*DFA=root aqueous-gaseous CO2 exchange
+C     R*FLA=root gaseous-atmosphere CO2 exchange
+C     gas code:CO=CO2,OX=O2,CH=CH4,N2=N2O,NH=NH3,H2=H2
 C
       RCODFA(N,L,NZ,NY,NX)=RCODFA(N,L,NZ,NY,NX)+RCODF1
       ROXDFA(N,L,NZ,NY,NX)=ROXDFA(N,L,NZ,NY,NX)+ROXDF1

@@ -36,7 +36,7 @@ C
       OPEN(20,FILE='logfile3',STATUS='UNKNOWN')
       OPEN(1,FILE=TRIM(PREFIX)//DATA(1),STATUS='OLD')
       OPEN(7,FILE=TRIM(PREFIX)//DATA(2),STATUS='OLD')
-      WRITE(18,5000)'  05 APR 2021'
+      WRITE(18,5000)' 08 JUL 2021'
 5000  FORMAT(A16)
       NF=1
       NFX=1
@@ -44,7 +44,11 @@ C
 C
 C     READ SITE DATA
 C
-C     ALATG,ALTIG,ATCAG,IDTBLG=latitude,altitude,MAT(oC),drainage flag
+C     ALATG,ALTIG,ATCAG=latitude,altitude,MAT(oC)
+C     IDTBLG=water table flag
+C        :0=none
+C        :1,2=natural stationary,mobile
+C        :3,4=artificial stationary,mobile
 C     OXYEG,Z2GEG,CO2EIG,CH4EG,Z2OEG,ZNH3EG=atm O2,N2,CO2,CH4,N2O,NH3 (ppm)
 C     IETYPG,ISALTG,IERSNG=Koppen climate zone,salt,erosion options
 C     NCNG=1:lateral connections between grid cells,3:no connections
@@ -294,9 +298,36 @@ C
       RSC(1,0,NY,NX)=AMAX1(1.0E-06,RSC(1,0,NY,NX))
       RSN(1,0,NY,NX)=AMAX1(0.04E-06,RSN(1,0,NY,NX))
       RSP(1,0,NY,NX)=AMAX1(0.004E-06,RSP(1,0,NY,NX))
-      FC(0,NY,NX)=0.0667
-      WP(0,NY,NX)=0.0333
       SCNV(0,NY,NX)=10.0*0.098
+C
+C     SET FLAGS FOR ESTIMATING FC,WP,SCNV,SCNH IF UNKNOWN
+C
+C     ISOIL=flag for calculating FC(1),WP(2),SCNV(3),SCNH(4)
+C
+      DO 25 L=NU(NY,NX),NM(NY,NX)
+      IF(FC(L,NY,NX).LT.0.0)THEN
+      ISOIL(1,L,NY,NX)=1
+      PSIFC(NY,NX)=-0.033
+      ELSE
+      ISOIL(1,L,NY,NX)=0
+      ENDIF
+      IF(WP(L,NY,NX).LT.0.0)THEN
+      ISOIL(2,L,NY,NX)=1
+      PSIWP(NY,NX)=-1.5
+      ELSE
+      ISOIL(2,L,NY,NX)=0
+      ENDIF
+      IF(SCNV(L,NY,NX).LT.0.0)THEN
+      ISOIL(3,L,NY,NX)=1
+      ELSE
+      ISOIL(3,L,NY,NX)=0
+      ENDIF
+      IF(SCNH(L,NY,NX).LT.0.0)THEN
+      ISOIL(4,L,NY,NX)=1
+      ELSE
+      ISOIL(4,L,NY,NX)=0
+      ENDIF
+25    CONTINUE
 C
 C     FILL OUT SOIL BOUNDARY LAYERS ABOVE ROOTING ZONE (NOT USED)
 C
@@ -463,19 +494,12 @@ C     WP(L,NY,NX)=WP(L,NY,NX)/(1.0-FHOL(L,NY,NX))
       CORGR(L,NY,NX)=CORGR(L,NY,NX)*1.0E+03
       CORGCI(L,NY,NX)=CORGC(L,NY,NX)
       FHOLI(L,NY,NX)=FHOL(L,NY,NX)
-      IF(BKDS(L,NY,NX).GT.ZERO)THEN
-      CORGCX=CORGC(L,NY,NX)+(RSC(1,L,NY,NX)+RSC(0,L,NY,NX))
-     2/(BKDS(L,NY,NX)*(CDPTH(L,NY,NX)-CDPTH(L-1,NY,NX)))
-      ELSE
-      CORGCX=CORGC(L,NY,NX)+(RSC(1,L,NY,NX)+RSC(0,L,NY,NX))
-     2/(CDPTH(L,NY,NX)-CDPTH(L-1,NY,NX))
-      ENDIF
       CSAND(L,NY,NX)=CSAND(L,NY,NX)
-     2*1.0E-03*AMAX1(0.0,(1.0-CORGCX/0.55E+06))
+     2*1.0E-03*AMAX1(0.0,(1.0-CORGC(L,NY,NX)/0.55E+06))
       CSILT(L,NY,NX)=CSILT(L,NY,NX)
-     2*1.0E-03*AMAX1(0.0,(1.0-CORGCX/0.55E+06))
+     2*1.0E-03*AMAX1(0.0,(1.0-CORGC(L,NY,NX)/0.55E+06))
       CCLAY(L,NY,NX)=CCLAY(L,NY,NX)
-     2*1.0E-03*AMAX1(0.0,(1.0-CORGCX/0.55E+06))
+     2*1.0E-03*AMAX1(0.0,(1.0-CORGC(L,NY,NX)/0.55E+06))
       CEC(L,NY,NX)=CEC(L,NY,NX)*10.0
       AEC(L,NY,NX)=AEC(L,NY,NX)*10.0
       CNH4(L,NY,NX)=CNH4(L,NY,NX)/14.0
@@ -498,33 +522,6 @@ C     WP(L,NY,NX)=WP(L,NY,NX)/(1.0-FHOL(L,NY,NX))
       CCACO(L,NY,NX)=CCACO(L,NY,NX)/40.0
       CCASO(L,NY,NX)=CCASO(L,NY,NX)/40.0
 C
-C     SET FLAGS FOR ESTIMATING FC,WP,SCNV,SCNH IF UNKNOWN
-C
-C     ISOIL=flag for calculating FC(1),WP(2),SCNV(3),SCNH(4)
-C
-      IF(FC(L,NY,NX).LT.0.0)THEN
-      ISOIL(1,L,NY,NX)=1
-      PSIFC(NY,NX)=-0.033
-      ELSE
-      ISOIL(1,L,NY,NX)=0
-      ENDIF
-      IF(WP(L,NY,NX).LT.0.0)THEN
-      ISOIL(2,L,NY,NX)=1
-      PSIWP(NY,NX)=-1.5
-      ELSE
-      ISOIL(2,L,NY,NX)=0
-      ENDIF
-      IF(SCNV(L,NY,NX).LT.0.0)THEN
-      ISOIL(3,L,NY,NX)=1
-      ELSE
-      ISOIL(3,L,NY,NX)=0
-      ENDIF
-      IF(SCNH(L,NY,NX).LT.0.0)THEN
-      ISOIL(4,L,NY,NX)=1
-      ELSE
-      ISOIL(4,L,NY,NX)=0
-      ENDIF
-C
 C     ESTIMATE SON,SOP,CEC IF UNKNOWN
 C     BIOCHEMISTRY 130:117-131
 C
@@ -542,9 +539,6 @@ C     WRITE(*,1111)'CORGP',L,CORGP(L,NY,NX),CORGC(L,NY,NX)
       CEC(L,NY,NX)=10.0*(200.0*2.0*CORGC(L,NY,NX)/1.0E+06
      2+80.0*CCLAY(L,NY,NX)+20.0*CSILT(L,NY,NX)
      3+5.0*CSAND(L,NY,NX))
-C     WRITE(*,1111)'CEC',L,CEC(L,NY,NX),CORGC(L,NY,NX)
-C    2,CCLAY(L,NY,NX),CSILT(L,NY,NX),CSAND(L,NY,NX)
-1111  FORMAT(A8,1I4,12E12.4)
       ENDIF
 28    CONTINUE
       CORGC(0,NY,NX)=0.55E+06

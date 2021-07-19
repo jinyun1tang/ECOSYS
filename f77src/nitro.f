@@ -51,8 +51,7 @@ C
      3,ZNO2T(0:JZ),H2P4T(0:JZ),RINH4R(7,0:5),RINO3R(7,0:5)
      4,RIPO4R(7,0:5),FNH4XR(7,0:5),FNO3XR(7,0:5),FPO4XR(7,0:5)
      5,RGOMY(7,0:5),CNQ(0:4),CPQ(0:4),CNH(0:4),CPH(0:4)
-     6,CNS(4,0:4),CPS(4,0:4),DCKX(0:4),ROQCD(7,0:4) 
-     7,FORC(0:5),SPOMK(2),RMOMK(2) 
+     6,CNS(4,0:4),CPS(4,0:4),ROQCD(7,0:4),FORC(0:5),SPOMK(2),RMOMK(2) 
      8,CGOMS(2,7,0:5),CGONS(2,7,0:5),CGOPS(2,7,0:5),H1P4T(0:JZ) 
      1,TONX(0:5),TOPX(0:5),FCNK(0:4),FCPK(0:4),FP14XR(7,0:5) 
      2,RCO2X(7,0:5),RCH3X(7,0:5),RCH4X(7,0:5),RVOXA(7),RVOXB(7)
@@ -61,7 +60,7 @@ C
      4,FCN(7,0:5),FCP(7,0:5),FCNP(7,0:5),RIP14(7,0:5),RIP1B(7,0:5)
      5,TCGOQC(0:5),TCGOAC(0:5),TCGOMN(0:5),TCGOMP(0:5) 
      6,TRN2ON(JY,JX),TRN2OD(JY,JX),TRN2GD(JY,JX),RIP14R(7,0:5) 
-      DIMENSION ONL(4,0:4),OPL(4,0:4),EFIRE(2,21:22) 
+      DIMENSION ONL(4,0:4),OPL(4,0:4),EFIRE(2,21:22),DOSA(0:4) 
 C
 C     SUBSTRATE DECOMPOSITION BY MICROBIAL POPULATIONS
 C
@@ -88,7 +87,7 @@ C
      2,BIOA=BIOS*12.57*ORAD**2,DCKI=2.5,RCCX=0.833
      3,RCCQ=0.833,RCCZ=0.167,RCCY=0.833,FPRIM=5.0E-02,FPRIMM=1.0E-06
      4,OMGR=2.5E-01,OQKI=1.2E+03,H2KI=1.0,OAKI=12.0,COMKI=1.0E-03
-     5,COMKM=1.0E-04,CKC=1.0E-03,FOSCZ0=0.0E-02,FOSCZL=0.0E-04
+     5,COMKM=1.0E-04,CKC=1.0E-03,FOSCZ0=2.0E-02,FOSCZL=2.0E-06
      6,FMN=1.0E-03,DCKM0=1.0E+03,DCKML=1.0E+03)
 C
 C     SPECIFIC RESPIRATION RATES, M-M UPTAKE CONSTANTS,
@@ -162,15 +161,9 @@ C     SORPTION COEFFICIENTS
 C
       PARAMETER (TSORP=0.5,HSORP=1.0)
 C
-C     COLONIZATION RATE CONSTANTS
-C
-C     DOSA=rate constant for litter colonization by heterotrophs (g C g-1 C)
-C     DOSX=parameter for minimum rate of litter colonization 
-C
-      PARAMETER (DOSA=0.5,DOSX=5.0E-03)
-C
 C     SPECIFIC DECOMPOSITION RATES
 C
+C     DOSA=rate constant for litter colonization by heterotrophs (g C g-1 C)
 C     SP*= specific decomposition rate constant (g subs. C g-1 micr. C)
 C       OHC=adsorbed SOC, OHA=adsorbed acetate, OSC=SOC 
 C       (K=0,M=1,4 woody litter, K=1,M=1,4 non-woody litter,
@@ -179,15 +172,12 @@ C       ORC (M=1,2) microbial residue, OMC (M=1,2) microbial biomass
 C     RMOM=specific maintenance respiration (g C g-1 N h-1)  
 C
       PARAMETER (SPOHC=0.25,SPOHA=0.25,RMOM=0.010)
+      DATA DOSA/0.25E-03,0.25,0.25,0.25,0.25/
       DATA SPOSC/7.5,7.5,1.5,0.5,7.5,7.5,1.5,0.5
      2,7.5,7.5,1.5,0.5,0.05,0.00,0.00,0.00
      3,0.05,0.0167,0.00,0.00/
       DATA SPORC/7.5,1.5/
-      DATA SPOMC/1.0E-02,5.0E-04/
-C
-C     DCKX=Km for microbial colonization of litter (g C g-1 C)     
-C
-      DATA DCKX/0.50,0.50,0.50,0.00,0.00/
+      DATA SPOMC/1.0E-02,0.1E-02/
       DATA EN2F/0.0,0.0,0.0,0.0,0.0,EN2X,EN2Y/
       DATA EFIRE/1.0,1.0,0.917,0.167/
       REAL*4 WFNG,TFNX,TFNY,TFNG,TFNR,CNSHZ,CPSHZ,FRM
@@ -209,12 +199,13 @@ C
       IF(L.EQ.0)THEN
       KL=2
       IF(VOLWRX(NY,NX).GT.ZEROS2(NY,NX))THEN
-      THETR=VOLW(0,NY,NX)/VOLWRX(NY,NX)
-      THETZ=AMAX1(0.0,(AMIN1(FC(L,NY,NX),THETR)-THETY(L,NY,NX)))
-      VOLWZ=THETZ/(1.0+THETZ)*VOLWRX(NY,NX)
-C     IF((I/1)*1.EQ.I.AND.J.EQ.15.AND.L.EQ.0)THEN
-C     WRITE(*,8825)'THETZ',I,J,L,THETZ,THETR,VOLWZ,VOLWRX(NY,NX)
-C    2,VOLW(0,NY,NX),POROS(L,NY,NX),FCR(NY,NX),THETY(L,NY,NX)
+      THETR=VOLW(0,NY,NX)/VOLR(NY,NX)
+      THETZ=AMAX1(0.0,THETR-THETY(L,NY,NX))
+      VOLWZ=THETZ*VOLR(NY,NX)
+C     IF((I/30)*30.EQ.I.AND.J.EQ.15.AND.L.EQ.0)THEN
+C     WRITE(*,8825)'THETZ',I,J,L,THETR,THETZ,VOLWZ,VOLWRX(NY,NX)
+C    2,VOLW(0,NY,NX),POROS(L,NY,NX),FC(0,NY,NX),WP(0,NY,NX)
+C    3,THETY(L,NY,NX),PSISM(0,NY,NX),ORGC(0,NY,NX),VOLR(NY,NX)
 8825  FORMAT(A8,3I4,20E12.4)
 C     ENDIF
       ELSE
@@ -224,7 +215,7 @@ C     ENDIF
       KL=4
       THETZ=AMAX1(0.0,(AMIN1(AMAX1(0.5*POROS(L,NY,NX),FC(L,NY,NX))
      2,THETW(L,NY,NX))-THETY(L,NY,NX)))
-      VOLWZ=THETZ/(1.0+THETZ)*VOLY(L,NY,NX)
+      VOLWZ=THETZ*VOLY(L,NY,NX)
 C     IF((I/120)*120.EQ.I.AND.J.EQ.24.AND.L.LE.6)THEN
 C     WRITE(*,8824)'THETZ',I,J,NX,NY,L,THETZ,THETW(L,NY,NX),VOLWZ
 C    2,POROS(L,NY,NX),FC(L,NY,NX),WP(L,NY,NX),THETY(L,NY,NX)
@@ -356,7 +347,7 @@ C
 880   CONTINUE
       DO 860 K=0,KL
       OSRH(K)=OSAT(K)+ORCT(K)+OHC(K,L,NY,NX)+OHA(K,L,NY,NX)
-C     IF((I/10)*10.EQ.I.AND.J.EQ.24.AND.L.EQ.4.AND.K.EQ.2)THEN
+C     IF((I/30)*30.EQ.I.AND.J.EQ.15.AND.L.EQ.0)THEN
 C     WRITE(*,861)'OSRH',I,J,NX,NY,L,K,OSRH(K),OSCT(K)
 C    2,OSAT(K),ORCT(K),OHC(K,L,NY,NX),OHA(K,L,NY,NX)
 861   FORMAT(A8,6I4,20E12.4)
@@ -752,7 +743,7 @@ C     BY HETEROTROPHIC AEROBES
 C
 C     ECHZ=growth respiration yield
 C     ROXYM,ROXYP,ROXYS=O2 demand from DOC,DOA oxidation
-C     ROQCS,ROQCA=DOC,DOA demand from DOC,DOA oxidation
+C     ROQCS,ROQAS=DOC,DOA demand from DOC,DOA oxidation
 C     ROQCD=microbial respiration used to represent microbial activity 
 C
       ECHZ=EO2Q*FGOCP+EO2A*FGOAP
@@ -1441,7 +1432,8 @@ C     VMKI=product inhibition for NOx reduction
 C     VMXD3S,VMXD3B=substrate-unlimited NO3 reduction in non-band,band
 C     OQCD3S,OQCD3B=DOC limitation to NO3 reduction in non-band, band
 C     RDNO3,RDNOB=substrate-limited NO3 reduction in non-band,band
-C     RGOM3X,RGOMD3=substrate-unltd,-ltd respn from NO3 reduction 
+C     RGOM3X,RGOMD3=substrate-unltd,-ltd respn from NO3 reduction
+C     RVMX3,RVMB3=demand for NO3 reduction in non-band,band 
 C
       ROXYD=AMAX1(0.0,ROXYM(N,K)-ROXYO(N,K))
       VMXD3=0.875*ROXYD
@@ -1583,6 +1575,7 @@ C     OQCD1=DOC limitation to N2O reduction
 C     RDN2O=substrate-limited N2O reduction
 C     RGOM1X,RGOMD1=substrate-unltd,-ltd  respn from N2O reduction 
 C     RGOMY,RGOMD=total substrate-unltd,-ltd respn from NOx reduction 
+C     RVMX1=demand for N2O reduction 
 C
       VMXD1=(VMXD2-RDN2T)*2.0
       VMXDXS=VMXD1*CZ2OS(L,NY,NX)/(CZ2OS(L,NY,NX)+Z1KM)
@@ -1778,7 +1771,7 @@ C     RINOX=microbially limited NO3 demand
 C     BIOA=microbial surface area, OMA=active biomass
 C     TFNG=temp+water stress
 C     FNO3S,FNO3B=fractions of NO3 in non-band, band
-C     RINOO,RINOB=substrate-unlimited NH4 immobiln 
+C     RINOO,RINOB=substrate-unlimited NO3 immobiln 
 C     VOLW=water content
 C     ZNO3M,ZNOBM=NO3 not available for uptake in non-band, band
 C     FNO3X,FNB3X=fractions of biological NO3 demand in non-band, band
@@ -1918,7 +1911,6 @@ C     NU=surface layer number
 C     CNH4S,CNH4B=aqueous NH4 concentrations in non-band, band
 C     Z4MX,Z4MN,Z4KU=parameters for max NH4 uptake rate,
 C     minimum NH4 concentration and Km for NH4 uptake
-C     RINHOR=microbially limited NH4 demand
 C     BIOA=microbial surface area, OMA=active biomass
 C     TFNG=temp+water stress
 C     FNH4S,FNHBS=fractions of NH4 in non-band, band
@@ -2464,6 +2456,7 @@ C     RCNO2,RCNOB=substrate-limited nitrous acid reduction in non-band,band
 C     RCN2O,RCN2B=N2O production from nitrous acid reduction in non-band,band
 C     RCNO3,RCN3B=NO3 production from nitrous acid reduction in non-band,band
 C     RCOQN=DON production from nitrous acid reduction 
+C     RVMXC,RVMBC=demand for NO2 reduction in non-band,band 
 C
       IF(RNO2Y(L,NY,NX).GT.ZEROS(NY,NX))THEN
       FNO2=AMAX1(FMN,RVMXC(L,NY,NX)/RNO2Y(L,NY,NX))
@@ -2767,7 +2760,7 @@ C    3*AMIN1(FCNK(K),FCPK(K))
      2,CNS(M,K)*RDOSC(M,K)))/FCNK(K)
       RDOSP(M,K)=AMAX1(0.0,AMIN1(OSP(M,K,L,NY,NX)
      2,CPS(M,K)*RDOSC(M,K)))/FCPK(K)
-C     IF((I/1)*1.EQ.I.AND.J.EQ.15.AND.L.EQ.0)THEN
+C     IF((I/30)*30.EQ.I.AND.J.EQ.15.AND.L.EQ.0)THEN
 C     WRITE(*,4444)'RDOSC',I,J,NX,NY,L,K,M,RDOSC(M,K),RDOSN(M,K) 
 C    2,RDOSP(M,K),CNS(M,K),CPS(M,K),SPOSC(M,K),ROQCK(K),DFNS,TFNX 
 C    3,OQCI,OSA(M,K,L,NY,NX),OSRH(K),COSC,COQCK,DCKD,VOLWZ
@@ -3033,7 +3026,7 @@ C     OQC,OQN,OQP,OQA=DOC,DON,DOP
 C     RCOSC,RCOSN,RCOSP=transfer of decomposition C,N,P to DOC,DON,DOP
 C
       OSC(M,K,L,NY,NX)=OSC(M,K,L,NY,NX)-RDOSC(M,K)
-      OSA(M,K,L,NY,NX)=OSA(M,K,L,NY,NX)-RDOSC(M,K)
+C     OSA(M,K,L,NY,NX)=OSA(M,K,L,NY,NX)-RDOSC(M,K)
       OSN(M,K,L,NY,NX)=OSN(M,K,L,NY,NX)-RDOSN(M,K)
       OSP(M,K,L,NY,NX)=OSP(M,K,L,NY,NX)-RDOSP(M,K)
       OQC(K,L,NY,NX)=OQC(K,L,NY,NX)+RCOSC(M,K)
@@ -3050,12 +3043,12 @@ C     RHOSC,RHOSN,RHOSP=transfer of decomposition C,N,P to POC,PON,POP
 C
       IF(L.NE.0)THEN
       OSC(1,3,L,NY,NX)=OSC(1,3,L,NY,NX)+RHOSC(M,K)
-      OSA(1,3,L,NY,NX)=OSA(1,3,L,NY,NX)+RHOSC(M,K)
+C     OSA(1,3,L,NY,NX)=OSA(1,3,L,NY,NX)+RHOSC(M,K)
       OSN(1,3,L,NY,NX)=OSN(1,3,L,NY,NX)+RHOSN(M,K)
       OSP(1,3,L,NY,NX)=OSP(1,3,L,NY,NX)+RHOSP(M,K)
       ELSE
       OSC(1,3,NU(NY,NX),NY,NX)=OSC(1,3,NU(NY,NX),NY,NX)+RHOSC(M,K)
-      OSA(1,3,NU(NY,NX),NY,NX)=OSA(1,3,NU(NY,NX),NY,NX)+RHOSC(M,K)
+C     OSA(1,3,NU(NY,NX),NY,NX)=OSA(1,3,NU(NY,NX),NY,NX)+RHOSC(M,K)
       OSN(1,3,NU(NY,NX),NY,NX)=OSN(1,3,NU(NY,NX),NY,NX)+RHOSN(M,K)
       OSP(1,3,NU(NY,NX),NY,NX)=OSP(1,3,NU(NY,NX),NY,NX)+RHOSP(M,K)
       ENDIF
@@ -3186,16 +3179,16 @@ C
       IF(L.NE.0)THEN
       OSC(1,4,L,NY,NX)=OSC(1,4,L,NY,NX)+CFOMC(1,L,NY,NX)
      2*(RHOMC(M,N,K)+RHMMC(M,N,K))
-      OSA(1,4,L,NY,NX)=OSA(1,4,L,NY,NX)+CFOMC(1,L,NY,NX)
-     2*(RHOMC(M,N,K)+RHMMC(M,N,K))
+C     OSA(1,4,L,NY,NX)=OSA(1,4,L,NY,NX)+CFOMC(1,L,NY,NX)
+C    2*(RHOMC(M,N,K)+RHMMC(M,N,K))
       OSN(1,4,L,NY,NX)=OSN(1,4,L,NY,NX)+CFOMC(1,L,NY,NX)
      2*(RHOMN(M,N,K)+RHMMN(M,N,K))
       OSP(1,4,L,NY,NX)=OSP(1,4,L,NY,NX)+CFOMC(1,L,NY,NX)
      2*(RHOMP(M,N,K)+RHMMP(M,N,K))
       OSC(2,4,L,NY,NX)=OSC(2,4,L,NY,NX)+CFOMC(2,L,NY,NX)
      2*(RHOMC(M,N,K)+RHMMC(M,N,K))
-      OSA(2,4,L,NY,NX)=OSA(2,4,L,NY,NX)+CFOMC(2,L,NY,NX)
-     2*(RHOMC(M,N,K)+RHMMC(M,N,K))
+C     OSA(2,4,L,NY,NX)=OSA(2,4,L,NY,NX)+CFOMC(2,L,NY,NX)
+C    2*(RHOMC(M,N,K)+RHMMC(M,N,K))
       OSN(2,4,L,NY,NX)=OSN(2,4,L,NY,NX)+CFOMC(2,L,NY,NX)
      2*(RHOMN(M,N,K)+RHMMN(M,N,K))
       OSP(2,4,L,NY,NX)=OSP(2,4,L,NY,NX)+CFOMC(2,L,NY,NX)
@@ -3209,16 +3202,16 @@ C     ENDIF
       ELSE
       OSC(1,4,NU(NY,NX),NY,NX)=OSC(1,4,NU(NY,NX),NY,NX)
      2+CFOMC(1,NU(NY,NX),NY,NX)*(RHOMC(M,N,K)+RHMMC(M,N,K))
-      OSA(1,4,NU(NY,NX),NY,NX)=OSA(1,4,NU(NY,NX),NY,NX)
-     2+CFOMC(1,NU(NY,NX),NY,NX)*(RHOMC(M,N,K)+RHMMC(M,N,K))
+C     OSA(1,4,NU(NY,NX),NY,NX)=OSA(1,4,NU(NY,NX),NY,NX)
+C    2+CFOMC(1,NU(NY,NX),NY,NX)*(RHOMC(M,N,K)+RHMMC(M,N,K))
       OSN(1,4,NU(NY,NX),NY,NX)=OSN(1,4,NU(NY,NX),NY,NX)
      2+CFOMC(1,NU(NY,NX),NY,NX)*(RHOMN(M,N,K)+RHMMN(M,N,K))
       OSP(1,4,NU(NY,NX),NY,NX)=OSP(1,4,NU(NY,NX),NY,NX)
      2+CFOMC(1,NU(NY,NX),NY,NX)*(RHOMP(M,N,K)+RHMMP(M,N,K))
       OSC(2,4,NU(NY,NX),NY,NX)=OSC(2,4,NU(NY,NX),NY,NX)
      2+CFOMC(2,NU(NY,NX),NY,NX)*(RHOMC(M,N,K)+RHMMC(M,N,K))
-      OSA(2,4,NU(NY,NX),NY,NX)=OSA(2,4,NU(NY,NX),NY,NX)
-     2+CFOMC(2,NU(NY,NX),NY,NX)*(RHOMC(M,N,K)+RHMMC(M,N,K))
+C     OSA(2,4,NU(NY,NX),NY,NX)=OSA(2,4,NU(NY,NX),NY,NX)
+C    2+CFOMC(2,NU(NY,NX),NY,NX)*(RHOMC(M,N,K)+RHMMC(M,N,K))
       OSN(2,4,NU(NY,NX),NY,NX)=OSN(2,4,NU(NY,NX),NY,NX)
      2+CFOMC(2,NU(NY,NX),NY,NX)*(RHOMN(M,N,K)+RHMMN(M,N,K))
       OSP(2,4,NU(NY,NX),NY,NX)=OSP(2,4,NU(NY,NX),NY,NX)
@@ -3286,11 +3279,8 @@ C
 C     MICROBIAL COLONIZATION OF NEW LITTER
 C
 C     OSCT,OSAT,OSCX=total,colonized,uncolonized SOC
-C     DCKX=Km for microbial colonization of litter
-C     DFNA=effect of uncolonized litter concentration on colonization
 C     OSA,OSC=colonized,total litter
 C     DOSA=rate constant for litter colonization 
-C     DOSX=parameter for minimum rate of litter colonization 
 C     ROQCK=total respiration of DOC+DOA used to represent microbial activity
 C
       DO 475 K=0,KL
@@ -3301,41 +3291,28 @@ C
       OSAT(K)=OSAT(K)+OSA(M,K,L,NY,NX)
 475   CONTINUE
       DO 480 K=0,KL
-      OSCX=OSCT(K)-OSAT(K)
-      IF(OSCX.GT.ZEROS(NY,NX))THEN
-      IF(OSAT(K).GT.ZEROS(NY,NX))THEN
-      COSC=OSCX/OSAT(K)
-      DFNA=COSC/(COSC+DCKX(K))
-      ELSE
-      DFNA=1.0
-      ENDIF
+      IF(OSCT(K).GT.ZEROS(NY,NX))THEN
+      DOSAK=DOSA(K)*AMAX1(0.0,ROQCK(K))
       DO 485 M=1,4
-      IF(OSC(M,K,L,NY,NX).GT.ZEROS(NY,NX))THEN
-      OSA(M,K,L,NY,NX)=AMAX1(1.0E-03*OSC(M,K,L,NY,NX)
-     2,AMIN1(OSC(M,K,L,NY,NX) 
-     2,OSA(M,K,L,NY,NX)+DOSA*(AMAX1(0.0
-     2,AMIN1(DOSX*OSCT(K),ROQCK(K)))) 
-     3*(OSC(M,K,L,NY,NX)-OSA(M,K,L,NY,NX))/OSCX*DFNA))
-C     IF(INT(I/30)*30.EQ.I.AND.J.EQ.19.AND.K.LE.1)THEN
+      OSA(M,K,L,NY,NX)=AMIN1(OSC(M,K,L,NY,NX)
+     2,OSA(M,K,L,NY,NX)+DOSAK*OSC(M,K,L,NY,NX)/OSCT(K)) 
+C     IF((I/30)*30.EQ.I.AND.J.EQ.15.AND.L.EQ.0)THEN
 C     WRITE(*,8822)'OSA',I,J,NX,NY,L,K,M,OSA(M,K,L,NY,NX)
-C    2,OSC(M,K,L,NY,NX),DOSX*OSCT(K),ROQCK(K)
-C    3,OSAT(K),OSCT(K),(OSC(M,K,L,NY,NX)-OSA(M,K,L,NY,NX))
-C    3/OSCX,DOSA,TFNX,WFNG,COSC,DFNA
-C     ENDIF
+C    2,OSC(M,K,L,NY,NX),DOSA(K),ROQCK(K),DOSAK,OSAT(K),OSCT(K)
 8822  FORMAT(A8,7I4,30E12.4)
-      ENDIF
+C     ENDIF
 485   CONTINUE
       ELSE
       DO 490 M=1,4
       OSA(M,K,L,NY,NX)=AMIN1(OSC(M,K,L,NY,NX),OSA(M,K,L,NY,NX)) 
 490   CONTINUE
       ENDIF
-C     IF(L.EQ.0)THEN
+C     IF((I/30)*30.EQ.I.AND.J.EQ.15.AND.L.EQ.0)THEN
 C     WRITE(*,8823)'OSC',I,J,L,K,((OMC(M,N,K,L,NY,NX),N=1,7),M=1,3)
 C    2,(ORC(M,K,L,NY,NX),M=1,2),OQC(K,L,NY,NX),OQCH(K,L,NY,NX)
 C    3,OHC(K,L,NY,NX),OQA(K,L,NY,NX),OQAH(K,L,NY,NX),OHA(K,L,NY,NX)
 C    4,(OSC(M,K,L,NY,NX),M=1,4)
-8823  FORMAT(A8,4I4,100E24.16)
+8823  FORMAT(A8,4I4,100E12.4)
 C     ENDIF
 480   CONTINUE
 C
@@ -3778,9 +3755,9 @@ C
       IFLGJ=0
       NLL=-1
       DO 2945 L=0,NL(NY,NX)
-      WRITE(*,9494)'FIRE',I,J,L,IFLGJ,NLL,ORGC(L,NY,NX),THETW(L,NY,NX) 
-     2,FVLWB,CORGC(L,NY,NX),FORGC,DPTH(L,NY,NX),BKDS(L,NY,NX) 
-     3,VOLY(L,NY,NX),DTBLX(NY,NX),DCORP(I,NY,NX)
+C     WRITE(*,9494)'FIRE',I,J,L,IFLGJ,NLL,ORGC(L,NY,NX),THETW(L,NY,NX) 
+C    2,FVLWB,CORGC(L,NY,NX),FORGC,DPTH(L,NY,NX),BKDS(L,NY,NX) 
+C    3,VOLY(L,NY,NX),DTBLX(NY,NX),DCORP(I,NY,NX)
 9494  FORMAT(A8,5I6,12E12.4)
       IF(L.EQ.0.OR.L.GE.NUM(NY,NX))THEN
       IF(IFLGJ.EQ.1)THEN
@@ -3799,17 +3776,23 @@ C
       DO 2950 L=0,NLL
       IF(NLL.GE.0)THEN
       IF(ITILL(I,NY,NX).EQ.22)THEN
-      DCORPC=AMIN1(0.999,DCORP(I,NY,NX))*(CORGC(L,NY,NX)-FORGC)
-     2/(AMAX1(CORGC(L,NY,NX),0.55E+06)-FORGC)
+      IF(L.EQ.0)THEN
+      FORGCX=0.0
+      ELSE
+      FORGCX=FORGC
+      ENDIF
+      DCORPC=AMIN1(0.999,DCORP(I,NY,NX))*(CORGC(L,NY,NX)-FORGCX)
+     2/(AMAX1(CORGC(L,NY,NX),0.55E+06)-FORGCX)
       ELSE
       DCORPC=AMIN1(0.999,DCORP(I,NY,NX))
       ENDIF
 C     VOLWOU=VOLWOU+DCORPC*VOLW(L,NY,NX)
 C     HEATOU=HEATOU+DCORPC*4.19*TKS(L,NY,NX)*VOLW(L,NY,NX)
 C     VOLW(L,NY,NX)=VOLW(L,NY,NX)-DCORPC*VOLW(L,NY,NX)
-      WRITE(*,9696)'BURN',I,J,L,NLL,CORGC(L,NY,NX),ORGC(L,NY,NX)
-     2,FORGC,DCORPC,DCORP(I,NY,NX),VOLW(L,NY,NX),BKDS(L,NY,NX)
-9696  FORMAT(A8,4I6,12E12.4)
+C     WRITE(*,9696)'BURN',I,J,L,NLL,ITILL(I,NY,NX)
+C    2,CORGC(L,NY,NX),ORGC(L,NY,NX)
+C    2,FORGCX,DCORPC,DCORP(I,NY,NX),VOLW(L,NY,NX),BKDS(L,NY,NX)
+9696  FORMAT(A8,5I6,12E12.4)
       OC=0.0
       ON=0.0
       OP=0.0
