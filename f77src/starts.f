@@ -1093,6 +1093,8 @@ C
       THETW(L,NY,NX)=WP(L,NY,NX)
       ELSEIF(THW(L,NY,NX).LT.0.0)THEN 
       THETW(L,NY,NX)=0.0
+      ELSE
+      THETW(L,NY,NX)=THW(L,NY,NX)      
       ENDIF
       IF(THI(L,NY,NX).GT.1.0)THEN
       THETI(L,NY,NX)=AMAX1(0.0,AMIN1(POROS(L,NY,NX)
@@ -1105,6 +1107,8 @@ C
      2,POROS(L,NY,NX)-THW(L,NY,NX)))
       ELSEIF(THI(L,NY,NX).LT.0.0)THEN 
       THETI(L,NY,NX)=0.0
+      ELSE
+      THETI(L,NY,NX)=THI(L,NY,NX)      
       ENDIF
       VOLW(L,NY,NX)=THETW(L,NY,NX)*VOLX(L,NY,NX)
       VOLWX(L,NY,NX)=VOLW(L,NY,NX)
