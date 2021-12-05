@@ -1,0 +1,2 @@
+add_subdirectory(ecosys_core)
+add_subdirectory(ecosys_driver)
