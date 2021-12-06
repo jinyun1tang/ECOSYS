@@ -17,17 +17,25 @@ You can also make a fork using the fork button on the upper right corner.
 
 # Build 
 
-Currently, the code is configured with intel compilers, icc and ifort. 
+* clean the build folder
+ 
+ make distclean
+ 
+* Configure for building
 
-* Type
+make config CC=icc CXX=icpc FC=ifort
 
-  ./build_ecosys make
+* If using gnu compilers, type
 
-* Then follow the output information to locate the executable.
+make config CC=gcc CXX=g++ FC=gfortran
 
-* To clean the build directory, type
+* Obtain the executable
 
-  ./build_ecosys clean
+make install CC=icc CXX=icpc FC=ifort
+
+* The executable is located in 
+
+./local/bin/ecosys.x  
 
 # Several useful git commands
 
