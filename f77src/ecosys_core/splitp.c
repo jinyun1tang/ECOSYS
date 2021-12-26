@@ -211,7 +211,7 @@ void splitp_(const int *NHW,const int *NHE,const int *NVN,const int *NVS, const 
      free(lines);
      free(prefix);
      free(pos);
-
+     free(outdirl);
      /*Close all opened output file units*/
      for(i=0;i<cycles;i++){
        fclose(fouts[i]);
