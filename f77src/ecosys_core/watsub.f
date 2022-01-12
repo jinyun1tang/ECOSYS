@@ -26,48 +26,48 @@ C
       include "blktest.h"
       DIMENSION VOLWX1(JZ,JY,JX),VPQ(JY,JX),TKQ(JY,JX)
      2,XVOLT(JY,JX),XVOLW(JY,JX),XVOLI(JY,JX),FMAC(JZ,JY,JX)
-     3,FGRD(JZ,JY,JX),VOLW1(0:JZ,JY,JX),VOLI1(0:JZ,JY,JX) 
+     3,FGRD(JZ,JY,JX),VOLW1(0:JZ,JY,JX),VOLI1(0:JZ,JY,JX)
      4,VHCP1(0:JZ,JY,JX),VHCP1A(JZ,JY,JX),VHCP1B(JZ,JY,JX)
-     4,TK1(0:JZ,JY,JX),TWFLXL(JZ,JY,JX),VOLW2(JZ,JY,JX) 
-     5,VOLP1(0:JZ,JY,JX),TWFLXH(JZ,JY,JX),PRECM(JY,JX) 
-     6,VOLS0(JS,JY,JX),VOLI0(JS,JY,JX),VOLW0(JS,JY,JX) 
-     7,VOLS1(JS,JY,JX),DLYRS0(JS,JY,JX),VOLP1Z(JZ,JY,JX) 
-     8,TK0(JS,JY,JX),AREAU(JZ,JY,JX),AREAUD(JZ,JY,JX),FLQ0S(JY,JX) 
-     9,FLQ0I(JY,JX),FLQ0W(JY,JX),FLQ1(JY,JX),FLH1(JY,JX) 
+     4,TK1(0:JZ,JY,JX),TWFLXL(JZ,JY,JX),VOLW2(JZ,JY,JX)
+     5,VOLP1(0:JZ,JY,JX),TWFLXH(JZ,JY,JX),PRECM(JY,JX)
+     6,VOLS0(JS,JY,JX),VOLI0(JS,JY,JX),VOLW0(JS,JY,JX)
+     7,VOLS1(JS,JY,JX),DLYRS0(JS,JY,JX),VOLP1Z(JZ,JY,JX)
+     8,TK0(JS,JY,JX),AREAU(JZ,JY,JX),AREAUD(JZ,JY,JX),FLQ0S(JY,JX)
+     9,FLQ0I(JY,JX),FLQ0W(JY,JX),FLQ1(JY,JX),FLH1(JY,JX)
      9,FLY1(JY,JX),HWFLQ0(JY,JX),HWFLQ1(JY,JX),HWFLY1(JY,JX)
      1,RAR(JY,JX),RAGS(JY,JX),BAREW(JY,JX),CVRDW(JY,JX)
-     2,RARG(JY,JX),RAGR(JY,JX),RAGW(JY,JX),PAREW(JY,JX),PAREG(JY,JX) 
+     2,RARG(JY,JX),RAGR(JY,JX),RAGW(JY,JX),PAREW(JY,JX),PAREG(JY,JX)
      3,RAG(JY,JX),PARSW(JY,JX),PARSG(JY,JX),PARER(JY,JX),PARSR(JY,JX)
      4,QR1(2,2,JV,JH),HQR1(2,2,JV,JH),VOLPH1Z(JZ,JY,JX)
      5,QS1(2,JV,JH),QW1(2,JV,JH),QI1(2,JV,JH),HQS1(2,JV,JH)
      6,TQR1(JY,JX),THQR1(JY,JX),EVAPG(JY,JX),TTFLXL(JZ,JY,JX)
-     7,EVAPW(JY,JX),EVAPS(JY,JX),EVAPR(JY,JX),FLWRL(JY,JX) 
+     7,EVAPW(JY,JX),EVAPS(JY,JX),EVAPR(JY,JX),FLWRL(JY,JX)
      8,HFLWRL(JY,JX),FINHL(JZ,JY,JX),FLWL(3,JD,JV,JH)
       DIMENSION FLWHL(3,JD,JV,JH),HFLWL(3,JD,JV,JH)
      2,TFLWL(JZ,JY,JX),TFLWHL(JZ,JY,JX),THFLWL(JZ,JY,JX)
      3,WFLXL(JZ,JY,JX),TFLXL(JZ,JY,JX),AVCNHL(3,JD,JV,JH)
      5,THRYW(JY,JX),THRMW(JY,JX),THRMS(JY,JX),THRMR(JY,JX)
      6,THRYG(JY,JX),THRYR(JY,JX),RADXW(JY,JX),RADXG(JY,JX)
-     7,RADXR(JY,JX),FLWLX(3,JD,JV,JH),TFLWLX(JZ,JY,JX) 
+     7,RADXR(JY,JX),FLWLX(3,JD,JV,JH),TFLWLX(JZ,JY,JX)
      8,FLU1(JZ,JY,JX),HWFLU1(JZ,JY,JX),PSISM1(0:JZ,JY,JX)
      9,ALTG(JY,JX),WFLXLH(JZ,JY,JX),DLYRR(JY,JX),WFLXR(JY,JX)
-     1,TFLXR(JY,JX),HCNDR(JY,JX),CNDH1(JZ,JY,JX),VOLA1(0:JZ,JY,JX) 
+     1,TFLXR(JY,JX),HCNDR(JY,JX),CNDH1(JZ,JY,JX),VOLA1(0:JZ,JY,JX)
      2,THETWX(0:JZ,JY,JX),THETIX(0:JZ,JY,JX),THETPX(0:JZ,JY,JX)
      4,VOLAH1(JZ,JY,JX),VOLWH1(JZ,JY,JX),VOLPH1(JZ,JY,JX)
      5,VOLIH1(JZ,JY,JX),THETPY(0:JZ,JY,JX),FLWNX(JY,JX)
      6,FLWXNX(JY,JX),FLWHNX(JY,JX),HFLWNX(JY,JX),N6X(JY,JX)
-     7,PSISA1(JZ,JY,JX) 
+     7,PSISA1(JZ,JY,JX)
       DIMENSION TQS1(JY,JX),TQW1(JY,JX),TQI1(JY,JX),THQS1(JY,JX)
      2,TFLWS(JS,JY,JX),TFLWW(JS,JY,JX),TFLWI(JS,JY,JX)
      3,THFLWW(JS,JY,JX),TFLX0(JS,JY,JX),WFLXS(JS,JY,JX)
      4,WFLXI(JS,JY,JX),FLW0W(JS,JY,JX),FLW0S(JS,JY,JX)
-     5,FLW0I(JS,JY,JX),HFLW0W(JS,JY,JX) 
+     5,FLW0I(JS,JY,JX),HFLW0W(JS,JY,JX)
      6,VOLS0M(JS,JY,JX),VOLW0M(JS,JY,JX)
      7,VOLI0M(JS,JY,JX),VHCPWMM(JS,JY,JX),TK0M(JS,JY,JX)
 C
 C     EMMS,EMMW,EMMR=emissivities of surface soil, snow and litter
-C     RACX,RARX=minimum boundary layer resistances of canopy,litter (h m-1) 
-C     RZ=minimum resistance to evaporation of surface water (h m-1) 
+C     RACX,RARX=minimum boundary layer resistances of canopy,litter (h m-1)
+C     RZ=minimum resistance to evaporation of surface water (h m-1)
 C     RAM=minimum boundary layer resistance (h m-1)
 C     DPTHSX=minimum snowpack depth for full cover (m)
 C     Z1S,Z2SW,Z2SD,Z3SX=parameters for air-water gas transfers in soil
@@ -93,7 +93,7 @@ C
 C     FVOLAH=parameter for clay effect on macropore volume
 C     DTHETW=difference between saturation and effective saturation
 C     HCNDRR=saturated hydraulic conductivity of surface litter
-C     FENGYP=rate constant for restoring surface Ksat 
+C     FENGYP=rate constant for restoring surface Ksat
 C
       PARAMETER (FVOLAH=0.0,DTHETW=1.0E-06,HCNDRR=25.0
      2,FENGYP=1.0E-03)
@@ -104,12 +104,12 @@ C
       NUM(NY,NX)=NU(NY,NX)
 C
 C     ADJUST SURFACE ELEVATION USED IN RUNOFF FOR FREEZE-THAW, EROSION
-C     AND SOC   
+C     AND SOC
 C
 C     ALTG,ALT=current,initial elevation of ground surface
 C     CDPTH(NUM(NY,NX)-1,=depth of ground surface
-C     ENGYP=cumulative rainfall energy impact on soil surface 
-C 
+C     ENGYP=cumulative rainfall energy impact on soil surface
+C
       ALTG(NY,NX)=ALT(NY,NX)-CDPTH(NUM(NY,NX)-1,NY,NX)
       ENGYP(NY,NX)=ENGYP(NY,NX)*(1.0-FENGYP)
 C
@@ -166,14 +166,14 @@ C     FVOLAH=parameter for clay effect on macropore volume
 C     VOLX,VOLT=soil,total volumes
 C     WP=wilting point
 C     THETW*,THETI*,THETP*=water,ice,air-filled porosity
-C     VHCP1,VHCM=volumetric heat capacities of total volume, solid 
+C     VHCP1,VHCM=volumetric heat capacities of total volume, solid
 C     VHCP1A,VHCP1B=volumetric heat capacities of micropore,macropore
 C
       PSISM1(L,NY,NX)=PSISM(L,NY,NX)
       VOLA1(L,NY,NX)=VOLA(L,NY,NX)
       VOLW1(L,NY,NX)=VOLW(L,NY,NX)
       VOLWX1(L,NY,NX)=VOLWX(L,NY,NX)
-      VOLI1(L,NY,NX)=VOLI(L,NY,NX) 
+      VOLI1(L,NY,NX)=VOLI(L,NY,NX)
       VOLWH1(L,NY,NX)=VOLWH(L,NY,NX)
       VOLIH1(L,NY,NX)=VOLIH(L,NY,NX)
       IF(BKDS(L,NY,NX).GT.ZERO)THEN
@@ -210,7 +210,7 @@ C
       THETPX(L,NY,NX)=0.0
       ENDIF
       THETPM(1,L,NY,NX)=THETPX(L,NY,NX)
-      IF(VOLA1(L,NY,NX)+VOLAH1(L,NY,NX).GT.ZEROS2(NY,NX))THEN 
+      IF(VOLA1(L,NY,NX)+VOLAH1(L,NY,NX).GT.ZEROS2(NY,NX))THEN
       THETPY(L,NY,NX)=AMAX1(0.0,(VOLP1(L,NY,NX)+VOLPH1(L,NY,NX))
      2/(VOLA1(L,NY,NX)+VOLAH1(L,NY,NX)))
       ELSE
@@ -224,8 +224,8 @@ C
 C     IF(I.GT.331)THEN
 C     WRITE(*,3376)'VOLWI',I,J,NX,NY,L,VOLW1(L,NY,NX)
 C    2,VOLI1(L,NY,NX),VOLP1(L,NY,NX),VOLA1(L,NY,NX)
-C    3,VOLWH1(L,NY,NX),VOLIH1(L,NY,NX),VOLPH1(L,NY,NX) 
-C    3,VOLAH1(L,NY,NX),VOLT(L,NY,NX),VOLY(L,NY,NX) 
+C    3,VOLWH1(L,NY,NX),VOLIH1(L,NY,NX),VOLPH1(L,NY,NX)
+C    3,VOLAH1(L,NY,NX),VOLT(L,NY,NX),VOLY(L,NY,NX)
 C    4,THETWX(L,NY,NX),THETIX(L,NY,NX),THETPX(L,NY,NX)
 3376  FORMAT(A8,5I4,40E14.6)
 C     ENDIF
@@ -240,7 +240,7 @@ C     AREAU,AREAD=fractions of layer below natural,artifl water table
 C
       IF(VOLAH1(L,NY,NX).GT.ZEROS2(NY,NX))THEN
       FMAC(L,NY,NX)=FHOL(L,NY,NX)*VOLAH1(L,NY,NX)/VOLAH(L,NY,NX)
-      CNDH1(L,NY,NX)=CNDH(L,NY,NX) 
+      CNDH1(L,NY,NX)=CNDH(L,NY,NX)
      2*(VOLAH1(L,NY,NX)/VOLAH(L,NY,NX))**2
       ELSE
       FMAC(L,NY,NX)=0.0
@@ -282,7 +282,7 @@ C     THRMG=longwave emission from litter surface
 C     VHCP1=volumetric heat capacity of litter
 C     VOLA*,VOLW*,VOLI*,VOLP*=pore,water,ice,air volumes of litter
 C     VOLWRX=maximum water retention by litter
-C     XVOLT,XVOLW=free surface water+ice,water 
+C     XVOLT,XVOLW=free surface water+ice,water
 C     VHCPRX=min heat capacity for litter water,heat fluxes
 C     VOLR=litter volume
 C     THETW*,THETI*,THETP*=water,ice,air concentrations
@@ -327,8 +327,8 @@ C
       TK1(0,NY,NX)=TKS(0,NY,NX)
 C     WRITE(*,7751)'THETPX',I,J,NX,NY
 C    2,VOLW1(0,NY,NX),VOLI1(0,NY,NX),VOLP1(0,NY,NX),VOLA1(0,NY,NX)
-C    3,THETWX(0,NY,NX),THETIX(0,NY,NX),THETPX(0,NY,NX) 
-C    3,XVOLW(NY,NX),XVOLT(NY,NX),VOLWD(NY,NX),VOLWG(NY,NX),VOLR(NY,NX) 
+C    3,THETWX(0,NY,NX),THETIX(0,NY,NX),THETPX(0,NY,NX)
+C    3,XVOLW(NY,NX),XVOLT(NY,NX),VOLWD(NY,NX),VOLWG(NY,NX),VOLR(NY,NX)
 C    4,VOLW1(1,NY,NX),VOLI1(1,NY,NX),VOLP1(1,NY,NX)
 C    5,VOLWRX(NY,NX)
 7751  FORMAT(A8,4I4,20E12.4)
@@ -340,7 +340,7 @@ C     DPTHS=snowpack depth
 C     DPTHSX=minimum snowpack depth for full cover
 C     BARE,CVRD=fractions of soil,litter cover
 C     PRECA=precipitation+irrigation
-C     PRECD,PRECB=direct,indirect precipn+irrign at soil surface 
+C     PRECD,PRECB=direct,indirect precipn+irrign at soil surface
 C
       FSNW(NY,NX)=AMIN1(1.0,SQRT((DPTHS(NY,NX)/DPTHSX)))
       FSNX(NY,NX)=1.0-FSNW(NY,NX)
@@ -364,14 +364,14 @@ C    3,XVOLW(NY,NX),VOLWD(NY,NX)
 C    4,PRECA(NY,NX),TFLWCI(NY,NX),TFLWC(NY,NX)
 C    5,PRECA(NY,NX)*XNPH*1000*BARE(NY,NX),PRECD(NY,NX),PRECB(NY,NX)
 3112  FORMAT(A8,4I4,20E12.4)
-C     ENDIF 
+C     ENDIF
 C
 C     RESIDUE WATER ABSORPTION CAPACITY
 C
 C     HCNDR=litter saturated hydraulic conductivity
 C     DLYRR=litter depth
 C
-      HCNDR(NY,NX)=HCNDRR 
+      HCNDR(NY,NX)=HCNDRR
       DLYRR(NY,NX)=AMAX1(2.5E-03,DLYR(3,0,NY,NX))
 C
 C     DISTRIBUTION OF PRECIPITATION AND ITS HEAT AMONG SURFACE
@@ -387,30 +387,30 @@ C     HFLWQA,HFLWQB=convective heat flux to soil,litter surfaces
 C     FLWQAS,FLWQAH=precip to soil micropores,macropores
 C
       IF(PRECA(NY,NX).GT.0.0.OR.PRECW(NY,NX).GT.0.0)THEN
-      FLWQW=(PRECA(NY,NX)-TFLWC(NY,NX))*FSNW(NY,NX) 
+      FLWQW=(PRECA(NY,NX)-TFLWC(NY,NX))*FSNW(NY,NX)
       FLWSW=PRECW(NY,NX)
       HFLWSW=2.095*TKA(NY,NX)*FLWSW+4.19*TKA(NY,NX)*FLWQW
       FLWQB=(PRECA(NY,NX)-TFLWC(NY,NX))*FSNX(NY,NX)
-      FLWQBX=FLWQB*CVRD(NY,NX) 
+      FLWQBX=FLWQB*CVRD(NY,NX)
       HFLWQB=4.19*TKA(NY,NX)*FLWQBX
       FLWQAX=FLWQB*BARE(NY,NX)
       HFLWQA=4.19*TKA(NY,NX)*FLWQAX
       FLWQAS=FLWQAX*FGRD(NUM(NY,NX),NY,NX)
       FLWQAH=FLWQAX*FMAC(NUM(NY,NX),NY,NX)
       ELSE
-      FLWQW=-TFLWC(NY,NX)*FSNW(NY,NX) 
+      FLWQW=-TFLWC(NY,NX)*FSNW(NY,NX)
       FLWSW=0.0
       HFLWSW=4.19*TKA(NY,NX)*FLWQW
       FLWQB=-TFLWC(NY,NX)*FSNX(NY,NX)
-      FLWQBX=FLWQB*CVRD(NY,NX) 
+      FLWQBX=FLWQB*CVRD(NY,NX)
       HFLWQB=4.19*TKA(NY,NX)*FLWQBX
-      FLWQAX=FLWQB*BARE(NY,NX) 
+      FLWQAX=FLWQB*BARE(NY,NX)
       HFLWQA=4.19*TKA(NY,NX)*FLWQAX
       FLWQAS=FLWQAX*FGRD(NUM(NY,NX),NY,NX)
       FLWQAH=FLWQAX*FMAC(NUM(NY,NX),NY,NX)
       ENDIF
 C
-C     PRECIP ON SNOW ARRAYS EXPORTED TO TRNSFR.F, TRNSFRS.F 
+C     PRECIP ON SNOW ARRAYS EXPORTED TO TRNSFR.F, TRNSFRS.F
 C     FOR SOLUTE FLUX CALCULATIONS
 C
 C     PRECW,PRECR,PRECQ,PRECI=snow,rain,snow+rain,irrigation
@@ -443,16 +443,16 @@ C     INTO LOCAL ARRAYS FOR USE IN MASS AND ENERGY EXCHANGE
 C     ALGORITHMS
 C
 C     XNPH=internal time step for fluxes through soil profile
-C     
+C
 C     FLW0S,FLQ0I,FLQ0W=snow,ice,water input to snowpack
 C     HWFLQ0=convective heat flux to snowpack
 C     FLQ1,FLH1,FLY1=rain+irrigation to micropores,macropores,litter
 C     HWFLQ1,HWFLY1=convective heat flux to soil,litter surfaces
 C
-      FLQ0S(NY,NX)=FLWSW*XNPH 
+      FLQ0S(NY,NX)=FLWSW*XNPH
       FLQ0I(NY,NX)=0.0
-      FLQ0W(NY,NX)=FLWQW*XNPH 
-      HWFLQ0(NY,NX)=HFLWSW*XNPH 
+      FLQ0W(NY,NX)=FLWQW*XNPH
+      HWFLQ0(NY,NX)=HFLWSW*XNPH
       FLQ1(NY,NX)=FLWQAS*XNPH
       FLH1(NY,NX)=FLWQAH*XNPH
       FLY1(NY,NX)=FLWQBX*XNPH
@@ -462,8 +462,8 @@ C     IF(I.EQ.118.AND.NX.EQ.3.AND.NY.EQ.4)THEN
 C     WRITE(*,4422)'FLQ0W',I,J,FLQ0W(NY,NX),FLWQW,XNPH
 C     WRITE(*,4422)'FLY',I,J,PRECA(NY,NX),TFLWC(NY,NX),FLY1(NY,NX)
 C    2,PSISM1(0,NY,NX),PSISM(0,NY,NX)
-C    2,FLQ1(NY,NX),FLH1(NY,NX),FLWQBX 
-C    2,FLWQAS,FLWQAH 
+C    2,FLQ1(NY,NX),FLH1(NY,NX),FLWQBX
+C    2,FLWQAS,FLWQAH
 C    3,FGRD(NUM(NY,NX),NY,NX),FMAC(NUM(NY,NX),NY,NX)
 C    4,FHOL(L,NY,NX),VOLAH1(L,NY,NX),VOLAH1(L,NY,NX)
 C    5,FLWQAX,PRECA(NY,NX),TFLWC(NY,NX),FLWQBX
@@ -476,7 +476,7 @@ C     INITIALIZE PARAMETERS, FLUXES FOR ENERGY EXCHANGE
 C     AT SNOW, RESIDUE AND SOIL SURFACES
 C
 C     RADGX=shortwave radiation at ground surface
-C     RADXW,RADXG,RADXR= shortwave radn at snowpack,soil,litter 
+C     RADXW,RADXG,RADXR= shortwave radn at snowpack,soil,litter
 C     FRADG=fraction of shortwave radiation at ground surface
 C     FSNW,FSNX=fractions of snow,snow-free cover
 C     BARE,CVRD=fractions of soil,litter cover
@@ -484,9 +484,9 @@ C     XNPS=internal time step for fluxes through snowpack
 C     THRYX=longwave radiation at ground surface
 C     THRYW,THRYG,THRYR=longwave radn incident at snowpack,soil,litter
 C     THRMW,THRMS,THRMR=longwave radn emitted by snowpack,soil,litter
-C     EMMW,EMMS,EMMR=emissivity of snowpack,soil,litter surfaces 
+C     EMMW,EMMS,EMMR=emissivity of snowpack,soil,litter surfaces
 C
-      RADGX=RADG(NY,NX)*XNPH 
+      RADGX=RADG(NY,NX)*XNPH
       RADXW(NY,NX)=RADGX*FSNW(NY,NX)*XNPS
       RADXG(NY,NX)=RADGX*FSNX(NY,NX)*BARE(NY,NX)
       RADXR(NY,NX)=RADGX*FSNX(NY,NX)*CVRD(NY,NX)*XNPR
@@ -497,9 +497,9 @@ C
       THRMW(NY,NX)=EMMW*2.04E-10*AREA(3,NUM(NY,NX),NY,NX)
      2*FSNW(NY,NX)*XNPY
       THRMS(NY,NX)=EMMS*2.04E-10*AREA(3,NUM(NY,NX),NY,NX)
-     2*FSNX(NY,NX)*BARE(NY,NX)*XNPH 
+     2*FSNX(NY,NX)*BARE(NY,NX)*XNPH
       THRMR(NY,NX)=EMMR*2.04E-10*AREA(3,NUM(NY,NX),NY,NX)
-     2*FSNX(NY,NX)*CVRD(NY,NX)*XNPZ 
+     2*FSNX(NY,NX)*CVRD(NY,NX)*XNPZ
 C
 C     AERODYNAMIC RESISTANCE OF CANOPY TO SNOW/RESIDUE/SOIL
 C     SURFACE ENERGY EXCHANGE WITH ATMOSPHERE
@@ -508,7 +508,7 @@ C     ALFZ=parameter for canopy effect on windspeed
 C     FRADG=fraction of shortwave radiation at ground surface
 C     RAB,RAC=isothermal blr above canopy, canopy blr
 C     ZT,ZS=canopy, surface roughness heights
-C     UA,UAG=windspeeds above,below canopy 
+C     UA,UAG=windspeeds above,below canopy
 C     VPQ,VPA=vapor pressure within,above canopy
 C     TKQ,TKA=temperature within,above canopy
 C     TLEX,TSHX=net latent,sensible heat fluxes x blrs from prev hour
@@ -528,7 +528,7 @@ C
       UAG=UA(NY,NX)
       ENDIF
       VPQ(NY,NX)=VPA(NY,NX)-TLEX(NY,NX)
-     2/(VAP*AREA(3,NUM(NY,NX),NY,NX)) 
+     2/(VAP*AREA(3,NUM(NY,NX),NY,NX))
       TKQ(NY,NX)=TKA(NY,NX)-TSHX(NY,NX)
      2/(1.25E-03*AREA(3,NUM(NY,NX),NY,NX))
 C     WRITE(*,3114)'RAC',I,J,NX,NY,RAC(NY,NX),FRADG(NY,NX)
@@ -543,33 +543,33 @@ C
 C     RAR=porosity-unlimited litter blr
 C     DLYRR=litter depth
 C     WGSGR=vapor diffusivity in litter
-C     RAG,RAGW,RAGR=isothermal blrs at ground,snowpack,litter surfaces 
+C     RAG,RAGW,RAGR=isothermal blrs at ground,snowpack,litter surfaces
 C     RARX=blr of litter surface
 C     THETPX*=air-filled porosity of litter
 C     DFVR=porosity limitation to diffusion through litter
 C     POROQ=litter tortuosity
 C     RAR1=porosity-limited litter blr
 C     PAREX,PARSX=conductances for latent,sensible heat fluxes
-C     PAREW,PARSW=conductances for snowpack latent,sensible heatfluxes 
-C     PAREG,PARSG=conductances for soil latent,sensible heat fluxes 
-C     PARER,PARSR=conductances for litter latent,sensible heat fluxes 
+C     PAREW,PARSW=conductances for snowpack latent,sensible heatfluxes
+C     PAREG,PARSG=conductances for soil latent,sensible heat fluxes
+C     PARER,PARSR=conductances for litter latent,sensible heat fluxes
 C     XNPR=internal time step for fluxes through litter
 C
       RAR(NY,NX)=DLYRR(NY,NX)/WGSGR(NY,NX)
       RAG(NY,NX)=RAC(NY,NX)+RAB(NY,NX)
-      RAGW(NY,NX)=RAG(NY,NX) 
-      RAGR(NY,NX)=RAG(NY,NX)+RARX 
+      RAGW(NY,NX)=RAG(NY,NX)
+      RAGR(NY,NX)=RAG(NY,NX)+RARX
       RARG(NY,NX)=RAGR(NY,NX)
       THETPX0=AMAX1(ZERO2,THETPX(0,NY,NX))
-      DFVR=THETPX0*POROQ*THETPX0/POROS(0,NY,NX) 
+      DFVR=THETPX0*POROQ*THETPX0/POROS(0,NY,NX)
       RAR1=RAG(NY,NX)+RAR(NY,NX)/DFVR
       PAREX=AREA(3,NUM(NY,NX),NY,NX)*XNPH
       PARSX=1.25E-03*AREA(3,NUM(NY,NX),NY,NX)*XNPH
       PAREW(NY,NX)=PAREX*FSNW(NY,NX)*XNPS
-      PARSW(NY,NX)=PARSX*FSNW(NY,NX)*XNPS 
-      PAREG(NY,NX)=PAREX*FSNX(NY,NX)             
+      PARSW(NY,NX)=PARSX*FSNW(NY,NX)*XNPS
+      PAREG(NY,NX)=PAREX*FSNX(NY,NX)
       PARER(NY,NX)=PAREX*FSNX(NY,NX)*XNPR*CVRD(NY,NX)
-      PARSG(NY,NX)=PARSX*FSNX(NY,NX) 
+      PARSG(NY,NX)=PARSX*FSNX(NY,NX)
       PARSR(NY,NX)=PARSX*FSNX(NY,NX)*XNPR*CVRD(NY,NX)
 C     WRITE(*,3115)'RAR',I,J,NX,NY,RAR1,RAR(NY,NX),DFVR
 C    2,THETPX(0,NY,NX),THETPX0,POROS(0,NY,NX),DLYRR(NY,NX)
@@ -607,7 +607,7 @@ C    3,VOLI0(L,NY,NX),VOLW0(L,NY,NX),VOLS1(L,NY,NX),TKW(L,NY,NX)
 C     IF(NX.EQ.1)THEN
 C     WRITE(*,3111)'RAC',I,J,NX,NY,ALFZ,RAC(NY,NX)
 C    2,PARR(NY,NX),ZT(NY,NX),RAB(NY,NX)
-C    2,RAGR(NY,NX),RAS,VOLS(NY,NX) 
+C    2,RAGR(NY,NX),RAS,VOLS(NY,NX)
 C    3,DLYRR(NY,NX),RAG(NY,NX),RAGR(NY,NX)
 C    4,THETX,THETPX(0,NY,NX),VHCP1(0,NY,NX)
 C    5,WGSGR(NY,NX),VOLW1(0,NY,NX)
@@ -668,9 +668,9 @@ C     DLYR=layer depth
 C
       IF(CNDH1(N3,N2,N1).GT.ZERO.AND.CNDH1(N6,N5,N4)
      2.GT.ZERO)THEN
-      AVCNHL(N,N6,N5,N4)=2.0*CNDH1(N3,N2,N1)*CNDH1(N6,N5,N4) 
-     2/(CNDH1(N3,N2,N1)*DLYR(N,N6,N5,N4)+CNDH1(N6,N5,N4) 
-     3*DLYR(N,N3,N2,N1)) 
+      AVCNHL(N,N6,N5,N4)=2.0*CNDH1(N3,N2,N1)*CNDH1(N6,N5,N4)
+     2/(CNDH1(N3,N2,N1)*DLYR(N,N6,N5,N4)+CNDH1(N6,N5,N4)
+     3*DLYR(N,N3,N2,N1))
       ELSE
       AVCNHL(N,N6,N5,N4)=0.0
       ENDIF
@@ -747,7 +747,7 @@ C
 C     VOLA1,VOLI1,VOLW1,VOLPM=total,ice-,water-,air-filled porosity
 C     TFND1=temperature effect on gas diffusivity
 C     DFGS=rate constant for air-water gas exchange
-C     Z1R,Z2RW,Z2RD,Z3RX=parameters for litter air-water gas transfers 
+C     Z1R,Z2RW,Z2RD,Z3RX=parameters for litter air-water gas transfers
 C     XNPD=time step for gas transfer calculations
 C     TORT=tortuosity for aqueous diffusivity
 C
@@ -779,10 +779,10 @@ C
 C     PRECD,PRECB=direct,indirect precipn+irrign at soil surface
 C     ENGYD,ENGYB=energy impact of direct,indirect precipn+irrign at soil surface
 C     VOLWG=ground surface water retention capacity
-C     XVOLW=free surface water 
-C     ZT=canopy height  
+C     XVOLW=free surface water
+C     ZT=canopy height
 C     ENGYPM=total energy impact for use in erosion.f
-C     ENGYP=cumulative rainfall energy impact on soil surface 
+C     ENGYP=cumulative rainfall energy impact on soil surface
 C     FKSAT=reduction in soil surface Ksat from rainfall energy impact
 C
       IF(PRECD(NY,NX).GT.ZERO)THEN
@@ -813,7 +813,7 @@ C    3,PRECM(NY,NX),HV,XVOLWM(M,NY,NX),XVOLIM(M,NY,NX)
 C    4,XVOLT(NY,NX),VOLWG(NY,NX),ORGC(0,NY,NX),BARE(NY,NX)
 C    5,CCLAY(NU(NY,NX),NY,NX),CSILT(NU(NY,NX),NY,NX),ZT(NY,NX)
 1117  FORMAT(A8,5I4,20E12.4)
-C     ENDIF 
+C     ENDIF
 C
 C     SNOWPACK FLUX ACCUMULATORS
 C
@@ -824,7 +824,7 @@ C
       TFLWS(L,NY,NX)=0.0
       TFLWW(L,NY,NX)=0.0
       TFLWI(L,NY,NX)=0.0
-      THFLWW(L,NY,NX)=0.0  
+      THFLWW(L,NY,NX)=0.0
 9875  CONTINUE
 C
 C     SURFACE FLUX ACCUMULATORS
@@ -846,12 +846,12 @@ C
 C
 C     GAS EXCHANGE COEFFICIENTS SOIL LAYERS
 C
-C     VOLA1,VOLI1,VOLW1=total,ice-,water-filled microporosity 
-C     VOLAH1,VOLIH1,VOLWH1=total,ice-,water-filled macroporosity 
+C     VOLA1,VOLI1,VOLW1=total,ice-,water-filled microporosity
+C     VOLAH1,VOLIH1,VOLWH1=total,ice-,water-filled macroporosity
 C     VOLPM=air-filled porosity
 C     TFND1=temperature effect on gas diffusivity
 C     DFGS=rate constant for air-water gas exchange
-C     Z1S,Z2SW,Z2SD,Z3SX=parameters for soil air-water gas transfers 
+C     Z1S,Z2SW,Z2SD,Z3SX=parameters for soil air-water gas transfers
 C     XNPD=time step for gas transfer calculations
 C     TORT,TORTH=tortuosity for aqueous diffn in micropores,macropres
 C
@@ -863,12 +863,12 @@ C
       THETWA=AMAX1(0.0,AMIN1(1.0,VOLWT/VOLAT))
       TFND1=(TK1(L,NY,NX)/298.15)**6
       Z3S=AMAX1(Z3SX,FC(L,NY,NX)/POROS(L,NY,NX))
-      IF(THETWA.GT.Z3S)THEN 
+      IF(THETWA.GT.Z3S)THEN
       DFGS(M,L,NY,NX)=AMAX1(0.0
-     2,TFND1*XNPD/((Z1S**-1)*EXP(Z2SW*(THETWA-Z3S)))) 
+     2,TFND1*XNPD/((Z1S**-1)*EXP(Z2SW*(THETWA-Z3S))))
       ELSE
       DFGS(M,L,NY,NX)=AMIN1(1.0
-     2,TFND1*XNPD/((Z1S**-1)*EXP(Z2SD*(THETWA-Z3S)))) 
+     2,TFND1*XNPD/((Z1S**-1)*EXP(Z2SD*(THETWA-Z3S))))
       ENDIF
       ELSE
       DFGS(M,L,NY,NX)=0.0
@@ -922,17 +922,17 @@ C
       VFLXW=0.0
       SFLXW=0.0
       HFLXW=0.0
-      FLWLW=0.0 
-      FLWLXW=0.0 
-      FLWHLW=0.0 
+      FLWLW=0.0
+      FLWLXW=0.0
+      FLWHLW=0.0
       HFLWLW=0.0
-      FLWRLW=0.0 
+      FLWRLW=0.0
       HFLWRLW=0.0
       FLWVLW=0.0
 C
 C     EVAPS,EVAPW=evaporation from soil,snowpack surfaces
 C     FLQRM,FLQSM,FLQHM=water into litter,soil micropores,micropores for use in trnsfr.f
-C     
+C
       EVAPS(NY,NX)=0.0
       EVAPW(NY,NX)=0.0
       FLQRM(M,NY,NX)=0.0
@@ -951,19 +951,19 @@ C     VHCPWMM=volumetric heat capacity
 C     TK0M=temperature
 C
       DO 9765 L=1,JS
-      TFLX0(L,NY,NX)=0.0 
+      TFLX0(L,NY,NX)=0.0
       WFLXS(L,NY,NX)=0.0
       WFLXI(L,NY,NX)=0.0
-      FLW0S(L,NY,NX)=0.0 
-      FLW0W(L,NY,NX)=0.0 
-      FLW0I(L,NY,NX)=0.0 
+      FLW0S(L,NY,NX)=0.0
+      FLW0W(L,NY,NX)=0.0
+      FLW0I(L,NY,NX)=0.0
       HFLW0W(L,NY,NX)=0.0
       FLQWM(M,L,NY,NX)=0.0
-      VOLS0M(L,NY,NX)=VOLS0(L,NY,NX) 
-      VOLW0M(L,NY,NX)=VOLW0(L,NY,NX) 
-      VOLI0M(L,NY,NX)=VOLI0(L,NY,NX) 
+      VOLS0M(L,NY,NX)=VOLS0(L,NY,NX)
+      VOLW0M(L,NY,NX)=VOLW0(L,NY,NX)
+      VOLI0M(L,NY,NX)=VOLI0(L,NY,NX)
       VHCPWMM(L,NY,NX)=VHCPWM(M,L,NY,NX)
-      TK0M(L,NY,NX)=TK0(L,NY,NX) 
+      TK0M(L,NY,NX)=TK0(L,NY,NX)
 9765  CONTINUE
 C
 C     HEAT AND VAPOR FLUXES BETWEEN SNOWPACK AND ATMOSPHERE
@@ -978,7 +978,7 @@ C     THRYW=longwave radn incident at snowpack surface
 C     THRMX=longwave radn emitted by snowpack surface
 C     TK0M=snowpack surface temperature
 C     RFLXW2=net radiation
-C     
+C
       IF(VHCPWM(M,1,NY,NX).GT.VHCPWX(NY,NX))THEN
       DO 3000 MM=1,NPS
       ALBW=(0.85*VOLS0M(1,NY,NX)+0.30*VOLI0M(1,NY,NX)
@@ -995,7 +995,7 @@ C     RI=Richardsons number
 C     RIB=isothermal RI
 C     TKQ=canopy air temperature
 C     RAGX,RA=snowpack blr
-C     RAG,RAGW=isothermal blrs at ground,snowpack surfaces 
+C     RAG,RAGW=isothermal blrs at ground,snowpack surfaces
 C
       RI=AMAX1(-0.3,AMIN1(0.075
      2,RIB(NY,NX)*(TKQ(NY,NX)-TK0M(1,NY,NX))))
@@ -1014,9 +1014,9 @@ C     EVAPT2,EVAPW2,EVAPS2=evaporation total, water,snow
 C     XNPS=1/NPS
 C     EFLXW2=latent heat flux
 C     VAP,VAPS=latent heat of evaporation,sublimation
-C     VFLXW2=convective heat of evaporation flux     
+C     VFLXW2=convective heat of evaporation flux
 C
-      PARE=PAREW(NY,NX)/(RA+RZ) 
+      PARE=PAREW(NY,NX)/(RA+RZ)
       PARS=PARSW(NY,NX)/RA
       VP0=2.173E-03/TK0M(1,NY,NX)
      2*0.61*EXP(5360.0*(3.661E-03-1.0/TK0M(1,NY,NX)))
@@ -1032,7 +1032,7 @@ C
       ENDIF
 C
 C     SOLVE FOR SNOWPACK SURFACE TEMPERATURE AT WHICH ENERGY
-C     BALANCE OCCURS, SOLVE AND ACCUMULATE LATENT, SENSIBLE 
+C     BALANCE OCCURS, SOLVE AND ACCUMULATE LATENT, SENSIBLE
 C     STORAGE HEAT FLUXES AND EVAPORATION
 C
 C     SFLXW2,EFLXW2,RFLXW2=sensible,latent heat fluxes, net radiation
@@ -1042,7 +1042,7 @@ C     FLQ0S2,FLQ0W2,FLQ0I2=snow,water,ice input to snowpack
 C     HWFLQ02=convective heat from snow,water,ice input to snowpack
 C
       SFLXW2=PARS*(TKQ(NY,NX)-TK0M(1,NY,NX))
-      HFLX02=RFLXW2+EFLXW2+SFLXW2 
+      HFLX02=RFLXW2+EFLXW2+SFLXW2
       HFLXW2=HFLX02+VFLXW2
       RFLXW=RFLXW+RFLXW2
       EFLXW=EFLXW+EFLXW2
@@ -1051,17 +1051,17 @@ C
       HFLXW=HFLXW+HFLXW2
       EVAPS(NY,NX)=EVAPS(NY,NX)+EVAPS2
       EVAPW(NY,NX)=EVAPW(NY,NX)+EVAPW2
-      FLQ0S2=FLQ0S(NY,NX)*XNPS 
-      FLQ0W2=FLQ0W(NY,NX)*XNPS 
+      FLQ0S2=FLQ0S(NY,NX)*XNPS
+      FLQ0W2=FLQ0W(NY,NX)*XNPS
       FLQ0I2=FLQ0I(NY,NX)*XNPS
-      HWFLQ02=HWFLQ0(NY,NX)*XNPS 
-      FLW0S2=FLQ0S2+EVAPS2 
+      HWFLQ02=HWFLQ0(NY,NX)*XNPS
+      FLW0S2=FLQ0S2+EVAPS2
       FLW0W2=FLQ0W2+EVAPW2
       FLW0I2=FLQ0I2
       HFLW0W2=HWFLQ02+HFLXW2
-      FLW0S(1,NY,NX)=FLW0S2 
+      FLW0S(1,NY,NX)=FLW0S2
       FLW0W(1,NY,NX)=FLW0W2
-      FLW0I(1,NY,NX)=FLW0I2 
+      FLW0I(1,NY,NX)=FLW0I2
       HFLW0W(1,NY,NX)=HFLW0W2
       FLQWM(M,1,NY,NX)=FLQWM(M,1,NY,NX)+FLQ0S2+FLQ0I2+FLQ0W2
 C     IF(NX.EQ.3.AND.NY.EQ.3)THEN
@@ -1072,9 +1072,9 @@ C    4,SFLXW2,VFLXW2,RA,EVAPT2,EVAPX2,VPQ(NY,NX),VP0
 C    5,VOLW0M(1,NY,NX),VOLS0M(1,NY,NX),VOLI0M(1,NY,NX)
 C    6,HFLW0W(1,NY,NX),HFLW0W2,HWFLQ02,HFLXW2,RFLXW2,EFLXW2
 C    7,SFLXW2,VFLXW2,TK0M(1,NY,NX),TKQ(NY,NX)
-C    8,PARE,RA,RZ,EVAPS2,EVAPW2,EVAPT2 
-7759  FORMAT(A8,4I4,40E14.6) 
-C     ENDIF 
+C    8,PARE,RA,RZ,EVAPS2,EVAPW2,EVAPT2
+7759  FORMAT(A8,4I4,40E14.6)
+C     ENDIF
 C
 C     PHYSICAL AND HYDRAULIC PROPERTIES OF SNOWPACK INCLUDING
 C     AIR AND WATER-FILLED POROSITY, WATER POTENTIAL OF UNDERLYING
@@ -1085,20 +1085,20 @@ C     VOLS0M,VOLI0M,VOLW0M,VOLS1=snow,ice,water,total snowpack volume
 C     DENSS,DENSI,DENS0=snow,ice,minimum snow density
 C     AREA=area of grid cell
 C     VOLP01=snowpack air volume
-C     THETP1=snowpack air concentration   
+C     THETP1=snowpack air concentration
 C     CNV1=snowpack vapor conductivity
 C     VP1=snowpack vapor concentration
 C     TK0M=snowpack temperature
 C     WGSGW=vapor diffusivity
 C     DENSW1=snowpack density
-C     
+C
       ICHKL=0
       DO 9880 L=1,JS
       IF(VHCPWMM(L,NY,NX).GT.VHCPWX(NY,NX))THEN
       VOLS1(L,NY,NX)=VOLS0M(L,NY,NX)/DENSS(L,NY,NX)
      2+VOLW0M(L,NY,NX)+VOLI0M(L,NY,NX)
       DLYRS0(L,NY,NX)=VOLS1(L,NY,NX)/AREA(3,NUM(NY,NX),NY,NX)
-      VOLP01=AMAX1(0.0,VOLS1(L,NY,NX)-VOLS0M(L,NY,NX)-VOLI0M(L,NY,NX) 
+      VOLP01=AMAX1(0.0,VOLS1(L,NY,NX)-VOLS0M(L,NY,NX)-VOLI0M(L,NY,NX)
      2-VOLW0M(L,NY,NX))
       THETP1=AMAX1(THETPI,VOLP01/VOLS1(L,NY,NX))
       CNV1=THETP1**2.0*WGSGW(L,NY,NX)
@@ -1119,7 +1119,7 @@ C
       TCND1W=0.0036*10**(2.650*DENSW1-1.652)
 C
 C     DISCHARGE OF MELTWATER AND ITS HEAT FROM SNOWPACK LAYER
-C     TO LOWER SNOWPACK LAYER 
+C     TO LOWER SNOWPACK LAYER
 C
       FLWQX=AMAX1(0.0,AMAX1(0.0,VOLW0M(L,NY,NX))
      2-0.05*AMAX1(0.0,VOLS0M(L,NY,NX)))*XNPA
@@ -1141,7 +1141,7 @@ C
       FLWQM=AMIN1(THETP2,FLWQX)
       HFLWQM=4.19*TK0M(L,NY,NX)*FLWQM
 C
-C     VAPOR FLUX IN SNOWPACK 
+C     VAPOR FLUX IN SNOWPACK
 C
 C     VOLP01,VOLP02=air-filled volumes of source, destination layers
 C     L2=destination layer
@@ -1158,11 +1158,11 @@ C
       VP2=2.173E-03/TK0M(L2,NY,NX)
      2*0.61*EXP(5360.0*(3.661E-03-1.0/TK0M(L2,NY,NX)))
       ATCNVW=2.0*CNV1*CNV2/(CNV1*DLYRS0(L2,NY,NX)
-     2+CNV2*DLYRS0(L,NY,NX)) 
+     2+CNV2*DLYRS0(L,NY,NX))
       FLVC=ATCNVW*(VP1-VP2)*AREA(3,NUM(NY,NX),NY,NX)*FSNW(NY,NX)
-     2*XNPY 
+     2*XNPY
       VPY=(VP1*VOLP01+VP2*VOLP02)/(VOLP01+VOLP02)
-      FLVX=(VP1-VPY)*VOLP01*XNPA 
+      FLVX=(VP1-VPY)*VOLP01*XNPA
       IF(FLVC.GE.0.0)THEN
       FLVSS=AMAX1(0.0,AMIN1(FLVC,FLVX,VOLW0M(L,NY,NX)*XNPX))
       HFLVSS=(4.19*TK0M(L,NY,NX)+VAP)*FLVSS
@@ -1198,23 +1198,23 @@ C
       ENDIF
       TCND2W=0.0036*10**(2.650*DENSW2-1.652)
       ATCNDW=2.0*TCND1W*TCND2W/(TCND1W*DLYRS0(L2,NY,NX)
-     2+TCND2W*DLYRS0(L,NY,NX)) 
-      TKY=(TK0M(L,NY,NX)*VHCPWMM(L,NY,NX)+TK0M(L2,NY,NX) 
+     2+TCND2W*DLYRS0(L,NY,NX))
+      TKY=(TK0M(L,NY,NX)*VHCPWMM(L,NY,NX)+TK0M(L2,NY,NX)
      2*VHCPWMM(L2,NY,NX))/(VHCPWMM(L,NY,NX)+VHCPWMM(L2,NY,NX))
-      HFLWX=(TK0M(L,NY,NX)-TKY)*VHCPWMM(L,NY,NX)*XNPA 
-      HFLWC=ATCNDW*(TK0M(L,NY,NX)-TK0M(L2,NY,NX)) 
-     2*AREA(3,NUM(NY,NX),NY,NX)*FSNW(NY,NX)*XNPY 
+      HFLWX=(TK0M(L,NY,NX)-TKY)*VHCPWMM(L,NY,NX)*XNPA
+      HFLWC=ATCNDW*(TK0M(L,NY,NX)-TK0M(L2,NY,NX))
+     2*AREA(3,NUM(NY,NX),NY,NX)*FSNW(NY,NX)*XNPY
       IF(HFLWC.GE.0.0)THEN
       HFLWSS=AMAX1(0.0,AMIN1(HFLWX,HFLWC))
       ELSE
       HFLWSS=AMIN1(0.0,AMAX1(HFLWX,HFLWC))
       ENDIF
-      FLW0T=FLWQM+FLVSS 
-      HFLW0T=HFLWQM+HFLVSS+HFLWSS 
-      FLW0S(L2,NY,NX)=0.0 
+      FLW0T=FLWQM+FLVSS
+      HFLW0T=HFLWQM+HFLVSS+HFLWSS
+      FLW0S(L2,NY,NX)=0.0
       FLW0W(L2,NY,NX)=FLW0T
-      FLW0I(L2,NY,NX)=0.0 
-      HFLW0W(L2,NY,NX)=HFLW0T 
+      FLW0I(L2,NY,NX)=0.0
+      HFLW0W(L2,NY,NX)=HFLW0T
       FLQWM(M,L2,NY,NX)=FLQWM(M,L2,NY,NX)+FLWQM
 C     IF(NX.EQ.3.AND.NY.EQ.3.AND.L.EQ.1)THEN
 C     WRITE(*,7757)'FLW0',I,J,M,MM,L2,FLW0W(L2,NY,NX),FLW0T,FLWQM,FLVSS
@@ -1231,7 +1231,7 @@ C     FLWQX,FLWQR=porosity-unconstrained water flux to soil,litter
 C     FLWQGX,FLWQGS,FLWQGH=water flux to soil surface,
 C     micropores,macropores
 C     VOLP1,VOLPH1=air volumes of soil micropores,macropores
-C     FMAC,FGRD=macropore,micropore volume fractions 
+C     FMAC,FGRD=macropore,micropore volume fractions
 C     HFLWQG,HFLWQR=convective heat fluxes to soil,litter
 C     THETWR,THETW1=litter, soil water concentration
 C     VOLWRX=litter water retention capacity
@@ -1246,13 +1246,13 @@ C
       ELSE
       IF(ICHKL.EQ.0)THEN
       FLWQGX=FLWQX*BARE(NY,NX)
-      FLWQGS=AMIN1(VOLP1(NUM(NY,NX),NY,NX)*XNPX 
+      FLWQGS=AMIN1(VOLP1(NUM(NY,NX),NY,NX)*XNPX
      2,FLWQGX*FGRD(NUM(NY,NX),NY,NX))
-      FLWQGH=AMIN1(VOLPH1(NUM(NY,NX),NY,NX)*XNPX 
+      FLWQGH=AMIN1(VOLPH1(NUM(NY,NX),NY,NX)*XNPX
      2,FLWQGX*FMAC(NUM(NY,NX),NY,NX))
       FLWQG=FLWQGS+FLWQGH
       HFLWQG=4.19*TK0M(L,NY,NX)*FLWQG
-      FLWQR=FLWQX-FLWQG 
+      FLWQR=FLWQX-FLWQG
       HFLWQR=4.19*TK0M(L,NY,NX)*FLWQR
       IF(VOLR(NY,NX).GT.ZEROS(NY,NX)
      2.AND.VOLW1(0,NY,NX).GT.ZEROS2(NY,NX))THEN
@@ -1261,7 +1261,7 @@ C
       PSISM1(0,NY,NX)=AMAX1(PSIHY,-EXP(PSIMX(NY,NX)
      2+((FCL(0,NY,NX)-LOG(THETWR))
      3/FCD(0,NY,NX)*PSIMD(NY,NX))))
-      ELSEIF(THETWR.LT.POROS0(NY,NX))THEN 
+      ELSEIF(THETWR.LT.POROS0(NY,NX))THEN
       PSISM1(0,NY,NX)=-EXP(PSIMS(NY,NX)
      2+(((PSL(0,NY,NX)-LOG(THETWR))
      3/PSD(0,NY,NX))**SRP(0,NY,NX)*PSISD(NY,NX)))
@@ -1281,7 +1281,7 @@ C
       PSISM1(NUM(NY,NX),NY,NX)=AMAX1(PSIHY,-EXP(PSIMX(NY,NX)
      2+((FCL(NUM(NY,NX),NY,NX)-LOG(THETW1))
      3/FCD(NUM(NY,NX),NY,NX)*PSIMD(NY,NX))))
-      ELSEIF(THETW1.LT.POROS(NUM(NY,NX),NY,NX)-DTHETW)THEN 
+      ELSEIF(THETW1.LT.POROS(NUM(NY,NX),NY,NX)-DTHETW)THEN
       PSISM1(NUM(NY,NX),NY,NX)=-EXP(PSIMS(NY,NX)
      2+(((PSL(NUM(NY,NX),NY,NX)-LOG(THETW1))
      3/PSD(NUM(NY,NX),NY,NX))**SRP(NUM(NY,NX),NY,NX)*PSISD(NY,NX)))
@@ -1301,7 +1301,7 @@ C
      2+((FCLX-LOG(THETWX(NUM(NY,NX),NY,NX)))
      3/FCDX*PSIMD(NY,NX))))
       ELSEIF(THETWX(NUM(NY,NX),NY,NX)
-     2.LT.POROS(NUM(NY,NX),NY,NX)-DTHETW)THEN 
+     2.LT.POROS(NUM(NY,NX),NY,NX)-DTHETW)THEN
       PSISM1(NUM(NY,NX),NY,NX)=-EXP(PSIMS(NY,NX)
      2+(((PSL(NUM(NY,NX),NY,NX)-LOG(THETWX(NUM(NY,NX),NY,NX)))
      3/PSDX)*PSISD(NY,NX)))
@@ -1326,9 +1326,9 @@ C
 C     VOLP01,THETPM=air volume,concentration
 C     CNV1,CNV2=vapor conductances of source, destination layers
 C     VP1,VP2=vapor concentrations of source, destination layers
-C     POROS,POROQ=porosity, tortuosity 
+C     POROS,POROQ=porosity, tortuosity
 C     WGSGL=vapor diffusivity
-C     TK0M,TK1=snow,soil surface temperature 
+C     TK0M,TK1=snow,soil surface temperature
 C     PSISV1=soil matric+osmotic potential
 C     ATCNVS=snow-soil vapor conductance
 C     DLYR=soil surface layer depth
@@ -1345,12 +1345,12 @@ C
      2*0.61*EXP(5360.0*(3.661E-03-1.0/TK1(NUM(NY,NX),NY,NX)))
      3*EXP(18.0*PSISV1/(8.3143*TK1(NUM(NY,NX),NY,NX)))
       ATCNVS=2.0*CNV1*CNV2
-     2/(CNV1*DLYR(3,NUM(NY,NX),NY,NX)+CNV2*DLYRS0(L,NY,NX)) 
-      FLVC=ATCNVS*(VP1-VP2)*AREA(3,NUM(NY,NX),NY,NX) 
-     2*FSNW(NY,NX)*BARE(NY,NX)*XNPY 
+     2/(CNV1*DLYR(3,NUM(NY,NX),NY,NX)+CNV2*DLYRS0(L,NY,NX))
+      FLVC=ATCNVS*(VP1-VP2)*AREA(3,NUM(NY,NX),NY,NX)
+     2*FSNW(NY,NX)*BARE(NY,NX)*XNPY
       VPY=(VP1*VOLP01+VP2*VOLPM(M,NUM(NY,NX),NY,NX))
      2/(VOLP01+VOLPM(M,NUM(NY,NX),NY,NX))
-      FLVX=(VP1-VPY)*VOLP01*XNPA 
+      FLVX=(VP1-VPY)*VOLP01*XNPA
       IF(FLVC.GE.0.0)THEN
       FLVS1=AMAX1(0.0,AMIN1(FLVC,FLVX))
       HFLVS1=(4.19*TK0M(L,NY,NX)+VAP)*FLVS1
@@ -1367,7 +1367,7 @@ C
 C     HEAT FLUX BETWEEN SNOWPACK AND SURFACE SOIL
 C
 C     WTHET2=multiplier for air concentration in thermal conductivity
-C     TCND1W,TCNDS=thermal conductivity of snowpack, soil surface 
+C     TCND1W,TCNDS=thermal conductivity of snowpack, soil surface
 C     STC,DTC=mineral component of thermal conductivity
 C     THETWX,THETIX,THETPX=soil surface water,ice,air concentrations
 C     BAREW=soil surface fraction
@@ -1387,23 +1387,23 @@ C
      6+WTHET2*THETPX(NUM(NY,NX),NY,NX))
       IF(BARE(NY,NX).GT.ZERO)THEN
       ATCNDS=2.0*TCND1W*TCNDS/(TCND1W*DLYR(3,NUM(NY,NX),NY,NX)
-     2+TCNDS*DLYRS0(L,NY,NX)) 
+     2+TCNDS*DLYRS0(L,NY,NX))
       ELSE
       ATCNDS=0.0
       ENDIF
-      TKWX1=TK1(NUM(NY,NX),NY,NX)+HFLVS1/VHCP1(NUM(NY,NX),NY,NX) 
+      TKWX1=TK1(NUM(NY,NX),NY,NX)+HFLVS1/VHCP1(NUM(NY,NX),NY,NX)
       TKY=(TK0M(L,NY,NX)*VHCPWMM(L,NY,NX)+TKWX1*VHCP1(NUM(NY,NX),NY,NX))
      2/(VHCPWMM(L,NY,NX)+VHCP1(NUM(NY,NX),NY,NX))
-      HFLWX=(TK0M(L,NY,NX)-TKY)*VHCPWMM(L,NY,NX)*XNPA 
-      HFLWC=ATCNDS*(TK0M(L,NY,NX)-TKWX1)*AREA(3,NUM(NY,NX),NY,NX) 
-     2*FSNW(NY,NX)*BARE(NY,NX)*XNPY 
+      HFLWX=(TK0M(L,NY,NX)-TKY)*VHCPWMM(L,NY,NX)*XNPA
+      HFLWC=ATCNDS*(TK0M(L,NY,NX)-TKWX1)*AREA(3,NUM(NY,NX),NY,NX)
+     2*FSNW(NY,NX)*BARE(NY,NX)*XNPY
       IF(HFLWC.GE.0.0)THEN
       HFLWS1=AMAX1(0.0,AMIN1(HFLWX,HFLWC))
       ELSE
       HFLWS1=AMIN1(0.0,AMAX1(HFLWX,HFLWC))
       ENDIF
 C     IF(J.EQ.15.AND.M.EQ.NPH)THEN
-C     WRITE(*,1113)'HFLWS1',I,J,M,MM,L,FLVS1,FLVX,HFLVS1 
+C     WRITE(*,1113)'HFLWS1',I,J,M,MM,L,FLVS1,FLVX,HFLVS1
 C    2,HFLWS1,ATCNVS,VP1,VP2,CNV1,CNV2,PSISV1
 C    3,HFLWX,HFLWC,ATCNDS,TKW(L,NY,NX),TK1(NUM(NY,NX),NY,NX)
 C    4,THETPX(NUM(NY,NX),NY,NX),WGSGL(NUM(NY,NX),NY,NX)
@@ -1442,26 +1442,26 @@ C
       HFLWR1=0.0
       IF(VHCP1(0,NY,NX).GT.VHCPRX(NY,NX))THEN
       TK0X=TK0M(L,NY,NX)
-      TKXR=TK1(0,NY,NX) 
-      TK1X=TK1(NUM(NY,NX),NY,NX) 
+      TKXR=TK1(0,NY,NX)
+      TK1X=TK1(NUM(NY,NX),NY,NX)
       CNVR=WGSGR(NY,NX)*THETPM(M,0,NY,NX)*POROQ
      2*THETPM(M,0,NY,NX)/POROS(0,NY,NX)
       IF(CVRD(NY,NX).GT.ZERO)THEN
       IF(CNV1.GT.ZERO.AND.CNVR.GT.ZERO)THEN
-      ATCNVR=2.0*CNVR*CNV1/(CNV1*DLYRR(NY,NX)+CNVR*DLYRS0(L,NY,NX)) 
+      ATCNVR=2.0*CNVR*CNV1/(CNV1*DLYRR(NY,NX)+CNVR*DLYRS0(L,NY,NX))
       ELSE
-      ATCNVR=2.0*CNV1/(DLYRR(NY,NX)+DLYRS0(L,NY,NX)) 
+      ATCNVR=2.0*CNV1/(DLYRR(NY,NX)+DLYRS0(L,NY,NX))
       ENDIF
       IF(CNVR.GT.ZERO.AND.CNV2.GT.ZERO)THEN
       ATCNVS=2.0*CNVR*CNV2
      2/(CNVR*DLYR(3,NUM(NY,NX),NY,NX)+CNV2*DLYRR(NY,NX))
       ELSE
-      ATCNVS=2.0*CNV2/(DLYR(3,NUM(NY,NX),NY,NX)+DLYRR(NY,NX)) 
+      ATCNVS=2.0*CNV2/(DLYR(3,NUM(NY,NX),NY,NX)+DLYRR(NY,NX))
       ENDIF
       THETRR=AMAX1(0.0,1.0-THETPX(0,NY,NX)-THETWX(0,NY,NX)
      2-THETIX(0,NY,NX))
       TCNDR=(0.779*THETRR*9.050E-04+0.622*THETWX(0,NY,NX)
-     2*2.067E-03+0.380*THETIX(0,NY,NX)*7.844E-03+THETPX(0,NY,NX) 
+     2*2.067E-03+0.380*THETIX(0,NY,NX)*7.844E-03+THETPX(0,NY,NX)
      3*9.050E-05)/(0.779*THETRR+0.622*THETWX(0,NY,NX)
      4+0.380*THETIX(0,NY,NX)+THETPX(0,NY,NX))
       IF(TCND1W.GT.ZERO.AND.TCNDR.GT.ZERO)THEN
@@ -1494,11 +1494,11 @@ C     TK0X,TKXR=snowpack,litter temperature
 C     PSISM1=litter matric water potential
 C     FLVC,FLVX=vapor-unconstrained,vapor-constrained vapor flux
 C     AREA=area of grid cell
-C     FSNW,CVRD=snow,litter cover fraction 
+C     FSNW,CVRD=snow,litter cover fraction
 C     XNPQ=time step for flux calculation
-C     FLVRSX=snow-litter vapor flux 
+C     FLVRSX=snow-litter vapor flux
 C     HFLVRSX=convective heat flux from snow-litter vapor flux
-C       
+C
       VPR=2.173E-03/TKXR
      2*0.61*EXP(5360.0*(3.661E-03-1.0/TKXR))
      3*EXP(18.0*PSISM1(0,NY,NX)/(8.3143*TKXR))
@@ -1506,11 +1506,11 @@ C
      2.AND.THETPM(M,0,NY,NX).GT.THETX)THEN
       VP0=2.173E-03/TK0X
      2*0.61*EXP(5360.0*(3.661E-03-1.0/TK0X))
-      FLVC=ATCNVR*(VP0-VPR)*AREA(3,NUM(NY,NX),NY,NX) 
+      FLVC=ATCNVR*(VP0-VPR)*AREA(3,NUM(NY,NX),NY,NX)
      2*FSNW(NY,NX)*CVRD(NY,NX)*XNPQ
       VPY=(VP0*VOLP01+VPR*VOLPM(M,0,NY,NX))
      2/(VOLP01+VOLPM(M,0,NY,NX))
-      FLVX=(VP0-VPY)*VOLP01*XNPC 
+      FLVX=(VP0-VPY)*VOLP01*XNPC
       IF(FLVC.GE.0.0)THEN
       FLVSRX=AMAX1(0.0,AMIN1(FLVC,FLVX))
       HFLVSRX=(4.19*TK0X+VAP)*FLVSRX
@@ -1530,23 +1530,23 @@ C     HFLWC,HFLWX=snow-litter heat flux unltd,ltd by heat
 C     HFLWSRX=snow-litter heat flux
 C
       TKY=(TK0X*VHCPWMM(L,NY,NX)+TKXR*VHCP1(0,NY,NX))
-     2/(VHCPWMM(L,NY,NX)+VHCP1(0,NY,NX)) 
-      HFLWX=(TK0X-TKY)*VHCPWMM(L,NY,NX)*XNPC 
-      HFLWC=ATCNDR*(TK0X-TKXR)*AREA(3,NUM(NY,NX),NY,NX) 
+     2/(VHCPWMM(L,NY,NX)+VHCP1(0,NY,NX))
+      HFLWX=(TK0X-TKY)*VHCPWMM(L,NY,NX)*XNPC
+      HFLWC=ATCNDR*(TK0X-TKXR)*AREA(3,NUM(NY,NX),NY,NX)
      2*FSNW(NY,NX)*CVRD(NY,NX)*XNPQ
       IF(HFLWC.GE.0.0)THEN
       HFLWSRX=AMAX1(0.0,AMIN1(HFLWX,HFLWC))
       ELSE
       HFLWSRX=AMIN1(0.0,AMAX1(HFLWX,HFLWC))
       ENDIF
-C     WRITE(*,7752)'TKXR',I,J,M,MM,NX,NY,L 
+C     WRITE(*,7752)'TKXR',I,J,M,MM,NX,NY,L
 C    2,FLVC,FLVX,VP1,VPR,VPY,ATCNVS,FSNW(NY,NX),BARE(NY,NX)
 C    3,VOLP01,VOLPM(M,NUM(NY,NX),NY,NX),TK1X,TKXR
 C    4,HFLVR1X,VHCP1(NUM(NY,NX),NY,NX),VHCP1(0,NY,NX)
 C    3,VOLPM(M,0,NY,NX),VOLPM(M,NUM(NY,NX),NY,NX),VOLP01
-C    2,THETPM(M,0,NY,NX),TKXR 
+C    2,THETPM(M,0,NY,NX),TKXR
 C
-C     VAPOR FLUX BETWEEN SURFACE RESIDUE AND SOIL SURFACE 
+C     VAPOR FLUX BETWEEN SURFACE RESIDUE AND SOIL SURFACE
 C
 C     THETPM,VOLPM=air-filled porosity,volume
 C     VP1,VPY=soil,litter-soil equilibrium vapor concentration
@@ -1554,19 +1554,19 @@ C     TK1X=soil temperature
 C     PSISV1=soil matric+osmotic water potentials
 C     FLVC,FLVX=vapor-unconstrained,vapor-constrained vapor flux
 C     FLVR1X=litter-soil vapor flux
-C     HFLVR1X=convective heat of litter-soil vapor flux 
-C     TKXR,TK1X=interim calculation of litter,soil temperatures     
+C     HFLVR1X=convective heat of litter-soil vapor flux
+C     TKXR,TK1X=interim calculation of litter,soil temperatures
 C
       IF(VOLPM(M,0,NY,NX).GT.ZEROS(NY,NX)
      2.AND.VOLPM(M,NUM(NY,NX),NY,NX).GT.ZEROS(NY,NX))THEN
       VP1=2.173E-03/TK1X
      2*0.61*EXP(5360.0*(3.661E-03-1.0/TK1X))
      3*EXP(18.0*PSISV1/(8.3143*TK1X))
-      FLVC=ATCNVS*(VPR-VP1)*AREA(3,NUM(NY,NX),NY,NX)*FSNW(NY,NX) 
-     2*CVRD(NY,NX)*XNPQ 
+      FLVC=ATCNVS*(VPR-VP1)*AREA(3,NUM(NY,NX),NY,NX)*FSNW(NY,NX)
+     2*CVRD(NY,NX)*XNPQ
       VPY=(VPR*VOLPM(M,0,NY,NX)+VP1*VOLPM(M,NUM(NY,NX),NY,NX))
      2/(VOLPM(M,0,NY,NX)+VOLPM(M,NUM(NY,NX),NY,NX))
-      FLVX=(VPR-VPY)*VOLPM(M,0,NY,NX)*XNPC 
+      FLVX=(VPR-VPY)*VOLPM(M,0,NY,NX)*XNPC
       IF(FLVC.GE.0.0)THEN
       FLVR1X=AMAX1(0.0,AMIN1(FLVC,FLVX,VOLW0M(L,NY,NX)*XNPB))
       HFLVR1X=(4.19*TKXR+VAP)*FLVR1X
@@ -1576,20 +1576,20 @@ C
       ENDIF
       ELSE
       FLVR1X=0.0
-      HFLVR1X=0.0 
+      HFLVR1X=0.0
       ENDIF
       TKXR=TKXR-HFLVR1X/VHCP1(0,NY,NX)
-      TK1X=TK1X+HFLVR1X/VHCP1(NUM(NY,NX),NY,NX) 
+      TK1X=TK1X+HFLVR1X/VHCP1(NUM(NY,NX),NY,NX)
 C     IF(NY.EQ.6)THEN
-C     WRITE(*,7752)'TK1X',I,J,M,MM,NX,NY,NN 
+C     WRITE(*,7752)'TK1X',I,J,M,MM,NX,NY,NN
 C    2,FLVC,FLVX,VP1,VPR,VPY,ATCNVS,FSNW(NY,NX),BARE(NY,NX)
 C    3,VOLP01,VOLPM(M,NUM(NY,NX),NY,NX),TK1X,TKXR,TK1(0,NY,NX)
 C    4,HFLVR1X,VHCP1(NUM(NY,NX),NY,NX),VHCP1(0,NY,NX)
 C    3,VOLPM(M,0,NY,NX),VOLPM(M,NUM(NY,NX),NY,NX),VOLP01
-C    2,THETPM(M,0,NY,NX) 
+C    2,THETPM(M,0,NY,NX)
 C     ENDIF
 C
-C     HEAT FLUX BETWEEN SURFACE RESIDUE AND SOIL SURFACE 
+C     HEAT FLUX BETWEEN SURFACE RESIDUE AND SOIL SURFACE
 C
 C     TKY=litter-soil equilibrium temperature
 C     HFLWC,HFLWX=litter-soil heat flux unltd,ltg by heat
@@ -1597,9 +1597,9 @@ C     HFLWR1X=litter-soil heat flux
 C
       TKY=(TKXR*VHCP1(0,NY,NX)+TK1X*VHCP1(NUM(NY,NX),NY,NX))
      2/(VHCP1(0,NY,NX)+VHCP1(NUM(NY,NX),NY,NX))
-      HFLWX=(TKXR-TKY)*VHCP1(0,NY,NX)*XNPC 
-      HFLWC=ATCNDS*(TKXR-TK1X)*AREA(3,NUM(NY,NX),NY,NX) 
-     2*FSNW(NY,NX)*CVRD(NY,NX)*XNPQ 
+      HFLWX=(TKXR-TKY)*VHCP1(0,NY,NX)*XNPC
+      HFLWC=ATCNDS*(TKXR-TK1X)*AREA(3,NUM(NY,NX),NY,NX)
+     2*FSNW(NY,NX)*CVRD(NY,NX)*XNPQ
       IF(HFLWC.GE.0.0)THEN
       HFLWR1X=AMAX1(0.0,AMIN1(HFLWX,HFLWC))
       ELSE
@@ -1607,7 +1607,7 @@ C
       ENDIF
 C
 C     ACCUMULATE SNOW-LITTER, LITTER-SOIL HEAT FLUXES
-C     WITHIN LONGER TIME STEP FOR SNOWPACK FLUX CALCULATIONS 
+C     WITHIN LONGER TIME STEP FOR SNOWPACK FLUX CALCULATIONS
 C
       FLVSR=FLVSR+FLVSRX
       HFLVSR=HFLVSR+HFLVSRX
@@ -1616,15 +1616,15 @@ C
       HFLVR1=HFLVR1+HFLVR1X
       HFLWR1=HFLWR1+HFLWR1X
       TK0X=TK0X-HFLVSRX/VHCPWMM(L,NY,NX)
-      TKXR=TKXR+(HFLVSRX-HFLWR1X)/VHCP1(0,NY,NX) 
-      TK1X=TK1X+HFLWR1X/VHCP1(NUM(NY,NX),NY,NX) 
+      TKXR=TKXR+(HFLVSRX-HFLWR1X)/VHCP1(0,NY,NX)
+      TK1X=TK1X+HFLWR1X/VHCP1(NUM(NY,NX),NY,NX)
 C     IF(I.EQ.53)THEN
 C     WRITE(*,1114)'FLVR0',I,J,M,N,NX,NY
 C    2,FLVSR,FLVSRX,FLVC,FLVX,ATCNVR,VP0,VPR,VPY,FSNW(NY,NX),CVRD(NY,NX)
 C    3,XNPQ,THETPM(M,0,NY,NX),VOLP01,XNPX,XNPV
 C    2,TK0M(1,NY,NX),TK1(0,NY,NX)
 C    2,TK1(NUM(NY,NX),NY,NX),TK0X,TKXR,TK1X,FLVR1,HWFLVR1,FLVS1
-C    4,HWFLVS1,HFLC0R1,HFLCR11,FLVR,HWFLVR,FLVS,HWFLVS 
+C    4,HWFLVS1,HFLC0R1,HFLCR11,FLVR,HWFLVR,FLVS,HWFLVS
 C    3,HFLC0R,HFLCR1,VPQ(NY,NX),VP0,VPR,VP1,PSISM1(0,NY,NX),PSISV1
 C    5,AVCNVR,ATCNDR,AVCNVS,ATCNDS,VHCPWMM(L,NY,NX),VHCP1(0,NY,NX)
 C    6,VHCP1(NUM(NY,NX),NY,NX),DLYRR(NY,NX),DLYRS0(NY,NX),CNV01,CNVR1
@@ -1639,7 +1639,7 @@ C     GATHER WATER, VAPOR AND HEAT FLUXES INTO FLUX ARRAYS
 C     FOR LATER UPDATES TO STATE VARIABLES
 C
 C     FLWLT,FLWLW=total,accumulated water flux to soil micropores
-C     FLWLXW,FLWHLW=total,accumd snow-soil micropore,macropore water 
+C     FLWLXW,FLWHLW=total,accumd snow-soil micropore,macropore water
 C     HFLWLT,HFLWLW=total,accumulated snow+litter heat flux to soil
 C     FLWRT,FLWRLW=total,accumulated snow+soil water flux to litter
 C     HFLWRT,HFLWRLW=total,accumulated snow+soil heat flux to litter
@@ -1647,27 +1647,27 @@ C     FLQRM,FLQSM,FLQHM=total water flux to litter,soil micropore,macropore
 C     FLSW,FLSWH,FLSWR=water flux from lowest snow layer to soil macropore,micropore,litter
 C     HFLSW,HFLSWR=heat flux from lowest snow layer to soil,litter
 C
-      FLWLT=FLWQGS+FLVS1+FLVR1 
-      FLWLW=FLWLW+FLWLT 
-      FLWLXW=FLWLXW+FLWQGS 
+      FLWLT=FLWQGS+FLVS1+FLVR1
+      FLWLW=FLWLW+FLWLT
+      FLWLXW=FLWLXW+FLWQGS
       FLWHLW=FLWHLW+FLWQGH
-      HFLWLT=HFLWQG+HFLVS1+HFLWS1+HFLVR1+HFLWR1 
+      HFLWLT=HFLWQG+HFLVS1+HFLWS1+HFLVR1+HFLWR1
       HFLWLW=HFLWLW+HFLWLT
       FLWRT=FLWQR+FLVSR-FLVR1
       FLWRLW=FLWRLW+FLWRT
-      HFLWRT=HFLWQR+HFLVSR+HFLWSR-HFLVR1-HFLWR1 
+      HFLWRT=HFLWQR+HFLVSR+HFLWSR-HFLVR1-HFLWR1
       HFLWRLW=HFLWRLW+HFLWRT
       FLWVLW=0.0
       FLQRM(M,NY,NX)=FLQRM(M,NY,NX)+FLWQR
       FLQSM(M,NY,NX)=FLQSM(M,NY,NX)+FLWQGS
       FLQHM(M,NY,NX)=FLQHM(M,NY,NX)+FLWQGH
-      FLSW(L,NY,NX)=FLSW(L,NY,NX)+FLWLT 
-      FLSWH(L,NY,NX)=FLSWH(L,NY,NX)+FLWQGH 
-      HFLSW(L,NY,NX)=HFLSW(L,NY,NX)+HFLWLT 
-      FLSWR(L,NY,NX)=FLSWR(L,NY,NX)+FLWRT 
-      HFLSWR(L,NY,NX)=HFLSWR(L,NY,NX)+HFLWRT  
+      FLSW(L,NY,NX)=FLSW(L,NY,NX)+FLWLT
+      FLSWH(L,NY,NX)=FLSWH(L,NY,NX)+FLWQGH
+      HFLSW(L,NY,NX)=HFLSW(L,NY,NX)+HFLWLT
+      FLSWR(L,NY,NX)=FLSWR(L,NY,NX)+FLWRT
+      HFLSWR(L,NY,NX)=HFLSWR(L,NY,NX)+HFLWRT
 C     IF(I.EQ.53)THEN
-C     WRITE(*,7752)'FLWLW',I,J,M,MM,NX,NY,L 
+C     WRITE(*,7752)'FLWLW',I,J,M,MM,NX,NY,L
 C    2,FLWLW,FLWLT,FLWQGS,FLVS1,FLVR1,FLSW(L,NY,NX)
 C    2,FLWRLW,FLWRT,FLWQR,FLVSR,FLVR1,FLWQX,FLWQG,FLSWR(L,NY,NX)
 C    2,FLWQX,FLWQGX,BARE(NY,NX),VOLW0M(L,NY,NX),VOLS0M(L,NY,NX)
@@ -1678,17 +1678,17 @@ C    3,HFLSWR(L,NY,NX)
 C    2,VOLP01,THETPM(M,NUM(NY,NX),NY,NX),THETX
 C    3,CNV2,VP2,TK1(NUM(NY,NX),NY,NX),ATCNVS,FLVC,VPY,FLVX
 C    4,VP1,VP2,TK1X,PSISV1,HFLVR1X,HFLWR1X
-C    5,VHCP1(NUM(NY,NX),NY,NX) 
+C    5,VHCP1(NUM(NY,NX),NY,NX)
 C    3,HFLWRLW,HFLWLW,VP0,VPR,VPY
 C    3,THETPX(NUM(NY,NX),NY,NX),FLWQX,BARE(NY,NX)
 C    4,VOLW0M(L,NY,NX),VOLS0M(L,NY,NX)
 C    2,HFLWX,HFLWC,ATCNDS,TK0M(L,NY,NX),TKWX1
 C    2,TCND1W,TCNDS,DLYR(3,NUM(NY,NX),NY,NX),DLYRS0(L,NY,NX)
-C    2,THETWX(NUM(NY,NX),NY,NX),THETIX(NUM(NY,NX),NY,NX) 
+C    2,THETWX(NUM(NY,NX),NY,NX),THETIX(NUM(NY,NX),NY,NX)
 C    3,WTHET2,THETPX(NUM(NY,NX),NY,NX),VOLP1(NUM(NY,NX),NY,NX)
 C    2,VOLPH1(NUM(NY,NX),NY,NX),VOLA1(NUM(NY,NX),NY,NX)
 C    2,VOLW1(NUM(NY,NX),NY,NX),VOLI1(NUM(NY,NX),NY,NX),BARE(NY,NX)
-C    3,FLQRM(M,NY,NX),FLWQR,FLQSM(M,NY,NX),FLWQGS 
+C    3,FLQRM(M,NY,NX),FLWQR,FLQSM(M,NY,NX),FLWQGS
 C    4,FLQHM(M,NY,NX),FLWQG,VOLS0M(L,NY,NX),VOLW0M(L,NY,NX)
 C    5,VOLI0M(L,NY,NX),DLYRS0(L,NY,NX),FLWQX,TK0M(L,NY,NX)
 7752  FORMAT(A8,7I4,40E12.4)
@@ -1715,7 +1715,7 @@ C
       XFLWS(L,NY,NX)=XFLWS(L,NY,NX)+FLW0S(L,NY,NX)
       XFLWW(L,NY,NX)=XFLWW(L,NY,NX)+FLW0W(L,NY,NX)
       XFLWI(L,NY,NX)=XFLWI(L,NY,NX)+FLW0I(L,NY,NX)
-      XHFLWW(L,NY,NX)=XHFLWW(L,NY,NX)+HFLW0W(L,NY,NX) 
+      XHFLWW(L,NY,NX)=XHFLWW(L,NY,NX)+HFLW0W(L,NY,NX)
       L2=MIN(JS,L+1)
 C
 C     IF WITHIN SNOWPACK
@@ -1725,8 +1725,8 @@ C
       TFLWWX=FLW0W(L,NY,NX)-FLW0W(L2,NY,NX)
       TFLWIX=FLW0I(L,NY,NX)-FLW0I(L2,NY,NX)
       THFLWWX=HFLW0W(L,NY,NX)-HFLW0W(L2,NY,NX)
-      TFLWS(L,NY,NX)=TFLWS(L,NY,NX)+TFLWSX 
-      TFLWW(L,NY,NX)=TFLWW(L,NY,NX)+TFLWWX 
+      TFLWS(L,NY,NX)=TFLWS(L,NY,NX)+TFLWSX
+      TFLWW(L,NY,NX)=TFLWW(L,NY,NX)+TFLWWX
       TFLWI(L,NY,NX)=TFLWI(L,NY,NX)+TFLWIX
       THFLWW(L,NY,NX)=THFLWW(L,NY,NX)+THFLWWX
 C
@@ -1738,7 +1738,7 @@ C
       TFLWIX=FLW0I(L,NY,NX)
       THFLWWX=HFLW0W(L,NY,NX)-HFLWRT-HFLWLT
       TFLWS(L,NY,NX)=TFLWS(L,NY,NX)+TFLWSX
-      TFLWW(L,NY,NX)=TFLWW(L,NY,NX)+TFLWWX 
+      TFLWW(L,NY,NX)=TFLWW(L,NY,NX)+TFLWWX
       TFLWI(L,NY,NX)=TFLWI(L,NY,NX)+TFLWIX
       THFLWW(L,NY,NX)=THFLWW(L,NY,NX)+THFLWWX
       ELSE
@@ -1750,10 +1750,10 @@ C
 C     IF(L.EQ.1)THEN
 C     WRITE(*,7763)'TFLWW',I,J,M,MM,NX,NY,L,L2,TFLWW(L,NY,NX)
 C    2,TFLWWX,FLW0W(L,NY,NX),FLW0W(L2,NY,NX),FLWRLW,FLWLW,FLWHLW
-C    3,VOLW0(L,NY,NX),FLWRT,FLWLT,FLWQGH 
+C    3,VOLW0(L,NY,NX),FLWRT,FLWLT,FLWQGH
 C    2,THFLWW(L,NY,NX),THFLWWX
 C    3,HFLW0W(L,NY,NX),HFLW0W(L2,NY,NX),HFLWRLW,HFLWLW
-C    4,VHCPWMM(L,NY,NX) 
+C    4,VHCPWMM(L,NY,NX)
 7763  FORMAT(A8,8I4,30E14.6)
 C     ENDIF
 C
@@ -1765,7 +1765,7 @@ C     VHCPWMM,VHCPWMX,VHCPWX=previous,current,minimum heat capacity
 C     TK0M=snowpack temperature
 C     THFLWWX=net conductive+convective heat flux
 C     TFLX1=unconstrained latent heat flux from freeze-thaw
-C     FVOLS0,FVOLI0=fractions of total water in water,ice 
+C     FVOLS0,FVOLI0=fractions of total water in water,ice
 C     TFLX0X=source-limited latent heat flux from freeze-thaw
 C     WFLXSX,WFLXIX=freeze-thaw changes in water,ice
 C     WFLXS,WFLXI=accumulated freeze-thaw
@@ -1782,11 +1782,11 @@ C
       TK0X=(ENGY0+THFLWWX)/VHCPWMX
       IF((TK0X.LT.273.15
      2.AND.VOLW0X.GT.ZERO*VOLS(NY,NX))
-     3.OR.(TK0X.GT.273.15 
+     3.OR.(TK0X.GT.273.15
      4.AND.VOLI0X+VOLS0X.GT.ZERO*VOLS(NY,NX)))THEN
       TFLX1=VHCPWMX*(273.15-TK0X)/2.7185*XNPX
       IF(TFLX1.LT.0.0)THEN
-      TVOLWS=VOLS0X+VOLI0X*DENSI 
+      TVOLWS=VOLS0X+VOLI0X*DENSI
       IF(TVOLWS.GT.ZEROS2(NY,NX))THEN
       FVOLS0=VOLS0X/TVOLWS
       FVOLI0=VOLI0X*DENSI/TVOLWS
@@ -1815,8 +1815,8 @@ C
       WFLXS(L,NY,NX)=WFLXS(L,NY,NX)+WFLXSX
       WFLXI(L,NY,NX)=WFLXI(L,NY,NX)+WFLXIX
       TFLX0(L,NY,NX)=TFLX0(L,NY,NX)+TFLX0X
-      XWFLXS(L,NY,NX)=XWFLXS(L,NY,NX)+WFLXSX 
-      XWFLXI(L,NY,NX)=XWFLXI(L,NY,NX)+WFLXIX 
+      XWFLXS(L,NY,NX)=XWFLXS(L,NY,NX)+WFLXSX
+      XWFLXI(L,NY,NX)=XWFLXI(L,NY,NX)+WFLXIX
       XTHAWW(L,NY,NX)=XTHAWW(L,NY,NX)+TFLX0X
       ELSE
       TFLX0X=0.0
@@ -1824,14 +1824,14 @@ C
       WFLXIX=0.0
       ENDIF
 C     IF(L.EQ.5)THEN
-C     WRITE(*,7758)'TFLX0',I,J,M,MM,NX,NY,L,TK0M(L,NY,NX) 
+C     WRITE(*,7758)'TFLX0',I,J,M,MM,NX,NY,L,TK0M(L,NY,NX)
 C    4,TFLX0(L,NY,NX),WFLXS(L,NY,NX),WFLXI(L,NY,NX)
 C    4,XTHAWW(L,NY,NX),XWFLXS(L,NY,NX),XWFLXI(L,NY,NX)
 C    2,TK0X,TKW(L,NY,NX),VHCPWMX,TFLX1,VOLS0X
 C    3,VOLW0X,VOLI0X,TFLWS(L,NY,NX),TFLWW(L,NY,NX)
 C    4,TFLWI(L,NY,NX),FVOLS0,FVOLI0
 C    5,TFLWW(L,NY,NX),THFLWW(L,NY,NX),FLW0W(L,NY,NX)
-7758  FORMAT(A8,7I4,30E14.6) 
+7758  FORMAT(A8,7I4,30E14.6)
 C     ENDIF
 C
 C     INTERNAL SNOWPACK SNOW, WATER, ICE, TEMPERATURE
@@ -1845,8 +1845,8 @@ C     DENSI=ice density
 C     TK0M,TKA=snowpack,air temperature
 C     VHCPWMM,VHCPWX=snowpack, minimum heat capacity
 C
-      VOLS0M(L,NY,NX)=VOLS0M(L,NY,NX)+TFLWSX-WFLXSX 
-      VOLW0M(L,NY,NX)=VOLW0M(L,NY,NX)+TFLWWX+WFLXSX+WFLXIX 
+      VOLS0M(L,NY,NX)=VOLS0M(L,NY,NX)+TFLWSX-WFLXSX
+      VOLW0M(L,NY,NX)=VOLW0M(L,NY,NX)+TFLWWX+WFLXSX+WFLXIX
       VOLI0M(L,NY,NX)=VOLI0M(L,NY,NX)-WFLXIX/DENSI
       ENGY0=VHCPWMM(L,NY,NX)*TK0M(L,NY,NX)
       VHCPWMM(L,NY,NX)=2.095*VOLS0M(L,NY,NX)+4.19*VOLW0M(L,NY,NX)
@@ -1860,12 +1860,12 @@ C
       ENDIF
 C     IF(L.EQ.5)THEN
 C     WRITE(*,7758)'TK0M',I,J,M,MM,NX,NY,L,TK0M(L,NY,NX)
-C    2,THFLWWX,TFLX0X 
+C    2,THFLWWX,TFLX0X
 C    3,VOLS0M(L,NY,NX),VOLW0M(L,NY,NX),VOLI0M(L,NY,NX),VOLS1(L,NY,NX)
 C    2,WFLXSX,WFLXIX
 C    3,TFLWSX,TFLWWX,TFLWIX
 C    3,XFLWS(L,NY,NX),XFLWW(L,NY,NX),XFLWI(L,NY,NX)
-C    4,XHFLWW(L,NY,NX),VHCPWMM(L,NY,NX) 
+C    4,XHFLWW(L,NY,NX),VHCPWMM(L,NY,NX)
 C     ENDIF
 9860  CONTINUE
 3000  CONTINUE
@@ -1873,7 +1873,7 @@ C     ENDIF
 C
 C     ENERGY EXCHANGE AT SOIL SURFACE IF EXPOSED UNDER SNOWPACK
 C
-      IF(FSNX(NY,NX).GT.0.0.AND.(BKDS(NUM(NY,NX),NY,NX).GT.ZERO 
+      IF(FSNX(NY,NX).GT.0.0.AND.(BKDS(NUM(NY,NX),NY,NX).GT.ZERO
      2.OR.VHCP1(NUM(NY,NX),NY,NX).GT.VHCPNX(NY,NX)))THEN
 C
 C     PHYSICAL AND HYDRAULIC PROPERTIES OF SOIL SURFACE INCLUDING
@@ -1883,14 +1883,14 @@ C
 C     THETW1,THETY=current,hygroscopic water concentration
 C     POROS=porosity
 C     VOLW1,VOLXI=volume of micropore water
-C     VOLXI=soil volume less macropore,rock 
+C     VOLXI=soil volume less macropore,rock
 C     FC,WP=water contents at field capacity,wilting point
 C     FCL,WPL=log FC,WP
 C     FCD,PSD=FCL-WPL,log(POROS)-FCL
 C     PSISM1,PSIHY,PSISE=soil matric,hygroscopic,air entry potential
 C     PSIMX,PSIMN,PSIMS=log water potential at FC,WP,POROS
 C     PSISD,PSIMD=PSIMX-PSIMS,PSIMN-PSIMX
-C     SRP=parameter for deviation from linear log-log water retention 
+C     SRP=parameter for deviation from linear log-log water retention
 C     function from hour1.f
 C     PSISO=osmotic potential
 C
@@ -1902,7 +1902,7 @@ C
       PSISM1(NUM(NY,NX),NY,NX)=AMAX1(PSIHY,-EXP(PSIMX(NY,NX)
      2+((FCL(NUM(NY,NX),NY,NX)-LOG(THETW1))
      3/FCD(NUM(NY,NX),NY,NX)*PSIMD(NY,NX))))
-      ELSEIF(THETW1.LT.POROS(NUM(NY,NX),NY,NX)-DTHETW)THEN 
+      ELSEIF(THETW1.LT.POROS(NUM(NY,NX),NY,NX)-DTHETW)THEN
       PSISM1(NUM(NY,NX),NY,NX)=-EXP(PSIMS(NY,NX)
      2+(((PSL(NUM(NY,NX),NY,NX)-LOG(THETW1))
      3/PSD(NUM(NY,NX),NY,NX))**SRP(NUM(NY,NX),NY,NX)*PSISD(NY,NX)))
@@ -1922,14 +1922,14 @@ C
       WPX=WPI*THETIX(NUM(NY,NX),NY,NX)
       FCLX=LOG(FCX)
       WPLX=LOG(WPX)
-      PSDX=PSL(L,NY,NX)-FCLX
+      PSDX=PSL(NU(NY,NX),NY,NX)-FCLX
       FCDX=FCLX-WPLX
       IF(THETWX(NUM(NY,NX),NY,NX).LT.FCX)THEN
       PSISM1(NUM(NY,NX),NY,NX)=AMAX1(PSIHY,-EXP(PSIMX(NY,NX)
      2+((FCLX-LOG(THETWX(NUM(NY,NX),NY,NX)))
      3/FCDX*PSIMD(NY,NX))))
       ELSEIF(THETWX(NUM(NY,NX),NY,NX)
-     2.LT.POROS(NUM(NY,NX),NY,NX)-DTHETW)THEN 
+     2.LT.POROS(NUM(NY,NX),NY,NX)-DTHETW)THEN
       PSISM1(NUM(NY,NX),NY,NX)=-EXP(PSIMS(NY,NX)
      2+(((PSL(NUM(NY,NX),NY,NX)-LOG(THETWX(NUM(NY,NX),NY,NX)))
      3/PSDX)*PSISD(NY,NX)))
@@ -1965,7 +1965,7 @@ C     ALBG,ALBS=albedo of ground surface,soil
 C     BKVL=soil mass
 C     RADXG,THRYG,RFLXG=incoming shortwave,longwave,net radiation
 C     THRMA,THRMS=emitted longwave radiation, emissivity
-C     TK1=soil temperature  
+C     TK1=soil temperature
 C
       VOLWXG=VOLW1(NUM(NY,NX),NY,NX)+VOLWH1(NUM(NY,NX),NY,NX)
       VOLIXG=VOLI1(NUM(NY,NX),NY,NX)+VOLIH1(NUM(NY,NX),NY,NX)
@@ -1991,10 +1991,10 @@ C     RI=Richardsons number
 C     RIB=isothermal RI
 C     TKQ,TK1=canopy air,soil temperature
 C     RAGZ,RA=soil+litter blr
-C     RAGS=isothermal blr at ground surface 
+C     RAGS=isothermal blr at ground surface
 C
       THETPX0=AMAX1(ZERO,THETPX(0,NY,NX))
-      DFVR=THETPX0*POROQ*THETPX0/POROS(0,NY,NX) 
+      DFVR=THETPX0*POROQ*THETPX0/POROS(0,NY,NX)
       RAR1=RAG(NY,NX)+RAR(NY,NX)/DFVR
       RI=AMAX1(-0.3,AMIN1(0.075,RIB(NY,NX)*(TKQ(NY,NX)
      2-TK1(NUM(NY,NX),NY,NX))))
@@ -2019,10 +2019,10 @@ C     RZ=minimum surface resistance
 C     VP1,VPQ=vapor pressure at soil surface, canopy air
 C     EVAPG=evaporation
 C     EFLXG=latent heat flux
-C     XH=rate constant 
+C     XH=rate constant
 C     VOLW2=soil water volume
 C     VAP=latent heat of evaporation
-C     VFLXG=convective heat of evaporation flux     
+C     VFLXG=convective heat of evaporation flux
 C
       PARE=PAREG(NY,NX)/(RA+RZ)
       PARS=PARSG(NY,NX)/RA
@@ -2045,20 +2045,20 @@ C     BALANCE OCCURS, SOLVE LATENT, SENSIBLE AND STORAGE HEAT FLUXES
 C
 C     SFLXG,EFLXG,RFLXG=sensible,latent heat fluxes, net radiation
 C     VFLXG=convective heat flux from EFLXG
-C     HFLXG=storage heat flux     
+C     HFLXG=storage heat flux
 C
       SFLXG=PARS*(TKQ(NY,NX)-TK1(NUM(NY,NX),NY,NX))
       HFLX0=RFLXG+EFLXG+SFLXG
       HFLXG=HFLX0+VFLXG
 C     IF(I.GT.331)THEN
 C     WRITE(*,1112)'EFLXG',I,J,M,NX,NY,NUM(NY,NX),EVAPG(NY,NX)
-C    2,TK1(NUM(NY,NX),NY,NX),TK1(0,NY,NX),DLYRR(NY,NX) 
-C    2,RFLXG,EFLXG,SFLXG,VFLXG,HFLX0,HFLXG,RA,RAC(NY,NX),RAG(NY,NX) 
+C    2,TK1(NUM(NY,NX),NY,NX),TK1(0,NY,NX),DLYRR(NY,NX)
+C    2,RFLXG,EFLXG,SFLXG,VFLXG,HFLX0,HFLXG,RA,RAC(NY,NX),RAG(NY,NX)
 C    3,RAGZ,RAR1,RAGX,RI,RAGS(NY,NX),BKVL(NUM(NY,NX),NY,NX)
-C    3,VOLW2(NUM(NY,NX),NY,NX),VOLI1(NUM(NY,NX),NY,NX),RFLX0,ALBG 
+C    3,VOLW2(NUM(NY,NX),NY,NX),VOLI1(NUM(NY,NX),NY,NX),RFLX0,ALBG
 C    4,RADXG(NY,NX),THRYG(NY,NX),THRMA,THRYW(NY,NX),THS(NY,NX)
 C    5,VPQ(NY,NX),VP1,FRADG(NY,NX),THRMCX(NY,NX)
-C    6,PSISO(NUM(NY,NX),NY,NX) 
+C    6,PSISO(NUM(NY,NX),NY,NX)
 C    6,FLQM,PARE,PARS,PARSG(NY,NX),HWFLQM
 C    7,THETPY(NUM(NY,NX),NY,NX),RAR(NY,NX),THETPY(0,NY,NX)
 C    8,VHCP1(0,NY,NX),VHCPRX(NY,NX),VHCP1(NUM(NY,NX),NY,NX)
@@ -2091,9 +2091,9 @@ C     BKVL=litter mass
 C     VOLW1,VOLI1=water,ice volume in litter
 C     RADXR,THRYR=incoming shortwave,longwave radiation
 C     TKR1,TKS1=litter,soil temperature
-C     VOLWR2,VOLW12=litter,soil water volume 
+C     VOLWR2,VOLW12=litter,soil water volume
 C     VHCPR2,VHCP12=litter,soil heat capacity
-C 
+C
 C
       ALBR=(0.20*BKVL(0,NY,NX)+0.06*VOLW1(0,NY,NX)+0.30
      2*VOLI1(0,NY,NX))/(BKVL(0,NY,NX)+VOLW1(0,NY,NX)+VOLI1(0,NY,NX))
@@ -2120,15 +2120,15 @@ C     WTHET0,WTHET1=multiplier for air concn in thermal conductivity
 C     TCNDW*,TCNDA*=thermal conductivity of water,air
 C     TCNDR,TCND1=litter,soil thermal conductivity
 C     ATCNDR=litter-soil thermal conductance
-C     
+C
       CNVR=WGSGR(NY,NX)*THETPM(M,0,NY,NX)*POROQ
-     2*THETPM(M,0,NY,NX)/POROS(0,NY,NX) 
+     2*THETPM(M,0,NY,NX)/POROS(0,NY,NX)
       CNV1=WGSGL(NUM(NY,NX),NY,NX)*THETPM(M,NUM(NY,NX),NY,NX)*POROQ
      2*THETPM(M,NUM(NY,NX),NY,NX)/POROS(NUM(NY,NX),NY,NX)
       IF(CVRD(NY,NX).GT.ZERO)THEN
       IF(CNVR.GT.ZERO.AND.CNV1.GT.ZERO)THEN
       ATCNVR=2.0*CNVR*CNV1
-     2/(CNVR*DLYR(3,NUM(NY,NX),NY,NX)+CNV1*DLYRR(NY,NX)) 
+     2/(CNVR*DLYR(3,NUM(NY,NX),NY,NX)+CNV1*DLYRR(NY,NX))
       ELSE
       ATCNVR=2.0*CNVR
      2/(DLYR(3,NUM(NY,NX),NY,NX)+DLYRR(NY,NX))*CVRD(NY,NX)
@@ -2139,31 +2139,31 @@ C
       THETRR=AMAX1(0.0,1.0-THETPX(0,NY,NX)-THETWX(0,NY,NX)
      2-THETIX(0,NY,NX))
       DTKX=ABS(TK1(0,NY,NX)-TK1(NUM(NY,NX),NY,NX))*1.0E-06
-      DTHW0=AMAX1(0.0,THETWX(0,NY,NX)-TRBW)**3 
-      DTHA0=AMAX1(0.0,THETPX(0,NY,NX)-TRBA)**3 
-      DTHW1=AMAX1(0.0,THETWX(NUM(NY,NX),NY,NX)-TRBW)**3 
-      DTHA1=AMAX1(0.0,THETPX(NUM(NY,NX),NY,NX)-TRBA)**3 
-      RYLXW0=DTKX*DTHW0 
-      RYLXA0=DTKX*DTHA0 
-      RYLXW1=DTKX*DTHW1 
-      RYLXA1=DTKX*DTHA1 
-      RYLNW0=AMIN1(1.0E+04,RYLXW*RYLXW0)  
+      DTHW0=AMAX1(0.0,THETWX(0,NY,NX)-TRBW)**3
+      DTHA0=AMAX1(0.0,THETPX(0,NY,NX)-TRBA)**3
+      DTHW1=AMAX1(0.0,THETWX(NUM(NY,NX),NY,NX)-TRBW)**3
+      DTHA1=AMAX1(0.0,THETPX(NUM(NY,NX),NY,NX)-TRBA)**3
+      RYLXW0=DTKX*DTHW0
+      RYLXA0=DTKX*DTHA0
+      RYLXW1=DTKX*DTHW1
+      RYLXA1=DTKX*DTHA1
+      RYLNW0=AMIN1(1.0E+04,RYLXW*RYLXW0)
       RYLNA0=AMIN1(1.0E+04,RYLXA*RYLXA0)
-      RYLNW1=AMIN1(1.0E+04,RYLXW*RYLXW1)  
+      RYLNW1=AMIN1(1.0E+04,RYLXW*RYLXW1)
       RYLNA1=AMIN1(1.0E+04,RYLXA*RYLXA1)
       XNUSW0=AMAX1(1.0,0.68+0.67*RYLNW0**0.25/DNUSW)
       XNUSA0=AMAX1(1.0,0.68+0.67*RYLNA0**0.25/DNUSA)
       XNUSW1=AMAX1(1.0,0.68+0.67*RYLNW1**0.25/DNUSW)
       XNUSA1=AMAX1(1.0,0.68+0.67*RYLNA1**0.25/DNUSA)
       TCNDW0=2.067E-03*XNUSW0
-      TCNDA0=9.050E-05*XNUSA0  
+      TCNDA0=9.050E-05*XNUSA0
       TCNDW1=2.067E-03*XNUSW1
-      TCNDA1=9.050E-05*XNUSA1  
+      TCNDA1=9.050E-05*XNUSA1
       WTHET0=1.467-0.467*THETPY(0,NY,NX)
       WTHET1=1.467-0.467*THETPY(NUM(NY,NX),NY,NX)
-      TCNDR=(0.779*THETRR*9.050E-04+0.622*THETWX(0,NY,NX)*TCNDW0 
+      TCNDR=(0.779*THETRR*9.050E-04+0.622*THETWX(0,NY,NX)*TCNDW0
      2+0.380*THETIX(0,NY,NX)*7.844E-03
-     3+WTHET0*THETPX(0,NY,NX)*TCNDA0) 
+     3+WTHET0*THETPX(0,NY,NX)*TCNDA0)
      4/(0.779*THETRR+0.622*THETWX(0,NY,NX)
      5+0.380*THETIX(0,NY,NX)+WTHET0*THETPX(0,NY,NX))
       TCND1=(STC(NUM(NY,NX),NY,NX)+THETWX(NUM(NY,NX),NY,NX)*TCNDW1
@@ -2187,7 +2187,7 @@ C     RIB=isothermal RI
 C     TKQ,TKR1=canopy air,litter temperature
 C     RZ=surface resistance to evaporation
 C     RAGX,RA=litter blr
-C     RAG,RAGR=isothermal blr at ground surface 
+C     RAG,RAGR=isothermal blr at ground surface
 C     PARE,PARS=blcs for litter latent,sensible heat fluxes
 C
       RI=AMAX1(-0.3,AMIN1(0.075,RIB(NY,NX)*(TKQ(NY,NX)-TKR1)))
@@ -2220,7 +2220,7 @@ C
       PSISM1(0,NY,NX)=AMAX1(PSIHY,-EXP(PSIMX(NY,NX)
      2+((FCL(0,NY,NX)-LOG(THETWR))
      3/FCD(0,NY,NX)*PSIMD(NY,NX))))
-      ELSEIF(THETWR.LT.POROS0(NY,NX))THEN 
+      ELSEIF(THETWR.LT.POROS0(NY,NX))THEN
       PSISM1(0,NY,NX)=-EXP(PSIMS(NY,NX)
      2+(((PSL(0,NY,NX)-LOG(THETWR))
      3/PSD(0,NY,NX))**SRP(0,NY,NX)*PSISD(NY,NX)))
@@ -2240,8 +2240,8 @@ C     TKS1=soil temperature
 C     EVAPR2=litter evaporation
 C     EFLXR2=litter latent heat flux
 C     VAP=latent heat of evaporation
-C     VFLXR2=convective heat of evaporation flux     
-C    
+C     VFLXR2=convective heat of evaporation flux
+C
       VPR=2.173E-03/TKR1
      2*0.61*EXP(5360.0*(3.661E-03-1.0/TKR1))
      3*EXP(18.0*PSISM1(0,NY,NX)/(8.3143*TKR1))
@@ -2262,7 +2262,7 @@ C     VOLPM=litter,soil air filled porosity
 C     FLV2=litter soil vapor flux
 C     HWFLV2=convective heat of litter soil vapor flux
 C     TKXR,TK1X=interim calculation of litter,soil temperatures
-C     TKY=equilibrium litter-soil temperature     
+C     TKY=equilibrium litter-soil temperature
 C     HFLWC,HFLWX=litter-soil heat flux unlimited,limited by heat
 C     HFLCR2=litter-soil heat flux
 C
@@ -2282,14 +2282,14 @@ C
       ENDIF
       ELSE
       FLV2=0.0
-      HWFLV2=0.0 
+      HWFLV2=0.0
       ENDIF
       TKXR=TKR1-HWFLV2/VHCPR2
-      TK1X=TKS1+HWFLV2/VHCP12 
+      TK1X=TKS1+HWFLV2/VHCP12
       TKY=(TKXR*VHCPR2+TK1X*VHCP12)/(VHCPR2+VHCP12)
-      HFLWX=(TKXR-TKY)*VHCPR2*XNPB 
+      HFLWX=(TKXR-TKY)*VHCPR2*XNPB
       HFLWC=ATCNDR*(TKXR-TK1X)*AREA(3,NUM(NY,NX),NY,NX)*FSNX(NY,NX)
-     2*CVRD(NY,NX)*XNPZ 
+     2*CVRD(NY,NX)*XNPZ
       IF(HFLWC.GE.0.0)THEN
       HFLCR2=AMAX1(0.0,AMIN1(HFLWX,HFLWC))
       ELSE
@@ -2299,10 +2299,10 @@ C
 C     SOLVE FOR RESIDUE LATENT, SENSIBLE AND STORAGE HEAT FLUXES
 C
 C     SFLXR2,RFLXR2,EFLXR2=litter sensible,net radn,latent heat fluxes
-C     HFLX02,HFLXR2=storage,total litter heat flux 
+C     HFLX02,HFLXR2=storage,total litter heat flux
 C
       SFLXR2=PARS*(TKQ(NY,NX)-TKR1)
-      HFLX02=RFLXR2+EFLXR2+SFLXR2 
+      HFLX02=RFLXR2+EFLXR2+SFLXR2
       HFLXR2=HFLX02+VFLXR2
 C
 C     AGGREGATE WATER AND ENERGY FLUXES FROM TIME STEP FOR LITTER
@@ -2316,7 +2316,7 @@ C
       HFLXR=HFLXR+HFLXR2
       FLV1=FLV1+FLV2
       HWFLV1=HWFLV1+HWFLV2
-      HFLCR1=HFLCR1+HFLCR2 
+      HFLCR1=HFLCR1+HFLCR2
       THRMZ=THRMZ+THRMZ2
       ELSE
       EVAPR2=0.0
@@ -2335,29 +2335,29 @@ C
       ENGYR=VHCPR2*TKR1
       VHCPR2=2.496E-06*ORGC(0,NY,NX)+4.19*VOLWR2
      2+1.9274*VOLI1(0,NY,NX)
-      VHCP12=VHCP12+4.19*FLV2 
+      VHCP12=VHCP12+4.19*FLV2
       TKR1=(ENGYR+HFLXR2+HWFLM2-HWFLV2-HFLCR2)/VHCPR2
       TKS1=TKS1+(HWFLV2+HFLCR2)/VHCP12
 C     IF(I.GT.350.AND.NX.EQ.1)THEN
-C     WRITE(*,1111)'EFLXR2',I,J,M,NX,NY,NUM(NY,NX),NN 
+C     WRITE(*,1111)'EFLXR2',I,J,M,NX,NY,NUM(NY,NX),NN
 C    2,TKR1,TKS1,TKQ(NY,NX),RFLXR2,EFLXR2,SFLXR2,VFLXR2
-C    3,HFLX02,HFLXR2,HWFLM2,HWFLV2,HFLCR2,VHCPR2,HFLXR 
+C    3,HFLX02,HFLXR2,HWFLM2,HWFLV2,HFLCR2,VHCPR2,HFLXR
 C    3,RA,RAGX,RAG(NY,NX),RAB(NY,NX),RAC(NY,NX)
-C    4,RAR1,PARE,HFLWX,HFLWC,TKXR,TK1X,TKY 
-C    2,VPQ(NY,NX),VPR,EVAPR(NY,NX),EVAPR2,VOLWR2,XNPX 
+C    4,RAR1,PARE,HFLWX,HFLWC,TKXR,TK1X,TKY
+C    2,VPQ(NY,NX),VPR,EVAPR(NY,NX),EVAPR2,VOLWR2,XNPX
 C    3,HFLCR2,HWFLV2,VHCPR2,VHCP12,RFLX0,THRMZ2,VHCPRX(NY,NX)
 C    4,ALBR,RADXR(NY,NX),THRYR(NY,NX),THRMR(NY,NX),XNPZ
 C    3,FLV1,FLV2,VPR,VP1,CNVR,CNV1,FLVC,FLVX,XNPZ,XNPR
 C    3,PSISM1(0,NY,NX),PSISV1,THETWR,VOLWRX(NY,NX),ORGC(0,NY,NX)
-C    4,VHCPRX(NY,NX),PARS,PARE,RA,RZ,RI,TKQ(NY,NX),VOLW1(0,NY,NX) 
-C    5,VOLW1(NUM(NY,NX),NY,NX),VOLT(NUM(NY,NX),NY,NX),FLV1 
-C    5,CNVR,CNV1,VOLX(0,NY,NX),POROQ,WGSGR(NY,NX) 
-C    5,ATCNDR,TCNDR 
-C    6,TCND1,STC(NUM(NY,NX),NY,NX),THETWX(NUM(NY,NX),NY,NX) 
+C    4,VHCPRX(NY,NX),PARS,PARE,RA,RZ,RI,TKQ(NY,NX),VOLW1(0,NY,NX)
+C    5,VOLW1(NUM(NY,NX),NY,NX),VOLT(NUM(NY,NX),NY,NX),FLV1
+C    5,CNVR,CNV1,VOLX(0,NY,NX),POROQ,WGSGR(NY,NX)
+C    5,ATCNDR,TCNDR
+C    6,TCND1,STC(NUM(NY,NX),NY,NX),THETWX(NUM(NY,NX),NY,NX)
 C    2,THETIX(NUM(NY,NX),NY,NX),WTHET1,THETPX(NUM(NY,NX),NY,NX),TCNDA1
 C    4,DTC(NUM(NY,NX),NY,NX),VOLP1(0,NY,NX),VOLR(NY,NX)
 C    7,THETWX(0,NY,NX),THETIX(0,NY,NX),THETPY(0,NY,NX),ORGC(0,NY,NX)
-C    6,DLYR(3,0,NY,NX),DLYR(3,NUM(NY,NX),NY,NX) 
+C    6,DLYR(3,0,NY,NX),DLYR(3,NUM(NY,NX),NY,NX)
 C    8,CVRD(NY,NX),XVOLW(NY,NX),VOLWG(NY,NX)
 1111  FORMAT(A8,7I4,100E12.4)
 C     ENDIF
@@ -2383,7 +2383,7 @@ C     GATHER WATER, VAPOR AND HEAT FLUXES INTO FLUX ARRAYS
 C     FOR LATER UPDATES TO STATE VARIABLES
 C
 C     FLWLG,FLWHLG=water flux from atm to soil micropores,macropores
-C     HFLWLG=convective heat flux from atm to soil 
+C     HFLWLG=convective heat flux from atm to soil
 C     FLWRLG=water flux from atm to litter
 C     HFLWRLG=convective heat flux from atm to litter
 C     FLWVLS=water flux within soil accounting for wetting front
@@ -2421,9 +2421,9 @@ C    3,FLQ0I(NY,NX),HWFLQ0(NY,NX),XFLWS(1,NY,NX),XFLWW(1,NY,NX)
 C    2,XFLWI(1,NY,NX),XHFLWW(1,NY,NX),HFLWL(3,NUM(NY,NX),NY,NX)
 C    3,HFLW(3,NUM(NY,NX),NY,NX),FSNX(NY,NX),VHCP1(NUM(NY,NX),NY,NX)
 C    4*TK1(NUM(NY,NX),NY,NX),HFLWRL(NY,NX),HFLWR(NY,NX)
-C    5,VHCP1(0,NY,NX)*TK1(0,NY,NX),HEATH(NY,NX),RFLXG,RFLXR,RFLXW 
+C    5,VHCP1(0,NY,NX)*TK1(0,NY,NX),HEATH(NY,NX),RFLXG,RFLXR,RFLXW
 C    2,SFLXG,SFLXR,SFLXW,EFLXG,EFLXR,EFLXW,VFLXG,VFLXR,VFLXW
-      ENDIF 
+      ENDIF
       THRMG(NY,NX)=THRMG(NY,NX)+THRMA+THRMZ
       ELSE
       RFLXG=0.0
@@ -2436,18 +2436,18 @@ C    2,SFLXG,SFLXR,SFLXW,EFLXG,EFLXR,EFLXW,VFLXG,VFLXR,VFLXW
       VFLXR=0.0
       SFLXR=0.0
       HFLXR=0.0
-      FLWLG=0.0 
-      FLWLXG=0.0 
-      FLWHLG=0.0 
+      FLWLG=0.0
+      FLWLXG=0.0
+      FLWHLG=0.0
       HFLWLG=0.0
-      FLWRLG=0.0 
+      FLWRLG=0.0
       HFLWRLG=0.0
       FLWVLS=0.0
       EVAPG(NY,NX)=0.0
       EVAPR(NY,NX)=0.0
       ENDIF
 C
-C     AGGREGATE RESIDUE AND SOIL SURFACE FLUXES BENEATH SNOW 
+C     AGGREGATE RESIDUE AND SOIL SURFACE FLUXES BENEATH SNOW
 C     AND ATMOSPHERE
 C
 C     FLWL,FLWLX=total water flux into soil micropores
@@ -2457,17 +2457,17 @@ C     FLWRL,FLWLX=total water flux into litter
 C     HFLWRL=total heat flux into litter
 C     FLWV*=total internal vapor flux in soil
 C
-      FLWL(3,NUM(NY,NX),NY,NX)=FLWLW+FLWLG 
-      FLWLX(3,NUM(NY,NX),NY,NX)=FLWLXW+FLWLXG 
+      FLWL(3,NUM(NY,NX),NY,NX)=FLWLW+FLWLG
+      FLWLX(3,NUM(NY,NX),NY,NX)=FLWLXW+FLWLXG
       FLWHL(3,NUM(NY,NX),NY,NX)=FLWHLW+FLWHLG
-      HFLWL(3,NUM(NY,NX),NY,NX)=HFLWLW+HFLWLG 
-      FLWRL(NY,NX)=FLWRLW+FLWRLG 
-      HFLWRL(NY,NX)=HFLWRLW+HFLWRLG 
+      HFLWL(3,NUM(NY,NX),NY,NX)=HFLWLW+HFLWLG
+      FLWRL(NY,NX)=FLWRLW+FLWRLG
+      HFLWRL(NY,NX)=HFLWRLW+HFLWRLG
 C     IF(I.GT.350.AND.NX.EQ.1)THEN
 C     WRITE(*,7756)'FLWT',I,J,M,NX,NY,NUM(NY,NX)
 C    2,FLWL(3,NUM(NY,NX),NY,NX),FLWLW,FLWLG
-C    4,FLWHL(3,NUM(NY,NX),NY,NX),FLWHLW,FLWHLG 
-C    5,HFLWL(3,NUM(NY,NX),NY,NX),HFLWLW,HFLWLG 
+C    4,FLWHL(3,NUM(NY,NX),NY,NX),FLWHLW,FLWHLG
+C    5,HFLWL(3,NUM(NY,NX),NY,NX),HFLWLW,HFLWLG
 C    6,FLWRL(NY,NX),FLWRLW,FLWRLG
 C    7,HFLWRL(NY,NX),HFLWRLW,HFLWRLG
 C    9,HFLWQG,HFLVS1,HFLWS1,HFLVR1,HFLWR1
@@ -2476,14 +2476,14 @@ C    8,FLQ0S(NY,NX),FLQ0W(NY,NX),FLQ0I(NY,NX),FLQM,FLHM,FLYM
 C    9,PRECA(NY,NX)*XNPH,PRECW(NY,NX)*XNPH
 C    7,RFLXW,EFLXW,SFLXW,-HFLXW+VFLXW,RFLXG,EFLXG,SFLXG,-HFLXG+VFLXG
 C    7,RFLXR,EFLXR,SFLXR,-HFLXR+VFLXR
-C    8,FLW0S(1,NY,NX),FLQ0S(NY,NX),EVAPS(NY,NX) 
-C    9,FLW0W(1,NY,NX),FLQ0W(NY,NX),EVAPW(NY,NX) 
-C    1,FLW0I(1,NY,NX),FLQ0I(NY,NX) 
+C    8,FLW0S(1,NY,NX),FLQ0S(NY,NX),EVAPS(NY,NX)
+C    9,FLW0W(1,NY,NX),FLQ0W(NY,NX),EVAPW(NY,NX)
+C    1,FLW0I(1,NY,NX),FLQ0I(NY,NX)
 C    2,HFLW0W(1,NY,NX),HWFLQ0(NY,NX),HFLXW
 C    3,XFLWS(1,NY,NX),XFLWW(1,NY,NX),XFLWI(1,NY,NX),XHFLWW(1,NY,NX)
 C    8,FSNW(NY,NX),FSNX(NY,NX),CVRD(NY,NX),BARE(NY,NX)
 C    9,THETPM(M,NUM(NY,NX),NY,NX)
-7756  FORMAT(A8,6I4,60E12.4) 
+7756  FORMAT(A8,6I4,60E12.4)
 C     ENDIF
 C
 C     CAPILLARY EXCHANGE OF WATER BETWEEN SOIL SURFACE AND RESIDUE
@@ -2503,11 +2503,11 @@ C     CVRD=fraction of litter cover
 C     PSISM1(NUM=soil matric water potential
 C     VOLW1(NUM=soil water volume
 C     HFLQL=convective heat from litter-soil water flux
-C     FLWL,HFLWL=micropore water,heat flux 
+C     FLWL,HFLWL=micropore water,heat flux
 C     FLWRL,HFLWRL=total litter water,heat flux
-C     FLWRM=litter-soil water flux for solute transfer in trnsfr.f     
+C     FLWRM=litter-soil water flux for solute transfer in trnsfr.f
 C     CND1,CNDL=hydraulic conductivity of source,destination layer
-C     HCND=lateral(1,2),vertical(3) micropore hydraulic conductivity 
+C     HCND=lateral(1,2),vertical(3) micropore hydraulic conductivity
 C
       IF(BKDS(NUM(NY,NX),NY,NX).GT.ZERO)THEN
       IF(VOLWRX(NY,NX).GT.ZEROS2(NY,NX))THEN
@@ -2522,10 +2522,10 @@ C
      2-THETWR))/POROS0(NY,NX))+1))
       K1=MAX(1,MIN(100,INT(100.0*(AMAX1(0.0,POROS(NUM(NY,NX),NY,NX)
      2-THETW1))/POROS(NUM(NY,NX),NY,NX))+1))
-      CNDR=HCND(3,K0,0,NY,NX) 
-      CND1=HCND(3,K1,NUM(NY,NX),NY,NX)*FKSAT 
+      CNDR=HCND(3,K0,0,NY,NX)
+      CND1=HCND(3,K1,NUM(NY,NX),NY,NX)*FKSAT
       AVCNDR=2.0*CNDR*CND1/(CNDR*DLYR(3,NUM(NY,NX),NY,NX)
-     2+CND1*DLYRR(NY,NX)) 
+     2+CND1*DLYRR(NY,NX))
       PSIST0=PSISM1(0,NY,NX)+PSISH(0,NY,NX)
      2+PSISO(0,NY,NX)
       PSIST1=PSISM1(NUM(NY,NX),NY,NX)+PSISH(NUM(NY,NX),NY,NX)
@@ -2536,7 +2536,7 @@ C
       IF(THETWR.GT.THETS(0,NY,NX))THEN
       FLQZ=FLQX+AMIN1((THETWR-THETS(0,NY,NX))
      2*VOLR(NY,NX),AMAX1(0.0,(THETS(NUM(NY,NX),NY,NX)-THETW1)
-     3*VOLY(NUM(NY,NX),NY,NX)))*XNPX 
+     3*VOLY(NUM(NY,NX),NY,NX)))*XNPX
       ELSE
       FLQZ=FLQX
       ENDIF
@@ -2546,7 +2546,7 @@ C
      2,VOLP1(NUM(NY,NX),NY,NX)))
       ELSE
       IF(THETW1.GT.THETS(NUM(NY,NX),NY,NX))THEN
-      FLQZ=FLQX+AMAX1((THETS(NUM(NY,NX),NY,NX)-THETW1) 
+      FLQZ=FLQX+AMAX1((THETS(NUM(NY,NX),NY,NX)-THETW1)
      2*VOLY(NUM(NY,NX),NY,NX),AMIN1(0.0,(THETWR-THETS(0,NY,NX))
      3*VOLR(NY,NX)))*XNPX
       ELSE
@@ -2578,13 +2578,13 @@ C     WRITE(*,4322)'FLQR',I,J,M,NX,NY,NUM(NY,NX),K0,K1
 C    2,FLQR,FLWRL(NY,NX),FLWL(3,NUM(NY,NX),NY,NX),FLQX,FLQZ,FLQ2
 C    2,PSISM1(0,NY,NX),PSISM1(NUM(NY,NX),NY,NX),PSIST0,PSIST1
 C    3,CVRDW(NY,NX),CNDR,CND1,AVCNDR,FKSAT
-C    3,POROS0(NY,NX),VOLW1(0,NY,NX) 
+C    3,POROS0(NY,NX),VOLW1(0,NY,NX)
 C    2,VOLP1(NUM(NY,NX),NY,NX),FLWL(3,NUM(NY,NX),NY,NX)
 C    3,VOLP1Z(NUM(NY,NX),NY,NX),THETWX(0,NY,NX)
 C    4,THETWX(NUM(NY,NX),NY,NX)
 C    4,THETS(0,NY,NX),THETS(NUM(NY,NX),NY,NX)
 C    4,THETWR,THETW1,XVOLT(NY,NX)
-C    3,HFLQR,HFLWRL(NY,NX),HFLWL(3,NUM(NY,NX),NY,NX) 
+C    3,HFLQR,HFLWRL(NY,NX),HFLWL(3,NUM(NY,NX),NY,NX)
 C    6,THETWR,VHCP1(0,NY,NX),VHCPRX(NY,NX)
 C    2,FLWLYH,VOLX(NUM(NY,NX),NY,NX),VOLA1(NUM(NY,NX),NY,NX)
 C    3,VOLP1(NUM(NY,NX),NY,NX),VOLW1(NUM(NY,NX),NY,NX)
@@ -2594,7 +2594,7 @@ C    4,VOLX(NUM(NY,NX),NY,NX),VOLAH(NUM(NY,NX),NY,NX)
 C    4,PSISM1(NUM(NY,NX),NY,NX),AVCNDR
 C    2,VOLAH1(NUM(NY,NX),NY,NX),VOLPH1(NUM(NY,NX),NY,NX)
 C    2,VOLWH1(NUM(NY,NX),NY,NX),VOLIH1(NUM(NY,NX),NY,NX)
-4322  FORMAT(A8,8I4,40E12.4) 
+4322  FORMAT(A8,8I4,40E12.4)
 C     ENDIF
       ELSE
       FLQR=XVOLW(NY,NX)*XNPX
@@ -2606,13 +2606,13 @@ C     ENDIF
       FLWRM(M,NY,NX)=FLQR
 C     IF(I.GT.350.AND.NX.EQ.1)THEN
 C     WRITE(*,4323)'FLQ0',I,J,M,NX,NY
-C    2,FLQR,XVOLW(NY,NX),XNPX,FLWRL(NY,NX) 
+C    2,FLQR,XVOLW(NY,NX),XNPX,FLWRL(NY,NX)
 4323  FORMAT(A8,5I4,12E12.4)
 C     ENDIF
       ENDIF
 C     IF((I/10)*10.EQ.I)THEN
 C     WRITE(*,4321)'HCNDR',I,J,M,NX,NY,K1,AVCND1,CNDR,CND1,DLYRR(NY,NX)
-C    2,PSISM1(0,NY,NX),PSISM1(NUM(NY,NX),NY,NX),FLQL,HFLQL 
+C    2,PSISM1(0,NY,NX),PSISM1(NUM(NY,NX),NY,NX),FLQL,HFLQL
 C    3,VOLWR2,EVAPR(NY,NX),VOLWRX(NY,NX)-VOLW1(0,NY,NX)
 C    2-VOLI1(0,NY,NX),VOLW1(NUM(NY,NX),NY,NX),VOLW1(0,NY,NX)
 C    4,VOLP1(NUM(NY,NX),NY,NX),POROS(NUM(NY,NX),NY,NX)
@@ -2628,7 +2628,7 @@ C
 C     VOLPH1=air-filled macroporosity
 C     FINHR,HFINHR=water,convective heat from litter to macropores
 C     VOLW1(0,VOLWRX=current,maximum litter water volume
-C     FLWL,HFLWL=micropore water,heat flux 
+C     FLWL,HFLWL=micropore water,heat flux
 C     FLWRL,HFLWRL=total litter water,heat flux
 C
       IF(VOLPH1(NUM(NY,NX),NY,NX).GT.0.0
@@ -2648,7 +2648,7 @@ C    4,HFLQHR,HFLWRL(NY,NX),HFLWL(3,NUM(NY,NX),NY,NX),TK1(0,NY,NX)
 C     ENDIF
       ENDIF
 C
-C     FREEZE-THAW IN RESIDUE SURFACE FROM NET CHANGE IN RESIDUE 
+C     FREEZE-THAW IN RESIDUE SURFACE FROM NET CHANGE IN RESIDUE
 C     SURFACE HEAT STORAGE
 C
 C     TFREEZ=litter freezing temperature
@@ -2660,7 +2660,7 @@ C     ORGC=litter organic C
 C     HFLWRL=total litter conductive, convective heat flux
 C     TFLX1,TFLX=unltd,ltd latent heat from freeze-thaw
 C     TFLXR,WFLXR=litter water,latent heat flux from freeze-thaw
-C     
+C
       TFREEZ=-9.0959E+04/(PSISM1(0,NY,NX)-333.0)
       VOLW1X=AMAX1(0.0,VOLW1(0,NY,NX)+FLWRL(NY,NX))
       ENGYR=VHCP1(0,NY,NX)*TK1(0,NY,NX)
@@ -2673,7 +2673,7 @@ C
       ENDIF
       IF((TK1X.LT.TFREEZ
      2.AND.VOLW1(0,NY,NX).GT.ZERO*VOLT(0,NY,NX))
-     3.OR.(TK1X.GT.TFREEZ 
+     3.OR.(TK1X.GT.TFREEZ
      4.AND.VOLI1(0,NY,NX).GT.ZERO*VOLT(0,NY,NX)))THEN
       TFLX1=VHCP1(0,NY,NX)*(TFREEZ-TK1X)
      2/((1.0+TFREEZ*6.2913E-03)*(1.0-0.10*PSISM1(0,NY,NX)))*XNPX
@@ -2687,7 +2687,7 @@ C
 C     IF(NX.EQ.1.AND.NY.EQ.1.AND.TFLX1.NE.0.0)THEN
 C     WRITE(*,5352)'TFLXR',I,J,M,NX,NY,WFLXR(NY,NX),TFLXR(NY,NX)
 C    2,TFLX1,TFREEZ,TK1(0,NY,NX),TK1X
-C    2,TFREEZ-TK1X,FLWRL(NY,NX),HFLWRL(NY,NX) 
+C    2,TFREEZ-TK1X,FLWRL(NY,NX),HFLWRL(NY,NX)
 C    2,THETWR,TFLX,VOLI1(0,NY,NX),VOLW1(0,NY,NX),VHCP1(0,NY,NX)
 C    3,PSISM1(0,NY,NX),THAWR(NY,NX),HTHAWR(NY,NX)
 5352  FORMAT(A8,5I4,30E12.4)
@@ -2697,7 +2697,7 @@ C     ENDIF
       TFLXR(NY,NX)=0.0
       ENDIF
 C
-C     THICKNESS OF WATER FILMS IN LITTER AND SOIL SURFACE 
+C     THICKNESS OF WATER FILMS IN LITTER AND SOIL SURFACE
 C     FROM WATER POTENTIALS FOR GAS EXCHANGE IN TRNSFR.F
 C
       IF(VHCP1(0,NY,NX).GT.VHCPRX(NY,NX))THEN
@@ -2728,24 +2728,24 @@ C     Q=runoff from Mannings equation
 C     QRM,QRV=runoff,velocity for erosion, solute transfer
 C
       IF(XVOLT(N2,N1).GT.VOLWG(N2,N1))THEN
-      VX=XVOLT(N2,N1)-VOLWG(N2,N1) 
+      VX=XVOLT(N2,N1)-VOLWG(N2,N1)
       D=VX/AREA(3,0,N2,N1)
       R=D/2.828
-      V=R**0.67*SQRT(SLOPE(0,N2,N1))/ZM(N2,N1) 
-      Q=V*D*AREA(3,NUM(N2,N1),N2,N1)*3.6E+03*XNPH 
+      V=R**0.67*SQRT(SLOPE(0,N2,N1))/ZM(N2,N1)
+      Q=V*D*AREA(3,NUM(N2,N1),N2,N1)*3.6E+03*XNPH
       VOLW1X=AMAX1(0.0,VOLW1(0,N2,N1)+WFLXR(N2,N1))
       QRM(M,N2,N1)=AMIN1(Q,VX*XNPX,VOLW1X*XNPX)
      2*XVOLW(N2,N1)/XVOLT(N2,N1)
       QRV(M,N2,N1)=V
 C     IF(I.EQ.232)THEN
-C     WRITE(*,5554)'QRINT',I,J,M,N1,N2,QRM(M,N2,N1),QRV(M,N2,N1) 
+C     WRITE(*,5554)'QRINT',I,J,M,N1,N2,QRM(M,N2,N1),QRV(M,N2,N1)
 C    2,Q,V,D,VX*XNPX,SLOPE(0,N2,N1),ZM(N2,N1)
 C    3,XVOLW(N2,N1),XVOLT(N2,N1),VOLWG(N2,N1),VOLW1(0,N2,N1)
 C    4,WFLXR(N2,N1)
 5554  FORMAT(A8,5I4,20E12.4)
 C     ENDIF
       ELSE
-      QRM(M,N2,N1)=0.0 
+      QRM(M,N2,N1)=0.0
       QRV(M,N2,N1)=0.0
       ENDIF
 C
@@ -2781,7 +2781,7 @@ C     XVOLT,XVOLW=excess water+ice,water in destination grid cell
 C     ALT1,ALT2=elevation of source,destination
 C     QRQ1=equilibrium runoff
 C     QR1,HQR1=runoff, convective heat from runoff
-C     QR,HQR=hourly-accumulated runoff, convective heat from runoff 
+C     QR,HQR=hourly-accumulated runoff, convective heat from runoff
 C
       IF(QRM(M,N2,N1).GT.ZEROS(N2,N1))THEN
       ALT1=ALTG(N2,N1)+XVOLT(N2,N1)/AREA(3,NUM(N2,N1),N2,N1)
@@ -2803,7 +2803,7 @@ C
       IFLBM(M,N,2,N5,N4)=0
 C     IF(NX.EQ.1.AND.NY.EQ.1)THEN
 C     WRITE(*,5555)'QRFOR',I,J,M,N1,N2,N4,N5,N,NN
-C    2,QRM(M,N2,N1),QR1(N,2,N5,N4),QR(N,2,N5,N4) 
+C    2,QRM(M,N2,N1),QR1(N,2,N5,N4),QR(N,2,N5,N4)
 C    2,ALT1,ALT2,ALTG(N2,N1),ALTG(N5,N4),ALT(N2,N1),ALT(N5,N4)
 C    3,QRQ1,FSLOPE(N,N2,N1),QR1(2,2,4,1)
 5555  FORMAT(A8,9I4,30E12.4)
@@ -2834,7 +2834,7 @@ C
       QRMN(M,N,1,N5B,N4B)=QR1(N,1,N5B,N4B)
       IFLBM(M,N,1,N5B,N4B)=1
 C     WRITE(*,5555)'QRBAK',I,J,M,N1,N2,N4B,N5B,N,NN
-C    2,QRM(M,N2,N1),QR1(N,1,N5B,N4B),QR(N,1,N5B,N4B) 
+C    2,QRM(M,N2,N1),QR1(N,1,N5B,N4B),QR(N,1,N5B,N4B)
 C    2,ALT1,ALTB,ALTG(N2,N1),ALTG(N5B,N4B),QRQ1,FSLOPE(N,N2,N1)
       ELSE
       QR1(N,1,N5B,N4B)=0.0
@@ -2863,7 +2863,7 @@ C     IF(N4B.GT.0.AND.N5B.GT.0)THEN
 C     WRITE(*,5557)'QRBAKA',I,J,M,N1,N2,N4B,N5B,N,NN
 C    2,IFLBM(M,N,1,N5B,N4B)
 C    2,QRM(M,N2,N1),QRMN(M,N,1,N5B,N4B),QR1(N,1,N5B,N4B)
-C    3,QR(N,1,N5B,N4B) 
+C    3,QR(N,1,N5B,N4B)
 C     ENDIF
 C
 C     SNOW REDISTRIBUTION FROM SNOWPACK
@@ -2875,7 +2875,7 @@ C     SS,DIST=slope,distance between source,destination
 C     QSX=transfer fraction
 C     QS1,QW1,QI1=snow,water,ice transfer
 C     HQS1=convective heat transfer from snow,water,ice transfer
-C     VOLS0,VOLW0,VOLI0=snow,water,ice volume    
+C     VOLS0,VOLW0,VOLI0=snow,water,ice volume
 C     DPTHSX=minimum snowpack depth for full cover
 C     QS,QW,QI=hourly-accumulated snow,water,ice transfer
 C     HQS=hourly-accumd convective heat from snow,water,ice transfer
@@ -2892,7 +2892,7 @@ C
       QI1(N,N5,N4)=QSX*VOLI0(1,N2,N1)
       HQS1(N,N5,N4)=TK0(1,N2,N1)*(2.095*QS1(N,N5,N4)
      2+4.19*QW1(N,N5,N4)+1.9274*QI1(N,N5,N4))
-      ELSEIF(SS.LT.0.0.AND.DPTHS(N5,N4).GT.DPTHSX)THEN 
+      ELSEIF(SS.LT.0.0.AND.DPTHS(N5,N4).GT.DPTHSX)THEN
       QS1(N,N5,N4)=QSX*VOLS0(1,N5,N4)
       QW1(N,N5,N4)=QSX*VOLW0(1,N5,N4)
       QI1(N,N5,N4)=QSX*VOLI0(1,N5,N4)
@@ -2921,19 +2921,19 @@ C     ENDIF
 4305  CONTINUE
 4310  CONTINUE
 C
-C     HOURLY-ACCUMULATED WATER, VAPOR AND HEAT FLUXES THROUGH 
+C     HOURLY-ACCUMULATED WATER, VAPOR AND HEAT FLUXES THROUGH
 C     SURFACE RESIDUE AND SOIL SURFACE
 C
 C     THAWR,HTHAWR=litter water,heat fluxes from freeze-thaw
 C     FLW,FLWH,HFLW=soil micropore,macropore,heat fluxes
 C     FLWR,HFLWR=litter water,heat fluxes
 C     FLSW,FLSWH=water from snowpack to soil micropores,macropores
-C     HFLSW=convective heat from snowpack to soil 
+C     HFLSW=convective heat from snowpack to soil
 C     FLSWR=water flux from snowpack to litter
 C     HFLSWR=convective heat flux from snowpack to litter
 C     HEATI,HEATE,HEATS,HEATG=net radiation,latent,sensible,storage heat
 C     TEVAPG=total evaporation
-C     FLWM,FLWHM=water flux into soil micropore,macropore for use in trnsfr.f 
+C     FLWM,FLWHM=water flux into soil micropore,macropore for use in trnsfr.f
 C     VOLWX1=VOLW1 accounting for wetting front
 C
       THAWR(NY,NX)=THAWR(NY,NX)+WFLXR(NY,NX)
@@ -2952,7 +2952,7 @@ C
       HEATS(NY,NX)=HEATS(NY,NX)+SFLXG+SFLXR+SFLXW
       HEATE(NY,NX)=HEATE(NY,NX)+EFLXG+EFLXR+EFLXW
       HEATV(NY,NX)=HEATV(NY,NX)+VFLXG+VFLXR+VFLXW
-      HEATH(NY,NX)=HEATH(NY,NX)+RFLXG+RFLXR+RFLXW 
+      HEATH(NY,NX)=HEATH(NY,NX)+RFLXG+RFLXR+RFLXW
      2+SFLXG+SFLXR+SFLXW+EFLXG+EFLXR+EFLXW+VFLXG+VFLXR+VFLXW
       TEVAPG(NY,NX)=TEVAPG(NY,NX)+EVAPG(NY,NX)+EVAPR(NY,NX)
      2+EVAPS(NY,NX)+EVAPW(NY,NX)
@@ -2963,7 +2963,7 @@ C     WATER AND ENERGY TRANSFER THROUGH SOIL PROFILE
 C
 C     N3,N2,N1=L,NY,NX of source grid cell
 C     N6,N5,N4=L,NY,NX of destination grid cell
-C     
+C
       IFLGH=0
       DO 4400 L=1,NL(NY,NX)
       N1=NX
@@ -2995,7 +2995,7 @@ C     ENDIF
       N5=NY+1
       N6=L
 C
-C     ARTIFICIAL SOIL WARMING PREVENT LATERAL FLOW 
+C     ARTIFICIAL SOIL WARMING PREVENT LATERAL FLOW
 C
 C     IF(N1.EQ.3.AND.(N2.EQ.1.OR.N2.EQ.2).AND.L.LE.15)THEN
 C     GO TO 4320
@@ -3058,12 +3058,12 @@ C
       PSISA1(N3,N2,N1)=AMAX1(PSIHY,-EXP(PSIMX(N2,N1)
      2+((FCL(N3,N2,N1)-LOG(THETA1))
      3/FCD(N3,N2,N1)*PSIMD(N2,N1))))
-      ELSEIF(THETA1.LT.POROS(N3,N2,N1)-DTHETW)THEN 
+      ELSEIF(THETA1.LT.POROS(N3,N2,N1)-DTHETW)THEN
       PSISA1(N3,N2,N1)=-EXP(PSIMS(N2,N1)
      2+(((PSL(N3,N2,N1)-LOG(THETA1))
      3/PSD(N3,N2,N1))**SRP(N3,N2,N1)*PSISD(N2,N1)))
       ELSE
-      PSISA1(N3,N2,N1)=PSISE(N3,N2,N1) 
+      PSISA1(N3,N2,N1)=PSISE(N3,N2,N1)
       ENDIF
 C
 C     SUBSURFCE UPPER WATER LAYER
@@ -3083,7 +3083,7 @@ C
       PSISA1(N3,N2,N1)=AMAX1(PSIHY,-EXP(PSIMX(N2,N1)
      2+((FCLX-LOG(THETWX(N3,N2,N1)))
      3/FCDX*PSIMD(NY,NX))))
-      ELSEIF(THETWX(N3,N2,N1).LT.POROS(N3,N2,N1)-DTHETW)THEN 
+      ELSEIF(THETWX(N3,N2,N1).LT.POROS(N3,N2,N1)-DTHETW)THEN
       PSISA1(N3,N2,N1)=-EXP(PSIMS(N2,N1)
      2+(((PSL(N3,N2,N1)-LOG(THETWX(N3,N2,N1)))
      3/PSDX)*PSISD(N2,N1)))
@@ -3091,7 +3091,7 @@ C
       PSISA1(N3,N2,N1)=PSISE(N3,N2,N1)
       ENDIF
       ELSE
-      PSISA1(N3,N2,N1)=PSISE(N3,N2,N1) 
+      PSISA1(N3,N2,N1)=PSISE(N3,N2,N1)
       ENDIF
 C     IF(N1.EQ.4.AND.N2.EQ.1.AND.N3.EQ.11)THEN
 C     WRITE(*,1119)'PSISA1',I,J,M,N,N1,N2,N3,PSISA1(N3,N2,N1)
@@ -3106,12 +3106,12 @@ C
       PSISA1(N6,N5,N4)=AMAX1(PSIHY,-EXP(PSIMX(N5,N4)
      2+((FCL(N6,N5,N4)-LOG(THETAL))
      3/FCD(N6,N5,N4)*PSIMD(N5,N4))))
-      ELSEIF(THETAL.LT.POROS(N6,N5,N4)-DTHETW)THEN 
+      ELSEIF(THETAL.LT.POROS(N6,N5,N4)-DTHETW)THEN
       PSISA1(N6,N5,N4)=-EXP(PSIMS(N5,N4)
      2+(((PSL(N6,N5,N4)-LOG(THETAL))
      3/PSD(N6,N5,N4))**SRP(N6,N5,N4)*PSISD(N5,N4)))
       ELSE
-      PSISA1(N6,N5,N4)=PSISE(N6,N5,N4) 
+      PSISA1(N6,N5,N4)=PSISE(N6,N5,N4)
       ENDIF
 C
 C     SUBSURFCE LOWER WATER LAYER
@@ -3127,7 +3127,7 @@ C
       PSISA1(N6,N5,N4)=AMAX1(PSIHY,-EXP(PSIMX(N5,N4)
      2+((FCLX-LOG(THETWX(N6,N5,N4)))
      3/FCDX*PSIMD(NY,NX))))
-      ELSEIF(THETWX(N6,N5,N4).LT.POROS(N6,N5,N4)-DTHETW)THEN 
+      ELSEIF(THETWX(N6,N5,N4).LT.POROS(N6,N5,N4)-DTHETW)THEN
       PSISA1(N6,N5,N4)=-EXP(PSIMS(NY,NX)
      2+(((PSL(N6,N5,N4)-LOG(THETWX(N6,N5,N4)))
      3/PSDX)*PSISD(NY,NX)))
@@ -3135,7 +3135,7 @@ C
       PSISA1(N6,N5,N4)=PSISE(N6,N5,N4)
       ENDIF
       ELSE
-      PSISA1(N6,N5,N4)=PSISE(N6,N5,N4) 
+      PSISA1(N6,N5,N4)=PSISE(N6,N5,N4)
       ENDIF
 C     IF(N1.EQ.4.AND.N2.EQ.1.AND.N3.EQ.11)THEN
 C     WRITE(*,1119)'PSISAL',I,J,M,N,N4,N5,N6,PSISA1(N6,N5,N4)
@@ -3186,7 +3186,7 @@ C
       PSISM1(N6,N5,N4)=AMAX1(PSIHY,-EXP(PSIMX(N5,N4)
      2+((FCL(N6,N5,N4)-LOG(THETWL))
      3/FCD(N6,N5,N4)*PSIMD(N5,N4))))
-      ELSEIF(THETWL.LT.POROS(N6,N5,N4)-DTHETW)THEN 
+      ELSEIF(THETWL.LT.POROS(N6,N5,N4)-DTHETW)THEN
       PSISM1(N6,N5,N4)=-EXP(PSIMS(N5,N4)
      2+(((PSL(N6,N5,N4)-LOG(THETWL))
      3/PSD(N6,N5,N4))**SRP(N6,N5,N4)*PSISD(N5,N4)))
@@ -3222,17 +3222,17 @@ C
       PSISM1(N3,N2,N1)=AMAX1(PSIHY,-EXP(PSIMX(N2,N1)
      2+((FCL(N3,N2,N1)-LOG(THETW1))
      3/FCD(N3,N2,N1)*PSIMD(N2,N1))))
-      ELSEIF(THETW1.LT.POROS(N3,N2,N1)-DTHETW)THEN 
+      ELSEIF(THETW1.LT.POROS(N3,N2,N1)-DTHETW)THEN
       PSISM1(N3,N2,N1)=-EXP(PSIMS(N2,N1)
      2+(((PSL(N3,N2,N1)-LOG(THETW1))
      3/PSD(N3,N2,N1))**SRP(N3,N2,N1)*PSISD(N2,N1)))
       ELSE
       THETW1=POROS(N3,N2,N1)
-      PSISM1(N3,N2,N1)=PSISE(N3,N2,N1) 
+      PSISM1(N3,N2,N1)=PSISE(N3,N2,N1)
       ENDIF
       ELSE
       THETW1=POROS(N3,N2,N1)
-      PSISM1(N3,N2,N1)=PSISE(N3,N2,N1) 
+      PSISM1(N3,N2,N1)=PSISE(N3,N2,N1)
       ENDIF
 C
 C     RICHARDS FLOW IF NEITHER CELL IS SATURATED
@@ -3252,7 +3252,7 @@ C
 C     HYDRAULIC CONUCTIVITY
 C
 C     CND1,CNDL=hydraulic conductivity of source,destination layer
-C     HCND=lateral(1,2),vertical(3) micropore hydraulic conductivity 
+C     HCND=lateral(1,2),vertical(3) micropore hydraulic conductivity
 C
       IF(N3.EQ.NUM(NY,NX))THEN
       CND1=HCND(N,K1,N3,N2,N1)*FKSAT
@@ -3290,7 +3290,7 @@ C     DLYR=layer thickness
 C
       IF(CND1.GT.ZERO.AND.CNDL.GT.ZERO)THEN
       AVCNDL=2.0*CND1*CNDL/(CND1*DLYR(N,N6,N5,N4)
-     2+CNDL*DLYR(N,N3,N2,N1)) 
+     2+CNDL*DLYR(N,N3,N2,N1))
       ELSE
       AVCNDL=0.0
       ENDIF
@@ -3324,7 +3324,7 @@ C     FLQL3=FLQX+AMIN1(FLQL1,AMAX1(0.0,FLQL2))*XNPX
 C     FLQL4=AMAX1(0.0,AMIN1(FLQL3,VOLP1(N6,N5,N4)*XNPX))
       ELSE
       IF(THETWL.GT.THETS(N6,N5,N4))THEN
-      FLQZ=FLQX+AMAX1((THETS(N6,N5,N4)-THETWL) 
+      FLQZ=FLQX+AMAX1((THETS(N6,N5,N4)-THETWL)
      2*VOLY(N6,N5,N4),AMIN1(0.0,(THETW1-THETS(N3,N2,N1))
      3*VOLY(N3,N2,N1)))*XNPX
       ELSE
@@ -3386,7 +3386,7 @@ C
       FLWHL(N,N6,N5,N4)=0.0
       ENDIF
       ELSE
-      FLWHL(N,N6,N5,N4)=AMAX1(0.0,AMIN1(AMIN1(VOLWH1(N3,N2,N1)*XNPX 
+      FLWHL(N,N6,N5,N4)=AMAX1(0.0,AMIN1(AMIN1(VOLWH1(N3,N2,N1)*XNPX
      2+FLWHL(N,N3,N2,N1),VOLPH1(N6,N5,N4)*XNPX),FLWHX))
       ENDIF
       IF(N.EQ.3)THEN
@@ -3395,12 +3395,12 @@ C
       FLWHM(M,N,N6,N5,N4)=FLWHL(N,N6,N5,N4)
 C     IF(N4.EQ.1)THEN
 C     WRITE(*,5478)'FLWH',I,J,M,N1,N2,N3,IFLGH
-C    2,FLHM,FLWHX,FLWHL(N,N3,N2,N1),FLWHL(N,N6,N5,N4) 
-C    2,AVCNHL(N,N6,N5,N4),PSISH(N3,N2,N1),PSISH(N6,N5,N4) 
+C    2,FLHM,FLWHX,FLWHL(N,N3,N2,N1),FLWHL(N,N6,N5,N4)
+C    2,AVCNHL(N,N6,N5,N4),PSISH(N3,N2,N1),PSISH(N6,N5,N4)
 C    3,VOLPH1(N3,N2,N1),VOLPH1(N6,N5,N4),VOLWH1(N3,N2,N1)
 C    4,VOLWH1(N6,N5,N4),VOLAH1(N3,N2,N1),VOLAH1(N6,N5,N4)
 C    5,DLYR(N,N6,N5,N4),DLYR(N,N3,N2,N1),AREA(N,N3,N2,N1)
-C    7,CNDH1(N3,N2,N1),CNDH1(N6,N5,N4),XNPH,HWFLHL 
+C    7,CNDH1(N3,N2,N1),CNDH1(N6,N5,N4),XNPH,HWFLHL
 5478  FORMAT(A8,7I4,30E12.4)
 C     ENDIF
       ELSE
@@ -3420,8 +3420,8 @@ C     THETPM,THETX=current, minimum air-filled porosity
 C     TK11,TK12=interim soil temperature in source,destination
 C     VP1,VPL=vapor concentration in source,destination
 C     PSISV1,PSISVL=matric+osmotic water potl in source,destination
-C     CNV1,CNV2=vapor conductivities of source, destination 
-C     POROS,POROQ=porosity, tortuosity 
+C     CNV1,CNV2=vapor conductivities of source, destination
+C     POROS,POROQ=porosity, tortuosity
 C     WGSGL=vapor diffusivity
 C     ATCNVL=source,destination vapor conductance
 C     DLYR=soil layer depth
@@ -3441,11 +3441,11 @@ C
      2*0.61*EXP(5360.0*(3.661E-03-1.0/TK12))
      3*EXP(18.0*PSISVL/(8.3143*TK12))
       CNV1=WGSGL(N3,N2,N1)*THETPM(M,N3,N2,N1)*POROQ
-     2*THETPM(M,N3,N2,N1)/POROS(N3,N2,N1) 
+     2*THETPM(M,N3,N2,N1)/POROS(N3,N2,N1)
       CNVL=WGSGL(N6,N5,N4)*THETPM(M,N6,N5,N4)*POROQ
-     2*THETPM(M,N6,N5,N4)/POROS(N6,N5,N4) 
+     2*THETPM(M,N6,N5,N4)/POROS(N6,N5,N4)
       ATCNVL=2.0*CNV1*CNVL
-     2/(CNV1*DLYR(N,N6,N5,N4)+CNVL*DLYR(N,N3,N2,N1)) 
+     2/(CNV1*DLYR(N,N6,N5,N4)+CNVL*DLYR(N,N3,N2,N1))
 C
 C     VAPOR FLUX FROM VAPOR PRESSURE AND DIFFUSIVITY,
 C     AND CONVECTIVE HEAT FLUX FROM VAPOR FLUX
@@ -3453,9 +3453,9 @@ C
       FLVC=ATCNVL*(VP1-VPL)*AREA(N,N3,N2,N1)*XNPH
       VPY=(VP1*VOLPM(M,N3,N2,N1)+VPL*VOLPM(M,N6,N5,N4))
      2/(VOLPM(M,N3,N2,N1)+VOLPM(M,N6,N5,N4))
-      FLVX=(VP1-VPY)*VOLPM(M,N3,N2,N1)*XNPX 
+      FLVX=(VP1-VPY)*VOLPM(M,N3,N2,N1)*XNPX
       IF(FLVC.GE.0.0)THEN
-      FLVL=AMAX1(0.0,AMIN1(FLVC,FLVX)) 
+      FLVL=AMAX1(0.0,AMIN1(FLVC,FLVX))
       HWFLVL=(4.19*TK1(N3,N2,N1)+VAP)*FLVL
       ELSE
       FLVL=AMIN1(0.0,AMAX1(FLVC,FLVX))
@@ -3468,33 +3468,33 @@ C
 C
 C     FLWL=total water+vapor flux to destination
 C     FLWLX=total unsaturated water+vapor flux to destination
-C     HWFLWL=total convective heat flux from water+vapor flux 
+C     HWFLWL=total convective heat flux from water+vapor flux
 C
       FLWL(N,N6,N5,N4)=FLQL+FLVL
       FLWLX(N,N6,N5,N4)=FLQ2+FLVL
       HWFLWL=HWFLQL+HWFLVL
 C     IF(I.EQ.232.AND.N3.LE.NUM(N2,N1))THEN
 C     WRITE(*,1115)'FLWL',I,J,M,N1,N2,N3,N4,N5,N6,N,K1,KL
-C    2,FLWL(N,N3,N2,N1),FLWL(N,N6,N5,N4),FLQX,FLQZ,FLQL,FLQ2,FLVL 
+C    2,FLWL(N,N3,N2,N1),FLWL(N,N6,N5,N4),FLQX,FLQZ,FLQL,FLQ2,FLVL
 C    3,PSIST1,PSISTL
-C    4,AVCNDL,CND1,CNDL,FKSAT 
+C    4,AVCNDL,CND1,CNDL,FKSAT
 C    2,VOLP1(N3,N2,N1),VOLP1(N6,N5,N4),VOLW1(N3,N2,N1)
 C    3,VOLWX1(N3,N2,N1),VOLW1(N6,N5,N4),VOLWX1(N6,N5,N4)
-C    6,THETW1,THETS(N3,N2,N1),THETWL,THETS(N6,N5,N4)  
+C    6,THETW1,THETS(N3,N2,N1),THETWL,THETS(N6,N5,N4)
 C    7,PSISA1(N3,N2,N1),PSISA1(N6,N5,N4),PSISM1(N3,N2,N1)
 C    7,PSISM1(N6,N5,N4),PSISH(N3,N2,N1),PSISH(N6,N5,N4)
-C    3,VOLY(N3,N2,N1),VOLY(N6,N5,N4) 
-C    3,FLVL,FLVX,VP1,VPL,VPY,CNV1,CNVL,ATCNVL 
-C    4,VOLA1(N6,N5,N4),VOLI1(N6,N5,N4),SCNV(N3,N2,N1) 
-C    5,SCNV(N6,N5,N4),VOLP1(N3,N2,N1),VOLP1(N6,N5,N4) 
+C    3,VOLY(N3,N2,N1),VOLY(N6,N5,N4)
+C    3,FLVL,FLVX,VP1,VPL,VPY,CNV1,CNVL,ATCNVL
+C    4,VOLA1(N6,N5,N4),VOLI1(N6,N5,N4),SCNV(N3,N2,N1)
+C    5,SCNV(N6,N5,N4),VOLP1(N3,N2,N1),VOLP1(N6,N5,N4)
 C    7,VOLP1Z(N6,N5,N4),VOLT(N3,N2,N1),VOLT(N6,N5,N4)
 C    8,DLYR(N,N3,N2,N1),DLYR(N,N6,N5,N4),AREA(N,N3,N2,N1)
 C    3,HWFLWL,HWFLQL,HWFLVL
-C    9,TK1(N3,N2,N1),TK1(N6,N5,N4),TKY 
+C    9,TK1(N3,N2,N1),TK1(N6,N5,N4),TKY
 C    9,VHCP1(N3,N2,N1),VHCP1(N6,N5,N4),POROS(N6,N5,N4)
 C    9,VOLP1(N3,N2,N1),VOLX(N3,N2,N1),VOLA1(N6,N5,N4),VOLA1(N3,N2,N1)
 C    8,VOLP1(N6,N5,N4),VOLX(N6,N5,N4),FLW(N,N3,N2,N1),FLW(N,N6,N5,N4)
-C    1,THETPM(M,N3,N2,N1),THETPM(M,N6,N5,N4),THETX 
+C    1,THETPM(M,N3,N2,N1),THETPM(M,N6,N5,N4),THETX
 C    4,FLQL1,FLQL2,FLQL3,FLQL4
 1115  FORMAT(A8,12I4,100E12.4)
 C     ENDIF
@@ -3511,16 +3511,16 @@ C
       DTKX=ABS(TK1(N3,N2,N1)-TK1(N6,N5,N4))*1.0E-06
       IF(BKDS(N3,N2,N1).GT.ZERO.OR.THETWX(N3,N2,N1)
      2+THETIX(N3,N2,N1).GT.ZERO)THEN
-      DTHW1=AMAX1(0.0,THETWX(N3,N2,N1)-TRBW)**3 
-      DTHA1=AMAX1(0.0,THETPX(N3,N2,N1)-TRBA)**3 
-      RYLXW1=DTKX*DTHW1 
-      RYLXA1=DTKX*DTHA1 
-      RYLNW1=AMIN1(1.0E+04,RYLXW*RYLXW1)  
+      DTHW1=AMAX1(0.0,THETWX(N3,N2,N1)-TRBW)**3
+      DTHA1=AMAX1(0.0,THETPX(N3,N2,N1)-TRBA)**3
+      RYLXW1=DTKX*DTHW1
+      RYLXA1=DTKX*DTHA1
+      RYLNW1=AMIN1(1.0E+04,RYLXW*RYLXW1)
       RYLNA1=AMIN1(1.0E+04,RYLXA*RYLXA1)
       XNUSW1=AMAX1(1.0,0.68+0.67*RYLNW1**0.25/DNUSW)
       XNUSA1=AMAX1(1.0,0.68+0.67*RYLNA1**0.25/DNUSA)
       TCNDW1=2.067E-03*XNUSW1
-      TCNDA1=9.050E-05*XNUSA1  
+      TCNDA1=9.050E-05*XNUSA1
       WTHET1=1.467-0.467*THETPY(N3,N2,N1)
       TCND1=(STC(N3,N2,N1)+THETWX(N3,N2,N1)*TCNDW1
      2+0.611*THETIX(N3,N2,N1)*7.844E-03
@@ -3532,16 +3532,16 @@ C
       ENDIF
       IF(BKDS(N6,N5,N4).GT.ZERO.OR.THETWX(N6,N5,N4)
      2+THETIX(N6,N5,N4).GT.ZERO)THEN
-      DTHW2=AMAX1(0.0,THETWX(N6,N5,N4)-TRBW)**3 
-      DTHA2=AMAX1(0.0,THETPX(N6,N5,N4)-TRBA)**3 
-      RYLXW2=DTKX*DTHW2 
-      RYLXA2=DTKX*DTHA2 
-      RYLNW2=AMIN1(1.0E+04,RYLXW*RYLXW2)  
+      DTHW2=AMAX1(0.0,THETWX(N6,N5,N4)-TRBW)**3
+      DTHA2=AMAX1(0.0,THETPX(N6,N5,N4)-TRBA)**3
+      RYLXW2=DTKX*DTHW2
+      RYLXA2=DTKX*DTHA2
+      RYLNW2=AMIN1(1.0E+04,RYLXW*RYLXW2)
       RYLNA2=AMIN1(1.0E+04,RYLXA*RYLXA2)
       XNUSW2=AMAX1(1.0,0.68+0.67*RYLNW2**0.25/DNUSW)
       XNUSA2=AMAX1(1.0,0.68+0.67*RYLNA2**0.25/DNUSA)
       TCNDW2=2.067E-03*XNUSW2
-      TCNDA2=9.050E-05*XNUSA2  
+      TCNDA2=9.050E-05*XNUSA2
       WTHET2=1.467-0.467*THETPY(N6,N5,N4)
       TCND2=(STC(N6,N5,N4)+THETWX(N6,N5,N4)*TCNDW2
      2+0.611*THETIX(N6,N5,N4)*7.844E-03
@@ -3551,16 +3551,16 @@ C
       ELSE
       TCND2=0.0
       ENDIF
-      ATCNDL=(2.0*TCND1*TCND2)/(TCND1*DLYR(N,N6,N5,N4) 
-     3+TCND2*DLYR(N,N3,N2,N1)) 
+      ATCNDL=(2.0*TCND1*TCND2)/(TCND1*DLYR(N,N6,N5,N4)
+     3+TCND2*DLYR(N,N3,N2,N1))
 C
 C     HEAT FLOW FROM THERMAL CONDUCTIVITY AND TEMPERATURE GRADIENT
 C
 C     VHCP1,VHCPW=volumetric heat capacity of soil,snowpack
 C     TK1X,TKLX=interim temperatures of source,destination
 C     HWFLVL,HFLXG=convective heat from soil vapor flux
-C     HFLXG=storage heat flux from snowpack    
-C     TKY=equilibrium source-destination temperature     
+C     HFLXG=storage heat flux from snowpack
+C     TKY=equilibrium source-destination temperature
 C     HFLWC,HFLWX=source-destination heat flux unltd,ltd by heat
 C     ATCNDL=source-destination thermal conductance
 C     HFLWSX=source-destination conductive heat flux
@@ -3575,14 +3575,14 @@ C
       ELSE
       TK1X=TK1(N3,N2,N1)
       ENDIF
-      IF(VHCP1(N6,N5,N4).GT.ZEROS(NY,NX))THEN 
-      TKLX=TK1(N6,N5,N4)+HWFLVL/VHCP1(N6,N5,N4) 
+      IF(VHCP1(N6,N5,N4).GT.ZEROS(NY,NX))THEN
+      TKLX=TK1(N6,N5,N4)+HWFLVL/VHCP1(N6,N5,N4)
       ELSE
       TKLX=TK1(N6,N5,N4)
       ENDIF
       TKY=(VHCP1(N3,N2,N1)*TK1X+VHCP1(N6,N5,N4)*TKLX)
      2/(VHCP1(N3,N2,N1)+VHCP1(N6,N5,N4))
-      HFLWX=(TK1X-TKY)*VHCP1(N3,N2,N1)*XNPX 
+      HFLWX=(TK1X-TKY)*VHCP1(N3,N2,N1)*XNPX
       HFLWC=ATCNDL*(TK1X-TKLX)*AREA(N,N3,N2,N1)*XNPH
       IF(HFLWC.GE.0.0)THEN
       HFLWSX=AMAX1(0.0,AMIN1(HFLWX,HFLWC))
@@ -3593,23 +3593,23 @@ C
 C     IF(N3.EQ.1)THEN
 C     WRITE(*,8765)'HFLWL',I,J,M,N1,N2,N3,N4,N5,N6,N
 C    2,HFLWL(N,N3,N2,N1),HFLWL(N,N6,N5,N4)
-C    2,HWFLWL,HWFLQL,HWFLVL,HWFLHL,HFLWC,HFLWX,HFLWSX 
+C    2,HWFLWL,HWFLQL,HWFLVL,HWFLHL,HFLWC,HFLWX,HFLWSX
 C    3,ATCNDL,TK1X,TKLX,TKY,HWFLVL,TK1(N3,N2,N1),TK1(N6,N5,N4)
 C    2,TCND1,TCND2,DLYR(N,N3,N2,N1),DLYR(N,N6,N5,N4)
 C    4,VHCP1(N3,N2,N1),VHCP1(N6,N5,N4),VOLY(N3,N2,N1)
-C    5,VOLY(N6,N5,N4),VOLW1(N3,N2,N1),VOLW1(N6,N5,N4) 
+C    5,VOLY(N6,N5,N4),VOLW1(N3,N2,N1),VOLW1(N6,N5,N4)
 C    3,THETPX(N3,N2,N1),THETIX(N3,N2,N1),THETWX(N3,N2,N1)
 C    3,THETPX(N6,N5,N4),THETIX(N6,N5,N4),THETWX(N6,N5,N4)
 C    3,THETPY(N3,N2,N1),THETPY(N6,N5,N4)
-C    4,RYLNA2,XNUSA2,XNUSW2 
-C    4,STC(N6,N5,N4),DTC(N6,N5,N4) 
+C    4,RYLNA2,XNUSA2,XNUSW2
+C    4,STC(N6,N5,N4),DTC(N6,N5,N4)
 C    2,WTHET2,TCNDA2,TCNDW2
 8765  FORMAT(A8,10I4,60E14.6)
 C     ENDIF
 C
 C     TOTAL WATER, VAPOR AND HEAT FLUXES
 C
-C     FLW,FLWX,FLWH=total water flux through micropores,macropores 
+C     FLW,FLWX,FLWH=total water flux through micropores,macropores
 C     HFLW=total heat flux
 C     FLWM=water flux used for solute flux calculations in trnsfr.f
 C
@@ -3622,18 +3622,18 @@ C
 C     IF(I.EQ.55)THEN
 C     WRITE(*,1115)'FLWL2',I,J,M,N1,N2,N3,N4,N5,N6,N,FLWL(N,N3,N2,N1)
 C    2,FLWL(N,N6,N5,N4),FLW(N,N3,N2,N1),FLW(N,N6,N5,N4)
-C    3,FLQL,FLVL,FLQX,FLVX,HFLWX 
-C    3,CND1,CNDL,AVCNDL,AVCNVL,VP1,VPL,PSIST1,PSISTL 
-C    4,UAG,VOLA1(N6,N5,N4),VOLI1(N6,N5,N4),SCNV(N6,N5,N4) 
+C    3,FLQL,FLVL,FLQX,FLVX,HFLWX
+C    3,CND1,CNDL,AVCNDL,AVCNVL,VP1,VPL,PSIST1,PSISTL
+C    4,UAG,VOLA1(N6,N5,N4),VOLI1(N6,N5,N4),SCNV(N6,N5,N4)
 C    5,VOLP1(N3,N2,N1),VOLP1(N6,N5,N4),TKY
 C    7,TK1(N3,N2,N1),TK1(N6,N5,N4),VOLT(N3,N2,N1),VOLT(N6,N5,N4)
-C    8,VOLW1(N6,N5,N4),VOLP1(N6,N5,N4),VOLX(N6,N5,N4),VOLW1(N3,N2,N1) 
+C    8,VOLW1(N6,N5,N4),VOLP1(N6,N5,N4),VOLX(N6,N5,N4),VOLW1(N3,N2,N1)
 C    9,VOLP1(N3,N2,N1),VOLX(N3,N2,N1),VOLA1(N6,N5,N4),VOLA1(N3,N2,N1)
 C    6,THETW1,THETWL,PSISA1(N3,N2,N1)
 C    7,PSISA1(N6,N5,N4),PSISM1(N3,N2,N1)
 C    7,PSISM1(N6,N5,N4),PSISH(N3,N2,N1),PSISH(N6,N5,N4)
 C    8,DLYR(N,N3,N2,N1),DLYR(N,N6,N5,N4),AREA(N,N3,N2,N1)
-C    9,VHCP1(N3,N2,N1),VHCP1(N6,N5,N4),POROS(N6,N5,N4) 
+C    9,VHCP1(N3,N2,N1),VHCP1(N6,N5,N4),POROS(N6,N5,N4)
 C     ENDIF
 C
 C     WATER FILM THICKNESS FOR CALCULATING GAS EXCHANGE IN TRNSFR.F
@@ -3704,7 +3704,7 @@ C
       DO 9565 LL=MIN(L+1,NL(NY,NX)),NL(NY,NX)
       DTBLXX=DTBLX(NY,NX)+PSISE(LL,NY,NX)/0.0098
       IF(DPTH(LL,NY,NX).LT.DTBLXX)THEN
-      IF((PSISM1(LL,NY,NX).LE.0.0098*(DPTH(LL,NY,NX)-DTBLXX) 
+      IF((PSISM1(LL,NY,NX).LE.0.0098*(DPTH(LL,NY,NX)-DTBLXX)
      2.AND.L.NE.NL(NY,NX)).OR.DPTH(LL,NY,NX).GT.DPTHA(NY,NX))THEN
       IFLGU=1
       ENDIF
@@ -3720,7 +3720,7 @@ C
 C     IDENTIFY CONDITIONS FOR MACROPORE DISCHARGE TO WATER TABLE
 C
 C     VOLAH1,VOLWH1,VOLIH1=macropore volume,water,ice content
-C     DPTHH depth to layer macropore water 
+C     DPTHH depth to layer macropore water
 C     CDPTH=depth to layer bottom
 C     DLYR=layer thickness
 C     IFLGUH=macropore discharge flag to natural water table
@@ -3746,12 +3746,12 @@ C     ENDIF
       ENDIF
 C     IF((I/30)*30.EQ.I.AND.J.EQ.15)THEN
 C     WRITE(*,9567)'IFLGU',I,J,M,NX,NY,L,IFLGU,IFLGUH,PSISM1(L,NY,NX)
-C    2,0.0098*(DPTH(L,NY,NX)-DTBLX(NY,NX)),DTBLXX 
-C    2,DPTH(L,NY,NX),DTBLX(NY,NX),DTBLZ(NY,NX),DTBLI(NY,NX) 
+C    2,0.0098*(DPTH(L,NY,NX)-DTBLX(NY,NX)),DTBLXX
+C    2,DPTH(L,NY,NX),DTBLX(NY,NX),DTBLZ(NY,NX),DTBLI(NY,NX)
 C    3,VOLAH1(L,NY,NX),VOLWH1(L,NY,NX),VOLIH1(L,NY,NX),CDPTH(L,NY,NX)
 C    4,DLYR(3,L,NY,NX),DTBLZ(NY,NX),DPTHH,THETX,DPTHA(NY,NX)
 9567  FORMAT(A8,8I4,30E12.4)
-C     ENDIF 
+C     ENDIF
 C
 C     IDENTIFY CONDITIONS FOR MICROPRE DISCHARGE TO TILE DRAIN
 C
@@ -3768,7 +3768,7 @@ C
       DO 9568 LL=L+1,NL(NY,NX)
       DTBLYX=DTBLY(NY,NX)+PSISE(LL,NY,NX)/0.0098
       IF(DPTH(LL,NY,NX).LT.DTBLYX)THEN
-      IF((PSISM1(LL,NY,NX).LE.0.0098*(DPTH(LL,NY,NX)-DTBLYX) 
+      IF((PSISM1(LL,NY,NX).LE.0.0098*(DPTH(LL,NY,NX)-DTBLYX)
      2.AND.L.NE.NL(NY,NX)).OR.DPTH(LL,NY,NX).GT.DPTHA(NY,NX))THEN
       IFLGD=1
       ENDIF
@@ -3812,11 +3812,11 @@ C
       ENDIF
 C     IF(L.EQ.12)THEN
 C     WRITE(*,9567)'IFLGD',I,J,M,NX,NY,L,IFLGD,IFLGDH,PSISM1(L,NY,NX)
-C    2,PSISE(L,NY,NX)+0.0098*(DPTH(L,NY,NX)-DTBLY(NY,NX)) 
-C    2,DPTH(L,NY,NX),DTBLY(NY,NX),DTBLD(NY,NX),DTBLDI(NY,NX) 
+C    2,PSISE(L,NY,NX)+0.0098*(DPTH(L,NY,NX)-DTBLY(NY,NX))
+C    2,DPTH(L,NY,NX),DTBLY(NY,NX),DTBLD(NY,NX),DTBLDI(NY,NX)
 C    3,VOLAH1(L,NY,NX),VOLWH1(L,NY,NX),VOLIH1(L,NY,NX),CDPTH(L,NY,NX)
 C    4,DLYR(3,L,NY,NX),DPTHH,THETX,DPTHA(NY,NX),RCHGFT
-C     ENDIF 
+C     ENDIF
 C
 C     LOCATE ALL EXTERNAL BOUNDARIES AND SET BOUNDARY CONDITIONS
 C     ENTERED IN 'READS'
@@ -3944,26 +3944,26 @@ C    1,IRCHG(NN,N,N2,N1),RCHQF,QRM(M,N2,N1)
       IF(IRCHG(NN,N,N2,N1).EQ.0.OR.RCHQF.EQ.0.0
      2.OR.ABS(QRM(M,N2,N1)).LT.ZEROS(N2,N1))THEN
       QR1(N,NN,M5,M4)=0.0
-      HQR1(N,NN,M5,M4)=0.0 
+      HQR1(N,NN,M5,M4)=0.0
       ELSE
 C
 C     SURFACE BOUNDARY WATER FLUX
 C
-C     DPTHW1,DPTHW2=surface water depth of source,destination 
+C     DPTHW1,DPTHW2=surface water depth of source,destination
 C     ALT1,ALT2=elevation of source,destination
 C     XVOLT=excess surface water+ice
 C     VOLWG=ground surface water retention capacity
 C     DTBLX=natural water table depth
 C     QR1,HQR1=runoff, convective heat from runoff
-C     QR,HQR=hourly-accumulated runoff, convective heat from runoff 
+C     QR,HQR=hourly-accumulated runoff, convective heat from runoff
 C     QRM,QRV=runoff,velocity for erosion, solute transfer
 C     XN=direction
 C
 C     RUNOFF
 C
-      DPTHW1=XVOLT(N2,N1)/AREA(3,NUM(N2,N1),N2,N1)  
-      DPTHW2=VOLWG(N2,N1)/AREA(3,NUM(N2,N1),N2,N1)  
-      ALT1=ALTG(N2,N1)+DPTHW1 
+      DPTHW1=XVOLT(N2,N1)/AREA(3,NUM(N2,N1),N2,N1)
+      DPTHW2=VOLWG(N2,N1)/AREA(3,NUM(N2,N1),N2,N1)
+      ALT1=ALTG(N2,N1)+DPTHW1
       ALT2=ALTG(N2,N1)+DPTHW2-XN*SLOPE(N,N2,N1)*DLYR(N,NUM(N2,N1),N2,N1)
       IF(ALT1.GT.ALT2
      2.AND.CDPTH(NU(N2,N1)-1,N2,N1)-DPTHW1.LT.DTBLX(N2,N1))THEN
@@ -3974,9 +3974,9 @@ C
 C     IF(N1.EQ.1.AND.N2.EQ.1)THEN
 C     WRITE(*,7744)'QRBND',I,J,M,N1,N2,N4,N5,M4,M5,N,NN
 C    1,IRCHG(NN,N,N2,N1),QRM(M,N2,N1)
-C    2,QR1(N,NN,M5,M4),QR(N,NN,M5,M4) 
+C    2,QR1(N,NN,M5,M4),QR(N,NN,M5,M4)
 C    2,ALT1,ALT2,ALTG(N2,N1),FSLOPE(N,N2,N1)
-C    3,VOLWG(N2,N1),VOLWRX(N2,N1),ZM(N2,N1),ZS(N2,N1) 
+C    3,VOLWG(N2,N1),VOLWRX(N2,N1),ZM(N2,N1),ZS(N2,N1)
 C    4,VOLW1(0,N2,N1),VOLI1(0,N2,N1),DLYR(N,NUM(N2,N1),N2,N1)
 C    5,XVOLT(N2,N1)-VOLWG(N2,N1),DTBLX(N2,N1)
 C    6,DTBLX(N2,N1)-CDPTH(NU(N2,N1)-1,N2,N1)+DPTHW1
@@ -3989,18 +3989,18 @@ C
       ELSEIF(CDPTH(NU(N2,N1)-1,N2,N1)-DPTHW1.GT.DTBLX(N2,N1))THEN
       VX=AMIN1(0.0,(DTBLX(N2,N1)-CDPTH(NU(N2,N1)-1,N2,N1)+DPTHW1)
      2*AREA(3,NUM(N2,N1),N2,N1))
-      QRM(M,N2,N1)=VX*XNPX 
+      QRM(M,N2,N1)=VX*XNPX
       QRV(M,N2,N1)=0.0
       QR1(N,NN,M5,M4)=-XN*QRM(M,N2,N1)*FSLOPE(N,N2,N1)*RCHQF
-      HQR1(N,NN,M5,M4)=4.19*TK1(0,N2,N1)*QR1(N,NN,M5,M4) 
+      HQR1(N,NN,M5,M4)=4.19*TK1(0,N2,N1)*QR1(N,NN,M5,M4)
       QR(N,NN,M5,M4)=QR(N,NN,M5,M4)+QR1(N,NN,M5,M4)
       HQR(N,NN,M5,M4)=HQR(N,NN,M5,M4)+HQR1(N,NN,M5,M4)
 C     WRITE(*,7744)'QRBNB',I,J,M,N1,N2,N4,N5,M4,M5,N,NN
 C    1,IRCHG(NN,N,N2,N1),QRM(M,N2,N1)
-C    2,QR1(N,NN,M5,M4),QR(N,NN,M5,M4),QRMN(M,N,NN,M5,M4) 
+C    2,QR1(N,NN,M5,M4),QR(N,NN,M5,M4),QRMN(M,N,NN,M5,M4)
 C    2,ALTG(N2,N1),FSLOPE(N,N2,N1)
-C    3,VOLWG(N2,N1),VOLWRX(N2,N1),ZM(N2,N1),ZS(N2,N1) 
-C    4,VOLW1(0,N2,N1),VOLI1(0,N2,N1),DLYR(N,NUM(N2,N1),N2,N1) 
+C    3,VOLWG(N2,N1),VOLWRX(N2,N1),ZM(N2,N1),ZS(N2,N1)
+C    4,VOLW1(0,N2,N1),VOLI1(0,N2,N1),DLYR(N,NUM(N2,N1),N2,N1)
 C    5,XVOLT(N2,N1)-VOLWG(N2,N1),DTBLX(N2,N1)
 C    6,CDPTH(NU(N2,N1)-1,N2,N1),DPTHW1
 C    7,XVOLTM(M,N2,N1),XVOLWM(M,N2,N1)
@@ -4012,7 +4012,7 @@ C    7,XVOLTM(M,N2,N1),XVOLWM(M,N2,N1)
       IFLBM(M,N,NN,M5,M4)=0
 C     WRITE(*,7745)'QRB',I,J,M,N1,N2,N4,N5,M4,M5,N,NN
 C    2,IFLBM(M,N,NN,M5,M4)
-C    2,QRM(M,N2,N1),QRMN(M,N,NN,M5,M4),QR(N,NN,M5,M4) 
+C    2,QRM(M,N2,N1),QRMN(M,N,NN,M5,M4),QR(N,NN,M5,M4)
 7745  FORMAT(A8,12I4,40E12.4)
 C
 C     BOUNDARY SNOW FLUX
@@ -4074,15 +4074,15 @@ C
       CND1=HCND(N,K1,N3,N2,N1)*FKSAT
       ELSE
       CND1=HCND(N,K1,N3,N2,N1)
-      ENDIF 
-      CNDL=HCND(N,KL,N3,N2,N1) 
+      ENDIF
+      CNDL=HCND(N,KL,N3,N2,N1)
       FLWL(N,M6,M5,M4)=AMIN1(VOLW1(N3,N2,N1)*XNPX
      2,XN*0.0098*-ABS(SLOPE(N,N2,N1))*CND1*AREA(3,N3,N2,N1))
-     3*RCHGFU*RCHGFT*XNPH 
-      FLWLX(N,M6,M5,M4)=FLWL(N,M6,M5,M4) 
-      FLWHL(N,M6,M5,M4)=AMIN1(VOLWH1(L,NY,NX)*XNPX 
-     2,XN*0.0098*-ABS(SLOPE(N,N2,N1))*CNDH1(L,NY,NX)*AREA(3,N3,N2,N1)) 
-     3*RCHGFU*RCHGFT*XNPH 
+     3*RCHGFU*RCHGFT*XNPH
+      FLWLX(N,M6,M5,M4)=FLWL(N,M6,M5,M4)
+      FLWHL(N,M6,M5,M4)=AMIN1(VOLWH1(L,NY,NX)*XNPX
+     2,XN*0.0098*-ABS(SLOPE(N,N2,N1))*CNDH1(L,NY,NX)*AREA(3,N3,N2,N1))
+     3*RCHGFU*RCHGFT*XNPH
       HFLWL(N,M6,M5,M4)=4.19*TK1(N3,N2,N1)
      2*(FLWL(N,M6,M5,M4)+FLWHL(N,M6,M5,M4))
 C     IF(I.EQ.336)THEN
@@ -4104,33 +4104,33 @@ C     PSISWD=water potential from water table slope
 C     XN,RCHG*=direction indicator,boundary flag
 C     SLOPE=sin(lateral slope)
 C     DLYR=layer width
-C     DTBLG=water table slope 
+C     DTBLG=water table slope
 C     PSISWT=water potential driving micropore discharge
 C     PSISA1,PSISO=matric,osmotic water potential
-C     DPTH,DTBLX=depth to layer midpoint,natural water table 
+C     DPTH,DTBLX=depth to layer midpoint,natural water table
 C     DPTHT=depth to internal water table
 C     FLWL=micropore discharge to natural water table
 C     HFLWL=convective heat from discharge to natural water table
-C     HCND=saturated hydraulic conductivity       
+C     HCND=saturated hydraulic conductivity
 C     AREAU=fraction of layer below natural water table
 C
       IF(IFLGU.EQ.0.AND.RCHGFT.NE.0.0)THEN
       PSISWD=XN*0.005*SLOPE(N,N2,N1)*DLYR(N,N3,N2,N1)
      2*(1.0-DTBLG(N2,N1))
-      PSISWT=AMIN1(0.0,-PSISA1(N3,N2,N1)-0.03*PSISO(N3,N2,N1) 
+      PSISWT=AMIN1(0.0,-PSISA1(N3,N2,N1)-0.03*PSISO(N3,N2,N1)
      2+0.0098*(DPTH(N3,N2,N1)-DTBLX(N2,N1))
      3-0.0098*AMAX1(0.0,DPTH(N3,N2,N1)-DPTHT(N2,N1)))
-      IF(PSISWT.LT.0.0)PSISWT=PSISWT-PSISWD 
+      IF(PSISWT.LT.0.0)PSISWT=PSISWT-PSISWD
       FLWT=PSISWT*HCND(N,1,N3,N2,N1)*AREA(N,N3,N2,N1)
-     2*(1.0-AREAU(N3,N2,N1))/(RCHGFU+1.0)*RCHGFT*XNPH 
-      FLWL(N,M6,M5,M4)=XN*FLWT 
-      FLWLX(N,M6,M5,M4)=XN*FLWT 
+     2*(1.0-AREAU(N3,N2,N1))/(RCHGFU+1.0)*RCHGFT*XNPH
+      FLWL(N,M6,M5,M4)=XN*FLWT
+      FLWLX(N,M6,M5,M4)=XN*FLWT
       HFLWL(N,M6,M5,M4)=4.19*TK1(N3,N2,N1)*XN*FLWT
 C     IF((I/10)*10.EQ.I.AND.J.EQ.15)THEN
 C     WRITE(*,4445)'DISCHMI',I,J,M,N1,N2,N3,M4,M5,M6,N,NN,IFLGU
 C    2,XN,FLWL(N,M6,M5,M4),FLWT,PSISWT,PSISWD,HCND(N,1,N3,N2,N1)
 C    3,AREA(N,N3,N2,N1),AREAU(N3,N2,N1),RCHGFU,RCHGFT
-C    4,PSISE(N3,N2,N1),PSISA1(N3,N2,N1),DPTH(N3,N2,N1),DTBLX(N2,N1) 
+C    4,PSISE(N3,N2,N1),PSISA1(N3,N2,N1),DPTH(N3,N2,N1),DTBLX(N2,N1)
 C    2,PSISO(N3,N2,N1),0.0098*(DPTH(N3,N2,N1)-DTBLX(N2,N1))
 C    3,0.0098*AMAX1(0.0,DPTH(N3,N2,N1)-DPTHT(N2,N1))
 4445  FORMAT(A8,12I4,30E14.6)
@@ -4148,16 +4148,16 @@ C     PSISWD=water potential from water table slope
 C     XN,RCHG*=direction indicator,boundary flag
 C     SLOPE=sin(lateral slope)
 C     DLYR=layer width
-C     DTBLG=water table slope 
+C     DTBLG=water table slope
 C     PSISWTH=water potential driving macropore discharge
 C     PSISO=osmotic water potential
-C     DPTHH,DTBLX=depth to layer macropore water,natural water table 
+C     DPTHH,DTBLX=depth to layer macropore water,natural water table
 C     DPTHT=depth to internal water table
 C     FLWTH,FLWTHL=macropore discharge unltd,ltd by macropore water
 C     CNDH1=macropore hydraulic conductivity
 C     FLWHL=macropore discharge to natural water table
 C     HFLWL=convective heat from discharge to natural water table
-C     HCND=saturated hydraulic conductivity       
+C     HCND=saturated hydraulic conductivity
 C     AREAU=fraction of layer below natural water table
 C
       IF(IFLGUH.EQ.0.AND.RCHGFT.NE.0.0
@@ -4168,11 +4168,11 @@ C
      2+0.0098*(DPTHH-DTBLX(N2,N1))
      3-0.0098*AMAX1(0.0,DPTHH-DPTHT(N2,N1))
       IF(PSISWTH.LT.0.0)PSISWTH=PSISWTH-PSISWD
-      FLWTH=PSISWTH*CNDH1(N3,N2,N1)*AREA(N,N3,N2,N1)  
-     2*(1.0-AREAU(N3,N2,N1))/(RCHGFU+1.0)*RCHGFT*XNPH 
+      FLWTH=PSISWTH*CNDH1(N3,N2,N1)*AREA(N,N3,N2,N1)
+     2*(1.0-AREAU(N3,N2,N1))/(RCHGFU+1.0)*RCHGFT*XNPH
       FLWTHL=AMAX1(FLWTH,AMIN1(0.0,-(VOLWH1(N3,N2,N1)*XNPX
      2+FLWHL(3,N3,N2,N1)-FLWHL(3,N3+1,N2,N1))))
-      FLWHL(N,M6,M5,M4)=XN*FLWTHL 
+      FLWHL(N,M6,M5,M4)=XN*FLWTHL
       HFLWL(N,M6,M5,M4)=HFLWL(N,M6,M5,M4)
      2+4.19*TK1(N3,N2,N1)*XN*FLWTHL
 C     WRITE(*,4446)'DISCHMA',I,J,M,N1,N2,N3,M4,M5,M6,N,NN,IFLGUH
@@ -4191,27 +4191,27 @@ C     PSISWD=water potential from water table slope
 C     XN,RCHG*=direction indicator,boundary flag
 C     SLOPE=sin(lateral slope)
 C     DLYR=layer width
-C     DTBLG=water table slope 
+C     DTBLG=water table slope
 C     PSISWT=water potential driving micropore discharge
 C     PSISA1,PSISO=matric,osmotic water potential
-C     DPTH,DTBLY=depth to layer midpoint,artificial water table 
+C     DPTH,DTBLY=depth to layer midpoint,artificial water table
 C     DPTHT=depth to internal water table
 C     FLWL=micropore discharge to natural+artificial water table
 C     HFLWL=convective heat from dischg to natural+artifl water table
-C     HCND=saturated hydraulic conductivity       
+C     HCND=saturated hydraulic conductivity
 C     AREAUD=fraction of layer below artificial water table
 C
       IF(IFLGD.EQ.0.AND.RCHGFT.NE.0.0)THEN
       PSISWD=XN*0.005*SLOPE(N,N2,N1)*DLYR(N,N3,N2,N1)
      2*(1.0-DTBLG(N2,N1))
-      PSISWT=AMIN1(0.0,-PSISA1(N3,N2,N1)-0.03*PSISO(N3,N2,N1) 
+      PSISWT=AMIN1(0.0,-PSISA1(N3,N2,N1)-0.03*PSISO(N3,N2,N1)
      2+0.0098*(DPTH(N3,N2,N1)-DTBLY(N2,N1))
      3-0.0098*AMAX1(0.0,DPTH(N3,N2,N1)-DPTHT(N2,N1)))
-      IF(PSISWT.LT.0.0)PSISWT=PSISWT-PSISWD 
+      IF(PSISWT.LT.0.0)PSISWT=PSISWT-PSISWD
       FLWT=PSISWT*HCND(N,1,N3,N2,N1)*AREA(N,N3,N2,N1)
-     2*(1.0-AREAUD(N3,N2,N1))/(RCHGFU+1.0)*RCHGFT*XNPH 
-      FLWL(N,M6,M5,M4)=FLWL(N,M6,M5,M4)+XN*FLWT 
-      FLWLX(N,M6,M5,M4)=FLWLX(N,M6,M5,M4)+XN*FLWT 
+     2*(1.0-AREAUD(N3,N2,N1))/(RCHGFU+1.0)*RCHGFT*XNPH
+      FLWL(N,M6,M5,M4)=FLWL(N,M6,M5,M4)+XN*FLWT
+      FLWLX(N,M6,M5,M4)=FLWLX(N,M6,M5,M4)+XN*FLWT
       HFLWL(N,M6,M5,M4)=HFLWL(N,M6,M5,M4)+4.19*TK1(N3,N2,N1)*XN*FLWT
 C     IF(L.EQ.12)THEN
 C     WRITE(*,4445)'DISCHMD',I,J,M,N1,N2,N3,M4,M5,M6,N,NN,IFLGD
@@ -4219,7 +4219,7 @@ C    2,XN,FLWL(N,M6,M5,M4),FLWT,PSISWT,PSISWD
 C    3,0.0098*(DPTH(N3,N2,N1)-DTBLY(N2,N1)),RCHGFU,RCHGFT
 C    3,HCND(N,1,N3,N2,N1),AREA(N,N3,N2,N1),AREAUD(N3,N2,N1)
 C    4,PSISE(N3,N2,N1),PSISA1(N3,N2,N1),PSISO(N3,N2,N1)
-C    5,DPTH(N3,N2,N1),DTBLY(N2,N1),DPTHT(N2,N1) 
+C    5,DPTH(N3,N2,N1),DTBLY(N2,N1),DPTHT(N2,N1)
 C    3,0.0098*AMAX1(0.0,DPTH(N3,N2,N1)-DPTHT(N2,N1))
 C     ENDIF
       ENDIF
@@ -4231,16 +4231,16 @@ C     PSISWD=water potential from water table slope
 C     XN,RCHG*=direction indicator,boundary flag
 C     SLOPE=sin(lateral slope)
 C     DLYR=layer width
-C     DTBLG=water table slope 
+C     DTBLG=water table slope
 C     PSISWTH=water potential driving macropore discharge
 C     PSISO=osmotic water potential
-C     DPTHH,DTBLY=depth to layer macropore water,artificl water table 
+C     DPTHH,DTBLY=depth to layer macropore water,artificl water table
 C     DPTHT=depth to internal water table
 C     FLWTH,FLWTHL=macropore discharge unltd,ltd by macropore water
 C     CNDH1=macropore hydraulic conductivity
 C     FLWHL=macropore discharge to artificial water table
 C     HFLWL=convective heat from discharge to artificial water table
-C     HCND=saturated hydraulic conductivity       
+C     HCND=saturated hydraulic conductivity
 C     AREAUD=fraction of layer below artificial water table
 C
       IF(IFLGDH.EQ.0.AND.RCHGFT.NE.0.0
@@ -4251,11 +4251,11 @@ C
      2+0.0098*(DPTHH-DTBLY(N2,N1))
      3-0.0098*AMAX1(0.0,DPTHH-DPTHT(N2,N1))
       IF(PSISWTH.LT.0.0)PSISWTH=PSISWTH-PSISWD
-      FLWTH=PSISWTH*CNDH1(N3,N2,N1)*AREA(N,N3,N2,N1)  
-     2*(1.0-AREAUD(N3,N2,N1))/(RCHGFU+1.0)*RCHGFT*XNPH 
+      FLWTH=PSISWTH*CNDH1(N3,N2,N1)*AREA(N,N3,N2,N1)
+     2*(1.0-AREAUD(N3,N2,N1))/(RCHGFU+1.0)*RCHGFT*XNPH
       FLWTHL=AMAX1(FLWTH,AMIN1(0.0
      2,-(VOLWH1(N3,N2,N1)*XNPX+FLWHL(3,N3,N2,N1)-FLWHL(3,N3+1,N2,N1))))
-      FLWHL(N,M6,M5,M4)=FLWHL(N,M6,M5,M4)+XN*FLWTHL 
+      FLWHL(N,M6,M5,M4)=FLWHL(N,M6,M5,M4)+XN*FLWTHL
       HFLWL(N,M6,M5,M4)=HFLWL(N,M6,M5,M4)
      2+4.19*TK1(N3,N2,N1)*XN*FLWTHL
 C     IF((I/10)*10.EQ.I.AND.J.EQ.15)THEN
@@ -4277,14 +4277,14 @@ C     PSISWD=water potential from water table slope
 C     XN,RCHG*=direction indicator,boundary flag
 C     SLOPE=sin(lateral slope)
 C     DLYR=layer width
-C     DTBLG=water table slope 
+C     DTBLG=water table slope
 C     PSISUT=water potential driving micropore recharge
 C     PSISA1,PSISO=matric,osmotic water potential
-C     DPTH,DTBLX=depth to layer midpoint,natural water table 
+C     DPTH,DTBLX=depth to layer midpoint,natural water table
 C     FLWU,FLWUL=micropore recharge unltd,ltd by micropore air volume
 C     FLWL=micropore recharge from natural water table
 C     HFLWL=convective heat from recharge from natural water table
-C     HCND=saturated hydraulic conductivity       
+C     HCND=saturated hydraulic conductivity
 C     AREAU=fraction of layer below natural water table
 C
       IF(DPTH(N3,N2,N1).GE.DTBLX(N2,N1)
@@ -4295,32 +4295,32 @@ C
      5.AND.RCHGFT.NE.0.0)THEN
       PSISWD=XN*0.005*SLOPE(N,N2,N1)*DLYR(N,N3,N2,N1)
      2*(1.0-DTBLG(N2,N1))
-      PSISUT=AMAX1(0.0,-PSISA1(N3,N2,N1)-0.03*PSISO(N3,N2,N1) 
+      PSISUT=AMAX1(0.0,-PSISA1(N3,N2,N1)-0.03*PSISO(N3,N2,N1)
      2+0.0098*(DPTH(N3,N2,N1)-DTBLX(N2,N1)))
-      IF(PSISUT.GT.0.0)PSISUT=PSISUT+PSISWD 
-      FLWU=PSISUT*HCND(N,1,N3,N2,N1)*AREA(N,N3,N2,N1) 
+      IF(PSISUT.GT.0.0)PSISUT=PSISUT+PSISWD
+      FLWU=PSISUT*HCND(N,1,N3,N2,N1)*AREA(N,N3,N2,N1)
      2*AREAU(N3,N2,N1)/(RCHGFU+1.0)*RCHGFT*XNPH
-      IF(BKDS(N3,N2,N1).GT.ZERO)THEN 
+      IF(BKDS(N3,N2,N1).GT.ZERO)THEN
       FLWUL=AMIN1(FLWU,VOLP2)
       FLWUX=AMIN1(FLWU,VOLPX2)
       ELSE
       FLWUL=FLWU
       FLWUX=FLWU
       ENDIF
-      FLWL(N,M6,M5,M4)=FLWL(N,M6,M5,M4)+XN*FLWUL 
-      FLWLX(N,M6,M5,M4)=FLWLX(N,M6,M5,M4)+XN*FLWUX 
+      FLWL(N,M6,M5,M4)=FLWL(N,M6,M5,M4)+XN*FLWUL
+      FLWLX(N,M6,M5,M4)=FLWLX(N,M6,M5,M4)+XN*FLWUX
       HFLWL(N,M6,M5,M4)=HFLWL(N,M6,M5,M4)+4.19*TK1(N3,N2,N1)
      2*XN*FLWUL
 C     IF(J.EQ.15)THEN
-C     WRITE(*,4444)'RECHGMI',I,J,M,N1,N2,N3,M4,M5,M6,N,NN,IFLGU 
+C     WRITE(*,4444)'RECHGMI',I,J,M,N1,N2,N3,M4,M5,M6,N,NN,IFLGU
 C    2,XN,FLWL(N,M6,M5,M4),FLWU,FLWUL
-C    2,PSISUT,PSISA1(N3,N2,N1),PSISO(N3,N2,N1) 
-C    3,0.0098*(DPTH(N3,N2,N1)-DTBLX(N2,N1)),RCHGFU,RCHGFT 
-C    4,HCND(N,1,N3,N2,N1),AREA(N,N3,N2,N1),AREAU(N3,N2,N1) 
+C    2,PSISUT,PSISA1(N3,N2,N1),PSISO(N3,N2,N1)
+C    3,0.0098*(DPTH(N3,N2,N1)-DTBLX(N2,N1)),RCHGFU,RCHGFT
+C    4,HCND(N,1,N3,N2,N1),AREA(N,N3,N2,N1),AREAU(N3,N2,N1)
 C    5,VOLP2,VOLA1(L,NY,NX),VOLW1(L,NY,NX),VOLI1(L,NY,NX),DTBLX(N2,N1)
-C    6,DPTH(N3,N2,N1),DPTHA(N2,N1),DPTHT(N2,N1) 
-C    6,DTBLD(N2,N1),VOLW1(N3,N2,N1),VOLI1(N3,N2,N1) 
-C    7,VOLX(N3,N2,N1),VOLP1(N3,N2,N1),VOLP1Z(N3,N2,N1) 
+C    6,DPTH(N3,N2,N1),DPTHA(N2,N1),DPTHT(N2,N1)
+C    6,DTBLD(N2,N1),VOLW1(N3,N2,N1),VOLI1(N3,N2,N1)
+C    7,VOLX(N3,N2,N1),VOLP1(N3,N2,N1),VOLP1Z(N3,N2,N1)
 C    8,FLWL(3,N3,N2,N1),FLWL(3,N6,N5,N4),QR1(N,NN,M5,M4)
 C    9,DLYR(N,N3,N2,N1),DLYR(3,N3,N2,N1),PSISWD
 C    1,CDPTH(N3,N2,N1),AREA(N,N3,N2,N1),SLOPE(N,N2,N1)
@@ -4336,16 +4336,16 @@ C     PSISWD=water potential from water table slope
 C     XN,RCHG*=direction indicator,boundary flag
 C     SLOPE=sin(lateral slope)
 C     DLYR=layer width
-C     DTBLG=water table slope 
+C     DTBLG=water table slope
 C     PSISUTH=water potential driving macropore recharge
 C     PSISO=osmotic water potential
-C     DPTHH,DTBLX=depth to layer macropore water,natural water table 
+C     DPTHH,DTBLX=depth to layer macropore water,natural water table
 C     DPTHT=depth to internal water table
 C     CNDH1=macropore hydraulic conductivity
 C     FLWUH,FLWUHL=macropore recharge unltd,ltd by macropore air volume
 C     FLWHL=macropore discharge to natural water table
 C     HFLWL=convective heat from discharge to natural water table
-C     HCND=saturated hydraulic conductivity       
+C     HCND=saturated hydraulic conductivity
 C     AREAU=fraction of layer below natural water table
 C
       IF(DPTHH.GT.DTBLX(N2,N1)
@@ -4355,20 +4355,20 @@ C
      2.AND.RCHGFT.NE.0.0)THEN
       PSISWD=XN*0.005*SLOPE(N,N2,N1)*DLYR(N,N3,N2,N1)
      2*(1.0-DTBLG(N2,N1))
-      PSISUTH=-0.03*PSISO(N3,N2,N1) 
+      PSISUTH=-0.03*PSISO(N3,N2,N1)
      2+0.0098*(DPTHH-DTBLX(N2,N1))
       IF(PSISUTH.GT.0.0)PSISUTH=PSISUTH+PSISWD
-      FLWUH=PSISUTH*CNDH1(N3,N2,N1)*AREA(N,N3,N2,N1)  
-     2*AREAU(N3,N2,N1)/(RCHGFU+1.0)*RCHGFT*XNPH 
+      FLWUH=PSISUTH*CNDH1(N3,N2,N1)*AREA(N,N3,N2,N1)
+     2*AREAU(N3,N2,N1)/(RCHGFU+1.0)*RCHGFT*XNPH
       FLWUHL=AMIN1(FLWUH,VOLPH2*XNPX)
       FLWHL(N,M6,M5,M4)=FLWHL(N,M6,M5,M4)+XN*FLWUHL
       HFLWL(N,M6,M5,M4)=HFLWL(N,M6,M5,M4)+4.19*TK1(N3,N2,N1)
      2*XN*FLWUHL
 C     IF(M6.EQ.7)THEN
-C     WRITE(*,4447)'RECHGMA',I,J,M,N1,N2,N3,M4,M5,M6,N,NN,IFLGU 
+C     WRITE(*,4447)'RECHGMA',I,J,M,N1,N2,N3,M4,M5,M6,N,NN,IFLGU
 C    2,XN,FLWHL(N,M6,M5,M4),FLWUH,FLWUHL,DPTHH,PSISUTH,VOLPH2
-C    3,CNDH1(N3,N2,N1),DTBLX(N2,N1),CDPTH(N3,N2,N1),DPTHT(N2,N1) 
-C    6,DTBLD(N2,N1),DPTH(N3,N2,N1),VOLWH1(N3,N2,N1),VOLPH1(N3,N2,N1) 
+C    3,CNDH1(N3,N2,N1),DTBLX(N2,N1),CDPTH(N3,N2,N1),DPTHT(N2,N1)
+C    6,DTBLD(N2,N1),DPTH(N3,N2,N1),VOLWH1(N3,N2,N1),VOLPH1(N3,N2,N1)
 C    8,FLWHL(3,N3,N2,N1),FLWHL(3,N3+1,N2,N1),RCHGFU,AREA(N,N3,N2,N1)
 C    9,DLYR(N,N3,N2,N1),DLYR(3,N3,N2,N1),PSISWD
 C    1,SLOPE(N,N2,N1),AREAU(N3,N2,N1)
@@ -4385,7 +4385,7 @@ C     TK1=lower boundary soil temperature
 C     TKSD=deep source/sink temperature from geothermal flux
 C     TCNDG=thermal conductivity below lower boundary
 C     DPTHSK,CDPTH=depth of thermal sink/source, lower boundary
-C     
+C
       IF(N.EQ.3.AND.IETYP(N2,N1).NE.-2)THEN
       HFLWL(N,M6,M5,M4)=HFLWL(N,M6,M5,M4)+(TK1(N3,N2,N1)
      2-TKSD(N2,N1))*TCNDG/(DPTHSK(N2,N1)-CDPTH(N3,N2,N1))
@@ -4408,7 +4408,7 @@ C
       ENDIF
 9575  CONTINUE
 C
-C     NET WATER AND HEAT FLUXES IN RUNOFF AND SNOW DRIFT 
+C     NET WATER AND HEAT FLUXES IN RUNOFF AND SNOW DRIFT
 C
 C     TQR1,THQR1=net runoff,convective heat from runoff
 C     TQS1,TQW1,TQI1,THQS1=net snow,water,ice, heat from snowpack runoff
@@ -4418,7 +4418,7 @@ C     HQS1=convective heat transfer from snow,water,ice transfer
 C
       IF(L.EQ.NUM(N2,N1).AND.N.NE.3)THEN
       DO 1202 NN=1,2
-      TQR1(N2,N1)=TQR1(N2,N1)+QR1(N,NN,N2,N1) 
+      TQR1(N2,N1)=TQR1(N2,N1)+QR1(N,NN,N2,N1)
       THQR1(N2,N1)=THQR1(N2,N1)+HQR1(N,NN,N2,N1)
       IF(IFLBM(M,N,NN,N5,N4).EQ.0)THEN
       TQR1(N2,N1)=TQR1(N2,N1)-QR1(N,NN,N5,N4)
@@ -4431,7 +4431,7 @@ C    2,QR1(N,NN,N2,N1),QR1(N,NN,N5,N4)
 C    3,QR(N,NN,N2,N1),QR(N,NN,N5,N4)
 C    2,HQR1(N,NN,N2,N1),HQR1(N,NN,N5,N4)
 C    3,HQR(N,NN,N2,N1),HQR(N,NN,N5,N4)
-6631  FORMAT(A8,10I4,12E12.4) 
+6631  FORMAT(A8,10I4,12E12.4)
 C     ENDIF
       IF(N4B.GT.0.AND.N5B.GT.0.AND.NN.EQ.1)THEN
       TQR1(N2,N1)=TQR1(N2,N1)-QR1(N,NN,N5B,N4B)
@@ -4439,8 +4439,8 @@ C     ENDIF
 C     IF(I.GT.350.AND.NX.EQ.1)THEN
 C     WRITE(*,6631)'TQRB1',I,J,M,N1,N2,N4B,N5B,N,NN
 C    2,IFLBM(M,N,NN,N5B,N4B),TQR1(N2,N1),THQR1(N2,N1)
-C    2,QR1(N,NN,N5B,N4B),HQR1(N,NN,N5B,N4B)  
-C    2,QR(N,NN,N5B,N4B),HQR(N,NN,N5B,N4B)  
+C    2,QR1(N,NN,N5B,N4B),HQR1(N,NN,N5B,N4B)
+C    2,QR(N,NN,N5B,N4B),HQR(N,NN,N5B,N4B)
 C     ENDIF
       ENDIF
       IF(M.EQ.NPH)THEN
@@ -4456,13 +4456,13 @@ C     ENDIF
       THQS1(N2,N1)=THQS1(N2,N1)+HQS1(N,N2,N1)-HQS1(N,N5,N4)
       ENDIF
 C
-C     NET WATER AND HEAT FLUXES THROUGH SOIL AND SNOWPACK     
+C     NET WATER AND HEAT FLUXES THROUGH SOIL AND SNOWPACK
 C
 C     TFLWL,THFLWL=net water micropore,macropore flux
 C     THFLWL=net convective+conductive heat flux
-C     FLWL =micropore water,heat flux 
+C     FLWL =micropore water,heat flux
 C     FLWHL=macropore water,heat flux
-C     HFLWL=soil heat flux 
+C     HFLWL=soil heat flux
 C
       IF(NCN(N2,N1).NE.3.OR.N.EQ.3)THEN
       DO 1200 LL=N6,NL(N5,N4)
@@ -4502,7 +4502,7 @@ C     INFILTRATION OF WATER FROM MACROPORES INTO MICROPORES
 C
 C     VOLWH1=macropore volume
 C     FINHX,FINHL=macro-micropore transfer unltd,ltd by water,air volume
-C     FINHM=macro-micropore transfer for use in trnsfr.f 
+C     FINHM=macro-micropore transfer for use in trnsfr.f
 C     HCND=saturated hydraulic conductivity
 C     PSISE,PSISA1=air entry,matric water potentials
 C     PHOL,HRAD=path length between,radius of macropores from hour1.f
@@ -4513,10 +4513,10 @@ C
       IF(VOLWH1(N3,N2,N1).GT.ZEROS2(N2,N1))THEN
       FINHX=6.283*HCND(2,1,N3,N2,N1)*AREA(3,N3,N2,N1)
      2*(PSISE(N3,N2,N1)-PSISA1(N3,N2,N1))
-     3/LOG(PHOL(N3,N2,N1)/HRAD(N3,N2,N1))*XNPH 
+     3/LOG(PHOL(N3,N2,N1)/HRAD(N3,N2,N1))*XNPH
       VOLW1X=VOLW1(N3,N2,N1)+TFLWL(N3,N2,N1)+FLU1(N3,N2,N1)
       VOLP1X=AMAX1(0.0,VOLA1(N3,N2,N1)-VOLW1X-VOLI1(N3,N2,N1))
-      VOLWH1X=VOLWH1(N3,N2,N1)+TFLWHL(N3,N2,N1) 
+      VOLWH1X=VOLWH1(N3,N2,N1)+TFLWHL(N3,N2,N1)
       VOLPH1X=AMAX1(0.0,VOLAH1(N3,N2,N1)-VOLWH1X-VOLIH1(N3,N2,N1))
       IF(FINHX.GT.0.0)THEN
       FINHL(N3,N2,N1)=AMAX1(0.0,AMIN1(FINHX,VOLWH1X,VOLP1X))
@@ -4529,7 +4529,7 @@ C     IF(NX.EQ.1.AND.NY.EQ.1)THEN
 C     WRITE(*,3366)'FINHL',I,J,M,N4,N5,N6,IFLGH,FINHL(N3,N2,N1)
 C    3,FINHX,VOLWH1(N3,N2,N1),VOLPH1(N3,N2,N1),VOLP1(N3,N2,N1)
 C    4,PSISA1(N3,N2,N1),HCND(2,1,N3,N2,N1),PHOL(N3,N2,N1)
-C    5,HRAD(N3,N2,N1) 
+C    5,HRAD(N3,N2,N1)
 3366  FORMAT(A8,7I4,20E12.4)
 C     ENDIF
       ELSE
@@ -4537,7 +4537,7 @@ C     ENDIF
       FINHM(M,N3,N2,N1)=0.0
       ENDIF
 C
-C     FREEZE-THAW IN SOIL LAYER MICROPORE FROM NET CHANGE IN SOIL 
+C     FREEZE-THAW IN SOIL LAYER MICROPORE FROM NET CHANGE IN SOIL
 C     LAYER HEAT STORAGE
 C
 C     TFREEZ=micropore freezing temperature
@@ -4558,7 +4558,7 @@ C
       TFREEZ=-9.0959E+04/(PSISMX-333.0)
       VOLW1X=VOLW1(N3,N2,N1)+TFLWL(N3,N2,N1)+FINHL(N3,N2,N1)
      2+FLU1(N3,N2,N1)
-      VOLWH1X=VOLWH1(N3,N2,N1)+TFLWHL(N3,N2,N1)-FINHL(N3,N2,N1) 
+      VOLWH1X=VOLWH1(N3,N2,N1)+TFLWHL(N3,N2,N1)-FINHL(N3,N2,N1)
       ENGY1=VHCP1(N3,N2,N1)*TK1(N3,N2,N1)
       VHCP1X=VHCM(N3,N2,N1)+4.19*(VOLW1X+VOLWH1X)
      2+1.9274*(VOLI1(N3,N2,N1)+VOLIH1(N3,N2,N1))
@@ -4586,7 +4586,7 @@ C
       WFLXL(N3,N2,N1)=0.0
       ENDIF
 C
-C     FREEZE-THAW IN SOIL LAYER MACROPORE FROM NET CHANGE IN SOIL 
+C     FREEZE-THAW IN SOIL LAYER MACROPORE FROM NET CHANGE IN SOIL
 C     LAYER HEAT STORAGE
 C
       IF((TK1X.LT.273.15.AND.VOLWH1(N3,N2,N1)
@@ -4612,7 +4612,7 @@ C
 C     THAW,THAWH=hourly accumulated freeze-thaw flux in micropores,macropores
 C     HTHAW=hourly accumulated freeze-thaw latent heat flux
 C     TWFLXL,TWFLXH=total accumulated freeze-thaw in micropores,macropores
-C     TTFLXL=total latent heat flux 
+C     TTFLXL=total latent heat flux
 C
       THAW(N3,N2,N1)=THAW(N3,N2,N1)+WFLXL(N3,N2,N1)
       THAWH(N3,N2,N1)=THAWH(N3,N2,N1)+WFLXLH(N3,N2,N1)
@@ -4622,12 +4622,12 @@ C
       TTFLXL(N3,N2,N1)=TTFLXL(N3,N2,N1)+TFLXL(N3,N2,N1)
 C     IF(N3.EQ.1)THEN
 C     WRITE(*,4359)'TFLX',I,J,M,N1,N2,N3,TWFLXL(N3,N2,N1)
-C    2,WFLXL(N3,N2,N1),THAW(N3,N2,N1),VHCP1X,VHCP1AX 
+C    2,WFLXL(N3,N2,N1),THAW(N3,N2,N1),VHCP1X,VHCP1AX
 C    2,TFLX1,TFLX,TFREEZ,TK1(N3,N2,N1),TK1X,VHCP1(N3,N2,N1)
-C    3,TFLXL(N3,N2,N1),TTFLXL(N3,N2,N1) 
+C    3,TFLXL(N3,N2,N1),TTFLXL(N3,N2,N1)
 C    2,TFLWL(N3,N2,N1),FINHL(N3,N2,N1),FLU1(N3,N2,N1),THFLWL(N3,N2,N1)
 C    4,HWFLU1(N3,N2,N1),VOLW1X,VOLW1(N3,N2,N1),VOLI1(N3,N2,N1)
-C    5,PSISA1(N3,N2,N1),PSISM(N3,N2,N1),PSISO(N3,N2,N1),PSISMX 
+C    5,PSISA1(N3,N2,N1),PSISM(N3,N2,N1),PSISO(N3,N2,N1),PSISMX
 C    5,VOLWH1(N3,N2,N1),VOLIH1(N3,N2,N1)
 C    5,FGRD(N3,N2,N1),FMAC(N3,N2,N1)
 4359  FORMAT(A8,6I4,40E14.6)
@@ -4635,7 +4635,7 @@ C     ENDIF
 C
 C     DISSIPATE WETTING FRONT
 C
-C     VOLW1=soil micropore water content 
+C     VOLW1=soil micropore water content
 C     VOLWX1=soil micropore water content behind wetting front
 C     FLWVL=water flux from wetted to drier soil
 C
@@ -4661,9 +4661,9 @@ C     THFLWW=total snowpack conductive+convective heat flux
 C     TFLX0=snowpack latent heat flux from freeze-thaw
 C
       DO 9780 L=1,JS
-      VOLS0(L,NY,NX)=VOLS0(L,NY,NX)+TFLWS(L,NY,NX)-WFLXS(L,NY,NX) 
+      VOLS0(L,NY,NX)=VOLS0(L,NY,NX)+TFLWS(L,NY,NX)-WFLXS(L,NY,NX)
       VOLW0(L,NY,NX)=VOLW0(L,NY,NX)+TFLWW(L,NY,NX)+WFLXS(L,NY,NX)
-     2+WFLXI(L,NY,NX) 
+     2+WFLXI(L,NY,NX)
       VOLI0(L,NY,NX)=VOLI0(L,NY,NX)-WFLXI(L,NY,NX)/DENSI
       ENGY0=VHCPWM(M,L,NY,NX)*TK0(L,NY,NX)
       VHCPWM(M+1,L,NY,NX)=2.095*VOLS0(L,NY,NX)+4.19*VOLW0(L,NY,NX)
@@ -4679,13 +4679,13 @@ C
 C     IF(L.EQ.1)THEN
 C     WRITE(*,7753)'TKM',I,J,M,NX,NY,L,TK0(L,NY,NX)
 C    2,THFLWW(L,NY,NX),TFLX0(L,NY,NX),HFLW0W(L,NY,NX)
-C    3,HFLWRLW,HFLWLW 
+C    3,HFLWRLW,HFLWLW
 C    3,VOLS0(L,NY,NX),VOLW0(L,NY,NX),VOLI0(L,NY,NX),VOLS1(L,NY,NX)
 C    2,WFLXS(L,NY,NX),WFLXI(L,NY,NX)
 C    3,TFLWS(L,NY,NX),TFLWW(L,NY,NX),TFLWI(L,NY,NX)
 C    3,XFLWS(L,NY,NX),XFLWW(L,NY,NX),XFLWI(L,NY,NX)
 C    4,XHFLWW(L,NY,NX),HFLSW(L,NY,NX)
-C    5,VHCPWM(M+1,L,NY,NX) 
+C    5,VHCPWM(M+1,L,NY,NX)
 7753  FORMAT(A8,6I4,80E14.6)
 C     ENDIF
 9780  CONTINUE
@@ -4714,9 +4714,9 @@ C     TK1=soil surface temperature
 C
       IF(VHCPW(1,NY,NX).LE.VHCPWX(NY,NX)
      2.AND.TKA(NY,NX).GT.273.15)THEN
-      FLWS=VOLS0(1,NY,NX) 
+      FLWS=VOLS0(1,NY,NX)
       FLWW=VOLW0(1,NY,NX)
-      FLWI=VOLI0(1,NY,NX) 
+      FLWI=VOLI0(1,NY,NX)
       HFLWS=(4.19*FLWW+2.095*FLWS+1.9274*FLWI)*TK0(1,NY,NX)
       VOLS0(1,NY,NX)=VOLS0(1,NY,NX)-FLWS
       VOLW0(1,NY,NX)=VOLW0(1,NY,NX)-FLWW
@@ -4750,7 +4750,7 @@ C     VOLA1,VOLW1,VOLI1,VOLP1=pore,water,ice,air volumes of litter
 C     VOLWRX=maximum water retention by litter
 C     TFLXR,WFLXR=litter water,latent heat flux from freeze-thaw
 C     VOLR=dry litter volume
-C     THETWX,THETIX,THETPX=water,ice,air concentrations 
+C     THETWX,THETIX,THETPX=water,ice,air concentrations
 C     VHCP1=volumetric heat capacity of litter
 C     TK1=litter temperature
 C     HFLWRL,TFLXR,THQR1=litter total cond+conv,latent,runoff heat flux
@@ -4801,18 +4801,18 @@ C
 C     IF(I.GT.350.AND.NX.EQ.1)THEN
 C     WRITE(*,7754)'VOLW0',I,J,M,NX,NY,NUM(NY,NX)
 C    2,VOLW1(0,NY,NX),VOLI1(0,NY,NX),VOLP1(0,NY,NX)
-C    3,THETWX(0,NY,NX),THETIX(0,NY,NX),THETPX(0,NY,NX) 
+C    3,THETWX(0,NY,NX),THETIX(0,NY,NX),THETPX(0,NY,NX)
 C    2,FLWRL(NY,NX),WFLXR(NY,NX),TQR1(NY,NX),EVAPR(NY,NX)
 C    4,XVOLW(NY,NX),XVOLI(NY,NX),XVOLT(NY,NX)
 C    5,TVOLWI,VOLWRX(NY,NX)
-C    5,FLWRLG,FLWRLW,FLYM,FLQR 
-C    3,TK1(0,NY,NX),HFLWRL(NY,NX),TFLXR(NY,NX) 
+C    5,FLWRLG,FLWRLW,FLYM,FLQR
+C    3,TK1(0,NY,NX),HFLWRL(NY,NX),TFLXR(NY,NX)
 C    3,THQR1(NY,NX),ENGYR,VHCP1(0,NY,NX),VHCPRX(NY,NX)
-C    2,HFLWRLG,HFLWRLW,HWFLYM,HFLXR 
+C    2,HFLWRLG,HFLWRLW,HWFLYM,HFLXR
 C    3,VOLPM(M,0,NY,NX),VOLPM(M,NUM(NY,NX),NY,NX)
 C    4,VOLI1(NUM(NY,NX),NY,NX),TK1(NUM(NY,NX),NY,NX)
 7754  FORMAT(A8,6I4,60E12.4)
-C     ENDIF      
+C     ENDIF
 C
 C     SOIL LAYER WATER, ICE AND TEMPERATURE
 C
@@ -4831,20 +4831,20 @@ C     and change in air volume for use in trnsfr.f
 C     THETWX,THETIX,THETPX,THETPY=bulk water,ice,air concn,air-filled porosity
 C     THETPM=air concentration for use in trnsfr.f
 C     FMAC,FGRD=macropore,micropore fraction
-C     CNDH1=maropore hydraulic conductivity 
-C     VHCP1,VHCM=volumetric heat capacities of total volume, solid 
+C     CNDH1=maropore hydraulic conductivity
+C     VHCP1,VHCM=volumetric heat capacities of total volume, solid
 C     VHCP1A,VHCP1B=volumetric heat capacities of soil+micropore,macropore
 C     TK1=soil temperature
 C
       DO 9785 L=NUM(NY,NX),NL(NY,NX)
       IF(VOLT(L,NY,NX).GT.ZEROS2(NY,NX))THEN
-      VOLW1(L,NY,NX)=VOLW1(L,NY,NX)+TFLWL(L,NY,NX) 
+      VOLW1(L,NY,NX)=VOLW1(L,NY,NX)+TFLWL(L,NY,NX)
      2+FINHL(L,NY,NX)+TWFLXL(L,NY,NX)+FLU1(L,NY,NX)
-      VOLWX1(L,NY,NX)=VOLWX1(L,NY,NX)+TFLWLX(L,NY,NX) 
-     2+FINHL(L,NY,NX)+TWFLXL(L,NY,NX)+FLU1(L,NY,NX) 
+      VOLWX1(L,NY,NX)=VOLWX1(L,NY,NX)+TFLWLX(L,NY,NX)
+     2+FINHL(L,NY,NX)+TWFLXL(L,NY,NX)+FLU1(L,NY,NX)
       VOLWX1(L,NY,NX)=AMIN1(VOLW1(L,NY,NX),VOLWX1(L,NY,NX))
       VOLI1(L,NY,NX)=VOLI1(L,NY,NX)-TWFLXL(L,NY,NX)/DENSI
-      VOLWH1(L,NY,NX)=VOLWH1(L,NY,NX)+TFLWHL(L,NY,NX) 
+      VOLWH1(L,NY,NX)=VOLWH1(L,NY,NX)+TFLWHL(L,NY,NX)
      2-FINHL(L,NY,NX)+TWFLXH(L,NY,NX)
       VOLIH1(L,NY,NX)=VOLIH1(L,NY,NX)-TWFLXH(L,NY,NX)/DENSI
       IF(BKDS(L,NY,NX).GT.ZERO)THEN
@@ -4875,7 +4875,7 @@ C
       THETPX(L,NY,NX)=AMAX1(0.0,(VOLP1(L,NY,NX)+VOLPH1(L,NY,NX))
      2/VOLTX)
       THETPM(M+1,L,NY,NX)=THETPX(L,NY,NX)
-      IF(VOLA1(L,NY,NX)+VOLAH1(L,NY,NX).GT.ZEROS2(NY,NX))THEN 
+      IF(VOLA1(L,NY,NX)+VOLAH1(L,NY,NX).GT.ZEROS2(NY,NX))THEN
       THETPY(L,NY,NX)=AMAX1(0.0,(VOLP1(L,NY,NX)+VOLPH1(L,NY,NX))
      2/(VOLA1(L,NY,NX)+VOLAH1(L,NY,NX)))
       ELSE
@@ -4883,7 +4883,7 @@ C
       ENDIF
       IF(VOLAH1(L,NY,NX).GT.ZEROS2(NY,NX))THEN
       FMAC(L,NY,NX)=FHOL(L,NY,NX)*VOLAH1(L,NY,NX)/VOLAH(L,NY,NX)
-      CNDH1(L,NY,NX)=CNDH(L,NY,NX) 
+      CNDH1(L,NY,NX)=CNDH(L,NY,NX)
      2*(VOLAH1(L,NY,NX)/VOLAH(L,NY,NX))**2
       ELSE
       FMAC(L,NY,NX)=0.0
@@ -4902,7 +4902,7 @@ C
 C     BEGIN ARTIFICIAL SOIL WARMING
 C
 C     THFLWL=THFLWL incremented for soil warming
-C     TKSZ=temperature used to calculate additional heat flux for warming 
+C     TKSZ=temperature used to calculate additional heat flux for warming
 C
 C     IF(NX.EQ.3.AND.NY.EQ.2.AND.L.GT.NUM(NY,NX)
 C    3.AND.L.LE.17.AND.I.GE.152.AND.I.LE.304)THEN
@@ -4927,32 +4927,32 @@ C
       VOLWM(M+1,L,NY,NX)=0.0
       VOLWHM(M+1,L,NY,NX)=0.0
       VOLPM(M+1,L,NY,NX)=0.0
-      FLPM(M,L,NY,NX)=VOLPM(M,L,NY,NX) 
+      FLPM(M,L,NY,NX)=VOLPM(M,L,NY,NX)
       THETPM(M+1,L,NY,NX)=0.0
       ENDIF
 C     IF(L.LE.NUM(NY,NX)+1)THEN
-C     WRITE(*,3377)'VOLW1',I,J,M,NX,NY,L,N6X(NY,NX) 
+C     WRITE(*,3377)'VOLW1',I,J,M,NX,NY,L,N6X(NY,NX)
 C    2,VOLW1(L,NY,NX),VOLWX1(L,NY,NX)
 C    3,VOLI1(L,NY,NX),VOLA1(L,NY,NX),VOLP1(L,NY,NX)
 C    2,TFLWL(L,NY,NX),TFLWLX(L,NY,NX)
-C    3,TWFLXL(L,NY,NX),FINHL(L,NY,NX),FLU1(L,NY,NX) 
+C    3,TWFLXL(L,NY,NX),FINHL(L,NY,NX),FLU1(L,NY,NX)
 C    3,VOLWH1(L,NY,NX),VOLIH1(L,NY,NX),VOLAH1(L,NY,NX),VOLPH1(L,NY,NX)
 C    4,VOLA1(L,NY,NX)-VOLW1(L,NY,NX)-VOLI1(L,NY,NX)
 C    5,VOLPM(M,L,NY,NX),VOLPM(M+1,L,NY,NX)
-C    5,PSISM1(L,NY,NX),THETPX(L,NY,NX)  
+C    5,PSISM1(L,NY,NX),THETPX(L,NY,NX)
 C    6,FLWL(3,L,NY,NX),FLWL(3,L+1,NY,NX)
 C    7,FLWL(2,L,NY,NX),FLWL(2,L,NY+1,NX)
 C    8,FLWL(1,L,NY,NX),FLWL(1,L,NY,NX+1)
 C    6,FLWLX(3,L,NY,NX),FLWLX(3,L+1,NY,NX)
 C    7,FLWLX(2,L,NY,NX),FLWLX(2,L,NY+1,NX)
 C    8,FLWLX(1,L,NY,NX),FLWLX(1,L,NY,NX+1)
-C    6,FLW(3,L,NY,NX),FLW(3,L+1,NY,NX) 
+C    6,FLW(3,L,NY,NX),FLW(3,L+1,NY,NX)
 C    7,FLW(2,L,NY,NX),FLW(2,L,NY+1,NX)
 C    8,FLW(1,L,NY,NX),FLW(1,L,NY,NX+1)
 C    9,WFLXL(L,NY,NX),THAW(L,NY,NX)
 C    9,FLPM(M,L,NY,NX),FLSW(L,NY,NX)
 C     WRITE(*,3377)'VOLWH1',I,J,M,NX,NY,L,N6X(NY,NX),VOLWH1(L,NY,NX)
-C    2,TFLWHL(L,NY,NX),FINHL(L,NY,NX),VOLIH1(L,NY,NX) 
+C    2,TFLWHL(L,NY,NX),FINHL(L,NY,NX),VOLIH1(L,NY,NX)
 C    4,TWFLXH(L,NY,NX),TQR1(NY,NX),VOLPH1(L,NY,NX)
 C    6,FLWHL(3,L,NY,NX),FLWHL(3,L+1,NY,NX)
 C    7,FLWHL(2,L,NY,NX),FLWHL(2,L,NY+1,NX)
@@ -4960,39 +4960,39 @@ C    8,FLWHL(1,L,NY,NX),FLWHL(1,L,NY,NX+1)
 C    3,VHCM(L,NY,NX),VOLW1(L,NY,NX),VOLWH1(L,NY,NX),VOLI1(L,NY,NX)
 C    4,THETW(L,NY,NX),THETI(L,NY,NX),FINHL(L,NY,NX),THQR1(NY,NX)
 C    5,HFLWL(3,L,NY,NX),HFLWL(3,N6X(NY,NX),NY,NX)
-C    6,HFLWL(1,L,NY,NX),HFLWL(1,L,NY,NX+1)  
+C    6,HFLWL(1,L,NY,NX),HFLWL(1,L,NY,NX+1)
 C     WRITE(*,3377)'TK1',I,J,M,NX,NY,L,N6X(NY,NX),TK1(L,NY,NX)
 C    2,THFLWL(L,NY,NX),TTFLXL(L,NY,NX),HWFLU1(L,NY,NX)
 C    3,VHCP1(L,NY,NX),HFLWL(3,L,NY,NX),HFLWL(3,L+1,NY,NX)
-C    4,HFLWLW,HFLWLG,TKXX,VHXX,ENGY1,TK1(0,NY,NX) 
+C    4,HFLWLW,HFLWLG,TKXX,VHXX,ENGY1,TK1(0,NY,NX)
 3377  FORMAT(A8,7I4,40E12.4)
 C     ENDIF
 9785  CONTINUE
 C
 C     RESET SURFACE LAYER NUMBER AND TRANSFER ALL WATER TO SOIL SURFACE LAYER
-C     IF LAKE SURFACE LAYER IS LOST TO EVAPORATION 
+C     IF LAKE SURFACE LAYER IS LOST TO EVAPORATION
 C
 C     NUM=new surface layer number after complete lake evaporation
 C     FLWNU,FLWHNU,HFLWNU=lake surface water flux, heat flux if lake surface disappears
-C     
+C
       IF(BKDS(NUM(NY,NX),NY,NX).LE.ZERO
      2.AND.VHCP1(NUM(NY,NX),NY,NX).LE.VHCPNX(NY,NX))THEN
       NUX=NUM(NY,NX)
       DO 9970 LL=NUX+1,NL(NY,NX)
       IF(VOLX(LL,NY,NX).GT.ZEROS2(NY,NX))THEN
       NUM(NY,NX)=LL
-      FLWNX(NY,NX)=FLW(3,NUM(NY,NX),NY,NX) 
-      FLWXNX(NY,NX)=FLWX(3,NUM(NY,NX),NY,NX) 
-      FLWHNX(NY,NX)=FLWH(3,NUM(NY,NX),NY,NX)   
-      HFLWNX(NY,NX)=HFLW(3,NUM(NY,NX),NY,NX) 
+      FLWNX(NY,NX)=FLW(3,NUM(NY,NX),NY,NX)
+      FLWXNX(NY,NX)=FLWX(3,NUM(NY,NX),NY,NX)
+      FLWHNX(NY,NX)=FLWH(3,NUM(NY,NX),NY,NX)
+      HFLWNX(NY,NX)=HFLW(3,NUM(NY,NX),NY,NX)
 C     WRITE(*,5598)'SURFM',I,J,M,NX,NY,LL,NUX,NUM(NY,NX)
-C    2,FLWNX(NY,NX) 
-C    2,VOLW1(NUX,NY,NX),VOLW1(NUM(NY,NX),NY,NX) 
-C    2,VHCP1(NUX,NY,NX),VHCP1(NUM(NY,NX),NY,NX) 
+C    2,FLWNX(NY,NX)
+C    2,VOLW1(NUX,NY,NX),VOLW1(NUM(NY,NX),NY,NX)
+C    2,VHCP1(NUX,NY,NX),VHCP1(NUM(NY,NX),NY,NX)
 C    2,TK1(NUX,NY,NX),TK1(NUM(NY,NX),NY,NX)
-C    3,FLW(3,NUX,NY,NX),FLW(3,NUM(NY,NX),NY,NX) 
+C    3,FLW(3,NUX,NY,NX),FLW(3,NUM(NY,NX),NY,NX)
 C    3,HFLW(3,NUX,NY,NX),HFLW(3,NUM(NY,NX),NY,NX)
-C    4,VHCPNX(NY,NX),VHCP1(0,NY,NX) 
+C    4,VHCPNX(NY,NX),VHCP1(0,NY,NX)
 5598  FORMAT(A8,8I4,20E12.4)
       GO TO 9971
       ENDIF
@@ -5005,10 +5005,10 @@ C    4,VHCPNX(NY,NX),VHCP1(0,NY,NX)
       DO 9695 NX=NHW,NHE
       DO 9690 NY=NVN,NVS
       IF(NUM(NY,NX).EQ.NU(NY,NX))THEN
-      FLWNU(NY,NX)=FLW(3,N6X(NY,NX),NY,NX) 
-      FLWXNU(NY,NX)=FLWX(3,N6X(NY,NX),NY,NX) 
-      FLWHNU(NY,NX)=FLWH(3,N6X(NY,NX),NY,NX) 
-      HFLWNU(NY,NX)=HFLW(3,N6X(NY,NX),NY,NX) 
+      FLWNU(NY,NX)=FLW(3,N6X(NY,NX),NY,NX)
+      FLWXNU(NY,NX)=FLWX(3,N6X(NY,NX),NY,NX)
+      FLWHNU(NY,NX)=FLWH(3,N6X(NY,NX),NY,NX)
+      HFLWNU(NY,NX)=HFLW(3,N6X(NY,NX),NY,NX)
       ELSE
       FLWNU(NY,NX)=FLWNX(NY,NX)
       FLWXNU(NY,NX)=FLWXNX(NY,NX)
@@ -5021,5 +5021,3 @@ C    4,VHCPNX(NY,NX),VHCP1(0,NY,NX)
 3320  CONTINUE
       RETURN
       END
-
-
