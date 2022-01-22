@@ -24,6 +24,7 @@ C
      4,GSINA(JY,JX),GCOSA(JY,JX),ALTX(JV,JH),CDPTHSI(JS)
      5,OSCX(0:4),OSNX(0:4),OSPX(0:4),OMCK(0:4),ORCK(0:4),OQCK(0:4)
      6,OHCK(0:4),TOSCK(0:4),TOSNK(0:4),TOSPK(0:4),TORGL(JZ)
+      DIMENSION OMCI1(3,0:4)
 C
 C     DCKR,DCKM=parameters to initialize microbial biomass from SOC
 C     OMCI,ORCI=allocation of biomass,residue to kinetic components
@@ -39,7 +40,7 @@ C     CDPTHSI=depth to bottom of snowpack layers
 C     POROQ=Penman Water Linear Reduction tortuosity used in gas flux calculations
 C
       PARAMETER (DCKR=0.25,DCKM=2.5E+04,PSIPS=-0.5E-03,RDN=57.29577951)
-      DATA OMCI/0.010,0.050,0.005,0.050,0.050,0.005,0.050,0.050,0.005
+      DATA OMCI1/0.010,0.050,0.005,0.050,0.050,0.005,0.050,0.050,0.005
      2,0.010,0.050,0.005,0.010,0.050,0.005/
       DATA ORCI/0.01,0.05,0.01,0.05,0.01,0.05
      2,0.001,0.005,0.001,0.005/
@@ -56,6 +57,8 @@ C
       DATA PSIHY,FCI,WPI/-2500.0,0.05,0.025/
       DATA CDPTHSI/0.05,0.15,0.30,0.60,1.00/
       DATA POROQ/0.66/
+
+      OMCI=OMCI1/dble(JG)
 C
 C     NPH=no. of cycles h-1 for water, heat and solute flux calculns
 C     NPT=number of cycles NPH-1 for gas flux calculations
@@ -508,6 +511,7 @@ C
       CDPTHZ(L,NY,NX)=0.0
       ORGC(L,NY,NX)=(RSC(0,L,NY,NX)+RSC(1,L,NY,NX)+RSC(2,L,NY,NX))
      2*AREA(3,L,NY,NX)
+
       ORGCX(L,NY,NX)=ORGC(L,NY,NX)
       VOLR(NY,NX)=(RSC(0,L,NY,NX)*1.0E-06/BKRS(0)
      2+RSC(1,L,NY,NX)*1.0E-06/BKRS(1)+RSC(2,L,NY,NX)*1.0E-06/BKRS(2))
@@ -1292,7 +1296,7 @@ C
       DO 8990 N=1,7
       DO 8991 NGL=1,JG
       DO 8991 M=1,3
-      OMC1=AMAX1(0.0,OSCM(K)*OMCI(M,K)*OMCF(N)*FOSCI)/dble(JG)
+      OMC1=AMAX1(0.0,OSCM(K)*OMCI(M,K)*OMCF(N)*FOSCI)
       OMN1=AMAX1(0.0,OMC1*CNOMC(M,NGL,N,K)*FOSNI)
       OMP1=AMAX1(0.0,OMC1*CPOMC(M,NGL,N,K)*FOSPI)
       OMC(M,NGL,N,K,L,NY,NX)=OMC1
@@ -1302,9 +1306,12 @@ C
       OSNX(KK)=OSNX(KK)+OMN1
       OSPX(KK)=OSPX(KK)+OMP1
       DO 8992 NN=1,7
-      OMC(M,NGL,NN,5,L,NY,NX)=OMC(M,NGL,NN,5,L,NY,NX)+OMC1*OMCA(NN)
-      OMN(M,NGL,NN,5,L,NY,NX)=OMN(M,NGL,NN,5,L,NY,NX)+OMN1*OMCA(NN)
-      OMP(M,NGL,NN,5,L,NY,NX)=OMP(M,NGL,NN,5,L,NY,NX)+OMP1*OMCA(NN)
+      OMC(M,NGL,NN,5,L,NY,NX)=OMC(M,NGL,NN,5,L,NY,NX)
+     2+OMC1*OMCA(NN)
+      OMN(M,NGL,NN,5,L,NY,NX)=OMN(M,NGL,NN,5,L,NY,NX)
+     2+OMN1*OMCA(NN)
+      OMP(M,NGL,NN,5,L,NY,NX)=OMP(M,NGL,NN,5,L,NY,NX)
+     2+OMP1*OMCA(NN)
       OSCX(KK)=OSCX(KK)+OMC1*OMCA(NN)
       OSNX(KK)=OSNX(KK)+OMN1*OMCA(NN)
       OSPX(KK)=OSPX(KK)+OMP1*OMCA(NN)
@@ -1374,7 +1381,7 @@ C
       OSP(M,K,L,NY,NX)=0.0
       ENDIF
       IF(K.EQ.0)THEN
-      OSA(M,K,L,NY,NX)=OSC(M,K,L,NY,NX)*OMCI(1,K)
+      OSA(M,K,L,NY,NX)=OSC(M,K,L,NY,NX)*OMCI(1,K)*dble(JG)
       ELSE
       OSA(M,K,L,NY,NX)=OSC(M,K,L,NY,NX)
       ENDIF
@@ -1392,15 +1399,9 @@ C
       RC0(K,NY,NX)=0.0
 6975  CONTINUE
       ENDIF
-      DO 6990 K=0,5
+      DO 6991 K=0,5
       DO 6990 N=1,7
       DO 6990 NGL=1,JG
-      OC=OC+OMC(3,NGL,N,K,L,NY,NX)
-      ON=ON+OMN(3,NGL,N,K,L,NY,NX)
-      OP=OP+OMP(3,NGL,N,K,L,NY,NX)
-      IF(K.LE.2)THEN
-      RC=RC+OMC(3,NGL,N,K,L,NY,NX)
-      ENDIF
       ROXYS(NGL,N,K,L,NY,NX)=0.0
       RVMX4(NGL,N,K,L,NY,NX)=0.0
       RVMX3(NGL,N,K,L,NY,NX)=0.0
@@ -1423,6 +1424,8 @@ C
       ENDIF
       RC0(K,NY,NX)=RC0(K,NY,NX)+OMC(M,NGL,N,K,L,NY,NX)
 6990  CONTINUE
+6991  CONTINUE
+
       DO 6995 K=0,4
       DO 6985 M=1,2
       OC=OC+ORC(M,K,L,NY,NX)
@@ -1435,6 +1438,7 @@ C
       RC0(K,NY,NX)=RC0(K,NY,NX)+ORC(M,K,L,NY,NX)
       ENDIF
 6985  CONTINUE
+
       OC=OC+OQC(K,L,NY,NX)+OQCH(K,L,NY,NX)+OHC(K,L,NY,NX)
      2+OQA(K,L,NY,NX)+OQAH(K,L,NY,NX)+OHA(K,L,NY,NX)
       ON=ON+OQN(K,L,NY,NX)+OQNH(K,L,NY,NX)+OHN(K,L,NY,NX)
@@ -1449,6 +1453,7 @@ C
       RC0(K,NY,NX)=RC0(K,NY,NX)+OQC(K,L,NY,NX)+OQCH(K,L,NY,NX)
      2+OHC(K,L,NY,NX)+OQA(K,L,NY,NX)+OQAH(K,L,NY,NX)+OHA(K,L,NY,NX)
       ENDIF
+
       DO 6980 M=1,4
       OC=OC+OSC(M,K,L,NY,NX)
       ON=ON+OSN(M,K,L,NY,NX)
@@ -1460,8 +1465,10 @@ C
       RC0(K,NY,NX)=RC0(K,NY,NX)+OSC(M,K,L,NY,NX)
       ENDIF
 6980  CONTINUE
+
 6995  CONTINUE
       ORGC(L,NY,NX)=OC
+
       ORGCX(L,NY,NX)=ORGC(L,NY,NX)
       ORGR(L,NY,NX)=RC
       ORGN(L,NY,NX)=ON
