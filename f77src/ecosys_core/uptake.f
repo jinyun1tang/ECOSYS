@@ -36,9 +36,9 @@ C
       include "blk18b.h"
       include "blk1u.h"
       DIMENSION PSIST1(JZ),PATH(2,JZ),RRADL(2,JZ)
-     2,RSRT(2,JZ),ILYR(2,JZ),RSRG(2,JZ),RSR1(2,JZ),RSR2(2,JZ) 
-     3,RSSX(2,JZ),RSRS(2,JZ),WTRTG(JZ),FPQ(2,JZ,05),FPP(2,JZ,05) 
-     4,RACZ(JP,JY,JX),FRTDPX(JZ,05),RTARR(2,JZ) 
+     2,RSRT(2,JZ),ILYR(2,JZ),RSRG(2,JZ),RSR1(2,JZ),RSR2(2,JZ)
+     3,RSSX(2,JZ),RSRS(2,JZ),WTRTG(JZ),FPQ(2,JZ,05),FPP(2,JZ,05)
+     4,RACZ(JP,JY,JX),FRTDPX(JZ,05),RTARR(2,JZ)
      5,VOLPU(JZ),VOLWU(JZ)
 C
 C     MXN=max number of cycles in convergence soln for water uptake
@@ -60,7 +60,7 @@ C
       PARAMETER(ZCKI=0.5E-01,PCKI=0.5E-02,ZPKI=ZCKI/PCKI
      2,PZKI=PCKI/ZCKI)
       PARAMETER(FEXUC=0.5E-03,FEXUN=1.0E-02,FEXUP=1.0E-02)
-      REAL*4 RI,TKGO,TKSO 
+      REAL*4 RI,TKGO,TKSO
 C     REAL*16 B,C
       DO 9995 NX=NHW,NHE
       DO 9990 NY=NVN,NVS
@@ -123,7 +123,7 @@ C     ALT=surface elevation
 C     VOLWU,VOLWM=water volume available for uptake,total water volume
 C     THETY,VOLX=hygroscopic SWC,soil volume
 C     VOLPU=air volume
-C     WTRTG=total biome root mass 
+C     WTRTG=total biome root mass
 C
       DO 9000 L=NU(NY,NX),NJ(NY,NX)
       PSIST1(L)=PSIST(L,NY,NX)-0.0098*ALT(NY,NX)
@@ -151,7 +151,7 @@ C
       IF(IFLGC(NZ,NY,NX).EQ.1.AND.PP(NZ,NY,NX).GT.0.0)THEN
 C
 C     APPLY CLUMPING FACTOR TO LEAF SURFACE AREA DEFINED BY
-C     INCLINATION N, LAYER L, NODE K, BRANCH NB, SPECIES NZ, 
+C     INCLINATION N, LAYER L, NODE K, BRANCH NB, SPECIES NZ,
 C     N-S POSITION NY, E-W POSITION NX(AZIMUTH M ASSUMED UNIFORM)
 C
       DO 500 NB=1,NBR(NZ,NY,NX)
@@ -183,11 +183,11 @@ C     TRANSFER OF CURRENT CANOPY ADDED TO BOUNDARY LAYER RESISTANCE
 C     OF TALLEST CANOPY CALCULATED IN 'HOUR1'
 C
 C     IETYP=Koppen climate zone
-C     ZC,ZT,ZR=PFT canopy,biome,surface roughness height 
+C     ZC,ZT,ZR=PFT canopy,biome,surface roughness height
 C     FRADP=fraction of radiation received by each PFT canopy
 C     ALFZ=shape parameter for windspeed attenuation in canopy
 C     RAB=biome canopy isothermal boundary layer resistance
-C     RACZ,RAZ=additional,total PFT canopy isothermal blr 
+C     RACZ,RAZ=additional,total PFT canopy isothermal blr
 C
       IF(ARLFS(NZ,NY,NX).GT.0.0)THEN
       IF(IETYP(NY,NX).GE.0)THEN
@@ -197,10 +197,10 @@ C
       TFRADP=TFRADP+FRADP(NZZ,NY,NX)
       ENDIF
 700   CONTINUE
-      ALFZ=2.0*TFRADP 
+      ALFZ=2.0*TFRADP
       IF(RAB(NY,NX).GT.ZERO.AND.ZT(NY,NX).GT.ZERO
      2.AND.ALFZ.GT.ZERO)THEN
-      RACZ(NZ,NY,NX)=AMIN1(RACX,AMAX1(0.0,ZT(NY,NX)*EXP(ALFZ) 
+      RACZ(NZ,NY,NX)=AMIN1(RACX,AMAX1(0.0,ZT(NY,NX)*EXP(ALFZ)
      2/(ALFZ/RAB(NY,NX))*(EXP(-ALFZ*ZC(NZ,NY,NX)/ZT(NY,NX))
      3-EXP(-ALFZ*(ZD(NY,NX)+ZR(NY,NX))/ZT(NY,NX)))))
       ELSE
@@ -218,7 +218,7 @@ C     WRITE(*,4411)'RAC',I,J,NZ,RACZ(NZ,NY,NX),RAB(NY,NX),RAZ(NZ,NY,NX)
 C    2,ZT(NY,NX),ZD(NY,NX),ZR(NY,NX),ZC(NZ,NY,NX),ALFZ
 C    3,TFRADP,RACX,EXP(-ALFZ*ZC(NZ,NY,NX)/ZT(NY,NX))
 C    4,EXP(-ALFZ*(ZD(NY,NX)+ZR(NY,NX))/ZT(NY,NX)),RADP(NZ,NY,NX)
-C    5,FRADP(NZ,NY,NX),DPTHS(NY,NX) 
+C    5,FRADP(NZ,NY,NX),DPTHS(NY,NX)
 4411  FORMAT(A8,3I4,20E12.4)
 C     ENDIF
 C
@@ -277,7 +277,7 @@ C     WRITE(*,4413)'FRTDPX',I,J,NZ,L,N,FRTDPX(L,NZ)
 C    2,RTDPX,DLYR(3,L,NY,NX),RTDPZ,RTDP1(1,1,NZ,NY,NX)
 C    3,SDPTH(NZ,NY,NX),CDPTHZ(L-1,NY,NX),HTCTL(NZ,NY,NX)
 C    4,WTRTD(1,L,NZ,NY,NX),WTRTG(L),FPQ(N,L,NZ)
-C     ENDIF 
+C     ENDIF
       ENDIF
       IF(WTRTG(L).GT.ZEROS(NY,NX))THEN
       FPQ(N,L,NZ)=AMAX1(0.0,WTRTD(N,L,NZ,NY,NX))/WTRTG(L)
@@ -301,15 +301,15 @@ C     ENDIF
       ENDIF
 C     IF(NZ.EQ.1.OR.NZ.EQ.2)THEN
 C     WRITE(*,4413)'RTAR',I,J,NX,NY,NZ,L,N
-C    2,RTARR(N,L),RRADL(N,L),PATH(N,L),WTRTD(N,L,NZ,NY,NX) 
-C    2,RTLGP(N,L,NZ,NY,NX),RTDNP(N,L,NZ,NY,NX) 
+C    2,RTARR(N,L),RRADL(N,L),PATH(N,L),WTRTD(N,L,NZ,NY,NX)
+C    2,RTLGP(N,L,NZ,NY,NX),RTDNP(N,L,NZ,NY,NX)
 C    2,PP(NZ,NY,NX),RTDNP(N,L,NZ,NY,NX)*PP(NZ,NY,NX)
-C    2/AREA(3,L,NY,NX),FRTDPX(L,NZ),RTLG2X(N,NZ,NY,NX) 
+C    2/AREA(3,L,NY,NX),FRTDPX(L,NZ),RTLG2X(N,NZ,NY,NX)
 C    2,FPQ(N,L,NZ),WTRTG(L)
 C    3,RRADL(N,L),RRAD2X(N,NZ,NY,NX),RTVLW(N,L,NZ,NY,NX)
 C    2,PORT(N,NZ,NY,NX),PP(NZ,NY,NX),RTLGP(N,L,NZ,NY,NX)
 4413  FORMAT(A8,7I4,30E12.4)
-C     ENDIF 
+C     ENDIF
 2000  CONTINUE
 C
 C     CALCULATE CANOPY WATER STATUS FROM CONVERGENCE SOLUTION FOR
@@ -319,7 +319,7 @@ C     IF(NX.EQ.4.AND.NY.EQ.5)THEN
 C     WRITE(*,2123)'START',I,J,NX,NY,NZ
 C    2,IDAY(1,NB1(NZ,NY,NX),NZ,NY,NX),ARLFS(NZ,NY,NX),PP(NZ,NY,NX)
 C    3,FRADP(NZ,NY,NX),RTDP1(1,1,NZ,NY,NX),RADC(NZ,NY,NX)
-C    4,RADP(NZ,NY,NX),FRTDPX(L,NZ),RTDPX,RAZ(NZ,NY,NX) 
+C    4,RADP(NZ,NY,NX),FRTDPX(L,NZ),RTDPX,RAZ(NZ,NY,NX)
 2123  FORMAT(A8,6I4,20E12.4)
 C     ENDIF
       IF((IDAY(1,NB1(NZ,NY,NX),NZ,NY,NX).NE.0)
@@ -363,7 +363,7 @@ C      ENDIF
      2.AND.CNDU(L,NY,NX).GT.ZERO
      3.AND.RTN1(1,L,NZ,NY,NX).GT.ZEROP(NZ,NY,NX)
      4.AND.RTNL(N,L,NZ,NY,NX).GT.ZEROP(NZ,NY,NX)
-     5.AND.THETW(L,NY,NX).GT.ZERO)THEN 
+     5.AND.THETW(L,NY,NX).GT.ZERO)THEN
       ILYR(N,L)=1
 C
 C     SOIL HYDRAULIC RESISTANCE FROM RADIAL UPTAKE GEOMETRY
@@ -393,7 +393,7 @@ C
 C     ROOT AXIAL RESISTANCE FROM RADII AND LENGTHS OF PRIMARY AND
 C     SECONDARY ROOTS AND FROM AXIAL RESISTIVITY ENTERED IN 'READQ'
 C
-C     FRAD1,FRAD2=primary,secondary root radius relative to maximum 
+C     FRAD1,FRAD2=primary,secondary root radius relative to maximum
 C     secondary radius from PFT file RRAD2M at which RSRA is defined
 C     RRAD1,RRAD2=primary,secondary root radius
 C     RSRA=axial resistivity from PFT file
@@ -403,7 +403,7 @@ C     RTLGA=average secondary root length
 C     RTN1,RTNL=number of primary,secondary axes
 C
       FRAD1=(RRAD1(N,L,NZ,NY,NX)/RRAD2M(N,NZ,NY,NX))**4
-      RSR1(N,L)=RSRA(N,NZ,NY,NX)*DPTHZ(L,NY,NX) 
+      RSR1(N,L)=RSRA(N,NZ,NY,NX)*DPTHZ(L,NY,NX)
      2/(FRAD1*RTN1(1,L,NZ,NY,NX))
      3+RSRA(1,NZ,NY,NX)*HTSTZ(NZ,NY,NX)
      4/(FRADW*RTN1(1,L,NZ,NY,NX))
@@ -428,12 +428,12 @@ C
       RSRS(N,L)=RSSX(N,L)+RSRT(N,L)
       CNDT=CNDT+1.0/RSRS(N,L)
 C     IF(NZ.EQ.1.OR.NZ.EQ.4)THEN
-C     WRITE(*,8855)'RSRT',I,J,NX,NY,NZ,L,N,RSRT(N,L),RSRG(N,L) 
+C     WRITE(*,8855)'RSRT',I,J,NX,NY,NZ,L,N,RSRT(N,L),RSRG(N,L)
 C    2,RSR1(N,L),RSR2(N,L),RSSX(N,L),RSRS(N,L),DPTHZ(L,NY,NX)
 C    3,HTSTZ(NZ,NY,NX),RSRA(1,NZ,NY,NX)*HTSTZ(NZ,NY,NX)
-C    4/(FRADW*AMAX1(PP(NZ,NY,NX),RTN1(1,L,NZ,NY,NX))) 
-C    4,RTNL(N,L,NZ,NY,NX),RTLGP(N,L,NZ,NY,NX) 
-C    7,RTLGA(N,L,NZ,NY,NX),FRAD1,PP(NZ,NY,NX) 
+C    4/(FRADW*AMAX1(PP(NZ,NY,NX),RTN1(1,L,NZ,NY,NX)))
+C    4,RTNL(N,L,NZ,NY,NX),RTLGP(N,L,NZ,NY,NX)
+C    7,RTLGA(N,L,NZ,NY,NX),FRAD1,PP(NZ,NY,NX)
 C    8,RTN1(1,L,NZ,NY,NX),FRADW,RTNL(N,L,NZ,NY,NX),CNDT
 8855  FORMAT(A8,7I4,30E14.6)
 C     ENDIF
@@ -452,7 +452,7 @@ C     PSILT=initial estimate of total canopy water potential
 C     FLWC,HFLWC1=convective water,heat flux from precip to canopy
 C     FTHRM,FDTHS=LW emitted,absorbed by canopy
 C     FPC=fraction of ground area AREA occupied by PFT
-C     CCPOLT=total nonstructural canopy C,N,P concentration  
+C     CCPOLT=total nonstructural canopy C,N,P concentration
 C     CCPOLP,CZPOLP,CPPOLP=nonstructural C,N,P concn in canopy
 C     OSWT=molar mass of CCPOLT
 C     TKCX=intermediate estimate of TKC used in convergence solution
@@ -460,7 +460,7 @@ C     WVPLT=leaf+petiole+stalk mass
 C     VSTK=specific stalk volume
 C     VHCPX=canopy heat capacity
 C     VOLWP,VOLWC=water volume in canopy,on canopy surfaces
-C     RAZ=canopy isothermal boundary later resistance 
+C     RAZ=canopy isothermal boundary later resistance
 C
       PSILT(NZ,NY,NX)=AMIN1(-1.0E-06,0.667*PSILT(NZ,NY,NX))
       EP(NZ,NY,NX)=0.0
@@ -506,14 +506,14 @@ C
 C
 C     BOUNDARY LAYER RESISTANCE FROM RICHARDSON NUMBER
 C
-C     RI=Ricardson’s number
+C     RI=Ricardsonï¿½s number
 C     RA=canopy boundary layer resistance
 C     PAREC,PARHC=canopy latent,sensible heat conductance
 C
       RI=AMAX1(-0.3,AMIN1(0.075,RIB(NY,NX)*(TKA(NY,NX)-TKC1)))
 C     IF(NZ.EQ.1.OR.NZ.EQ.4)THEN
 C     WRITE(*,4443)'RI',I,J,NX,NY,NZ,NN,RI,RIB(NY,NX)
-C    2,TKA(NY,NX),TKC1 
+C    2,TKA(NY,NX),TKC1
 4443  FORMAT(A8,6I4,12E24.16)
 C     ENDIF
       RA(NZ,NY,NX)=AMAX1(RACM,0.9*RA1,AMIN1(1.1*RA1
@@ -558,7 +558,7 @@ C     VOLWC=water volume on canopy surfaces
 C     EP=water flux to,from inside canopy
 C     EFLXC=canopy latent heat flux
 C     VFLXC=convective heat flux from EFLXC
-C     VAP=latent heat of evaporation 
+C     VAP=latent heat of evaporation
 C
       VPC=2.173E-03/TKC1
      2*0.61*EXP(5360.0*(3.661E-03-1.0/TKC1))
@@ -578,7 +578,7 @@ C
 C
 C     SENSIBLE + STORAGE HEAT FROM RN, LE AND CONVECTIVE HEAT FLUXES
 C
-C     HFLXS=initial estimate of sensible+storage heat flux 
+C     HFLXS=initial estimate of sensible+storage heat flux
 C     HFLWC1=convective heat flux from precip to canopy
 C
       HFLXS=RAD1(NZ,NY,NX)+EFLXC(NZ,NY,NX)+VFLXC+HFLWC1
@@ -594,7 +594,7 @@ C
 C
 C     RESET CANOPY TEMPERATURE FOR NEXT ITERATION
 C
-C     XC,IC=magnitude,direction of change in canopy temp for next cycle 
+C     XC,IC=magnitude,direction of change in canopy temp for next cycle
 C
       IF((IC.EQ.0.AND.TKCY.GT.TKC1).OR.(IC.EQ.1.AND.TKCY.LT.TKC1))THEN
       XC=0.5*XC
@@ -611,10 +611,10 @@ C    2,TKA(NY,NX),TKCX,VHCPX,PARHC,HFLXS,VHCPC(NZ,NY,NX),WVPLT,EX
 C    2,FLWC(NZ,NY,NX),VOLWC(NZ,NY,NX),VOLWP(NZ,NY,NX),EVAPC(NZ,NY,NX)
 C    2,RAD1(NZ,NY,NX),EFLXC(NZ,NY,NX),RA(NZ,NY,NX),RC(NZ,NY,NX)
 C    2,EP(NZ,NY,NX),HFLXS,VFLXC,HFLWC1,RADC(NZ,NY,NX),FRADP(NZ,NY,NX)
-C    3,THS(NY,NX),THRMGX(NY,NX) 
+C    3,THS(NY,NX),THRMGX(NY,NX)
 C    2,RSMN(NZ,NY,NX),CCPOLT,OSWT,CCPOLP(NZ,NY,NX),CPOOLP(NZ,NY,NX)
 C    4,DCO2(NZ,NY,NX),AREA(3,NU(NY,NX),NY,NX),WTLS(NZ,NY,NX)
-C    2,PSILT(NZ,NY,NX),PSILG(NZ,NY,NX),RACZ(NZ,NY,NX),RAZ(NZ,NY,NX),RI 
+C    2,PSILT(NZ,NY,NX),PSILG(NZ,NY,NX),RACZ(NZ,NY,NX),RAZ(NZ,NY,NX),RI
 C    3,RIB(NY,NX),RA1,ARLFV(1,NZ,NY,NX),ARSTV(1,NZ,NY,NX)
 C    4,WVPLT,VSTK
 4444  FORMAT(A8,6I4,60E16.8)
@@ -639,7 +639,7 @@ C     FPQ=PFT fraction of biome root mass
 C     PSILC=canopy water potential adjusted for canopy height
 C     PSIST1=total soil water potential PSIST adjusted for surf elevn
 C     RSRS=total soil+root resistance
-C     UPRT=total water uptake from soil profile    
+C     UPRT=total water uptake from soil profile
 C
       DO 4200 N=1,MY(NZ,NY,NX)
       DO 4200 L=NU(NY,NX),NI(NZ,NY,NX)
@@ -657,7 +657,7 @@ C     IF(NZ.EQ.2)THEN
 C     WRITE(*,6565)'UPRT',I,J,NX,NY,NZ,L,N,NN,ILYR(N,L)
 C    2,UPRT,UPWTR(N,L,NZ,NY,NX)
 C    2,PSILC,PSIST1(L),PSISM(L,NY,NX),RSRS(N,L),RSSX(N,L)
-C    2,RSRT(N,L),RSRG(N,L),RSR1(N,L),RSR2(N,L),PSILH,RTAR2 
+C    2,RSRT(N,L),RSRG(N,L),RSR1(N,L),RSR2(N,L),PSILH,RTAR2
 C    3,RSRR(N,NZ,NY,NX),VOLA(L,NY,NX),VOLWM(NPH,L,NY,NX)
 C    4,VOLWU(L),THETY(L,NY,NX),VOLY(L,NY,NX),FPQ(N,L,NZ)
 6565  FORMAT(A8,9I4,30E12.4)
@@ -669,7 +669,7 @@ C     WATER STORAGE
 C
 C     VOLWPZ,VOLWP=canopy water content
 C     DIFFZ,DIFFU=change in canopy water content,transpiration-uptake
-C     DIFF=normalized difference between DIFFZ and DIFFU 
+C     DIFF=normalized difference between DIFFZ and DIFFU
 C     5.0E-03=acceptance criterion for DIFF
 C     RSSZ=change in canopy water potl vs change in canopy water cnt
 C     RSSU=change in canopy water potl vs change in transpiration
@@ -722,7 +722,7 @@ C     IF(NX.EQ.1.AND.NY.EQ.5.AND.NZ.EQ.3)THEN
 C     WRITE(*,2222)'PSI',I,J,NX,NY,NZ,NN,PSILT(NZ,NY,NX),PSIL2,DPSI
 C    2,RSSUX,RSSU,RSSZ,1.0/CNDT,UPRT,UPRTX,EP(NZ,NY,NX),EPX,EX
 C    3,EVAPC(NZ,NY,NX),RC(NZ,NY,NX),RA(NZ,NY,NX),FRADP(NZ,NY,NX)
-C    3,PAREC,VPA(NY,NX),VPC,TKA(NY,NX),TKC1,VOLWP(NZ,NY,NX) 
+C    3,PAREC,VPA(NY,NX),VPC,TKA(NY,NX),TKC1,VOLWP(NZ,NY,NX)
 C    4,VOLWPZ,VOLWPX,WVPLT,DIFF,WFNC,PSILG(NZ,NY,NX)
 C    5,FDMP,CCPOLT,OSWT,RAZ(NZ,NY,NX),RI,RIB(NY,NX)
 C    5,((UPWTR(N,L,NZ,NY,NX),L=1,8),N=1,1)
@@ -767,7 +767,7 @@ C
       TCC(NZ,NY,NX)=TKC(NZ,NY,NX)-273.15
       DTKC(NZ,NY,NX)=TKC(NZ,NY,NX)-TKA(NY,NX)
 C
-C     IF CONVERGENCE NOT ACHIEVED (RARE), SET DEFAULT 
+C     IF CONVERGENCE NOT ACHIEVED (RARE), SET DEFAULT
 C     TEMPERATURES, ENERGY FLUXES, WATER POTENTIALS, RESISTANCES
 C
       IF(NN.GE.MXN)THEN
@@ -839,7 +839,7 @@ C     RSSX,RSRS,RSRT=soil,soil+root,root radial+axial resistance
 C     PSIRO,PSIRG=root osmotic,turgor water potential
 C     FDMR=dry matter content
 C     OSMO=osmotic potential at PSIRT=0 from PFT file
-C     
+C
 C
       DO 4505 N=1,MY(NZ,NY,NX)
       DO 4510 L=NU(NY,NX),NI(NZ,NY,NX)
@@ -1026,13 +1026,13 @@ C
       TFP14X=0.0
       TFP1BX=0.0
 C
-C     UPTAKE CAPACITY 'FWSRT' DEPENDS ON ROOT,MYCORRHIZAL 
+C     UPTAKE CAPACITY 'FWSRT' DEPENDS ON ROOT,MYCORRHIZAL
 C     PROTEIN CONTENT RELATIVE TO 5% FOR WHICH ACTIVE UPTAKE
 C     PARAMETERS ARE DEFINED
 C
 C     CWSRTL,CWSRT=current,maximum protein concentration
 C     WSRTL,WTRTL=protein content,mass
-C     FWSRT=protein concentration relative to 5% 
+C     FWSRT=protein concentration relative to 5%
 C
       IF(WTRTL(N,L,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
       CWSRTL(N,L,NZ,NY,NX)=AMIN1(CWSRT(NZ,NY,NX)
@@ -1081,40 +1081,40 @@ C     NN=0
       UPWTRH=UPWTRP*XNPG
 C
 C     FACTORS CONSTRAINING O2 AND NUTRIENT UPTAKE AMONG
-C     COMPETING ROOT,MYCORRHIZAL AND MICROBIAL POPULATIONS 
-C     IN BAND AND NON-BAND SOIL ZONES FROM DEMAND CALCULATED 
+C     COMPETING ROOT,MYCORRHIZAL AND MICROBIAL POPULATIONS
+C     IN BAND AND NON-BAND SOIL ZONES FROM DEMAND CALCULATED
 C     IN PREVIOUS HOUR
 C
-C     ROXYY=O2 demand by all microbial,root,myco populations 
+C     ROXYY=O2 demand by all microbial,root,myco populations
 C     ROXYP=O2 demand by each root,myco population
 C     FOXYX=fraction of ROXYY by each root,myco population
 C     RNH4Y=NH4 demand in non-band by all microbial,root,myco populations
 C     RUNNHP=NH4 demand in non-band by each root,myco population
-C     FNH4X=fraction of RNH4Y by each root,myco populn 
+C     FNH4X=fraction of RNH4Y by each root,myco populn
 C     RNHBY=NH4 demand in band by all microbial,root,myco populations
 C     RUNNBP=NH4 demand in band by each root,myco population
-C     FNHBX=fraction of RNHBY by each root,myco populn 
+C     FNHBX=fraction of RNHBY by each root,myco populn
 C     RNO3Y=NO3 demand in non-band by all microbial,root,myco populations
 C     RUNNOP=NO3 demand in non-band by each root,myco population
-C     FNO3X=fraction of RNO3Y by each root,myco populn 
+C     FNO3X=fraction of RNO3Y by each root,myco populn
 C     RN3BY=NO3 demand in band by all microbial,root,myco populations
 C     RUNNXB=NO3 demand in band by each root,myco population
-C     FNOBX=fraction of RN3BY by each root,myco populn 
+C     FNOBX=fraction of RN3BY by each root,myco populn
 C     RPO4Y=H2PO4 demand in non-band by all microbial,root,myco populations
 C     RUPP2P=H2PO4 demand in non-band by each root,myco population
-C     FPO4X=fraction of RPO4Y by each root,myco populn 
+C     FPO4X=fraction of RPO4Y by each root,myco populn
 C     RPOBY=H2PO4 demand in band by all microbial,root,myco populations
 C     RUPP2B=H2PO4 demand in band by each root,myco population
-C     FPOBX=fraction of RPOBY by each root,myco populn 
+C     FPOBX=fraction of RPOBY by each root,myco populn
 C     RP14Y=HPO4 demand in non-band by all microbial,root,myco populations
 C     RUPP1P=HPO4 demand in non-band by each root,myco population
-C     FP14X=fraction of RP14Y by each root,myco populn 
+C     FP14X=fraction of RP14Y by each root,myco populn
 C     RP1BY=HPO4 demand in band by all microbial,root,myco populations
 C     RUPP1B=HPO4 demand in band by each root,myco population
-C     FP1BX=fraction of RP1BY by each root,myco populn 
+C     FP1BX=fraction of RP1BY by each root,myco populn
 C     FPP=minimum uptake fraction
 C     FPQ=PFT fraction of biome root mass
-C 
+C
       IF(ROXYY(L,NY,NX).GT.ZEROS(NY,NX))THEN
       FOXYX=AMAX1(FPP(N,L,NZ),ROXYP(N,L,NZ,NY,NX)/ROXYY(L,NY,NX))
       ELSE
@@ -1172,7 +1172,7 @@ C
 C
 C     ROOT O2 DEMAND CALCULATED FROM O2 NON-LIMITED RESPIRATION RATE
 C
-C     ROXYP=O2 demand 
+C     ROXYP=O2 demand
 C     RCO2M=respiration unlimited by O2
 C     RTVLW=root or myco aqueous volume
 C     FOXYX=fraction of total O2 demand from previous hour
@@ -1185,15 +1185,15 @@ C
 C     INITIALIZE VARIABLES USED IN ROOT GAS EXCHANGE
 C     (CO2, O2, CH4, N2, N2O, NH3, H2)
 C
-C     CO2A1,CO2P1,CO2G1,CO2S1=gaseous,aqueous CO2 in root,soil 
-C     OXYA1,OXYP1,OXYG1,OXYS1=gaseous,aqueous O2 in root,soil 
-C     CH4A1,CH4P1,CH4G1,CH4S1=gaseous,aqueous CH4 in root,soil 
-C     Z2OA1,Z2OP1,Z2OG1,Z2OS1=gaseous,aqueous N2O in root,soil 
-C     ZH3A1,ZH3P1,ZH3G1,ZH3S1=gaseous,aqueous NH3 in root,soil 
+C     CO2A1,CO2P1,CO2G1,CO2S1=gaseous,aqueous CO2 in root,soil
+C     OXYA1,OXYP1,OXYG1,OXYS1=gaseous,aqueous O2 in root,soil
+C     CH4A1,CH4P1,CH4G1,CH4S1=gaseous,aqueous CH4 in root,soil
+C     Z2OA1,Z2OP1,Z2OG1,Z2OS1=gaseous,aqueous N2O in root,soil
+C     ZH3A1,ZH3P1,ZH3G1,ZH3S1=gaseous,aqueous NH3 in root,soil
 C     H2GA1,H2GP1,H2GG1,H2GS1=gaseous,aqueous H2 in root,soil
-C     CCH4S1,CCH4P1=aqueous CH4 concentration in soil,root  
-C     CN2OS1,CN2OP1=aqueous N2O concentration in soil,root  
-C     CNH3S1,CNH3B1,CNH3P1=aqueous NH3 concn in soil non-band,band,root  
+C     CCH4S1,CCH4P1=aqueous CH4 concentration in soil,root
+C     CN2OS1,CN2OP1=aqueous N2O concentration in soil,root
+C     CNH3S1,CNH3B1,CNH3P1=aqueous NH3 concn in soil non-band,band,root
 C     CH2GS1,CH2GP1=aqueous H2 concentration in soil,root
 C     RTVLWA,RTVLWB=root aqueous volume in non-band,band
 C     XNPG=time step of flux calculation
@@ -1244,7 +1244,7 @@ C
 C     *SGL1=diffusivity
 C     PORTX=tortuosity effect of root porosity on diffusivity
 C     CG=CO2g,OG=O2g,CH=CH4g,Z2=N2Og,ZH=NH3g,HG=H2g
-C     CL=CO2s,OL=O2s,CQ=CH4s,ZV=N2Os,ZN=NH3s,HL=H2s     
+C     CL=CO2s,OL=O2s,CQ=CH4s,ZV=N2Os,ZN=NH3s,HL=H2s
 C
       CGSGL1=CGSGL(L,NY,NX)*XNPG*PORTX(N,NZ,NY,NX)
       OGSGL1=OGSGL(L,NY,NX)*XNPG*PORTX(N,NZ,NY,NX)
@@ -1311,11 +1311,11 @@ C     CO2=CO2,OXY=O2,CH4=CH4,N2O=N2O,NH3=NH3,H2G=H2
 C     DF*A=root-atmosphere gas conductance
 C     DFGP=rate const for equilibrn of gas concn in gaseous-aqueous phases
 C     RCO2PX=root CO2 gas flux at time step for gas flux calculations
-C     RCO2A=root CO2 flux from grosub.f 
+C     RCO2A=root CO2 flux from grosub.f
 C
       IF(N.EQ.1.AND.IDAY(1,NB1(NZ,NY,NX),NZ,NY,NX).GT.0
      2.AND.RTLGP(N,L,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
-      RTARRX=RTARR(N,L)/RRADP(N,NZ,NY,NX) 
+      RTARRX=RTARR(N,L)/RRADP(N,NZ,NY,NX)
       DIFOP=OLSGLP*RTARRX
       VOLWCA=RTVLW(N,L,NZ,NY,NX)*SCO2L(L,NY,NX)
       VOLWOA=RTVLW(N,L,NZ,NY,NX)*SOXYL(L,NY,NX)
@@ -1369,7 +1369,7 @@ C     RRADL=root radius
 C     RRADS=path length for radial diffusion from soil to root
 C     DIF*=aqueous diffusivity from soil to root:OL=O2,CL=CH4
 C     ZL=N2O,NL=NH3 non-band,NB=NH4 band,HL=H2
-C     C*G=soil gaseous concentration 
+C     C*G=soil gaseous concentration
 C     VOLW*,VOLP*=VOLWMM,VOLPMM*gas solubility
 C
       VOLWMO=VOLWM(M,L,NY,NX)*FOXYX
@@ -1385,7 +1385,7 @@ C
      2.AND.FPQ(N,L,NZ).GT.ZEROQ(NZ,NY,NX))THEN
       THETM=TORT(M,L,NY,NX)*THETW1
       RRADS=LOG((FILM(M,L,NY,NX)+RRADL(N,L))/RRADL(N,L))
-      RTARRX=RTARR(N,L)/RRADS 
+      RTARRX=RTARR(N,L)/RRADS
       DIFOL=THETM*OLSGL1*RTARRX
       DIFCL=THETM*CQSGL1*RTARRX
       DIFZL=THETM*ZVSGL1*RTARRX
@@ -1408,19 +1408,19 @@ C
 C
 C     MASS FLOW OF GAS FROM SOIL TO ROOT AT SHORTER TIME STEP NPT
 C
-C     C*S1=soil aqueous concentration non-band 
+C     C*S1=soil aqueous concentration non-band
 C     C*B1=soil aqueous concentration band
-C     C*A1=root gaseous concentration 
+C     C*A1=root gaseous concentration
 C     C*P1=root aqueous concentration
-C     ROXYLX=soil net O2 aqueous flux 
+C     ROXYLX=soil net O2 aqueous flux
 C     VOLWMM=micropore water volume
 C     RTVLW,RTVLP=root aqueous,gaseous volume
 C     RMF*=soil convective solute flux:COS=CO2,OXS=O2,CHS=CH4,
 C     N2S=N2O,NHS=NH3 non-band,NHB=NH3 band,HGS=H2
-C     UPWTRH=water uptake 
+C     UPWTRH=water uptake
 C
       DO 90 MX=1,NPT
-      OXYS1=OXYS1+ROXYLX 
+      OXYS1=OXYS1+ROXYLX
       CCO2S1=AMAX1(0.0,CO2S1/VOLWMM)
       COXYS1=AMIN1(COXYE(NY,NX)*SOXYL(L,NY,NX)
      2,AMAX1(0.0,OXYS1/VOLWMO))
@@ -1464,13 +1464,13 @@ C     SOLUTION FOR MASS FLOW + DIFFUSION OF O2 IN AQUEOUS PHASES OF
 C     SOIL AND ROOT = ACTIVE UPTAKE OF O2 BY ROOT
 C
 C     DIFOL=O2 aqueous diffusivity from soil to root
-C     UPWTRH=water uptake 
+C     UPWTRH=water uptake
 C     DIFOP=aqueous diffusivity of O2 within root
 C     COXYS1,COXYP1=soil,root aqueous O2 concentration
 C     UPMXP=O2 demand per plant
 C     RUPOXR=root O2 uptake per plant
 C     COXYR=aqueous O2 concentration at root surface
-C     RDFOXS,RDFOXP=aqueous O2 diffusion per plant:soil-root,within root 
+C     RDFOXS,RDFOXP=aqueous O2 diffusion per plant:soil-root,within root
 C
       X=(DIFOL+UPWTRH)*COXYS1+DIFOP*COXYP1
       IF(X.GT.ZERO.AND.OXYS1.GT.ZEROP(NZ,NY,NX))THEN
@@ -1503,7 +1503,7 @@ C     WITH OTHER ROOT AND MICROBIAL POPULATIONS
 C
 C     RUPOSX,RUPOPX=aqueous O2 uptake from soil,root
 C     PP=PFT population
-C     RDFCOS,RCO2SX=aqueous CO2 soil-root diffusion,root uptake 
+C     RDFCOS,RCO2SX=aqueous CO2 soil-root diffusion,root uptake
 C     RDFCHS,RUPCSX=aqueous CH4 soil-root diffusion,root uptake
 C     RDFN2S,RUPZSX=aqueous N2O soil-root diffusion,root uptake
 C     RDFN3S,RUPNSX=aqueous NH3 soil-root diffusion,root uptake:non-band
@@ -1511,7 +1511,7 @@ C     RDFN3B,RUPNBX=aqueous NH3 soil-root diffusion,root uptake:band
 C     RDFHGS,RUPHGX=aqueous H2 soil-root diffusion,root uptake
 C     RMF*=soil convective solute flux
 C     DIF*=aqueous diffusivity from soil to root
-C     C*S1=soil aqueous concentration non-band 
+C     C*S1=soil aqueous concentration non-band
 C     C*B1=soil aqueous concentration band
 C     C*P1=root aqueous concentration
 C
@@ -1521,7 +1521,7 @@ C    2,RMFOXS,RDFOXS,RDFOXP,COXYS1,COXYS1-COXYR,COXYP1,FOXYX
 C    3,WTRTG(L),DIFOL,DIFOP,THETM,OLSGL1,UPWTRH,RTARR(N,L)
 C    5,RTARRX,UPMXP,THETW(L,NY,NX),OXYS1,OXYS(L,NY,NX),OXYP1
 C    3,OXYP(N,L,NZ,NY,NX),ROXYY(L,NY,NX),RTLGP(N,L,NZ,NY,NX)
-C    2,UPMXP,DIFOX,THETW1,THETM,RRADS,FPQ(N,L,NZ) 
+C    2,UPMXP,DIFOX,THETW1,THETM,RRADS,FPQ(N,L,NZ)
 C    4,RUPOXS(N,L,NZ,NY,NX),RUPOXP(N,L,NZ,NY,NX)
 C    5,COXYE(NY,NX),SOXYL(L,NY,NX),FRTDPX(L,NZ)
 5555  FORMAT(A8,9I4,40E12.4)
@@ -1602,20 +1602,20 @@ C     FROM 'WATSUB'
 C
 C     THETPM,THETX=air-filled porosity,minimum THETPM
 C     R*DFQ=soil gas exchange between gaseous-aqueous phases
-C     DFGS=rate constant for soil gas exchange from watsub.f 
-C     CO2G1,CO2S1=gaseous,aqueous CO2 in soil 
-C     OXYG1,OXYS1=gaseous,aqueous O2 in soil 
-C     CH4G1,CH4S1=gaseous,aqueous CH4 in soil 
-C     Z2OG1,Z2OS1=gaseous,aqueous N2O in soil 
-C     ZH3G1,ZH3S1,ZH3B1=gaseous,aqueous NH3 in soil non-band,band 
+C     DFGS=rate constant for soil gas exchange from watsub.f
+C     CO2G1,CO2S1=gaseous,aqueous CO2 in soil
+C     OXYG1,OXYS1=gaseous,aqueous O2 in soil
+C     CH4G1,CH4S1=gaseous,aqueous CH4 in soil
+C     Z2OG1,Z2OS1=gaseous,aqueous N2O in soil
+C     ZH3G1,ZH3S1,ZH3B1=gaseous,aqueous NH3 in soil non-band,band
 C     H2GG1,H2GS1=gaseous,aqueous H2 in soil
 C     RUPOSX=root aqueous O2 uptake
-C     ROXYLX=root net O2 aqueous flux 
+C     ROXYLX=root net O2 aqueous flux
 C     RCO2SX=root aqueous CO2 uptake
 C     RUPCSX=root aqueous CH4 uptake
 C     RUPZSX=root aqueous N2O uptake
-C     RUPNSX=root aqueous NH3 uptake non-band 
-C     RUPNBX=root aqueous NH3 uptake band 
+C     RUPNSX=root aqueous NH3 uptake non-band
+C     RUPNBX=root aqueous NH3 uptake band
 C     RUPHGX=root aqueous H2 uptake
 C     VOLWMM,VOLPMM=soil micropore water,air volume
 C     VOLW*=VOLWMM*gas solubility
@@ -1632,7 +1632,7 @@ C
      2-(AMAX1(ZEROS(NY,NX),CH4S1)-RUPCSX)*VOLPMM)/(VOLWCH+VOLPMM)
       RN2DFQ=DFGSP*(AMAX1(ZEROP(NZ,NY,NX),Z2OG1)*VOLWN2
      2-(AMAX1(ZEROS(NY,NX),Z2OS1)-RUPZSX)*VOLPMM)/(VOLWN2+VOLPMM)
-      IF(VOLWNH+VOLPNH.GT.ZEROP(NZ,NY,NZ))THEN
+      IF(VOLWNH+VOLPNH.GT.ZEROP(NZ,NY,NX))THEN
       ZH3GA=ZH3G1*VLNH4(L,NY,NX)
       RNHDFQ=AMIN1(RUPNSX,AMAX1(-RUPNSX
      2,DFGSP*(AMAX1(ZEROP(NZ,NY,NX),ZH3GA)*VOLWNH
@@ -1640,7 +1640,7 @@ C
       ELSE
       RNHDFQ=0.0
       ENDIF
-      IF(VOLWNB+VOLPNB.GT.ZEROP(NZ,NY,NZ))THEN
+      IF(VOLWNB+VOLPNB.GT.ZEROP(NZ,NY,NX))THEN
       ZH3GB=ZH3G1*VLNHB(L,NY,NX)
       RNBDFQ=AMIN1(RUPNSX,AMAX1(-RUPNSX
      2,DFGSP*(AMAX1(ZEROP(NZ,NY,NX),ZH3GB)*VOLWNB
@@ -1671,7 +1671,7 @@ C     UPDATE GASEOUS, AQUEOUS GAS CONTENTS AND CONCENTRATIONS
 C     FROM GASEOUS-AQUEOUS EXCHANGE, SOIL GAS TRANSFERS
 C
       OXYG1=OXYG1-ROXDFQ+ROXYFX
-      OXYS1=OXYS1+ROXDFQ-RUPOSX 
+      OXYS1=OXYS1+ROXDFQ-RUPOSX
       CO2G1=CO2G1-RCODFQ+RCO2FX
       CO2S1=CO2S1+RCODFQ-RCO2SX
       CH4S1=CH4S1+RCHDFQ-RUPCSX
@@ -1692,11 +1692,11 @@ C
 C     R*DF1=root gas exchange between gaseous-aqueous phases
 C     R*FL1=root gas exchange with atmosphere
 C     gas code:CO=CO2,OX=O2,CH=CH4,N2=N2O,NH=NH3,H2=H2
-C     CO2A1,CO2P1=gaseous,aqueous CO2 in root 
-C     OXYA1,OXYP1=gaseous,aqueous O2 in root 
-C     CH4A1,CH4P1=gaseous,aqueous CH4 in root 
-C     Z2OA1,Z2OP1=gaseous,aqueous N2O in root 
-C     ZH3A1,ZH3P1=gaseous,aqueous NH3 in root 
+C     CO2A1,CO2P1=gaseous,aqueous CO2 in root
+C     OXYA1,OXYP1=gaseous,aqueous O2 in root
+C     CH4A1,CH4P1=gaseous,aqueous CH4 in root
+C     Z2OA1,Z2OP1=gaseous,aqueous N2O in root
+C     ZH3A1,ZH3P1=gaseous,aqueous NH3 in root
 C     H2GA1,H2GP1=gaseous,aqueous H2 in root
 C     RTVLW,RTVLP=root aqueous,gaseous volume
 C     VOLW*=RTVLW*gas solubility
@@ -1704,22 +1704,22 @@ C     C*E,C*A1=atmosphere,root gas concentration
 C     DF*A=root-atmosphere gas conductance
 C
       CO2PX=CO2P1+RCO2PX
-      RCODF1=AMAX1(-CO2PX,DFGP*(AMAX1(ZEROP(NZ,NY,NX),CO2A1)*VOLWCA 
+      RCODF1=AMAX1(-CO2PX,DFGP*(AMAX1(ZEROP(NZ,NY,NX),CO2A1)*VOLWCA
      2-CO2PX*RTVLP(N,L,NZ,NY,NX))/(VOLWCA+RTVLP(N,L,NZ,NY,NX)))
       OXYPX=OXYP1-RUPOPX
       ROXDF1=AMAX1(-OXYPX,DFGP*(AMAX1(ZEROP(NZ,NY,NX),OXYA1)*VOLWOA
      2-OXYPX*RTVLP(N,L,NZ,NY,NX))/(VOLWOA+RTVLP(N,L,NZ,NY,NX)))
       CH4PX=CH4P1+RUPCSX
-      RCHDF1=AMAX1(-CH4PX,DFGP*(AMAX1(ZEROP(NZ,NY,NX),CH4A1)*VOLWC4 
+      RCHDF1=AMAX1(-CH4PX,DFGP*(AMAX1(ZEROP(NZ,NY,NX),CH4A1)*VOLWC4
      2-CH4PX*RTVLP(N,L,NZ,NY,NX))/(VOLWC4+RTVLP(N,L,NZ,NY,NX)))
       Z2OPX=Z2OP1+RUPZSX
-      RN2DF1=AMAX1(-Z2OPX,DFGP*(AMAX1(ZEROP(NZ,NY,NX),Z2OA1)*VOLWZA 
+      RN2DF1=AMAX1(-Z2OPX,DFGP*(AMAX1(ZEROP(NZ,NY,NX),Z2OA1)*VOLWZA
      2-Z2OPX*RTVLP(N,L,NZ,NY,NX))/(VOLWZA+RTVLP(N,L,NZ,NY,NX)))
       ZH3PX=ZH3P1+RUPNTX
-      RNHDF1=AMAX1(-ZH3PX,DFGP*(AMAX1(ZEROP(NZ,NY,NX),ZH3A1)*VOLWNA 
+      RNHDF1=AMAX1(-ZH3PX,DFGP*(AMAX1(ZEROP(NZ,NY,NX),ZH3A1)*VOLWNA
      2-ZH3PX*RTVLP(N,L,NZ,NY,NX))/(VOLWNA+RTVLP(N,L,NZ,NY,NX)))
-      H2GPX=H2GP1+RUPHGX 
-      RHGDF1=AMAX1(-H2GPX,DFGP*(AMAX1(ZEROP(NZ,NY,NX),H2GA1)*VOLWH2 
+      H2GPX=H2GP1+RUPHGX
+      RHGDF1=AMAX1(-H2GPX,DFGP*(AMAX1(ZEROP(NZ,NY,NX),H2GA1)*VOLWH2
      2-H2GPX*RTVLP(N,L,NZ,NY,NX))/(VOLWH2+RTVLP(N,L,NZ,NY,NX)))
       RCOFL1=AMIN1(DFCOA,RTVLP(N,L,NZ,NY,NX))*(CCO2E(NY,NX)-CCO2A1)
       ROXFL1=AMIN1(DFOXA,RTVLP(N,L,NZ,NY,NX))*(COXYE(NY,NX)-COXYA1)
@@ -1751,7 +1751,7 @@ C
       Z2OA1=Z2OA1-RN2DF1+RN2FL1
       ZH3A1=ZH3A1-RNHDF1+RNHFL1
       H2GA1=H2GA1-RHGDF1+RHGFL1
-      CO2P1=CO2P1+RCODF1+RCO2SX+RCO2PX 
+      CO2P1=CO2P1+RCODF1+RCO2SX+RCO2PX
       OXYP1=OXYP1+ROXDF1-RUPOPX
       CH4P1=CH4P1+RCHDF1+RUPCSX
       Z2OP1=Z2OP1+RN2DF1+RUPZSX
@@ -1818,25 +1818,25 @@ C
       RUPOXP(N,L,NZ,NY,NX)=RUPOXP(N,L,NZ,NY,NX)+RUPOPX
       ROXSK(M,L,NY,NX)=ROXSK(M,L,NY,NX)+RUPOSX
 C     IF(NZ.EQ.1.AND.L.EQ.7.AND.N.EQ.1)THEN
-C     WRITE(*,5566)'CO2P1',I,J,NX,NY,NZ,L,N,M,MX,RCO2S(N,L,NZ,NY,NX) 
-C    2,RCO2SX,RDFCOS,RDXCOS,RMFCOS,DIFCL,DFGS(M,L,NY,NX) 
+C     WRITE(*,5566)'CO2P1',I,J,NX,NY,NZ,L,N,M,MX,RCO2S(N,L,NZ,NY,NX)
+C    2,RCO2SX,RDFCOS,RDXCOS,RMFCOS,DIFCL,DFGS(M,L,NY,NX)
 C    3,CCO2S1,CCO2P1,RTVLW(N,L,NZ,NY,NX),CO2S1,VOLWMM
 C    4,CO2P1,VOLWSP,PP(NZ,NY,NX),FPQ(N,L,NZ),RCODF1,RCO2PX
 C    5,CO2PX,RTVLP(N,L,NZ,NY,NX),DFGP,VOLWCA,CO2A1
 C    6,XNPD,PORT(N,NZ,NY,NX),TFND(L,NY,NX),RCO2FX
 C    7,RCODFQ,DFGSP,FOXYX,CO2G1,VOLWCO,VOLPMM,THETPM(M,L,NY,NX),THETX
-C    8,ROXYP(N,L,NZ,NY,NX),ROXYY(L,NY,NX) 
-C     WRITE(*,5566)'OXYP1',I,J,NX,NY,NZ,L,N,M,MX,UPMXP*PP(NZ,NY,NX) 
+C    8,ROXYP(N,L,NZ,NY,NX),ROXYY(L,NY,NX)
+C     WRITE(*,5566)'OXYP1',I,J,NX,NY,NZ,L,N,M,MX,UPMXP*PP(NZ,NY,NX)
 C    2,RUPOSX,ROXDFQ,OXYS1,RUPOPX,ROXDF1,OXYP1
-C    3,FOXYX,DFGS(M,L,NY,NX),DFGP,ROXYFX,ROXYLX,ROXFL1 
+C    3,FOXYX,DFGS(M,L,NY,NX),DFGP,ROXYFX,ROXYLX,ROXFL1
 C    3,OXYG1,OXYA1,COXYS1,COXYP1,COXYR,ROXSK(M,L,NY,NX),XS,XR
 C    4,OXYPY,VOLWOA,RTVLP(N,L,NZ,NY,NX),RTVLW(N,L,NZ,NY,NX)
 C    5,DFOXA,COXYE(NY,NX),COXYA1,RUPOXP(N,L,NZ,NY,NX)
 C    6,RUPOXS(N,L,NZ,NY,NX),ROXYP(N,L,NZ,NY,NX),THETPM(M,L,NY,NX)
 C     WRITE(*,5566)'CH4S1',I,J,NX,NY,NZ,L,N,M,MX,CH4S1,RCHDFQ,RUPCSX
-C    2,RDFCHS,RMFCHS,DIFCL,CCH4S1,CCH4P1,CH4P1,CH4PX,RCHDF1,RCHFL1 
-C    3,DFCHA,RTVLP(N,L,NZ,NY,NX),CCH4E(NY,NX),CCH4A1,THETM,CQSGL1,RTARRX 
-C    4,RRADS,FILM(M,L,NY,NX),RRADL(N,L),RRAD2M(N,NZ,NY,NX) 
+C    2,RDFCHS,RMFCHS,DIFCL,CCH4S1,CCH4P1,CH4P1,CH4PX,RCHDF1,RCHFL1
+C    3,DFCHA,RTVLP(N,L,NZ,NY,NX),CCH4E(NY,NX),CCH4A1,THETM,CQSGL1,RTARRX
+C    4,RRADS,FILM(M,L,NY,NX),RRADL(N,L),RRAD2M(N,NZ,NY,NX)
 C    5,RTDNP(N,L,NZ,NY,NX)
 C    4,DFGS(M,L,NY,NX),CH4G1,VOLWCH,CH4S1,VOLPMM,THETPM(M,L,NY,NX)
 5566  FORMAT(A8,9I4,50E12.4)
@@ -1889,7 +1889,7 @@ C     vapor pressure in watsub.f
 C     EFLXC,SFLXC=canopylatent,sensible heat fluxes
 C     RA=canopy boundary layer resistance
 C     OSTR=O2 stress indicator
-C     
+C
       DO 195 K=0,4
       VOLWK=VOLWM(NPH,L,NY,NX)*FOSRH(K,L,NY,NX)
       IF(VOLWK.GT.ZEROS2(NY,NX)
@@ -1921,7 +1921,7 @@ C
       ENDIF
 C     IF((I/10)*10.EQ.I.AND.J.EQ.24.AND.NZ.EQ.1)THEN
 C     WRITE(*,2224)'RDFOMC',I,J,NX,NY,L,NZ,K,N,RDFOMC(N,K,L,NZ,NY,NX)
-C    2,RDFOMN(N,K,L,NZ,NY,NX),RDFOMP(N,K,L,NZ,NY,NX) 
+C    2,RDFOMN(N,K,L,NZ,NY,NX),RDFOMP(N,K,L,NZ,NY,NX)
 C    3,OQC(K,L,NY,NX),OQN(K,L,NY,NX),OQP(K,L,NY,NX)
 C    2,CPOOLR(N,L,NZ,NY,NX),ZPOOLR(N,L,NZ,NY,NX),PPOOLR(N,L,NZ,NY,NX)
 C    3,VOLWM(NPH,L,NY,NX),RTVLW(N,L,NZ,NY,NX),RTAR1X(N,NZ,NY,NX)
@@ -1942,7 +1942,7 @@ C     NUTRIENT UPTAKE
 C
 C     WFR=constraint by O2 consumption on all biological processes
 C     FCUP=limitation to active uptake respiration from CPOOLR
-C     FWSRT=protein concentration relative to 5% 
+C     FWSRT=protein concentration relative to 5%
 C     RTLGP=root,myco length per plant
 C
       IF(WFR(N,L,NZ,NY,NX).GT.ZERO
@@ -1973,7 +1973,7 @@ C     CNH4S=NH4 concentration in non-band
 C     UPMXZH,UPKMZH,UPMNZH=NH4 max uptake,Km,min concn from PFT file
 C     UPWTRP=root water uptake per plant
 C     RMFNH4=soil-root convective NH4 flux per plant in non-band
-C     DIFNH4=soil-root NH4 diffusion per plant in non-band       
+C     DIFNH4=soil-root NH4 diffusion per plant in non-band
 C
       IF(VLNH4(L,NY,NX).GT.ZERO.AND.CNH4S(L,NY,NX)
      2.GT.UPMNZH(N,NZ,NY,NX))THEN
@@ -1985,29 +1985,29 @@ C     AND FROM ROOT SURFACE AREA, C AND N CONSTRAINTS CALCULATED ABOVE
 C
 C     UPMXP,UPMX=max NH4 uptake in non-band unlimited,limited by O2
 C     RTARP=root surface area per plant from grosub.f
-C     FWSRT=protein concentration relative to 5% 
-C     TFN4=temperature function for root growth 
+C     FWSRT=protein concentration relative to 5%
+C     TFN4=temperature function for root growth
 C     FCUP,FZUP=limitn to active uptake respiration from CCPOLR,CZPOLR
 C     WFR=constraint by O2 consumption on all biological processes
 C
-      UPMXP=UPMXZH(N,NZ,NY,NX)*RTARP(N,L,NZ,NY,NX) 
+      UPMXP=UPMXZH(N,NZ,NY,NX)*RTARP(N,L,NZ,NY,NX)
      2*FWSRT*TFN4(L,NZ,NY,NX)*VLNH4(L,NY,NX)*AMIN1(FCUP,FZUP)
-      UPMX=UPMXP*WFR(N,L,NZ,NY,NX) 
+      UPMX=UPMXP*WFR(N,L,NZ,NY,NX)
 C
 C     SOLUTION FOR MASS FLOW + DIFFUSION OF NH4 IN AQUEOUS PHASE OF
 C     SOIL = ACTIVE UPTAKE OF NH4 BY ROOT, CONSTRAINED BY COMPETITION
 C     WITH OTHER ROOT AND MICROBIAL POPULATIONS
 C
 C     RMFNH4=soil-root convective NH4 flux per plant in non-band
-C     DIFNH4=soil-root NH4 diffusion per plant in non-band       
+C     DIFNH4=soil-root NH4 diffusion per plant in non-band
 C     CNH4S=NH4 concentration in non-band
 C     UPMXZH,UPKMZH,UPMNZH=NH4 max uptake,Km,min concn from PFT file
 C     RTKNH4,RTKNHP=NH4 uptake per plant in non-band lmtd,unlmtd by O2
-C     ZNH4M,ZNH4X=minimum,maximum NH4 available for uptake in non-band 
+C     ZNH4M,ZNH4X=minimum,maximum NH4 available for uptake in non-band
 C     FNH4X=fraction of total NH4 uptake in non-band by root,myco populn
 C     RUNNHP,RUPNH4=NH4 uptake in non-band unlimited,limited by NH4
 C     RUONH4=NH4 uptake in non-band unlimited by O2
-C     RUCNH4=NH4 uptake in non-band unlimited by nonstructural C  
+C     RUCNH4=NH4 uptake in non-band unlimited by nonstructural C
 C
       X=(DIFNH4+RMFNH4)*CNH4S(L,NY,NX)
       Y=DIFNH4*UPMNZH(N,NZ,NY,NX)
@@ -2027,11 +2027,11 @@ C
 C     IF(NX.EQ.1.OR.NZ.EQ.4)THEN
 C     WRITE(*,1110)'UPNH4',I,J,NZ,L,N,RUNNHP(N,L,NZ,NY,NX)
 C    2,RUPNH4(N,L,NZ,NY,NX),RTKNH4,RMFNH4,X,Y,B,C,UPMX,UPMXP
-C    2,WFR(N,L,NZ,NY,NX),CNH4S(L,NY,NX),DIFNH,RTDNP(N,L,NZ,NY,NX) 
+C    2,WFR(N,L,NZ,NY,NX),CNH4S(L,NY,NX),DIFNH,RTDNP(N,L,NZ,NY,NX)
 C    2,WTRTD(N,L,NZ,NY,NX),CNH4S(L,NY,NX),RDFOMN(N,L,NZ,NY,NX)
 C    3,CCPOLR(N,L,NZ,NY,NX),CZPOLR(N,L,NZ,NY,NX),CPPOLR(N,L,NZ,NY,NX)
 C    4,THETW(L,NY,NX),TKS(L,NY,NX),RSCS(L,NY,NX),UPMXP,FWSRT
-C    5,FZUP,FCUP,COXYS(L,NY,NX),COXYG(L,NY,NX) 
+C    5,FZUP,FCUP,COXYS(L,NY,NX),COXYG(L,NY,NX)
 C    6,CCPOLP(NZ,NY,NX)
 C    7,CZPOLP(NZ,NY,NX),CPPOLP(NZ,NY,NX),FDBK(1,NZ,NY,NX),PSIST1(L)
 C    2,PSIRT(N,L,NZ,NY,NX),ZPOOLR(N,L,NZ,NY,NX),WTRTL(N,L,NZ,NY,NX)
@@ -2053,7 +2053,7 @@ C     CNH4B=NH4 concentration in band
 C     UPMXZH,UPKMZH,UPMNZH=NH4 max uptake,Km,min concn from PFT file
 C     UPWTRP=root water uptake per plant
 C     RMFNHB=soil-root convective NH4 flux per plant in band
-C     DIFNHB=soil-root NH4 diffusion per plant in band       
+C     DIFNHB=soil-root NH4 diffusion per plant in band
 C
 
       IF(VLNHB(L,NY,NX).GT.ZERO.AND.CNH4B(L,NY,NX)
@@ -2066,29 +2066,29 @@ C     AND FROM ROOT SURFACE AREA, C AND N CONSTRAINTS CALCULATED ABOVE
 C
 C     UPMXP,UPMX=maximum NH4 uptake in band unlimited,limited by O2
 C     RTARP=root surface area per plant from grosub.f
-C     FWSRT=protein concentration relative to 5% 
-C     TFN4=temperature function for root growth 
+C     FWSRT=protein concentration relative to 5%
+C     TFN4=temperature function for root growth
 C     FCUP,FZUP=limitn to active uptake respiration from CCPOLR,CZPOLR
 C     WFR=constraint by O2 consumption on all biological processes
 C
-      UPMXP=UPMXZH(N,NZ,NY,NX)*RTARP(N,L,NZ,NY,NX) 
+      UPMXP=UPMXZH(N,NZ,NY,NX)*RTARP(N,L,NZ,NY,NX)
      2*FWSRT*TFN4(L,NZ,NY,NX)*VLNHB(L,NY,NX)*AMIN1(FCUP,FZUP)
-      UPMX=UPMXP*WFR(N,L,NZ,NY,NX) 
+      UPMX=UPMXP*WFR(N,L,NZ,NY,NX)
 C
 C     SOLUTION FOR MASS FLOW + DIFFUSION OF NH4 IN AQUEOUS PHASE OF
 C     SOIL = ACTIVE UPTAKE OF NH4 BY ROOT, CONSTRAINED BY COMPETITION
 C     WITH OTHER ROOT AND MICROBIAL POPULATIONS
 C
 C     RMFNHB=soil-root convective NH4 flux per plant in band
-C     DIFNHB=soil-root NH4 diffusion per plant in band       
+C     DIFNHB=soil-root NH4 diffusion per plant in band
 C     CNH4B=NH4 concentration in band
 C     UPMXZH,UPKMZH,UPMNZH=NH4 max uptake,Km,min concn from PFT file
 C     RTKNHB,RTKNBP=NH4 uptake per plant in band lmtd,unlmtd by O2
-C     ZNHBM,ZNHBX=minimum,maximum NH4 available for uptake in band 
+C     ZNHBM,ZNHBX=minimum,maximum NH4 available for uptake in band
 C     FNHBX=fraction of total NH4 uptake in band by root,myco populn
 C     RUNNBP,RUPNHB=NH4 uptake in band unlimited,limited by NH4
 C     RUONHB=NH4 uptake in band unlimited by O2
-C     RUCNHB=NH4 uptake in band unlimited by nonstructural C  
+C     RUCNHB=NH4 uptake in band unlimited by nonstructural C
 C
       X=(DIFNHB+RMFNHB)*CNH4B(L,NY,NX)
       Y=DIFNHB*UPMNZH(N,NZ,NY,NX)
@@ -2132,7 +2132,7 @@ C     CNO3S=NO3 concentration in non-band
 C     UPMXZO,UPKMZO,UPMNZO=NO3 max uptake,Km,min concn from PFT file
 C     UPWTRP=root water uptake per plant
 C     RMFNO3=soil-root convective NO3 flux per plant in non-band
-C     DIFNO3=soil-root NO3 diffusion per plant in non-band       
+C     DIFNO3=soil-root NO3 diffusion per plant in non-band
 C
       IF(VLNO3(L,NY,NX).GT.ZERO.AND.CNO3S(L,NY,NX)
      2.GT.UPMNZO(N,NZ,NY,NX))THEN
@@ -2144,29 +2144,29 @@ C     AND FROM ROOT SURFACE AREA, C AND N CONSTRAINTS CALCULATED ABOVE
 C
 C     UPMXP,UPMX=max NO3 uptake in non-band unlimited,limited by O2
 C     RTARP=root surface area per plant from grosub.f
-C     FWSRT=protein concentration relative to 5% 
-C     TFN4=temperature function for root growth 
+C     FWSRT=protein concentration relative to 5%
+C     TFN4=temperature function for root growth
 C     FCUP,FZUP=limitn to active uptake respiration from CCPOLR,CZPOLR
 C     WFR=constraint by O2 consumption on all biological processes
 C
       UPMXP=UPMXZO(N,NZ,NY,NX)*RTARP(N,L,NZ,NY,NX)
-     2*FWSRT*TFN4(L,NZ,NY,NX)*VLNO3(L,NY,NX)*AMIN1(FCUP,FZUP) 
-      UPMX=UPMXP*WFR(N,L,NZ,NY,NX) 
+     2*FWSRT*TFN4(L,NZ,NY,NX)*VLNO3(L,NY,NX)*AMIN1(FCUP,FZUP)
+      UPMX=UPMXP*WFR(N,L,NZ,NY,NX)
 C
 C     SOLUTION FOR MASS FLOW + DIFFUSION OF NO3 IN AQUEOUS PHASE OF
 C     SOIL = ACTIVE UPTAKE OF NO3 BY ROOT, CONSTRAINED BY COMPETITION
 C     WITH OTHER ROOT AND MICROBIAL POPULATIONS
 C
 C     RMFNO3=soil-root convective N03 flux per plant in non-band
-C     DIFNO3=soil-root N03 diffusion per plant in non-band       
+C     DIFNO3=soil-root N03 diffusion per plant in non-band
 C     CNO3S=NO3 concentration in non-band
 C     UPMXZO,UPKMZO,UPMNZO=NO3 max uptake,Km,min concn from PFT file
 C     RTKNO3,RTKNOP=NO3 uptake per plant in non-band lmtd,unlmtd by O2
-C     ZNO3M,ZNO3X=minimum,maximum NO3 available for uptake in non-band 
+C     ZNO3M,ZNO3X=minimum,maximum NO3 available for uptake in non-band
 C     FNO3X=fraction of total NH4 uptake in non-band by root,myco populn
 C     RUNNOP,RUPNO3=NO3 uptake in non-band unlimited,limited by NO3
 C     RUONO3=NO3 uptake in non-band unlimited by O2
-C     RUCNO3=NO3 uptake in non-band unlimited by nonstructural C  
+C     RUCNO3=NO3 uptake in non-band unlimited by nonstructural C
 C
       X=(DIFNO3+RMFNO3)*CNO3S(L,NY,NX)
       Y=DIFNO3*UPMNZO(N,NZ,NY,NX)
@@ -2185,7 +2185,7 @@ C
       RUCNO3(N,L,NZ,NY,NX)=RUPNO3(N,L,NZ,NY,NX)/FCUP
 C     IF(NX.EQ.4.AND.NY.EQ.2)THEN
 C     WRITE(*,1111)'UPNO3',I,J,NZ,L,N,RUPNO3(N,L,NZ,NY,NX),FNO3X
-C    2,ZNO3S(L,NY,NX),ZNO3M,RTDNP(N,L,NZ,NY,NX),RTKNO3,RMFNO3,X,Y,B,C 
+C    2,ZNO3S(L,NY,NX),ZNO3M,RTDNP(N,L,NZ,NY,NX),RTKNO3,RMFNO3,X,Y,B,C
 C    2,UPMX,CNO3S(L,NY,NX),DIFNO,RUONO3(N,L,NZ,NY,NX)
 C    3,CCPOLR(N,L,NZ,NY,NX),CZPOLR(N,L,NZ,NY,NX),CPPOLR(N,L,NZ,NY,NX)
 C    4,THETW(L,NY,NX),TKS(L,NY,NX),RSCS(L,NY,NX),UPMXP,FWSRT
@@ -2210,7 +2210,7 @@ C     CNO3B=NO3 concentration in band
 C     UPMXZO,UPKMZO,UPMNZO=NO3 max uptake,Km,min concn from PFT file
 C     UPWTRP=root water uptake per plant
 C     RMFNOB=soil-root convective NO3 flux per plant in band
-C     DIFNOB=soil-root NO3 diffusion per plant in band       
+C     DIFNOB=soil-root NO3 diffusion per plant in band
 C
 
       IF(VLNOB(L,NY,NX).GT.ZERO.AND.CNO3B(L,NY,NX)
@@ -2223,29 +2223,29 @@ C     AND FROM ROOT SURFACE AREA, C AND N CONSTRAINTS CALCULATED ABOVE
 C
 C     UPMXP,UPMX=maximum NO3 uptake in band unlimited,limited by O2
 C     RTARP=root surface area per plant from grosub.f
-C     FWSRT=protein concentration relative to 5% 
-C     TFN4=temperature function for root growth 
+C     FWSRT=protein concentration relative to 5%
+C     TFN4=temperature function for root growth
 C     FCUP,FZUP=limitn to active uptake respiration from CCPOLR,CZPOLR
 C     WFR=constraint by O2 consumption on all biological processes
 C
       UPMXP=UPMXZO(N,NZ,NY,NX)*RTARP(N,L,NZ,NY,NX)
      2*FWSRT*TFN4(L,NZ,NY,NX)*VLNOB(L,NY,NX)*AMIN1(FCUP,FZUP)
-      UPMX=UPMXP*WFR(N,L,NZ,NY,NX) 
+      UPMX=UPMXP*WFR(N,L,NZ,NY,NX)
 C
 C     SOLUTION FOR MASS FLOW + DIFFUSION OF NO3 IN AQUEOUS PHASE OF
 C     SOIL = ACTIVE UPTAKE OF NO3 BY ROOT, CONSTRAINED BY COMPETITION
 C     WITH OTHER ROOT AND MICROBIAL POPULATIONS
 C
 C     RMFNOB=soil-root convective NO3 flux per plant in band
-C     DIFNOB=soil-root NO3 diffusion per plant in band       
+C     DIFNOB=soil-root NO3 diffusion per plant in band
 C     CNO3B=NH4 concentration in band
 C     UPMXZO,UPKMZO,UPMNZO=NO3 max uptake,Km,min concn from PFT file
 C     RTKNOB,RTKNPB=NO3 uptake per plant in band lmtd,unlmtd by O2
-C     ZNOBM,ZNOBX=minimum,maximum NO3 available for uptake in band 
+C     ZNOBM,ZNOBX=minimum,maximum NO3 available for uptake in band
 C     FNOBX=fraction of total NO3 uptake in band by root,myco populn
 C     RUNNXP,RUPNOB=NO3 uptake in band unlimited,limited by NH4
 C     RUONOB=NO3 uptake in band unlimited by O2
-C     RUCNOB=NO3 uptake in band unlimited by nonstructural C  
+C     RUCNOB=NO3 uptake in band unlimited by nonstructural C
 C
       X=(DIFNOB+RMFNOB)*CNO3B(L,NY,NX)
       Y=DIFNOB*UPMNZO(N,NZ,NY,NX)
@@ -2311,7 +2311,7 @@ C     CH2P4=H2PO4 concentration in non-band
 C     UPMXPO,UPKMPO,UPMNPO=H2PO4 max uptake,Km,min concn from PFT file
 C     UPWTRP=root water uptake per plant
 C     RMFH2P=soil-root convective H2PO4 flux per plant in non-band
-C     DIFH2P=soil-root H2PO4 diffusion per plant in non-band       
+C     DIFH2P=soil-root H2PO4 diffusion per plant in non-band
 C
       IF(VLPO4(L,NY,NX).GT.ZERO.AND.CH2P4(L,NY,NX)
      2.GT.UPMNPO(N,NZ,NY,NX))THEN
@@ -2323,29 +2323,29 @@ C     AND FROM ROOT SURFACE AREA, C AND P CONSTRAINTS CALCULATED ABOVE
 C
 C     UPMXP,UPMX=max H2PO4 uptake in non-band unlimited,limited by O2
 C     RTARP=root surface area per plant from grosub.f
-C     FWSRT=protein concentration relative to 5% 
-C     TFN4=temperature function for root growth 
+C     FWSRT=protein concentration relative to 5%
+C     TFN4=temperature function for root growth
 C     FCUP,FPUP=limitn to active uptake respiration from CCPOLR,CPPOLR
 C     WFR=constraint by O2 consumption on all biological processes
 C
       UPMXP=UPMXPO(N,NZ,NY,NX)*RTARP(N,L,NZ,NY,NX)
      2*FWSRT*TFN4(L,NZ,NY,NX)*VLPO4(L,NY,NX)*AMIN1(FCUP,FPUP)
-      UPMX=UPMXP*WFR(N,L,NZ,NY,NX) 
+      UPMX=UPMXP*WFR(N,L,NZ,NY,NX)
 C
 C     SOLUTION FOR MASS FLOW + DIFFUSION OF H2PO4 IN AQUEOUS PHASE OF
-C     SOIL = ACTIVE UPTAKE OF H2PO4 BY ROOT, CONSTRAINED BY 
+C     SOIL = ACTIVE UPTAKE OF H2PO4 BY ROOT, CONSTRAINED BY
 C     COMPETITION WITH OTHER ROOT AND MICROBIAL POPULATIONS
 C
 C     RMFH2P=soil-root convective H2PO4 flux per plant in non-band
-C     DIFH2P=soil-root H2PO4 diffusion per plant in non-band       
+C     DIFH2P=soil-root H2PO4 diffusion per plant in non-band
 C     CH2P4=H2PO4 concentration in non-band
 C     UPMXPO,UPKMPO,UPMNPO=H2PO4 max uptake,Km,min concn from PFT file
 C     RTKH2P,RTKHPP=H2PO4 uptake per plant in non-band lmtd,unlmtd by O2
-C     H2POM,H2POX=minimum,maximum H2PO4 available for uptake in non-band 
+C     H2POM,H2POX=minimum,maximum H2PO4 available for uptake in non-band
 C     FPO4X=fraction of total H2PO4 uptake in non-band by root,myco populn
 C     RUPP2P,RUPH2P=H2PO4 uptake in non-band unlimited,limited by H2PO4
 C     RUOH2P=H2PO4 uptake in non-band unlimited by O2
-C     RUCH2P=H2PO4 uptake in non-band unlimited by nonstructural C  
+C     RUCH2P=H2PO4 uptake in non-band unlimited by nonstructural C
 C
       X=(DIFH2P+RMFH2P)*CH2P4(L,NY,NX)
       Y=DIFH2P*UPMNPO(N,NZ,NY,NX)
@@ -2369,7 +2369,7 @@ C    3,UPMNPO(N,NZ,NY,NX),RMFH2P,CH2P4(L,NY,NX),UPMXP,WFR(N,L,NZ,NY,NX)
 C    4,FCUP,FZUP,FPUP,UPMXPO(N,NZ,NY,NX),RTARP(N,L,NZ,NY,NX),FWSRT
 C    5,TFN4(L,NZ,NY,NX),DIFFL,CPO4S(L,NY,NX),CPOOLR(N,L,NZ,NY,NX)
 C    6,PPOOLR(N,L,NZ,NY,NX),RTKH2P,PP(NZ,NY,NX)
-C    2,RTLGP(N,L,NZ,NY,NX) 
+C    2,RTLGP(N,L,NZ,NY,NX)
 2223  FORMAT(A8,5I4,40E12.4)
 C     ENDIF
       ELSE
@@ -2386,7 +2386,7 @@ C     CH2P4B=H2PO4 concentration in band
 C     UPMXPO,UPKMPO,UPMNPO=H2PO4 max uptake,Km,min concn from PFT file
 C     UPWTRP=root water uptake per plant
 C     RMFH2B=soil-root convective H2PO4 flux per plant in band
-C     DIFH2B=soil-root H2PO4 diffusion per plant in band       
+C     DIFH2B=soil-root H2PO4 diffusion per plant in band
 C
 
       IF(VLPOB(L,NY,NX).GT.ZERO.AND.CH2P4B(L,NY,NX)
@@ -2399,29 +2399,29 @@ C     AND FROM ROOT SURFACE AREA, C AND N CONSTRAINTS CALCULATED ABOVE
 C
 C     UPMXP,UPMX=maximum H2PO4 uptake in band unlimited,limited by O2
 C     RTARP=root surface area per plant from grosub.f
-C     FWSRT=protein concentration relative to 5% 
-C     TFN4=temperature function for root growth 
+C     FWSRT=protein concentration relative to 5%
+C     TFN4=temperature function for root growth
 C     FCUP,FPUP=limitn to active uptake respiration from CCPOLR,CPPOLR
 C     WFR=constraint by O2 consumption on all biological processes
 C
       UPMXP=UPMXPO(N,NZ,NY,NX)*RTARP(N,L,NZ,NY,NX)
      2*FWSRT*TFN4(L,NZ,NY,NX)*VLPOB(L,NY,NX)*AMIN1(FCUP,FPUP)
-      UPMX=UPMXP*WFR(N,L,NZ,NY,NX) 
+      UPMX=UPMXP*WFR(N,L,NZ,NY,NX)
 C
 C     SOLUTION FOR MASS FLOW + DIFFUSION OF PO4 IN AQUEOUS PHASE OF
 C     SOIL = ACTIVE UPTAKE OF H2PO4 BY ROOT, CONSTRAINED BY COMPETITION
 C     WITH OTHER ROOT AND MICROBIAL POPULATIONS
 C
 C     RMFH2B=soil-root convective H2PO4 flux per plant in band
-C     DIFH2B=soil-root H2PO4 diffusion per plant in band       
+C     DIFH2B=soil-root H2PO4 diffusion per plant in band
 C     CH2P4B=H2PO4 concentration in band
 C     UPMXPO,UPKMPO,UPMNPO=H2PO4 max uptake,Km,min concn from PFT file
 C     RTKH2B,RTKHPB=H2PO4 uptake per plant in band lmtd,unlmtd by O2
-C     H2PXM,H2PXB=minimum,maximum H2PO4 available for uptake in band 
+C     H2PXM,H2PXB=minimum,maximum H2PO4 available for uptake in band
 C     FPOBX=fraction of total H2PO4 uptake in band by root,myco populn
 C     RUPP2B,RUPH2B=H2PO4 uptake in band unlimited,limited by H2PO4
 C     RUOH2B=H2PO4 uptake in band unlimited by O2
-C     RUCH2B=H2PO4 uptake in band unlimited by nonstructural C  
+C     RUCH2B=H2PO4 uptake in band unlimited by nonstructural C
 C
       X=(DIFH2B+RMFH2B)*CH2P4B(L,NY,NX)
       Y=DIFH2B*UPMNPO(N,NZ,NY,NX)
@@ -2452,7 +2452,7 @@ C     CH1P4=HPO4 concentration in non-band
 C     UPMXPO,UPKMPO,UPMNPO=H2PO4 max uptake,Km,min concn from PFT file
 C     UPWTRP=root water uptake per plant
 C     RMFH1P=soil-root convective HPO4 flux per plant in non-band
-C     DIFH1P=soil-root HPO4 diffusion per plant in non-band       
+C     DIFH1P=soil-root HPO4 diffusion per plant in non-band
 C
       IF(VLPO4(L,NY,NX).GT.ZERO.AND.CH1P4(L,NY,NX)
      2.GT.UPMNPO(N,NZ,NY,NX))THEN
@@ -2464,29 +2464,29 @@ C     AND FROM ROOT SURFACE AREA, C AND N CONSTRAINTS CALCULATED ABOVE
 C
 C     UPMXP,UPMX=max HPO4 uptake in non-band unlimited,limited by O2
 C     RTARP=root surface area per plant from grosub.f
-C     FWSRT=protein concentration relative to 5% 
-C     TFN4=temperature function for root growth 
+C     FWSRT=protein concentration relative to 5%
+C     TFN4=temperature function for root growth
 C     FCUP,FPUP=limitn to active uptake respiration from CCPOLR,CPPOLR
 C     WFR=constraint by O2 consumption on all biological processes
 C
       UPMXP=0.1*UPMXPO(N,NZ,NY,NX)*RTARP(N,L,NZ,NY,NX)
      2*FWSRT*TFN4(L,NZ,NY,NX)*VLPO4(L,NY,NX)*AMIN1(FCUP,FPUP)
-      UPMX=UPMXP*WFR(N,L,NZ,NY,NX) 
+      UPMX=UPMXP*WFR(N,L,NZ,NY,NX)
 C
 C     SOLUTION FOR MASS FLOW + DIFFUSION OF HPO4 IN AQUEOUS PHASE OF
 C     SOIL = ACTIVE UPTAKE OF HPO4 BY ROOT, CONSTRAINED BY COMPETITION
 C     WITH OTHER ROOT AND MICROBIAL POPULATIONS
 C
 C     RMFH1P=soil-root convective HPO4 flux per plant in non-band
-C     DIFH1P=soil-root HPO4 diffusion per plant in non-band       
+C     DIFH1P=soil-root HPO4 diffusion per plant in non-band
 C     CH1P4=HPO4 concentration in non-band
 C     UPMXPO,UPKMPO,UPMNPO=H2PO4 max uptake,Km,min concn from PFT file
 C     RTKH1P,RTKHP1=HPO4 uptake per plant in non-band lmtd,unlmtd by O2
-C     H1POM,H1POX=minimum,maximum HPO4 available for uptake in non-band 
+C     H1POM,H1POX=minimum,maximum HPO4 available for uptake in non-band
 C     FP14X=fraction of total HPO4 uptake in non-band by root,myco populn
 C     RUPP1P,RUPH1P=HPO4 uptake in non-band unlimited,limited by HPO4
 C     RUOH1P=HPO4 uptake in non-band unlimited by O2
-C     RUCH1P=HPO4 uptake in non-band unlimited by nonstructural C  
+C     RUCH1P=HPO4 uptake in non-band unlimited by nonstructural C
 C
       X=(DIFH1P+RMFH1P)*CH1P4(L,NY,NX)
       Y=DIFH1P*UPMNPO(N,NZ,NY,NX)
@@ -2510,7 +2510,7 @@ C    3,UPMNPO(N,NZ,NY,NX),RMFH2P,CH2P4(L,NY,NX),UPMXP,WFR(N,L,NZ,NY,NX)
 C    4,FCUP,FZUP,FPUP,UPMXPO(N,NZ,NY,NX),RTARP(N,L,NZ,NY,NX),FWSRT
 C    5,TFN4(L,NZ,NY,NX),DIFFL,FH2P,CPO4S(L,NY,NX),CPOOLR(N,L,NZ,NY,NX)
 C    6,PPOOLR(N,L,NZ,NY,NX),RTKH2P,PP(NZ,NY,NX)
-C    2,RTLGP(N,L,NZ,NY,NX) 
+C    2,RTLGP(N,L,NZ,NY,NX)
 2226  FORMAT(A8,5I4,40E12.4)
 C     ENDIF
       ELSE
@@ -2527,7 +2527,7 @@ C     CH1P4B=HPO4 concentration in band
 C     UPMXPO,UPKMPO,UPMNPO=H2PO4 max uptake,Km,min concn from PFT file
 C     UPWTRP=root water uptake per plant
 C     RMFH1B=soil-root convective HPO4 flux per plant in band
-C     DIFH1B=soil-root HPO4 diffusion per plant in band       
+C     DIFH1B=soil-root HPO4 diffusion per plant in band
 C
       IF(VLPOB(L,NY,NX).GT.ZERO.AND.CH1P4B(L,NY,NX)
      2.GT.UPMNPO(N,NZ,NY,NX))THEN
@@ -2539,30 +2539,30 @@ C     AND FROM ROOT SURFACE AREA, C AND N CONSTRAINTS CALCULATED ABOVE
 C
 C     UPMXP,UPMX=maximum HPO4 uptake in band unlimited,limited by O2
 C     RTARP=root surface area per plant from grosub.f
-C     FWSRT=protein concentration relative to 5% 
-C     TFN4=temperature function for root growth 
+C     FWSRT=protein concentration relative to 5%
+C     TFN4=temperature function for root growth
 C     FCUP,FPUP=limitn to active uptake respiration from CCPOLR,CPPOLR
 C     WFR=constraint by O2 consumption on all biological processes
 C
       UPMXP=0.1*UPMXPO(N,NZ,NY,NX)*RTARP(N,L,NZ,NY,NX)
      2*FWSRT*TFN4(L,NZ,NY,NX)*VLPOB(L,NY,NX)*AMIN1(FCUP,FPUP)
-      UPMX=UPMXP*WFR(N,L,NZ,NY,NX) 
+      UPMX=UPMXP*WFR(N,L,NZ,NY,NX)
 C
 C     SOLUTION FOR MASS FLOW + DIFFUSION OF HPO4 IN AQUEOUS PHASE OF
 C     SOIL = ACTIVE UPTAKE OF HPO4 BY ROOT, CONSTRAINED BY COMPETITION
 C     WITH OTHER ROOT AND MICROBIAL POPULATIONS
 C
 C     RMFH1B=soil-root convective HPO4 flux per plant in band
-C     DIFH1B=soil-root HPO4 diffusion per plant in band       
+C     DIFH1B=soil-root HPO4 diffusion per plant in band
 C     CH1P4B=HPO4 concentration in band
 C     UPMXPO,UPKMPO,UPMNPO=H2PO4 max uptake,Km,min concn from PFT file
 C     RTKH1B,RTKHB1=HPO4 uptake per plant in band lmtd,unlmtd by O2
-C     H1PXM,H1PXB=minimum,maximum HPO4 available for uptake in band 
+C     H1PXM,H1PXB=minimum,maximum HPO4 available for uptake in band
 C     FP1BX=fraction of total HPO4 uptake in band by root,myco populn
 C     RUPP1B,RUPH1B=HPO4 uptake in band unlimited,limited by H2PO4
 C     RUOH1B=HPO4 uptake in band unlimited by O2
-C     RUCH1B=HPO4 uptake in band unlimited by nonstructural C 
-C  
+C     RUCH1B=HPO4 uptake in band unlimited by nonstructural C
+C
       X=(DIFH1B+RMFH2B)*CH1P4B(L,NY,NX)
       Y=DIFH1B*UPMNPO(N,NZ,NY,NX)
       B=-UPMX-DIFH1B*UPKMPO(N,NZ,NY,NX)-X+Y
@@ -2699,10 +2699,10 @@ C     TOTAL C,N,P EXCHANGE BETWEEN ROOTS AND SOIL
 C
 C     RDFOMC,RDFOMN,RDFOMP=nonstructl C,N,P exchange:-ve=exudn,+ve=uptake
 C     UPOMC,UPOMN,UPOMP=net PFT root-soil nonstructl C,N,P exchange
-C     XOQCS,XOQNZ,XOQPS=accumulated change in DOC,DON,DOP from nitro.f 
+C     XOQCS,XOQNZ,XOQPS=accumulated change in DOC,DON,DOP from nitro.f
 C     RUPNH4,RUPNHB,RUPN03,RUPNOB=uptake from non-band,band of NH4,NO3
 C     RUPH2P,RUPH2B,RUPH1P,RUPH1B=uptake from non-band,band of H2PO4,HPO4
-C     UPNH4,UPNO3,UPH2P,UPH1P=PFT uptake of NH4,NO3,H2PO4,HPO4 
+C     UPNH4,UPNO3,UPH2P,UPH1P=PFT uptake of NH4,NO3,H2PO4,HPO4
 C
       DO 295 K=0,4
       UPOMC(NZ,NY,NX)=UPOMC(NZ,NY,NX)+RDFOMC(N,K,L,NZ,NY,NX)
@@ -2712,7 +2712,7 @@ C
       XOQNS(K,L,NY,NX)=XOQNS(K,L,NY,NX)-RDFOMN(N,K,L,NZ,NY,NX)
       XOQPS(K,L,NY,NX)=XOQPS(K,L,NY,NX)-RDFOMP(N,K,L,NZ,NY,NX)
 C     WRITE(*,8766)'XOQCSU',I,J,NX,NY,L,NZ,K,N
-C    2,XOQCS(K,L,NY,NX),RDFOMC(N,K,L,NZ,NY,NX) 
+C    2,XOQCS(K,L,NY,NX),RDFOMC(N,K,L,NZ,NY,NX)
 8766  FORMAT(A8,8I4,12E12.4)
 295   CONTINUE
       UPNH4(NZ,NY,NX)=UPNH4(NZ,NY,NX)+RUPNH4(N,L,NZ,NY,NX)
@@ -2725,7 +2725,7 @@ C    2,XOQCS(K,L,NY,NX),RDFOMC(N,K,L,NZ,NY,NX)
      2+RUPH1B(N,L,NZ,NY,NX)
 C     IF(J.EQ.12)THEN
 C     WRITE(*,8765)'PLANT',I,J,NX,NY,L,NZ,N,TFOXYX,TFNH4X
-C    2,TFNO3X,TFPO4X,TFNHBX,TFNOBX,TFPOBX 
+C    2,TFNO3X,TFPO4X,TFNHBX,TFNOBX,TFPOBX
 8765  FORMAT(A8,7I4,7F15.6)
 C     ENDIF
 950   CONTINUE
@@ -2743,4 +2743,3 @@ C     ENDIF
 9995  CONTINUE
       RETURN
       END
-
