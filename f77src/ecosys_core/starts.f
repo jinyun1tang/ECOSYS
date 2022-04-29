@@ -1519,16 +1519,6 @@ C
       VHCM(0,NY,NX)=0.0
       VOLAI(0,NY,NX)=0.0
 
-      totvolw=0.
-      DO L=NUM(NY,NX),NL(NY,NX)
-      totvolw=totvolw+VOLW(L,NY,NX)
-      ENDDO
-      if(totvolw<ZERO)then
-      write(*,*)'starts.f: model quit at zero water content'
-     2//' for whole soil column'
-      write(*,*)'check setup in opt file or soil file'
-      stop
-      endif
 9890  CONTINUE
 9895  CONTINUE
       RETURN

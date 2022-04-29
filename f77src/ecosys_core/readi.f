@@ -60,7 +60,7 @@ C     RCHGNUG,RCHGEUG,RCHGSUG,RCHGWUG=bound condns for N,E,S,W subsurf flow
 C     RCHGNTG,RCHGETG,RCHGSTG,RCHGWTG=N,E,S,W distance to water table (m)
 C     RCHGDG=lower boundary conditions for water flow
 C     DHI=width of each W-E landscape column
-C     DVI=width of each N-S landscape row  
+C     DVI=width of each N-S landscape row
 C
       READ(1,*)(datav(jj),jj=1,4)
 	  ALATG=datav(1)
@@ -70,7 +70,7 @@ C
 C      READ(1,*)ALATG,ALTIG,ATCAG,IDTBLG
       READ(1,*)OXYEG,Z2GEG,CO2EIG,CH4EG,Z2OEG,ZNH3EG
       READ(1,*)IETYPG,ISALTG,IERSNG,NCNG,DTBLIG,DTBLDIG,DTBLGG
-      READ(1,*)RCHQNG,RCHQEG,RCHQSG,RCHQWG,RCHGNUG,RCHGEUG,RCHGSUG 
+      READ(1,*)RCHQNG,RCHQEG,RCHQSG,RCHQWG,RCHGNUG,RCHGEUG,RCHGSUG
      2,RCHGWUG,RCHGNTG,RCHGETG,RCHGSTG,RCHGWTG,RCHGDG
       READ(1,*)(DHI(NX),NX=1,NHE)
       READ(1,*)(DVI(NY),NY=1,NVS)
@@ -136,7 +136,7 @@ C
 C     READ TOPOGRAPHY DATA AND SOIL FILE NAME FOR EACH GRID CELL
 C
 C     for each unit within the landscape:
-C     NH1,NV1,NH2,NV2=NW,SE column,row 
+C     NH1,NV1,NH2,NV2=NW,SE column,row
 C     ASPX=N,E,S,W aspect (o)
 C     SL1,SL2=EW,NS slope (o)
 C     DPTHSX=initial snowpack depth
@@ -162,16 +162,16 @@ C
       ASP(NY,NX)=450.0-ASP(NY,NX)
       IF(ASP(NY,NX).GE.360.0)ASP(NY,NX)=ASP(NY,NX)-360.0
 C
-C     SURFACE PROPERTIES 
+C     SURFACE PROPERTIES
 C
 C     PSIFC,PSIWP=water potentials at field capacity,wilting point (MPa)
 C     ALBS=wet soil albedo
 C     PH=litter pH
 C     RSC,RSC,RSP=C,N,P in fine(1,0),woody(0,0),manure(2,0) surface litter (g m-2)
-C     IXTYP=surface litter type:1=plant,2=manure 
+C     IXTYP=surface litter type:1=plant,2=manure
 C     NUI,NJ=number of soil surface layer,maximum rooting layer
 C     NL1,NL2=number of additional layers below NJ with,without data in file
-C     ISOILR=natural(0),reconstructed(1) soil profile 
+C     ISOILR=natural(0),reconstructed(1) soil profile
 C
 C      READ(9,*)PSIFC(NY,NX),PSIWP(NY,NX),ALBS(NY,NX),PH(0,NY,NX)
 C     2,RSC(1,0,NY,NX),RSN(1,0,NY,NX),RSP(1,0,NY,NX)
@@ -204,7 +204,7 @@ C     6,NUI(NY,NX),NJ(NY,NX),NL1,NL2,ISOILR(NY,NX)
       NU(NY,NX)=NUI(NY,NX)
       NK(NY,NX)=NJ(NY,NX)+1
       NM(NY,NX)=NJ(NY,NX)+NL1
-      NLI(NY,NX)=NM(NY,NX)+NL2 
+      NLI(NY,NX)=NM(NY,NX)+NL2
       NL(NY,NX)=NLI(NY,NX)
 C
 C     PHYSICAL PROPERTIES
@@ -213,6 +213,13 @@ C     CDPTH=depth to bottom (m)
 C     BKDSI=initial bulk density (Mg m-3,0=water)
 C
       READ(9,*)(CDPTH(L,NY,NX),L=NU(NY,NX),NM(NY,NX))
+      DO L=NU(NY,NX),NM(NY,NX)
+        if(CDPTH(L,NY,NX)<ZERO)then
+          write(*,*)'not sufficient input data in line 2'//
+     2'of the soil file'
+          stop
+        endif
+      ENDDO
       READ(9,*)(BKDSI(L,NY,NX),L=NU(NY,NX),NM(NY,NX))
 C
 C     HYDROLOGIC PROPERTIES
@@ -508,7 +515,7 @@ C     CEC,AEC=cation,anion exchange capacity converted to mol Mg-1
 C     CNH4...=solute concentrations converted to mol Mg-1
 C
       DO 28 L=1,NL(NY,NX)
-C     BKDSI(L,NY,NX)=BKDSI(L,NY,NX)/(1.0-FHOL(L,NY,NX)) 
+C     BKDSI(L,NY,NX)=BKDSI(L,NY,NX)/(1.0-FHOL(L,NY,NX))
       BKDS(L,NY,NX)=BKDSI(L,NY,NX)
       IF(BKDS(L,NY,NX).EQ.0.0)FHOL(L,NY,NX)=0.0
       FMPR(L,NY,NX)=(1.0-ROCK(L,NY,NX))*(1.0-FHOL(L,NY,NX))
@@ -590,6 +597,3 @@ C     WRITE(*,2223)'NVS',NY,NVN,NVS,NHE,NL(NY,NHE)
       IOLD=0
       RETURN
       END
-
-
-
