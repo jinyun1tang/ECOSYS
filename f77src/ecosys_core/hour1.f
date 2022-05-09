@@ -2886,6 +2886,8 @@ C
       DZL=ZL(L-1,NY,NX)-ZL(L-2,NY,NX)
       IF(ARX.GT.ZEROS(NY,NX))THEN
       ZL1(L-1,NY,NX)=ZL(L-1,NY,NX)-0.5*AMIN1(1.0,(ART-ARL)/ARX)*DZL
+      ELSE
+      ZL1(L-1,NY,NX)=ZL(L-1,NY,NX)
       ENDIF
       ELSE
       ZL1(L-1,NY,NX)=ZL(L-1,NY,NX)
