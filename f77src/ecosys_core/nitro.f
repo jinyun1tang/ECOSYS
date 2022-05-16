@@ -30,9 +30,9 @@ C
      4,SPOSC(4,0:4),RDORC(2,0:4),RDORN(2,0:4),RDORP(2,0:4),SPORC(2)
      5,RDOHC(0:4),RDOHN(0:4),RDOHP(0:4),RDOHA(0:4),CSORP(0:4),ZSORP(0:4)
      6,PSORP(0:4),CSORPA(0:4),OSRH(0:4),RUPOX(7,0:5),RGN2F(7,0:5)
-     8,RGOMO(7,0:5),ROXYM(7,0:5),ROXYP(7,0:5),ROXYO(7,0:5) 
-     9,RDNO3(7,0:5),RDNOB(7,0:5),RDNO2(7,0:5),RDN2B(7,0:5),RDN2O(7,0:5) 
-     1,RGOMD(7,0:5),RMOMC(2,7,0:5),RINH4(7,0:5),RINO3(7,0:5) 
+     8,RGOMO(7,0:5),ROXYM(7,0:5),ROXYP(7,0:5),ROXYO(7,0:5)
+     9,RDNO3(7,0:5),RDNOB(7,0:5),RDNO2(7,0:5),RDN2B(7,0:5),RDN2O(7,0:5)
+     1,RGOMD(7,0:5),RMOMC(2,7,0:5),RINH4(7,0:5),RINO3(7,0:5)
      2,RIPO4(7,0:5),RINB4(7,0:5),RINB3(7,0:5),RIPOB(7,0:5),FOMK(7,0:5)
      3,RDOMC(2,7,0:5),RDOMN(2,7,0:5),RDOMP(2,7,0:5),RHOMC(2,7,0:5)
      4,RHOMN(2,7,0:5),RHOMP(2,7,0:5),RCOMC(2,7,0:5),RCOMN(2,7,0:5)
@@ -40,50 +40,50 @@ C
      6,CGOMP(7,0:5),RDMMC(2,7,0:5),RHMMC(2,7,0:5),RCMMC(2,7,0:5)
      7,RDMMN(2,7,0:5),RHMMN(2,7,0:5),RCMMN(2,7,0:5),RDMMP(2,7,0:5)
      8,RHMMP(2,7,0:5),RCMMP(2,7,0:5),RCCMC(2,7,0:4)
-     9,RCCMN(2,7,0:4),RCCMP(2,7,0:4),RN2FX(7,0:5),TOMK(0:5) 
-     1,TONK(0:5),TOPK(0:5),SPOMC(2),OMC2(7,0:5),TFNG(7,0:5),TFNR(7,0:5) 
+     9,RCCMN(2,7,0:4),RCCMP(2,7,0:4),RN2FX(7,0:5),TOMK(0:5)
+     1,TONK(0:5),TOPK(0:5),SPOMC(2),OMC2(7,0:5),TFNG(7,0:5),TFNR(7,0:5)
      2,OMN2(7,0:5),FOM2(7,0:5),FOCA(0:4),FOAA(0:4),RXOMC(2,7,0:5)
      3,RXOMN(2,7,0:5),RXOMP(2,7,0:5),R3OMC(2,7,0:5),R3OMN(2,7,0:5)
-     4,R3OMP(2,7,0:5),RXMMC(2,7,0:5),RXMMN(2,7,0:5),RXMMP(2,7,0:5) 
-     4,R3MMC(2,7,0:5),R3MMN(2,7,0:5),R3MMP(2,7,0:5),WFN(7,0:5)  
-      DIMENSION CGOQC(7,0:5),CGOAC(7,0:5),ROQCK(0:4),XOQCK(0:4)  
+     4,R3OMP(2,7,0:5),RXMMC(2,7,0:5),RXMMN(2,7,0:5),RXMMP(2,7,0:5)
+     4,R3MMC(2,7,0:5),R3MMN(2,7,0:5),R3MMP(2,7,0:5),WFN(7,0:5)
+      DIMENSION CGOQC(7,0:5),CGOAC(7,0:5),ROQCK(0:4),XOQCK(0:4)
      2,EN2F(7),ORCT(0:4),OSCT(0:4),OSAT(0:4),ZNH4T(0:JZ),ZNO3T(0:JZ)
      3,ZNO2T(0:JZ),H2P4T(0:JZ),RINH4R(7,0:5),RINO3R(7,0:5)
      4,RIPO4R(7,0:5),FNH4XR(7,0:5),FNO3XR(7,0:5),FPO4XR(7,0:5)
      5,RGOMY(7,0:5),CNQ(0:4),CPQ(0:4),CNH(0:4),CPH(0:4)
-     6,CNS(4,0:4),CPS(4,0:4),ROQCD(7,0:4),FORC(0:5),SPOMK(2),RMOMK(2) 
-     8,CGOMS(2,7,0:5),CGONS(2,7,0:5),CGOPS(2,7,0:5),H1P4T(0:JZ) 
-     1,TONX(0:5),TOPX(0:5),FCNK(0:4),FCPK(0:4),FP14XR(7,0:5) 
+     6,CNS(4,0:4),CPS(4,0:4),ROQCD(7,0:4),FORC(0:5),SPOMK(2),RMOMK(2)
+     8,CGOMS(2,7,0:5),CGONS(2,7,0:5),CGOPS(2,7,0:5),H1P4T(0:JZ)
+     1,TONX(0:5),TOPX(0:5),FCNK(0:4),FCPK(0:4),FP14XR(7,0:5)
      2,RCO2X(7,0:5),RCH3X(7,0:5),RCH4X(7,0:5),RVOXA(7),RVOXB(7)
      2,XOQCZ(0:4),XOQNZ(0:4),XOQPZ(0:4),XOQAZ(0:4)
-     3,XOMCZ(3,7,0:4),XOMNZ(3,7,0:4),XOMPZ(3,7,0:4)    
+     3,XOMCZ(3,7,0:4),XOMNZ(3,7,0:4),XOMPZ(3,7,0:4)
      4,FCN(7,0:5),FCP(7,0:5),FCNP(7,0:5),RIP14(7,0:5),RIP1B(7,0:5)
-     5,TCGOQC(0:5),TCGOAC(0:5),TCGOMN(0:5),TCGOMP(0:5) 
-     6,TRN2ON(JY,JX),TRN2OD(JY,JX),TRN2GD(JY,JX),RIP14R(7,0:5) 
-      DIMENSION ONL(4,0:4),OPL(4,0:4),EFIRE(2,21:22),DOSA(0:4) 
+     5,TCGOQC(0:5),TCGOAC(0:5),TCGOMN(0:5),TCGOMP(0:5)
+     6,TRN2ON(JY,JX),TRN2OD(JY,JX),TRN2GD(JY,JX),RIP14R(7,0:5)
+      DIMENSION ONL(4,0:4),OPL(4,0:4),EFIRE(2,21:22),DOSA(0:4)
 C
 C     SUBSTRATE DECOMPOSITION BY MICROBIAL POPULATIONS
 C
 C     ORAD=microbial radius (m), BIOS=microbial density (n m-3)
-C     BIOA=microbial surface area (m2 m-3), DCKI=inhibition of 
+C     BIOA=microbial surface area (m2 m-3), DCKI=inhibition of
 C     decomposition by microbial concentration (g C m-3)
 C     RCCX=maximum remobilization of microbial N (-)
 C     RCCY=maximum remobilization of microbial P (-)
 C     RCCZ, RCCY = minimum, maximum remobilization of microbial C (-)
 C     FPRIM, FPRIMM=fraction of nonstructural, microbial C,N,P
-C     transferred with priming (-), OMGR=rate constant for 
+C     transferred with priming (-), OMGR=rate constant for
 C     transferring nonstructural to structural microbial C (h-1)
 C     OQKI=DOC product inhibition constant for decomposition (g C m-3)
 C     H2KI=H2 product inhibition for methanogenesis (g H m-3)
 C     COMKI, COMKM= Km to slow microbial decomposition, maintenance
 C     respiration with low microbial C (g micr C g-1 subs C)
-C     CKC=controls C remobilization of microbial C (g C g-1 C)   
+C     CKC=controls C remobilization of microbial C (g C g-1 C)
 C     FOSCZ0, FOSCZL=rate constants for mixing surface (0) and
-C     subsurface (L) litter (h-1),FMN=minimum ratio of total 
+C     subsurface (L) litter (h-1),FMN=minimum ratio of total
 C     biological demand for any substrate by any microbial population
 C     DCKM0, DCKML=Km for SOC decomposition (g C g-1 soil)
 C
-      PARAMETER (ORAD=1.0E-06,BIOS=1.0E-06/(4.19*ORAD**3) 
+      PARAMETER (ORAD=1.0E-06,BIOS=1.0E-06/(4.19*ORAD**3)
      2,BIOA=BIOS*12.57*ORAD**2,DCKI=2.5,RCCX=0.833
      3,RCCQ=0.833,RCCZ=0.167,RCCY=0.833,FPRIM=5.0E-02,FPRIMM=1.0E-06
      4,OMGR=2.5E-01,OQKI=1.2E+03,H2KI=1.0,OAKI=12.0,COMKI=1.0E-03
@@ -106,22 +106,22 @@ C        H=NH4 by nitrifiers, N=NO2 by nitrifiers
 C        3=NO3 by denitrifiers, 2=NO2 by denitrifiers
 C        1=N2O uptake by denitrifiers
 C     Z4*=NH4 uptake kinetics by all MFTs(g N m-2 h-1, g N m-3)
-C       MX=maximum uptake rate, KU=Km, MN= minimum concentration  
+C       MX=maximum uptake rate, KU=Km, MN= minimum concentration
 C     ZO*=NO3 uptake kinetics by all MFTs(g N m-2 h-1, g N m-3)
-C       MX=maximum uptake rate, KU=Km, MN= minimum concentration  
+C       MX=maximum uptake rate, KU=Km, MN= minimum concentration
 C     HP*=H2PO4 uptake kinetics by all MFTs(g P m-2 h-1, g P m-3)
 C       MX=maximum uptake rate, KU=Km, MN= minimum concentration
 C     ZFKM=Km for N2 uptake by diazotrophs (g N m-3)
-C     H2KM=Km for H2 uptake by hydrogenotrophic methanogens (g H m-3)  
+C     H2KM=Km for H2 uptake by hydrogenotrophic methanogens (g H m-3)
 C     ECNH=efficiency CO2 conversion to biomass by ammonia oxidizers
 C     ECNO=efficiency CO2 conversion to biomass by nitrite oxidizers
 C     ECHO=efficiency CO2 conversion to biomass by methane oxidizers
 C     ECN3,ECN2,ECN1=N2:O2 ratios for e- transfers to NO3, NO2 and N2O
 C     by denitrifiers, RNFNI=parameter for nitrification inhibition
-C     ZHKI=inhibition of nitrification inhibition by NH3 (g N m-3) 
+C     ZHKI=inhibition of nitrification inhibition by NH3 (g N m-3)
 C     VMKI=product inhibn for NOx reduction by denitrifiers(g N m-3)
-C     VHKI=product inhibn for NH3 oxidation by nitrifiers (g N m-3)  
-C     OXKA=Km for O2 uptake by nitrifiers(g O m-3)   
+C     VHKI=product inhibn for NH3 oxidation by nitrifiers (g N m-3)
+C     OXKA=Km for O2 uptake by nitrifiers(g O m-3)
 C
       PARAMETER (VMXO=0.125,VMXF=0.125,VMXM=0.125,VMXH=0.375
      2,VMXN=0.25,VMX4=0.375,VMXC=0.125,OQKM=1.2E+01,OQKA=1.2E+01
@@ -157,7 +157,7 @@ C
      6,ENFX=1.0/(1.0+GO2X/EOMN),ENOX=1.0/(1.0+GNOX/EOMC)
      7,EO2A=1.0/(1.0+GO2A/EOMC))
 C
-C     SORPTION COEFFICIENTS 
+C     SORPTION COEFFICIENTS
 C
       PARAMETER (TSORP=0.5,HSORP=1.0)
 C
@@ -165,11 +165,11 @@ C     SPECIFIC DECOMPOSITION RATES
 C
 C     DOSA=rate constant for litter colonization by heterotrophs (g C g-1 C)
 C     SP*= specific decomposition rate constant (g subs. C g-1 micr. C)
-C       OHC=adsorbed SOC, OHA=adsorbed acetate, OSC=SOC 
+C       OHC=adsorbed SOC, OHA=adsorbed acetate, OSC=SOC
 C       (K=0,M=1,4 woody litter, K=1,M=1,4 non-woody litter,
 C       K=2,M=1,4 manure, K=3,M=1,1 POC, K=4,M=1,2 humus)
 C       ORC (M=1,2) microbial residue, OMC (M=1,2) microbial biomass
-C     RMOM=specific maintenance respiration (g C g-1 N h-1)  
+C     RMOM=specific maintenance respiration (g C g-1 N h-1)
 C
       PARAMETER (SPOHC=0.25,SPOHA=0.25,RMOM=0.010)
       DATA DOSA/0.25E-03,0.25,0.25,0.25,0.25/
@@ -234,7 +234,7 @@ C     8.313,710.0=gas constant,enthalpy
 C     62500=activation energy
 C     197500,195000 low temp inactivation for growth,maintenance
 C     222500,232500 high temp inactivation for growth,maintenance
-C     TFNX,TFNY=temperature function for growth,maintenance respiration 
+C     TFNX,TFNY=temperature function for growth,maintenance respiration
 C
       TKSO=TKS(L,NY,NX)+OFFSET(NY,NX)
       RTK=8.3143*TKSO
@@ -295,7 +295,7 @@ C     ELSE
       FH2PB=VLPOB(L,NY,NX)
 C     ENDIF
 C
-C     CCO2S=aqueous CO2 concentration    
+C     CCO2S=aqueous CO2 concentration
 C
       XCO2=CCO2S(L,NY,NX)/(CCO2S(L,NY,NX)+CCKM)
 C
@@ -351,13 +351,13 @@ C     IF((I/30)*30.EQ.I.AND.J.EQ.15.AND.L.EQ.0)THEN
 C     WRITE(*,861)'OSRH',I,J,NX,NY,L,K,OSRH(K),OSCT(K)
 C    2,OSAT(K),ORCT(K),OHC(K,L,NY,NX),OHA(K,L,NY,NX)
 861   FORMAT(A8,6I4,20E12.4)
-C     ENDIF      
+C     ENDIF
 860   CONTINUE
       TSRH=TOSA+TORC+TOHC
 C
 C     C:N AND C:P RATIOS OF TOTAL BIOMASS
 C     CNOMA,CPOMA=N,P contents of active biomass OMA
-C     FCN,FCP=effects of N,P limitations on biomass activity 
+C     FCN,FCP=effects of N,P limitations on biomass activity
 C
       TOMA=0.0
       TOMN=0.0
@@ -426,7 +426,7 @@ C     DOC CONCENTRATIONS
 C
 C     COQC,COQA=aqueous DOC,acetate concentrations
 C     VOLWM=soil water content, FOSRH=fraction of total SOC
-C     occupied by each substrate complex K 
+C     occupied by each substrate complex K
 C
       IF(VOLWM(NPH,L,NY,NX).GT.ZEROS2(NY,NX))THEN
       IF(FOSRH(K,L,NY,NX).GT.ZERO)THEN
@@ -466,7 +466,7 @@ C
       ENDIF
 790   CONTINUE
 C
-C     nitrous acid concn CHNO2 and energy yield of hydrogenotrophic 
+C     nitrous acid concn CHNO2 and energy yield of hydrogenotrophic
 C     methanogenesis GH2X at ambient H2 concentration CH2GS
 C
       CHY1=AMAX1(ZERO,10.0**(-(PH(L,NY,NX)-3.0)))
@@ -511,7 +511,7 @@ C
       IF(N.EQ.3)THEN
 C
 C     WFNG=water potential (PSISM) effect on microbial respiration
-C     OXKX=Km for O2 uptake 
+C     OXKX=Km for O2 uptake
 C     OXKM=Km for heterotrophic O2 uptake set in starts.f
 C     TFNG=combined temp and water stress effect on growth respiration
 C     TFNR=temperature effect on maintenance respiration
@@ -549,7 +549,7 @@ C
 C
 C     ADJUST MCROBIAL GROWTH AND DECOMPOSITION RATES FOR BIOMASS
 C
-C     COMC=microbial C concentration relative to substrate 
+C     COMC=microbial C concentration relative to substrate
 C     SPOMK=effect of microbial C concentration on microbial decay
 C     RMOMK=effect of microbial C concentration on maintenance respn
 C
@@ -566,14 +566,14 @@ C
 770   CONTINUE
       ENDIF
 C
-C     FACTORS CONSTRAINING DOC, ACETATE, O2, NH4, NO3, PO4 UPTAKE 
+C     FACTORS CONSTRAINING DOC, ACETATE, O2, NH4, NO3, PO4 UPTAKE
 C     AMONG COMPETING MICROBIAL AND ROOT POPULATIONS IN SOIL LAYERS
 C
 C     F*=fraction of substrate uptake relative to total uptake from
 C     previous hour. OXYX=O2, NH4X=NH4 non-band, NB4X=NH4 band
 C     NO3X=NO3 non-band, NB3X=NO3 band, PO4X=H2PO4 non-band
 C     POBX=H2PO4 band,P14X=HPO4 non-band, P1BX=HPO4 band, OQC=DOC
-C     oxidation, OQA=acetate oxidation  
+C     oxidation, OQA=acetate oxidation
 C
       IF(ROXYY(L,NY,NX).GT.ZEROS(NY,NX))THEN
       FOXYX=AMAX1(FMN,ROXYS(N,K,L,NY,NX)/ROXYY(L,NY,NX))
@@ -717,18 +717,18 @@ C     FCNP=N,P limitation,VMXO=specific respiration rate
 C     WFNG=water stress effect, OMA=active biomass
 C     TFNX=temp stress effect,FOQC,FOQA=OQC,OQA limitation
 C     RGOMP=O2-unlimited respiration of DOC+DOA
-C     RGOCP,RGOAP,RGOMP=O2-unlimited respiration of DOC, DOA, DOC+DOA    
+C     RGOCP,RGOAP,RGOMP=O2-unlimited respiration of DOC, DOA, DOC+DOA
 C
       FSBSTC=COQC(K,L,NY,NX)/(COQC(K,L,NY,NX)+OQKM)
       FSBSTA=COQA(K,L,NY,NX)/(COQA(K,L,NY,NX)+OQKA)
       FSBST=FOCA(K)*FSBSTC+FOAA(K)*FSBSTA
-      RGOCY=AMAX1(0.0,FCNP(N,K)*VMXO*WFNG*OMA(N,K)) 
-      RGOCZ=RGOCY*FSBSTC*FOCA(K)*TFNX 
-      RGOAZ=RGOCY*FSBSTA*FOAA(K)*TFNX 
+      RGOCY=AMAX1(0.0,FCNP(N,K)*VMXO*WFNG*OMA(N,K))
+      RGOCZ=RGOCY*FSBSTC*FOCA(K)*TFNX
+      RGOAZ=RGOCY*FSBSTA*FOAA(K)*TFNX
       RGOCX=AMAX1(0.0,OQC(K,L,NY,NX)*FOQC*EO2Q)
       RGOAX=AMAX1(0.0,OQA(K,L,NY,NX)*FOQA*EO2A)
-      RGOCP=AMIN1(RGOCX,RGOCZ) 
-      RGOAP=AMIN1(RGOAX,RGOAZ) 
+      RGOCP=AMIN1(RGOCX,RGOCZ)
+      RGOAP=AMIN1(RGOAX,RGOAZ)
       RGOMP=RGOCP+RGOAP
       IF(RGOMP.GT.ZEROS(NY,NX))THEN
       FGOCP=RGOCP/RGOMP
@@ -744,7 +744,7 @@ C
 C     ECHZ=growth respiration yield
 C     ROXYM,ROXYP,ROXYS=O2 demand from DOC,DOA oxidation
 C     ROQCS,ROQAS=DOC,DOA demand from DOC,DOA oxidation
-C     ROQCD=microbial respiration used to represent microbial activity 
+C     ROQCD=microbial respiration used to represent microbial activity
 C
       ECHZ=EO2Q*FGOCP+EO2A*FGOAP
       ROXYM(N,K)=2.667*RGOMP
@@ -753,11 +753,11 @@ C
       ROQCSX=ROQCS(N,K,L,NY,NX)
       ROQASX=ROQAS(N,K,L,NY,NX)
       ROXYS(N,K,L,NY,NX)=ROXYP(N,K)
-      ROQCS(N,K,L,NY,NX)=RGOCZ 
-      ROQAS(N,K,L,NY,NX)=RGOAZ 
-      ROQCD(N,K)=RGOCY 
+      ROQCS(N,K,L,NY,NX)=RGOCZ
+      ROQAS(N,K,L,NY,NX)=RGOAZ
+      ROQCD(N,K)=RGOCY
 C     IF((I/1)*1.EQ.I.AND.J.EQ.15.AND.L.EQ.0)THEN
-C     WRITE(*,5555)'RGOMP',I,J,NX,NY,L,K,N,RGOMP,RGOCX,RGOAX,RGOCZ 
+C     WRITE(*,5555)'RGOMP',I,J,NX,NY,L,K,N,RGOMP,RGOCX,RGOAX,RGOCZ
 C    2,RGOAZ,RGOCX,RGOAX,FCNP(N,K),TFNG(N,K),VMXO,OMA(N,K),OSRH(K)
 C    2,FOQC,FOQA,COQC(K,L,NY,NX),OQC(K,L,NY,NX),EO2Q,TKS(L,NY,NX)
 C    3,COXYS(L,NY,NX),OQKM,OMC(1,N,K,L,NY,NX),OMC(2,N,K,L,NY,NX)
@@ -771,17 +771,17 @@ C
 C     RESPIRATION BY HETEROTROPHIC ANAEROBES:
 C     N=(4)ACETOGENIC FERMENTERS (7) ACETOGENIC N2 FIXERS
 C
-C     ENERGY YIELD FROM FERMENTATION DEPENDS ON H2 AND 
+C     ENERGY YIELD FROM FERMENTATION DEPENDS ON H2 AND
 C     ACETATE CONCENTRATION
 C
 C     GH2F=energy yield of acetotrophic methanogenesis per g C
 C     GHAX=H2 effect on energy yield of fermentation
 C     GOAX=acetate effect on energy yield of fermentation
-C     ECHZ=growth respiration efficiency of fermentation 
+C     ECHZ=growth respiration efficiency of fermentation
 C
       ELSEIF(N.EQ.4.OR.N.EQ.7)THEN
       GH2F=GH2X/72.0
-      GOAX=8.3143E-03*TKS(L,NY,NX) 
+      GOAX=8.3143E-03*TKS(L,NY,NX)
      2*LOG((AMAX1(ZERO,COQA(K,L,NY,NX))/OAKI)**2)
       GOAF=GOAX/72.0
       GHAX=GH2F+GOAF
@@ -793,24 +793,24 @@ C
      2/(1.0+AMAX1(0.0,(GCHX-GHAX))/EOMN)))
       ENDIF
 C
-C     RESPIRATION RATES BY HETEROTROPHIC ANAEROBES 'RGOMP' FROM 
+C     RESPIRATION RATES BY HETEROTROPHIC ANAEROBES 'RGOMP' FROM
 C     SPECIFIC OXIDATION RATE, ACTIVE BIOMASS, DOC CONCENTRATION,
-C     MICROBIAL C:N:P FACTOR, AND TEMPERATURE FOLLOWED BY POTENTIAL 
-C     RESPIRATION RATES 'RGOMP' WITH UNLIMITED SUBSTRATE USED FOR 
+C     MICROBIAL C:N:P FACTOR, AND TEMPERATURE FOLLOWED BY POTENTIAL
+C     RESPIRATION RATES 'RGOMP' WITH UNLIMITED SUBSTRATE USED FOR
 C     MICROBIAL COMPETITION FACTOR
 C
 C     OXYI=O2 inhibition of fermentation
 C     FCNP=N,P limitation on respiration
 C     VMXF=maximum respiration rate by fermenters
 C     WFNG=water stress effect on respiration
-C     OMA=active fermenter biomass 
+C     OMA=active fermenter biomass
 C     TFNX=temp stress effect, FOQC=OQC limitation
-C     RFOMP=O2-unlimited respiration of DOC 
-C     ROQCD=microbial respiration used to represent microbial activity 
+C     RFOMP=O2-unlimited respiration of DOC
+C     ROQCD=microbial respiration used to represent microbial activity
 C
       FSBST=COQC(K,L,NY,NX)/(COQC(K,L,NY,NX)+OQKM)*OXYI
       RGOFY=AMAX1(0.0,FCNP(N,K)*VMXF*WFNG*OMA(N,K))
-      RGOFZ=RGOFY*FSBST*TFNX 
+      RGOFZ=RGOFY*FSBST*TFNX
       RGOFX=AMAX1(0.0,OQC(K,L,NY,NX)*FOQC*ECHZ)
       RGOMP=AMIN1(RGOFX,RGOFZ)
       FGOCP=1.0
@@ -818,12 +818,12 @@ C
       ROXYM(N,K)=0.0
       ROXYP(N,K)=0.0
       ROXYS(N,K,L,NY,NX)=0.0
-      ROQCS(N,K,L,NY,NX)=RGOFZ 
-      ROQAS(N,K,L,NY,NX)=0.0 
-      ROQCD(N,K)=RGOFY 
+      ROQCS(N,K,L,NY,NX)=RGOFZ
+      ROQAS(N,K,L,NY,NX)=0.0
+      ROQCD(N,K)=RGOFY
       TRH2G=TRH2G+RGOMP
 C     IF((I/120)*120.EQ.I.AND.J.EQ.24.AND.L.LE.6)THEN
-C     WRITE(*,5554)'FERM',I,J,NX,NY,L,K,N,RGOMP,RGOFX,RGOFZ,GHAX,GOAF 
+C     WRITE(*,5554)'FERM',I,J,NX,NY,L,K,N,RGOMP,RGOFX,RGOFZ,GHAX,GOAF
 C    2,ECHZ,FCNP(N,K),TFNG(N,K),OMA(N,K),OSRH(K),FOQC,COQC(K,L,NY,NX)
 C    3,OQKM,OMC(1,N,K,L,NY,NX),OMC(2,N,K,L,NY,NX),OMC(3,N,K,L,NY,NX)
 C    3,OMN(1,N,K,L,NY,NX),OMN(2,N,K,L,NY,NX),OMN(3,N,K,L,NY,NX)
@@ -836,9 +836,9 @@ C     ENERGY YIELD FROM ACETOTROPHIC METHANOGENESIS
 C
 C     GOMX=acetate effect on energy yield
 C     ECHZ=growth respiration efficiency of aceto. methanogenesis
-C     
+C
       ELSEIF(N.EQ.5)THEN
-      GOMX=8.3143E-03*TKS(L,NY,NX) 
+      GOMX=8.3143E-03*TKS(L,NY,NX)
      2*LOG((AMAX1(ZERO,COQA(K,L,NY,NX))/OAKI))
       GOMM=GOMX/24.0
       ECHZ=AMAX1(EO2X,AMIN1(1.0
@@ -847,7 +847,7 @@ C
 C     RESPIRATION RATES BY ACETOTROPHIC METHANOGENS 'RGOMP' FROM
 C     SPECIFIC OXIDATION RATE, ACTIVE BIOMASS, DOC CONCENTRATION,
 C     MICROBIAL C:N:P FACTOR, AND TEMPERATURE FOLLOWED BY POTENTIAL C
-C     RESPIRATION RATES 'RGOMP' WITH UNLIMITED SUBSTRATE USED FOR 
+C     RESPIRATION RATES 'RGOMP' WITH UNLIMITED SUBSTRATE USED FOR
 C     MICROBIAL COMPETITION FACTOR
 C
 C     COQA=DOA concentration
@@ -860,29 +860,29 @@ C     RGOGX=competition-limited respiration of acetate
 C     OQA=acetate, FOQA=fraction of biological demand for acetate
 C     RGOMP=O2-unlimited respiration of acetate
 C     ROXY*=O2 demand, ROQCS,ROQCA=DOC, acetate demand
-C     ROQCD=microbial respiration used to represent microbial activity 
+C     ROQCD=microbial respiration used to represent microbial activity
 C
       FSBST=COQA(K,L,NY,NX)/(COQA(K,L,NY,NX)+OQKAM)
       RGOGY=AMAX1(0.0,FCNP(N,K)*VMXM*WFNG*OMA(N,K))
-      RGOGZ=RGOGY*FSBST*TFNX 
-      RGOGX=AMAX1(0.0,OQA(K,L,NY,NX)*FOQA*ECHZ) 
+      RGOGZ=RGOGY*FSBST*TFNX
+      RGOGX=AMAX1(0.0,OQA(K,L,NY,NX)*FOQA*ECHZ)
       RGOMP=AMIN1(RGOGX,RGOGZ)
       FGOCP=0.0
       FGOAP=1.0
       ROXYM(N,K)=0.0
       ROXYP(N,K)=0.0
       ROXYS(N,K,L,NY,NX)=0.0
-      ROQCS(N,K,L,NY,NX)=0.0 
-      ROQAS(N,K,L,NY,NX)=RGOGZ 
-      ROQCD(N,K)=0.0 
+      ROQCS(N,K,L,NY,NX)=0.0
+      ROQAS(N,K,L,NY,NX)=RGOGZ
+      ROQCD(N,K)=0.0
       TCH4H=TCH4H+0.5*RGOMP
 C     IF((I/30)*30.EQ.I.AND.NX.EQ.3.AND.NY.EQ.1.AND.J.EQ.24)THEN
-C     WRITE(*,5552)'ACMETH',I,J,NX,NY,L,K,N,RGOMP,RGOGZ,RGOGX,GOMM 
+C     WRITE(*,5552)'ACMETH',I,J,NX,NY,L,K,N,RGOMP,RGOGZ,RGOGX,GOMM
 C    2,ECHZ,FCNP(N,K),TFNG(N,K),OMA(N,K),FOQA,COQA(K,L,NY,NX)
 C    2,OQA(K,L,NY,NX)
 C    3,OMC(1,N,K,L,NY,NX),OMC(2,N,K,L,NY,NX),OMC(3,N,K,L,NY,NX)
 C    3,OMN(1,N,K,L,NY,NX),OMN(2,N,K,L,NY,NX),OMN(3,N,K,L,NY,NX)
-C    5,VOLWM(NPH,L,NY,NX),PSISM(L,NY,NX),WFNG,COXYS(L,NY,NX) 
+C    5,VOLWM(NPH,L,NY,NX),PSISM(L,NY,NX),WFNG,COXYS(L,NY,NX)
 C    6,OHA(K,L,NY,NX),FSBST,SPOMK(1),RMOMK(1)
 5552  FORMAT(A8,7I4,40E12.4)
 C     ENDIF
@@ -890,7 +890,7 @@ C     ENDIF
 C
 C     RESPIRATION RATES BY AUTOTROPHS 'RGOMP' FROM SPECIFIC
 C     OXIDATION RATE, ACTIVE BIOMASS, DOC CONCENTRATION,
-C     MICROBIAL C:N:P FACTOR, AND TEMPERATURE FOLLOWED BY POTENTIAL 
+C     MICROBIAL C:N:P FACTOR, AND TEMPERATURE FOLLOWED BY POTENTIAL
 C     RESPIRATION RATES 'RGOMP' WITH UNLIMITED SUBSTRATE USED FOR
 C     MICROBIAL COMPETITION FACTOR. N=(1) NH4 OXIDIZERS (2) NO2
 C     OXIDIZERS,(3) CH4 OXIDIZERS, (5) H2TROPHIC METHANOGENS
@@ -926,17 +926,17 @@ C     ZNFNI=reduction in inhibition since fertilizer added
 C     CNH4S,CNH4B=NH4 concentrations in non-band, band
 C     TFNX=temperature effect
 C     RNFNI=rate constant for inhibition decline
-C     ZHKI=inhibition from high CNH4 
+C     ZHKI=inhibition from high CNH4
 C     ZNFN4S,ZNFN4B=inhibition in non-band, band
 C
       IF(ZNFN0(L,NY,NX).GT.ZEROS(NY,NX))THEN
       ZNFNI(L,NY,NX)=ZNFNI(L,NY,NX)*(1.0-RNFNI*TFNX)
-      ZNFN4S=ZNFN0(L,NY,NX)-ZNFNI(L,NY,NX)/(1.0+CNH4S(L,NY,NX)/ZHKI) 
+      ZNFN4S=ZNFN0(L,NY,NX)-ZNFNI(L,NY,NX)/(1.0+CNH4S(L,NY,NX)/ZHKI)
       ZNFN4B=ZNFN0(L,NY,NX)-ZNFNI(L,NY,NX)/(1.0+CNH4B(L,NY,NX)/ZHKI)
       ELSE
       ZNFN4S=1.0
       ZNFN4B=1.0
-      ENDIF  
+      ENDIF
 C
 C     NH3 OXIDATION FROM SPECIFIC OXIDATION RATE, ENERGY YIELD,
 C     ACTIVE OXIDIZER BIOMASS, TEMPERATURE, AQUEOUS CO2 AND
@@ -956,39 +956,39 @@ C     ZNH4S,ZNH4B=NH4 amount in non-band, band
 C     RNNH4,RNNHB=NH3 oxidation in non-band, band
 C     RGOMP=O2-unlimited respiration
 C     ECNH=efficiency CO2 conversion to biomass
-C     RVMX4,RVMXB=nitrifier demand for NH4 in non-band, band 
+C     RVMX4,RVMXB=nitrifier demand for NH4 in non-band, band
 C
       ECHZ=EO2X
       VMXX=VMXH*TFNG(N,K)*FCNP(N,K)*XCO2*OMA(N,K)
       IF(VOLWZ.GT.ZEROS2(NY,NX))THEN
-      VMXA=VMXX/(1.0+VMXX/(VHKI*VOLWZ)) 
+      VMXA=VMXX/(1.0+VMXX/(VHKI*VOLWZ))
       ELSE
       VMXA=0.0
       ENDIF
-      FCN4S=FNH4S*CNH4S(L,NY,NX)/(CNH4S(L,NY,NX)+ZHKM) 
-      FCN4B=FNHBS*CNH4B(L,NY,NX)/(CNH4B(L,NY,NX)+ZHKM) 
+      FCN4S=FNH4S*CNH4S(L,NY,NX)/(CNH4S(L,NY,NX)+ZHKM)
+      FCN4B=FNHBS*CNH4B(L,NY,NX)/(CNH4B(L,NY,NX)+ZHKM)
       FSBST=FCN4S+FCN4B
-      VMX4S=VMXA*FCN4S 
-      VMX4B=VMXA*FCN4B 
-      RNNH4=AMAX1(0.0,AMIN1(VMX4S,FNH4*ZNH4S(L,NY,NX)))*ZNFN4S 
+      VMX4S=VMXA*FCN4S
+      VMX4B=VMXA*FCN4B
+      RNNH4=AMAX1(0.0,AMIN1(VMX4S,FNH4*ZNH4S(L,NY,NX)))*ZNFN4S
       RNNHB=AMAX1(0.0,AMIN1(VMX4B,FNB4*ZNH4B(L,NY,NX)))*ZNFN4B
       RVOXP=RNNH4+RNNHB
       RVOXPA=RNNH4
       RVOXPB=RNNHB
-      RGOMP=AMAX1(0.0,RVOXP*ECNH*ECHZ) 
-      RVMX4(N,K,L,NY,NX)=VMX4S 
-      RVMB4(N,K,L,NY,NX)=VMX4B 
+      RGOMP=AMAX1(0.0,RVOXP*ECNH*ECHZ)
+      RVMX4(N,K,L,NY,NX)=VMX4S
+      RVMB4(N,K,L,NY,NX)=VMX4B
 C
 C     O2 DEMAND FROM NH3 OXIDATION
 C
 C     ROXYM=O2 demand from respiration by nitrifiers
-C     ROXYP,ROXYM=O2 demand from respiration + NH3 oxidation 
+C     ROXYP,ROXYM=O2 demand from respiration + NH3 oxidation
 C
       ROXYM(N,K)=2.667*RGOMP
-      ROXYP(N,K)=ROXYM(N,K)+3.429*RVOXP 
+      ROXYP(N,K)=ROXYM(N,K)+3.429*RVOXP
       ROXYS(N,K,L,NY,NX)=ROXYP(N,K)
 C     IF(IYRC.EQ.2012.AND.I.EQ.151.AND.NX.EQ.1)THEN
-C     WRITE(*,6666)'NITRI',I,J,L,K,N,RNNH4,RNNHB,VMXX,VMXA,VOLWZ 
+C     WRITE(*,6666)'NITRI',I,J,L,K,N,RNNH4,RNNHB,VMXX,VMXA,VOLWZ
 C    2,CNH4S(L,NY,NX),CNH4B(L,NY,NX)
 C    2,14.0*XN4(L,NY,NX),14.0*XNB(L,NY,NX)
 C    3,ZNH4S(L,NY,NX),ZNH4B(L,NY,NX),COXYS(L,NY,NX),RGOMP
@@ -1005,7 +1005,7 @@ C
 C     FACTOR TO REGULATE COMPETITION FOR NO2 AMONG DIFFERENT
 C     MICROBIAL POPULATIONS
 C
-C     FNO2=fraction of total biological demand for NO2 in non-band, band 
+C     FNO2=fraction of total biological demand for NO2 in non-band, band
 C
       IF(RNO2Y(L,NY,NX).GT.ZEROS(NY,NX))THEN
       FNO2=AMAX1(FMN,RVMX2(N,K,L,NY,NX)/RNO2Y(L,NY,NX))
@@ -1038,12 +1038,12 @@ C     ZNO2S,ZNO2B=NO2 amount in non-band, band
 C     RNNO2,RNNOB=NO2 oxidation in non-band, band
 C     RGOMP=O2-unlimited respiration
 C     ECNO=efficiency CO2 conversion to biomass
-C     RVMX2,RVMB2=nitrifier demand for NO2 in non-band, band 
+C     RVMX2,RVMB2=nitrifier demand for NO2 in non-band, band
 C
       ECHZ=EO2X
-      VMXA=TFNG(N,K)*FCNP(N,K)*XCO2*OMA(N,K)*VMXN 
-      FCN2S=FNH4S*CNO2S(L,NY,NX)/(CNO2S(L,NY,NX)+ZNKM) 
-      FCN2B=FNHBS*CNO2B(L,NY,NX)/(CNO2B(L,NY,NX)+ZNKM) 
+      VMXA=TFNG(N,K)*FCNP(N,K)*XCO2*OMA(N,K)*VMXN
+      FCN2S=FNH4S*CNO2S(L,NY,NX)/(CNO2S(L,NY,NX)+ZNKM)
+      FCN2B=FNHBS*CNO2B(L,NY,NX)/(CNO2B(L,NY,NX)+ZNKM)
       FSBST=FCN2S+FCN2B
       VMX2S=VMXA*FCN2S
       VMX2B=VMXA*FCN2B
@@ -1052,27 +1052,27 @@ C
       RVOXP=RNNO2+RNNOB
       RVOXPA=RNNO2
       RVOXPB=RNNOB
-      RGOMP=AMAX1(0.0,RVOXP*ECNO*ECHZ) 
-      RVMX2(N,K,L,NY,NX)=VMX2S 
+      RGOMP=AMAX1(0.0,RVOXP*ECNO*ECHZ)
+      RVMX2(N,K,L,NY,NX)=VMX2S
       RVMB2(N,K,L,NY,NX)=VMX2B
 C
 C     O2 DEMAND FROM NO2 OXIDATION
 C
 C     ROXYM=O2 demand from respiration by nitrifiers
-C     ROXYP,ROXYM=O2 demand from respiration + NO2 oxidation 
+C     ROXYP,ROXYM=O2 demand from respiration + NO2 oxidation
 C
       ROXYM(N,K)=2.667*RGOMP
-      ROXYP(N,K)=ROXYM(N,K)+1.143*RVOXP 
+      ROXYP(N,K)=ROXYM(N,K)+1.143*RVOXP
       ROXYS(N,K,L,NY,NX)=ROXYP(N,K)
 C     IF((I/30)*30.EQ.I.AND.J.EQ.15.AND.L.LE.6)THEN
 C     WRITE(*,6667)'NO2OX',I,J,L,K,N,RNNO2,RNNOB,ZNO2S(L,NY,NX)
 C    2,ZNO2B(L,NY,NX),CNO2S(L,NY,NX),CNO2B(L,NY,NX),CNH3S(L,NY,NX)
-C    3,CNH3B(L,NY,NX),CNH4S(L,NY,NX),CNH4B(L,NY,NX),CNO3S(L,NY,NX) 
+C    3,CNH3B(L,NY,NX),CNH4S(L,NY,NX),CNH4B(L,NY,NX),CNO3S(L,NY,NX)
 C    3,CNO3B(L,NY,NX),CHNO2,CHNOB,VMXA,TFNG(N,K),FCNP(N,K),VMXN,ZNKM
 C    4,FCN2S,FCN2B,OMA(N,K),FOMN(N,K),TOMN,RVMX2(N,K,L,NY,NX)
-C    5,RNO2Y(L,NY,NX),FNO2,FNB2,ROXYM(N,K),ROXYP(N,K) 
+C    5,RNO2Y(L,NY,NX),FNO2,FNB2,ROXYM(N,K),ROXYP(N,K)
 C    6,ROXYS(N,K,L,NY,NX),VLNHB(L,NY,NX),VLNOB(L,NY,NX)
-C    7,SPOMK(1),RMOMK(1) 
+C    7,SPOMK(1),RMOMK(1)
 6667  FORMAT(A8,5I4,50E12.4)
 C     ENDIF
 C
@@ -1093,19 +1093,19 @@ C
       GH2H=GH2X/12.0
       ECHZ=AMAX1(EO2X,AMIN1(1.0
      2,1.0/(1.0+AMAX1(0.0,(GCOX+GH2H))/EOMH)))
-      VMXA=TFNG(N,K)*FCNP(N,K)*XCO2*OMA(N,K)*VMXC 
+      VMXA=TFNG(N,K)*FCNP(N,K)*XCO2*OMA(N,K)*VMXC
       H2GSX=H2GS(L,NY,NX)+0.111*TRH2G
       FSBST=CH2GS(L,NY,NX)/(CH2GS(L,NY,NX)+H2KM)
       RGOMP=AMAX1(0.0,AMIN1(1.5*H2GSX,VMXA*FSBST))
       ROXYM(N,K)=0.0
       ROXYP(N,K)=0.0
       ROXYS(N,K,L,NY,NX)=0.0
-      TCH4A=TCH4A+RGOMP 
+      TCH4A=TCH4A+RGOMP
 C     IF((I/30)*30.EQ.I.AND.NX.EQ.3.AND.NY.EQ.1.AND.J.EQ.24)THEN
 C     WRITE(*,5553)'H2METH',I,J,NX,NY,L,K,N,RGOMP,H2GS(L,NY,NX)
-C    2,H2GSX,CH2GS(L,NY,NX),VMXA,TFNG(N,K),FCNP(N,K),XCO2 
+C    2,H2GSX,CH2GS(L,NY,NX),VMXA,TFNG(N,K),FCNP(N,K),XCO2
 C    3,OMA(N,K),VMXC,ECHZ,GCOX,GH2H,TKS(L,NY,NX),FSBST
-C    4,SPOMK(1),RMOMK(1) 
+C    4,SPOMK(1),RMOMK(1)
 5553  FORMAT(A8,7I4,20E12.4)
 C     ENDIF
 C
@@ -1125,7 +1125,7 @@ C     RCH4L=total aqueous CH4 exchange from previous hour
 C     RCH4F=total gaseous CH4 exchange from previous hour
 C     TCH4H+TCH4A=total CH4 generated from methanogenesis
 C     XNPG=1.0/(NPH*NPT)
-C     CH4G1,CH4S1=CH4 gaseous, aqueous amounts 
+C     CH4G1,CH4S1=CH4 gaseous, aqueous amounts
 C     CCH4E,CCH4G=CH4 gas concentration in atmosphere, soil
 C     VOLPM,VOLWM=air,water-filled porosity
 C     SCH4L=CH4 aqueous solubility
@@ -1133,10 +1133,10 @@ C     CCK4=Km for CH4 uptake
 C     ECHO=efficiency CO2 conversion to biomass
 C     RGOMP1=substrate-limited CH4 oxidation
 C     RCHDF=gaseous-aqueous CH4 exchange
-C     DFGS=rate constant for gaseous-aqueous exchange     
+C     DFGS=rate constant for gaseous-aqueous exchange
 C
       ECHZ=EH4X
-      VMXA=TFNG(N,K)*FCNP(N,K)*OMA(N,K)*VMX4 
+      VMXA=TFNG(N,K)*FCNP(N,K)*OMA(N,K)*VMX4
       RCH4L1=RCH4L(L,NY,NX)*XNPG
       RCH4F1=RCH4F(L,NY,NX)*XNPG
       RCH4S1=(TCH4H+TCH4A)*XNPG
@@ -1145,7 +1145,7 @@ C
       ELSE
       CH4G1=CCH4G(L,NY,NX)*VOLPM(1,L,NY,NX)
       ENDIF
-      CH4S1=CH4S(L,NY,NX) 
+      CH4S1=CH4S(L,NY,NX)
       VMXA1=VMXA*XNPG
       RVOXP=0.0
       RGOMP=0.0
@@ -1159,31 +1159,31 @@ C
       VOLWPM=VOLWCH+VOLPM(M,L,NY,NX)
       DO 325 MM=1,NPT
       CH4G1=CH4G1+RCH4F1
-      CH4S1=CH4S1+RCH4L1+RCH4S1 
+      CH4S1=CH4S1+RCH4L1+RCH4S1
       CCH4S1=AMAX1(0.0,CH4S1/VOLWM(M,L,NY,NX))
       FSBST=CCH4S1/(CCH4S1+CCK4)
       RVOXP1=AMIN1(AMAX1(0.0,CH4S1)/(1.0+ECHO*ECHZ)
      2,VMXA1*FSBST)
       RGOMP1=RVOXP1*ECHO*ECHZ
-      CH4S1=CH4S1-RVOXP1-RGOMP1 
+      CH4S1=CH4S1-RVOXP1-RGOMP1
       IF(THETPM(M,L,NY,NX).GT.THETX)THEN
       RCHDF=DFGS(M,L,NY,NX)*(AMAX1(ZEROS(NY,NX),CH4G1)*VOLWCH
      2-CH4S1*VOLPM(M,L,NY,NX))/VOLWPM
       ELSE
       RCHDF=0.0
       ENDIF
-      CH4G1=CH4G1-RCHDF 
-      CH4S1=CH4S1+RCHDF 
+      CH4G1=CH4G1-RCHDF
+      CH4S1=CH4S1+RCHDF
       RVOXP=RVOXP+RVOXP1
       RGOMP=RGOMP+RGOMP1
 C     IF((I/10)*10.EQ.I.AND.J.EQ.24.AND.L.EQ.0
 C    2.AND.MM.EQ.NPT)THEN
-C     WRITE(*,5547)'CH4OX',I,J,NX,NY,L,K,N,M,MM,RVOXP1,RGOMP1,CH4G1 
-C     2,CH4S1,VMXA1,RVOXP,RGOMP,RCHDF,RCH4L1,RCH4F1,RCH4S1,CCH4S1 
+C     WRITE(*,5547)'CH4OX',I,J,NX,NY,L,K,N,M,MM,RVOXP1,RGOMP1,CH4G1
+C     2,CH4S1,VMXA1,RVOXP,RGOMP,RCHDF,RCH4L1,RCH4F1,RCH4S1,CCH4S1
 C    3,ECHO,ECHZ,OMA(N,K),VOLWM(M,L,NY,NX),VOLPM(M,L,NY,NX),VOLWCH
 C    4,THETPM(M,L,NY,NX),SCH4L(L,NY,NX),DFGS(M,L,NY,NX)
 C    5,COXYS(L,NY,NX),CCH4E(NY,NX),FSBST,SPOMK(1),RMOMK(1)
-C    6,CH4G1/VOLPM(M,L,NY,NX) 
+C    6,CH4G1/VOLPM(M,L,NY,NX)
 5547  FORMAT(A8,9I4,30E12.4)
 C     ENDIF
 325   CONTINUE
@@ -1198,8 +1198,8 @@ C     ROXYM=O2 demand from respiration
 C     ROXYP=O2 demand from respiration + CH4 oxidation
 C
       ROXYM(N,K)=2.667*RGOMP
-      ROXYP(N,K)=ROXYM(N,K)+4.00*RVOXP 
-      ROXYS(N,K,L,NY,NX)=ROXYP(N,K) 
+      ROXYP(N,K)=ROXYM(N,K)+4.00*RVOXP
+      ROXYS(N,K,L,NY,NX)=ROXYP(N,K)
       ELSE
       RGOMP=0.0
       ROXYM(N,K)=0.0
@@ -1216,8 +1216,8 @@ C
 C     O2 UPTAKE BY AEROBES
 C
 C     RUPOX, ROXYP=O2-limited, O2-unlimited rates of O2 uptake
-C     RUPMX=O2-unlimited rate of O2 uptake 
-C     FOXYX=fraction of O2 uptake by N,K relative to total 
+C     RUPMX=O2-unlimited rate of O2 uptake
+C     FOXYX=fraction of O2 uptake by N,K relative to total
 C     XNPG=1/(NPH*NPT)
 C     ROXYF,ROXYL=net O2 gaseous, aqueous fluxes from previous hour
 C     OLSGL=aqueous O2 diffusivity
@@ -1233,9 +1233,9 @@ C
 C     MAXIMUM O2 UPAKE FROM POTENTIAL RESPIRATION OF EACH AEROBIC
 C     POPULATION
 C
-      RUPMX=ROXYP(N,K)*XNPG 
+      RUPMX=ROXYP(N,K)*XNPG
       ROXYFX=ROXYF(L,NY,NX)*XNPG*FOXYX
-      OLSGL1=OLSGL(L,NY,NX)*XNPG 
+      OLSGL1=OLSGL(L,NY,NX)*XNPG
       IF(L.NE.0)THEN
       OXYG1=OXYG(L,NY,NX)*FOXYX
       ROXYLX=ROXYL(L,NY,NX)*XNPG*FOXYX
@@ -1252,9 +1252,9 @@ C
       DO 420 M=1,NPH
 C
 C     ACTUAL REDUCTION OF AQUEOUS BY AEROBES CALCULATED
-C     FROM MASS FLOW PLUS DIFFUSION = ACTIVE UPTAKE 
-C     COUPLED WITH DISSOLUTION OF GASEOUS O2 DURING REDUCTION 
-C     OF AQUEOUS O2 FROM DISSOLUTION RATE CONSTANT 'DFGS' 
+C     FROM MASS FLOW PLUS DIFFUSION = ACTIVE UPTAKE
+C     COUPLED WITH DISSOLUTION OF GASEOUS O2 DURING REDUCTION
+C     OF AQUEOUS O2 FROM DISSOLUTION RATE CONSTANT 'DFGS'
 C     CALCULATED IN 'WATSUB'
 C
 C     VOLWM,VOLPM,VOLX=water, air and total volumes
@@ -1262,9 +1262,9 @@ C     ORAD=microbial radius,FILM=water film thickness
 C     DIFOX=aqueous O2 diffusion, TORT=tortuosity
 C     BIOS=microbial number, OMA=active biomass
 C     SOXYL=O2 solubility, OXKX=Km for O2 uptake
-C     OXYS,COXYS=aqueous O2 amount, concentration 
+C     OXYS,COXYS=aqueous O2 amount, concentration
 C     OXYG,COXYG=gaseous O2 amount, concentration
-C     RMPOX,ROXSK=O2 uptake 
+C     RMPOX,ROXSK=O2 uptake
 C
       THETW1=AMAX1(0.0,VOLWM(M,L,NY,NX)/VOLY(L,NY,NX))
       RRADO=ORAD*(FILM(M,L,NY,NX)+ORAD)/FILM(M,L,NY,NX)
@@ -1274,7 +1274,7 @@ C
       VOLWPM=VOLWOX+VOLPOX
       DO 425 MX=1,NPT
       OXYG1=OXYG1+ROXYFX
-      OXYS1=OXYS1+ROXYLX 
+      OXYS1=OXYS1+ROXYLX
       COXYS1=AMIN1(COXYE(NY,NX)*SOXYL(L,NY,NX)
      2,AMAX1(0.0,OXYS1/(VOLWM(M,L,NY,NX)*FOXYX)))
       X=DIFOX*COXYS1
@@ -1292,27 +1292,27 @@ C
       ELSE
       ROXDFQ=0.0
       ENDIF
-      OXYG1=OXYG1-ROXDFQ 
-      OXYS1=OXYS1+ROXDFQ 
+      OXYG1=OXYG1-ROXDFQ
+      OXYS1=OXYS1+ROXDFQ
       RUPOX(N,K)=RUPOX(N,K)+RMPOX
       ROXSK(M,L,NY,NX)=ROXSK(M,L,NY,NX)+RMPOX
 C     IF(I.EQ.151.AND.J.EQ.24.AND.L.LE.5.AND.M.EQ.NPH.AND.MX.EQ.NPT)THEN
-C     WRITE(*,5545)'RMPOX',I,J,L,K,N,M,MX,OXYS1,ROXDFQ,ROXYLX,RMPOX 
+C     WRITE(*,5545)'RMPOX',I,J,L,K,N,M,MX,OXYS1,ROXDFQ,ROXYLX,RMPOX
 C    2,DFGS(M,L,NY,NX),OXYG1,VOLWOX,VOLPOX,VOLWPM,X,B,C
-C    3,RUPMX,DIFOX,OXKX,COXYS1,FOXYX,ROXYL(L,NY,NX) 
-C    4,ROXSK(M,L,NY,NX),VOLWM(M,L,NY,NX)/VOLY(L,NY,NX) 
+C    3,RUPMX,DIFOX,OXKX,COXYS1,FOXYX,ROXYL(L,NY,NX)
+C    4,ROXSK(M,L,NY,NX),VOLWM(M,L,NY,NX)/VOLY(L,NY,NX)
 C    5,OXYS(L,NY,NX)
 5545  FORMAT(A8,7I4,30E16.6)
 C     ENDIF
 C     IF((I/120)*120.EQ.I.AND.J.EQ.24.AND.L.LE.3
 C    2.AND.K.GE.3.AND.N.EQ.3)THEN
 C     WRITE(*,5544)'OXY',I,J,L,K,N,M,MX,RUPOX(N,K),ROXYP(N,K)
-C    2,ROXSK(M,L,NY,NX),RUPMX,RMPOX,DIFOX,OLSGL1,BIOS,OMA(N,K),X 
+C    2,ROXSK(M,L,NY,NX),RUPMX,RMPOX,DIFOX,OLSGL1,BIOS,OMA(N,K),X
 C    2,ROXDFQ,ROXYLX,ROXYFX,FOXYX,COXYS1,OXYS1,OXYG1,OXYS1
 C    4/(VOLWM(M,L,NY,NX)*FOXYX),OXYG1/(VOLPM(M,L,NY,NX)*FOXYX)
 C    5,THETW1,THETPM(M,L,NY,NX),DFGS(M,L,NY,NX),ROXSK(M,L,NY,NX)
 C    6,VOLPM(M,L,NY,NX),VOLWM(M,L,NY,NX),VOLA(L,NY,NX)
-C    7,COXYS(L,NY,NX),COXYG(L,NY,NX),ROXYY(L,NY,NX) 
+C    7,COXYS(L,NY,NX),COXYG(L,NY,NX),ROXYY(L,NY,NX)
 5544  FORMAT(A8,7I4,50E12.4)
 C     ENDIF
 425   CONTINUE
@@ -1351,7 +1351,7 @@ C     RESPIRATION PRODUCTS ALLOCATED TO O2, CO2, ACETATE, CH4, H2
 C
 C     RGOMO,RGOMP=O2-limited, O2-unlimited respiration
 C     RCO2X,RCH3X,RCH4X,RH2GX=CO2,acetate,CH4,H2 production from RGOMO
-C     ROXYO=O2-limited O2 uptake 
+C     ROXYO=O2-limited O2 uptake
 C     RVOXA,RVOXB=total O2-lmited (1)NH4,(2)NO2,(3)CH4 oxidation
 C
       RGOMO(N,K)=RGOMP*WFN(N,K)
@@ -1433,7 +1433,7 @@ C     VMXD3S,VMXD3B=substrate-unlimited NO3 reduction in non-band,band
 C     OQCD3S,OQCD3B=DOC limitation to NO3 reduction in non-band, band
 C     RDNO3,RDNOB=substrate-limited NO3 reduction in non-band,band
 C     RGOM3X,RGOMD3=substrate-unltd,-ltd respn from NO3 reduction
-C     RVMX3,RVMB3=demand for NO3 reduction in non-band,band 
+C     RVMX3,RVMB3=demand for NO3 reduction in non-band,band
 C
       ROXYD=AMAX1(0.0,ROXYM(N,K)-ROXYO(N,K))
       VMXD3=0.875*ROXYD
@@ -1444,7 +1444,7 @@ C
       VMXDXS=0.0
       ENDIF
       IF(CNO3B(L,NY,NX).GT.ZERO)THEN
-      VMXDXB=FNO3B*VMXD3*CNO3B(L,NY,NX)/(CNO3B(L,NY,NX)+Z3KM) 
+      VMXDXB=FNO3B*VMXD3*CNO3B(L,NY,NX)/(CNO3B(L,NY,NX)+Z3KM)
      2/(1.0+(CNO2B(L,NY,NX)*Z3KM)/(CNO3B(L,NY,NX)*Z2KM))
       ELSE
       VMXDXB=0.0
@@ -1455,8 +1455,8 @@ C
       ELSE
       FVMXDX=0.0
       ENDIF
-      VMXD3S=VMXDXS*FVMXDX 
-      VMXD3B=VMXDXB*FVMXDX 
+      VMXD3S=VMXDXS*FVMXDX
+      VMXD3B=VMXDXB*FVMXDX
       OQCZ3=AMAX1(0.0,OQC(K,L,NY,NX)*FOQC-RGOCP*WFN(N,K))
       OQCD3=OQCZ3/ECN3
       OQCD3S=OQCD3*FNO3S
@@ -1471,7 +1471,7 @@ C
       RDNOT=RDNO3(N,K)+RDNOB(N,K)
       RGOM3X=ECN3*RDNOX
       RGOMD3=ECN3*RDNOT
-      RVMX3(N,K,L,NY,NX)=VMXD3S 
+      RVMX3(N,K,L,NY,NX)=VMXD3S
       RVMB3(N,K,L,NY,NX)=VMXD3B
 C
 C     FACTOR TO CONSTRAIN NO2 UPAKE AMONG COMPETING MICROBIAL
@@ -1507,7 +1507,7 @@ C     VMKI=product inhibition for NOx reduction
 C     VMXD2S,VMXD2B=substrate-unlimited NO2 reduction in non-band,band
 C     OQCD2S,OQCD2B=DOC limitation to NO2 reduction in non-band, band
 C     RDNO2,RDN2B=substrate-limited NO2 reduction in non-band,band
-C     RGOM2X,RGOMD2=substrate-unltd,-ltd respn from NO2 reduction 
+C     RGOM2X,RGOMD2=substrate-unltd,-ltd respn from NO2 reduction
 C
       VMXD2=VMXD3-RDNOT
       IF(CNO2S(L,NY,NX).GT.ZERO)THEN
@@ -1528,14 +1528,14 @@ C
       ELSE
       FVMXDX=0.0
       ENDIF
-      VMXD2S=VMXDXS*FVMXDX 
-      VMXD2B=VMXDXB*FVMXDX 
+      VMXD2S=VMXDXS*FVMXDX
+      VMXD2B=VMXDXB*FVMXDX
       OQCZ2=AMAX1(0.0,OQCZ3-RGOMD3)
       OQCD2=OQCZ2/ECN2
       OQCD2S=OQCD2*FNO3S
       OQCD2B=OQCD2*FNO3B
       ZNO2SX=(ZNO2S(L,NY,NX)+RDNO3(N,K))*FNO2
-      ZNO2BX=(ZNO2B(L,NY,NX)+RDNOB(N,K))*FNB2 
+      ZNO2BX=(ZNO2B(L,NY,NX)+RDNOB(N,K))*FNB2
       RDNO2X=AMAX1(0.0,AMIN1(ZNO2SX,VMXD2S))
       RDNOBX=AMAX1(0.0,AMIN1(ZNO2BX,VMXD2B))
       RDNO2(N,K)=AMAX1(0.0,AMIN1(VMXD2S,OQCD2S,ZNO2SX))
@@ -1544,12 +1544,12 @@ C
       RDN2T=RDNO2(N,K)+RDN2B(N,K)
       RGOM2X=ECN2*RDN2X
       RGOMD2=ECN2*RDN2T
-      RVMX2(N,K,L,NY,NX)=VMXD2S 
+      RVMX2(N,K,L,NY,NX)=VMXD2S
       RVMB2(N,K,L,NY,NX)=VMXD2B
 C
 C     FACTOR TO CONSTRAIN N2O UPAKE AMONG COMPETING MICROBIAL
 C     AND ROOT POPULATIONS
-C 
+C
 C     FN2O=fraction of total biological demand for N2O
 C
       IF(RN2OY(L,NY,NX).GT.ZEROS(NY,NX))THEN
@@ -1570,12 +1570,12 @@ C     CZ2OS=N2O concentrations
 C     Z1KM=Km for N2O uptake
 C     FVMXDX=nonlinear effect of product inhibition for NOx reduction
 C     VMKI=product inhibition for NOx reduction
-C     VMXD1S=substrate-unlimited N2O reduction 
+C     VMXD1S=substrate-unlimited N2O reduction
 C     OQCD1=DOC limitation to N2O reduction
 C     RDN2O=substrate-limited N2O reduction
-C     RGOM1X,RGOMD1=substrate-unltd,-ltd  respn from N2O reduction 
-C     RGOMY,RGOMD=total substrate-unltd,-ltd respn from NOx reduction 
-C     RVMX1=demand for N2O reduction 
+C     RGOM1X,RGOMD1=substrate-unltd,-ltd  respn from N2O reduction
+C     RGOMY,RGOMD=total substrate-unltd,-ltd respn from NOx reduction
+C     RVMX1=demand for N2O reduction
 C
       VMXD1=(VMXD2-RDN2T)*2.0
       VMXDXS=VMXD1*CZ2OS(L,NY,NX)/(CZ2OS(L,NY,NX)+Z1KM)
@@ -1584,32 +1584,32 @@ C
       ELSE
       FVMXDX=0.0
       ENDIF
-      VMXD1S=VMXDXS*FVMXDX 
+      VMXD1S=VMXDXS*FVMXDX
       OQCZ1=AMAX1(0.0,OQCZ2-RGOMD2)
       OQCD1=OQCZ1/ECN1
-      Z2OSX=(Z2OS(L,NY,NX)+RDN2T)*FN2O 
+      Z2OSX=(Z2OS(L,NY,NX)+RDN2T)*FN2O
       RDN2OX=AMAX1(0.0,AMIN1(Z2OSX,VMXD1S))
       RDN2O(N,K)=AMAX1(0.0,AMIN1(VMXD1S,OQCD1,Z2OSX))
       RGOM1X=ECN1*RDN2OX
       RGOMD1=ECN1*RDN2O(N,K)
       RGOMY(N,K)=RGOM3X+RGOM2X+RGOM1X
       RGOMD(N,K)=RGOMD3+RGOMD2+RGOMD1
-      RVMX1(N,K,L,NY,NX)=VMXD1S 
-C     TRN2OD(NY,NX)=TRN2OD(NY,NX)+RDNO2(N,K)+RDN2B(N,K) 
+      RVMX1(N,K,L,NY,NX)=VMXD1S
+C     TRN2OD(NY,NX)=TRN2OD(NY,NX)+RDNO2(N,K)+RDN2B(N,K)
 C     TRN2GD(NY,NX)=TRN2GD(NY,NX)+RDN2O(N,K)
 C     IF((I/1)*1.EQ.I.AND.L.LE.5)THEN
 C     WRITE(*,2222)'DENIT',I,J,L,K,N,RDNO3(N,K),RDNOB(N,K),RDNO2(N,K)
 C    2,RDN2B(N,K),RDN2O(N,K),TRN2OD(NY,NX),TRN2GD(NY,NX)
 C    3,COXYS(L,NY,NX),COXYG(L,NY,NX),ROXYM(N,K)
-C    3,ROXYO(N,K),OMA(N,K),VMXD,CNO3S(L,NY,NX),CNO3B(L,NY,NX) 
+C    3,ROXYO(N,K),OMA(N,K),VMXD,CNO3S(L,NY,NX),CNO3B(L,NY,NX)
 C    4,CNO2S(L,NY,NX),CNO2B(L,NY,NX),CZ2OS(L,NY,NX),VLNO3(L,NY,NX)
 C    5,VLNOB(L,NY,NX),THETW(L,NY,NX),THETI(L,NY,NX),FOMA(N,K)
 C    5,ZNO3S(L,NY,NX),ZNO3B(L,NY,NX),ZNO2S(L,NY,NX),ZNO2B(L,NY,NX)
-C    6,Z2OS(L,NY,NX),RGOMY(N,K),RGOMD(N,K),TOMA,FOXYX,FNO23S,FNO23B 
-C    7,OQC(K,L,NY,NX),FOQC,RGOCP,WFN(N,K),VOLWZ,FOSRH(K,L,NY,NX),ZERO 
-C    9,RGOM3X,RGOM2X,RGOM1X,FNO3,FNO2,FN2O,ZNO3SX,ZNO2SX,Z2OSX 
+C    6,Z2OS(L,NY,NX),RGOMY(N,K),RGOMD(N,K),TOMA,FOXYX,FNO23S,FNO23B
+C    7,OQC(K,L,NY,NX),FOQC,RGOCP,WFN(N,K),VOLWZ,FOSRH(K,L,NY,NX),ZERO
+C    9,RGOM3X,RGOM2X,RGOM1X,FNO3,FNO2,FN2O,ZNO3SX,ZNO2SX,Z2OSX
 C    3,OQCD3S,OQCD2S,OQCD1,VMXD3S,VMXD2S,VMXD1S,VMXD3,VMXD2,VMXD1
-C    4,ROXYD,VMXDX,TFNX,WFNG,TFNG(N,K),PSISM(L,NY,NX) 
+C    4,ROXYD,VMXDX,TFNX,WFNG,TFNG(N,K),PSISM(L,NY,NX)
 C    2,(1.0+(CNO2S(L,NY,NX)*Z3KM)/(CNO3S(L,NY,NX)*Z2KM))
 C    2,(1.0+(CZ2OS(L,NY,NX)*Z2KM)/(CNO2S(L,NY,NX)*Z1KM))
 2222  FORMAT(A8,5I4,70E12.4)
@@ -1660,16 +1660,16 @@ C     RVOXA,RVOXB=total O2-limited (1)NH4,(2)NO2,(3)CH4 oxidation
 C
       ROXYD=AMAX1(0.0,ROXYM(N,K)-ROXYO(N,K))
       VMXD4=0.875*ROXYD*XCO2
-      VMXDXS=FNO2S*VMXD4*CNO2S(L,NY,NX)/(CNO2S(L,NY,NX)+Z2KM) 
+      VMXDXS=FNO2S*VMXD4*CNO2S(L,NY,NX)/(CNO2S(L,NY,NX)+Z2KM)
       VMXDXB=FNO2B*VMXD4*CNO2B(L,NY,NX)/(CNO2B(L,NY,NX)+Z2KM)
       VMXDXT=VMXDXS+VMXDXB
-      IF(VOLWZ.GT.ZEROS2(NY,NX))THEN 
+      IF(VOLWZ.GT.ZEROS2(NY,NX))THEN
       FVMXDX=1.0/(1.0+VMXDXT/(VMKI*VOLWZ))
       ELSE
       FVMXDX=0.0
       ENDIF
-      VMXD4S=VMXDXS*FVMXDX 
-      VMXD4B=VMXDXB*FVMXDX 
+      VMXD4S=VMXDXS*FVMXDX
+      VMXD4B=VMXDXB*FVMXDX
       ZNO2SX=ZNO2S(L,NY,NX)+RVOXA(1)
       ZNO2BX=ZNO2B(L,NY,NX)+RVOXB(1)
       RDNO2(N,K)=AMAX1(0.0,AMIN1(VMXD4S,ZNO2SX))
@@ -1680,7 +1680,7 @@ C
       RDNO3(N,K)=0.0
       RDNOB(N,K)=0.0
       RDN2O(N,K)=0.0
-      RVMX2(N,K,L,NY,NX)=VMXD4S 
+      RVMX2(N,K,L,NY,NX)=VMXD4S
       RVMB2(N,K,L,NY,NX)=VMXD4B
       RVOXA(N)=RVOXA(N)+0.333*RDNO2(N,K)
       RVOXB(N)=RVOXB(N)+0.333*RDN2B(N,K)
@@ -1694,7 +1694,7 @@ C    3,XCO2,FNO2,FNB2,TFNG(N,K),OMA(N,K),ROXYP(N,K)
 C    2,ROXYM(N,K),ROXYO(N,K),WFN(N,K),FOXYX
 C    3,THETW(L,NY,NX),COXYS(L,NY,NX),COXYG(L,NY,NX)
 C    4,ROXYD,VMXD4,VMXDXS,VMXDXB,VMXD4S,VMXD4B,FNO2S,FNO2B
-C    5,ZNFN4S,ZNFN4B 
+C    5,ZNFN4S,ZNFN4B
 7777  FORMAT(A8,5I4,50E12.4)
 C     ENDIF
       ELSE
@@ -1712,7 +1712,7 @@ C
 C     MINERALIZATION-IMMOBILIZATION OF NH4 IN SOIL FROM MICROBIAL
 C     C:N AND NH4 CONCENTRATION IN BAND AND NON-BAND SOIL ZONES
 C
-C     RINHP=NH4 mineralization (-ve) or immobilization (+ve) demand 
+C     RINHP=NH4 mineralization (-ve) or immobilization (+ve) demand
 C     OMC,OMN=microbial nonstructural C,N
 C     CNOMC=maximum microbial N:C ratio
 C     CNH4S,CNH4B=aqueous NH4 concentrations in non-band, band
@@ -1722,25 +1722,25 @@ C     RINHX=microbially limited NH4 demand
 C     BIOA=microbial surface area, OMA=active biomass
 C     TFNG=temp+water stress
 C     FNH4S,FNHBS=fractions of NH4 in non-band, band
-C     RINHO,RINHB=substrate-unlimited NH4 mineraln-immobiln 
+C     RINHO,RINHB=substrate-unlimited NH4 mineraln-immobiln
 C     VOLW=water content
 C     ZNH4M,ZNHBM=NH4 not available for uptake in non-band, band
 C     FNH4X,FNB4X=fractions of biological NH4 demand in non-band, band
-C     RINH4,RINB4=substrate-limited NH4 mineraln-immobiln in non-band, band 
-C     TRINH4=total NH4 net mineraln (-ve) or immobiln (+ve) 
-C     
+C     RINH4,RINB4=substrate-limited NH4 mineraln-immobiln in non-band, band
+C     TRINH4=total NH4 net mineraln (-ve) or immobiln (+ve)
+C
 
       RINHP=(OMC(3,N,K,L,NY,NX)*CNOMC(3,N,K)-OMN(3,N,K,L,NY,NX))
       IF(RINHP.GT.0.0)THEN
       CNH4X=AMAX1(0.0,CNH4S(L,NY,NX)-Z4MN)
       CNH4Y=AMAX1(0.0,CNH4B(L,NY,NX)-Z4MN)
-      RINHX=AMIN1(RINHP,BIOA*OMA(N,K)*TFNG(N,K)*Z4MX) 
+      RINHX=AMIN1(RINHP,BIOA*OMA(N,K)*TFNG(N,K)*Z4MX)
       RINHO(N,K,L,NY,NX)=FNH4S*RINHX*CNH4X/(CNH4X+Z4KU)
       RINHB(N,K,L,NY,NX)=FNHBS*RINHX*CNH4Y/(CNH4Y+Z4KU)
       ZNH4M=Z4MN*VOLW(L,NY,NX)*FNH4S
       ZNHBM=Z4MN*VOLW(L,NY,NX)*FNHBS
       RINH4(N,K)=AMIN1(FNH4X*AMAX1(0.0,(ZNH4S(L,NY,NX)-ZNH4M))
-     2,RINHO(N,K,L,NY,NX)) 
+     2,RINHO(N,K,L,NY,NX))
       RINB4(N,K)=AMIN1(FNB4X*AMAX1(0.0,(ZNH4B(L,NY,NX)-ZNHBM))
      2,RINHB(N,K,L,NY,NX))
       ELSE
@@ -1753,7 +1753,7 @@ C
 C    2/AREA(3,L,NY,NX)
 C     IF(L.EQ.3.AND.K.EQ.1.AND.N.EQ.6)THEN
 C     WRITE(*,7776)'RINH4',I,J,NX,NY,L,K,N,RINH4(N,K),RINHP
-C    1,BIOA*OMA(N,K)*Z4MX*TFNG(N,K),BIOA,OMA(N,K),Z4MX,TFNG(N,K) 
+C    1,BIOA*OMA(N,K)*Z4MX*TFNG(N,K),BIOA,OMA(N,K),Z4MX,TFNG(N,K)
 C    2,OMC(3,N,K,L,NY,NX),CNOMC(3,N,K),OMN(3,N,K,L,NY,NX)
 C    3,RINHO(N,K,L,NY,NX),CNH4S(L,NY,NX),FNH4X,ZNH4S(L,NY,NX)
 C    4,ZNH4B(L,NY,NX),ZNH4T(L),OQN(K,L,NY,NX),TRINH4(NY,NX)
@@ -1771,12 +1771,12 @@ C     RINOX=microbially limited NO3 demand
 C     BIOA=microbial surface area, OMA=active biomass
 C     TFNG=temp+water stress
 C     FNO3S,FNO3B=fractions of NO3 in non-band, band
-C     RINOO,RINOB=substrate-unlimited NO3 immobiln 
+C     RINOO,RINOB=substrate-unlimited NO3 immobiln
 C     VOLW=water content
 C     ZNO3M,ZNOBM=NO3 not available for uptake in non-band, band
 C     FNO3X,FNB3X=fractions of biological NO3 demand in non-band, band
-C     RINO3,RINB3=substrate-limited NO3 immobiln in non-band, band 
-C     TRINH4=total net NH4+NO3 mineraln (-ve) or immobiln (+ve) 
+C     RINO3,RINB3=substrate-limited NO3 immobiln in non-band, band
+C     TRINH4=total net NH4+NO3 mineraln (-ve) or immobiln (+ve)
 C
       RINOP=AMAX1(0.0,RINHP-RINH4(N,K)-RINB4(N,K))
       IF(RINOP.GT.0.0)THEN
@@ -1788,9 +1788,9 @@ C
       ZNO3M=ZOMN*VOLW(L,NY,NX)*FNO3S
       ZNOBM=ZOMN*VOLW(L,NY,NX)*FNO3B
       RINO3(N,K)=AMIN1(FNO3X*AMAX1(0.0,(ZNO3S(L,NY,NX)-ZNO3M))
-     2,RINOO(N,K,L,NY,NX)) 
+     2,RINOO(N,K,L,NY,NX))
       RINB3(N,K)=AMIN1(FNB3X*AMAX1(0.0,(ZNO3B(L,NY,NX)-ZNOBM))
-     2,RINOB(N,K,L,NY,NX)) 
+     2,RINOB(N,K,L,NY,NX))
       ELSE
       RINOO(N,K,L,NY,NX)=0.0
       RINOB(N,K,L,NY,NX)=0.0
@@ -1801,10 +1801,10 @@ C
 C     IF(RINO3(N,K).LT.0.0.OR.RINB3(N,K).LT.0.0)THEN
 C     WRITE(*,4321)'RINO3',I,J,NX,NY,L,K,N
 C    2,RINOO(N,K,L,NY,NX),RINO3(N,K)
-C    2,RINOP,BIOA,OMA(N,K),TFNG(N,K),ZOMX,WFN(N,K),FNO3X,FNO3B 
+C    2,RINOP,BIOA,OMA(N,K),TFNG(N,K),ZOMX,WFN(N,K),FNO3X,FNO3B
 C    2,VLNO3(L,NY,NX),VLNOB(L,NY,NX),CNO3S(L,NY,NX),CNO3B(L,NY,NX)
 C    3,RINOB(N,K,L,NY,NX),RINB3,ZNO3S(L,NY,NX),ZNO3B(L,NY,NX)
-C    3,OMC(3,N,K,L,NY,NX),CPOMC(3,N,K),OMP(3,N,K,L,NY,NX),WFNG 
+C    3,OMC(3,N,K,L,NY,NX),CPOMC(3,N,K),OMP(3,N,K,L,NY,NX),WFNG
 4321  FORMAT(A8,7I4,60E12.4)
 C     ENDIF
 C
@@ -1821,38 +1821,38 @@ C     RIPOX=microbially limited H2PO4 demand
 C     BIOA=microbial surface area, OMA=active biomass
 C     TFNG=temp+water stress
 C     FH2PS,FH2PB=fractions of H2PO4 in non-band, band
-C     RIPOO,RIPBO=substrate-unlimited H2PO4 mineraln-immobiln 
+C     RIPOO,RIPBO=substrate-unlimited H2PO4 mineraln-immobiln
 C     H2POM,H2PBM=H2PO4 not available for uptake in non-band, band
 C     VOLW=water content
 C     FPO4X,FPOBX=fractions of biol H2PO4 demand in non-band, band
-C     RIPO4,RIPOB=substrate-limited H2PO4 mineraln-immobn in non-band, band 
-C     TRIPO4=total H2PO4 net mineraln (-ve) or immobiln (+ve) 
+C     RIPO4,RIPOB=substrate-limited H2PO4 mineraln-immobn in non-band, band
+C     TRIPO4=total H2PO4 net mineraln (-ve) or immobiln (+ve)
 C
       RIPOP=(OMC(3,N,K,L,NY,NX)*CPOMC(3,N,K)-OMP(3,N,K,L,NY,NX))
       IF(RIPOP.GT.0.0)THEN
       CH2PX=AMAX1(0.0,CH2P4(L,NY,NX)-HPMN)
       CH2PY=AMAX1(0.0,CH2P4B(L,NY,NX)-HPMN)
       RIPOX=AMIN1(RIPOP,BIOA*OMA(N,K)*TFNG(N,K)*HPMX)
-      RIPOO(N,K,L,NY,NX)=FH2PS*RIPOX*CH2PX/(CH2PX+HPKU) 
-      RIPBO(N,K,L,NY,NX)=FH2PB*RIPOX*CH2PY/(CH2PY+HPKU) 
-      H2POM=HPMN*VOLW(L,NY,NX)*FH2PS 
+      RIPOO(N,K,L,NY,NX)=FH2PS*RIPOX*CH2PX/(CH2PX+HPKU)
+      RIPBO(N,K,L,NY,NX)=FH2PB*RIPOX*CH2PY/(CH2PY+HPKU)
+      H2POM=HPMN*VOLW(L,NY,NX)*FH2PS
       H2PBM=HPMN*VOLW(L,NY,NX)*FH2PB
       RIPO4(N,K)=AMIN1(FPO4X*AMAX1(0.0,(H2PO4(L,NY,NX)-H2POM))
-     2,RIPOO(N,K,L,NY,NX)) 
+     2,RIPOO(N,K,L,NY,NX))
       RIPOB(N,K)=AMIN1(FPOBX*AMAX1(0.0,(H2POB(L,NY,NX)-H2PBM))
-     2,RIPBO(N,K,L,NY,NX)) 
+     2,RIPBO(N,K,L,NY,NX))
       ELSE
       RIPOO(N,K,L,NY,NX)=0.0
       RIPBO(N,K,L,NY,NX)=0.0
-      RIPO4(N,K)=RIPOP*FH2PS 
-      RIPOB(N,K)=RIPOP*FH2PB 
+      RIPO4(N,K)=RIPOP*FH2PS
+      RIPOB(N,K)=RIPOP*FH2PB
       ENDIF
       TRIPO4(NY,NX)=TRIPO4(NY,NX)+(RIPO4(N,K)+RIPOB(N,K))
 C     IF(NY.EQ.5.AND.L.EQ.10.AND.K.EQ.3.AND.N.EQ.2)THEN
 C     WRITE(*,4322)'RIPO4',I,J,NX,NY,L,K,N,RIPO4(N,K),FPO4X,H2P4T(L)
-C    2,RIPOO(N,K,L,NY,NX),RIPOP,BIOA,OMA(N,K),TFNG(N,K),HPMX,WFN(N,K) 
+C    2,RIPOO(N,K,L,NY,NX),RIPOP,BIOA,OMA(N,K),TFNG(N,K),HPMX,WFN(N,K)
 C    2,VLPO4(L,NY,NX),VLPOB(L,NY,NX),CH2P4(L,NY,NX),CH2P4B(L,NY,NX)
-C    3,OMC(3,N,K,L,NY,NX),CPOMC(3,N,K),OMP(3,N,K,L,NY,NX),WFNG 
+C    3,OMC(3,N,K,L,NY,NX),CPOMC(3,N,K),OMP(3,N,K,L,NY,NX),WFNG
 4322  FORMAT(A8,7I4,30E12.4)
 C     ENDIF
 C
@@ -1867,38 +1867,38 @@ C     RIP1X=microbially limited HPO4 demand
 C     BIOA=microbial surface area, OMA=active biomass
 C     TFNG=temp+water stress
 C     FH1PS,FH1PB=fractions of HPO4 in non-band, band
-C     RIPO1,RIPB1=substrate-unlimited HPO4 mineraln-immobiln  
+C     RIPO1,RIPB1=substrate-unlimited HPO4 mineraln-immobiln
 C     H1POM,H1PBM=HPO4 not available for uptake in non-band, band
 C     VOLW=water content
 C     FP14X,FP1BX=fractions of biol HPO4 demand in non-band, band
-C     RIP14,RIP1B=substrate-limited HPO4 mineraln-immobn in non-band, band 
-C     TRIPO4=total H2PO4+HPO4 net mineraln (-ve) or immobiln (+ve) 
+C     RIP14,RIP1B=substrate-limited HPO4 mineraln-immobn in non-band, band
+C     TRIPO4=total H2PO4+HPO4 net mineraln (-ve) or immobiln (+ve)
 C
       RIP1P=0.1*AMAX1(0.0,RIPOP-RIPO4(N,K)-RIPOB(N,K))
       IF(RIP1P.GT.0.0)THEN
       CH1PX=AMAX1(0.0,CH1P4(L,NY,NX)-HPMN)
       CH1PY=AMAX1(0.0,CH1P4B(L,NY,NX)-HPMN)
       RIP1X=AMIN1(RIP1P,BIOA*OMA(N,K)*TFNG(N,K)*HPMX)
-      RIPO1(N,K,L,NY,NX)=FH1PS*RIP1X*CH1PX/(CH1PX+HPKU) 
-      RIPB1(N,K,L,NY,NX)=FH1PB*RIP1X*CH1PY/(CH1PY+HPKU) 
-      H1POM=HPMN*VOLW(L,NY,NX)*FH1PS 
+      RIPO1(N,K,L,NY,NX)=FH1PS*RIP1X*CH1PX/(CH1PX+HPKU)
+      RIPB1(N,K,L,NY,NX)=FH1PB*RIP1X*CH1PY/(CH1PY+HPKU)
+      H1POM=HPMN*VOLW(L,NY,NX)*FH1PS
       H1PBM=HPMN*VOLW(L,NY,NX)*FH1PB
       RIP14(N,K)=AMIN1(FP14X*AMAX1(0.0,(H1PO4(L,NY,NX)-H1POM))
-     2,RIPO1(N,K,L,NY,NX)) 
+     2,RIPO1(N,K,L,NY,NX))
       RIP1B(N,K)=AMIN1(FP1BX*AMAX1(0.0,(H1POB(L,NY,NX)-H1PBM))
-     2,RIPB1(N,K,L,NY,NX)) 
+     2,RIPB1(N,K,L,NY,NX))
       ELSE
       RIPO1(N,K,L,NY,NX)=0.0
       RIPB1(N,K,L,NY,NX)=0.0
-      RIP14(N,K)=RIP1P*FH1PS 
-      RIP1B(N,K)=RIP1P*FH1PB 
+      RIP14(N,K)=RIP1P*FH1PS
+      RIP1B(N,K)=RIP1P*FH1PB
       ENDIF
       TRIPO4(NY,NX)=TRIPO4(NY,NX)+(RIP14(N,K)+RIP1B(N,K))
 C     IF(NY.EQ.5.AND.L.EQ.10.AND.K.EQ.3.AND.N.EQ.2)THEN
 C     WRITE(*,4323)'RIP14',I,J,NX,NY,L,K,N,RIP14(N,K),FP14X,H1P4T(L)
-C    2,RIPO1(N,K,L,NY,NX),RIP1P,BIOA,OMA(N,K),TFNG(N,K),HPMX,WFN(N,K) 
+C    2,RIPO1(N,K,L,NY,NX),RIP1P,BIOA,OMA(N,K),TFNG(N,K),HPMX,WFN(N,K)
 C    2,VLPO4(L,NY,NX),VLPOB(L,NY,NX),CH1P4(L,NY,NX),CH1P4B(L,NY,NX)
-C    3,OMC(3,N,K,L,NY,NX),CPOMC(3,N,K),OMP(3,N,K,L,NY,NX),WFNG 
+C    3,OMC(3,N,K,L,NY,NX),CPOMC(3,N,K),OMP(3,N,K,L,NY,NX),WFNG
 4323  FORMAT(A8,7I4,30E12.4)
 C     ENDIF
 C
@@ -1906,7 +1906,7 @@ C     MINERALIZATION-IMMOBILIZATION OF NH4 IN SURFACE RESIDUE FROM
 C     MICROBIAL C:N AND NH4 CONCENTRATION IN BAND AND NON-BAND SOIL
 C     ZONES OF SOIL SURFACE
 C
-C     RINHPR=NH4 mineralization (-ve) or immobilization (+ve) demand 
+C     RINHPR=NH4 mineralization (-ve) or immobilization (+ve) demand
 C     NU=surface layer number
 C     CNH4S,CNH4B=aqueous NH4 concentrations in non-band, band
 C     Z4MX,Z4MN,Z4KU=parameters for max NH4 uptake rate,
@@ -1914,33 +1914,36 @@ C     minimum NH4 concentration and Km for NH4 uptake
 C     BIOA=microbial surface area, OMA=active biomass
 C     TFNG=temp+water stress
 C     FNH4S,FNHBS=fractions of NH4 in non-band, band
-C     RINHOR=substrate-unlimited NH4 mineraln-immobiln 
+C     RINHOR=substrate-unlimited NH4 mineraln-immobiln
 C     VOLW=water content
-C     ZNH4M=NH4 not available for uptake 
+C     ZNH4M=NH4 not available for uptake
 C     FNH4XR=fractions of biological NH4 demand
 C     RINH4R=substrate-limited NH4 mineraln-immobiln
-C     TRINH4=total NH4 net mineraln (-ve) or immobiln (+ve) 
+C     TRINH4=total NH4 net mineraln (-ve) or immobiln (+ve)
 C
       IF(L.EQ.0)THEN
       RINHPR=RINHP-RINH4(N,K)-RINO3(N,K)
       IF(RINHPR.GT.0.0)THEN
       CNH4X=AMAX1(0.0,CNH4S(NU(NY,NX),NY,NX)-Z4MN)
       CNH4Y=AMAX1(0.0,CNH4B(NU(NY,NX),NY,NX)-Z4MN)
-      RINHOR(N,K,NY,NX)=AMIN1(RINHPR,BIOA*OMA(N,K)*TFNG(N,K)*Z4MX) 
+      RINHOR(N,K,NY,NX)=AMIN1(RINHPR,BIOA*OMA(N,K)*TFNG(N,K)*Z4MX)
      2*(FNH4S*CNH4X/(CNH4X+Z4KU)+FNHBS*CNH4Y
-     3/(CNH4Y+Z4KU)) 
-      ZNH4M=Z4MN*VOLW(NU(NY,NX),NY,NX) 
+     3/(CNH4Y+Z4KU))
+      ZNH4M=Z4MN*VOLW(NU(NY,NX),NY,NX)
+      ZNH4T(NU(NY,NX))=AMAX1(0.0,ZNH4S(NU(NY,NX),NY,NX))+
+     2AMAX1(0.0,ZNH4B(NU(NY,NX),NY,NX))
       RINH4R(N,K)=AMIN1(FNH4XR(N,K)*AMAX1(0.0
      2,(ZNH4T(NU(NY,NX))-ZNH4M)),RINHOR(N,K,NY,NX))
       ELSE
       RINHOR(N,K,NY,NX)=0.0
       RINH4R(N,K)=RINHPR
       ENDIF
+C      print*,'nk',RINHPR,RINH4R(N,K)
       TRINH4(NY,NX)=TRINH4(NY,NX)+RINH4R(N,K)
 C    2/AREA(3,L,NY,NX)
 C     IF(K.EQ.2.AND.N.EQ.1)THEN
 C     WRITE(*,7778)'RINH4R',I,J,NX,NY,L,K,N,RINH4R(N,K),RINHPR
-C    2,BIOA*OMA(N,K)*Z4MX,RINHP,RINH4(N,K),RINO3(N,K) 
+C    2,BIOA*OMA(N,K)*Z4MX,RINHP,RINH4(N,K),RINO3(N,K)
 C    3,RINHOR(N,K,NY,NX),CNH4S(NU(NY,NX),NY,NX),FNH4XR(N,K)
 C    4,ZNH4T(NU(NY,NX))
 7778  FORMAT(A8,7I4,20E12.4)
@@ -1950,7 +1953,7 @@ C     MINERALIZATION-IMMOBILIZATION OF NO3 IN SURFACE RESIDUE FROM
 C     MICROBIAL C:N AND NO3 CONCENTRATION IN BAND AND NON-BAND SOIL
 C     ZONES OF SOIL SURFACE
 C
-C     RINOPR=NH4 mineralization (-ve) or immobilization (+ve) demand 
+C     RINOPR=NH4 mineralization (-ve) or immobilization (+ve) demand
 C     NU=surface layer number
 C     CNO3S,CNO3B=aqueous NO3 concentrations in non-band, band
 C     ZOMX,ZOMN,ZOKU=parameters for max NO3 uptake rate,
@@ -1959,21 +1962,23 @@ C     RINOOR=microbially limited NO3 demand
 C     BIOA=microbial surface area, OMA=active biomass
 C     TFNG=temp+water stress
 C     FNO3S,FNO3B=fractions of NO3 in non-band, band
-C     RINO3R=substrate-unlimited NO3 immobiln 
+C     RINO3R=substrate-unlimited NO3 immobiln
 C     VOLW=water content
-C     ZNO3M=NO3 not available for uptake 
+C     ZNO3M=NO3 not available for uptake
 C     FNO3XR=fraction of biological NO3 demand
 C     RINO3R=substrate-limited NO3 immobiln
-C     TRINH4=total NH4+NO3 net mineraln (-ve) or immobiln (+ve) 
+C     TRINH4=total NH4+NO3 net mineraln (-ve) or immobiln (+ve)
 C
       RINOPR=AMAX1(0.0,RINHPR-RINH4R(N,K))
       IF(RINOPR.GT.0.0)THEN
       CNO3X=AMAX1(0.0,CNO3S(NU(NY,NX),NY,NX)-ZOMN)
       CNO3Y=AMAX1(0.0,CNO3B(NU(NY,NX),NY,NX)-ZOMN)
-      RINOOR(N,K,NY,NX)=AMAX1(RINOPR,BIOA*OMA(N,K)*TFNG(N,K)*ZOMX) 
+      RINOOR(N,K,NY,NX)=AMAX1(RINOPR,BIOA*OMA(N,K)*TFNG(N,K)*ZOMX)
      2*(FNO3S*CNO3X/(CNO3X+ZOKU)+FNO3B*CNO3Y
-     3/(CNO3Y+ZOKU)) 
-      ZNO3M=ZOMN*VOLW(NU(NY,NX),NY,NX) 
+     3/(CNO3Y+ZOKU))
+      ZNO3M=ZOMN*VOLW(NU(NY,NX),NY,NX)
+      ZNO3T(NU(NY,NX))=AMAX1(0.0,ZNO3S(NU(NY,NX),NY,NX))
+     2+AMAX1(0.0,ZNO3B(NU(NY,NX),NY,NX))
       RINO3R(N,K)=AMIN1(FNO3XR(N,K)*AMAX1(0.0
      2,(ZNO3T(NU(NY,NX))-ZNO3M)),RINOOR(N,K,NY,NX))
       ELSE
@@ -1986,7 +1991,7 @@ C     MINERALIZATION-IMMOBILIZATION OF H2PO4 IN SURFACE RESIDUE FROM
 C     MICROBIAL C:P AND PO4 CONCENTRATION IN BAND AND NON-BAND SOIL
 C     ZONES OF SOIL SURFACE
 C
-C     RIPOPR=H2PO4 mineralization (-ve) or immobilization (+ve) demand 
+C     RIPOPR=H2PO4 mineralization (-ve) or immobilization (+ve) demand
 C     NU=surface layer number
 C     CH2P4,CH2P4B=aqueous H2PO4 concentrations in non-band, band
 C     HPMX,HPMN,HPKU=parameters for max H2PO4 uptake rate,
@@ -1995,36 +2000,38 @@ C     RIPOOR=microbially limited H2PO4 demand
 C     BIOA=microbial surface area, OMA=active biomass
 C     TFNG=temp+water stress
 C     FH2PS,FH2PB=fractions of H2PO4 in non-band, band
-C     RIPOOR=substrate-unlimited H2PO4 mineraln-immobiln 
+C     RIPOOR=substrate-unlimited H2PO4 mineraln-immobiln
 C     VOLW=water content
-C     H2P4M=H2PO4 not available for uptake 
+C     H2P4M=H2PO4 not available for uptake
 C     FPO4XR=fractions of biological H2PO4 demand
 C     RIPO4R=substrate-limited H2PO4 mineraln-immobiln
-C     TRIPO4=total H2PO4 net mineraln (-ve) or immobiln (+ve) 
+C     TRIPO4=total H2PO4 net mineraln (-ve) or immobiln (+ve)
 C
       RIPOPR=RIPOP-RIPO4(N,K)
       IF(RIPOPR.GT.0.0)THEN
       CH2PX=AMAX1(0.0,CH2P4(NU(NY,NX),NY,NX)-HPMN)
       CH2PY=AMAX1(0.0,CH2P4B(NU(NY,NX),NY,NX)-HPMN)
-      RIPOOR(N,K,NY,NX)=AMIN1(RIPOPR,BIOA*OMA(N,K)*TFNG(N,K)*HPMX) 
+      RIPOOR(N,K,NY,NX)=AMIN1(RIPOPR,BIOA*OMA(N,K)*TFNG(N,K)*HPMX)
      2*(FH2PS*CH2PX/(CH2PX+HPKU)+FH2PB*CH2PY
-     3/(CH2PY+HPKU)) 
-      H2P4M=HPMN*VOLW(NU(NY,NX),NY,NX) 
+     3/(CH2PY+HPKU))
+      H2P4M=HPMN*VOLW(NU(NY,NX),NY,NX)
+      H2P4T(NU(NY,NX))=AMAX1(0.0,H2PO4(NU(NY,NX),NY,NX))
+     2+AMAX1(0.0,H2POB(NU(NY,NX),NY,NX))
       RIPO4R(N,K)=AMIN1(FPO4XR(N,K)*AMAX1(0.0
      2,(H2P4T(NU(NY,NX))-H2P4M)),RIPOOR(N,K,NY,NX))
       ELSE
       RIPOOR(N,K,NY,NX)=0.0
       RIPO4R(N,K)=RIPOPR
       ENDIF
-      TRIPO4(NY,NX)=TRIPO4(NY,NX)+RIPO4R(N,K) 
+      TRIPO4(NY,NX)=TRIPO4(NY,NX)+RIPO4R(N,K)
 C     WRITE(*,7778)'RIPO4R',I,J,NX,NY,L,K,N,RIPO4R(N,K),FPO4XR(N,K)
-C    2,H2P4T(NU(NY,NX)),RIPOOR(N,K,NY,NX),RIPOPR 
+C    2,H2P4T(NU(NY,NX)),RIPOOR(N,K,NY,NX),RIPOPR
 C
 C     MINERALIZATION-IMMOBILIZATION OF HPO4 IN SURFACE RESIDUE FROM
 C     MICROBIAL C:P AND PO4 CONCENTRATION IN BAND AND NON-BAND SOIL
 C     ZONES OF SOIL SURFACE
 C
-C     RIP1PR=HPO4 mineralization (-ve) or immobilization (+ve) demand 
+C     RIP1PR=HPO4 mineralization (-ve) or immobilization (+ve) demand
 C     NU=surface layer number
 C     CH1P4,CH1P4B=aqueous HPO4 concentrations in non-band, band
 C     HPMX,HPMN,HPKU=parameters for max HPO4 uptake rate,
@@ -2033,43 +2040,45 @@ C     RIPO1R=microbially limited HPO4 demand
 C     BIOA=microbial surface area, OMA=active biomass
 C     TFNG=temp+water stress
 C     FH1PS,FH1PB=fractions of HPO4 in non-band, band
-C     RIPO1R=substrate-unlimited HPO4 mineraln-immobiln 
+C     RIPO1R=substrate-unlimited HPO4 mineraln-immobiln
 C     VOLW=water content
-C     H1P4M=HPO4 not available for uptake 
+C     H1P4M=HPO4 not available for uptake
 C     FP14XR=fraction of biological HPO4 demand
 C     RIP14R=substrate-limited HPO4 minereraln-immobiln
-C     TRIPO4=total HPO4 net mineraln (-ve) or immobiln (+ve) 
+C     TRIPO4=total HPO4 net mineraln (-ve) or immobiln (+ve)
 C
       RIP1PR=0.1*AMAX1(0.0,RIPOPR-RIPO4R(N,K))
       IF(RIP1PR.GT.0.0)THEN
       CH1PX=AMAX1(0.0,CH1P4(NU(NY,NX),NY,NX)-HPMN)
       CH1PY=AMAX1(0.0,CH1P4B(NU(NY,NX),NY,NX)-HPMN)
-      RIPO1R(N,K,NY,NX)=AMIN1(RIP1PR,BIOA*OMA(N,K)*TFNG(N,K)*HPMX) 
+      RIPO1R(N,K,NY,NX)=AMIN1(RIP1PR,BIOA*OMA(N,K)*TFNG(N,K)*HPMX)
      2*(FH1PS*CH1PX/(CH1PX+HPKU)+FH1PB*CH1PY
-     3/(CH1PY+HPKU)) 
-      H1P4M=HPMN*VOLW(NU(NY,NX),NY,NX) 
+     3/(CH1PY+HPKU))
+      H1P4M=HPMN*VOLW(NU(NY,NX),NY,NX)
+      H1P4T(NU(NY,NX))=AMAX1(0.0,H1PO4(NU(NY,NX),NY,NX))
+     2+AMAX1(0.0,H1POB(NU(NY,NX),NY,NX))
       RIP14R(N,K)=AMIN1(FP14XR(N,K)*AMAX1(0.0
      2,(H1P4T(NU(NY,NX))-H1P4M)),RIPO1R(N,K,NY,NX))
       ELSE
       RIPO1R(N,K,NY,NX)=0.0
       RIP14R(N,K)=RIP1PR
       ENDIF
-      TRIPO4(NY,NX)=TRIPO4(NY,NX)+RIP14R(N,K) 
+      TRIPO4(NY,NX)=TRIPO4(NY,NX)+RIP14R(N,K)
 C     WRITE(*,7778)'RIP14R',I,J,NX,NY,L,K,N,RIP14R(N,K),FP14XR(N,K)
-C    2,H1P4T(NU(NY,NX)),RIPO1R(N,K,NY,NX),RIP1PR 
+C    2,H1P4T(NU(NY,NX)),RIPO1R(N,K,NY,NX),RIP1PR
       ENDIF
 C
 C     pH EFFECT ON MAINTENANCE RESPIRATION
 C
 C     FPH=pH effect on maintenance respiration
 C     RMOM=specific maintenance respiration rate
-C     TFNR=temperature effect on maintenance respiration 
+C     TFNR=temperature effect on maintenance respiration
 C     OMN=microbial N biomass
 C     RMOMK=effect of low microbial C concentration on mntc respn
 C
       FPH=1.0+AMAX1(0.0,0.25*(6.5-PH(L,NY,NX)))
       RMOMX=RMOM*TFNR(N,K)*FPH
-      RMOMC(1,N,K)=OMN(1,N,K,L,NY,NX)*RMOMX*RMOMK(1) 
+      RMOMC(1,N,K)=OMN(1,N,K,L,NY,NX)*RMOMX*RMOMK(1)
       RMOMC(2,N,K)=OMN2(N,K)*RMOMX*RMOMK(2)
 C
 C     MICROBIAL MAINTENANCE AND GROWTH RESPIRATION
@@ -2084,7 +2093,7 @@ C
 C
 C     N2 FIXATION: N=(6) AEROBIC, (7) ANAEROBIC
 C     FROM GROWTH RESPIRATION, FIXATION ENERGY REQUIREMENT,
-C     MICROBIAL N REQUIREMENT IN LABILE (1) AND 
+C     MICROBIAL N REQUIREMENT IN LABILE (1) AND
 C     RESISTANT (2) FRACTIONS
 C
 C     RGN2P=respiration to meet N2 fixation demand
@@ -2108,12 +2117,12 @@ C
       ELSE
       RGN2F(N,K)=0.0
       ENDIF
-      RN2FX(N,K)=RGN2F(N,K)*EN2F(N) 
+      RN2FX(N,K)=RGN2F(N,K)*EN2F(N)
 C     IF(L.EQ.3.AND.K.EQ.1.AND.N.EQ.6)THEN
-C     WRITE(*,5566)'N2 FIX',I,J,NX,NY,L,K,N,RN2FX(N,K),EN2F(N) 
+C     WRITE(*,5566)'N2 FIX',I,J,NX,NY,L,K,N,RN2FX(N,K),EN2F(N)
 C    2,OMC(3,N,K,L,NY,NX)*CNOMC(3,N,K),OMN(3,N,K,L,NY,NX)
 C    3,RINH4(N,K),RINO3(N,K),RGN2P,RGN2F(N,K),RGOMT
-C    4,CZ2GS(L,NY,NX) 
+C    4,CZ2GS(L,NY,NX)
 5566  FORMAT(A8,7I4,30E12.4)
 C     ENDIF
       ELSE
@@ -2124,7 +2133,7 @@ C
 C     DOC, DON, DOP AND ACETATE UPTAKE DRIVEN BY GROWTH RESPIRATION
 C     FROM O2, NOX AND C REDUCTION
 C
-C     CGOMX=DOC+acetate uptake from aerobic growth respiration 
+C     CGOMX=DOC+acetate uptake from aerobic growth respiration
 C     CGOMD=DOC+acetate uptake from denitrifier growth respiration
 C     RMOMT=maintenance respiration
 C     RGOMO=total respiration
@@ -2163,8 +2172,8 @@ C
       TCGOMN(K)=TCGOMN(K)+CGOMN(N,K)
       TCGOMP(K)=TCGOMP(K)+CGOMP(N,K)
 C     IF((I/10)*10.EQ.I.AND.J.EQ.24.AND.L.EQ.3)THEN
-C     WRITE(*,5557)'CGOQC',I,J,NX,NY,L,K,N,CGOQC(N,K),CGOMX 
-C    2,FGOCP,FGOAP,CGOMD,RMOMT,RGN2F(N,K),ECHZ 
+C     WRITE(*,5557)'CGOQC',I,J,NX,NY,L,K,N,CGOQC(N,K),CGOMX
+C    2,FGOCP,FGOAP,CGOMD,RMOMT,RGN2F(N,K),ECHZ
 C    3,RGOMD(N,K),ENOX,RGOMO(N,K),WFN(N,K),FOXYX
 C     WRITE(*,5557)'CGOMP',I,J,NX,NY,L,K,N,CGOMP(N,K),OQP(K,L,NY,NX)
 C    2,FOMK(N,K),CGOXC,CPQ(K),FCP(N,K),CGOQC(N,K),CGOAC(N,K)
@@ -2216,11 +2225,11 @@ C     TFNG=temperature+water stress function
 C     OMGR=rate constant for transferring nonstructural to structural C
 C     CGOMS,CGONS,CGOPS=transfer from nonstructural to structural C,N,P
 C     FL=partitioning between labile and resistant microbial components
-C     OMC,OMN,OMP=nonstructural microbial C,N,P 
+C     OMC,OMN,OMP=nonstructural microbial C,N,P
 C
       CGOMZ=TFNG(N,K)*OMGR*AMAX1(0.0,OMC(3,N,K,L,NY,NX))
       DO 745 M=1,2
-      CGOMS(M,N,K)=FL(M)*CGOMZ 
+      CGOMS(M,N,K)=FL(M)*CGOMZ
       IF(OMC(3,N,K,L,NY,NX).GT.ZEROS(NY,NX))THEN
       CGONS(M,N,K)=AMIN1(FL(M)*AMAX1(0.0,OMN(3,N,K,L,NY,NX))
      2,CGOMS(M,N,K)*OMN(3,N,K,L,NY,NX)/OMC(3,N,K,L,NY,NX))
@@ -2229,7 +2238,7 @@ C
       ELSE
       CGONS(M,N,K)=0.0
       CGOPS(M,N,K)=0.0
-      ENDIF 
+      ENDIF
 C
 C     MICROBIAL DECOMPOSITION FROM BIOMASS, SPECIFIC DECOMPOSITION
 C     RATE, TEMPERATURE
@@ -2238,8 +2247,8 @@ C     SPOMX=rate constant for microbial decomposition
 C     SPOMC=basal decomposition rate
 C     SPOMK=effect of low microbial C concentration on microbial decay
 C     RXOMC,RXOMN,RXOMP=microbial C,N,P decomposition
-C     RDOMC,RDOMN,RDOMP=microbial C,N,P litterfall 
-C     R3OMC,R3OMN,R3OMP=microbial C,N,P recycling 
+C     RDOMC,RDOMN,RDOMP=microbial C,N,P litterfall
+C     R3OMC,R3OMN,R3OMP=microbial C,N,P recycling
 C
       SPOMX=SQRT(TFNG(N,K))*SPOMC(M)*SPOMK(M)
       RXOMC(M,N,K)=AMAX1(0.0,OMC(M,N,K,L,NY,NX)*SPOMX)
@@ -2256,18 +2265,18 @@ C     HUMIFICATION OF MICROBIAL DECOMPOSITION PRODUCTS FROM
 C     DECOMPOSITION RATE, SOIL CLAY AND OC 'EHUM' FROM 'HOUR1'
 C
 C     RHOMC,RHOMN,RHOMP=transfer of microbial C,N,P litterfall to humus
-C     EHUM=humus transfer fraction from hour1.f 
+C     EHUM=humus transfer fraction from hour1.f
 C     RCOMC,RCOMN,RCOMP=transfer of microbial C,N,P litterfall to residue
 C
       RHOMC(M,N,K)=AMAX1(0.0,RDOMC(M,N,K)*EHUM(L,NY,NX))
       RHOMN(M,N,K)=AMAX1(0.0,RDOMN(M,N,K)*EHUM(L,NY,NX))
-      RHOMP(M,N,K)=AMAX1(0.0,RDOMP(M,N,K)*EHUM(L,NY,NX)) 
+      RHOMP(M,N,K)=AMAX1(0.0,RDOMP(M,N,K)*EHUM(L,NY,NX))
 C     IF(L.EQ.3.AND.K.EQ.1.AND.N.EQ.6)THEN
 C     WRITE(*,8821)'RHOMC',I,J,L,K,N,M
 C    2,RXOMC(M,N,K),RXOMN(M,N,K),RXOMP(M,N,K)
 C    2,RDOMC(M,N,K),RDOMN(M,N,K),RDOMP(M,N,K)
 C    2,R3OMC(M,N,K),R3OMN(M,N,K),R3OMP(M,N,K)
-C    2,RHOMC(M,N,K),RHOMN(M,N,K),RHOMP(M,N,K) 
+C    2,RHOMC(M,N,K),RHOMN(M,N,K),RHOMP(M,N,K)
 C    4,OMC(M,N,K,L,NY,NX),OMN(M,N,K,L,NY,NX)
 C    5,OMP(M,N,K,L,NY,NX)
 C    4,OMC(3,N,K,L,NY,NX),OMN(3,N,K,L,NY,NX)
@@ -2303,7 +2312,7 @@ C
       RXMMC(M,N,K)=AMIN1(OMC(M,N,K,L,NY,NX)
      2,AMAX1(0.0,FRM*RMOMC(M,N,K)/RCCC))
       RXMMN(M,N,K)=AMIN1(OMN(M,N,K,L,NY,NX)
-     2,AMAX1(0.0,RXMMC(M,N,K)*CNOMA(N,K))) 
+     2,AMAX1(0.0,RXMMC(M,N,K)*CNOMA(N,K)))
       RXMMP(M,N,K)=AMIN1(OMP(M,N,K,L,NY,NX)
      2,AMAX1(0.0,RXMMC(M,N,K)*CPOMA(N,K)))
       RDMMC(M,N,K)=RXMMC(M,N,K)*(1.0-RCCC)
@@ -2317,11 +2326,11 @@ C     HUMIFICATION AND RECYCLING OF RESPIRATION DECOMPOSITION
 C     PRODUCTS
 C
 C     RHMMC,RHMMN,RHMMC=transfer of senesence litterfall C,N,P to humus
-C     EHUM=humus transfer fraction 
+C     EHUM=humus transfer fraction
 C     RCMMC,RCMMN,RCMMC=transfer of senesence litterfall C,N,P to residue
 C
       RHMMC(M,N,K)=AMAX1(0.0,RDMMC(M,N,K)*EHUM(L,NY,NX))
-      RHMMN(M,N,K)=AMAX1(0.0,RDMMN(M,N,K)*EHUM(L,NY,NX)) 
+      RHMMN(M,N,K)=AMAX1(0.0,RDMMN(M,N,K)*EHUM(L,NY,NX))
       RHMMP(M,N,K)=AMAX1(0.0,RDMMP(M,N,K)*EHUM(L,NY,NX))
       RCMMC(M,N,K)=RDMMC(M,N,K)-RHMMC(M,N,K)
       RCMMN(M,N,K)=RDMMN(M,N,K)-RHMMN(M,N,K)
@@ -2334,7 +2343,7 @@ C    4,RMOM,TFNR(N,K),FPH,RDMMN(M,N,K),CNSHZ,RDMMP(M,N,K)
 C    5,CPSHZ,EHUM(L,NY,NX),RXOMT,RMOMT,RMOMT,RGOMO(N,K)
 C    6,RGOMP,WFN(N,K)
 C     WRITE(*,8821)'RCMMP',I,J,L,K,N,M,RCMMP(M,N,K)
-C    2,RDMMP(M,N,K),RHMMP(M,N,K),EHUM(L,NY,NX) 
+C    2,RDMMP(M,N,K),RHMMP(M,N,K),EHUM(L,NY,NX)
 C    3,RCCC,RCCN,RCCP,RXMMP(M,N,K)
 C     ENDIF
 730   CONTINUE
@@ -2455,8 +2464,8 @@ C     TFNX=temperature stress function
 C     RCNO2,RCNOB=substrate-limited nitrous acid reduction in non-band,band
 C     RCN2O,RCN2B=N2O production from nitrous acid reduction in non-band,band
 C     RCNO3,RCN3B=NO3 production from nitrous acid reduction in non-band,band
-C     RCOQN=DON production from nitrous acid reduction 
-C     RVMXC,RVMBC=demand for NO2 reduction in non-band,band 
+C     RCOQN=DON production from nitrous acid reduction
+C     RVMXC,RVMBC=demand for NO2 reduction in non-band,band
 C
       IF(RNO2Y(L,NY,NX).GT.ZEROS(NY,NX))THEN
       FNO2=AMAX1(FMN,RVMXC(L,NY,NX)/RNO2Y(L,NY,NX))
@@ -2470,8 +2479,8 @@ C
       ENDIF
       TFNO2X=TFNO2X+FNO2
       TFNO2B=TFNO2B+FNB2
-      VMXC4S=7.5E-02*CHNO2*VOLWM(NPH,L,NY,NX)*FNO3S*TFNX 
-      VMXC4B=7.5E-02*CHNOB*VOLWM(NPH,L,NY,NX)*FNO3B*TFNX 
+      VMXC4S=7.5E-02*CHNO2*VOLWM(NPH,L,NY,NX)*FNO3S*TFNX
+      VMXC4B=7.5E-02*CHNOB*VOLWM(NPH,L,NY,NX)*FNO3B*TFNX
       RCNO2=AMAX1(0.0,AMIN1(ZNO2S(L,NY,NX)*FNO2,VMXC4S))
       RCNOB=AMAX1(0.0,AMIN1(ZNO2B(L,NY,NX)*FNB2,VMXC4B))
       RCN2O=0.10*RCNO2
@@ -2479,24 +2488,24 @@ C
       RCNO3=0.80*RCNO2
       RCN3B=0.80*RCNOB
       RCOQN=0.10*(RCNO2+RCNOB)
-      RVMXC(L,NY,NX)=VMXC4S 
-      RVMBC(L,NY,NX)=VMXC4B 
+      RVMXC(L,NY,NX)=VMXC4S
+      RVMBC(L,NY,NX)=VMXC4B
 C     IF((I/1)*1.EQ.I.AND.L.LE.5)THEN
 C     WRITE(*,7779)'CHEMO',I,J,L,RCNO2,RCNOB,CHY1,CHNO2,CHNOB
-C    2,CNO2S(L,NY,NX),CNO2B(L,NY,NX),VOLWM(NPH,L,NY,NX),FNO2 
-C    3,VMXC4S,VMXC4B,RVMXC(L,NY,NX),RNO2Y(L,NY,NX),RCN2O,RCN2B 
-C    4,RCNO3,RCNOB,RCOQN,VLNO3(L,NY,NX),VLNOB(L,NY,NX) 
+C    2,CNO2S(L,NY,NX),CNO2B(L,NY,NX),VOLWM(NPH,L,NY,NX),FNO2
+C    3,VMXC4S,VMXC4B,RVMXC(L,NY,NX),RNO2Y(L,NY,NX),RCN2O,RCN2B
+C    4,RCNO3,RCNOB,RCOQN,VLNO3(L,NY,NX),VLNOB(L,NY,NX)
 7779  FORMAT(A8,3I4,30E12.4)
 C     ENDIF
 C
-C     DECOMPOSITION    
+C     DECOMPOSITION
 C
 C     ROQCK=total respiration of DOC+DOA used to represent microbial activity
 C
       DO 1870 K=0,KL
       ROQCK(K)=0.0
       DO 1875 N=1,7
-      ROQCK(K)=ROQCK(K)+ROQCD(N,K) 
+      ROQCK(K)=ROQCK(K)+ROQCD(N,K)
 1875  CONTINUE
       XOQCK(K)=0.0
       XOQCZ(K)=0.0
@@ -2512,7 +2521,7 @@ C
 C     IF((I/10)*10.EQ.I.AND.J.EQ.24.AND.L.LE.1)THEN
 C     WRITE(*,4443)'PRIM1',I,J,NX,NY,L,K,ROQCK(K)
 C    2,XOQCK(K),OQC(K,L,NY,NX),XOQCZ(K),OQN(K,L,NY,NX),XOQNZ(K)
-C    3,OQP(K,L,NY,NX),XOQPZ(K),OQA(K,L,NY,NX),XOQAZ(K) 
+C    3,OQP(K,L,NY,NX),XOQPZ(K),OQA(K,L,NY,NX),XOQAZ(K)
 C     ENDIF
 1870  CONTINUE
 C
@@ -2528,12 +2537,12 @@ C
       DO 795 K=0,KL
       IF(K.LE.KL-1)THEN
       DO 800 KK=K+1,KL
-      OSRT=OSRH(K)+OSRH(KK)      
+      OSRT=OSRH(K)+OSRH(KK)
       IF(OSRH(K).GT.ZEROS(NY,NX).AND.OSRH(KK).GT.ZEROS(NY,NX))THEN
       XFRK=FPRIM*TFND(L,NY,NX)*(ROQCK(K)*OSRH(KK)
-     2-ROQCK(KK)*OSRH(K))/OSRT 
+     2-ROQCK(KK)*OSRH(K))/OSRT
       XFRC=FPRIM*TFND(L,NY,NX)*(OQC(K,L,NY,NX)*OSRH(KK)
-     2-OQC(KK,L,NY,NX)*OSRH(K))/OSRT 
+     2-OQC(KK,L,NY,NX)*OSRH(K))/OSRT
       XFRN=FPRIM*TFND(L,NY,NX)*(OQN(K,L,NY,NX)*OSRH(KK)
      2-OQN(KK,L,NY,NX)*OSRH(K))/OSRT
       XFRP=FPRIM*TFND(L,NY,NX)*(OQP(K,L,NY,NX)*OSRH(KK)
@@ -2541,7 +2550,7 @@ C
       XFRA=FPRIM*TFND(L,NY,NX)*(OQA(K,L,NY,NX)*OSRH(KK)
      2-OQA(KK,L,NY,NX)*OSRH(K))/OSRT
       IF(ROQCK(K)+XOQCK(K)-XFRK.GT.0.0
-     2.AND.ROQCK(KK)+XOQCK(KK)+XFRK.GT.0.0)THEN 
+     2.AND.ROQCK(KK)+XOQCK(KK)+XFRK.GT.0.0)THEN
       XOQCK(K)=XOQCK(K)-XFRK
       XOQCK(KK)=XOQCK(KK)+XFRK
 C     IF(I.EQ.116)THEN
@@ -2552,7 +2561,7 @@ C    3,OQC(K,L,NY,NX),OQC(KK,L,NY,NX)
 C     ENDIF
       ENDIF
       IF(OQC(K,L,NY,NX)+XOQCZ(K)-XFRC.GT.0.0
-     2.AND.OQC(KK,L,NY,NX)+XOQCZ(KK)+XFRC.GT.0.0)THEN 
+     2.AND.OQC(KK,L,NY,NX)+XOQCZ(KK)+XFRC.GT.0.0)THEN
       XOQCZ(K)=XOQCZ(K)-XFRC
       XOQCZ(KK)=XOQCZ(KK)+XFRC
 C     IF(I.EQ.116)THEN
@@ -2562,7 +2571,7 @@ C    3,OQC(K,L,NY,NX),OQC(KK,8,NY,NX)
 C     ENDIF
       ENDIF
       IF(OQN(K,L,NY,NX)+XOQNZ(K)-XFRN.GT.0.0
-     2.AND.OQN(KK,L,NY,NX)+XOQNZ(KK)+XFRN.GT.0.0)THEN 
+     2.AND.OQN(KK,L,NY,NX)+XOQNZ(KK)+XFRN.GT.0.0)THEN
       XOQNZ(K)=XOQNZ(K)-XFRN
       XOQNZ(KK)=XOQNZ(KK)+XFRN
 C     IF((I/10)*10.EQ.I.AND.J.EQ.24.AND.L.EQ.4)THEN
@@ -2571,7 +2580,7 @@ C    2,OSRH(K),OQN(KK,L,NY,NX),OSRH(KK),XOQNZ(K),XOQNZ(KK)
 C     ENDIF
       ENDIF
       IF(OQP(K,L,NY,NX)+XOQPZ(K)-XFRP.GT.0.0
-     2.AND.OQP(KK,L,NY,NX)+XOQPZ(KK)+XFRP.GT.0.0)THEN 
+     2.AND.OQP(KK,L,NY,NX)+XOQPZ(KK)+XFRP.GT.0.0)THEN
       XOQPZ(K)=XOQPZ(K)-XFRP
       XOQPZ(KK)=XOQPZ(KK)+XFRP
 C     IF((I/10)*10.EQ.I.AND.J.EQ.24.AND.L.EQ.4)THEN
@@ -2580,7 +2589,7 @@ C    2,OSRH(K),OQP(KK,L,NY,NX),OSRH(KK),XOQPZ(K),XOQPZ(KK)
 C     ENDIF
       ENDIF
       IF(OQA(K,L,NY,NX)+XOQAZ(K)-XFRA.GT.0.0
-     2.AND.OQA(KK,L,NY,NX)+XOQAZ(KK)+XFRA.GT.0.0)THEN 
+     2.AND.OQA(KK,L,NY,NX)+XOQAZ(KK)+XFRA.GT.0.0)THEN
       XOQAZ(K)=XOQAZ(K)-XFRA
       XOQAZ(KK)=XOQAZ(KK)+XFRA
 C     IF((I/1)*1.EQ.I.AND.L.EQ.3.AND.K.EQ.1)THEN
@@ -2591,7 +2600,7 @@ C     ENDIF
 C
 C     PRIMING of MICROBIAL C,N,P BETWEEN LITTER AND NON-LITTER C
 C
-C     XFMC,XFMN,XFMP=transfer of microbial C,N,P 
+C     XFMC,XFMN,XFMP=transfer of microbial C,N,P
 C     between each K and KK, FPRIMM=priming transfer rate constant
 C     TFNG=temperature+water effect
 C     OMC,OMN,OMP=microbial C,N,P
@@ -2607,19 +2616,19 @@ C
       XFMP=FPRIMM*TFNG(N,K)*(OMP(M,N,K,L,NY,NX)*OSRH(KK)
      2-OMP(M,N,KK,L,NY,NX)*OSRH(K))/OSRT
       IF(OMC(M,N,K,L,NY,NX)+XOMCZ(M,N,K)-XFMC.GT.0.0
-     2.AND.OMC(M,N,KK,L,NY,NX)+XOMCZ(M,N,KK)+XFMC.GT.0.0)THEN 
+     2.AND.OMC(M,N,KK,L,NY,NX)+XOMCZ(M,N,KK)+XFMC.GT.0.0)THEN
       XOMCZ(M,N,K)=XOMCZ(M,N,K)-XFMC
       XOMCZ(M,N,KK)=XOMCZ(M,N,KK)+XFMC
 C     IF(L.EQ.3.AND.K.EQ.1.AND.N.EQ.6)THEN
 C     WRITE(*,4447)'XOMCZ',I,J,NX,NY,L,K,KK,N,M,XFMC
 C    2,OMC(M,N,K,L,NY,NX)
-C    2,OQC(K,L,NY,NX),OMC(M,N,KK,L,NY,NX),OQC(KK,8,NY,NX) 
-C    3,XOMCZ(M,N,K),XOMCZ(M,N,KK) 
+C    2,OQC(K,L,NY,NX),OMC(M,N,KK,L,NY,NX),OQC(KK,8,NY,NX)
+C    3,XOMCZ(M,N,K),XOMCZ(M,N,KK)
 4447  FORMAT(A8,9I4,20E12.4)
 C     ENDIF
       ENDIF
       IF(OMN(M,N,K,L,NY,NX)+XOMNZ(M,N,K)-XFMN.GT.0.0
-     2.AND.OMN(M,N,KK,L,NY,NX)+XOMNZ(M,N,KK)+XFMN.GT.0.0)THEN 
+     2.AND.OMN(M,N,KK,L,NY,NX)+XOMNZ(M,N,KK)+XFMN.GT.0.0)THEN
       XOMNZ(M,N,K)=XOMNZ(M,N,K)-XFMN
       XOMNZ(M,N,KK)=XOMNZ(M,N,KK)+XFMN
 C     IF(L.EQ.3.AND.K.EQ.1.AND.N.EQ.6)THEN
@@ -2629,7 +2638,7 @@ C    2,OSRH(K),OMN(M,N,KK,L,NY,NX),OSRH(KK),XOMNZ(M,N,K),XOMNZ(M,N,KK)
 C     ENDIF
       ENDIF
       IF(OMP(M,N,K,L,NY,NX)+XOMPZ(M,N,K)-XFMP.GT.0.0
-     2.AND.OMP(M,N,KK,L,NY,NX)+XOMPZ(M,N,KK)+XFMP.GT.0.0)THEN 
+     2.AND.OMP(M,N,KK,L,NY,NX)+XOMPZ(M,N,KK)+XFMP.GT.0.0)THEN
       XOMPZ(M,N,K)=XOMPZ(M,N,K)-XFMP
       XOMPZ(M,N,KK)=XOMPZ(M,N,KK)+XFMP
 C     IF(L.EQ.3.AND.K.EQ.1.AND.N.EQ.6)THEN
@@ -2638,7 +2647,7 @@ C    2,OMP(M,N,K,L,NY,NX),OSRH(K),OMP(M,N,KK,L,NY,NX),OSRH(KK)
 C    2,XOMPZ(M,N,K),XOMPZ(M,N,KK)
 C     ENDIF
       ENDIF
-850   CONTINUE      
+850   CONTINUE
       ENDIF
 800   CONTINUE
       ENDIF
@@ -2669,7 +2678,7 @@ C     WRITE(*,5559)'XOM',I,J,NX,NY,L,K,N,M,OMC(M,N,K,L,NY,NX)
 C    2,OMN(M,N,K,L,NY,NX),OMP(M,N,K,L,NY,NX)
 C    3,XOMCZ(M,N,K),XOMNZ(M,N,K),XOMPZ(M,N,K)
 5559  FORMAT(A8,8I4,12E12.4)
-C     ENDIF 
+C     ENDIF
 840   CONTINUE
 C     IF((I/10)*10.EQ.I.AND.J.EQ.24.AND.L.EQ.4)THEN
 C     WRITE(*,4443)'PRIM2',I,J,NX,NY,L,K,ROQCK(K)
@@ -2686,19 +2695,19 @@ C     FCPK=N,P limitation to microbial activity in each K
 C     CNOMX,CPOMX=N:C,P:C ratios relative to set maximum values
 C     COQCK=aqueous concentration of microbial activity
 C     DCKD=Km for decomposition of SOC at current COQCK
-C     DCKM0,DCKML=Km for decomposition of SOC at zero COQCK 
+C     DCKM0,DCKML=Km for decomposition of SOC at zero COQCK
 C     DCKI=inhibition of decomposition by microbial concentration
 C     OSRH=total SOC
 C     COSC=concentration of total SOC
 C     BKVL,VOLX=mass, volume of soil layer
 C     DFNS=effect of microbial concentration on decomposition
-C     OQCI=DOC product inhibition for decomposition 
-C     OQKI=DOC product inhibition constant for decomposition 
+C     OQCI=DOC product inhibition for decomposition
+C     OQKI=DOC product inhibition constant for decomposition
 C
       IF(TOMK(K).GT.ZEROS(NY,NX))THEN
       CNOMX=TONK(K)/TONX(K)
       CPOMX=TOPK(K)/TOPX(K)
-      FCNK(K)=AMIN1(1.0,AMAX1(0.50,CNOMX)) 
+      FCNK(K)=AMIN1(1.0,AMAX1(0.50,CNOMX))
       FCPK(K)=AMIN1(1.0,AMAX1(0.50,CPOMX))
       ELSE
       FCNK(K)=1.0
@@ -2730,7 +2739,7 @@ C     IF(L.EQ.0.AND.J.EQ.15)THEN
 C     WRITE(*,4242)'COSC',I,J,L,K,DFNS,COSC,COQCK,DCKD,OSRH(K)
 C    2,OSAT(K),OSCT(K),ORCT(K),OHC(K,L,NY,NX),BKVL(L,NY,NX),ROQCK(K)
 C    3,VOLWZ,VOLWRX(NY,NX),VOLW(0,NY,NX),FCR(NY,NX)
-C    4,THETY(L,NY,NX) 
+C    4,THETY(L,NY,NX)
 4242  FORMAT(A8,4I4,30E12.4)
 C     ENDIF
 C
@@ -2745,7 +2754,7 @@ C     SPOSC=specific decomposition rate constant
 C     ROQCK=total respiration of DOC+DOA used to represent microbial activity
 C     DFNS=effect of microbial concentration on decomposition
 C     OQCI=DOC product inhibition for decomposition
-C     TFNX=temperature stress effect 
+C     TFNX=temperature stress effect
 C     OSRH=total SOC
 C     FCNK,FCPK=N,P limitation to microbial activity in each K
 C
@@ -2755,17 +2764,17 @@ C
       CPS(M,K)=AMAX1(0.0,OSP(M,K,L,NY,NX)/OSC(M,K,L,NY,NX))
       RDOSC(M,K)=AMAX1(0.0,AMIN1(0.5*OSA(M,K,L,NY,NX)
      2,SPOSC(M,K)*ROQCK(K)*DFNS*OQCI*TFNX*OSA(M,K,L,NY,NX)/OSRH(K)))
-C    3*AMIN1(FCNK(K),FCPK(K)) 
+C    3*AMIN1(FCNK(K),FCPK(K))
       RDOSN(M,K)=AMAX1(0.0,AMIN1(OSN(M,K,L,NY,NX)
      2,CNS(M,K)*RDOSC(M,K)))/FCNK(K)
       RDOSP(M,K)=AMAX1(0.0,AMIN1(OSP(M,K,L,NY,NX)
      2,CPS(M,K)*RDOSC(M,K)))/FCPK(K)
 C     IF((I/30)*30.EQ.I.AND.J.EQ.15.AND.L.EQ.0)THEN
-C     WRITE(*,4444)'RDOSC',I,J,NX,NY,L,K,M,RDOSC(M,K),RDOSN(M,K) 
-C    2,RDOSP(M,K),CNS(M,K),CPS(M,K),SPOSC(M,K),ROQCK(K),DFNS,TFNX 
+C     WRITE(*,4444)'RDOSC',I,J,NX,NY,L,K,M,RDOSC(M,K),RDOSN(M,K)
+C    2,RDOSP(M,K),CNS(M,K),CPS(M,K),SPOSC(M,K),ROQCK(K),DFNS,TFNX
 C    3,OQCI,OSA(M,K,L,NY,NX),OSRH(K),COSC,COQCK,DCKD,VOLWZ
 C    4,COXYS(L,NY,NX),TKS(L,NY,NX),PSISM(L,NY,NX),THETW(L,NY,NX)
-C    5,WFN(1,K),WFN(3,K),OXYI,VOLW(0,NY,NX),VOLWRX(NY,NX) 
+C    5,WFN(1,K),WFN(3,K),OXYI,VOLW(0,NY,NX),VOLWRX(NY,NX)
 C    4,FOSRH(K,L,NY,NX),VOLY(L,NY,NX),ORGC(L,NY,NX),OSC(M,K,L,NY,NX)
 C    2,OSN(M,K,L,NY,NX),OSP(M,K,L,NY,NX),TONK(K),TONX(K),FCNK(K)
 C    6,FCPK(K),WFN(1,K),WFN(3,K),WFN(4,K),COQC(K,L,NY,NX)
@@ -2842,7 +2851,7 @@ C     SPORC=specific decomposition rate constant for microbial residue
 C     ROQCK=total respiration of DOC+DOA used to represent microbial activity
 C     DFNS=effect of microbial concentration on decomposition
 C     OQCI=DOC product inhibition for decomposition
-C     TFNX=temperature stress effect 
+C     TFNX=temperature stress effect
 C     OSRH=total SOC
 C     FCNK,FCPK=N,P limitation to microbial activity in each K
 C
@@ -2853,11 +2862,11 @@ C
       CPR=AMAX1(0.0,ORP(M,K,L,NY,NX)/ORC(M,K,L,NY,NX))
       RDORC(M,K)=AMAX1(0.0,AMIN1(ORC(M,K,L,NY,NX)
      2,SPORC(M)*ROQCK(K)*DFNS*OQCI*TFNX*ORC(M,K,L,NY,NX)/OSRH(K)))
-C    3*AMIN1(FCNK(K),FCPK(K)) 
+C    3*AMIN1(FCNK(K),FCPK(K))
       RDORN(M,K)=AMAX1(0.0,AMIN1(ORN(M,K,L,NY,NX),CNR*RDORC(M,K)))
      2/FCNK(K)
       RDORP(M,K)=AMAX1(0.0,AMIN1(ORP(M,K,L,NY,NX),CPR*RDORC(M,K)))
-     2/FCPK(K) 
+     2/FCPK(K)
       ELSE
       RDORC(M,K)=0.0
       RDORN(M,K)=0.0
@@ -2883,17 +2892,17 @@ C     SPOHC=specific decomposition rate constant for adsorbed C
 C     ROQCK=total respiration of DOC+DOA used to represent microbial activity
 C     DFNS=effect of microbial concentration on decomposition
 C     OQCI=DOC product inhibition for decomposition
-C     TFNX=temperature stress effect 
+C     TFNX=temperature stress effect
 C     OSRH=total SOC
 C     FCNK,FCPK=N,P limitation to microbial activity in each K
 C
       IF(OSRH(K).GT.ZEROS(NY,NX))THEN
-      IF(OHC(K,L,NY,NX).GT.ZEROS(NY,NX))THEN 
+      IF(OHC(K,L,NY,NX).GT.ZEROS(NY,NX))THEN
       CNH(K)=AMAX1(0.0,OHN(K,L,NY,NX)/OHC(K,L,NY,NX))
       CPH(K)=AMAX1(0.0,OHP(K,L,NY,NX)/OHC(K,L,NY,NX))
       RDOHC(K)=AMAX1(0.0,AMIN1(OHC(K,L,NY,NX)
      2,SPOHC*ROQCK(K)*DFNS*OQCI*TFNX*OHC(K,L,NY,NX)/OSRH(K)))
-C    3*AMIN1(FCNK(K),FCPK(K)) 
+C    3*AMIN1(FCNK(K),FCPK(K))
       RDOHN(K)=AMAX1(0.0,AMIN1(OHN(K,L,NY,NX),CNH(K)*RDOHC(K)))
      2/FCNK(K)
       RDOHP(K)=AMAX1(0.0,AMIN1(OHP(K,L,NY,NX),CPH(K)*RDOHC(K)))
@@ -2934,8 +2943,8 @@ C
       IF(L.EQ.0)THEN
       AECX=0.5E+03
       ELSE
-      AECX=AEC(L,NY,NX) 
-      ENDIF 
+      AECX=AEC(L,NY,NX)
+      ENDIF
       OQCX=AMAX1(ZEROS(NY,NX),OQC(K,L,NY,NX)-TCGOQC(K))
       OQNX=AMAX1(ZEROS(NY,NX),OQN(K,L,NY,NX)-TCGOMN(K))
       OQPX=AMAX1(ZEROS(NY,NX),OQP(K,L,NY,NX)-TCGOMP(K))
@@ -2963,18 +2972,18 @@ C
       ZSORP(K)=TSORP*(OQNX*VOLXX-OHNX*VOLXW)/(VOLXX+VOLXW)
       PSORP(K)=TSORP*(OQPX*VOLXX-OHPX*VOLXW)/(VOLXX+VOLXW)
       ELSE
-      CSORP(K)=0.0 
+      CSORP(K)=0.0
       CSORPA(K)=0.0
       ZSORP(K)=0.0
       PSORP(K)=0.0
       ENDIF
 C     IF(I.EQ.116)THEN
-C     WRITE(*,591)'CSORP',I,J,NX,NY,L,K,CSORP(K),CSORPA(K) 
+C     WRITE(*,591)'CSORP',I,J,NX,NY,L,K,CSORP(K),CSORPA(K)
 C    1,OQC(K,L,NY,NX),OHC(K,L,NY,NX),OQA(K,L,NY,NX),OHA(K,L,NY,NX)
 C    2,OQC(K,L,NY,NX)/VOLWM(NPH,L,NY,NX)
 C    2,OQA(K,L,NY,NX)/VOLWM(NPH,L,NY,NX)
 C    3,OHC(K,L,NY,NX)/BKVL(L,NY,NX),OHA(K,L,NY,NX)/BKVL(L,NY,NX)
-C    4,BKVL(L,NY,NX),VOLWM(NPH,L,NY,NX),FOCA(K),FOAA(K) 
+C    4,BKVL(L,NY,NX),VOLWM(NPH,L,NY,NX),FOCA(K),FOAA(K)
 C    5,FOSRH(K,L,NY,NX),TCGOQC(K),OQCX
 591   FORMAT(A8,6I4,40E12.4)
 C     ENDIF
@@ -3006,7 +3015,7 @@ C
       RCCMP(M,N,K)=(RCOMP(M,N,5)+RCMMP(M,N,5))*FORC(K)
 C     IF(L.EQ.0)THEN
 C     WRITE(*,8821)'RCCMC',I,J,L,K,N,M,RCCMC(M,N,K)
-C    2,RCOMC(M,N,5),RCMMC(M,N,5),FORC(K) 
+C    2,RCOMC(M,N,5),RCMMC(M,N,5),FORC(K)
 C     ENDIF
 1680  CONTINUE
 1685  CONTINUE
@@ -3059,7 +3068,7 @@ C
 C     ORC,ORN,ORP=microbial residue C,N,P
 C     RDORC,RDORN,RDORP=decomposition of microbial residue C,N,P
 C     RDOHC,RDOHN,RDOHP,RDOHA=decomposition of adsorbed C,N,P,acetate
-C     RCOQN=DON production from nitrous acid reduction 
+C     RCOQN=DON production from nitrous acid reduction
 C
       DO 575 M=1,2
       ORC(M,K,L,NY,NX)=ORC(M,K,L,NY,NX)-RDORC(M,K)
@@ -3085,8 +3094,8 @@ C     RCH3X=acetate production from fermentation
 C
       DO 570 N=1,7
       OQC(K,L,NY,NX)=OQC(K,L,NY,NX)-CGOQC(N,K)
-      OQN(K,L,NY,NX)=OQN(K,L,NY,NX)-CGOMN(N,K) 
-      OQP(K,L,NY,NX)=OQP(K,L,NY,NX)-CGOMP(N,K) 
+      OQN(K,L,NY,NX)=OQN(K,L,NY,NX)-CGOMN(N,K)
+      OQP(K,L,NY,NX)=OQP(K,L,NY,NX)-CGOMP(N,K)
       OQA(K,L,NY,NX)=OQA(K,L,NY,NX)-CGOAC(N,K)+RCH3X(N,K)
 C
 C     MICROBIAL DECOMPOSITION PRODUCTS
@@ -3128,14 +3137,14 @@ C
 C     IF(L.EQ.1)THEN
 C     WRITE(*,592)'OQC',I,J,NX,NY,L,K,OQC(K,L,NY,NX)
 C    2,OQA(K,L,NY,NX),(RCOSC(M,K),M=1,4),(RDORC(M,K),M=1,2)
-C    3,RDOHC(K),(CGOQC(N,K),N=1,7),CSORP(K),OHC(K,L,NY,NX) 
+C    3,RDOHC(K),(CGOQC(N,K),N=1,7),CSORP(K),OHC(K,L,NY,NX)
 C    4,(WFN(N,K),N=1,7),RDOHA(K),(RCH3X(N,K),N=1,7)
-C    3,(CGOAC(N,K),N=1,7),CSORPA(K),OHA(K,L,NY,NX) 
+C    3,(CGOAC(N,K),N=1,7),CSORPA(K),OHA(K,L,NY,NX)
 C     WRITE(*,592)'OQN',I,J,NX,NY,L,K,OQN(K,L,NY,NX)
 C    2,(RCOSN(M,K),M=1,4),(RDORN(M,K),M=1,2),RDOHN(K)
-C    2,RCOQN*FORC(K),(CGOMN(N,K),N=1,7),ZSORP(K),OHN(K,L,NY,NX)  
+C    2,RCOQN*FORC(K),(CGOMN(N,K),N=1,7),ZSORP(K),OHN(K,L,NY,NX)
 592   FORMAT(A8,6I4,80E12.4)
-C     ENDIF 
+C     ENDIF
 590   CONTINUE
 C
 C     MICROBIAL GROWTH FROM RESPIRATION, MINERALIZATION
@@ -3150,20 +3159,20 @@ C
       DO 545 N=1,7
       IF(K.NE.5.OR.(N.LE.3.OR.N.EQ.5))THEN
       DO 540 M=1,2
-      OMC(M,N,K,L,NY,NX)=OMC(M,N,K,L,NY,NX)+CGOMS(M,N,K) 
-     2-RXOMC(M,N,K)-RXMMC(M,N,K) 
-      OMN(M,N,K,L,NY,NX)=OMN(M,N,K,L,NY,NX)+CGONS(M,N,K) 
+      OMC(M,N,K,L,NY,NX)=OMC(M,N,K,L,NY,NX)+CGOMS(M,N,K)
+     2-RXOMC(M,N,K)-RXMMC(M,N,K)
+      OMN(M,N,K,L,NY,NX)=OMN(M,N,K,L,NY,NX)+CGONS(M,N,K)
      2-RXOMN(M,N,K)-RXMMN(M,N,K)
-      OMP(M,N,K,L,NY,NX)=OMP(M,N,K,L,NY,NX)+CGOPS(M,N,K) 
-     2-RXOMP(M,N,K)-RXMMP(M,N,K) 
+      OMP(M,N,K,L,NY,NX)=OMP(M,N,K,L,NY,NX)+CGOPS(M,N,K)
+     2-RXOMP(M,N,K)-RXMMP(M,N,K)
 C     IF(L.EQ.3.AND.K.EQ.1.AND.N.EQ.6)THEN
 C     WRITE(*,4488)'OMN2',I,J,NX,NY,L,K,N,M,OMC(M,N,K,L,NY,NX)
-C    2,OMN(M,N,K,L,NY,NX),OMP(M,N,K,L,NY,NX) 
+C    2,OMN(M,N,K,L,NY,NX),OMP(M,N,K,L,NY,NX)
 C     WRITE(*,4488)'RDOMC',I,J,NX,NY,L,K,N,M,CGOMS(M,N,K),CGOQC(N,K)
 C    4,CGOAC(N,K),RGOMO(N,K),RGOMD(N,K),RXOMC(M,N,K),RXMMC(M,N,K)
 C    3,RMOMC(M,N,K),TFNX,OMGR,OMC(3,N,K,L,NY,NX),WFN(N,K)
-C    3,OMC(M,N,K,L,NY,NX),OMA(N,K),TSRH 
-C    4,RCH3X(N,K),RH2GZ,RH2GX(4,K),FOCA(K),FOAA(K) 
+C    3,OMC(M,N,K,L,NY,NX),OMA(N,K),TSRH
+C    4,RCH3X(N,K),RH2GZ,RH2GX(4,K),FOCA(K),FOAA(K)
 C    6,OQA(K,L,NY,NX),OHA(K,L,NY,NX),OQC(K,L,NY,NX),OHC(K,L,NY,NX)
 C    7,OMP(M,N,K,L,NY,NX),CGOPS(M,N,K),RDOMP(M,N,K),RDMMP(M,N,K)
 C    8,OMP(3,N,K,L,NY,NX),CGOMP(N,K),RIPO4(N,K)
@@ -3198,7 +3207,7 @@ C     WRITE(*,4445)'RHOMC',I,J,NX,NY,L,K,M,N,OSC(1,4,L,NY,NX)
 C    2,OSC(2,4,L,NY,NX),CFOMC(1,L,NY,NX),CFOMC(2,L,NY,NX)
 C    3,RHOMC(M,N,K),RHMMC(M,N,K)
 4445  FORMAT(A8,8I4,40E12.4)
-C     ENDIF 
+C     ENDIF
       ELSE
       OSC(1,4,NU(NY,NX),NY,NX)=OSC(1,4,NU(NY,NX),NY,NX)
      2+CFOMC(1,NU(NY,NX),NY,NX)*(RHOMC(M,N,K)+RHMMC(M,N,K))
@@ -3227,32 +3236,32 @@ C     RGOMD=respiration for denitrifcation
 C     RGN2F=respiration for N2 fixation
 C     RCO2X=total CO2 emission
 C     CGOMS,CGONS,CGOPS=transfer from nonstructural to structural C,N,P
-C     R3OMC,R3OMN,R3OMP=microbial C,N,P recycling 
+C     R3OMC,R3OMN,R3OMP=microbial C,N,P recycling
 C     R3MMC,R3MMN,R3MMP=microbial C,N,P recycling from senescence
 C     CGOMN,CGOMP=DON, DOP uptake
-C     RINH4,RINB4=substrate-limited NH4 mineraln-immobiln in non-band, band 
-C     RINO3,RINB3=substrate-limited NO3 immobiln in non-band, band 
-C     RIPO4,RIPOB=substrate-limited H2PO4 mineraln-immobn in non-band, band 
-C     RIP14,RIP1B=substrate-limited HPO4 mineraln-immobn in non-band, band 
+C     RINH4,RINB4=substrate-limited NH4 mineraln-immobiln in non-band, band
+C     RINO3,RINB3=substrate-limited NO3 immobiln in non-band, band
+C     RIPO4,RIPOB=substrate-limited H2PO4 mineraln-immobn in non-band, band
+C     RIP14,RIP1B=substrate-limited HPO4 mineraln-immobn in non-band, band
 C     RINH4R,RINO3R =substrate-limited NH4,NO3 mineraln-immobiln
 C     RIPO4R,RIP14R=substrate-limited H2PO4,HPO4 mineraln-immobiln
 C
       CGROMC=CGOMC(N,K)-RGOMO(N,K)-RGOMD(N,K)-RGN2F(N,K)
-      RCO2X(N,K)=RCO2X(N,K)+RGN2F(N,K) 
+      RCO2X(N,K)=RCO2X(N,K)+RGN2F(N,K)
       DO 555 M=1,2
       OMC(3,N,K,L,NY,NX)=OMC(3,N,K,L,NY,NX)-CGOMS(M,N,K)
-     2+R3OMC(M,N,K) 
+     2+R3OMC(M,N,K)
       OMN(3,N,K,L,NY,NX)=OMN(3,N,K,L,NY,NX)-CGONS(M,N,K)
      2+R3OMN(M,N,K)+R3MMN(M,N,K)
       OMP(3,N,K,L,NY,NX)=OMP(3,N,K,L,NY,NX)-CGOPS(M,N,K)
      2+R3OMP(M,N,K)+R3MMP(M,N,K)
-      RCO2X(N,K)=RCO2X(N,K)+R3MMC(M,N,K) 
+      RCO2X(N,K)=RCO2X(N,K)+R3MMC(M,N,K)
 555   CONTINUE
       OMC(3,N,K,L,NY,NX)=OMC(3,N,K,L,NY,NX)+CGROMC
-      OMN(3,N,K,L,NY,NX)=OMN(3,N,K,L,NY,NX)+CGOMN(N,K) 
-     2+RINH4(N,K)+RINB4(N,K)+RINO3(N,K)+RINB3(N,K)+RN2FX(N,K) 
-      OMP(3,N,K,L,NY,NX)=OMP(3,N,K,L,NY,NX)+CGOMP(N,K) 
-     2+RIPO4(N,K)+RIPOB(N,K)+RIP14(N,K)+RIP1B(N,K) 
+      OMN(3,N,K,L,NY,NX)=OMN(3,N,K,L,NY,NX)+CGOMN(N,K)
+     2+RINH4(N,K)+RINB4(N,K)+RINO3(N,K)+RINB3(N,K)+RN2FX(N,K)
+      OMP(3,N,K,L,NY,NX)=OMP(3,N,K,L,NY,NX)+CGOMP(N,K)
+     2+RIPO4(N,K)+RIPOB(N,K)+RIP14(N,K)+RIP1B(N,K)
       IF(L.EQ.0)THEN
       OMN(3,N,K,L,NY,NX)=OMN(3,N,K,L,NY,NX)+RINH4R(N,K)+RINO3R(N,K)
       OMP(3,N,K,L,NY,NX)=OMP(3,N,K,L,NY,NX)+RIPO4R(N,K)+RIP14R(N,K)
@@ -3261,14 +3270,14 @@ C     IF(L.EQ.3.AND.K.EQ.1.AND.N.EQ.6)THEN
 C     WRITE(*,5556)'OMC3',I,J,NX,NY,L,K,N,OMC(3,N,K,L,NY,NX)
 C    2,OMN(3,N,K,L,NY,NX),OMP(3,N,K,L,NY,NX),OMC(1,N,K,L,NY,NX)
 C    2,OMN(1,N,K,L,NY,NX),OMP(1,N,K,L,NY,NX),WFN(N,K),OXYI
-C    2,COXYS(L,NY,NX) 
+C    2,COXYS(L,NY,NX)
 C    2,CGOMS(1,N,K),CGOMS(2,N,K),CGROMC
 C    3,CGOPS(1,N,K),CGOPS(2,N,K),CGOMP(N,K),RIPO4(N,K)
 C    4,CGOMC(N,K),RGOMO(N,K),RGOMD(N,K),RMOMT,WFN(N,K)
 C    5,(CGONS(M,N,K),M=1,2),(R3OMN(M,N,K),M=1,2),(R3MMN(M,N,K)
 C    6,M=1,2),(XOMCZ(M,N,K),M=1,2)
 C    6,CGOMN(N,K),RINH4(N,K),RINB4(N,K),RINO3(N,K),RINB3(N,K)
-C    7,RN2FX(N,K) 
+C    7,RN2FX(N,K)
 5556  FORMAT(A8,7I4,60E12.4)
 C     ENDIF
       ENDIF
@@ -3280,7 +3289,7 @@ C     MICROBIAL COLONIZATION OF NEW LITTER
 C
 C     OSCT,OSAT,OSCX=total,colonized,uncolonized SOC
 C     OSA,OSC=colonized,total litter
-C     DOSA=rate constant for litter colonization 
+C     DOSA=rate constant for litter colonization
 C     ROQCK=total respiration of DOC+DOA used to represent microbial activity
 C
       DO 475 K=0,KL
@@ -3295,7 +3304,7 @@ C
       DOSAK=DOSA(K)*AMAX1(0.0,ROQCK(K))
       DO 485 M=1,4
       OSA(M,K,L,NY,NX)=AMIN1(OSC(M,K,L,NY,NX)
-     2,OSA(M,K,L,NY,NX)+DOSAK*OSC(M,K,L,NY,NX)/OSCT(K)) 
+     2,OSA(M,K,L,NY,NX)+DOSAK*OSC(M,K,L,NY,NX)/OSCT(K))
 C     IF((I/30)*30.EQ.I.AND.J.EQ.15.AND.L.EQ.0)THEN
 C     WRITE(*,8822)'OSA',I,J,NX,NY,L,K,M,OSA(M,K,L,NY,NX)
 C    2,OSC(M,K,L,NY,NX),DOSA(K),ROQCK(K),DOSAK,OSAT(K),OSCT(K)
@@ -3304,7 +3313,7 @@ C     ENDIF
 485   CONTINUE
       ELSE
       DO 490 M=1,4
-      OSA(M,K,L,NY,NX)=AMIN1(OSC(M,K,L,NY,NX),OSA(M,K,L,NY,NX)) 
+      OSA(M,K,L,NY,NX)=AMIN1(OSC(M,K,L,NY,NX),OSA(M,K,L,NY,NX))
 490   CONTINUE
       ENDIF
 C     IF((I/30)*30.EQ.I.AND.J.EQ.15.AND.L.EQ.0)THEN
@@ -3393,7 +3402,7 @@ C     ENDIF
       DO 645 N=1,7
       IF(N.LE.3.OR.N.EQ.5)THEN
       IF(N.NE.3)THEN
-      TRGOA=TRGOA+CGOMC(N,5) 
+      TRGOA=TRGOA+CGOMC(N,5)
       ENDIF
       ENDIF
 645   CONTINUE
@@ -3412,7 +3421,7 @@ C     TRGOC=total CH4 emission
 C     RH2GO=net H2 uptake
 C     RH2GZ,TRGOH=total H2 uptake, emission
 C     RUPOXO,TUPOX=total O2 uptake
-C     RN2G=total N2 production 
+C     RN2G=total N2 production
 C     TRDNO=total N2O reduction
 C     RN2O=total N2O uptake
 C     TRDN2,TRD2B=total NO2 reduction in non-band,band
@@ -3454,8 +3463,8 @@ C
       XOQAS(K,L,NY,NX)=XOQAS(K,L,NY,NX)+RDOHA(K)
       DO 670 N=1,7
       XOQCS(K,L,NY,NX)=XOQCS(K,L,NY,NX)-CGOQC(N,K)
-      XOQNS(K,L,NY,NX)=XOQNS(K,L,NY,NX)-CGOMN(N,K) 
-      XOQPS(K,L,NY,NX)=XOQPS(K,L,NY,NX)-CGOMP(N,K) 
+      XOQNS(K,L,NY,NX)=XOQNS(K,L,NY,NX)-CGOMN(N,K)
+      XOQPS(K,L,NY,NX)=XOQPS(K,L,NY,NX)-CGOMP(N,K)
       XOQAS(K,L,NY,NX)=XOQAS(K,L,NY,NX)-CGOAC(N,K)+RCH3X(N,K)
 670   CONTINUE
       XOQCS(K,L,NY,NX)=XOQCS(K,L,NY,NX)-CSORP(K)
@@ -3472,23 +3481,23 @@ C     TRINO,TRIOB=total NO3 immobn in non-band,band
 C     RVOXA(2),RVOXB(2)=total NO2 oxidation in non-band,band
 C     TRDN3,TRDNB=total NO3 reduction in non-band,band
 C     RCNO3,RCN3B=NO3 production from nitrous acid reduction in non-band,band
-C     XNO2S,XNO2B=net change in NO3 in band,non-band 
-C     TRDN2,TRD2B=total NO2 reduction in non-band,band 
+C     XNO2S,XNO2B=net change in NO3 in band,non-band
+C     TRDN2,TRD2B=total NO2 reduction in non-band,band
 C     RCNO2,RCNOB=substrate-limited nitrous acid reduction in non-band,band
-C     XH2PS,XH2BS=net change in H2PO4 in band,non-band 
+C     XH2PS,XH2BS=net change in H2PO4 in band,non-band
 C     TRIPO,TRIPB=total H2PO4 mineraln-immobn in non-band,band
-C     XH1PS,XH1BS=net change in HPO4 in band,non-band 
+C     XH1PS,XH1BS=net change in HPO4 in band,non-band
 C     TRIP1,TRIB1=total HPO4 mineraln-immobn in non-band,band
 C     XN2GS=total N2 fixation
 C     XZHYS=total H+ production
 C     TRN2F=total N2 fixation
 C
-      XNH4S(L,NY,NX)=-TRINH-RVOXA(1) 
+      XNH4S(L,NY,NX)=-TRINH-RVOXA(1)
       XNO3S(L,NY,NX)=-TRINO+RVOXA(2)-TRDN3+RCNO3
       XNO2S(L,NY,NX)=RVOXA(1)-RVOXA(2)+TRDN3-TRDN2-RCNO2
       XH2PS(L,NY,NX)=-TRIPO
       XH1PS(L,NY,NX)=-TRIP1
-      XNH4B(L,NY,NX)=-TRINB-RVOXB(1) 
+      XNH4B(L,NY,NX)=-TRINB-RVOXB(1)
       XNO3B(L,NY,NX)=-TRIOB+RVOXB(2)-TRDNB+RCN3B
       XNO2B(L,NY,NX)=RVOXB(1)-RVOXB(2)+TRDNB-TRD2B-RCNOB
       XH2BS(L,NY,NX)=-TRIPB
@@ -3496,7 +3505,7 @@ C
       XN2GS(L,NY,NX)=TRN2F
       TFNQ(L,NY,NX)=TFNX
       VOLQ(L,NY,NX)=VOLWZ
-C     IF(ISALTG.NE.0)THEN 
+C     IF(ISALTG.NE.0)THEN
 C     XZHYS(L,NY,NX)=XZHYS(L,NY,NX)+0.1429*(RVOXA(1)+RVOXB(1)
 C    2-TRDN3-TRDNB)-0.0714*(TRDN2+TRD2B+TRDNO)
 C     ENDIF
@@ -3540,7 +3549,7 @@ C     FOSCZ0=rate constant for mixing surface litter
 C     FOSCXS=mixing fraction for surface litter
 C     TOQCK=total active biomass respiration activity
 C     TFNX=temperature function
-C     VOLX=soil layer volume 
+C     VOLX=soil layer volume
 C     OSCXD=mixing required for equilibrating litter concentration
 C     FOSCXD=mixing fraction for equilibrating subsurface litter
 C     FOSCXS=mixing fraction for subsurface litter
@@ -3556,7 +3565,7 @@ C     ENDIF
       FOSCXS=AMIN1(1.0,FOSCZ0/ORGR(L,NY,NX)*TOQCK(L,NY,NX))
       ELSE
       FOSCXS=0.0
-      ENDIF 
+      ENDIF
       ELSE
       DO 1100 LN=L+1,NL(NY,NX)
       IF(VOLX(LN,NY,NX).GT.ZEROS2(NY,NX))THEN
@@ -3571,7 +3580,7 @@ C     ENDIF
      2/(VOLT(L,NY,NX)+VOLT(LL,NY,NX))
       IF(OSCXD.GT.0.0.AND.ORGR(L,NY,NX).GT.ZEROS(NY,NX))THEN
       FOSCXD=OSCXD/ORGR(L,NY,NX)
-      ELSEIF(OSCXD.LT.0.0.AND.ORGR(LL,NY,NX).GT.ZEROS(NY,NX))THEN 
+      ELSEIF(OSCXD.LT.0.0.AND.ORGR(LL,NY,NX).GT.ZEROS(NY,NX))THEN
       FOSCXD=OSCXD/ORGR(LL,NY,NX)
       ELSE
       FOSCXD=0.0
@@ -3584,7 +3593,7 @@ C     ENDIF
       ENDIF
 C     IF(L.EQ.3)THEN
 C     WRITE(*,1115)'MIX',I,J,NX,NY,L,LL,FOSCXS,FOSCZ0
-C    2,FOSCZL,FOSCXD,TOQCK(L,NY,NX),VOLT(L,NY,NX) 
+C    2,FOSCZL,FOSCXD,TOQCK(L,NY,NX),VOLT(L,NY,NX)
 C    2,OSCXD,ORGR(L,NY,NX),ORGR(LL,NY,NX)
 C    3,TKS(L,NY,NX)
 1115  FORMAT(A8,6I4,30E12.4)
@@ -3593,7 +3602,7 @@ C     ENDIF
       DO 7971 K=1,2
       DO 7961 N=1,7
       DO 7962 M=1,3
-      IF(FOSCXS.GT.0.0)THEN 
+      IF(FOSCXS.GT.0.0)THEN
       OMCXS=FOSCXS*AMAX1(0.0,OMC(M,N,K,L,NY,NX))
       OMNXS=FOSCXS*AMAX1(0.0,OMN(M,N,K,L,NY,NX))
       OMPXS=FOSCXS*AMAX1(0.0,OMP(M,N,K,L,NY,NX))
@@ -3614,13 +3623,13 @@ C    2,OMN(M,N,K,L,NY,NX),OMP(M,N,K,L,NY,NX),OMC(M,N,K,LL,NY,NX)
 C    2,OMN(M,N,K,LL,NY,NX),OMP(M,N,K,LL,NY,NX)
 C    3,OMCXS,OMNXS,OMPXS,FOSCXS
 5558  FORMAT(A8,9I4,12E12.4)
-C     ENDIF 
+C     ENDIF
 7962  CONTINUE
 7961  CONTINUE
 7971  CONTINUE
       DO 7901 K=1,2
       DO 7941 M=1,2
-      IF(FOSCXS.GT.0.0)THEN 
+      IF(FOSCXS.GT.0.0)THEN
       ORCXS=FOSCXS*AMAX1(0.0,ORC(M,K,L,NY,NX))
       ORNXS=FOSCXS*AMAX1(0.0,ORN(M,K,L,NY,NX))
       ORPXS=FOSCXS*AMAX1(0.0,ORP(M,K,L,NY,NX))
@@ -3637,11 +3646,11 @@ C     ENDIF
       ORP(M,K,LL,NY,NX)=ORP(M,K,LL,NY,NX)+ORPXS
 C     IF(L.EQ.3.AND.K.EQ.2)THEN
 C     WRITE(*,7942)'ORC',I,J,L,LL,K,M,ORC(M,K,L,NY,NX)
-C    2,ORC(M,K,LL,NY,NX),ORCXS,FOSCXS 
+C    2,ORC(M,K,LL,NY,NX),ORCXS,FOSCXS
 7942  FORMAT(A8,6I4,20E12.4)
 C     ENDIF
 7941  CONTINUE
-      IF(FOSCXS.GT.0.0)THEN 
+      IF(FOSCXS.GT.0.0)THEN
       OQCXS=FOSCXS*AMAX1(0.0,OQC(K,L,NY,NX))
       OQCHXS=FOSCXS*AMAX1(0.0,OQCH(K,L,NY,NX))
       OHCXS=FOSCXS*AMAX1(0.0,OHC(K,L,NY,NX))
@@ -3693,7 +3702,7 @@ C     ENDIF
       OQPH(K,LL,NY,NX)=OQPH(K,LL,NY,NX)+OQPHXS
       OHP(K,LL,NY,NX)=OHP(K,LL,NY,NX)+OHPXS
       DO 7931 M=1,4
-      IF(FOSCXS.GT.0.0)THEN 
+      IF(FOSCXS.GT.0.0)THEN
       OSCXS=FOSCXS*AMAX1(0.0,OSC(M,K,L,NY,NX))
       OSAXS=FOSCXS*AMAX1(0.0,OSA(M,K,L,NY,NX))
       OSNXS=FOSCXS*AMAX1(0.0,OSN(M,K,L,NY,NX))
@@ -3719,7 +3728,7 @@ C     ENDIF
 C     IF((I/1)*1.EQ.I.AND.J.EQ.19.AND.L.LE.5)THEN
 C     WRITE(*,2123)'TOTALL',I,J,NX,NY,L,TFOXYX,TFNH4X
 C    2,TFNO3X,TFPO4X,TFNH4B,TFNO3B,TFPO4B,TFNO2X,TFNO2B
-C    3,TFOQC,TFOQA 
+C    3,TFOQC,TFOQA
 2123  FORMAT(A8,5I4,12E15.4)
 C     ENDIF
       ENDIF
@@ -3755,8 +3764,8 @@ C
       IFLGJ=0
       NLL=-1
       DO 2945 L=0,NL(NY,NX)
-C     WRITE(*,9494)'FIRE',I,J,L,IFLGJ,NLL,ORGC(L,NY,NX),THETW(L,NY,NX) 
-C    2,FVLWB,CORGC(L,NY,NX),FORGC,DPTH(L,NY,NX),BKDS(L,NY,NX) 
+C     WRITE(*,9494)'FIRE',I,J,L,IFLGJ,NLL,ORGC(L,NY,NX),THETW(L,NY,NX)
+C    2,FVLWB,CORGC(L,NY,NX),FORGC,DPTH(L,NY,NX),BKDS(L,NY,NX)
 C    3,VOLY(L,NY,NX),DTBLX(NY,NX),DCORP(I,NY,NX)
 9494  FORMAT(A8,5I6,12E12.4)
       IF(L.EQ.0.OR.L.GE.NUM(NY,NX))THEN
@@ -3820,7 +3829,7 @@ C
       ONL(4,K)=ONL(4,K)+ONH-ONX
       OPL(4,K)=OPL(4,K)+OPH-OPX
       ELSEIF(K.LE.4)THEN
-      ONL(1,K)=ONL(1,K)+ONH-ONX 
+      ONL(1,K)=ONL(1,K)+ONH-ONX
       OPL(1,K)=OPL(1,K)+OPH-OPX
       ELSEIF(K.EQ.5)THEN
       ONL(4,1)=ONL(4,1)+ONH-ONX
@@ -3853,7 +3862,7 @@ C
       ONL(4,K)=ONL(4,K)+ONH-ONX
       OPL(4,K)=OPL(4,K)+OPH-OPX
       ELSE
-      ONL(1,K)=ONL(1,K)+ONH-ONX 
+      ONL(1,K)=ONL(1,K)+ONH-ONX
       OPL(1,K)=OPL(1,K)+OPH-OPX
       ENDIF
       ORC(M,K,L,NY,NX)=ORC(M,K,L,NY,NX)-OCH
@@ -3879,7 +3888,7 @@ C
       ONL(4,K)=ONL(4,K)+ONH-ONX
       OPL(4,K)=OPL(4,K)+OPH-OPX
       ELSE
-      ONL(1,K)=ONL(1,K)+ONH-ONX 
+      ONL(1,K)=ONL(1,K)+ONH-ONX
       OPL(1,K)=OPL(1,K)+OPH-OPX
       ENDIF
       OQC(K,L,NY,NX)=OQC(K,L,NY,NX)-OCH
@@ -3899,7 +3908,7 @@ C
       ONL(4,K)=ONL(4,K)+ONH-ONX
       OPL(4,K)=OPL(4,K)+OPH-OPX
       ELSE
-      ONL(1,K)=ONL(1,K)+ONH-ONX 
+      ONL(1,K)=ONL(1,K)+ONH-ONX
       OPL(1,K)=OPL(1,K)+OPH-OPX
       ENDIF
       OQCH(K,L,NY,NX)=OQCH(K,L,NY,NX)-OCH
@@ -3910,7 +3919,7 @@ C
       ON=ON+ONX
       OP=OP+OPX
 C
-C     REMOVE ADSORBED OM 
+C     REMOVE ADSORBED OM
 C
       OCH=DCORPC*OHC(K,L,NY,NX)
       ONH=DCORPC*OHN(K,L,NY,NX)
@@ -3922,7 +3931,7 @@ C
       ONL(4,K)=ONL(4,K)+ONH-ONX
       OPL(4,K)=OPL(4,K)+OPH-OPX
       ELSE
-      ONL(1,K)=ONL(1,K)+ONH-ONX 
+      ONL(1,K)=ONL(1,K)+ONH-ONX
       OPL(1,K)=OPL(1,K)+OPH-OPX
       ENDIF
       OHC(K,L,NY,NX)=OHC(K,L,NY,NX)-OCH
@@ -4037,6 +4046,3 @@ C     ENDIF
 9995  CONTINUE
       RETURN
       END
-
-
-
