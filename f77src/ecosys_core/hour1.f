@@ -3626,11 +3626,17 @@ C
 
       totvolw=0.
       DO L=NUM(NY,NX),NL(NY,NX)
-      totvolw=totvolw+VOLW(L,NY,NX)
+      totvolw=totvolw+VOLW(L,NY,NX)+VOLI(L,NY,NX)
       ENDDO
       if(totvolw<ZERO)then
+      write(*,*)'NY,NX',NY,NX
+      write(*,*)'layer water ice soil_vol BKDS'
+      do L=NUM(NY,NX),NL(NY,NX)
+      write(*,*)L,VOLW(L,NY,NX),VOLI(L,NY,NX),VOLY(L,NY,NX)
+     2,BKDS(L,NY,NX)
+      enddo
       write(*,*)'hour1.f: model quit at zero water content'
-     2//' for whole soil column'
+     2//' for whole soil column',NUM(NY,NX),NL(NY,NX)
       write(*,*)'check setup in opt file or soil file'
       stop
       endif

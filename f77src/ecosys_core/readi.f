@@ -61,7 +61,12 @@ C     RCHGNTG,RCHGETG,RCHGSTG,RCHGWTG=N,E,S,W distance to water table (m)
 C     RCHGDG=lower boundary conditions for water flow
 C     DHI=width of each W-E landscape column
 C     DVI=width of each N-S landscape row
-C
+C  IERSNG=erosion options
+C       :=0 means allowing  freeze- thaw to change elevation
+C       :=1 means allowing freeze-thaw plus erosion to change elevation
+C       :=2 means allowing freeze-thaw plus SOC accumulation to change elevation
+C       :=3 means allowing freeze-thaw plus SOC accumulation, plus erosion to change elevation
+C       :=-1 means no change in elevation.
       READ(1,*)(datav(jj),jj=1,4)
 	  ALATG=datav(1)
 	  ALTIG=datav(2)
