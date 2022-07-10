@@ -639,6 +639,7 @@ C     WRITE(*,1116)'IFLGS',IYRC,I,J,IFLGS(NY,NX)
       ENDIF
       SUM2=SUM2+(2*K-1)/(PSISK(K)**2)
 1220  CONTINUE
+
       DO 1235 K=1,100
       SUM1=0.0
       XK=K-1
@@ -649,6 +650,7 @@ C     WRITE(*,1116)'IFLGS',IYRC,I,J,IFLGS(NY,NX)
       HCND(3,K,0,NY,NX)=SCNV(0,NY,NX)*YK*SUM1/SUM2
       HCND(1,K,0,NY,NX)=0.0
       HCND(2,K,0,NY,NX)=0.0
+C  PSISA: water potential at air entry
       IF(K.GT.1.AND.PSISK(K).LT.PSISA(0,NY,NX)
      2.AND.PSISK(K-1).GE.PSISA(0,NY,NX))THEN
       THETS(0,NY,NX)=THETK(K)
@@ -918,6 +920,7 @@ C     IF(BKVL(L,NY,NX).GT.ZEROS(NY,NX))THEN
       ENDIF
       SUM2=SUM2+(2*K-1)/(PSISK(K)**2)
 1320  CONTINUE
+
       DO 1335 K=1,100
       SUM1=0.0
       XK=K-1
@@ -940,6 +943,7 @@ C    3,SRP(L,NY,NX),THETS(L,NY,NX),PSISA(L,NY,NX)
       HCND(N,K,L,NY,NX)=SCNH(L,NY,NX)*YK*SUM1/SUM2
       ENDIF
 1340  CONTINUE
+
 1335  CONTINUE
 2340  CONTINUE
 2335  CONTINUE
@@ -3629,19 +3633,20 @@ C
       totvolw=totvolw+VOLW(L,NY,NX)+VOLI(L,NY,NX)
       ENDDO
       if(totvolw<ZERO)then
-      write(*,*)'NY,NX',NY,NX
+      write(*,*)'NY,NX',NY,NX,NUM(NY,NX),NU(NY,NX)
       write(*,*)'layer water ice soil_vol BKDS'
       L=0
       write(*,*)L,VOLW(L,NY,NX),VOLI(L,NY,NX),VOLY(L,NY,NX)
      2,BKDS(L,NY,NX)
-      do L=NUM(NY,NX),NL(NY,NX)
+      do L=NU(NY,NX),NL(NY,NX)
       write(*,*)L,VOLW(L,NY,NX),VOLI(L,NY,NX),VOLY(L,NY,NX)
      2,BKDS(L,NY,NX)
       enddo
       write(*,*)'hour1.f: model quit at zero water content'
      2//' for whole soil column',NU(NY,NX),NL(NY,NX)
+      write(*,*)'day',I
       write(*,*)'check setup in opt file or soil file'
-C      stop
+      stop
       endif
 
 8995  CONTINUE

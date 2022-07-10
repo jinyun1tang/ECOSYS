@@ -99,6 +99,7 @@ C
      2,FENGYP=1.0E-03)
       REAL*4 RI,THETWR,THETW1,THETA1,THETAL,THETWL
      2,TKR1,TKS1,TKY,TKW1,TK11,TK12,TK0X,TKXR,TK1X,TKX1,TFND1
+
       DO 9995 NX=NHW,NHE
       DO 9990 NY=NVN,NVS
       NUM(NY,NX)=NU(NY,NX)
@@ -177,6 +178,8 @@ C
       VOLWH1(L,NY,NX)=VOLWH(L,NY,NX)
       VOLIH1(L,NY,NX)=VOLIH(L,NY,NX)
       IF(BKDS(L,NY,NX).GT.ZERO)THEN
+C VOLA1: total volume in micropores
+C VOLP1: air-filled volume
       VOLP1Z(L,NY,NX)=VOLA1(L,NY,NX)-VOLW1(L,NY,NX)-VOLI1(L,NY,NX)
       VOLP1(L,NY,NX)=AMAX1(0.0,VOLP1Z(L,NY,NX))
       ELSE
@@ -2333,10 +2336,27 @@ C
       VOLWR2=VOLWR2+FLYM2+EVAPR2-FLV2
       VOLW12=VOLW12+FLV2
       ENGYR=VHCPR2*TKR1
+      TKR10=TKR1
+      VHCPRXX=VHCPR2
       VHCPR2=2.496E-06*ORGC(0,NY,NX)+4.19*VOLWR2
      2+1.9274*VOLI1(0,NY,NX)
       VHCP12=VHCP12+4.19*FLV2
       TKR1=(ENGYR+HFLXR2+HWFLM2-HWFLV2-HFLCR2)/VHCPR2
+C      if(I==162)then
+C      print*,'tkrcp',VHCPRXX,VHCPR2,VHCPRXX/VHCPR2
+C      print*,'tkr1',j,TKR1,TKR10,TK1(0,NY,NX)
+C     2,TK1(NUM(NY,NX),NY,NX),TKS(0,NY,NX)
+C     2,HFLXR2+HWFLM2-HWFLV2-HFLCR2,VHCPR2
+C      print*,'tkr11',j,HFLXR2,HWFLM2,HWFLV2,HFLCR2
+C      endif
+      IF(ABS(VHCPRXX/VHCPR2-1.)>0.025.or.
+     2abs(TKR1/TKR10-1.)>0.025)then
+      TKR1=TK1(0,NY,NX)
+C      print*,'vhcpx',VHCPRXX,VHCPR2,TKR1,TKR10
+C      print*,'tkr1',j,TKA(NY,NX),TK1(0,NY,NX)
+C     2,TK1(NUM(NY,NX),NY,NX),TKS(0,NY,NX)
+C      pause
+      endif
       TKS1=TKS1+(HWFLV2+HFLCR2)/VHCP12
 C     IF(I.GT.350.AND.NX.EQ.1)THEN
 C     WRITE(*,1111)'EFLXR2',I,J,M,NX,NY,NUM(NY,NX),NN
@@ -2389,6 +2409,9 @@ C     HFLWRLG=convective heat flux from atm to litter
 C     FLWVLS=water flux within soil accounting for wetting front
 C
       FLWLG=FLQM+EVAPG(NY,NX)+FLV1
+C      if(I==162)then
+C      print*,'FLWLG=',j,FLQM,EVAPG(NY,NX),FLV1
+C      endif
       FLWLXG=FLQM+EVAPG(NY,NX)+FLV1
       FLWHLG=FLHM
       HFLWLG=HWFLQM+HFLXG+HWFLV1+HFLCR1
@@ -2458,6 +2481,9 @@ C     HFLWRL=total heat flux into litter
 C     FLWV*=total internal vapor flux in soil
 C
       FLWL(3,NUM(NY,NX),NY,NX)=FLWLW+FLWLG
+C      if(I==162)then
+C      print*,'flwljj',j,M,FLWLW,FLWLG,FLWLW+FLWLG
+C      endif
       FLWLX(3,NUM(NY,NX),NY,NX)=FLWLXW+FLWLXG
       FLWHL(3,NUM(NY,NX),NY,NX)=FLWHLW+FLWHLG
       HFLWL(3,NUM(NY,NX),NY,NX)=HFLWLW+HFLWLG
@@ -2510,11 +2536,14 @@ C     CND1,CNDL=hydraulic conductivity of source,destination layer
 C     HCND=lateral(1,2),vertical(3) micropore hydraulic conductivity
 C
       IF(BKDS(NUM(NY,NX),NY,NX).GT.ZERO)THEN
+C  VOLWRX: surface layer water holding capacity
+C  THETWR: surface layer saturation
       IF(VOLWRX(NY,NX).GT.ZEROS2(NY,NX))THEN
       THETWR=AMIN1(VOLWRX(NY,NX),VOLW1(0,NY,NX))/VOLR(NY,NX)
       ELSE
       THETWR=POROS0(NY,NX)
       ENDIF
+
       THETW1=AMAX1(THETY(NUM(NY,NX),NY,NX)
      2,AMIN1(POROS(NUM(NY,NX),NY,NX)
      2,VOLW1(NUM(NY,NX),NY,NX)/VOLY(NUM(NY,NX),NY,NX)))
@@ -2530,9 +2559,15 @@ C
      2+PSISO(0,NY,NX)
       PSIST1=PSISM1(NUM(NY,NX),NY,NX)+PSISH(NUM(NY,NX),NY,NX)
      2+PSISO(NUM(NY,NX),NY,NX)
+C    psist0 : pressure in residual layer layer
+C    psist1 : pressure in topsoil layer
+C    flqx : water flux from layer 0 into layer 1 (>0)
       FLQX=AVCNDR*(PSIST0-PSIST1)
      2*AREA(3,NUM(NY,NX),NY,NX)*CVRDW(NY,NX)*XNPH
+
       IF(FLQX.GE.0.0)THEN
+C layer 0 into layer 1
+C THETW1: saturation of layer 1
       IF(THETWR.GT.THETS(0,NY,NX))THEN
       FLQZ=FLQX+AMIN1((THETWR-THETS(0,NY,NX))
      2*VOLR(NY,NX),AMAX1(0.0,(THETS(NUM(NY,NX),NY,NX)-THETW1)
@@ -2540,12 +2575,16 @@ C
       ELSE
       FLQZ=FLQX
       ENDIF
+C positve
       FLQR=AMAX1(0.0,AMIN1(FLQZ,VOLW1(0,NY,NX)*XNPX
      2,VOLP1(NUM(NY,NX),NY,NX)))
       FLQ2=AMAX1(0.0,AMIN1(FLQX,VOLW1(0,NY,NX)*XNPX
      2,VOLP1(NUM(NY,NX),NY,NX)))
+
       ELSE
+C layer 1 into layer 0, FLQX<0
       IF(THETW1.GT.THETS(NUM(NY,NX),NY,NX))THEN
+C more water than saturation in layer 1,remove excessive water
       FLQZ=FLQX+AMAX1((THETS(NUM(NY,NX),NY,NX)-THETW1)
      2*VOLY(NUM(NY,NX),NY,NX),AMIN1(0.0,(THETWR-THETS(0,NY,NX))
      3*VOLR(NY,NX)))*XNPX
@@ -2557,17 +2596,22 @@ C
       FLQ2=AMIN1(0.0,AMAX1(FLQX,-VOLW1(NUM(NY,NX),NY,NX)*XNPX
      2,-VOLP1(0,NY,NX)))
       ENDIF
+
       IF(VOLP1Z(NUM(NY,NX),NY,NX).LT.0.0)THEN
       FLQR=FLQR+AMIN1(0.0,AMAX1(-VOLW1(NUM(NY,NX),NY,NX)*XNPX
      2,VOLP1Z(NUM(NY,NX),NY,NX)))
       FLQ2=FLQ2+AMIN1(0.0,AMAX1(-VOLW1(NUM(NY,NX),NY,NX)*XNPX
      2,VOLP1Z(NUM(NY,NX),NY,NX)))
       ENDIF
+
       IF(FLQR.GT.0.0)THEN
+C from layer 0 to layer 1
       HFLQR=4.19*TK1(0,NY,NX)*FLQR
       ELSE
+C from layer 1 to layer 0
       HFLQR=4.19*TK1(NUM(NY,NX),NY,NX)*FLQR
       ENDIF
+
       FLWL(3,NUM(NY,NX),NY,NX)=FLWL(3,NUM(NY,NX),NY,NX)+FLQR
       HFLWL(3,NUM(NY,NX),NY,NX)=HFLWL(3,NUM(NY,NX),NY,NX)+HFLQR
       FLWRL(NY,NX)=FLWRL(NY,NX)-FLQR
@@ -3433,6 +3477,7 @@ C
       IF(THETPM(M,N3,N2,N1).GT.THETX
      2.AND.THETPM(M,N6,N5,N4).GT.THETX)THEN
       TK11=TK1(N3,N2,N1)
+      if(abs(tks(n3,n2,n1))>400.)pause
       TK12=TK1(N6,N5,N4)
       VP1=2.173E-03/TK11
      2*0.61*EXP(5360.0*(3.661E-03-1.0/TK11))
@@ -3454,6 +3499,7 @@ C
       VPY=(VP1*VOLPM(M,N3,N2,N1)+VPL*VOLPM(M,N6,N5,N4))
      2/(VOLPM(M,N3,N2,N1)+VOLPM(M,N6,N5,N4))
       FLVX=(VP1-VPY)*VOLPM(M,N3,N2,N1)*XNPX
+
       IF(FLVC.GE.0.0)THEN
       FLVL=AMAX1(0.0,AMIN1(FLVC,FLVX))
       HWFLVL=(4.19*TK1(N3,N2,N1)+VAP)*FLVL
@@ -4725,6 +4771,7 @@ C
       VOLI1(NUM(NY,NX),NY,NX)=VOLI1(NUM(NY,NX),NY,NX)+FLWI
      2+FLWS/DENSI
       ENGY1=VHCP1(NUM(NY,NX),NY,NX)*TK1(NUM(NY,NX),NY,NX)
+      VHCP1x0=VHCP1(NUM(NY,NX),NY,NX)
       VHCP1(NUM(NY,NX),NY,NX)=VHCM(NUM(NY,NX),NY,NX)
      2+4.19*(VOLW1(NUM(NY,NX),NY,NX)+VOLWH1(NUM(NY,NX),NY,NX))
      3+1.9274*(VOLI1(NUM(NY,NX),NY,NX)+VOLIH1(NUM(NY,NX),NY,NX))
@@ -4733,8 +4780,12 @@ C
       VHCP1B(NUM(NY,NX),NY,NX)=4.19*VOLWH1(NUM(NY,NX),NY,NX)
      3+1.9274*VOLIH1(NUM(NY,NX),NY,NX)
       IF(VHCP1(NUM(NY,NX),NY,NX).GT.ZEROS(NY,NX))THEN
+      TK10=TK1(NUM(NY,NX),NY,NX)
       TK1(NUM(NY,NX),NY,NX)=(ENGY1+HFLWS)
      2/VHCP1(NUM(NY,NX),NY,NX)
+      if(abs(tK10/TK1(NUM(NY,NX),NY,NX)-1.)>0.025)then
+      TK1(NUM(NY,NX),NY,NX)=TKA(NY,NX)
+      endif
       ELSE
       TK1(NUM(NY,NX),NY,NX)=TKA(NY,NX)
       ENDIF
@@ -4755,6 +4806,9 @@ C     VHCP1=volumetric heat capacity of litter
 C     TK1=litter temperature
 C     HFLWRL,TFLXR,THQR1=litter total cond+conv,latent,runoff heat flux
 C
+      VOLW1xx=VOLW1(0,NY,NX)
+      VOLW1x=VOLW1(0,NY,NX)+FLWRL(NY,NX)
+     2+WFLXR(NY,NX)+TQR1(NY,NX)
       VOLW1(0,NY,NX)=AMAX1(0.0,VOLW1(0,NY,NX)+FLWRL(NY,NX)
      2+WFLXR(NY,NX)+TQR1(NY,NX))
       VOLI1(0,NY,NX)=AMAX1(0.0,VOLI1(0,NY,NX)-WFLXR(NY,NX)/DENSI)
@@ -4795,6 +4849,12 @@ C
       IF(VHCP1(0,NY,NX).GT.VHCPRX(NY,NX))THEN
       TK1(0,NY,NX)=(ENGYR+HFLWRL(NY,NX)+TFLXR(NY,NX)
      2+THQR1(NY,NX))/VHCP1(0,NY,NX)
+
+      IF(ABS(VHCP1(0,NY,NX)/VHCPXX-1.)>0.025.or.
+     2abs(TK1(0,NY,NX)/tk0xx-1)>0.025)THEN
+      TK1(0,NY,NX)=TK1(NUM(NY,NX),NY,NX)
+      ENDIF
+
       ELSE
       TK1(0,NY,NX)=TK1(NUM(NY,NX),NY,NX)
       ENDIF
@@ -4838,8 +4898,15 @@ C     TK1=soil temperature
 C
       DO 9785 L=NUM(NY,NX),NL(NY,NX)
       IF(VOLT(L,NY,NX).GT.ZEROS2(NY,NX))THEN
+      VOLw10=VOLW1(L,NY,NX)
       VOLW1(L,NY,NX)=VOLW1(L,NY,NX)+TFLWL(L,NY,NX)
      2+FINHL(L,NY,NX)+TWFLXL(L,NY,NX)+FLU1(L,NY,NX)
+C      if(VOLW1(L,NY,NX)/=VOLW1(L,NY,NX))then
+C      print*,'volw',L,VOLw10
+C      print*,TFLWL(L,NY,NX),
+C    2FINHL(L,NY,NX),TWFLXL(L,NY,NX),FLU1(L,NY,NX)
+C      pause
+C      endif
       VOLWX1(L,NY,NX)=VOLWX1(L,NY,NX)+TFLWLX(L,NY,NX)
      2+FINHL(L,NY,NX)+TWFLXL(L,NY,NX)+FLU1(L,NY,NX)
       VOLWX1(L,NY,NX)=AMIN1(VOLW1(L,NY,NX),VOLWX1(L,NY,NX))
@@ -4916,8 +4983,12 @@ C
 C     END ARTIFICIAL SOIL WARMING
 C
       IF(VHCP1(L,NY,NX).GT.ZEROS(NY,NX))THEN
+      tk1l=TK1(L,NY,NX)
       TK1(L,NY,NX)=(ENGY1+THFLWL(L,NY,NX)+TTFLXL(L,NY,NX)
      2+HWFLU1(L,NY,NX))/VHCP1(L,NY,NX)
+      if(abs(TK1(L,NY,NX)/tk1l-1.)>0.025)then
+      TK1(L,NY,NX)=tk1l
+      endif
       ELSEIF(L.EQ.1)THEN
       TK1(L,NY,NX)=TKA(NY,NX)
       ELSE
