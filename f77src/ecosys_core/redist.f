@@ -5082,6 +5082,7 @@ C
       ELSE
       DORGC(L,NY,NX)=0.0
       ENDIF
+
       IF(L.EQ.1)THEN
 C     DO 4344 K=0,5
 C     WRITE(*,4343)'ORGC',I,J,NX,NY,L,K,ORGC(L,NY,NX),ORGR(L,NY,NX)
