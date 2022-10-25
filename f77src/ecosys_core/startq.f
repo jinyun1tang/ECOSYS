@@ -35,11 +35,20 @@ C
       CHARACTER*8 CDATE
       DIMENSION CNOPC(4),CPOPC(4)
 C
+C     VSTK=stalk volume:mass (g m-3)
+C     FDMPM=minimum canopy dry matter concentration (g g-1)
+C     FARS=stalk sapwood thickness (m)
+C
+      DATA VSTK,FDMPM,FARS/4.0E-06,0.16,0.01/
+C
 C     INITIALIZE SHOOT GROWTH VARIABLES
 C
-C     IFLGC=PFT flag:0=not active,1=active
-C     IYR0,IDAY0,IYRH,IDAYH=year,day of planting,arvesting
+C     IFLGN=0:take values from readq.f
+C          =1:retain existing values
+C     IFLGC=PFT flag:0=not alive,1=alive
+C     IYR0,IDAY0,IYRH,IDAYH=year,day of planting,harvesting
 C     PPI,PPX=initial,current population (m-2)
+C     WTRVC,WTRVN,WTRVP=initial seed stotage C,N,P stocks (g)
 C     CF,CFI=current,initial clumping factor
 C     RSMH=cuticular resistance to water (h m-1)
 C     RCMX=cuticular resistance to CO2 (s m-1)
@@ -51,21 +60,36 @@ C
       DO 9990 NY=NVNQ,NVSQ
       NZ2X=MIN(NZ2Q,NP(NY,NX)) 
       DO 9985 NZ=NZ1Q,NZ2X
-      IF(IFLGC(NZ,NY,NX).EQ.0)THEN
+      IF(IFLGN(NZ,NY,NX).EQ.0)THEN
       IYR0(NZ,NY,NX)=IYRX(NZ,NY,NX)
       IDAY0(NZ,NY,NX)=IDAYX(NZ,NY,NX)
       IYRH(NZ,NY,NX)=IYRY(NZ,NY,NX)
       IDAYH(NZ,NY,NX)=IDAYY(NZ,NY,NX)
-      PPI(NZ,NY,NX)=PPZ(NZ,NY,NX)
-      PPX(NZ,NY,NX)=PPI(NZ,NY,NX)
-      CF(NZ,NY,NX)=CFI(NZ,NY,NX)
+      ENDIF
+      IF(IYR0(NZ,NY,NX).EQ.IYRC)THEN
+      IF(PPI(NZ,NY,NX).GT.0.0)THEN
+      PP(NZ,NY,NX)=PPI(NZ,NY,NX)*AREA(3,NU(NY,NX),NY,NX)
+      PPZ(NZ,NY,NX)=PPI(NZ,NY,NX)
+      ELSE
+      PP(NZ,NY,NX)=PPZ(NZ,NY,NX)*AREA(3,NU(NY,NX),NY,NX)
+      ENDIF
+      ELSE
+      PP(NZ,NY,NX)=PPX(NZ,NY,NX)*AREA(3,NU(NY,NX),NY,NX)
+      ENDIF
 C     WRITE(*,3232)'STARTQ',IYRC,NX,NY,NZ
 C    2,IDAY0(NZ,NY,NX),IYR0(NZ,NY,NX) 
 C    3,IDAYH(NZ,NY,NX),IYRH(NZ,NY,NX) 
 C    4,IYRC,IDAYX(NZ,NY,NX),IDAYY(NZ,NY,NX)
 C    5,IYRX(NZ,NY,NX),IYRY(NZ,NY,NX),IFLGC(NZ,NY,NX)
-C    5,PPI(NZ,NY,NX),PPX(NZ,NY,NX),CFI(NZ,NY,NX),CF(NZ,NY,NX)
-3232  FORMAT(A8,15I8,20E12.4)
+C    5,PP(NZ,NY,NX),PPZ(NZ,NY,NX),PPI(NZ,NY,NX),PPX(NZ,NY,NX)
+3232  FORMAT(A8,14I8,20E12.4)
+      IF(IFLGC(NZ,NY,NX).EQ.0)THEN
+      WTRVX(NZ,NY,NX)=GRDM(NZ,NY,NX)*PP(NZ,NY,NX)
+      WTRVC(NZ,NY,NX)=WTRVX(NZ,NY,NX)
+      WTRVN(NZ,NY,NX)=CNGR(NZ,NY,NX)*WTRVC(NZ,NY,NX)
+      WTRVP(NZ,NY,NX)=CPGR(NZ,NY,NX)*WTRVC(NZ,NY,NX)
+      PPX(NZ,NY,NX)=PPI(NZ,NY,NX)
+      CF(NZ,NY,NX)=CFI(NZ,NY,NX)
 C     IF(DATAP(NZ,NY,NX).NE.'NO')THEN
       RSMH(NZ,NY,NX)=RSMX(NZ,NY,NX)/3600.0
       RCMX(NZ,NY,NX)=RSMX(NZ,NY,NX)*1.56
@@ -83,13 +107,14 @@ C     FRACTIONS OF PLANT LITTER ALLOCATED TO KINETIC COMPONENTS
 C     PROTEIN(*,1),CH2O(*,2),CELLULOSE(*,3),LIGNIN(*,4) IN SOIL LITTER
 C
 C     CFOPC=fraction of plant litter allocated in nonstructural(0,*),
-C     foliar(1,*),non-foliar(2,*),stalk(3,*),root(4,*), coarse woody (5,*)
+C        foliar(1,*),non-foliar(2,*),stalk(3,*),root(4,*), 
+C        coarse woody (5,*)
 C
 C     NONSTRUCTURAL
 C
       CFOPC(0,1,NZ,NY,NX)=0.00
-      CFOPC(0,2,NZ,NY,NX)=0.67
-      CFOPC(0,3,NZ,NY,NX)=0.33
+      CFOPC(0,2,NZ,NY,NX)=1.00
+      CFOPC(0,3,NZ,NY,NX)=0.00
       CFOPC(0,4,NZ,NY,NX)=0.00
 C
 C     NON-VASCULAR (E.G. MOSSES)
@@ -130,7 +155,7 @@ C
 C
 C     DECIDUOUS TREES
 C
-      ELSEIF(IBTYP(NZ,NY,NX).EQ.1.OR.IBTYP(NZ,NY,NX).EQ.3)THEN
+      ELSEIF(IBTYP(NZ,NY,NX).EQ.1.OR.IBTYP(NZ,NY,NX).GE.3)THEN
       CFOPC(1,1,NZ,NY,NX)=0.07
       CFOPC(1,2,NZ,NY,NX)=0.34
       CFOPC(1,3,NZ,NY,NX)=0.36
@@ -153,7 +178,7 @@ C
       CFOPC(2,4,NZ,NY,NX)=0.295
       ENDIF
 C
-C     FRACTIONS OF WOODY LITTER ALLOCATED TO
+C     FRACTIONS OF STALK LITTER ALLOCATED TO
 C     PROTEIN, CH2O, CELLULOSE, LIGNIN
 C
 C     NON-VASCULAR
@@ -202,7 +227,7 @@ C
 C
 C     DECIDUOUS TREES
 C
-      ELSEIF(IBTYP(NZ,NY,NX).EQ.1.OR.IBTYP(NZ,NY,NX).EQ.3)THEN
+      ELSEIF(IBTYP(NZ,NY,NX).EQ.1.OR.IBTYP(NZ,NY,NX).GE.3)THEN
       CFOPC(4,1,NZ,NY,NX)=0.059
       CFOPC(4,2,NZ,NY,NX)=0.308
       CFOPC(4,3,NZ,NY,NX)=0.464
@@ -271,14 +296,16 @@ C
 C
 C     PFT THERMAL ACCLIMATION
 C
+C     TCZD,TCXC=base threshold temperature for leafout,leafoff (oC)
 C     ZTYP,ZTYPI=dynamic,initial thermal adaptation zone from PFT file
 C     OFFST=shift in Arrhenius curve for thermal adaptation (oC)
-C     TCZ,TCX=threshold temperature for leafout,leafoff
+C     TCZ,TCX=threshold temperature for leafout,leafoff (oC)
 C     HTC=high temperature threshold for grain number loss (oC)
-C     SSTX=sensitivity to HTC (seeds oC-1 above HTC)
+C     SSTX=sensitivity to HTC (seeds oC-1 h-1 above HTC)
+C     ICTYP=3:C3,=4:C4 from plant species file
 C
       TCZD=5.00
-      TCXD=12.00
+      TCXD=7.50
       ZTYP(NZ,NY,NX)=ZTYPI(NZ,NY,NX)
       OFFST(NZ,NY,NX)=2.667*(2.5-ZTYP(NZ,NY,NX))
       TCZ(NZ,NY,NX)=TCZD-OFFST(NZ,NY,NX)
@@ -305,7 +332,8 @@ C
       SDLG(NZ,NY,NX)=2.0*(0.75*SDVL(NZ,NY,NX)/3.1416)**0.33
       SDAR(NZ,NY,NX)=4.0*3.1416*(SDLG(NZ,NY,NX)/2.0)**2
 C
-C     INITIALIZE ROOT(N=1),MYCORRHIZAL(N=2) DIMENSIONS, UPTAKE PARAMETERS
+C     INITIALIZE ROOT(N=1),MYCORRHIZAL(N=2) DIMENSIONS, 
+C     UPTAKE PARAMETERS
 C
 C     SDPTH=seeding depth(m) from PFT management file
 C     CDPTHZ=depth to soil layer bottom from surface(m)
@@ -313,9 +341,12 @@ C     NG,NIX,NINR=seeding,upper,lower rooting layer
 C     CNRTS,CPRTS=N,P root growth yield
 C     RRAD1M,RRAD2M=maximum primary,secondary mycorrhizal radius (m)
 C     PORT=mycorrhizal porosity
-C     UPMXZH,UPKMZH,UPMNZH=NH4 max uptake(g m-2 h-1),Km(uM),min concn (uM)      
-C     UPMXZO,UPKMZO,UPMNZO=NO3 max uptake(g m-2 h-1),Km(uM), min concn (uM)      
-C     UPMXPO,UPKMPO,UPMNPO=H2PO4 max uptake(g m-2 h-1),Km(uM),min concn (uM)      
+C     UPMXZH,UPKMZH,UPMNZH=NH4 max uptake(g m-2 h-1),
+C        Km(uM),min concn (uM)      
+C     UPMXZO,UPKMZO,UPMNZO=NO3 max uptake(g m-2 h-1),
+C        Km(uM), min concn (uM)      
+C     UPMXPO,UPKMPO,UPMNPO=H2PO4 max uptake(g m-2 h-1),
+C        Km(uM),min concn (uM)      
 C     RSRR,RSRA=radial,axial root resistivity (m2 MPa-1 h-1)
 C
       SDPTH(NZ,NY,NX)=SDPTHI(NZ,NY,NX)
@@ -331,9 +362,9 @@ C
 9795  CONTINUE
       CNRTS(NZ,NY,NX)=CNRT(NZ,NY,NX)*DMRT(NZ,NY,NX)
       CPRTS(NZ,NY,NX)=CPRT(NZ,NY,NX)*DMRT(NZ,NY,NX)
-      RRAD1M(2,NZ,NY,NX)=5.0E-06
-      RRAD2M(2,NZ,NY,NX)=5.0E-06
-      PORT(2,NZ,NY,NX)=PORT(1,NZ,NY,NX)
+      RRAD1M(2,NZ,NY,NX)=2.5E-06
+      RRAD2M(2,NZ,NY,NX)=2.5E-06
+      PORTI(2,NZ,NY,NX)=PORTI(1,NZ,NY,NX)
       UPMXZH(2,NZ,NY,NX)=UPMXZH(1,NZ,NY,NX)
       UPKMZH(2,NZ,NY,NX)=UPKMZH(1,NZ,NY,NX)
       UPMNZH(2,NZ,NY,NX)=UPMNZH(1,NZ,NY,NX)
@@ -353,24 +384,23 @@ C     RTLG1X,RTLG2X=specific primary,secondary root length (m g-1)
 C     RTAR1X,RTAR2X=specific primary,secondary root area (m2 g-1)
 C
       DO 500 N=1,2
-      PORTX(N,NZ,NY,NX)=PORT(N,NZ,NY,NX)**1.33
-      RRADP(N,NZ,NY,NX)=LOG(1.0/SQRT(AMAX1(0.01,PORT(N,NZ,NY,NX))))
-      DMVL(N,NZ,NY,NX)=1.0E-06/(0.05*(1.0-PORT(N,NZ,NY,NX)))
-      RTLG1X(N,NZ,NY,NX)=DMVL(N,NZ,NY,NX)/(3.142*RRAD1M(N,NZ,NY,NX)**2)
-      RTLG2X(N,NZ,NY,NX)=DMVL(N,NZ,NY,NX)/(3.142*RRAD2M(N,NZ,NY,NX)**2)
+      PORT(N,NZ,NY,NX)=PORTI(N,NZ,NY,NX)
+      RRADP(N,NZ,NY,NX)=LOG(1.0/SQRT(AMAX1(0.01,PORTI(N,NZ,NY,NX))))
+      DMVL(N,NZ,NY,NX)=1.0E-06/(0.05*(1.0-PORTI(N,NZ,NY,NX)))
+      RTLG1X(N,NZ,NY,NX)=DMVL(N,NZ,NY,NX)
+     2/(3.142*RRAD1M(N,NZ,NY,NX)**2)
+      RTLG2X(N,NZ,NY,NX)=DMVL(N,NZ,NY,NX)
+     2/(3.142*RRAD2M(N,NZ,NY,NX)**2)
       RRAD1X(N,NZ,NY,NX)=RRAD1M(N,NZ,NY,NX)
-C    2*SQRT(0.25*(1.0-PORT(N,NZ,NY,NX)))
+C    2*SQRT(0.25*(1.0-PORTI(N,NZ,NY,NX)))
       RRAD2X(N,NZ,NY,NX)=RRAD2M(N,NZ,NY,NX)
-C    2*SQRT(0.25*(1.0-PORT(N,NZ,NY,NX)))
+C    2*SQRT(0.25*(1.0-PORTI(N,NZ,NY,NX)))
       RTAR1X(N,NZ,NY,NX)=3.142*RRAD1X(N,NZ,NY,NX)**2
       RTAR2X(N,NZ,NY,NX)=3.142*RRAD2X(N,NZ,NY,NX)**2
 500   CONTINUE
 C
-C     INITIALIZE PLANT PHENOLOGY
+C     INITIALIZE PLANT PHENOLOGY 
 C
-C     PP=population (grid cell-1)
-C
-      PP(NZ,NY,NX)=PPX(NZ,NY,NX)*AREA(3,NU(NY,NX),NY,NX)
       IFLGI(NZ,NY,NX)=0
       IDTHP(NZ,NY,NX)=0
       IDTHR(NZ,NY,NX)=0
@@ -378,9 +408,13 @@ C
       NBR(NZ,NY,NX)=0
       HTCTL(NZ,NY,NX)=0.0
       ZC(NZ,NY,NX)=0.0
-      DO 10 NB=1,10
+      DO 10 NB=1,JB
       IFLGA(NB,NZ,NY,NX)=0
+      IF(ISTYP(NZ,NY,NX).EQ.0.AND.IWTYP(NZ,NY,NX).EQ.1)THEN
+      IFLGE(NB,NZ,NY,NX)=1
+      ELSE
       IFLGE(NB,NZ,NY,NX)=0
+      ENDIF
       IFLGF(NB,NZ,NY,NX)=0
       IFLGR(NB,NZ,NY,NX)=0
       IFLGQ(NB,NZ,NY,NX)=0
@@ -405,8 +439,8 @@ C
       ATRP(NB,NZ,NY,NX)=0.0
       FDBK(NB,NZ,NY,NX)=1.0
       FDBKX(NB,NZ,NY,NX)=1.0
-      FLG4(NB,NZ,NY,NX)=0
-      FLGZ(NB,NZ,NY,NX)=0
+      FLG4(NB,NZ,NY,NX)=0.0
+      FLGZ(NB,NZ,NY,NX)=0.0
       NBTB(NB,NZ,NY,NX)=0
       IDTHB(NB,NZ,NY,NX)=1
       DO 15 M=1,10
@@ -418,7 +452,8 @@ C     INITIALIZE PLANT MORPHOLOGY AND BIOMASS
 C
       WSTR(NZ,NY,NX)=0.0
       CHILL(NZ,NY,NX)=0.0
-      DO 25 NB=1,10
+      HEAT(NZ,NY,NX)=0.0
+      DO 25 NB=1,JB
       CPOOL(NB,NZ,NY,NX)=0.0
       ZPOOL(NB,NZ,NY,NX)=0.0
       PPOOL(NB,NZ,NY,NX)=0.0
@@ -476,10 +511,13 @@ C
       WGSHNX(NB,NZ,NY,NX)=0.0
       WGSHPX(NB,NZ,NY,NX)=0.0
       HTSHEX(NB,NZ,NY,NX)=0.0
-      DO 5 L=1,NL(NY,NX)
+      DO 5 L=1,JC
       ARSTK(L,NB,NZ,NY,NX)=0.0
       DO 5 N=1,4
       SURFB(N,L,NB,NZ,NY,NX)=0.0
+      IF(NB.EQ.1)THEN
+      SURFD(N,L,NZ,NY,NX)=0.0
+      ENDIF
 5     CONTINUE
       DO 25 K=0,25
       ARLF(K,NB,NZ,NY,NX)=0.0
@@ -497,7 +535,7 @@ C
       WGNODE(K,NB,NZ,NY,NX)=0.0
       WGNODN(K,NB,NZ,NY,NX)=0.0
       WGNODP(K,NB,NZ,NY,NX)=0.0
-      DO 55 L=1,NL(NY,NX)
+      DO 55 L=1,JC
       ARLFL(L,K,NB,NZ,NY,NX)=0.0
       WGLFL(L,K,NB,NZ,NY,NX)=0.0
       WGLFLN(L,K,NB,NZ,NY,NX)=0.0
@@ -514,7 +552,7 @@ C
 45    CONTINUE
       ENDIF
 25    CONTINUE
-      DO 35 L=1,NL(NY,NX)
+      DO 35 L=1,JC
       ARLFV(L,NZ,NY,NX)=0.0
       WGLFV(L,NZ,NY,NX)=0.0
       ARSTV(L,NZ,NY,NX)=0.0
@@ -527,6 +565,7 @@ C
       CZPOLP(NZ,NY,NX)=0.0
       CPPOLP(NZ,NY,NX)=0.0
       WTSHT(NZ,NY,NX)=0.0
+      DWTSHT(NZ,NY,NX)=0.0
       WTLF(NZ,NY,NX)=0.0
       WTSHE(NZ,NY,NX)=0.0
       WTSTK(NZ,NY,NX)=0.0
@@ -579,12 +618,9 @@ C
       TZUPFX(NZ,NY,NX)=0.0
       RNH3C(NZ,NY,NX)=0.0
       TNH3C(NZ,NY,NX)=0.0
-      VCO2F(NZ,NY,NX)=0.0
-      VCH4F(NZ,NY,NX)=0.0 
-      VOXYF(NZ,NY,NX)=0.0 
-      VNH3F(NZ,NY,NX)=0.0
-      VN2OF(NZ,NY,NX)=0.0
-      VPO4F(NZ,NY,NX)=0.0
+      VCOXF(NZ,NY,NX)=0.0
+      VNOXF(NZ,NY,NX)=0.0
+      VPOXF(NZ,NY,NX)=0.0
       THVSTC(NZ,NY,NX)=0.0
       THVSTN(NZ,NY,NX)=0.0
       THVSTP(NZ,NY,NX)=0.0
@@ -595,6 +631,10 @@ C
       RSETN(NZ,NY,NX)=0.0
       RSETP(NZ,NY,NX)=0.0
       CTRAN(NZ,NY,NX)=0.0
+C
+C     INITIALIZE STANDING DEAD VARIABLES
+C
+      IF(IFLGN(NZ,NY,NX).EQ.0)THEN
       WTSTG(NZ,NY,NX)=0.0
       WTSTGN(NZ,NY,NX)=0.0
       WTSTGP(NZ,NY,NX)=0.0
@@ -609,28 +649,53 @@ C
       WTSTGN(NZ,NY,NX)=WTSTGN(NZ,NY,NX)+WTSTDN(M,NZ,NY,NX) 
       WTSTGP(NZ,NY,NX)=WTSTGP(NZ,NY,NX)+WTSTDP(M,NZ,NY,NX)
 155   CONTINUE
-      ENDIF
+      WTSTDG(5,NZ,NY,NX)=0.0
+      WTSTDN(5,NZ,NY,NX)=0.0
+      WTSTDP(5,NZ,NY,NX)=0.0
+C
+C     INITIALIZE STALK VARIABLES
+C
+      VSTD=VSTK*WTSTG(NZ,NY,NX)
+      RSTD=(0.01*VSTD/3.1416)**0.4
+      ZG(NZ,NY,NX)=100.0*RSTD
+      ARSTG(NZ,NY,NX)=3.1416*RSTD*ZG(NZ,NY,NX)
+      ARLSS(NY,NX)=ARLSS(NY,NX)+ARSTG(NZ,NY,NX)
+      DO 6 L=1,JC
+      XJC=JC
+      ARSTD(L,NZ,NY,NX)=ARSTG(NZ,NY,NX)/XJC
+6     CONTINUE
 C
 C     INITIALIZE PLANT HEAT AND WATER STATUS
 C
-C     VHCPC=canopy heat capacity (MJ m-3 K-1)
-C     TCC,TKC=canopy temperature for growth (oC,K)
-C     TCG,TKG=canopy temperature for phenology (oC,K)
+C     TKQC,VPQC=canopy aerodynamic temperature (K), 
+C        vapor pressure (kPa)
+C     TKQD,VPQD=standing dead aerodynamic temperature (K), 
+C        vapor pressure (kPa)
+C     TCC,TKC=canopy surface temperature (oC,K)
+C     TCD,TKD=standing dead surface temperature (oC,K)
+C     TCG,TKG=canopy surface temperature for phenology (oC,K)
 C     PSILT,PSILO,PSILG=canopy total,osmotic,turgor water potl(MPa)
 C
-      VHCPC(NZ,NY,NX)=4.19*WTSHT(NZ,NY,NX)*10.0E-06
       ENGYX(NZ,NY,NX)=0.0
-      DTKC(NZ,NY,NX)=0.0
+      TKQC(NZ,NY,NX)=ATKA(NY,NX)
+      VPQC(NZ,NY,NX)=2.173E-03/TKQC(NZ,NY,NX)
+     2*0.61*EXP(5360.0*(3.661E-03-1.0/TKQC(NZ,NY,NX)))
+      TKQD(NZ,NY,NX)=ATKA(NY,NX)
+      VPQD(NZ,NY,NX)= 2.173E-03/TKQD(NZ,NY,NX)
+     2*0.61*EXP(5360.0*(3.661E-03-1.0/TKQD(NZ,NY,NX)))
       TCC(NZ,NY,NX)=ATCA(NY,NX)
-      TKC(NZ,NY,NX)=TCC(NZ,NY,NX)+273.15
-      TCG(NZ,NY,NX)=TCC(NZ,NY,NX)
-      TKG(NZ,NY,NX)=TCG(NZ,NY,NX)+273.15
+      TKC(NZ,NY,NX)=ATKA(NY,NX)
+      TCG(NZ,NY,NX)=ATCA(NY,NX)
+      TKG(NZ,NY,NX)=ATKA(NY,NX)
+      TCD(NZ,NY,NX)=ATCA(NY,NX)
+      TKD(NZ,NY,NX)=ATKA(NY,NX)
       TFN3(NZ,NY,NX)=1.0
       PSILT(NZ,NY,NX)=-1.0E-03
       PSILO(NZ,NY,NX)=OSMO(NZ,NY,NX)+PSILT(NZ,NY,NX)
       PSILG(NZ,NY,NX)=AMAX1(0.0,PSILT(NZ,NY,NX)-PSILO(NZ,NY,NX))
       EP(NZ,NY,NX)=0.0
-      FRADP(NZ,NY,NX)=0.0
+      ENDIF
+      ENDIF
 C
 C     INITIALIZE ROOT(N=1),MYCORRHIZAL(N=2) MORPHOLOGY AND BIOMASS
 C
@@ -726,7 +791,7 @@ C
 30    CONTINUE
       IF(N.EQ.1)THEN
       DO 6400 K=0,1
-      DO 6400 M=1,4
+      DO 6400 M=1,5
       CSNC(M,K,L,NZ,NY,NX)=0.0
       ZSNC(M,K,L,NZ,NY,NX)=0.0
       PSNC(M,K,L,NZ,NY,NX)=0.0
@@ -756,16 +821,15 @@ C     WTRTL,WTRTD=total root C mass (g)
 C     WSRTL=total root protein C mass (g)
 C     CPOOLR,ZPOOLR,PPOOLR=C,N,P in root,myco nonstructural pools (g)
 C
-      WTRVX(NZ,NY,NX)=GRDM(NZ,NY,NX)*PP(NZ,NY,NX)
-      WTRVC(NZ,NY,NX)=WTRVX(NZ,NY,NX)
-      WTRVN(NZ,NY,NX)=CNGR(NZ,NY,NX)*WTRVC(NZ,NY,NX)
-      WTRVP(NZ,NY,NX)=CPGR(NZ,NY,NX)*WTRVC(NZ,NY,NX)
       WTLFBN(1,NZ,NY,NX)=CNGR(NZ,NY,NX)*WTLFB(1,NZ,NY,NX)
       WTLFBP(1,NZ,NY,NX)=CPGR(NZ,NY,NX)*WTLFB(1,NZ,NY,NX)
       WTLSB(1,NZ,NY,NX)=WTLFB(1,NZ,NY,NX)+WTSHEB(1,NZ,NY,NX)
       WTLS(NZ,NY,NX)=WTLS(NZ,NY,NX)+WTLSB(1,NZ,NY,NX)
-      FDM=AMIN1(1.0,0.16-0.045*PSILT(NZ,NY,NX))
-      VOLWP(NZ,NY,NX)=1.0E-06*WTLS(NZ,NY,NX)/FDM
+      WVPLT(NZ,NY,NX)=AMAX1(0.0,WTLS(NZ,NY,NX)
+     2+AMIN1(WTSTK(NZ,NY,NX),FARS*ARSTP(NZ,NY,NX)/VSTK))
+      APSILT=ABS(PSILT(NZ,NY,NX))
+      FDMP=FDMPM+0.10*APSILT/(0.05*APSILT+2.0)
+      VOLWP(NZ,NY,NX)=1.0E-06*WVPLT(NZ,NY,NX)/FDMP
       VOLWC(NZ,NY,NX)=0.0
       ZPOOL(1,NZ,NY,NX)=CNGR(NZ,NY,NX)*CPOOL(1,NZ,NY,NX)
       PPOOL(1,NZ,NY,NX)=CPGR(NZ,NY,NX)*CPOOL(1,NZ,NY,NX)
@@ -785,9 +849,15 @@ C
      2*CPOOLR(1,NG(NZ,NY,NX),NZ,NY,NX)
 C     ENDIF
       ENDIF
+C     IF(IGTYP(NZ,NY,NX).NE.0)THEN
+C     ZEROP(NZ,NY,NX)=ZERO*PP(NZ,NY,NX)
+C     ZEROQ(NZ,NY,NX)=ZERO*PP(NZ,NY,NX)/AREA(3,NU(NY,NX),NY,NX)
+C     ZEROP2(NZ,NY,NX)=ZERO2*PP(NZ,NY,NX)
+C     ELSE
       ZEROP(NZ,NY,NX)=ZERO*PP(NZ,NY,NX)
       ZEROQ(NZ,NY,NX)=ZERO*PP(NZ,NY,NX)/AREA(3,NU(NY,NX),NY,NX)
-      ZEROL(NZ,NY,NX)=ZERO*PP(NZ,NY,NX)*1.0E+06
+      ZEROP2(NZ,NY,NX)=ZERO2*PP(NZ,NY,NX)
+C     ENDIF
 9985  CONTINUE
 C
 C     FILL OUT UNUSED ARRAYS
@@ -802,14 +872,19 @@ C
       WTSTG(NZ,NY,NX)=0.0
       WTSTGN(NZ,NY,NX)=0.0
       WTSTGP(NZ,NY,NX)=0.0
+      ARSTG(NZ,NY,NX)=0.0
       DO 6401 L=1,NL(NY,NX)
       DO 6401 K=0,1
-      DO 6401 M=1,4
+      DO 6401 M=1,5
       CSNC(M,K,L,NZ,NY,NX)=0.0
       ZSNC(M,K,L,NZ,NY,NX)=0.0
       PSNC(M,K,L,NZ,NY,NX)=0.0
 6401  CONTINUE
 9986  CONTINUE
+      DO 9980 NZ=1,NP(NY,NX)
+      HCBFCZ(NZ,NY,NX)=0.0 
+      HCBFDZ(NZ,NY,NX)=0.0 
+9980  CONTINUE
 9990  CONTINUE
 9995  CONTINUE
       RETURN

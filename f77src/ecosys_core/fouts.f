@@ -33,6 +33,12 @@ C
 C
 C     OPEN AND NAME OUTPUT FILES
 C
+C     DATAC(21-30)=output file names from runscript read in �main.f�
+C     PREFIX=path for files in current or higher level directory
+C        from �main.f�
+C     IYRC=current year
+C     OUTFILS=output file name for grid cell, year
+C
       DO 1010 N=21,30
       IF(DATAC(N,NE,NEX).NE.'NO')THEN
       OPEN(15,FILE=TRIM(PREFIX)//DATAC(N,NE,NEX),STATUS='OLD')
@@ -56,6 +62,9 @@ C
      2//DATAC(N,NE,NEX)
 9990  CONTINUE
 9995  CONTINUE
+C
+C     START AND END DATES FOR OUTPUT FILES
+C
       DO 4010 M=1,2
       READ(15,*)DY
       IDY1=INT(DY/1.0E+02)
@@ -68,6 +77,9 @@ C
 4530  IF(M.EQ.1)IDATA(N)=IDY
       IF(M.EQ.2)IDATA(N+20)=IDY
 4010  CONTINUE
+C
+C     OUTPUT DATA CHOICES (YES OR NO)
+C
       M=0
 4020  CONTINUE
       M=M+1
@@ -79,6 +91,8 @@ C
       OPEN(LUN,FILE=trim(outdir)//OUTS(N-20),STATUS='UNKNOWN')
 C
 C     WRITE HEADINGS TO OUTPUT FILES
+C
+C     HOURLY C
 C
       M=0
       IF(N.EQ.21)THEN
@@ -139,6 +153,9 @@ C
 1021  CONTINUE
       NOUTS(N-20)=M
       ENDIF
+C
+C     HOURLY WATER
+C
       IF(N.EQ.22)THEN
       DO 1022 L=1,50
       IF(CHOICE(L,N-20).EQ.'YES')THEN
@@ -197,6 +214,9 @@ C
 1022  CONTINUE
       NOUTS(N-20)=M
       ENDIF
+C
+C     HOURLY N
+C
       IF(N.EQ.23)THEN
       DO 1023 L=1,50
       IF(CHOICE(L,N-20).EQ.'YES')THEN
@@ -242,6 +262,9 @@ C
 1023  CONTINUE
       NOUTS(N-20)=M
       ENDIF
+C
+C     HOURLY P
+C
       IF(N.EQ.24)THEN
       DO 1024 L=1,50
       IF(CHOICE(L,N-20).EQ.'YES')THEN
@@ -252,6 +275,9 @@ C
 1024  CONTINUE
       NOUTS(N-20)=M
       ENDIF
+C
+C     HOURLY WEATHER, ENERGY FLUX, TEMPERATURE
+C
       IF(N.EQ.25)THEN
       DO 1025 L=1,50
       IF(CHOICE(L,N-20).EQ.'YES')THEN
@@ -291,10 +317,15 @@ C
       IF(L.EQ.33)HEAD(M)='TEMP_20'
       IF(L.EQ.34)HEAD(M)='TEMP_LITTER'
       IF(L.EQ.35)HEAD(M)='TEMP_SNOW'
+      IF(L.EQ.36)HEAD(M)='TEMP_CAN_AIR'
+      IF(L.EQ.37)HEAD(M)='HUM_CAN_AIR'
       ENDIF
 1025  CONTINUE
       NOUTS(N-20)=M
       ENDIF
+C
+C     DAILY C
+C
       IF(N.EQ.26)THEN
       DO 1026 L=1,50
       IF(CHOICE(L,N-20).EQ.'YES')THEN
@@ -309,13 +340,13 @@ C
       IF(L.EQ.8)HEAD(M)='MICRO_C'
       IF(L.EQ.9)HEAD(M)='SURF_RES'
       IF(L.EQ.10)HEAD(M)='CH4_FLUX'
-      IF(L.EQ.11)HEAD(M)='SUR_DOC_SED_FLX'
+      IF(L.EQ.11)HEAD(M)='SUR_DOC+SED_FLX'
       IF(L.EQ.12)HEAD(M)='SUB_DOC_FLX'
       IF(L.EQ.13)HEAD(M)='SUR_DIC_FLX'
       IF(L.EQ.14)HEAD(M)='SUB_DIC_FLX'
       IF(L.EQ.15)HEAD(M)='ATM_CO2'
       IF(L.EQ.16)HEAD(M)='NBP'
-      IF(L.EQ.17)HEAD(M)='FIRE_CO2'
+      IF(L.EQ.17)HEAD(M)='FIRE_CO2_EMIT'
       IF(L.EQ.18)HEAD(M)='SOC_1'
       IF(L.EQ.19)HEAD(M)='SOC_2'
       IF(L.EQ.20)HEAD(M)='SOC_3'
@@ -330,7 +361,10 @@ C
       IF(L.EQ.29)HEAD(M)='SOC_12'
       IF(L.EQ.30)HEAD(M)='SOC_13'
       IF(L.EQ.31)HEAD(M)='SOC_14'
-      IF(L.EQ.32)HEAD(M)='SOC_15'
+      IF(L.EQ.32)HEAD(M)='FIRE_SOC_LOSS'
+      IF(L.EQ.33)HEAD(M)='ECO_CO2_FLUX'
+      IF(L.EQ.34)HEAD(M)='ECO_CH4_FLUX'
+      IF(L.EQ.35)HEAD(M)='ECO_O2_FLUX'
       IF(L.EQ.41)HEAD(M)='H2_FLUX'
       IF(L.EQ.42)HEAD(M)='ECO_HVST_C'
       IF(L.EQ.43)HEAD(M)='ECO_LAI'
@@ -338,13 +372,16 @@ C
       IF(L.EQ.45)HEAD(M)='ECO_RA'
       IF(L.EQ.46)HEAD(M)='ECO_NPP'
       IF(L.EQ.47)HEAD(M)='ECO_RH'
-      IF(L.EQ.48)HEAD(M)='FIRE_CH4'
+      IF(L.EQ.48)HEAD(M)='FIRE_CH4_EMIT'
       IF(L.EQ.49)HEAD(M)='TTL_DIC'
       IF(L.EQ.50)HEAD(M)='STG_DEAD'
       ENDIF
 1026  CONTINUE
       NOUTS(N-20)=M
       ENDIF
+C
+C     DAILY WATER
+C
       IF(N.EQ.27)THEN
       DO 1027 L=1,50
       IF(CHOICE(L,N-20).EQ.'YES')THEN
@@ -393,7 +430,7 @@ C
       IF(L.EQ.42)HEAD(M)='PSI_8'
       IF(L.EQ.43)HEAD(M)='PSI_9'
       IF(L.EQ.44)HEAD(M)='PSI_10'
-      IF(L.EQ.45)HEAD(M)='PSI_11'
+      IF(L.EQ.45)HEAD(M)='TILE_DRG'
       IF(L.EQ.46)HEAD(M)='SEDIMENT'
       IF(L.EQ.47)HEAD(M)='PSI_SURF'
       IF(L.EQ.48)HEAD(M)='SURF_ELEV'
@@ -403,6 +440,9 @@ C
 1027  CONTINUE
       NOUTS(N-20)=M
       ENDIF
+C
+C     DAILY N
+C
       IF(N.EQ.28)THEN
       DO 1028 L=1,50
       IF(CHOICE(L,N-20).EQ.'YES')THEN
@@ -413,7 +453,7 @@ C
       IF(L.EQ.4)HEAD(M)='NET_PL_EXCH_N'
       IF(L.EQ.5)HEAD(M)='NH4'
       IF(L.EQ.6)HEAD(M)='NO3'
-      IF(L.EQ.7)HEAD(M)='SUR_DON_SED_FLX'
+      IF(L.EQ.7)HEAD(M)='SUR_DON+SED_FLX'
       IF(L.EQ.8)HEAD(M)='SUB_DON_FLX'
       IF(L.EQ.9)HEAD(M)='SUR_DIN_FLX'
       IF(L.EQ.10)HEAD(M)='SUB_DIN_FLX'
@@ -452,15 +492,18 @@ C
       IF(L.EQ.43)HEAD(M)='NO3_14'
       IF(L.EQ.44)HEAD(M)='NO3_15'
       IF(L.EQ.45)HEAD(M)='NH4_RES'
-      IF(L.EQ.46)HEAD(M)='NO3_RES'
+      IF(L.EQ.46)HEAD(M)='FIRE_SON_LOSS'
       IF(L.EQ.47)HEAD(M)='ECO_HVST_N'
       IF(L.EQ.48)HEAD(M)='NET_N_MIN'
-      IF(L.EQ.49)HEAD(M)='FIRE_N'
+      IF(L.EQ.49)HEAD(M)='FIRE_NOX_EMIT'
       IF(L.EQ.50)HEAD(M)='N2_FLUX'
       ENDIF
 1028  CONTINUE
       NOUTS(N-20)=M
       ENDIF
+C
+C     DAILY P
+C
       IF(N.EQ.29)THEN
       DO 1029 L=1,50
       IF(CHOICE(L,N-20).EQ.'YES')THEN
@@ -470,13 +513,13 @@ C
       IF(L.EQ.3)HEAD(M)='FERTZR_P'
       IF(L.EQ.4)HEAD(M)='NET_PL_EXCH_P'
       IF(L.EQ.5)HEAD(M)='EXCH_PO4'
-      IF(L.EQ.6)HEAD(M)='SUR_DOP_SED_FLX'
+      IF(L.EQ.6)HEAD(M)='SUR_DOP+SED_FLX'
       IF(L.EQ.7)HEAD(M)='SUB_DOP_FLX'
       IF(L.EQ.8)HEAD(M)='SUR_DIP_FLX'
       IF(L.EQ.9)HEAD(M)='SUB_DIP_FLX'
       IF(L.EQ.10)HEAD(M)='PRECIP_P'
       IF(L.EQ.11)HEAD(M)='MICRO_P'
-      IF(L.EQ.12)HEAD(M)='FIRE_P'
+      IF(L.EQ.12)HEAD(M)='FIRE_POX_EMIT'
       IF(L.EQ.13)HEAD(M)='PO4_1'
       IF(L.EQ.14)HEAD(M)='PO4_2'
       IF(L.EQ.15)HEAD(M)='PO4_3'
@@ -509,12 +552,17 @@ C
       IF(L.EQ.42)HEAD(M)='EXCH_P_15'
       IF(L.EQ.43)HEAD(M)='PO4_RES'
       IF(L.EQ.44)HEAD(M)='EXCH_P_RES'
+      IF(L.EQ.45)HEAD(M)='FIRE_SOP_LOSS'
+      IF(L.EQ.46)HEAD(M)='SOIL_PO4'
       IF(L.EQ.47)HEAD(M)='ECO_HVST_P'
       IF(L.EQ.48)HEAD(M)='NET_P_MIN'
       ENDIF
 1029  CONTINUE
       NOUTS(N-20)=M
       ENDIF
+C
+C     DAILY WEATHER, TEMPERATURE
+C
       IF(N.EQ.30)THEN
       DO 1030 L=1,50
       IF(CHOICE(L,N-20).EQ.'YES')THEN

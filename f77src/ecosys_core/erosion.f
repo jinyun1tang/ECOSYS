@@ -1,4 +1,4 @@
-      SUBROUTINE erosion(I,J,NHW,NHE,NVN,NVS)
+      SUBROUTINE erosion(I,J,NFZ,NHW,NHE,NVN,NVS)
 C
 C     THIS SUBROUTINE CALCULATES DETACHMENT AND OVERLAND TRANSPORT
 C     OF SURFACE SEDIMENT FROM PRECIPITATION IN WEATHER FILE AND
@@ -19,7 +19,6 @@ C
       include "blk19b.h"
       include "blk19c.h"
       include "blk20f.h"
-      PARAMETER(FSINK=0.01)
       DIMENSION RERSED(2,2,JV,JH),TERSED(JY,JX),RDTSED(JY,JX)
      2,FVOLIM(JY,JX),FVOLWM(JY,JX),FERSNM(JY,JX),RERSED0(JY,JX)
 C
@@ -30,14 +29,28 @@ C
       DO 30 M=1,NPH
       DO 9895 NX=NHW,NHE
       DO 9890 NY=NVN,NVS
+C
+C     IERSNG=erosion flag from site file
+C     TERSED=net sediment erosion
+C     RDTSED=sediment detachment rate
+C     FVOLWM,FVOLIM=fraction of surface ponding capacity 
+C        occupied by water,ice
+C     FERSM=fraction of surface ponding capacity 
+C        not occupied by water,ice 
+C
       IF(IERSNG.EQ.1.OR.IERSNG.EQ.3)THEN
       TERSED(NY,NX)=0.0
       RDTSED(NY,NX)=0.0
-      FVOLIM(NY,NX)=AMIN1(1.0,AMAX1(0.0,XVOLIM(M,NY,NX)/VOLWG(NY,NX)))
       FVOLWM(NY,NX)=AMIN1(1.0,AMAX1(0.0,XVOLWM(M,NY,NX)/VOLWG(NY,NX)))
+      FVOLIM(NY,NX)=AMIN1(1.0,AMAX1(0.0,XVOLIM(M,NY,NX)/VOLWG(NY,NX)))
       FERSNM(NY,NX)=(1.0-FVOLIM(NY,NX))*FVOLWM(NY,NX) 
 C
 C     DETACHMENT BY RAINFALL WHEN SURFACE WATER IS PRESENT
+C
+C     BKDS=surface soil bulk density (0=water,>0=soil)
+C     ENGYPM=total energy impact of rainfall
+C     XVOLWM=surface water in excess of litter water 
+C        retention capacity 
 C
       IF(BKDS(NU(NY,NX),NY,NX).GT.ZERO
      2.AND.ENGYPM(M,NY,NX).GT.0.0
@@ -47,20 +60,45 @@ C     DETACHMENT OF SEDIMENT FROM SURFACE SOIL DEPENDS ON RAINFALL
 C     KINETIC ENERGY AND FROM DETACHMENT COEFFICIENT IN 'HOUR1'
 C     ATTENUATED BY DEPTH OF SURFACE WATER
 C
+C     DETS=soil detachability from rainfall impact from hour1.f 
+C     DETW=DETS accounting for soil surface water content
+C     DETR=sediment detachment from rainfall impact 
+C     ENGYPM=total energy impact of rainfall
+C     AREA=grid cell surface area
+C     FMPR=1.0-(coarse fragment+macropore) fraction
+C     FSNX=fraction of snow-free cover
+C     FVOLIM=fraction of surface ponding capacity occupied by ice 
+C     RDTSED=sediment detachment rate
+C
       DETW=DETS(NY,NX)*(1.0+2.0*VOLWM(M,NU(NY,NX),NY,NX)
      2/VOLA(NU(NY,NX),NY,NX))
-      DETR=AMIN1(BKVL(NU(NY,NX),NY,NX)*XNPX 
+      DETR=AMIN1(BKVL(NU(NY,NX),NY,NX)*XNPXX 
      2,DETW*ENGYPM(M,NY,NX)*AREA(3,NU(NY,NX),NY,NX)
      3*FMPR(NU(NY,NX),NY,NX)*FSNX(NY,NX)*(1.0-FVOLIM(NY,NX)))
       RDTSED(NY,NX)=RDTSED(NY,NX)+DETR
-C     WRITE(*,1117)'DETR',I,J,M,NX,NY,RDTSED(NY,NX),SED(NY,NX),DETR
+C     WRITE(*,1117)'DETR',I,J,NFZ,M,NX,NY,RDTSED(NY,NX)
+C    2,SED(NY,NX),DETR
 C    2,PRECA(NY,NX)*1000.0,PRECD(NY,NX),PRECB(NY,NX),DETS(NY,NX) 
 C    3,FSNX(NY,NX),FVOLIM(NY,NX),XVOLWM(M,NY,NX),ENGYPM(M,NY,NX)
 C    4,DETW,VOLWM(M,NU(NY,NX),NY,NX),VOLA(NU(NY,NX),NY,NX)
-1117  FORMAT(A8,5I4,20E12.4)
+1117  FORMAT(A8,6I4,20E12.4)
       ENDIF
 C
-C     DEPOSITION OF SEDIMENT TO SOIL SURFACE FROM IMMOBILE SURFACE WATER
+C     DEPOSITION OF SEDIMENT TO SOIL SURFACE FROM IMMOBILE SURFACE
+C     WATER
+C
+C     SED=sediment content of surface water
+C     RDTSED=sediment detachment rate
+C     XVOLTM=surface water+ice in excess of litter water 
+C        retention capacity 
+C     FERSM=fraction of surface ponding capacity 
+C        not occupied by water,ice 
+C     FVOLWM=fraction of surface ponding capacity occupied by water
+C     CSEDD=sediment concentration in surface water
+C     DEPT=sediment deposition rate
+C     VLS=hourly sediment sinking rate 
+C     AREA=grid cell surface area
+C     FMPR=1.0-(coarse fragment+macropore) fraction
 C
       SEDX=SED(NY,NX)+RDTSED(NY,NX)
       IF(BKDS(NU(NY,NX),NY,NX).GT.ZERO
@@ -70,9 +108,9 @@ C
       CSEDD=AMAX1(0.0,SEDX/XVOLWM(M,NY,NX))
       DEPI=AMAX1(-SEDX 
      2,VLS(NY,NX)*(0.0-CSEDD)*AREA(3,NU(NY,NX),NY,NX) 
-     3*FERSNM(NY,NX)*FMPR(NU(NY,NX),NY,NX)*XNPH)
+     3*FERSNM(NY,NX)*FMPR(NU(NY,NX),NY,NX)*XNPHX)
       RDTSED(NY,NX)=RDTSED(NY,NX)+DEPI
-C     WRITE(*,1117)'DEPI',I,J,M,NX,NY,RDTSED(NY,NX),SEDX,DEPI
+C     WRITE(*,1117)'DEPI',I,J,NFZ,M,NX,NY,RDTSED(NY,NX),SEDX,DEPI
 C    2,CSEDD,FVOLIM(NY,NX),FVOLWM(NY,NX),FERSNM(NY,NX)
 C    3,VLS(NY,NX),XVOLWM(M,NY,NX)
       ENDIF
@@ -83,7 +121,26 @@ C     AND FROM SEDIMENT TRANSPORT CAPACITY VS. CURRENT SEDIMENT
 C     CONCENTRATION IN SURFACE WATER, MODIFIED BY SOIL COHESION
 C     FROM 'HOUR1'
 C
-C     PTDSNU=particle density
+C     BKDS=surface soil bulk density (0=water,>0=soil)
+C     XVOLTM=surface water+ice in excess of litter water 
+C        retention capacity 
+C     FERSM=fraction of surface ponding capacity 
+C        not occupied by water,ice 
+C     STPR=stream power of runoff
+C     QRV=runoff velocity from watsub.f
+C     SLOPE=sin(slope) from site file
+C     PTDSNU=particle density in soil surface layer
+C     CER,XER=parameters for runoff transport capacity from hour1.f
+C     CSEDX=sediment concentration holding capacity of runoff 
+C     CSEDD=sediment concentration in surface water
+C     DETI=sediment detachment(+ve) or deposition(-ve) rate 
+C        from runoff
+C     BKVL=bulk density x volume of soil layer
+C     DETE=soil detachability from hour1.f    
+C     AREA=grid cell surface area
+C     FMPR=1.0-(coarse fragment+macropore) fraction
+C     VLS=hourly sediment sinking rate 
+C     RDTSED=sediment detachment rate
 C
       IF(BKDS(NU(NY,NX),NY,NX).GT.ZERO
      3.AND.XVOLTM(M,NY,NX).GT.VOLWG(NY,NX)
@@ -92,28 +149,40 @@ C
       CSEDX=PTDSNU(NY,NX)*CER(NY,NX)*AMAX1(0.0,STPR-0.4)**XER(NY,NX)
       CSEDD=AMAX1(0.0,SEDX/XVOLWM(M,NY,NX))
       IF(CSEDX.GT.CSEDD)THEN
-      DETI=AMIN1(BKVL(NU(NY,NX),NY,NX)*XNPX 
+      DETI=AMIN1(BKVL(NU(NY,NX),NY,NX)*XNPXX 
      2,DETE(NY,NX)*(CSEDX-CSEDD)*AREA(3,NU(NY,NX),NY,NX) 
-     3*FERSNM(NY,NX)*FMPR(NU(NY,NX),NY,NX)*XNPH)
+     3*FERSNM(NY,NX)*FMPR(NU(NY,NX),NY,NX)*XNPHX)
       ELSE
       IF(SEDX.GT.ZEROS(NY,NX))THEN
       DETI=AMAX1(-SEDX 
      2,VLS(NY,NX)*(CSEDX-CSEDD)*AREA(3,NU(NY,NX),NY,NX) 
-     3*FERSNM(NY,NX)*FMPR(NU(NY,NX),NY,NX)*XNPH)
+     3*FERSNM(NY,NX)*FMPR(NU(NY,NX),NY,NX)*XNPHX)
       ELSE
       DETI=0.0
       ENDIF
       ENDIF
       RDTSED(NY,NX)=RDTSED(NY,NX)+DETI
-C     WRITE(*,1112)'DETI',I,J,M,NX,NY,RDTSED(NY,NX),SED(NY,NX),DETI
+C     WRITE(*,1112)'DETI',I,J,NFZ,M,NX,NY,RDTSED(NY,NX)
+C    2,SED(NY,NX),DETI
 C    2,QRM(M,NY,NX),QRV(M,NY,NX),SEDX,XVOLWM(M,NY,NX),XVOLTM(M,NY,NX)  
-C    4,VOLWG(NY,NX),STPR,CSEDX,CSEDD,VLS(NY,NX)
+C    4,VOLWG(NY,NX),STPR,CSEDX,CSEDD,VLS(NY,NX),PTDSNU(NY,NX)
 C    5,DETE(NY,NX),SLOPE(0,NY,NX),ZM(NY,NX),FERSNM(NY,NX)
-1112  FORMAT(A8,5I4,30E12.4)
+1112  FORMAT(A8,6I4,30E12.4)
       ENDIF
 C
 C     TRANSPORT OF SEDIMENT IN OVERLAND FLOW FROM SEDIMENT
 C     CONCENTRATION TIMES OVERLAND WATER FLUX FROM 'WATSUB'
+C
+C     N2,N1=NY,NX of source grid cell
+C     QRM=downslope runoff rate from watsub.f
+C     BKDS=surface soil bulk density (0=water,>0=soil)
+C     RERSED0=sediment transport down hillslope
+C     XVOLWM=surface water in excess of litter water 
+C        retention capacity 
+C     SED=sediment content of surface water
+C     RDTSED=sediment detachment rate
+C     CSEDE=sediment concentration in surface water
+C     FVOLIM=fraction of surface ponding capacity occupied by ice
 C
       N1=NX
       N2=NY
@@ -125,19 +194,30 @@ C     SEDX=SED(N2,N1)
       IF(XVOLWM(M,N2,N1).GT.ZEROS2(N2,N1))THEN
       SEDX=SED(N2,N1)+RDTSED(N2,N1)
       CSEDE=AMAX1(0.0,SEDX/XVOLWM(M,N2,N1))
-      RERSED0(N2,N1)=AMIN1(SEDX,CSEDE*QRM(M,N2,N1)*(1.0-FVOLIM(N2,N1)))
+      RERSED0(N2,N1)=AMIN1(SEDX,CSEDE*QRM(M,N2,N1)
+     2*(1.0-FVOLIM(N2,N1)))
       ELSE
       RERSED0(N2,N1)=0.0
       ENDIF
       ENDIF
 C     IF(RERSED0(N2,N1).GT.ZEROS(N2,N1))THEN
-C     WRITE(*,1121)'RERSED0',I,J,M,N1,N2
+C     WRITE(*,1121)'RERSED0',I,J,NFZ,M,N1,N2
 C    2,RERSED0(N2,N1),QRM(M,N2,N1),XVOLWM(M,N2,N1)
 C    3,SED(N2,N1),RDTSED(N2,N1),CSEDE,FVOLIM(N2,N1)
-1121  FORMAT(A8,5I4,12E12.4)
+1121  FORMAT(A8,6I4,12E12.4)
 C     ENDIF
 C
 C     LOCATE INTERNAL BOUNDARIES
+C
+C     RERSED0=sediment transport down hillslope
+C     N2,N1=NY,NX of source grid cell
+C     N5,N4=NY,NX of destination grid cell E or S
+C     N5B,N4B=NY,NX of destination grid cell W or N
+C     NN=boundary:N=1:NN=1 east,NN=2 west, N=2:NN=1 south,NN=2 north
+C     FERM=fraction of QRM partitioned to WE(N=1),NS(N=2) directions
+C     QRMN=WE,NS runoff from watsub.f
+C     RERSED=sediment transport WE, NS
+C     XSEDER=cumulative sediment transport WE, NS
 C
       IF(RERSED0(N2,N1).GT.0.0)THEN
       DO 4310 N=1,2
@@ -168,11 +248,11 @@ C
       FERM=QRMN(M,N,2,N5,N4)/QRM(M,N2,N1)
       RERSED(N,2,N5,N4)=RERSED0(N2,N1)*FERM  
       XSEDER(N,2,N5,N4)=XSEDER(N,2,N5,N4)+RERSED(N,2,N5,N4)
-C     IF(N2.EQ.5)THEN
-C     WRITE(*,1113)'INTF',I,J,M,N1,N2,N4,N5,N
+C     IF(N1.EQ.1)THEN
+C     WRITE(*,1113)'INTF',I,J,NFZ,M,N1,N2,N4,N5,N
 C    2,RERSED0(N2,N1),RERSED(N,2,N5,N4),XSEDER(N,2,N5,N4) 
 C    3,SED(N2,N1),XVOLWM(M,N2,N1) 
-1113  FORMAT(A8,8I4,30E12.4)
+1113  FORMAT(A8,9I4,30E12.4)
 C     ENDIF
       ELSE
       RERSED(N,2,N5,N4)=0.0  
@@ -182,8 +262,8 @@ C     ENDIF
       FERM=QRMN(M,N,1,N5B,N4B)/QRM(M,N2,N1)
       RERSED(N,1,N5B,N4B)=RERSED0(N2,N1)*FERM 
       XSEDER(N,1,N5B,N4B)=XSEDER(N,1,N5B,N4B)+RERSED(N,1,N5B,N4B)
-C     IF(N2.EQ.5)THEN
-C     WRITE(*,1113)'INTB',I,J,M,N1,N2,N4B,N5B,N
+C     IF(N1.EQ.1)THEN
+C     WRITE(*,1113)'INTB',I,J,NFZ,M,N1,N2,N4B,N5B,N
 C    2,RERSED0(N2,N1),RERSED(N,1,N5B,N4B),XSEDER(N,1,N5B,N4B) 
 C    3,SED(N2,N1),XVOLWM(M,N2,N1) 
 C     ENDIF
@@ -206,6 +286,17 @@ C     ENDIF
 C
 C     BOUNDARY SEDIMENT FLUXES
 C
+C     N2,N1=NY,NX of source grid cell
+C     IERSNG=erosion flag from site file
+C     QRM=downslope runoff rate from watsub.f
+C     BKDS=surface soil bulk density (0=water,>0=soil)
+C     RERSED0=sediment transport down hillslope
+C     XVOLWM=surface water in excess of litter water 
+C        retention capacity 
+C     SED=sediment content of surface water
+C     RDTSED=sediment detachment rate
+C     CSEDE=sediment concentration in surface water
+C
       DO 9595 NX=NHW,NHE
       DO 9590 NY=NVN,NVS
       IF(IERSNG.EQ.1.OR.IERSNG.EQ.3)THEN
@@ -225,6 +316,13 @@ C
       ENDIF
 C
 C     LOCATE EXTERNAL BOUNDARIES
+C
+C     M5,M4=NY,NX of destination grid cell
+C     N5,N4=NY,NX of destination grid cell E or S
+C     N5B,N4B=NY,NX of destination grid cell W or N
+C     NN=boundary:N=1:NN=1 east,NN=2 west, N=2:NN=1 south,NN=2 north
+C     RCHQE,RCHQW,RCHQN,RCHQS=flux conditions at E,W,N,S boundaries
+C        from site file
 C
       DO 9580 N=1,2
       DO 9575 NN=1,2
@@ -290,6 +388,16 @@ C     SEDIMENT TRANSPORT ACROSS BOUNDARY FROM BOUNDARY RUNOFF
 C     IN 'WATSUB' TIMES BOUNDARY SEDIMENT CONCENTRATION IN
 C     SURFACE WATER
 C
+C     IRCHG=topographic constraints on runoff
+C     NN=boundary:N=1:NN=1 east,NN=2 west, N=2:NN=1 south,NN=2 north
+C     RERSED0=sediment transport down hillslope
+C     RERSED=sediment transport WE, NS
+C     QRM=downslope runoff rate from watsub.f
+C     QRMN=WE,NS runoff from watsub.f
+C     FERM=fraction of QRM partitioned to WE, NS
+C     RERSED=sediment transport WE, NS
+C     XSEDER=hourly sediment transport WE, NS
+C
       IF(IRCHG(NN,N,N2,N1).EQ.0.OR.RCHQF.EQ.0.0
      2.OR.RERSED0(N2,N1).LE.ZEROS(N2,N1))THEN
       RERSED(N,NN,M5,M4)=0.0
@@ -309,14 +417,17 @@ C
       ENDIF
       ENDIF
 C     IF(RERSED0(N2,N1).GT.ZEROS(N2,N1))THEN
-C     WRITE(*,1114)'BNDY',I,J,M,N1,N2,M4,M5,N,NN,IRCHG(NN,N,N2,N1)
+C     WRITE(*,1114)'BNDY',I,J,NFZ,M,N1,N2,M4,M5,N,NN,IRCHG(NN,N,N2,N1)
 C    2,RCHQF,RERSED0(N2,N1),RERSED(N,NN,M5,M4),XSEDER(N,NN,M5,M4) 
 C    3,SED(M2,M1),QRM(M,N2,N1),QRMN(M,N,NN,M5,M4),XVOLWM(M,M2,M1)
-1114  FORMAT(A8,10I4,30E12.4)
+1114  FORMAT(A8,11I4,30E12.4)
 C     ENDIF
 9575  CONTINUE
 C
 C     TOTAL SEDIMENT FLUXES
+C
+C     TERSED=net sediment transport
+C     RERSED=sediment transport WE,NS
 C
       DO 1202 NN=1,2
       TERSED(N2,N1)=TERSED(N2,N1)+RERSED(N,NN,N2,N1)
@@ -334,19 +445,30 @@ C
 C
 C     UPDATE STATE VARIABLES FOR SEDIMENT TRANSPORT
 C
+C     IERSNG=erosion flag from site file
+C     SED=sediment content of surface water
+C     TERSED=net sediment transport
+C     RDTSED=sediment detachment rate
+C
       DO 9695 NX=NHW,NHE
       DO 9690 NY=NVN,NVS
       IF(IERSNG.EQ.1.OR.IERSNG.EQ.3)THEN
       SED(NY,NX)=SED(NY,NX)+TERSED(NY,NX)+RDTSED(NY,NX)
-C     WRITE(*,1118)'SED2',I,J,M,NX,NY,SED(NY,NX)
+C     WRITE(*,1118)'SED2',I,J,NFZ,M,NX,NY,SED(NY,NX)
 C    2,TERSED(NY,NX),RDTSED(NY,NX) 
-1118  FORMAT(A8,5I4,12E12.4)
+1118  FORMAT(A8,6I4,12E12.4)
       ENDIF
 9690  CONTINUE
 9695  CONTINUE
 30    CONTINUE
 C
 C     INTERNAL SEDIMENT FLUXES
+C
+C     IERSNG=erosion flag from site file
+C     N2,N1=NY,NX of source grid cell
+C     N5,N4=NY,NX of destination grid cell E or S
+C     N5B,N4B=NY,NX of destination grid cell W or N
+C     NN=boundary:N=1:NN=1 east,NN=2 west, N=2:NN=1 south,NN=2 north
 C
       DO 9495 NX=NHW,NHE
       DO 9490 NY=NVN,NVS
@@ -384,11 +506,19 @@ C     TRANSPORTED IN SEDIMENT
 C
 C     SOIL MINERALS
 C
-C     *ER=sediment flux from erosion.f
-C     sediment code:XSED=total,XSAN=sand,XSIL=silt,XCLA=clay
+C     XSEDER=hourly sediment transport WE, NS
+C     BKVLNU=mass of surface soil layer
+C     FSEDER=fraction of soil surface layer mass transported 
+C        by erosion
+C     *ER=sediment flux
 C
       IF(NN.EQ.1)THEN
       FSEDER=AMIN1(1.0,XSEDER(N,2,N5,N4)/BKVLNU(N2,N1))
+C
+C     sediment code:XSED=total,XSAN=sand,XSIL=silt,XCLA=clay
+C                  :CEC=cation exchange capacity
+C                  :AEC=anion exchange capacity
+C
       XSANER(N,2,N5,N4)=FSEDER*SAND(NU(N2,N1),N2,N1)
       XSILER(N,2,N5,N4)=FSEDER*SILT(NU(N2,N1),N2,N1)
       XCLAER(N,2,N5,N4)=FSEDER*CLAY(NU(N2,N1),N2,N1)
@@ -397,9 +527,8 @@ C
 C
 C     FERTILIZER POOLS
 C
-C     *ER=sediment flux from erosion.f
-C     sediment code:NH4,NH3,NHU,NO3=NH4,NH3,urea,NO3 in non-band
-C                  :NH4B,NH3B,NHUB,NO3B=NH4,NH3,urea,NO3 in band
+C     sediment code:XNH4,XNH3,XNHU,XNO3=NH4,NH3,urea,NO3 in non-band
+C                  :XNH4B,XNH3B,XNHUB,XNO3B=NH4,NH3,urea,NO3 in band
 C
       XNH4ER(N,2,N5,N4)=FSEDER*ZNH4FA(NU(N2,N1),N2,N1)
       XNH3ER(N,2,N5,N4)=FSEDER*ZNH3FA(NU(N2,N1),N2,N1)
@@ -415,7 +544,7 @@ C
 C     sediment code
 C       :XN4,XNB=adsorbed NH4 in non-band,band
 C       :XHY,XAL,XFE,XCA,XMG,XNA,XKA,XHC,AL2,FE2
-C        =adsorbed H,Al,Fe,Ca,Mg,Na,K,HCO3,AlOH2,FeOH2
+C           =adsorbed H,Al,Fe,Ca,Mg,Na,K,HCO3,AlOH2,FeOH2
 C       :XOH0,XOH1,XOH2=adsorbed R-,R-OH,R-OH2 in non-band
 C       :XOH0B,XOH1B,XOH2B=adsorption sites R-,R-OH,R-OH2 in band
 C       :XH1P,XH2P=adsorbed HPO4,H2PO4 in non-band
@@ -447,12 +576,14 @@ C
 C     PRECIPITATES
 C
 C     sediment code
-C       :PALO,PFEO=precip AlOH,FeOH 
-C       :PCAC,PCAS=precip CaCO3,CaSO4
-C       :PALP,PFEP=precip AlPO4,FEPO4 in non-band
-C       :PALPB,PFEPB=precip AlPO4,FEPO4 in band
-C       :PCPM,PCPD,PCPH=precip CaH2PO4,CaHPO4,apatite in non-band
-C       :PCPMB,PCPDB,PCPHB=precip CaH2PO4,CaHPO4,apatite in band
+C       :PALO,PFEO=precipitated AlOH,FeOH 
+C       :PCAC,PCAS=precipitated CaCO3,CaSO4
+C       :PALP,PFEP=precipitated AlPO4,FEPO4 in non-band
+C       :PALPB,PFEPB=precipitated AlPO4,FEPO4 in band
+C       :PCPM,PCPD,PCPH=precipitated CaH2PO4,CaHPO4,apatite
+C          in non-band
+C       :PCPMB,PCPDB,PCPHB= precipitated CaH2PO4,CaHPO4,apatite 
+C          in band
 C
       PALOER(N,2,N5,N4)=FSEDER*PALOH(NU(N2,N1),N2,N1)
       PFEOER(N,2,N5,N4)=FSEDER*PFEOH(NU(N2,N1),N2,N1)
@@ -471,6 +602,14 @@ C
 C
 C     ORGANIC MATTER
 C
+C     sediment code
+C        :OMC,OMN,OMP=microbial C,N,P
+C        :ORC,ORN,ORP=microbial residue C,N,P
+C        :OHC,OHN,OHP,OHA=adsorbed C,N,P,acetate 
+C        :OSC,OSA,OSN,OSP=SOC,colonized SOC,SON,SOP 
+C           (K=0:woody litter, K=1:non-woody litter,
+C            K=2:manure, K=3:POC, K=4:humus)
+C
       DO 9480 K=0,5
       DO 9480 NO=1,7
       DO 9480 M=1,3
@@ -488,7 +627,7 @@ C
       OHNER(K,N,2,N5,N4)=FSEDER*OHN(K,NU(N2,N1),N2,N1)
       OHPER(K,N,2,N5,N4)=FSEDER*OHP(K,NU(N2,N1),N2,N1)
       OHAER(K,N,2,N5,N4)=FSEDER*OHA(K,NU(N2,N1),N2,N1)
-      DO 9465 M=1,4
+      DO 9465 M=1,5
       OSCER(M,K,N,2,N5,N4)=FSEDER*OSC(M,K,NU(N2,N1),N2,N1)
       OSAER(M,K,N,2,N5,N4)=FSEDER*OSA(M,K,NU(N2,N1),N2,N1)
       OSNER(M,K,N,2,N5,N4)=FSEDER*OSN(M,K,NU(N2,N1),N2,N1)
@@ -496,6 +635,9 @@ C
 9465  CONTINUE
 9475  CONTINUE
       ELSE
+C
+C     SEDIMENT POOLS
+C
       XSANER(N,2,N5,N4)=0.0
       XSILER(N,2,N5,N4)=0.0
       XCLAER(N,2,N5,N4)=0.0
@@ -574,7 +716,7 @@ C
       OHNER(K,N,2,N5,N4)=0.0
       OHPER(K,N,2,N5,N4)=0.0
       OHAER(K,N,2,N5,N4)=0.0
-      DO 8465 M=1,4
+      DO 8465 M=1,5
       OSCER(M,K,N,2,N5,N4)=0.0
       OSAER(M,K,N,2,N5,N4)=0.0
       OSNER(M,K,N,2,N5,N4)=0.0
@@ -585,6 +727,13 @@ C
       IF(NN.EQ.2)THEN
       IF(N4B.GT.0.AND.N5B.GT.0)THEN
       FSEDER=AMIN1(1.0,XSEDER(N,1,N5B,N4B)/BKVLNU(N2,N1))
+C
+C     SEDIMENT
+C
+C     sediment code:XSED=total,XSAN=sand,XSIL=silt,XCLA=clay
+C                  :CEC=cation exchange capacity
+C                  :AEC=anion exchange capacity
+C
       XSANER(N,1,N5B,N4B)=FSEDER*SAND(NU(N2,N1),N2,N1)
       XSILER(N,1,N5B,N4B)=FSEDER*SILT(NU(N2,N1),N2,N1)
       XCLAER(N,1,N5B,N4B)=FSEDER*CLAY(NU(N2,N1),N2,N1)
@@ -593,7 +742,6 @@ C
 C
 C     FERTILIZER POOLS
 C
-C     *ER=sediment flux from erosion.f
 C     sediment code:NH4,NH3,NHU,NO3=NH4,NH3,urea,NO3 in non-band
 C                  :NH4B,NH3B,NHUB,NO3B=NH4,NH3,urea,NO3 in band
 C
@@ -611,7 +759,7 @@ C
 C     sediment code
 C       :XN4,XNB=adsorbed NH4 in non-band,band
 C       :XHY,XAL,XFE,XCA,XMG,XNA,XKA,XHC,AL2,FE2
-C        =adsorbed H,Al,Fe,Ca,Mg,Na,K,HCO3,AlOH2,FeOH2
+C           =adsorbed H,Al,Fe,Ca,Mg,Na,K,HCO3,AlOH2,FeOH2
 C       :XOH0,XOH1,XOH2=adsorbed R-,R-OH,R-OH2 in non-band
 C       :XOH0B,XOH1B,XOH2B=adsorption sites R-,R-OH,R-OH2 in band
 C       :XH1P,XH2P=adsorbed HPO4,H2PO4 in non-band
@@ -643,12 +791,14 @@ C
 C     PRECIPITATES
 C
 C     sediment code
-C       :PALO,PFEO=precip AlOH,FeOH 
-C       :PCAC,PCAS=precip CaCO3,CaSO4
-C       :PALP,PFEP=precip AlPO4,FEPO4 in non-band
-C       :PALPB,PFEPB=precip AlPO4,FEPO4 in band
-C       :PCPM,PCPD,PCPH=precip CaH2PO4,CaHPO4,apatite in non-band
-C       :PCPMB,PCPDB,PCPHB=precip CaH2PO4,CaHPO4,apatite in band
+C       :PALO,PFEO=precipitated AlOH,FeOH 
+C       :PCAC,PCAS=precipitated CaCO3,CaSO4
+C       :PALP,PFEP=precipitated AlPO4,FEPO4 in non-band
+C       :PALPB,PFEPB=precipitated AlPO4,FEPO4 in band
+C       :PCPM,PCPD,PCPH=precipitated CaH2PO4,CaHPO4,apatite 
+C           in non-band
+C       :PCPMB,PCPDB,PCPHB= precipitated CaH2PO4,CaHPO4,apatite 
+C           in band
 C
       PALOER(N,1,N5B,N4B)=FSEDER*PALOH(NU(N2,N1),N2,N1)
       PFEOER(N,1,N5B,N4B)=FSEDER*PFEOH(NU(N2,N1),N2,N1)
@@ -667,6 +817,14 @@ C
 C
 C     ORGANIC MATTER
 C
+C     sediment code:OMC=microbial biomass
+C        :ORC=microbial residue
+C        :OQC,OQCH=DOC in micropores,macropores
+C        :OQA,OQAH=acetate in micropores,macropores
+C        :OHC,OHA=adsorbed SOC,acetate 
+C        :OSC=SOC(K=0:woody litter, K=1:non-woody litter,
+C        :K=2:manure, K=3:POC, K=4:humus)
+C
       DO 7480 K=0,5
       DO 7480 NO=1,7
       DO 7480 M=1,3
@@ -684,7 +842,7 @@ C
       OHNER(K,N,1,N5B,N4B)=FSEDER*OHN(K,NU(N2,N1),N2,N1)
       OHPER(K,N,1,N5B,N4B)=FSEDER*OHP(K,NU(N2,N1),N2,N1)
       OHAER(K,N,1,N5B,N4B)=FSEDER*OHA(K,NU(N2,N1),N2,N1)
-      DO 7465 M=1,4
+      DO 7465 M=1,5
       OSCER(M,K,N,1,N5B,N4B)=FSEDER*OSC(M,K,NU(N2,N1),N2,N1)
       OSAER(M,K,N,1,N5B,N4B)=FSEDER*OSA(M,K,NU(N2,N1),N2,N1)
       OSNER(M,K,N,1,N5B,N4B)=FSEDER*OSN(M,K,NU(N2,N1),N2,N1)
@@ -770,7 +928,7 @@ C
       OHNER(K,N,1,N5B,N4B)=0.0
       OHPER(K,N,1,N5B,N4B)=0.0
       OHAER(K,N,1,N5B,N4B)=0.0
-      DO 6465 M=1,4
+      DO 6465 M=1,5
       OSCER(M,K,N,1,N5B,N4B)=0.0
       OSAER(M,K,N,1,N5B,N4B)=0.0
       OSNER(M,K,N,1,N5B,N4B)=0.0
@@ -786,6 +944,13 @@ C
 9495  CONTINUE
 C
 C     EXTERNAL BOUNDARY SEDIMENT FLUXES
+C
+C     IERSNG=erosion flag from site file
+C     N2,N1=NY,NX of source grid cell
+C     N5,N4=NY,NX of destination grid cell E or S
+C     N5B,N4B=NY,NX of destination grid cell W or N
+C     M5,M4=NY,NX of destination grid cell 
+C     NN=boundary:N=1:NN=1 east,NN=2 west, N=2:NN=1 south,NN=2 north
 C
       DO 8995 NX=NHW,NHE
       DO 8990 NY=NVN,NVS
@@ -849,7 +1014,10 @@ C
       ENDIF
       ENDIF
       IF(IRCHG(NN,N,N2,N1).EQ.0.OR.RCHQF.EQ.0.0
-     2.OR.ABS(XSEDER(N,NN,M5,M4)).LE.ZEROS(N2,N1))THEN 
+     2.OR.ABS(XSEDER(N,NN,M5,M4)).LE.ZEROS(N2,N1))THEN
+C
+C     SOIL MINERALS
+C 
       XSANER(N,NN,M5,M4)=0.0
       XSILER(N,NN,M5,M4)=0.0
       XCLAER(N,NN,M5,M4)=0.0
@@ -928,7 +1096,7 @@ C
       OHNER(K,N,NN,M5,M4)=0.0
       OHPER(K,N,NN,M5,M4)=0.0
       OHAER(K,N,NN,M5,M4)=0.0
-      DO 5465 M=1,4
+      DO 5465 M=1,5
       OSCER(M,K,N,NN,M5,M4)=0.0
       OSAER(M,K,N,NN,M5,M4)=0.0
       OSNER(M,K,N,NN,M5,M4)=0.0
@@ -943,6 +1111,15 @@ C
 C
 C     SOIL MINERALS
 C
+C     XSEDER=hourly sediment transport WE, NS
+C     BKVLNU=mass of surface soil layer
+C     FSEDER=fraction of soil surface layer mass transported 
+C        by erosion
+C     *ER=sediment flux
+C     sediment code:XSED=total,XSAN=sand,XSIL=silt,XCLA=clay
+C                  :CEC=cation exchange capacity
+C                  :AEC=anion exchange capacity
+C
       XSANER(N,NN,M5,M4)=FSEDER*SAND(NU(N2,N1),N2,N1)
       XSILER(N,NN,M5,M4)=FSEDER*SILT(NU(N2,N1),N2,N1)
       XCLAER(N,NN,M5,M4)=FSEDER*CLAY(NU(N2,N1),N2,N1)
@@ -950,6 +1127,9 @@ C
       XAECER(N,NN,M5,M4)=FSEDER*XAEC(NU(N2,N1),N2,N1)
 C
 C     FERTILIZER POOLS
+C
+C     sediment code:NH4,NH3,NHU,NO3=NH4,NH3,urea,NO3 in non-band
+C                  :NH4B,NH3B,NHUB,NO3B=NH4,NH3,urea,NO3 in band
 C
       XNH4ER(N,NN,M5,M4)=FSEDER*ZNH4FA(NU(N2,N1),N2,N1)
       XNH3ER(N,NN,M5,M4)=FSEDER*ZNH3FA(NU(N2,N1),N2,N1)
@@ -961,6 +1141,15 @@ C
       XNO3EB(N,NN,M5,M4)=FSEDER*ZNO3FB(NU(N2,N1),N2,N1)
 C
 C     EXCHANGEABLE CATIONS AND ANIONS
+C
+C     sediment code
+C       :XN4,XNB=adsorbed NH4 in non-band,band
+C       :XHY,XAL,XFE,XCA,XMG,XNA,XKA,XHC,AL2,FE2
+C           =adsorbed H,Al,Fe,Ca,Mg,Na,K,HCO3,AlOH2,FeOH2
+C       :XOH0,XOH1,XOH2=adsorbed R-,R-OH,R-OH2 in non-band
+C       :XOH0B,XOH1B,XOH2B=adsorption sites R-,R-OH,R-OH2 in band
+C       :XH1P,XH2P=adsorbed HPO4,H2PO4 in non-band
+C       :XH1PB,XP2PB=adsorbed HPO4,H2PO4 in band
 C
       XN4ER(N,NN,M5,M4)=FSEDER*XN4(NU(N2,N1),N2,N1)
       XNBER(N,NN,M5,M4)=FSEDER*XNB(NU(N2,N1),N2,N1)
@@ -987,6 +1176,16 @@ C
 C
 C     PRECIPITATES
 C
+C     sediment code
+C       :PALO,PFEO=precipitated AlOH,FeOH 
+C       :PCAC,PCAS=precipitated CaCO3,CaSO4
+C       :PALP,PFEP=precipitated AlPO4,FEPO4 in non-band
+C       :PALPB,PFEPB=precipitated AlPO4,FEPO4 in band
+C       :PCPM,PCPD,PCPH=precipitated CaH2PO4,CaHPO4,apatite 
+C           in non-band
+C       :PCPMB,PCPDB,PCPHB=precipitated CaH2PO4,CaHPO4,apatite 
+C           in band
+C
       PALOER(N,NN,M5,M4)=FSEDER*PALOH(NU(N2,N1),N2,N1)
       PFEOER(N,NN,M5,M4)=FSEDER*PFEOH(NU(N2,N1),N2,N1)
       PCACER(N,NN,M5,M4)=FSEDER*PCACO(NU(N2,N1),N2,N1)
@@ -1003,6 +1202,14 @@ C
       PCPMEB(N,NN,M5,M4)=FSEDER*PCPMB(NU(N2,N1),N2,N1)
 C
 C     ORGANIC MATTER
+C
+C     sediment code:OMC=microbial biomass
+C        :ORC=microbial residue
+C        :OQC,OQCH=DOC in micropores,macropores
+C        :OQA,OQAH=acetate in micropores,macropores
+C        :OHC,OHA=adsorbed SOC,acetate 
+C        :OSC=SOC(K=0:woody litter, K=1:non-woody litter,
+C           :K=2:manure, K=3:POC, K=4:humus)
 C
       DO 4880 K=0,5
       DO 4880 NO=1,7
@@ -1021,7 +1228,7 @@ C
       OHNER(K,N,NN,M5,M4)=FSEDER*OHN(K,NU(N2,N1),N2,N1)
       OHPER(K,N,NN,M5,M4)=FSEDER*OHP(K,NU(N2,N1),N2,N1)
       OHAER(K,N,NN,M5,M4)=FSEDER*OHA(K,NU(N2,N1),N2,N1)
-      DO 4865 M=1,4
+      DO 4865 M=1,5
       OSCER(M,K,N,NN,M5,M4)=FSEDER*OSC(M,K,NU(N2,N1),N2,N1)
       OSAER(M,K,N,NN,M5,M4)=FSEDER*OSA(M,K,NU(N2,N1),N2,N1)
       OSNER(M,K,N,NN,M5,M4)=FSEDER*OSN(M,K,NU(N2,N1),N2,N1)
@@ -1030,12 +1237,12 @@ C
 4875  CONTINUE
       ENDIF
 C     IF(ABS(XSEDER(N,NN,M5,M4)).GT.ZEROS(M5,M4))THEN
-C     WRITE(*,1116)'EDGE',I,J,N1,N2,N,XSEDER(N,NN,M5,M4),FSEDER
+C     WRITE(*,1116)'EDGE',I,J,NFZ,N1,N2,N,XSEDER(N,NN,M5,M4),FSEDER
 C    2,BKVLNU(N2,N1),ORGC(NU(N2,N1),N2,N1)
 C    2,XCLAER(N,NN,M5,M4),CLAY(NU(N2,N1),N2,N1) 
 C    3,ORGC(NU(N2,N1),N2,N1),DLYR(3,NU(N2,N1),N2,N1)
 C    4,BKVL(NU(N2,N1),N2,N1)
-1116  FORMAT(A8,5I4,30E12.4)
+1116  FORMAT(A8,6I4,30E12.4)
 C     ENDIF
 8975  CONTINUE
 8980  CONTINUE
@@ -1044,3 +1251,4 @@ C     ENDIF
 8995  CONTINUE
       RETURN
       END
+

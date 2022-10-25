@@ -26,15 +26,16 @@ C
       CHARACTER*1 TTYPE,CTYPE,IVAR(20),VAR(50),TYP(50)
       CHARACTER*80 PREFIX
       DIMENSION IDAT(20),DAT(50),DATK(50),OUT(50)
-	  dimension datav(50)
+      dimension datav(50)
       PARAMETER (TWILGT=0.06976)
       DATA IFLGY,IYRX,IYRD/0,0,0/
       SAVE N1,N2,N1X,N2X,IFLGY,IYRX,IYRD
 C
-C     OPEN WEATHER(3, OPTIONS(4, AND LAND MANAGEMENT(9, FILES FROM
-C     FILE NAMES IN DATA ARRAYS LOADED IN MAIN.F
+C     OPEN WEATHER (DATAC(3,),OPTIONS (DATAC(4,) AND LAND MANAGEMENT
+C        (DATAC(9,) FILES FROM DATA ARRAYS READ IN MAIN.F
 C
 C     PREFIX=path for files in current or higher level directory
+C        from main.f
 C
       OPEN(3,FILE=TRIM(PREFIX)//DATAC(3,NE,NEX),STATUS='OLD')
       OPEN(4,FILE=TRIM(PREFIX)//DATAC(4,NE,NEX),STATUS='OLD')
@@ -42,16 +43,18 @@ C
       OPEN(13,FILE=TRIM(PREFIX)//DATAC(9,NE,NEX),STATUS='OLD')
       ENDIF
 C
-C     ARTIFICIAL SOIL WARMING
+C     ARTIFICIAL SOIL WARMING (USED ONLY WITH SOIL WARMING EXPTS)
 C
-C     soiltemp=file with hourly soil temperatures from baseline run
-C     OUT=hourly soil temperatures from baseline run (oC)
-C     TKSZ=temperature used to calculate additional heat flux 
-C     for warming in watsub.f 
+C     soiltemp=file with hourly soil temperatures copied from
+C        hourly soil temperature file in baseline run
+C     OUT=hourly soil temperatures from �soiltemp� (oC)
+C        assuming 13 variables before temperature of soil layer 1
+C     TKSZ=temperature used to calculate additional heat flux
+C        for warming in watsub.f, assuming warming of 4oC
 C
 C     OPEN(6,FILE='soiltemp',STATUS='OLD')
 C23   READ(6,'(F8.3,4X,A8,I8,50E16.7E3)',END=27)DOY,CDATE,J
-C    2,(OUT(L),L=1,33)
+C    2,(OUT(L),L=1,28)
 C     IF(J.EQ.24)THEN
 C     I=INT(DOY)
 C     ELSE
@@ -59,24 +62,42 @@ C     I=INT(DOY)+1
 C     ENDIF
 C     DO 24 L=1,20
 C     TKSZ(I,J,L)=OUT(L+13)+4.0+273.15
+C     WRITE(*,2222) 'READS',I,J,L,TKSZ(I,J,L),OUT(L+13)
+2222  FORMAT(A8,3I4,2E12.4)
 24    CONTINUE
 C     GO TO 23
 27    CONTINUE
 C
+C     END OF ARTIFICIAL SOIL WARMING
+C
 C     READ START AND END DATES, WEATHER OPTIONS
 C
-C     IDATA(1),IDATA(2),IDATA(3)=start date of scenario DDMMYYYY
-C     IDATA(4),IDATA(5),IDATA(6)=end date of scenario DDMMYYYY
+C     IDATA(1),IDATA(2),IDATA(3)=start date of scene DDMMYYYY
+C     IDATA(4),IDATA(5),IDATA(6)=end date of scene DDMMYYYY
 C     IDATA(7),IDATA(8),IDATA(9)=start date of run DDMMYYYY
-C     DATA(18),DATA(19),DATA(20)=options for visualization in visual.f
-C     generating checkpoint files,resuming from earlier checkpt files 
+C        used to locate checkpoint files if run is resumed from
+C        an earlier one
+C     DATA(18),DATA(19),DATA(20)=options for:
+C        visualization in visual.f (18)
+C        generating checkpoint files (19)
+C        resuming from earlier checkpoint files (20)
 C     DRAD,DTMPX,DTMPN,DHUM,DPREC,DIRRI,DWIND,DCO2E,DCNR4,DCNOR
-C     =annual changes in radiation,max+min temperature,humidity,
-C     precip,irrign,windspeed,atm CO2 concn,NH4,NO3 concn in precip
-C     NPX=number of cycles per hour for water,heat,solute flux calcns
-C     NPY=number of cycles per NPX for gas flux calcns
+C        annual changes during (1)Dec-Feb,(2)Mar-May,(3)Jun-Aug,
+C        (4)Sep-Nov in radiation,max+min temperature, humidity,
+C        precipitation, irrigation, windspeed, atmospheric CO2
+C        concentration, NH4,NO3 concentrations in precipitation
+C        from those read in the weather file
+C        (temperature changes in oC, other changes relative to
+C        existing values)
+C     NPX=number of cycles per time step for water,heat,solute flux
+C        calculations (suggest 12)
+C     NPY=number of cycles per NPX for gas flux calculations
+C        (suggest 3)
 C     JOUT,IOUT,KOUT=output frequency for hourly,daily,checkpoint data
-C     ICLM=changes to weather data (0=none,1=step,2=transient)
+C     ICLM=changes to weather data
+C        :0=none (weather data are used as read)
+C        :1=step (simple change in selected weather data)
+C        :2=transient (gradual change incremented daily)
 C
       READ(4,'(2I2,I4)')IDATA(1),IDATA(2),IDATA(3)
       READ(4,'(2I2,I4)')IDATA(4),IDATA(5),IDATA(6)
@@ -102,10 +123,12 @@ C
 26    CONTINUE
       READ(4,*)NPX,NPY,JOUT,IOUT,KOUT,ICLM
 C
-C     INCREMENTS IN START AND END DATES FOR SUCCESSIVE SCENARIOS
+C     INCREMENTS IN START AND END DATES FOR SUCCESSIVE SCENES
 C     FROM LOOPS FOR SCENES, SCENARIOS IN RUNSCRIPT SET IN MAIN.F
 C
 C     IDATA(3),IDATA(6)=start,end year of current scene
+C     IYRC=current year
+C     IGO: =0, first scene in first scenario.
 C
       NTZX=NTZ
       IF(IGO.EQ.0.OR.IDATA(3).NE.0)THEN
@@ -143,7 +166,7 @@ C
       ENDIF
       ENDIF
       ENDIF
-C     WRITE(*,7766)'IDATA3',IGO,IDATA(3),IDATA(6),IYRR,IYRC 
+C     WRITE(*,7766)'IDATA3',IGO,IDATA(3),IDATA(6),IYRR,IYRC
 C    2,NE,NT,NEX,NF,NTX,NFX,NTZ,NTZX,N1,N2,N1X,N2X
 C    3,NA(NEX),ND(NEX),NAX
 7766  FORMAT(A8,30I8)
@@ -153,6 +176,8 @@ C
 C     IDATE=year label for checkpoint files
 C     DATA(1)=site file name
 C     W,N=water+heat,nutrient checkpoint files
+C     DATA(20)=�YES�:find checkpoint files
+C             =�NO�: start new run
 C
       IF(IGO.EQ.0)THEN
       IF(DATA(20).EQ.'YES')THEN
@@ -172,7 +197,7 @@ C     FROM DATE INPUTS IN OPTION FILE
 C
 C     ISTART,IBEGIN=start dates for current scene
 C     IFIN,ILAST=end dates for current scene
-C     LYRC=number of days in current year
+C     LYRC,LYRX=number of days in current,previous year
 C
       LPY=0
       LYRC=365
@@ -204,17 +229,19 @@ C
 C
 C     READ WEATHER DATA
 C
-C     DATAC(3=weather file
-C     TTYPE,CTYPE=time step,calendar format
+C     DATAC(3,=weather file
+C     TTYPE=time step:S=subhourly,H=hourly,3=3-hourly,D=daily
+C     CTYPE=calendar format:J=Julian,C=calendar(day,month)
 C     NI,NN=number of time,weather data variables
 C     IVAR,VAR=time,weather variable type
 C     TYP=weather variable units
-C     Z0G,IFLGW=windspeed meast height,flag for raising Z0G with vegn
+C     Z0G=windspeed measurement height
+C     IFLGW=flag for adjusting Z0G for canopy height:0=no,1=yes
 C     ZNOONG=time of solar noon
-C     PHRG,CN4RIG,CNORIG,CPORG,CALRG,CFERG,CCARG,CMGRG,CNARG,CKARG, 
-C     CSORG,CCLRG=pH,NH4,NO3,H2PO4,Al,Fe,Ca,Mg,Na,K,SO4,Cl 
-C     concentration in precipitation
-C     IDAT,DAT=time,weather variable
+C     PHRG,CN4RIG,CNORIG,CPORG,CALRG,CFERG,CCARG,CMGRG,CNARG,CKARG,
+C        CSORG,CCLRG=pH,NH4,NO3,H2PO4,Al,Fe,Ca,Mg,Na,K,SO4,Cl
+C        concentration in precipitation (g m-3)
+C     IDAT,DAT=arrays holding time,weather variables
 C
       IF(DATAC(3,NE,NEX).NE.'NO')THEN
       IFLG3=0
@@ -222,21 +249,21 @@ C
      2,(VAR(K),K=1,NN)
       READ(3,'(50A1)')(TYP(K),K=1,NN)
 C      READ(3,*)Z0G,IFLGW,ZNOONG
-	  read(3,*)(datav(jl),jl=1,3)
-	  Z0G=datav(1)
-	  IFLGW=int(datav(2))
-	  ZNOONG=datav(3)
+      read(3,*)(datav(K),K=1,3)
+      Z0G=datav(1)
+      IFLGW=int(datav(2))
+      ZNOONG=datav(3)
       READ(3,*)PHRG,CN4RIG,CNORIG,CPORG,CALRG,CFERG,CCARG,CMGRG,CNARG
      2,CKARG,CSORG,CCLRG
       DO 55 K=1,NN
       DATK(K)=0.0
 55    CONTINUE
       IH=1
-C 60    READ(3,*,END=110)(IDAT(K),K=1,NI),(DAT(K),K=1,NN)
+C60    READ(3,*,END=110)(IDAT(K),K=1,NI),(DAT(K),K=1,NN)
 60    read(3,*,END=110)(datav(k),k=1,NI),(DAT(K),K=1,NN)
       do k = 1, ni
-		  idat(k)=int(datav(k))
-	  enddo 
+	  idat(k)=int(datav(k))
+	enddo
 C     WRITE(*,61)(IDAT(K),K=1,NI),(DAT(K),K=1,NN)
 61    FORMAT(3I6,50E12.4)
 C
@@ -246,7 +273,8 @@ C
 C
 C     DERIVE DAY I FROM TIME VARIABLES IVAR
 C
-C     IWTHR=weather data type:1=daily,2=hourly for first(L=1) or second(L=2) scene
+C     IWTHR=weather data type:1=daily,2=hourly for first(L=1)
+C        or second(L=2) scene
 C
       IWTHR(L)=1
       DO 160 K=1,NI
@@ -288,10 +316,10 @@ C
       IF(I.LE.ILAST)GO TO 60
       ENDIF
 C
-C     CONVERT DAILY WEATHER VARIABLES TO MODEL UNITS 
+C     CONVERT DAILY WEATHER VARIABLES TO MODEL UNITS
 C     AND ENTER INTO MODEL ARRAYS
 C
-C     TMPX,TMPN=maximum,minimum temperature (OC) 
+C     TMPX,TMPN=maximum,minimum temperature (OC)
 C     SRAD=solar radiation (MJ m-2 d-1)
 C     WIND=windspeed (m h-1)
 C     DWPT=vapor pressure (kPa)
@@ -325,6 +353,8 @@ C
       SRAD(I)=AMAX1(0.0,DAT(K)/23.87)
       ELSEIF(TYP(K).EQ.'J')THEN
       SRAD(I)=AMAX1(0.0,DAT(K)*0.01)
+      ELSEIF(TYP(K).EQ.'W')THEN
+      SRAD(I)=AMAX1(0.0,DAT(K)*0.0864)
       ELSE
       SRAD(I)=AMAX1(0.0,DAT(K))
       ENDIF
@@ -466,7 +496,7 @@ C
       ENDIF
       XRADH(J,I)=0.0
 C
-C     CONVERT HOURLY WEATHER VARIABLES TO MODEL UNITS 
+C     CONVERT HOURLY WEATHER VARIABLES TO MODEL UNITS
 C     AND ENTER INTO MODEL ARRAYS
 C
 C     TMPH=temperature (oC)
@@ -518,10 +548,10 @@ C
       ELSE
       WINDH(J,I)=(DAT(K)+DATK(K))/IH
       ENDIF
-      ELSEIF(VAR(K).EQ.'H')THEN
 C
 C     VAPOR PRESSURE
 C
+      ELSEIF(VAR(K).EQ.'H')THEN
       IF(TYP(K).EQ.'D')THEN
       DWPTH(J,I)=0.61*EXP(5360.0*(3.661E-03-1.0/(273.15
      2+(DAT(K)+DATK(K))/IH)))
@@ -583,6 +613,9 @@ C
 95    CONTINUE
       IH=1
       IX=I
+C
+C     INFILL 3-HOURLY WEATHER DATA
+C
       IF(TTYPE.EQ.'3')THEN
       JJ=J-3
       II=I
@@ -590,9 +623,6 @@ C
       JJ=24
       II=I-1
       ENDIF
-C
-C     INFILL 3-HOURLY WEATHER DATA
-C
       IF(II.LT.1)THEN
       TMPH(J-2,I)=TMPH(J,I)
       TMPH(J-1,I)=TMPH(J,I)
@@ -689,6 +719,9 @@ C
       CKARG=CKARG/39.1
       CSORG=CSORG/32.0
       CCLRG=CCLRG/35.5
+C
+C     ALLOCATE PECIITATION ION CONCENTRATIONS TO LANDSCAPE UNITS
+C
       DO 8970 NX=NHW,NHE
       DO 8975 NY=NVN,NVS
       Z0(NY,NX)=Z0G
@@ -729,6 +762,15 @@ C
       CLOSE(4)
 C
 C     READ LAND MANAGEMENT FILE NAMES FOR EACH GRID CELL
+C
+C     ROWN,ROWO,ROWP=row spacing for band NH4, NO3 and PO4
+C        fertilizer applications
+C     ITILL,DCORP=disturbance type,intensity
+C     FERT,IYTYP,FDPTH=fertilizer amount,type,application depth
+C     RRIG=irrigation timing,depth
+C     PHQX,CN4QX,CNOQX,CPOQX,CALQX,CFEQX,CCAQX,CMGQX,CNAQX,CKAQX,
+C     CSOQX,CCLQX=pH,NH4,NO3,H2PO4,Al,Fe,Ca,Mg,Na,K,SO4,Cl
+C        concentration in irrigation water (g m-3)
 C
       DO 9980 NX=NHW,NHE
       DO 9985 NY=NVN,NVS
@@ -771,8 +813,8 @@ C
 9980  CONTINUE
 C
 C     READ LAND MANAGEMENT FILE DATAC(9 LOADED IN 'MAIN'.
-C     THIS FILE CONTAINS NAMES OF TILLAGE, IRRIGATION
-C     AND FERTILIZER FILES
+C     THIS FILE CONTAINS NAMES OF DISTURBANCE DATA(8),
+C     FERTILIZER DATA(5) AND IRRIGATION DATA(6) FILES
 C
       IF(DATAC(9,NE,NEX).NE.'NO')THEN
 C
@@ -797,12 +839,25 @@ C
       IF(DATA(8).NE.'NO')THEN
 C
 C     DY=date DDMMYYYY
-C     IPLOW,DPLOW=intensity,depth of disturbance
-C     ITILL=soil disturbance type 1-20:tillage,21=litter removal,22=fire,23-24=drainage
-C     DCORP=intensity (fire) or depth (tillage,drainage) of disturbance 
+C     IDIST=soil disturbance type 1-10:tillage including crop
+C                                 11-20:tillage not including crop
+C                                 21:surface litter removal
+C                                 22:fire
+C                                 23-24:natural, artificial drainage
+C     DDIST=energy (kW m-2) (fire, likely 25 - 75)
+C           or depth (m) (tillage,drainage) of disturbance
+C     RCHGNAG,RCHGEAG,RCHGSAG,RCHGWAG=distance to N,E,S,W external
+C        artificial water table (m)
+C     RCHGNBG,RCHGEBG,RCHGSBG,RCHGWBG=boundary conditions for
+C        N,E,S,W subsurface exchange with external artificial water
+C        table :0=no flow, 1=unimpeded flow
 C
 295   CONTINUE
-      READ(10,*,END=305)DY,IPLOW,DPLOW
+      READ(10,*,END=305)DY,IDIST,DDIST
+      IF(IDIST.EQ.24)THEN
+      READ(10,*)RCHGNAG,RCHGEAG,RCHGSAG,RCHGWAG
+     2,RCHGNBG,RCHGEBG,RCHGSBG,RCHGWBG
+      ENDIF
       LPY=0
       IDY1=INT(DY/1.0E+06)
       IDY2=INT(DY/1.0E+04-IDY1*1.0E+02)
@@ -816,10 +871,24 @@ C     IF(IDY2.GE.7)IDY=IDY+0.5*(NTX-1)
       GO TO 3530
 3535  IDY=IDY1
 3530  CONTINUE
+C
+C     ENTER DISTURBANCE PROPERTIES TO GRID CELLS
+C     IN EACH LANDSCAPE UNIT
+C
       DO 8995 NX=NH1,NH2
       DO 8990 NY=NV1,NV2
-      ITILL(IDY,NY,NX)=IPLOW
-      DCORP(IDY,NY,NX)=DPLOW
+      ITILL(IDY,NY,NX)=IDIST
+      DCORP(IDY,NY,NX)=DDIST
+      IF(IDIST.EQ.24)THEN
+      RCHGNA(NY,NX)=RCHGNAG
+      RCHGEA(NY,NX)=RCHGEAG
+      RCHGSA(NY,NX)=RCHGSAG
+      RCHGWA(NY,NX)=RCHGWAG
+      RCHGNB(NY,NX)=RCHGNBG
+      RCHGEB(NY,NX)=RCHGEBG
+      RCHGSB(NY,NX)=RCHGSBG
+      RCHGWB(NY,NX)=RCHGWBG
+      ENDIF
 8990  CONTINUE
 8995  CONTINUE
       GO TO 295
@@ -838,9 +907,11 @@ C     PM*,PH*=Ca(H2PO4)2,apatite
 C     CAC,CAS=CaCO3,CaSO4
 C     *1,*2=litter,manure amendments
 C     RSC,RSN,RSC=amendment C,N,P content
-C     FDPTHI=application depth
-C     ROWX=band row width
+C     FDPTHI=fertilizer application depth
+C     ROWX=row width of band application
 C     IRO,IR1,IR2=fertilizer,litter,manure type
+C        IR0:0=fast (urea as urine),1=normal,2=slow release
+C        IR1,IR2:used to set decomposition parameters in �hour1.f�
 C
 1500  CONTINUE
       READ(8,*,END=85)DY,Z4A,Z3A,ZUA,ZOA,Z4B,Z3B,ZUB,ZOB
@@ -862,7 +933,7 @@ C     IF(IDY2.GE.7)IDY=IDY+0.5*(NTX-1)
       DO 8985 NX=NH1,NH2
       DO 8980 NY=NV1,NV2
 C
-C     ENTER AMENDMENTS INTO MODEL ARRAYS
+C     ENTER AMENDMENTS INTO GRID CELLS FOR EACH LANDSCAPE UNIT
 C
 C     NH4,NH3,UREA,NO3 BROADCAST (A) AND BANDED (B)
 C
@@ -916,20 +987,25 @@ C
 C     READ IRRIGATION INPUT FILE
 C
       IF(DATA(6).NE.'NO')THEN
-      IF(DATA(6)(1:4).EQ.'auto')THEN
 C
 C     AUTOMATED IRRIGATION
 C
+C     auto=first 4 characters of the irrigation file name
+C
+      IF(DATA(6)(1:4).EQ.'auto')THEN
+C
 C     DST,DEN=start,end dates,hours DDMMHHHH
-C     IFLGVX=flag for irrigation criterion,0=SWC,1=canopy water potl 
-C     FIRRX=depletion of SWC from CIRRX to WP(IFLGV=0),or minimum canopy 
-C     water potential(IFLGV=1), to trigger irrigation
+C     IFLGVX=flag for irrigation criterion,0=SWC,1=canopy water potl
+C     FIRRX=remaining SWC calculated from CIRRX to WP(IFLGV=0)
+C        or minimum canopy water potential(IFLGV=1), to trigger
+C        irrigation
 C     CIRRX= fraction of FC to which irrigation will raise SWC
-C     DIRRX= depth to which water depletion and rewatering is calculated
-C     WDPTHI=depth at which irrigation is applied 
-C     PHQX,CN4QX,CNOQX,CPOQX,CALQX,CFEQX,CCAQX,CMGQX,CNAQX,CKAQX, 
-C     CSOQX,CCLQX=pH,NH4,NO3,H2PO4,Al,Fe,Ca,Mg,Na,K,SO4,Cl 
-C     concentration in irrigation water
+C     DIRRX= depth to which water depletion and rewatering is
+C        calculated
+C     WDPTHI=depth at which irrigation is applied (0=surface)
+C     PHQX,CN4QX,CNOQX,CPOQX,CALQX,CFEQX,CCAQX,CMGQX,CNAQX,CKAQX,
+C        CSOQX,CCLQX=pH,NH4,NO3,H2PO4,Al,Fe,Ca,Mg,Na,K,SO4,Cl
+C        concentration in irrigation water (g m-3)
 C
       READ(2,*,END=105)DST,DEN,IFLGVX,FIRRX,CIRRX,DIRRX,WDPTHI
      2,PHQX,CN4QX,CNOQX,CPOQX,CALQX,CFEQX,CCAQX,CMGQX,CNAQX,CKAQX
@@ -959,7 +1035,8 @@ C
 5530  CONTINUE
       IHRE=IDY3
 C
-C     TRANSFER INPUTS TO MODEL ARRAYS 
+C     TRANSFER AUTOMATED IRRIGATION INPUTS TO MODEL ARRAYS
+C     FOR EACH LANDSCAPE UNIT
 C
       DO 7965 NX=NH1,NH2
       DO 7960 NY=NV1,NV2
@@ -972,6 +1049,9 @@ C
       CIRRA(NY,NX)=CIRRX
       DIRRA(1,NY,NX)=DIRRX
       DIRRA(2,NY,NX)=WDPTHI
+C
+C     EXPRESS ION CONCENTRATIONS IN MOLAR UNITS
+C
       DO 220 I=1,366
       PHQ(IDY,NY,NX)=PHQX
       CN4Q(IDY,NY,NX)=CN4QX/14.0
@@ -995,9 +1075,10 @@ C
 2500  CONTINUE
 C
 C     DY,RR,JST,JEN=date DDMMYYYY,amount (mm),start and end hours
-C     PHQX,CN4QX,CNOQX,CPOQX,CALQX,CFEQX,CCAQX,CMGQX,CNAQX,CKAQX, 
-C     CSOQX,CCLQX=pH,NH4,NO3,H2PO4,Al,Fe,Ca,Mg,Na,K,SO4,Cl 
-C     concentration in irrigation water
+C     WDPTHI=depth at which irrigation is applied (0=surface)
+C     PHQX,CN4QX,CNOQX,CPOQX,CALQX,CFEQX,CCAQX,CMGQX,CNAQX,CKAQX,
+C        CSOQX,CCLQX=pH,NH4,NO3,H2PO4,Al,Fe,Ca,Mg,Na,K,SO4,Cl
+C        concentration in irrigation water
 C
       READ(2,*,END=105)DY,RR,JST,JEN,WDPTHI,PHQX,CN4QX,CNOQX,CPOQX
      2,CALQX,CFEQX,CCAQX,CMGQX,CNAQX,CKAQX,CSOQX,CCLQX
@@ -1012,6 +1093,10 @@ C
       GO TO 2530
 2525  IDY=IDY1
 2530  CONTINUE
+C
+C     ENTER IRRIGATION AMOUNTS INTO MODEL ARRAY
+C     FOR EACH LANDSCAPE UNIT
+C
       RRH=RR/(JEN-(JST-1))
       DO 8965 NX=NH1,NH2
       DO 8960 NY=NV1,NV2
@@ -1019,7 +1104,8 @@ C
       IF(J.GE.JST.AND.J.LE.JEN)RRIG(J,IDY,NY,NX)=RRH/1000.0
 2535  CONTINUE
 C
-C     TRANSFER INPUTS TO MODEL ARRAYS 
+C     TRANSFER ION CONCENTRATIONS IN MOLAR UNITS TO MODEL ARRAYS
+C     FOR EACH LANDSCAPE UNIT
 C
       PHQ(IDY,NY,NX)=PHQX
       CN4Q(IDY,NY,NX)=CN4QX/14.0
@@ -1048,5 +1134,3 @@ C
       IMNG=1
       RETURN
       END
-
-

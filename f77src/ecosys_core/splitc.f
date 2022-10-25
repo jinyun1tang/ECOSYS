@@ -35,6 +35,7 @@ C          call splitp(NHW,NHE,NVN,NVS,nz,OUTP(N))
      2trim(outdir)//trim(OUTP(N))//' in '//trim(modfile),35)
           str = 'rm -f ' // OUTP(N)
           call system (str)
+
         endif
       enddo
       RETURN

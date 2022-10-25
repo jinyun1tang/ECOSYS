@@ -14,6 +14,14 @@ C
 C
 C     CALCULATE MASS BALANCES FOR WATER, HEAT, O2, C, N, P AND SOLUTES
 C
+C     TLW=water balance
+C     TLH=heat balance
+C     TLO=O2 balance
+C     TLC=C balance
+C     TLN=N balance
+C     TLP=P balance
+C     TLI=salt balance
+C
       IF(I.EQ.IBEGIN.OR.I.EQ.ISTART.OR.I.EQ.ILAST+1)THEN
       TLW=VOLWSO-CRAIN+CRUN+CEVAP+VOLWOU
       TLH=HEATSO-HEATIN+HEATOU
@@ -25,6 +33,9 @@ C
       ENDIF
 C
 C     CALCULATE DEVIATION SINCE MASS BALANCE WAS LAST RESET
+C
+C     DIFFQ,DIFFH,DIFFO,DIFFC,DIFFN,DIFFP,DIFFI
+C        =mass balance deviation for water,heat,O2,C,N,P,salt
 C
       IF((I/IOUT)*IOUT.EQ.I)THEN
       DIFFQ=(VOLWSO-CRAIN+CRUN+CEVAP+VOLWOU-TLW)/TAREA
@@ -90,3 +101,4 @@ C
       NYR=0
       RETURN
       END
+

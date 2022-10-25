@@ -1,5 +1,5 @@
 
-      SUBROUTINE grosub(I,J,NHW,NHE,NVN,NVS)
+      SUBROUTINE grosub(I,J,NFZ,NHW,NHE,NVN,NVS)
 C
 C     THIS SUBROUTINE CALCULATES ALL PLANT BIOLOGICAL TRANSFORMATIONS
 C
@@ -33,41 +33,57 @@ C
       include "blk16.h"
       include "blk18a.h"
       include "blk18b.h"
-      DIMENSION PART(7),TFN6(JZ),ARSTKB(10),NRX(2,JZ),ICHK1(2,JZ)
-     2,NBZ(10),FXFB(0:3),FXFR(0:3),FXRT(0:1),FXSH(0:1),FXRN(6) 
-     3,WTLSBZ(10),CPOOLZ(10),ZPOOLZ(10),PPOOLZ(10)
-     4,ZCX(JP,JY,JX),UPNFC(JP,JY,JX),FRSV(0:3),FXFY(0:1),FXFZ(0:1) 
+      DIMENSION PART(7),TFN6(JZ),ARSTKB(JB),NRX(2,JZ),ICHK1(2,JZ)
+     2,SLA2(0:5),FXFB(0:5),FXFR(0:5),FXRT(0:1),FXSH(0:1),FXRN(6) 
+     3,FPART1(0:5),FPART2(0:5),CNDLI(6),CMOSC(4),WTLSBZ(JB),CPOOLZ(JB)
+     4,ZPOOLZ(JB),PPOOLZ(JB),ZCX(JP,JY,JX),UPNFC(JP,JY,JX)
+     5,FRSV(0:5),FXFY(0:1),FXFZ(0:1),NBZ(JB)
       DIMENSION RTNT(2),RLNT(2,JZ),RTSK1(2,JZ,10),RTSK2(2,JZ,10)
-     2,RTDPL(10,JZ),FWTR(JZ),FWTB(JP),FRTDP(0:3),RCCX(0:3),RCCQ(0:3)
-     3,RCCZ(0:3),RCCY(0:3),EFIRE(2,5:5),WGLFBL(JZ,10,JP,JY,JX)
-     4,WTSHTA(JZ,JY,JX),FLG4Y(0:3),ATRPX(0:1),GVMX(0:1),RTSK(0:3)
-      DIMENSION CH2O3(25),CH2O4(25),CPOOLK(10,JP,JY,JX),FHVSTK(0:25)
-     2,FHVSHK(0:25),WFNGR(2,JZ),PSILY(0:3),FVRN(0:5)
-      DIMENSION FWOOD(0:1),FWOODN(0:1),FWOODP(0:1)
-     2,FWODB(0:1),FWODLN(0:1),FWODLP(0:1),FWODSN(0:1),FWODSP(0:1)
-     3,FWODR(0:1),FWODRN(0:1),FWODRP(0:1) 
-C     DIMENSION VCO2(400,366,05)
+     2,RTDPL(10,JZ),FWTR(JZ),FWTB(JP),FRTDP(0:3) 
+     3,RCCZ(0:5),RCCY(0:5),RCCX(0:5),RCCQ(0:5) 
+     4,RCCZR(0:5),RCCYR(0:5),RCCXR(0:5),RCCQR(0:5) 
+     5,WTSHTA(JZ,JY,JX),FLG4Y(0:3),ATRPX(0:1),VMXG(0:1),RTSK(0:3)
+     6,WGLFBL(JL,JB,JP,JY,JX)
+      DIMENSION CH2O3(25),CH2O4(25),CPOOLK(JB,JP,JY,JX),FHVSTK(0:25)
+     2,FHVSHK(0:25),WFNRG(2,JZ),WFNRR(2,JZ),PSILY(0:3),FVRN(0:5)
+      DIMENSION FWOOD(0:1,JZ),FWOODN(0:1,JZ),FWOODP(0:1,JZ)
+     2,FWODB(0:1,JZ),FWODLN(0:1,JZ),FWODLP(0:1,JZ),FWODSN(0:1,JZ)
+     3,FWODSP(0:1,JZ),FWODR(0:1,JZ),FWODRN(0:1,JZ),FWODRP(0:1,JZ)
+      DIMENSION TWPOOL(JY,JX),TWTLF(JY,JX),TWTSHE(JY,JX)
+     2,TWTSTK(JY,JX),TWTRSV(JY,JX),TWTHSK(JY,JX),TWTEAR(JY,JX)
+     3,TWTGR(JY,JX),TWTNDC(JY,JX),TWPOLN(JY,JX),TWTRVC(JY,JX)
+     4,TWTSTG(JY,JX),TWPOLR(JZ,JY,JX),TWTRTL(JZ,JY,JX)
+     5,TWPODL(JZ,JY,JX),TWTNDL(JZ,JY,JX),SPCMB(5) 
 C
-C     PART1X,PART2X=modifiers to organ partitioning coefficients
-C     VMXC=rate constant for nonstructural C oxidation in respiration (h-1)
+C     PART1,PART2=leaf,sheath partitioning coefficients at emergence
+C     PART1X,PART2X=minimum leaf,sheath partitioning coefficients
+C     VMXC=rate constant for nonstructural C oxidation in respiration
+C       (h-1)
 C     FSNR=rate constant for litterfall at end of growing season (h-1)
-C     FLG4X=number of hours with no grain filling required for physl maturity
-C     FLGZX=number of hours until full senescence after physl maturity
-C     XFRX=maximum storage C content for remobiln from stalk,root reserves
-C     XFRY=rate const for remobiln to storage from stalk,root reserves (h-1)
-C     IFLGQ,IFLGQX=current,required hours after physl maturity until start of litterfall
-C     FSNK=min ratio of branch or mycorrhizae to root for calculating C transfer 
-C     FXFS=rate constant for remobilization of stalk C,N,P (h-1)
+C     FLG4X=number of hours with no grain filling required for
+C        physiological maturity
+C     FLGZX=number of hours until full senescence after 
+C        physiological maturity
+C     XFRX=maximum storage C concentration for remobilization from
+C        stalk,root reserves
+C     XFRY=rate constant for physiological to storage from 
+C        stalk,root reserves (h-1)
+C     IFLGQX=required hours after physiological maturity
+C        until start of litterfall
+C     FSNK=minimum ratio of branch or mycorrhizae to root for
+C        calculating shoot-root C transfer 
 C     FMYC=rate constant for root-mycorrhizal C,N,P exchange (h-1) 
 C
-      PARAMETER(PART1X=0.05,PART2X=0.02
+      PARAMETER(PART1=0.75,PART2=0.25,PART1X=0.015,PART2X=0.005
      2,VMXC=0.015,FSNR=2.884E-03,FLG4X=168.0
-     3,FLGZX=240.0,XFRX=2.5E-02,XFRY=2.5E-03,IFLGQX=960
-     4,FSNK=0.05,FXFS=1.0,FMYC=0.1)
+     3,FLGZX=480.0,XFRX=2.5E-02,XFRY=2.5E-03,IFLGQX=960
+     4,FSNK=0.05,FMYC=0.1,TFNCX=1.0)
 C
-C     CNKI,CPKI=nonstructural N,P inhibition constant on growth (g N,P g-1 C)
+C     CNKI,CPKI=nonstructural N,P inhibition constant on growth,
+C        nutrient recycling (g N,P g-1 C)
 C     RMPLT=specific maintenance respiration rate (g C g-1 N h-1)
-C     PSILM=minimum water potential for organ expansion,extension (MPa)
+C     PSILM=minimum water potential for organ expansion,extension
+C        (MPa)
 C     RCMN=minimum stomatal resistance to CO2 (s m-1)
 C     RTDPX=distance behind growing point for secondary roots (m)
 C     RTLGAX=minimum average secondary root length (m)
@@ -79,13 +95,15 @@ C
 C
 C     QNTM=quantum efficiency (umol e- umol-1 PAR)
 C     CURV=shape parameter for e- transport response to PAR
-C     ELEC3,ELEC4=e- requirement for CO2 fixn by rubisco,PEP carboxylase
-C     (umol e- umol CO2)
-C     CO2KI=Ki for C3 leakage from bundle sheath to mesophyll in C4 (uM)
+C     ELEC3,ELEC4=e- requirement for CO2 fixn by rubisco,PEP
+C        carboxylase (umol e- umol CO2)
+C     CO2KI=Ki for C3 leakage from bundle sheath to mesophyll 
+C        in C4 (uM)
 C     FCO2B,FHCOB=partition decarboxylation,leakage to CO2,HCO3 in C4
 C     COMP4=C4 CO2 compensation point (uM)
 C     FDML=leaf water content (g H2O g-1 C)
-C     FBS,FMP=leaf water content in bundle sheath, mesophyll in C4 CO2 fixn
+C     FBS,FMP=leaf water content in bundle sheath, mesophyll
+C        in C4 CO2 fixn
 C
       PARAMETER(QNTM=0.45,CURV=0.70,CURV2=2.0*CURV,CURV4=4.0*CURV
      2,ELEC3=4.5,ELEC4=3.0,CO2KI=1.0E+03,FCO2B=0.02,FHCOB=1.0-FCO2B)
@@ -94,87 +112,108 @@ C
 C     ZPLFM=min N:C,P:C in leaves relative to max values from PFT file
 C     ZPGRM=min N:C,P:C in grain relative to max values from PFT file
 C     GY,GZ=partitioning of grazed material to removal,respiration 
-C     FSTK=fraction of stalk area contributing to water,heat flow
-C     DSTK,VSTK=stalk density (Mg m-3),specific volume (m3 g-1)
-C     FRTX=fraction used to calculate woody faction of stalk,root
 C
-      PARAMETER(ZPLFM=0.33,ZPLFD=1.0-ZPLFM,ZPGRM=0.75
+      PARAMETER(ZPLFM=0.333,ZPLFD=1.0-ZPLFM,ZPGRM=0.750
      2,ZPGRD=1.0-ZPGRM,GY=1.0,GZ=1.0-GY)
-      PARAMETER(FSTK=0.05,ZSTX=1.0E-03,DSTK=0.225,VSTK=1.0E-06/DSTK
-     2,FRTX=1.0/(1.0-(1.0-FSTK)**2))
+      PARAMETER(YSTK=2.5E-03)
 C
-C     SETC,SETN,SETP=Km for nonstructural C,N,P concn on seed set (g g-1)
-C     SLA2,SSL2,SNL2=parameter for calculating leaf area expansion, petiole
-C     and internode extension vs leaf, petiole, internode growth
-C     CNMX,CPMX,CNMN,CPMN=max,min N:C,P:C for nonstructural C,N,P transfers
+C     SETC,SETN,SETP=Km for nonstructural C,N,P concn on seed set 
+C        (g g-1)
+C     SSL2,SNL2=parameter for calculating petiole and internode
+C        extension vs petiole, internode growth
+C     CNMX,CPMX,CNMN,CPMN=max,min N:C,P:C for nonstructural C,N,P
+C        transfers
 C
-      PARAMETER(SETC=1.0E-02,SETN=1.0E-03,SETP=1.0E-04)
-      PARAMETER(SLA2=-0.33,SSL2=-0.50,SNL2=-0.67)
+      PARAMETER(SETC=1.0E-02,SETN=1.0E-03,SETP=1.0E-04,TCMBX=505.0)
+      PARAMETER(SSL2=-0.50,SNL2=-0.625,PPM=0.375)
       PARAMETER(CNMX=0.20,CPMX=0.020,CNMN=0.050,CPMN=0.005)
 C
 C     EN2F=N fixation yield from C oxidation (g N g-1 C)
-C     VMXO=specific respiration rate by bacterial N2 fixers (g g-1 h-1)
-C     SPNDL=specific decomposition rate by canopy,root bacterial N2 fixers (g g-1 h-1)
-C     CCNGB,CCNGR=parameters to calculate nonstructural C,N,P exchange between bacteria and branch,root
+C     VMXO=specific respiration rate by bacterial N2 fixers 
+C        (g g-1 h-1)
+C     SPNDL=specific decomposition rate by canopy,root bacterial 
+C        N2 fixers (g g-1 h-1)
 C     WTNDI=initial bacterial mass at infection (g C m-2)
-C     CZKM,CPKM=Km for nonstructural N,P uptake by bacteria (g N,P g-1 C)
-C     RCCZR,RCCYR=min,max fractions for root C recycling
-C     RCCXR,RCCQR=max fractions for root N,P recycling 
+C     CZKM,CPKM=Km for nonstructural N,P uptake by bacteria 
+C        (g N,P g-1 C)
 C     RCCZN,RCCYN=min,max fractions for bacteria C recycling
 C     RCCXN,RCCQN=max fractions for bacteria N,P recycling 
 C     RCCZ,RCCY=min,max fractions for shoot,bacteria C recycling
 C     RCCX,RCCQ=max fractions for shoot,bacteria N,P recycling 
+C     RCCZR,RCCYR=min,max fractions for root C recycling
+C     RCCXR,RCCQR=max fractions for root N,P recycling 
+C     FXFB=rate constant for leaf-storage nonstructural C,N,P exchange
+C          from IBTYP in PFT file (h-1)
+C     FXFR=rate constant for root-storage nonstructural C,N,P exchange
+C          from IBTYP in PFT file (h-1)
+C     FPART1,FPART2=phenology effect on reducing PART1,PART2
+C     SLA2=parameter for calculating leaf area expansion
+C        vs leaf growth
 C
-      PARAMETER(EN2F=0.20,VMXO=0.125,SPNDLK=0.01
-     2,SPNDL=5.0E-04,CCNGR=2.5E-01,CCNGB=6.0E-04
-     2,WTNDI=1.0E-03,CZKM=2.5E-03,CPKM=2.5E-04
-     3,RCCZR=0.056,RCCYR=0.167,RCCXR=0.833,RCCQR=0.833
-     3,RCCZN=0.167,RCCYN=0.833,RCCXN=0.833,RCCQN=0.833)
-      DATA RCCZ/0.167,0.167,0.167,0.056/
-      DATA RCCY/0.333,0.333,0.167,0.333/
-      DATA RCCX/0.417,0.833,0.833,0.833/
-      DATA RCCQ/0.417,0.833,0.833,0.833/
+      PARAMETER(GN2X=150.0,EOMC=37.5,EN2F=EOMC/GN2X
+     2,VMXO=0.125,WTNDI=1.0E-04,CZKM=1.0E-04
+     3,CPKM=1.0E-05,SPNDL=1.0E-02,ZCKI=1.0E+01,ZPKI=1.0E+03
+     4,RCCZN=0.167,RCCYN=0.167,RCCXN=0.833,RCCQN=0.833)
+      DATA RCCZ/0.167,0.167,0.167,0.167,0.167,0.167/
+      DATA RCCY/0.167,0.167,0.167,0.167,0.167,0.167/
+      DATA RCCX/0.833,0.833,0.833,0.833,0.833,0.833/
+      DATA RCCQ/0.833,0.833,0.833,0.833,0.833,0.833/
+      DATA RCCZR/0.167,0.167,0.167,0.167,0.167,0.167/
+      DATA RCCYR/0.167,0.167,0.167,0.167,0.167,0.167/
+      DATA RCCXR/0.833,0.833,0.833,0.833,0.833,0.833/
+      DATA RCCQR/0.833,0.833,0.833,0.833,0.833,0.833/
+      DATA FXFB/5.0E-03,5.0E-03,5.0E-06,5.0E-06,5.0E-05,2.5E-04/
+      DATA FXFR/2.0E-05,2.0E-05,2.0E-05,2.0E-05,2.0E-05,2.0E-05/
+      DATA FPART1/0.75,1.00,1.50,1.50,1.25,1.00/
+      DATA FPART2/0.25,0.33,0.50,0.50,0.42,0.33/
+      DATA SLA2/-0.333,-0.333,-0.083,-0.333,-0.333,-0.333/
 C
-C     RTSK=relative primary root sink strength 0.25=shallow,4.0=deep root profile
-C     FXRN=rate constant for plant-bacteria nonstructl C,N,P exchange (h-1)
-C     FXFB=rate constant for leaf-storage nonstructl C,N,P exchange (h-1)
-C     FXFR=rate constant for root-storage nonstructl C,N,P exchange (h-1)
-C     FPART=parameter for allocating nonstructural C to shoot organs
+C     RTSK=relative primary root sink strength 0.25=shallow,
+C        4.0=deep root profile
+C     FXRN=rate constant for plant-bacteria nonstructural C,N,P
+C        exchange (h-1)
+C     CNDLI=bacteria:plant ratio controlling bacterial decomposition
 C     FXSH,FXRT=shoot-root partitioning of storage C during leafout 
-C     FRSV=rate constant for remobiln of storage C,N,P during leafout (h-1)
-C     FXFY,FXFZ=rate constant for leaf-reserve nonstructural C,N,P exchange (h-1)
-C     EFIRE=combustion  of N,P relative to C
-C     PSILY=canopy water potential below which leafoff is induced (MPa)
-C     FLG4Y=number of hours after physiol maturity required for senescence
-C     ATRPX=number of hours required to initiate remobilization of storage C for leafout
-C     GVMX=specific oxidation rate of nonstructural C during leafout at 25 C
-C     FVRN=fraction of hours required for leafoff to initiate remobilization
+C     FRSV=rate constant for remobilization of storage C,N,P during
+C        leafout (h-1)
+C     FXFY,FXFZ=rate constant for leaf-reserve nonstructural C,N,P
+C        exchange (h-1)
+C     PSILY=canopy water potential below which leafoff is induced
+C       (MPa)
+C     FLG4Y=number of hours after physiolical maturity required for
+C        senescence
+C     ATRPX=number of hours required to initiate remobilization of
+C        storage C for leafout
+C     VMXG=specific oxidation rate of nonstructural C during leafout
+C        at 25 C
+C     FVRN=fraction of hours required for leafoff to initiate
+C        remobilization
+C     SPCMB=specific combustion rate of living plant material (0-4)
+C        at 600K, charcoal(5) at 700K (g C m-2 h-1)
 C
-      DATA RTSK/0.25,1.0,4.0,4.0/
-      DATA FXRN/0.25,0.125,0.0625,0.225,0.075,0.025/
-      DATA FXFB/1.0E-02,1.0E-02,1.0E-05,5.0E-05/
-      DATA FXFR/1.0E-02,1.0E-02,1.0E-05,5.0E-05/
-      DATA FPART1/1.00/,FPART2/0.40/
-      DATA FXSH/0.50,0.75/,FXRT/0.50,0.25/
-      DATA FRSV/0.025,0.025,0.001,0.001/
-      DATA FXFY/0.025,0.005/,FXFZ/0.25,0.05/
-      DATA EFIRE/0.917,0.167/
+      DATA RTSK/0.25,1.0,1.0,4.0/
+      DATA FXRN/5.0E-02,2.5E-02,1.25E-02,5.0E-02,2.5E-02,1.25E-02/
+      DATA CNDLI/10.0E-01,2.0E-01,2.0E-01,1.0E-01,0.2E-01,0.2E-01/
+      DATA FXSH/0.25,0.75/,FXRT/0.75,0.25/
+      DATA FRSV/0.025,0.025,0.0025,0.025,0.025,0.025/
+      DATA FXFY/0.125E-02,0.125E-02/,FXFZ/0.10E-01,0.10E-01/
       DATA PSILY/-200.0,-2.0,-2.0,-2.0/
       DATA FLG4Y/360.0,1440.0,720.0,720.0/
-      DATA ATRPX/68.96,276.9/,GVMX/0.010,0.0025/
+      DATA ATRPX/45.8,138.4/,VMXG/0.015,0.005/
       DATA FVRN/0.75,0.5,0.5,0.5,0.5,0.5/
+      DATA SPCMB/2.5E+02,2.5E+02,2.5E+02,2.5E+02,2.5E+02/
 C     DATA TC4,TLK/0.0,0.0/
-      REAL*4 TFN5,WFNG,WFNC,WFNS,WFNSG,WFN4,WFNB
-     2,WFNR,WFNRG,WFNGR,FSNC2 
-C
-C     TOTAL AGB FOR GRAZING IN LANDSCAPE SECTION
-C
+      REAL*4 TFN5,WFNSG,WFNSC,WFNST,WFNSR,WFN4,WFNB
+     2,WFNRT,WFNRG,WFNRR,FSNC2 
+      XNFHQ=XNFH**0.667
       DO 2995 NX=NHW,NHE
       DO 2990 NY=NVN,NVS
       DO 2985 NZ=1,NP(NY,NX)
 C
+C     TOTAL AGB FOR GRAZING IN LANDSCAPE SECTION
+C
 C     IHVST=harvest type:0=none,1=grain,2=all above-ground
-C                       ,3=pruning,4=grazing,5=fire,6=herbivory
+C                       ,3=pruning,4=grazing,6=herbivory
 C     LSG=landscape grazing section number
 C     WTSHTZ,WTSHTA=total,average biomass in landscape grazing section
 C
@@ -208,15 +247,11 @@ C
       DO 9980 NZ=1,NP0(NY,NX)
       DO 1 L=0,NJ(NY,NX)
       DO 1 K=0,1
-      DO 1 M=1,4
+      DO 1 M=1,5
       CSNC(M,K,L,NZ,NY,NX)=0.0
       ZSNC(M,K,L,NZ,NY,NX)=0.0
       PSNC(M,K,L,NZ,NY,NX)=0.0
 1     CONTINUE
-      HCSNC(NZ,NY,NX)=0.0
-      HZSNC(NZ,NY,NX)=0.0
-      HPSNC(NZ,NY,NX)=0.0
-      CNET(NZ,NY,NX)=0.0
       UPNFC(NZ,NY,NX)=0.0
       ZCX(NZ,NY,NX)=ZC(NZ,NY,NX)
       ZC(NZ,NY,NX)=0.0
@@ -274,30 +309,8 @@ C     IF(J.EQ.INT(ZNOON(NY,NX)))THEN
       WTHNG=0.0
       WTHPG=0.0
 C     ENDIF
-C     IF(NX.EQ.4.AND.NY.EQ.4.AND.NZ.EQ.2)THEN
-C     WRITE(*,2328)'IFLGC1',I,J,NZ,IFLGC(NZ,NY,NX)
-C    2,IDTHP(NZ,NY,NX),IDTHR(NZ,NY,NX)
-2328  FORMAT(A8,10I4)
-C     ENDIF
       IF(IFLGC(NZ,NY,NX).EQ.1)THEN
       IF(IDTHP(NZ,NY,NX).EQ.0.OR.IDTHR(NZ,NY,NX).EQ.0)THEN
-C     IF(I.EQ.1.AND.J.EQ.1)THEN
-C     DO 87 II=1,366
-C     DO 87 N=1,400
-C     VCO2(N,II,NZ)=0.0
-87    CONTINUE
-C     ENDIF
-C     IF(IYRC.GE.2099)THEN
-C     IF(I.EQ.365.AND.J.EQ.24)THEN
-C     DO 88 N=1,400
-C     WRITE(19,12)IYRC,NZ,N,(VCO2(N,II,NZ),II=1,181)
-C     WRITE(20,12)IYRC,NZ,N,(VCO2(N,II,NZ),II=182,365)
-12    FORMAT(3I8,365E12.4)
-88    CONTINUE
-C     ENDIF
-C     ENDIF
-      IFLGZ=0
-      IFLGY=0
       DO 2 L=1,JC
       ARLFV(L,NZ,NY,NX)=0.0
       WGLFV(L,NZ,NY,NX)=0.0
@@ -324,77 +337,90 @@ C     ENDIF
 6     CONTINUE
 9     CONTINUE
 C
-C     IBTYP=turnover:0=all abve-grd,1=all leaf+petiole,2=none,3=between 1,2
+C     IBTYP=turnover rate of above-ground biomass
+C              :0,1=fully deciduous,
+C              :2=needleleaf evergreen
+C              :3=broadleaf evergreen
+C              :4=semi-deciduous
+C              :5=semi-evergreen
+C     IGTYP=growth type:0=bryophyte,1=grass,herb,2=woody shrub,tree
 C     WTSTK,WVSTK=stalk,sapwood mass
-C     FWOOD,FWODB=C woody fraction in stalk,other organs:0=woody,1=non-woody
+C     FWOOD,FWODB=C woody fraction in stalk,other organs
+C        :0=woody,1=non-woody
 C     CN*,CP*=N:C,P:C ratios in plant organs from PFT files
-C     CN*W,CP*W=N:C,P:C ratios in plant organs weighted for wood content 
-C     *LF=leaf,*SHE=petiole,*STK=stalk,*RT=root 
+C     CN*W,CP*W=N:C,P:C ratios in plant organs weighted for wood
+C        content 
+C        plant organ code:*LF=leaf,*SHE=petiole,*STK=stalk,*RT=root 
 C     FWODLN,FWODLP=N,P woody fraction in leaf:0=woody,1=non-woody     
 C     FWODSN,FWODSP=N,P woody fraction in petiole:0=woody,1=non-woody     
 C     FWOODN,FWOODP=N,P woody fraction in stalk:0=woody,1=non-woody     
 C
       IF(IBTYP(NZ,NY,NX).EQ.0.OR.IGTYP(NZ,NY,NX).LE.1
      2.OR.WTSTK(NZ,NY,NX).LE.ZEROP(NZ,NY,NX))THEN
-      FWODB(1)=1.0
-      FWOOD(1)=1.0
-      FWODR(1)=1.0
+      FWODB(1,NZ)=1.0
+      FWOOD(1,NZ)=1.0
+      FWODR(1,NZ)=1.0
       ELSE
-      FWODB(1)=1.0
-      FWOOD(1)=SQRT(WVSTK(NZ,NY,NX)/WTSTK(NZ,NY,NX))
-      FWODR(1)=SQRT(FRTX*WVSTK(NZ,NY,NX)/WTSTK(NZ,NY,NX))
+      FWODB(1,NZ)=1.0
+      FWOOD(1,NZ)=WVSTK(NZ,NY,NX)/WTSTK(NZ,NY,NX)
+      FWODR(1,NZ)=FWOOD(1,NZ)**0.167
       ENDIF
-      FWODB(0)=1.0-FWODB(1)
-      FWOOD(0)=1.0-FWOOD(1)
-      FWODR(0)=1.0-FWODR(1)
-C     WRITE(*,8822)'FWOOD',I,J,NX,NY,NZ,IBTYP(NZ,NY,NX),IGTYP(NZ,NY,NX)
-C    2,FWOOD(0),FWOOD(1),FWODB(0),FWODB(1),FWODR(0),FWODR(1)
-C    3,WVSTK(NZ,NY,NX),WTSTK(NZ,NY,NX)
-8822  FORMAT(A8,7I4,12E12.4)
-      CNLFW=FWODB(0)*CNSTK(NZ,NY,NX)+FWODB(1)*CNLF(NZ,NY,NX)
-      CPLFW=FWODB(0)*CPSTK(NZ,NY,NX)+FWODB(1)*CPLF(NZ,NY,NX)
-      CNSHW=FWODB(0)*CNSTK(NZ,NY,NX)+FWODB(1)*CNSHE(NZ,NY,NX)
-      CPSHW=FWODB(0)*CPSTK(NZ,NY,NX)+FWODB(1)*CPSHE(NZ,NY,NX)
-      CNRTW=FWODR(0)*CNSTK(NZ,NY,NX)+FWODR(1)*CNRT(NZ,NY,NX)
-      CPRTW=FWODR(0)*CPSTK(NZ,NY,NX)+FWODR(1)*CPRT(NZ,NY,NX)
-      FWODLN(0)=FWODB(0)*CNSTK(NZ,NY,NX)/CNLFW
-      FWODLP(0)=FWODB(0)*CPSTK(NZ,NY,NX)/CPLFW
-      FWODSN(0)=FWODB(0)*CNSTK(NZ,NY,NX)/CNSHW
-      FWODSP(0)=FWODB(0)*CPSTK(NZ,NY,NX)/CPSHW
-      FWOODN(0)=FWOOD(0)*CNSTK(NZ,NY,NX)/CNRTW
-      FWOODP(0)=FWOOD(0)*CPSTK(NZ,NY,NX)/CPRTW
-      FWODRN(0)=FWODR(0)*CNRT(NZ,NY,NX)/CNRTW
-      FWODRP(0)=FWODR(0)*CPRT(NZ,NY,NX)/CPRTW
-      FWODLN(1)=1.0-FWODLN(0)
-      FWODLP(1)=1.0-FWODLP(0)
-      FWODSN(1)=1.0-FWODSN(0)
-      FWODSP(1)=1.0-FWODSP(0)
-      FWOODN(1)=1.0-FWOODN(0)
-      FWOODP(1)=1.0-FWOODP(0)
-      FWODRN(1)=1.0-FWODRN(0)
-      FWODRP(1)=1.0-FWODRP(0)
+      FWODB(0,NZ)=1.0-FWODB(1,NZ)
+      FWOOD(0,NZ)=1.0-FWOOD(1,NZ)
+      FWODR(0,NZ)=1.0-FWODR(1,NZ)
+C     WRITE(*,8822)'FWOOD',I,J,NFZ,NX,NY,NZ
+C    2,IBTYP(NZ,NY,NX),IGTYP(NZ,NY,NX)
+C    2,FWOOD(0,NZ),FWOOD(1,NZ),FWODB(0,NZ),FWODB(1,NZ)
+C    3,FWODR(0,NZ),FWODR(1,NZ)
+C    3,WVSTK(NZ,NY,NX),WTSTK(NZ,NY,NX),WTRVC(NZ,NY,NX)
+8822  FORMAT(A8,8I4,12E12.4)
+      CNLFW=FWODB(0,NZ)*CNSTK(NZ,NY,NX)+FWODB(1,NZ)*CNLF(NZ,NY,NX)
+      CPLFW=FWODB(0,NZ)*CPSTK(NZ,NY,NX)+FWODB(1,NZ)*CPLF(NZ,NY,NX)
+      CNSHW=FWODB(0,NZ)*CNSTK(NZ,NY,NX)+FWODB(1,NZ)*CNSHE(NZ,NY,NX)
+      CPSHW=FWODB(0,NZ)*CPSTK(NZ,NY,NX)+FWODB(1,NZ)*CPSHE(NZ,NY,NX)
+      CNRTW=FWODR(0,NZ)*CNSTK(NZ,NY,NX)+FWODR(1,NZ)*CNRT(NZ,NY,NX)
+      CPRTW=FWODR(0,NZ)*CPSTK(NZ,NY,NX)+FWODR(1,NZ)*CPRT(NZ,NY,NX)
+      FWODLN(1,NZ)=FWODB(1,NZ)
+      FWODLP(1,NZ)=FWODB(1,NZ)
+      FWODSN(1,NZ)=FWODB(1,NZ)
+      FWODSP(1,NZ)=FWODB(1,NZ)
+      FWOODN(1,NZ)=FWOOD(1,NZ)
+      FWOODP(1,NZ)=FWOOD(1,NZ)
+      FWODRN(1,NZ)=FWODR(1,NZ)
+      FWODRP(1,NZ)=FWODR(1,NZ)
+      FWODLN(0,NZ)=1.0-FWODLN(1,NZ)
+      FWODLP(0,NZ)=1.0-FWODLP(1,NZ)
+      FWODSN(0,NZ)=1.0-FWODSN(1,NZ)
+      FWODSP(0,NZ)=1.0-FWODSP(1,NZ)
+      FWOODN(0,NZ)=1.0-FWOODN(1,NZ)
+      FWOODP(0,NZ)=1.0-FWOODP(1,NZ)
+      FWODRN(0,NZ)=1.0-FWODRN(1,NZ)
+      FWODRP(0,NZ)=1.0-FWODRP(1,NZ)
 C
 C     SHOOT AND ROOT TEMPERATURE FUNCTIONS FOR MAINTENANCE
 C     RESPIRATION FROM TEMPERATURES WITH OFFSETS FOR THERMAL ADAPTATION
 C
-C     TKC,TKCM=canopy temperature,canopy temp used in Arrhenius eqn
-C     TKS,TKSM=soil temperature,soil temp used in Arrhenius eqn
+C     TKC,TKCM=canopy temperature,canopy temperature used in
+C        temperature function 
+C     TKS,TKSO=soil temperature,soil temp used in temperature function 
 C     OFFST=shift in Arrhenius curve for thermal adaptation
-C     TFN5,TFN6=temperature function for canopy,root mntc respn (25 oC =1)
+C     TFN5,TFN6=temperature function for canopy,root maintenance
+C        respiration (25oC =1)
 C     8.3143,710.0=gas constant,enthalpy
-C     62500,195000,232500=energy of activn,high,low temp inactivn(KJ mol-1)
+C     62500,195000=energy of activation,low temperature inactivation
+C        (KJ mol-1)
 C
       TKCM=TKC(NZ,NY,NX)+OFFST(NZ,NY,NX)
       RTK=8.3143*TKCM
       STK=710.0*TKCM
-      ACTVM=1+EXP((195000-STK)/RTK)+EXP((STK-232500)/RTK)
-      TFN5=EXP(25.214-62500/RTK)/ACTVM
+      ACTVM=1.0+EXP((197500-STK)/RTK)
+      TFN5=AMIN1(1.0E+03,EXP(25.216-62500/RTK)/ACTVM)
       DO 7 L=NU(NY,NX),NJ(NY,NX)
-      TKSM=TKS(L,NY,NX)+OFFST(NZ,NY,NX)
-      RTK=8.3143*TKSM
-      STK=710.0*TKSM
-      ACTVM=1+EXP((195000-STK)/RTK)+EXP((STK-232500)/RTK)
-      TFN6(L)=EXP(25.214-62500/RTK)/ACTVM
+      TKSO=TKS(L,NY,NX)+OFFST(NZ,NY,NX)
+      RTK=8.3143*TKSO
+      STK=710.0*TKSO
+      ACTVM=1.0+EXP((197500-STK)/RTK)
+      TFN6(L)=AMIN1(1.0E+03,EXP(25.216-62500/RTK)/ACTVM)
 7     CONTINUE
       GROGR=0.0
 C
@@ -411,22 +437,24 @@ C
 C     WATER STRESS FUNCTIONS FOR EXPANSION AND GROWTH RESPIRATION
 C     FROM CANOPY TURGOR
 C
-C     WFNS=turgor expansion,extension function
-C     PSILG,PSILM=current,minimum canopy turgor potl for expansion,extension
-C     WFNC=stomatal resistance function of canopy turgor
+C     IGTYP=growth type:0=bryophyte,1=grass,herb,2=woody shrub,tree
+C     WFNST=turgor expansion,extension function
+C     PSILG,PSILM=current,minimum canopy turgor potential for
+C        expansion,extension
+C     WFNSC=stomatal resistance function of canopy turgor
 C     PSILT=canopy water potential
-C     WFNG=growth function of canopy water potential
-C     WFNSG=expansion,extension function of canopy water potential
+C     WFNSG=growth function of canopy water potential
+C     WFNSR=expansion,extension function of canopy water potential
 C
-      WFNS=AMIN1(1.0,AMAX1(0.0,PSILG(NZ,NY,NX)-PSILM))
+      WFNST=AMIN1(1.0,AMAX1(0.0,PSILG(NZ,NY,NX)-PSILM))
       IF(IGTYP(NZ,NY,NX).EQ.0)THEN
-      WFNC=1.0
-      WFNG=EXP(0.05*PSILT(NZ,NY,NX))
-      WFNSG=WFNS**0.10
+      WFNSC=1.0
+      WFNSG=EXP(0.05*PSILT(NZ,NY,NX))
+      WFNSR=WFNSG**0.25
       ELSE
-      WFNC=EXP(RCS(NZ,NY,NX)*PSILG(NZ,NY,NX))
-      WFNG=EXP(0.10*PSILT(NZ,NY,NX))
-      WFNSG=WFNS**0.25
+      WFNSC=EXP(RCS(NZ,NY,NX)*PSILG(NZ,NY,NX))
+      WFNSG=EXP(0.10*PSILT(NZ,NY,NX))
+      WFNSR=WFNSG**0.25
       ENDIF
 C
 C     CALCULATE GROWTH OF EACH BRANCH
@@ -440,10 +468,14 @@ C
       IF(IDTHB(NB,NZ,NY,NX).EQ.0)THEN
 C
 C     PARTITION GROWTH WITHIN EACH BRANCH FROM GROWTH STAGE
-C     1=LEAF,2=SHEATH OR PETIOLE,3=STALK,4=RESERVE,
-C     5,6=REPRODUCTIVE ORGANS,7=GRAIN
 C
 C     PART=organ partitioning fraction
+C        :1=leaf
+C        :2=sheath or petiole
+C        :3=stalk
+C        :4=reserve,
+C        :5,6=reproductive organs
+C        :7=grain
 C
       ARSTKB(NB)=0.0
       TOTAL=0.0
@@ -456,20 +488,31 @@ C
 C     IDAY(2,=floral initiation date
 C
       IF(IDAY(2,NB,NZ,NY,NX).EQ.0)THEN
-      PART(1)=0.725
-      PART(2)=0.275
+      PART(1)=PART1
+      PART(2)=PART2
 C
 C     IF BEFORE ANTHESIS
 C
 C     IDAY(6,=start of anthesis and setting final seed number
-C     TGSTGI=total change in vegv node number normalized for maturity group 
+C     PART1,PART2=leaf,sheath partitioning coefficients at emergence
+C     PART1X,PART2X=minimum leaf,sheath partitioning coefficients
+C     FPART1,FPART2=phenology effect on reducing PART1,PART2
+C     TGSTGI=total change in vegetative node number normalized for
+C        maturity group 
 C
       ELSEIF(IDAY(6,NB,NZ,NY,NX).EQ.0)THEN
-      PART(1)=AMAX1(PART1X,0.725-FPART1*TGSTGI(NB,NZ,NY,NX))
-      PART(2)=AMAX1(PART2X,0.275-FPART2*TGSTGI(NB,NZ,NY,NX))
+      PART(1)=AMAX1(PART1X
+     2,PART1-FPART1(IBTYP(NZ,NY,NX))*TGSTGI(NB,NZ,NY,NX))
+      PART(2)=AMAX1(PART2X
+     2,PART2-FPART2(IBTYP(NZ,NY,NX))*TGSTGI(NB,NZ,NY,NX))
       PARTS=1.0-PART(1)-PART(2)
+      IF(SNL1(NZ,NY,NX).GT.0.0)THEN
       PART(3)=0.60*PARTS
       PART(4)=0.30*PARTS
+      ELSE
+      PART(3)=0.00
+      PART(4)=0.90*PARTS
+      ENDIF
       PARTX=PARTS-PART(3)-PART(4)
       PART(5)=0.5*PARTX
       PART(6)=0.5*PARTX
@@ -478,19 +521,30 @@ C     IF BEFORE GRAIN FILLING, DETERMINATE OR INDETERMINATE
 C
 C     IDAY(7,=start of grain filling and setting max seed size
 C     IDTYP=growth habit:0=determinate,1=indetermimate from PFT file
-C     TGSTGF=total change in reprv node number normalized for maturity group 
+C     PART1,PART2=leaf,sheath partitioning coefficients at emergence
+C     PART1X,PART2X=minimum leaf,sheath partitioning coefficients
+C     FPART1,FPART2=phenology effect on reducing PART1,PART2
+C     TGSTGF=total change in reproductive node number normalized for
+C        maturity group 
 C
       ELSEIF(IDAY(7,NB,NZ,NY,NX).EQ.0)THEN
       IF(IDTYP(NZ,NY,NX).EQ.0)THEN
       PART(1)=0.0
       PART(2)=0.0
       ELSE
-      PART(1)=AMAX1(PART1X,(0.725-FPART1)*(1.0-TGSTGF(NB,NZ,NY,NX)))
-      PART(2)=AMAX1(PART2X,(0.275-FPART2)*(1.0-TGSTGF(NB,NZ,NY,NX)))
+      PART(1)=AMAX1(PART1X,(PART1-FPART1(IBTYP(NZ,NY,NX)))
+     2*(1.0-TGSTGF(NB,NZ,NY,NX)))
+      PART(2)=AMAX1(PART2X,(PART2-FPART2(IBTYP(NZ,NY,NX)))
+     2*(1.0-TGSTGF(NB,NZ,NY,NX)))
       ENDIF
       PARTS=1.0-PART(1)-PART(2)
+      IF(SNL1(NZ,NY,NX).GT.0.0)THEN
       PART(3)=AMAX1(0.0,0.60*PARTS*(1.0-TGSTGF(NB,NZ,NY,NX)))
       PART(4)=AMAX1(0.0,0.30*PARTS*(1.0-TGSTGF(NB,NZ,NY,NX)))
+      ELSE
+      PART(3)=0.00
+      PART(4)=AMAX1(0.0,0.90*PARTS*(1.0-TGSTGF(NB,NZ,NY,NX)))
+      ENDIF
       PARTX=PARTS-PART(3)-PART(4)
       PART(5)=0.5*PARTX
       PART(6)=0.5*PARTX
@@ -498,7 +552,8 @@ C
 C     DURING GRAIN FILLING, DETERMINATE OR INDETERMINATE
 C
 C     ISTYP=growth habit:0=annual,1=perennial from PFT file
-C     IDTYP=growth habit:0=determinate,1=indetermimate
+C     IDTYP=growth habit:0=determinate,1=indetermimate from PFT file 
+C     PART1X,PART2X=minimum leaf,sheath partitioning coefficients
 C
       ELSE
       IF(IDTYP(NZ,NY,NX).EQ.0)THEN
@@ -508,20 +563,38 @@ C
       PART(2)=PART2X
       PARTS=1.0-PART(1)-PART(2)
       IF(ISTYP(NZ,NY,NX).EQ.0)THEN
+      IF(SNL1(NZ,NY,NX).GT.0.0)THEN
       PART(3)=0.125*PARTS
       PART(5)=0.125*PARTS
       PART(6)=0.125*PARTS
       PART(7)=0.625*PARTS
       ELSE
+      PART(3)=0.000
+      PART(5)=0.125*PARTS
+      PART(6)=0.125*PARTS
+      PART(7)=0.750*PARTS
+      ENDIF
+      ELSE
+      IF(SNL1(NZ,NY,NX).GT.0.0)THEN
       PART(3)=0.75*PARTS
       PART(7)=0.25*PARTS
+      ELSE
+      PART(3)=0.00
+      PART(7)=1.00*PARTS
+      ENDIF
       ENDIF
       ENDIF
       ENDIF
 C
 C     IF AFTER GRAIN FILLING
 C
-C     IBTYP=turnover:0=all abve-grd,1=all leaf+petiole,2=none,3=between 1,2
+C     IBTYP=turnover rate of above-ground biomass
+C              :0,1=fully deciduous,
+C              :2=needleleaf evergreen
+C              :3=broadleaf evergreen
+C              :4=semi-deciduous
+C              :5=semi-evergreen
+C     ISTYP=growth habit:0=annual,1=perennial from PFT file
 C     IDAY(10,=physiological maturity date
 C
       IF(IBTYP(NZ,NY,NX).EQ.0.AND.IDAY(10,NB,NZ,NY,NX).NE.0)THEN
@@ -538,8 +611,10 @@ C
 C
 C     REDIRECT FROM STALK TO STALK RESERVES IF RESERVES BECOME LOW
 C
+C     IDAY(2,=floral initiation date
 C     WTRSVB,WVSTKB=stalk reserve,sapwood mass
-C     XFRX=maximum storage C content for remobiln from stalk,root reserves
+C     XFRX=maximum storage C concentration for remobilization from
+C        stalk,root reserves
 C
       IF(IDAY(2,NB,NZ,NY,NX).NE.0)THEN
       IF(WTRSVB(NB,NZ,NY,NX).LT.XFRX*WVSTKB(NB,NZ,NY,NX))THEN
@@ -550,40 +625,58 @@ C
       ENDIF
 1020  CONTINUE
 C
-C     REDIRECT FROM STALK RESERVES TO STALK IF RESERVES BECOME TOO LARGE
+C     REDIRECT FROM STALK RESERVES TO STALK IF RESERVES BECOME TOO
+C     LARGE
 C
-      ELSEIF(WTRSVB(NB,NZ,NY,NX).GT.1.0*WVSTKB(NB,NZ,NY,NX))THEN
+      ELSEIF(WTRSVB(NB,NZ,NY,NX).GT.WVSTKB(NB,NZ,NY,NX))THEN
+      IF(SNL1(NZ,NY,NX).GT.0.0)THEN
       PART(3)=PART(3)+PART(4)+PART(7)
       PART(4)=0.0
       PART(7)=0.0
+      ELSE
+      PART(1)=PART(1)+PART1*(PART(4)+PART(7))
+      PART(2)=PART(2)+PART2*(PART(4)+PART(7))
+      PART(4)=0.0
+      PART(7)=0.0
+      ENDIF
       ENDIF
       ENDIF
 C
 C     REDIRECT FROM LEAVES TO STALK IF LAI BECOMES TOO LARGE
 C
-C     ARLFP=PFT leaf area
+C     ARLFP=PFT leaf area (m2 m-2)
+C     PTRT=allocation to leaf+petiole used to simulate phenology
+C        effect on shoot-root C transfer
 C
       ARLFI=ARLFP(NZ,NY,NX)/AREA(3,NU(NY,NX),NY,NX)
       IF(ARLFI.GT.5.0)THEN
-      FPARTL=AMAX1(0.0,(10.0-ARLFI)/5.0)
-      PART(3)=PART(3)+(1.0-FPARTL)*(PART(1)+PART(2))
-      PART(1)=FPARTL*PART(1)
-      PART(2)=FPARTL*PART(2)
+      FPARTL=AMIN1(1.0,(ARLFI-5.0)/5.0)
+      IF(SNL1(NZ,NY,NX).GT.0.0)THEN
+      PART(3)=PART(3)+FPARTL*(PART(1)+PART(2))
+      ELSE
+      PART(4)=PART(4)+FPARTL*(PART(1)+PART(2))
+      ENDIF
+      PART(1)=(1.0-FPARTL)*PART(1)
+      PART(2)=(1.0-FPARTL)*PART(2)
       ENDIF
       IF(NB.EQ.NB1(NZ,NY,NX))THEN
-      PTRT=PART(1)+PART(2)
+      PTRT=AMAX1(0.0,PART(1)+PART(2))
       ENDIF
 C
 C     DECIDUOUS LEAF FALL AFTER GRAIN FILL IN DETERMINATES,
 C     AFTER AUTUMNIZATION IN INDETERMINATES, OR AFTER SUSTAINED
 C     WATER STRESS
 C
+C     ISTYP=growth habit:0=annual,1=perennial
 C     VRNF,VRNX=leafoff hours,hours required for leafoff
-C     FVRN=fraction of hours required for leafoff to initiate remobilization
+C     FVRN=fraction of hours required for leafoff to initiate
+C        remobilization
 C     IDAY(8,=end date for setting final seed number
-C     IWTYP=phenology type:0=evergreen,1=cold decid,2=drought decid,3=1+2
+C     IWTYP=phenology type:0=evergreen,1=cold deciduous,2=drought
+C        deciduous,3=cold and drought deciduous
 C     IFLGY,IFLGZ=remobilization flags
 C     FLGZ=control rate of remobilization
+C     XNFH=time step from ‘wthr.f’
 C
       IF((ISTYP(NZ,NY,NX).NE.0.AND.VRNF(NB,NZ,NY,NX)
      2.GE.FVRN(IWTYP(NZ,NY,NX))*VRNX(NB,NZ,NY,NX))
@@ -592,19 +685,23 @@ C
       IFLGZ=1
       IF(ISTYP(NZ,NY,NX).EQ.0.OR.IWTYP(NZ,NY,NX).EQ.0)THEN
       IFLGY=1
-      FLGZ(NB,NZ,NY,NX)=FLGZ(NB,NZ,NY,NX)+1.0
+      FLGZ(NB,NZ,NY,NX)=FLGZ(NB,NZ,NY,NX)+1.0*XNFH 
       ELSEIF((IWTYP(NZ,NY,NX).EQ.1.OR.IWTYP(NZ,NY,NX).EQ.3)
-     2.AND.TCC(NZ,NY,NX).LT.CTC(NZ,NY,NX))THEN
+     2.AND.TCC(NZ,NY,NX).LT.TCX(NZ,NY,NX))THEN
       IFLGY=1
-      FLGZ(NB,NZ,NY,NX)=FLGZ(NB,NZ,NY,NX)+1.0
+      FLGZ(NB,NZ,NY,NX)=FLGZ(NB,NZ,NY,NX)+1.0*XNFH 
       ELSEIF(IWTYP(NZ,NY,NX).GE.2 
      2.AND.PSILT(NZ,NY,NX).LT.PSILY(IGTYP(NZ,NY,NX)))THEN
       IFLGY=1
-      FLGZ(NB,NZ,NY,NX)=FLGZ(NB,NZ,NY,NX)+1.0
+      FLGZ(NB,NZ,NY,NX)=FLGZ(NB,NZ,NY,NX)+1.0*XNFH 
       ENDIF 
       IF(ISTYP(NZ,NY,NX).NE.0.AND.IWTYP(NZ,NY,NX).NE.0)THEN
+      IF(SNL1(NZ,NY,NX).GT.0.0)THEN
       PART(3)=PART(3)+0.5*(PART(1)+PART(2))
       PART(4)=PART(4)+0.5*(PART(1)+PART(2))
+      ELSE
+      PART(4)=PART(4)+1.0*(PART(1)+PART(2))
+      ENDIF
       PART(1)=0.0
       PART(2)=0.0
       ENDIF
@@ -613,15 +710,16 @@ C
       IFLGY=0
       FLGZ(NB,NZ,NY,NX)=0.0
       ENDIF
+      IF(NB.EQ.NB1(NZ,NY,NX))THEN
+      IFLGZR=IFLGZ
+      IFLGYR=IFLGY
+      FLGZR=FLGZ(NB,NZ,NY,NX)
+      ENDIF
 C
 C     CHECK PARTITIONING COEFFICIENTS
 C
       DO 1000 N=1,7
-      IF(N.EQ.3.AND.SNL1(NZ,NY,NX).EQ.0.0)THEN
-      PART(N)=0.0
-      ELSE
       PART(N)=AMAX1(0.0,PART(N))
-      ENDIF
       TOTAL=TOTAL+PART(N)
 1000  CONTINUE
       IF(TOTAL.GT.ZERO)THEN
@@ -639,15 +737,19 @@ C     FROM GROWTH YIELDS ENTERED IN 'READQ', AND FROM PARTITIONING
 C     COEFFICIENTS ABOVE
 C
 C     DM*B=C production vs nonstructural C consumption
-C     CN*W,CP*W=N:C,P:C ratios in plant organs weighted for wood content 
-C     *LF=leaf,*SHE=petiole,*STK=stalk,*RSV=stalk reserve,*HSK=husk
-C     *EAR=ear,*GR=grain from PFT file,*SH=shoot
+C     CN*W,CP*W=N:C,P:C ratios in plant organs weighted for wood
+C        content 
+C     plant organ code:*LF=leaf,*SHE=petiole,*STK=stalk,*RSV=stalk
+C        reserve,*HSK=husk,*EAR=ear,*GR=grain from PFT file,*SH=shoot
 C     DMSHT=branch C production vs nonstructural C consumption
 C     DMSHD=branch C respiration vs nonstructural C consumption
-C     CN*M,CP*M=min N,P production vs nonstructural C consumption 
-C     CNLFX,CPLFX=diff between min and max leaf N,P prodn vs nonstruct C consumption 
-C     CNSHX,CPSHX=N,P production vs nonstructural C consumption in rest of shoot 
-C     ZPLFM=min N:C,P:C in leaves relative to max values from PFT file
+C     CN*M,CP*M=minimum N,P production vs nonstructural C consumption 
+C     CNLFX,CPLFX=N,P production vs nonstructural C consumption 
+C        in leaf 
+C     CNSHX,CPSHX=N,P production vs nonstructural C consumption 
+C        in rest of shoot 
+C     ZPLFM=minimum N:C,P:C in leaves relative to maximum values 
+C        from PFT file
 C     ZPLFD=1.0-ZPLFM
 C
       IF(IDAY(1,NB,NZ,NY,NX).NE.0)THEN
@@ -689,7 +791,8 @@ C
 C     TOTAL SHOOT STRUCTURAL N MASS FOR MAINTENANCE RESPIRATION
 C
 C     WTSHXN=shoot structural N mass
-C     WTLFBN,WTSHBN,WTHSBN,WTEARN,WTFRBN=leaf,petiole,husk,ear,grain N mass
+C     WTLFBN,WTSHBN,WTHSBN,WTEARN,WTFRBN=leaf,petiole,husk,ear,grain 
+C        N mass
 C     CNSTK,WVSTKB=stalk N:C,sapwood mass
 C     IDAY(10=date of physiological maturity
 C
@@ -702,24 +805,20 @@ C
 C
 C     GROSS PRIMARY PRODUCTIVITY
 C
-C     FDBK=N,P feedback inhibition on C3 CO2 fixation
-C     SSIN=sine of solar angle
-C     RADP=total PAR absorbed by canopy
+C     IDAY(1,=emergence date
+C     FDBK=N,P feedback inhibition on C3 CO2 fixation from ‘stomate.f’
+C     SSIN=sine of solar angle from ‘hour1.f’
+C     RADP=total PAR absorbed by canopy from ‘hour1.f’
 C     CO2Q=canopy air CO2 concentration
+C     WFNSC=stomatal resistance function of canopy turgor
 C
       IF(IDAY(1,NB,NZ,NY,NX).NE.0)THEN
-C     IF(NZ.EQ.1.OR.NZ.EQ.4)THEN
-C     WRITE(*,5651)'CHECK1',I,J,NZ,NB,IDAY(1,NB,NZ,NY,NX)
-C    2,FDBK(NB,NZ,NY,NX),RADP(NZ,NY,NX),CO2Q(NZ,NY,NX)
-C    3,ARLF(1,NB,NZ,NY,NX)
-5651  FORMAT(A8,5I4,12E12.4)
-C     ENDIF
-      IF(FDBK(NB,NZ,NY,NX).NE.0)THEN
+      IF(FDBK(NB,NZ,NY,NX).NE.0.0)THEN
       IF(SSIN(NY,NX).GT.0.0.AND.RADP(NZ,NY,NX).GT.0.0
-     2.AND.CO2Q(NZ,NY,NX).GT.0.0)THEN
+     2.AND.CO2Q(NY,NX).GT.0.0)THEN
       CO2F=0.0
       CH2O=0.0
-      IF(IGTYP(NZ,NY,NX).NE.0.OR.WFNC.GT.0.0)THEN
+      IF(IGTYP(NZ,NY,NX).NE.0.OR.WFNSC.GT.0.0)THEN
 C
 C     FOR EACH NODE
 C
@@ -750,6 +849,7 @@ C
 C     CO2 FIXATION IN MESOPHYLL BY SUNLIT LEAVES
 C
 C     SURFX=unself-shaded leaf surface area
+C     PAR=direct PAR flux from ‘hour1.f’
 C
       IF(SURFX(N,L,K,NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
       IF(PAR(N,M,L,NZ,NY,NX).GT.0.0)THEN
@@ -757,7 +857,7 @@ C
 C     C4 CARBOXYLATION REACTIONS IN MESOPHYLL 
 C
 C     QNTM=quantum efficiency 
-C     PAR=direct PAR flux
+C     PAR=direct PAR flux from ‘hour1.f’
 C     ETGR4=light saturated e- transport rate from stomate.f
 C     ETLF4=light-limited e- transport rate
 C     CURV=shape parameter for e- transport response to PAR
@@ -775,37 +875,41 @@ C
 C
 C     STOMATAL EFFECT OF WATER DEFICIT IN MESOPHYLL
 C
-C     RS,RSL=leaf stomatal resistance to CO2 at zero,current water potential
+C     RS,RSL=leaf stomatal resistance to CO2 at zero,current water
+C        potential
 C     RCMN=minimum stomatal resistance to CO2 (s m-1)
-C     RCMX=cuticular resistance to CO2 from startq.f (s m-1)
-C     DCO2=difference between atmosph and intercellular CO2 concn (umol m-3)
+C     RCMX=cuticular resistance to CO2 from ‘startq.f’ (s m-1)
+C     DCO2=difference between atmospheric and intercellular CO2
+C        concentration (umol m-3)
 C     GSL=leaf stomatal conductance (mol m-2 s-1)
-C     WFNC=stomatal resistance function of canopy turgor
+C     WFNSC=stomatal resistance function of canopy turgor
 C     FMOL=number of moles of air per m3
 C
       IF(VL.GT.ZERO)THEN
       RS=AMIN1(RCMX(NZ,NY,NX),AMAX1(RCMN,DCO2(NZ,NY,NX)/VL))
-      RSL=RS+(RCMX(NZ,NY,NX)-RS)*WFNC
+      RSL=RS+(RCMX(NZ,NY,NX)-RS)*WFNSC
       GSL=1.0/RSL*FMOL(NZ,NY,NX)
 C
 C     EFFECT OF WATER DEFICIT IN MESOPHYLL 
 C
-C     IGTYP=growth type:0=bryophyte,1=graminoid,2=shrub,tree
+C     IGTYP=growth type:0=bryophyte,1=grass,herb,2=woody shrub,tree
 C     WFNB=non-stomatal effects of water stress on C4,C3 CO2 fixation
 C
       IF(IGTYP(NZ,NY,NX).NE.0)THEN
       WFN4=RS/RSL
       WFNB=SQRT(RS/RSL)
       ELSE
-      WFN4=WFNG
-      WFNB=WFNG
+      WFN4=WFNSG
+      WFNB=WFNSG
       ENDIF
 C
 C     CONVERGENCE SOLUTION FOR CO2I AT WHICH CARBOXYLATION
 C     EQUALS DIFFUSION IN MESOPHYLL 
 C
-C     CO2I=intercellular,mesophyll CO2 concentration at zero water potential
-C     CO2X,CO2C=intercellular,mesophyll CO2 concentration during convergence 
+C     CO2I=intercellular,mesophyll CO2 concentration at zero water
+C        potential
+C     CO2X,CO2C=intercellular,mesophyll CO2 concentration during
+C        convergence for CO2I 
 C     SCO2=solubility of CO2 (uM/(umol mol-1))
 C     COMP4=C4 CO2 compensation point (uM)
 C     CBXNX=PEP carboxylation efficiency
@@ -826,12 +930,12 @@ C
       VGROX=VCGR4(K,NB,NZ,NY,NX)*CO2Y/(CO2C+XKCO24(NZ,NY,NX))
       EGROX=ETLF4*CBXNX
       VL=AMIN1(VGROX,EGROX)*WFN4*FDBK4(K,NB,NZ,NY,NX)
-      VG=(CO2Q(NZ,NY,NX)-CO2X)*GSL
+      VG=(CO2Q(NY,NX)-CO2X)*GSL
       IF(VL+VG.GT.ZERO)THEN
       DIFF=(VL-VG)/(VL+VG)
       IF(ABS(DIFF).LT.0.005)GO TO 130
       VA=0.95*VG+0.05*VL
-      CO2X=CO2Q(NZ,NY,NX)-VA/GSL
+      CO2X=CO2Q(NY,NX)-VA/GSL
       ELSE
       VL=0.0
       GO TO 130
@@ -841,20 +945,18 @@ C
 C     ACCUMULATE C4 FIXATION PRODUCT IN MESOPHYLL
 C
 C     CH2O4=total C4 CO2 fixation
-C     SURFX=unself-shaded leaf surface area
+C     SURFX=unself-shaded leaf surface area from ‘hour1.f’
 C     TAUS=fraction of direct radiation transmitted from layer above
+C        from ‘hour1.f’
 C
 130   CH2O4(K)=CH2O4(K)+VL*SURFX(N,L,K,NB,NZ,NY,NX)
      2*TAUS(L+1,NY,NX)
-C     ICO2I=MAX(1,MIN(400,INT(CO2X)))
-C     VCO2(ICO2I,I,NZ)=VCO2(ICO2I,I,NZ)
-C    2+(VL*SURFX(N,L,K,NB,NZ,NY,NX)*TAUS(L+1,NY,NX))*0.0432
 C     IF(NB.EQ.1.AND.M.EQ.1.AND.N.EQ.3.AND.K.EQ.KLEAF(NB,NZ,NY,NX)
 C    2.AND.(I/10)*10.EQ.I.AND.J.EQ.12)THEN
 C     WRITE(*,4444)'VLD4',IYRC,I,J,NZ,L,M,N,K,VL,PAR(N,M,L,NZ,NY,NX) 
 C    2,PAR(N,M,L,NZ,NY,NX)*TAUS(L+1,NY,NX)+PARDIF(N,M,L,NZ,NY,NX)
 C    3*TAU0(L+1,NY,NX)
-C    2,RAPS,TKC(NZ,NY,NX),CO2Q(NZ,NY,NX),ETGR4(K,NB,NZ,NY,NX)
+C    2,TKC(NZ,NY,NX),CO2Q(NY,NX),ETGR4(K,NB,NZ,NY,NX)
 C    3,CBXN4(K,NB,NZ,NY,NX),VGRO4(K,NB,NZ,NY,NX),EGRO
 C    3,FDBK4(K,NB,NZ,NY,NX),CH2O4(K),WFN4,VGROX,EGROX
 C    4,VCGR4(K,NB,NZ,NY,NX),CO2X,CO2C,CBXNX
@@ -864,14 +966,14 @@ C     ENDIF
 C
 C     C3 CARBOXYLATION REACTIONS IN BUNDLE SHEATH OF C4 PLANTS 
 C
-C     ETGRO=light saturated e- transport rate from stomate.f
+C     ETGRO=light saturated e- transport rate from ‘stomate.f’
 C     ETLF=light-limited e- transport rate
 C     CURV=shape parameter for e- transport response to PAR
 C     EGRO=light-limited rubisco carboxylation rate
 C     CBXN=rubisco caboxylation efficiency
 C     VL=rubisco carboxylation rate limited by light,CO2,N,P
-C     VGRO=rubisco carboxylation rate limited by CO2 from stomate.f 
-C     FDBK=N,P feedback inhibition on C3 CO2 fixation 
+C     VGRO=rubisco carboxylation rate limited by CO2 from ‘stomate.f’ 
+C     FDBK=N,P feedback inhibition on C3 CO2 fixation from ‘stomate.f’ 
 C
       PARJ=PARX+ETGRO(K,NB,NZ,NY,NX)
       ETLF=(PARJ-SQRT(PARJ**2-CURV4*PARX*ETGRO(K,NB,NZ,NY,NX)))/CURV2
@@ -888,7 +990,7 @@ C
      2*TAUS(L+1,NY,NX)
 C     IF(L.EQ.NC-1.AND.NB.EQ.1.AND.M.EQ.1.AND.N.EQ.1)THEN
 C     WRITE(*,4445)'VLD3',IYRC,I,J,NZ,L,M,N,K,VL,PAR(N,M,L,NZ,NY,NX) 
-C    2,RAPS,TKC(NZ,NY,NX),CO2Q(NZ,NY,NX),ETGRO(K,NB,NZ,NY,NX)
+C    2,TKC(NZ,NY,NX),CO2Q(NY,NX),ETGRO(K,NB,NZ,NY,NX)
 C    3,CBXN(K,NB,NZ,NY,NX),VGRO(K,NB,NZ,NY,NX),EGRO
 C    3,FDBK(NB,NZ,NY,NX),WFNB
 4445  FORMAT(A8,8I4,20E12.4)
@@ -903,14 +1005,14 @@ C
 C     C4 CARBOXYLATION REACTIONS IN MESOPHYLL
 C
 C     QNTM=quantum efficiency 
-C     PARDIF=diffuse PAR flux
-C     ETGR4=light saturated e- transport rate from stomate.f
+C     PARDIF=diffuse PAR flux from ‘hour1.f’
+C     ETGR4=light saturated e- transport rate from ‘stomate.f’
 C     ETLF4=light-limited e- transport rate
 C     CURV=shape parameter for e- transport response to PAR
 C     EGRO4=light-limited PEP carboxylation rate
 C     CBXN4=PEP caboxylation efficiency
 C     VL=PEP carboxylation rate limited by light,CO2,N,P
-C     VGRO4=PEP carboxylation rate limited by CO2 from stomate.f 
+C     VGRO4=PEP carboxylation rate limited by CO2 from ‘stomate.f’ 
 C     FDBK4=N,P feedback inhibition on C4 CO2 fixation 
 C
       PARX=QNTM*PARDIF(N,M,L,NZ,NY,NX)
@@ -921,37 +1023,45 @@ C
 C
 C     STOMATAL EFFECT OF WATER DEFICIT IN MESOPHYLL
 C
-C     RS,RSL=leaf stomatal resistance to CO2 at zero,current water potential
+C     RS,RSL=leaf stomatal resistance to CO2 at zero,current water
+C        potential
 C     RCMN=minimum stomatal resistance to CO2 (s m-1)
 C     RCMX=cuticular resistance to CO2 from startq.f (s m-1)
-C     DCO2=difference between atmosph and intercellular CO2 concn (umol m-3)
+C     DCO2=difference between atmospheric and intercellular CO2
+C        concentration (umol m-3)
 C     GSL=leaf stomatal conductance (mol m-2 s-1)
-C     WFNC=stomatal resistance function of canopy turgor
+C     WFNSC=stomatal resistance function of canopy turgor
 C     FMOL=number of moles of air per m3
 C
       IF(VL.GT.ZERO)THEN
       RS=AMIN1(RCMX(NZ,NY,NX),AMAX1(RCMN,DCO2(NZ,NY,NX)/VL))
-      RSL=RS+(RCMX(NZ,NY,NX)-RS)*WFNC
+      RSL=RS+(RCMX(NZ,NY,NX)-RS)*WFNSC
       GSL=1.0/RSL*FMOL(NZ,NY,NX)
 C
 C     EFFECT OF WATER DEFICIT IN MESOPHYLL
 C
-C     IGTYP=growth type:0=bryophyte,1=graminoid,2=shrub,tree
-C     WFN4,WFNB=non-stomatal effects of water stress on C4,C3 CO2 fixation
+C     IGTYP=growth type:0=bryophyte,1=grass,herb,2=woody shrub,tree
+C     WFN4,WFNB=non-stomatal effects of water stress on C4,C3 CO2
+C        fixation
+C     RS,RSL=leaf stomatal resistance to CO2 at zero,current water
+C        potential
+C     WFNSG=growth function of canopy water potential
 C
       IF(IGTYP(NZ,NY,NX).NE.0)THEN
       WFN4=(RS/RSL)**1.00
       WFNB=SQRT(RS/RSL)
       ELSE
-      WFN4=WFNG
-      WFNB=WFNG
+      WFN4=WFNSG
+      WFNB=WFNSG
       ENDIF
 C
 C     CONVERGENCE SOLUTION FOR CO2I AT WHICH CARBOXYLATION
 C     EQUALS DIFFUSION IN MESOPHYLL
 C
-C     CO2I=intercellular,mesophyll CO2 concentration at zero water potential
-C     CO2X,CO2C=intercellular,mesophyll CO2 concentration during convergence 
+C     CO2I=intercellular,mesophyll CO2 concentration at zero water
+C        potential
+C     CO2X,CO2C=intercellular,mesophyll CO2 concentration during
+C        convergence for CO2I
 C     SCO2=solubility of CO2 (uM/(umol mol-1))
 C     COMP4=C4 CO2 compensation point (uM)
 C     CBXNX=PEP caboxylation efficiency
@@ -972,12 +1082,12 @@ C
       VGROX=VCGR4(K,NB,NZ,NY,NX)*CO2Y/(CO2C+XKCO24(NZ,NY,NX))
       EGROX=ETLF4*CBXNX
       VL=AMIN1(VGROX,EGROX)*WFN4*FDBK4(K,NB,NZ,NY,NX)
-      VG=(CO2Q(NZ,NY,NX)-CO2X)*GSL
+      VG=(CO2Q(NY,NX)-CO2X)*GSL
       IF(VL+VG.GT.ZERO)THEN
       DIFF=(VL-VG)/(VL+VG)
       IF(ABS(DIFF).LT.0.005)GO TO 140
       VA=0.95*VG+0.05*VL
-      CO2X=CO2Q(NZ,NY,NX)-VA/GSL
+      CO2X=CO2Q(NY,NX)-VA/GSL
       ELSE
       VL=0.0
       GO TO 140
@@ -987,16 +1097,14 @@ C
 C     ACCUMULATE C4 FIXATION PRODUCT IN MESOPHYLL
 C
 C     CH2O4=total C4 CO2 fixation
-C     SURFX=unself-shaded leaf surface area
+C     SURFX=unself-shaded leaf surface area from ‘hour1.f’
 C     TAU0=fraction of diffuse radiation transmitted from layer above
+C        from ‘hour1.f’
 C
 140   CH2O4(K)=CH2O4(K)+VL*SURFX(N,L,K,NB,NZ,NY,NX)
      2*TAU0(L+1,NY,NX)
-C     ICO2I=MAX(1,MIN(400,INT(CO2X)))
-C     VCO2(ICO2I,I,NZ)=VCO2(ICO2I,I,NZ)
-C    2+(VL*SURFX(N,L,K,NB,NZ,NY,NX)*TAU0(L+1,NY,NX))*0.0432
 C     WRITE(*,4455)'VLB4',IYRC,I,J,NZ,L,M,N,K,VL,PAR(N,M,L,NZ,NY,NX) 
-C    2,RAPS,TKC(NZ,NY,NX),CO2Q(NZ,NY,NX),ETGR4(K,NB,NZ,NY,NX)
+C    2,TKC(NZ,NY,NX),CO2Q(NY,NX),ETGR4(K,NB,NZ,NY,NX)
 C    3,CBXN4(K,NB,NZ,NY,NX),VGRO4(K,NB,NZ,NY,NX),EGRO
 C    3,FDBK4(K,NB,NZ,NY,NX),CH2O4(K),WFN4,VGROX,EGROX
 C    4,VCGR4(K,NB,NZ,NY,NX),CO2X,CO2C,CBXNX
@@ -1022,14 +1130,15 @@ C
 C     ACCUMULATE C3 FIXATION PRODUCT IN BUNDLE SHEATH 
 C
 C     CH2O3=total C3 CO2 fixation
-C     SURFX=unself-shaded leaf surface area
+C     SURFX=unself-shaded leaf surface area from ‘hour1.f’
 C     TAU0=fraction of diffuse radiation transmitted from layer above
+C        from ‘hour1.f’
 C
       CH2O3(K)=CH2O3(K)+VL*SURFX(N,L,K,NB,NZ,NY,NX)
      2*TAU0(L+1,NY,NX)
 C     IF(J.EQ.13.AND.NB.EQ.1.AND.M.EQ.1.AND.N.EQ.1)THEN
 C     WRITE(*,4444)'VLB4',IYRC,I,J,NZ,L,K,VL,PARDIF(N,M,L,NZ,NY,NX) 
-C    2,RAPY,TKC(NZ,NY,NX),CO2Q(NZ,NY,NX),CO2X,FMOL(NZ,NY,NX)/GSL
+C    2,RAPY,TKC(NZ,NY,NX),CO2Q(NY,NX),CO2X,FMOL(NZ,NY,NX)/GSL
 C    3,VCGRO(K,NB,NZ,NY,NX),ETLF,FDBK(NB,NZ,NY,NX),WFNB
 C     ENDIF
       ENDIF
@@ -1043,6 +1152,10 @@ C     ENDIF
       CH2O=CH2O+CH2O3(K)
 C
 C     C3 PHOTOSYNTHESIS
+C
+C     ICTYP=photosynthesis type:3=C3,4=C4
+C     VCGRO=rubisco carboxylation rate unlimited by CO2
+C     ARLFL=node leaf area in canopy layer
 C
       ELSEIF(ICTYP(NZ,NY,NX).NE.4.AND.VCGRO(K,NB,NZ,NY,NX).GT.0.0)THEN
 C
@@ -1058,7 +1171,8 @@ C
 C
 C     CO2 FIXATION BY SUNLIT LEAVES
 C
-C     SURFX=unself-shaded leaf surface area
+C     SURFX=unself-shaded leaf surface area from ‘hour1.f’
+C     PAR=direct PAR flux from ‘hour1.f’
 C
       IF(SURFX(N,L,K,NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
       IF(PAR(N,M,L,NZ,NY,NX).GT.0.0)THEN
@@ -1066,15 +1180,15 @@ C
 C     C3 CARBOXYLATION REACTIONS IN MESOPHYLL
 C
 C     QNTM=quantum efficiency 
-C     PAR=direct PAR flux
+C     PAR=direct PAR flux from ‘hour1.f’
 C     ETGRO=light saturated e- transport rate from stomate.f
 C     ETLF=light-limited e- transport rate
 C     CURV=shape parameter for e- transport response to PAR
 C     EGRO=light-limited rubisco carboxylation rate
 C     CBXN=rubisco caboxylation efficiency
 C     VL=rubisco carboxylation rate limited by light,CO2,N,P
-C     VGRO=rubisco carboxylation rate limited by CO2 from stomate.f 
-C     FDBK=N,P feedback inhibition on C4 CO2 fixation 
+C     VGRO=rubisco carboxylation rate limited by CO2 from ‘stomate.f’ 
+C     FDBK=N,P feedback inhibition on C4 CO2 fixation from ‘stomate.f’ 
 C
       PARX=QNTM*PAR(N,M,L,NZ,NY,NX)
       PARJ=PARX+ETGRO(K,NB,NZ,NY,NX)
@@ -1084,35 +1198,39 @@ C
 C
 C     STOMATAL EFFECT OF WATER DEFICIT IN MESOPHYLL 
 C
-C     RS,RSL=leaf stomatal resistance to CO2 at zero,current water potential
+C     RS,RSL=leaf stomatal resistance to CO2 at zero,current water
+C        potential (s m-1)
 C     RCMN=minimum stomatal resistance to CO2 (s m-1)
 C     RCMX=cuticular resistance to CO2 from startq.f (s m-1)
-C     DCO2=difference between atmosph and intercellular CO2 concn (umol m-3)
+C     DCO2=difference between atmospheric and intercellular CO2
+C        concentration (umol m-3)
 C     GSL=leaf stomatal conductance (mol m-2 s-1)
-C     WFNC=stomatal resistance function of canopy turgor
+C     WFNSC=stomatal resistance function of canopy turgor
 C     FMOL=number of moles of air per m3
 C
       IF(VL.GT.ZERO)THEN
       RS=AMIN1(RCMX(NZ,NY,NX),AMAX1(RCMN,DCO2(NZ,NY,NX)/VL))
-      RSL=RS+(RCMX(NZ,NY,NX)-RS)*WFNC
+      RSL=RS+(RCMX(NZ,NY,NX)-RS)*WFNSC
       GSL=1.0/RSL*FMOL(NZ,NY,NX)
 C
 C     EFFECT OF WATER DEFICIT IN MESOPHYLL 
 C
-C     IGTYP=growth type:0=bryophyte,1=graminoid,2=shrub,tree
+C     IGTYP=growth type:0=bryophyte,1=grass,herb,2=woody shrub,tree
 C     WFNB=non-stomatal effects of water stress on CO2 fixation
 C
       IF(IGTYP(NZ,NY,NX).NE.0)THEN
       WFNB=SQRT(RS/RSL)
       ELSE
-      WFNB=WFNG
+      WFNB=WFNSG
       ENDIF
 C
 C     CONVERGENCE SOLUTION FOR CO2I AT WHICH CARBOXYLATION
 C     EQUALS DIFFUSION IN MESOPHYLL 
 C
-C     CO2I=intercellular,mesophyll CO2 concentration at zero water potential
-C     CO2X,CO2C=intercellular,mesophyll CO2 concentration during convergence 
+C     CO2I=intercellular,mesophyll CO2 concentration at zero water
+C        potential
+C     CO2X,CO2C=intercellular,mesophyll CO2 concentration during
+C        convergence for CO2I 
 C     SCO2=solubility of CO2 (uM/(umol mol-1))
 C     COMPL=C3 CO2 compensation point (uM)
 C     CBXNX=rubisco carboxylation efficiency
@@ -1121,7 +1239,8 @@ C     VCGRO,VGROX=rubisco carboxylation rate unlimited,limited by CO2
 C     XKCO2O=Km for rubisco carboxylation 
 C     EGROX=light-limited rubisco carboxylation rate
 C     ETLF=light-limited e- transport rate
-C     VL=rubisco carboxylation rate limited by light,CO2,N,P,water stress
+C     VL=rubisco carboxylation rate limited by light,CO2,N,P,water
+C        stress
 C     VG=CO2 diffusion rate limited by water stress
 C     GSL=leaf stomatal conductance (mol m-2 s-1)
 C
@@ -1133,12 +1252,12 @@ C
       VGROX=VCGRO(K,NB,NZ,NY,NX)*CO2Y/(CO2C+XKCO2O(NZ,NY,NX))
       EGROX=ETLF*CBXNX
       VL=AMIN1(VGROX,EGROX)*WFNB*FDBK(NB,NZ,NY,NX)
-      VG=(CO2Q(NZ,NY,NX)-CO2X)*GSL
+      VG=(CO2Q(NY,NX)-CO2X)*GSL
       IF(VL+VG.GT.ZERO)THEN
       DIFF=(VL-VG)/(VL+VG)
       IF(ABS(DIFF).LT.0.005)GO TO 230
       VA=0.95*VG+0.05*VL
-      CO2X=CO2Q(NZ,NY,NX)-VA/GSL
+      CO2X=CO2Q(NY,NX)-VA/GSL
       ELSE
       VL=0.0
       GO TO 230
@@ -1148,22 +1267,22 @@ C
 C     ACCUMULATE C3 FIXATION PRODUCT IN MESOPHYLL
 C
 C     CH2O3=total C4 CO2 fixation
-C     SURFX=unself-shaded leaf surface area
+C     SURFX=unself-shaded leaf surface area from ‘hour1.f’
 C     TAUS=fraction of direct radiation transmitted from layer above
+C        from ‘hour1.f’
 C
 230   CH2O3(K)=CH2O3(K)+VL*SURFX(N,L,K,NB,NZ,NY,NX)
      2*TAUS(L+1,NY,NX)
-C     ICO2I=MAX(1,MIN(400,INT(CO2X)))
-C     VCO2(ICO2I,I,NZ)=VCO2(ICO2I,I,NZ)
-C    2+(VL*SURFX(N,L,K,NB,NZ,NY,NX)*TAUS(L+1,NY,NX))*0.0432
-C     IF(NB.EQ.1.AND.M.EQ.1.AND.N.EQ.1.AND.K.EQ.KLEAF(NB,NZ,NY,NX)-1
-C    2.AND.J.EQ.12)THEN
-C     WRITE(20,3335)'VLD',IYRC,I,J,NZ,L,M,N,K,VL,PAR(N,M,L,NZ,NY,NX)
-C    2,RAPS,TKC(NZ,NY,NX),TKA,CO2Q(NZ,NY,NX),CO2X,CO2C,FMOL(NZ,NY,NX) 
-C    3/GSL,VGROX,EGROX,ETLF,CBXNX,FDBK(NB,NZ,NY,NX),WFNB,PSILG(NZ,NY,NX)
+C     IF(J.EQ.20.AND.NB.EQ.1.AND.M.EQ.1.AND.N.EQ.1)THEN
+C     WRITE(20,3335)'VLD',I,J,NFZ,NZ,L,M,N,K
+C    2,VL,PAR(N,M,L,NZ,NY,NX),PARDIF(N,M,L,NZ,NY,NX)
+C    3,SURFX(N,L,K,NB,NZ,NY,NX)
+C    2,TKC(NZ,NY,NX),TKAM(NY,NX),CO2Q(NY,NX),CO2X,CO2C 
+C    3,FMOL(NZ,NY,NX)/GSL,VGROX,EGROX,ETLF,CBXNX
+C    4,FDBK(NB,NZ,NY,NX),WFNB,PSILG(NZ,NY,NX)
 C    4,VCGRO(K,NB,NZ,NY,NX),ETGRO(K,NB,NZ,NY,NX),COMPL(K,NB,NZ,NY,NX)
 C    5,SURFX(N,L,K,NB,NZ,NY,NX),TAUS(L+1,NY,NX),CH2O3(K)
-3335  FORMAT(A8,8I4,30E12.4)
+3335  FORMAT(A8,8I4,240E12.4)
 C     ENDIF
       ENDIF
       ENDIF
@@ -1175,15 +1294,15 @@ C
 C     C3 CARBOXYLATION REACTIONS USING VARIABLES FROM 'STOMATE'
 C
 C     QNTM=quantum efficiency 
-C     PARDIF=diffuse PAR flux
-C     ETGRO=light saturated e- transport rate from stomate.f
+C     PARDIF=diffuse PAR flux from ‘hour1.f’
+C     ETGRO=light saturated e- transport rate from ‘stomate.f’
 C     ETLF=light-limited e- transport rate
 C     CURV=shape parameter for e- transport response to PAR
 C     EGRO=light-limited rubisco carboxylation rate
 C     CBXN=rubisco caboxylation efficiency
 C     VL=rubisco carboxylation rate limited by light,CO2,N,P
-C     VGRO=rubisco carboxylation rate limited by CO2 from stomate.f 
-C     FDBK=N,P feedback inhibition on C3 CO2 fixation 
+C     VGRO=rubisco carboxylation rate limited by CO2 from ‘stomate.f’ 
+C     FDBK=N,P feedback inhibition on C3 CO2 fixation from ‘stomate.f’ 
 C
       PARX=QNTM*PARDIF(N,M,L,NZ,NY,NX)
       PARJ=PARX+ETGRO(K,NB,NZ,NY,NX)
@@ -1193,44 +1312,49 @@ C
 C
 C     STOMATAL EFFECT OF WATER DEFICIT IN MESOPHYLL 
 C
-C     RS,RSL=leaf stomatal resistance to CO2 at zero,current water potential
+C     RS,RSL=leaf stomatal resistance to CO2 at zero,current water
+C        potential (s m-1)
 C     RCMN=minimum stomatal resistance to CO2 (s m-1)
 C     RCMX=cuticular resistance to CO2 from startq.f (s m-1)
-C     DCO2=difference between atmosph and intercellular CO2 concn (umol m-3)
+C     DCO2=difference between atmospheric and intercellular CO2
+C        concentration (umol m-3)
 C     GSL=leaf stomatal conductance (mol m-2 s-1)
-C     WFNC=stomatal resistance function of canopy turgor
+C     WFNSC=stomatal resistance function of canopy turgor
 C     FMOL=number of moles of air per m3
 C
       IF(VL.GT.ZERO)THEN
       RS=AMIN1(RCMX(NZ,NY,NX),AMAX1(RCMN,DCO2(NZ,NY,NX)/VL))
-      RSL=RS+(RCMX(NZ,NY,NX)-RS)*WFNC
+      RSL=RS+(RCMX(NZ,NY,NX)-RS)*WFNSC
       GSL=1.0/RSL*FMOL(NZ,NY,NX)
 C
 C     EFFECT OF WATER DEFICIT IN MESOPHYLL
 C
-C     IGTYP=growth type:0=bryophyte,1=graminoid,2=shrub,tree
+C     IGTYP=growth type:0=bryophyte,1=grass,herb,2=woody shrub,tree
 C     WFNB=non-stomatal effects of water stress on C3 CO2 fixation
 C
       IF(IGTYP(NZ,NY,NX).NE.0)THEN
       WFNB=SQRT(RS/RSL)
       ELSE
-      WFNB=WFNG
+      WFNB=WFNSG
       ENDIF
 C
 C     CONVERGENCE SOLUTION FOR CO2I AT WHICH CARBOXYLATION
 C     EQUALS DIFFUSION IN MESOPHYLL 
 C
-C     CO2I=intercellular,mesophyll CO2 concentration at zero water potential
-C     CO2X,CO2C=intercellular,mesophyll CO2 concentration during convergence 
+C     CO2I=intercellular,mesophyll CO2 concentration at zero water
+C        potential
+C     CO2X,CO2C=intercellular,mesophyll CO2 concentration during
+C        convergence for CO2I 
 C     SCO2=solubility of CO2 (uM/(umol mol-1))
 C     COMPL=C3 CO2 compensation point (uM)
 C     CBXNX=rubisco caboxylation efficiency
-C     ELEC3=e- requirement for CO2 fixn by rubisco carboxylase
+C     ELEC3=e- requirement for CO2 fixation by rubisco carboxylase
 C     VCGRO,VGROX=rubisco carboxylation rate unlimited,limited by CO2
 C     XKCO2O=Km for rubisco carboxylation from stomate.f (uM)
 C     EGROX=light-limited rubisco carboxylation rate
 C     ETLF=light-limited e- transport rate
-C     VL=rubisco carboxylation rate limited by light,CO2,N,P,water stress
+C     VL=rubisco carboxylation rate limited by light,CO2,N,P,water
+C        stress
 C     VG=CO2 diffusion rate limited by water stress
 C     GSL=leaf stomatal conductance (mol m-2 s-1)
 C
@@ -1242,12 +1366,12 @@ C
       VGROX=VCGRO(K,NB,NZ,NY,NX)*CO2Y/(CO2C+XKCO2O(NZ,NY,NX))
       EGROX=ETLF*CBXNX
       VL=AMIN1(VGROX,EGROX)*WFNB*FDBK(NB,NZ,NY,NX)
-      VG=(CO2Q(NZ,NY,NX)-CO2X)*GSL
+      VG=(CO2Q(NY,NX)-CO2X)*GSL
       IF(VL+VG.GT.ZERO)THEN
       DIFF=(VL-VG)/(VL+VG)
       IF(ABS(DIFF).LT.0.005)GO TO 240
       VA=0.95*VG+0.05*VL
-      CO2X=CO2Q(NZ,NY,NX)-VA/GSL
+      CO2X=CO2Q(NY,NX)-VA/GSL
       ELSE
       VL=0.0
       GO TO 240
@@ -1257,17 +1381,17 @@ C
 C     ACCUMULATE C3 FIXATION PRODUCT IN MESOPHYLL 
 C
 C     CH2O3=total C3 CO2 fixation
-C     SURFX=unself-shaded leaf surface area
+C     SURFX=unself-shaded leaf surface area from ‘hour1.f’
 C     TAU0=fraction of diffuse radiation transmitted from layer above
+C        from ‘hour1.f’
 C
 240   CH2O3(K)=CH2O3(K)+VL*SURFX(N,L,K,NB,NZ,NY,NX)
      2*TAU0(L+1,NY,NX)
-C     ICO2I=MAX(1,MIN(400,INT(CO2X)))
-C     VCO2(ICO2I,I,NZ)=VCO2(ICO2I,I,NZ)
-C    2+(VL*SURFX(N,L,K,NB,NZ,NY,NX)*TAU0(L+1,NY,NX))*0.0432
-C     IF(J.EQ.13.AND.NB.EQ.1.AND.M.EQ.1.AND.N.EQ.1)THEN
-C     WRITE(*,3335)'VLB',IYRC,I,J,NZ,L,K,VL,PARDIF(N,M,L,NZ,NY,NX) 
-C    2,RAPY,TKC(NZ,NY,NX),CO2Q(NZ,NY,NX),CO2X,FMOL(NZ,NY,NX)/GSL
+C     IF(J.EQ.20.AND.NB.EQ.1.AND.M.EQ.1.AND.N.EQ.1)THEN
+C     WRITE(*,3335)'VLB',I,J,NFZ,NZ,L,M,N,K
+C    2,VL,PARDIF(N,M,L,NZ,NY,NX),SURFX(N,L,K,NB,NZ,NY,NX) 
+C    2,RAPY,TKC(NZ,NY,NX),TKAM(NY,NX)
+C    3,CO2Q(NY,NX),CO2X,FMOL(NZ,NY,NX)/GSL
 C    3,VCGRO(K,NB,NZ,NY,NX),ETLF,FDBK(NB,NZ,NY,NX),WFNB
 C     ENDIF
       ENDIF
@@ -1285,14 +1409,14 @@ C     ENDIF
 C
 C     CO2F,CH2O=total CO2 fixation,CH2O production
 C
-      CO2F=CO2F*0.0432
-      CH2O=CH2O*0.0432
+      CO2F=CO2F*0.0432*XNFH 
+      CH2O=CH2O*0.0432*XNFH 
 C
 C     CONVERT UMOL M-2 S-1 TO G C M-2 H-1
 C
       DO 150 K=1,25
-      CH2O3(K)=CH2O3(K)*0.0432
-      CH2O4(K)=CH2O4(K)*0.0432
+      CH2O3(K)=CH2O3(K)*0.0432*XNFH
+      CH2O4(K)=CH2O4(K)*0.0432*XNFH
 150   CONTINUE
       ELSE
       CO2F=0.0
@@ -1330,8 +1454,10 @@ C
 C     N,P CONSTRAINT ON RESPIRATION FROM NON-STRUCTURAL C:N:P
 C
 C     CNPG=N,P constraint on growth respiration
-C     CCPOLB,CZPOLB,CPPOLB=nonstructural C,N,P concn in branch(g g-1)
-C     CNKI,CPKI=nonstruct N,P inhibn constant on growth(g N,P g-1 C)
+C     CCPOLB,CZPOLB,CPPOLB=nonstructural C,N,P concentration 
+C        in branch(g g-1)
+C     CNKI,CPKI=nonstructural N,P inhibition constant on growth,
+C        nutrient recycling
 C
       IF(CCPOLB(NB,NZ,NY,NX).GT.ZERO)THEN
       CNPG=AMIN1(CZPOLB(NB,NZ,NY,NX)/(CZPOLB(NB,NZ,NY,NX)
@@ -1344,54 +1470,64 @@ C
 C
 C     RESPIRATION FROM NON-STRUCTURAL C DETERMINED BY TEMPERATURE,
 C     NON-STRUCTURAL C:N:P
-C
-C     RCO2C=respiration from non-structural C
-C     VMXC=rate constant for nonstructural C oxidation in respiration (h-1)
-C     CPOOL=non-structural C mass
-C     TFN3=temperature function for canopy growth
-C     WFNG=growth function of canopy water potential
-C     CNPG=N,P constraint on respiration
-C     FDBKX=termination feedback inhibition on C3 CO2 
-C
-      RCO2C=AMAX1(0.0,VMXC*CPOOL(NB,NZ,NY,NX)
-     2*TFN3(NZ,NY,NX))*CNPG*FDBKX(NB,NZ,NY,NX)*WFNG
-C
 C     MAINTENANCE RESPIRATION FROM TEMPERATURE, PLANT STRUCTURAL N
 C
+C     RCO2C=respiration from non-structural C
+C     VMXC=rate constant for nonstructural C oxidation in respiration
+C        (h-1)
+C     CPOOL=non-structural C mass
+C     TFN3=temperature function for canopy growth
+C     WFNSG=growth function of canopy water potential
+C     CNPG=N,P constraint on respiration
+C     FDBKX=termination feedback inhibition on C3 CO2
 C     RMNCS=maintenance respiration
+C     RMPLT=specific maintenance respiration rate
 C     TFN5=temperature function for canopy maintenance respiration 
 C     WTSHXN=shoot structural N mass
-C     IGTYP=growth type:0=bryophyte,1=graminoid,2=shrub,tree
-C     IWTYP=phenology type:0=evergreen,1=cold decid,2=drought decid,3=1+2
-C     WFNG=growth function of canopy water potential
+C     IGTYP=growth type:0=bryophyte,1=grass,herb,2=woody shrub,tree
+C     IWTYP=phenology type:0=evergreen,1=cold deciduous,2=drought
+C        deciduous,3=cold and drought deciduous
+C     XNFH=time step from ‘wthr.f’
 C
-      RMNCS=AMAX1(0.0,RMPLT*TFN5*WTSHXN)
+      IF(ISTYP(NZ,NY,NX).NE.0.OR.IDAY(10,NB,NZ,NY,NX).EQ.0)THEN
+      RCO2C=AMAX1(0.0,VMXC*CPOOL(NB,NZ,NY,NX)
+     2*TFN3(NZ,NY,NX)*CNPG*FDBKX(NB,NZ,NY,NX)*WFNSG*XNFH)
+      RMNCS=AMAX1(0.0,RMPLT*TFN5*WTSHXN*XNFH)
       IF(IGTYP(NZ,NY,NX).EQ.0.OR.IWTYP(NZ,NY,NX).EQ.2)THEN
-      RMNCS=RMNCS*WFNG
+      RMNCS=RMNCS*WFNSG
+      ELSE
+      RMNCS=RMNCS*WFNSR
+      ENDIF
+      ELSE
+      RCO2C=0.0
+      RMNCS=0.0
       ENDIF 
 C
 C     GROWTH RESPIRATION FROM TOTAL - MAINTENANCE
 C     IF > 0 DRIVES GROWTH, IF < 0 DRIVES REMOBILIZATION
 C
-C     RCO2X=difference between non-structural C respn and mntc respn
+C     RCO2X=difference between non-structural C respiration and
+C        maintenance respiration
 C     RCO2Y=growth respiration unlimited by N,P
-C     WFNSG=expansion,extension function of canopy water potential
+C     WFNSR=expansion,extension function of canopy water potential
 C     SNCR=excess maintenance respiration
 C
       RCO2X=RCO2C-RMNCS
-      RCO2Y=AMAX1(0.0,RCO2X)*WFNSG
+      RCO2Y=AMAX1(0.0,RCO2X)
       SNCR=AMAX1(0.0,-RCO2X)
 C
 C     GROWTH RESPIRATION MAY BE LIMITED BY NON-STRUCTURAL N,P
 C     AVAILABLE FOR GROWTH
 C
 C     RCO2Y,RCO2G=growth respiration unlimited,limited by N,P
-C     CNLFX=diff between min and max leaf N prodn vs nonstruct C consumption 
-C     CNSHX=N production vs nonstructural C consumption in rest of shoot
+C     CNLFX,CPLFX=N,P production vs nonstructural C consumption 
+C        in leaf 
+C     CNSHX,CPSHX=N,P production vs nonstructural C consumption 
+C        in rest of shoot 
 C     ZPOOL,PPOOL=nonstructural N,P mass 
 C     DMSHD=branch C respiration vs nonstructural C consumption
-C     CNLFM,CPLFM=min leaf N,P production vs nonstructural C consumption 
-C     CNLFX,CPLFX=diff between min and max leaf N,P prodn vs nonstruct C consumption 
+C     CNLFM,CPLFM=minimum leaf N,P production vs nonstructural C
+C        consumption 
 C     CNPG=N,P constraint on growth respiration
 C
       IF(RCO2Y.GT.0.0.AND.(CNSHX.GT.0.0.OR.CNLFX.GT.0.0))THEN
@@ -1407,14 +1543,18 @@ C     TOTAL NON-STRUCTURAL C,N,P USED IN GROWTH
 C     AND GROWTH RESPIRATION DEPENDS ON GROWTH YIELDS
 C     ENTERED IN 'READQ'
 C
-C     CGROS=total non-structural C used in growth and growth respiration 
+C     CGROS=total non-structural C used in growth and growth
+C        respiration 
 C     RCO2G=growth respiration limited by N,P
 C     DMSHD=branch C respiration vs nonstructural C consumption
 C     ZADDB,PADDB=nonstructural N,P used in growth
 C     ZPOOL,PPOOL=nonstructural N,P mass 
-C     CNSHX,CPSHX=N,P production vs nonstructural C consumption in rest of shoot 
-C     CNLFM,CPLFM=min leaf N,P production vs nonstructural C consumption 
-C     CNLFX,CPLFX=diff between min and max leaf N,P prodn vs nonstruct C consumption 
+C     CNSHX,CPSHX=N,P production vs nonstructural C consumption 
+C        in rest of shoot 
+C     CNLFM,CPLFM=minimum leaf N,P production vs nonstructural C
+C        consumption 
+C     CNLFX,CPLFX=N,P production vs nonstructural C consumption 
+C        in leaf 
 C     CNPG=N,P constraint on growth respiration
 C     CNRDA=respiration for N assimilation
 C     CH2O=total CH2O production
@@ -1448,18 +1588,23 @@ C
       TCO2T(NZ,NY,NX)=TCO2T(NZ,NY,NX)-RCO2T
       TCO2A(NZ,NY,NX)=TCO2A(NZ,NY,NX)-RCO2T
       CNET(NZ,NY,NX)=CNET(NZ,NY,NX)+CO2F-RCO2T
+      HCNET(NZ,NY,NX)=HCNET(NZ,NY,NX)+CO2F-RCO2T
       TGPP(NY,NX)=TGPP(NY,NX)+CO2F
       RECO(NY,NX)=RECO(NY,NX)-RCO2T
       TRAU(NY,NX)=TRAU(NY,NX)-RCO2T
 C     IF(NZ.EQ.1)THEN
-C     WRITE(*,4477)'RCO2',I,J,NX,NY,NZ,NB,IFLGZ,CPOOL(NB,NZ,NY,NX)
-C    2,CH2O,RMNCS,RCO2C,CGROS,CNRDA,CNPG,RCO2T,RCO2X,SNCR
-C    3,RCO2G,DMSHD,ZADDB,PART(1),PART(2),DMLFB,DMSHB
+C     WRITE(*,4477)'RCO2',I,J,NFZ,NX,NY,NZ,NB,IFLGZ
+C    2,RCO2C,CNPG,CPOOL(NB,NZ,NY,NX),ZPOOL(NB,NZ,NY,NX)
+C    3,PPOOL(NB,NZ,NY,NX),CCPOLB(NB,NZ,NY,NX)
+C    3,CZPOLB(NB,NZ,NY,NX),CPPOLB(NB,NZ,NY,NX)
+C    2,CO2F,CH2O,RMNCS,CGROS,CNRDA,RCO2T,RCO2X,SNCR
+C    3,RCO2G,DMSHD,ZADDB,DMLFB,DMSHB
 C    4,WTRSVB(NB,NZ,NY,NX),WVSTKB(NB,NZ,NY,NX),WTSHXN 
-C    5,ZPOOL(NB,NZ,NY,NX),PPOOL(NB,NZ,NY,NX),PSILT(NZ,NY,NX)
+C    5,PSILT(NZ,NY,NX)
 C    6,ZADDB,RNH3B(NB,NZ,NY,NX),WFR(1,NG(NZ,NY,NX),NZ,NY,NX)
-C    7,WFNG,TFN3(NZ,NY,NX),TFN5,FDBKX(NB,NZ,NY,NX),VMXC
-4477  FORMAT(A8,7I4,40E12.4)
+C    7,WFNSG,TFN3(NZ,NY,NX),TFN5,TKC(NZ,NY,NX),FDBK(NB,NZ,NY,NX)
+C    8,FDBKX(NB,NZ,NY,NX),VMXC
+4477  FORMAT(A8,8I4,40E12.4)
 C     ENDIF
 C
 C     SHOOT AUTOTROPHIC RESPIRATION BEFORE EMERGENCE
@@ -1469,8 +1614,9 @@ C
 C     N,P CONSTRAINT ON RESPIRATION FROM NON-STRUCTURAL C:N:P
 C
 C     CNPG=N,P constraint on growth respiration
-C     CCPOLB,CZPOLB,CPPOLB=nonstructural C,N,P concn in branch
-C     CNKI,CPKI=nonstructural N,P inhibition constant on growth 
+C     CCPOLB,CZPOLB,CPPOLB=nonstructural C,N,P concentration in branch
+C     CNKI,CPKI=nonstructural N,P inhibition constant on growth,
+C        nutrient recycling
 C
       IF(CCPOLB(NB,NZ,NY,NX).GT.ZERO)THEN
       CNPG=AMIN1(CZPOLB(NB,NZ,NY,NX)/(CZPOLB(NB,NZ,NY,NX)
@@ -1484,17 +1630,19 @@ C
 C     RESPIRATION FROM NON-STRUCTURAL C DETERMINED BY TEMPERATURE,
 C     NON-STRUCTURAL C:N:P, O2 UPTAKE
 C
-C     RCO2CM,RCO2C=respiration from non-structural C unlimited,limited by O2
-C     VMXC=rate constant for nonstructural C oxidation in respiration (h-1)
+C     RCO2CM,RCO2C=respiration from non-structural C unlimited,limited
+C        by O2
+C     VMXC=rate constant for nonstructural C oxidation in respiration
+C       (h-1)
 C     CPOOL=non-structural C mass
 C     TFN4=temperature function for root growth
-C     WFNG=growth function of canopy water potential
+C     WFNSG=growth function of canopy water potential
 C     CNPG=N,P constraint on respiration
 C     FDBKX=termination feedback inhibition on C3 CO2 
 C     WFR=constraint by O2 consumption on all root processes
 C
       RCO2CM=AMAX1(0.0,VMXC*CPOOL(NB,NZ,NY,NX)
-     2*TFN4(NG(NZ,NY,NX),NZ,NY,NX))*CNPG*WFNG*FDBKX(NB,NZ,NY,NX)
+     2*TFN4(NG(NZ,NY,NX),NZ,NY,NX))*CNPG*WFNSG*FDBKX(NB,NZ,NY,NX)*XNFH
       RCO2C=RCO2CM*WFR(1,NG(NZ,NY,NX),NZ,NY,NX)
 C
 C     MAINTENANCE RESPIRATION FROM TEMPERATURE, PLANT STRUCTURAL N
@@ -1502,43 +1650,51 @@ C
 C     RMNCS=maintenance respiration
 C     TFN6=temperature function for root maintenance respiration 
 C     WTSHXN=shoot structural N mass
-C     IGTYP=growth type:0=bryophyte,1=graminoid,2=shrub,tree
-C     IWTYP=phenology type:0=evergreen,1=cold decid,2=drought decid,3=1+2
-C     WFNG=growth function of canopy water potential
+C     IGTYP=growth type:0=bryophyte,1=grass,herb,2=woody shrub,tree
+C     IWTYP=phenology type:0=evergreen,1=cold deciduous,2=drought
+C        deciduous,3=cold and drought deciduous
+C     WFNSG=growth function of canopy water potential
 C
-      RMNCS=AMAX1(0.0,RMPLT*TFN6(NG(NZ,NY,NX))*WTSHXN)
+      RMNCS=AMAX1(0.0,RMPLT*TFN6(NG(NZ,NY,NX))*WTSHXN*XNFH)
       IF(IGTYP(NZ,NY,NX).EQ.0.OR.IWTYP(NZ,NY,NX).EQ.2)THEN
-      RMNCS=RMNCS*WFNG
+      RMNCS=RMNCS*WFNSG
+      ELSE
+      RMNCS=RMNCS*WFNSR
       ENDIF 
 C
 C     GROWTH RESPIRATION FROM TOTAL - MAINTENANCE
 C     IF > 0 DRIVES GROWTH, IF < 0 DRIVES REMOBILIZATION
 C
 C     RCO2XM,RCO2X=diff between C respn unltd,ltd by O2 and mntc respn
-C     RCO2YM,RCO2Y=growth respiration unltd,ltd by O2 and unlimited by N,P
-C     WFNSG=expansion,extension function of canopy water potential
+C     RCO2YM,RCO2Y=growth respiration unltd,ltd by O2 and unlimited by
+C        N,P
+C     WFNSR=expansion,extension function of canopy water potential
 C     SNCRM,SNCR=excess maintenance respiration unltd,ltd by O2
 C
       RCO2XM=RCO2CM-RMNCS
       RCO2X=RCO2C-RMNCS
-      RCO2YM=AMAX1(0.0,RCO2XM)*WFNSG
-      RCO2Y=AMAX1(0.0,RCO2X)*WFNSG
+      RCO2YM=AMAX1(0.0,RCO2XM)
+      RCO2Y=AMAX1(0.0,RCO2X)
       SNCRM=AMAX1(0.0,-RCO2XM)
       SNCR=AMAX1(0.0,-RCO2X)
 C
 C     GROWTH RESPIRATION MAY BE LIMITED BY NON-STRUCTURAL N,P
 C     AVAILABLE FOR GROWTH
 C
-C     RCO2YM,RCO2Y=growth respiration unltd,ltd by O2 and unlimited by N,P
-C     CNLFX=diff between min and max leaf N prodn vs nonstruct C consumption 
-C     CNSHX=N production vs nonstructural C consumption in rest of shoot
+C     RCO2YM,RCO2Y=growth respiration unlimited,limited by O2 
+C        and unlimited by N,P
+C     CNLFX,CPLFX=N,P production vs nonstructural C consumption 
+C        in leaf 
+C     CNSHX,CPSHX=N,P production vs nonstructural C consumption 
+C        in rest of shoot 
 C     ZPOOL,PPOOL=nonstructural N,P mass
 C     FNP=growth respiration limited by O2 and N,P 
 C     DMSHD=branch C respiration vs nonstructural C consumption
-C     CNLFM,CPLFM=min leaf N,P production vs nonstructural C consumption 
-C     CNLFX,CPLFX=diff between min and max leaf N,P prodn vs nonstruct C consumption 
+C     CNLFM,CPLFM=minimum leaf N,P production vs nonstructural C
+C        consumption 
 C     CNPG=N,P constraint on growth respiration
-C     RCO2GM,RCO2G=growth respiration unltd,ltd by O2 and limited by N,P
+C     RCO2GM,RCO2G=growth respiration unlimited,limited by O2 
+C        and limited by N,P
 C     WFR=constraint by O2 consumption on all root processes
 C
       IF(CNSHX.GT.0.0.OR.CNLFX.GT.0.0)THEN
@@ -1565,16 +1721,23 @@ C     TOTAL NON-STRUCTURAL C,N,P USED IN GROWTH
 C     AND GROWTH RESPIRATION DEPENDS ON GROWTH YIELDS
 C     ENTERED IN 'READQ'
 C
-C     CGROSM,CGROS=total non-structural C used in growth and respn unltd,ltd by O2 
-C     RCO2GM,RCO2G=growth respiration unltd,ltd by O2 and limited by N,P
+C     CGROSM,CGROS=total non-structural C used in growth and 
+C        respiration unlimited,limited by O2 
+C     RCO2GM,RCO2G=growth respiration unlimited,limited by O2 and
+C        limited by N,P
 C     DMSHD=branch C respiration vs nonstructural C consumption
-C     ZADDBM,ZADDB,PADDB=nonstructural N,P unltd,ltd by O2 used in growth
+C     ZADDBM,ZADDB,PADDB=nonstructural N,P unlimited,limited by O2
+C        used in growth
 C     ZPOOL,PPOOL=nonstructural N,P mass 
-C     CNSHX,CPSHX=N,P production vs nonstructural C consumption in rest of shoot 
-C     CNLFM,CPLFM=min leaf N,P production vs nonstructural C consumption 
-C     CNLFX,CPLFX=diff between min and max leaf N,P prodn vs nonstruct C consumption 
+C     CNSHX,CPSHX=N,P production vs nonstructural C consumption 
+C        in rest of shoot 
+C     CNLFM,CPLFM=minimum leaf N,P production vs nonstructural C
+C        consumption 
+C     CNLFX,CPLFX=N,P production vs nonstructural C consumption 
+C        in leaf 
 C     CNPG=N,P constraint on growth respiration
-C     CNRDM,CNRDA=respiration for N assimilation unltd,ltd by O2
+C     CNRDM,CNRDA=respiration for N assimilation unlimited,limited 
+C        by O2
 C
       CGROSM=RCO2GM/DMSHD
       CGROS=RCO2G/DMSHD
@@ -1587,13 +1750,16 @@ C
 C     TOTAL ABOVE-GROUND AUTOTROPHIC RESPIRATION BY BRANCH
 C     ACCUMULATE GPP, SHOOT AUTOTROPHIC RESPIRATION, NET C EXCHANGE
 C
-C     RCO2TM,RCO2T=total C respiration unltd,ltd by O2
+C     RCO2TM,RCO2T=total C respiration unlimited,limited by O2
 C     RMNCS=maintenance respiration
-C     RCO2GM,RCO2G=growth respiration limited by N,P unltd,ltd by O2
-C     SNCRM,SNCR=excess maintenance respiration unltd,ltd by O2
-C     CNRDM,CNRDA=respiration for N assimilation unltd,ltd by O2
-C     RCO2A=total root respiration
-C     RCO2M,RCO2N=RCO2A unltd by O2,nonstructural C  
+C     RCO2GM,RCO2G=growth respiration limited by N,P unlimited,limited
+C        by O2
+C     SNCRM,SNCR=excess maintenance respiration unlimited,limited 
+C        by O2
+C     CNRDM,CNRDA=respiration for N assimilation unlimited,limited 
+C        by O2
+C     RCO2A=total branch respiration
+C     RCO2M,RCO2N=RCO2A unlimited by O2,nonstructural C  
 C
       RCO2TM=RMNCS+RCO2GM+SNCRM+CNRDM
       RCO2T=RMNCS+RCO2G+SNCR+CNRDA
@@ -1604,6 +1770,13 @@ C
       RCO2A(1,NG(NZ,NY,NX),NZ,NY,NX)=RCO2A(1,NG(NZ,NY,NX),NZ,NY,NX)
      2-RCO2T
       CH2O=0.0
+C     IF(NZ.EQ.2)THEN
+C     WRITE(*,4478)'RCO2E',I,J,NFZ,NX,NY,NZ,NB,IFLGC(NZ,NY,NX)
+C    2,RCO2CM,VMXC,CPOOL(NB,NZ,NY,NX)
+C    2,TFN4(NG(NZ,NY,NX),NZ,NY,NX),CNPG,WFNSG,FDBKX(NB,NZ,NY,NX)
+C    3,RCO2C,WFR(1,NG(NZ,NY,NX),NZ,NY,NX)
+4478  FORMAT(A8,8I4,20E12.4)
+C     ENDIF
       ENDIF
 C
 C     REMOVE C,N,P USED IN MAINTENANCE + GROWTH REPIRATION AND GROWTH
@@ -1616,7 +1789,7 @@ C     RCO2C=respiration from non-structural C
 C     CGROS=total non-structural C used in growth and respiration 
 C     CNRDA=respiration for N assimilation
 C     ZADDB,PADDB=nonstructural N,P used in growth
-C     RNH3B=NH3 flux between atmosphere and branch from uptake.f
+C     RNH3B=NH3 flux between atmosphere and branch from ‘uptake.f’
 C     XFRC,XFRN,XFRP=branch-root layer C,N,P transfer
 C
       CPOOL(NB,NZ,NY,NX)=CPOOL(NB,NZ,NY,NX)+CH2O-AMIN1(RMNCS,RCO2C)
@@ -1626,8 +1799,8 @@ C
 C
 C     TRANSFER OF C4 FIXATION PRODUCTS FROM NON-STRUCTURAL POOLS
 C     IN MESOPHYLL TO THOSE IN BUNDLE SHEATH, DECARBOXYLATION
-C     OF C4 FIXATION PRODUCTS IN BUNDLE SHEATH, LEAKAGE OF DECARBOXYLATION
-C     PRODUCTS BACK TO MESOPHYLL IN C4 PLANTS
+C     OF C4 FIXATION PRODUCTS IN BUNDLE SHEATH, LEAKAGE OF 
+C     DECARBOXYLATION PRODUCTS BACK TO MESOPHYLL IN C4 PLANTS
 C
 C     ICTYP=photosynthesis type:3=C3,4=C4
 C
@@ -1647,7 +1820,7 @@ C
       CPOOL4(K,NB,NZ,NY,NX)=CPOOL4(K,NB,NZ,NY,NX)+CH2O4(K)
       CPL4M=1.0*(CPOOL4(K,NB,NZ,NY,NX)*WGLF(K,NB,NZ,NY,NX)*FBS
      2-CPOOL3(K,NB,NZ,NY,NX)*WGLF(K,NB,NZ,NY,NX)*FMP)
-     2/(WGLF(K,NB,NZ,NY,NX)*(FBS+FMP))
+     2/(WGLF(K,NB,NZ,NY,NX)*(FBS+FMP))*XNFH
       CPOOL4(K,NB,NZ,NY,NX)=CPOOL4(K,NB,NZ,NY,NX)-CPL4M
       CPOOL3(K,NB,NZ,NY,NX)=CPOOL3(K,NB,NZ,NY,NX)+CPL4M
 C
@@ -1658,13 +1831,14 @@ C     CO2B,HCOB=aqueous CO2,HCO3-C mass in bundle sheath
 C     WGLF=node leaf C mass
 C     FBS,FMP=leaf water content in bundle sheath, mesophyll
 C     CPL3K=bundle sheath CO2 decarboxylation 
-C     CO2KI=Ki for C3 leakage from bundle sheath to mesophyll in C4 (uM)
+C     CO2KI=Ki for C3 leakage from bundle sheath to mesophyll in C4 
+C        (uM)
 C     FCO2B,FHCOB=partition decarboxylation to CO2,HCO3
 C     CPOOL3=C4 nonstructural C mass in bundle sheath 
 C
       CCBS=AMAX1(0.0,0.083E+09*CO2B(K,NB,NZ,NY,NX)
      2/(WGLF(K,NB,NZ,NY,NX)*FBS))
-      CPL3K=2.5E-02*CPOOL3(K,NB,NZ,NY,NX)/(1.0+CCBS/CO2KI)
+      CPL3K=2.5E-02*CPOOL3(K,NB,NZ,NY,NX)/(1.0+CCBS/CO2KI)*XNFH
       CPOOL3(K,NB,NZ,NY,NX)=CPOOL3(K,NB,NZ,NY,NX)-CPL3K
       CO2B(K,NB,NZ,NY,NX)=CO2B(K,NB,NZ,NY,NX)+FCO2B*CPL3K
       HCOB(K,NB,NZ,NY,NX)=HCOB(K,NB,NZ,NY,NX)+FHCOB*CPL3K 
@@ -1679,7 +1853,7 @@ C     FBS=leaf water content in bundle sheath
 C     FCO2B,FHCOB=partition decarboxylation to CO2,HCO3
 C     CO2B,HCOB=aqueous CO2,HCO3-C mass in bundle sheath
 C
-      CO2LK=5.0E-07*(CCBS-CO2L(NZ,NY,NX))*WGLF(K,NB,NZ,NY,NX)*FBS
+      CO2LK=5.0E-07*(CCBS-CO2L(NZ,NY,NX))*WGLF(K,NB,NZ,NY,NX)*FBS*XNFH
       CO2B(K,NB,NZ,NY,NX)=CO2B(K,NB,NZ,NY,NX)-FCO2B*CO2LK 
       HCOB(K,NB,NZ,NY,NX)=HCOB(K,NB,NZ,NY,NX)-FHCOB*CO2LK 
 C     IF(NB.EQ.1.AND.K.EQ.14)THEN
@@ -1701,6 +1875,7 @@ C
       TCO2T(NZ,NY,NX)=TCO2T(NZ,NY,NX)-CO2LK
       TCO2A(NZ,NY,NX)=TCO2A(NZ,NY,NX)-CO2LK
       CNET(NZ,NY,NX)=CNET(NZ,NY,NX)-CO2LK
+      HCNET(NZ,NY,NX)=HCNET(NZ,NY,NX)-CO2LK
       RECO(NY,NX)=RECO(NY,NX)-CO2LK
       TRAU(NY,NX)=TRAU(NY,NX)-CO2LK
       ENDIF
@@ -1713,11 +1888,13 @@ C
 C     GRO*,GRO*N,GRO*P=organ C,N,P growth rate
 C     DM*=C production vs nonstructural C consumption
 C     organ key:LF=leaf,SHE=petiole,STK=stalk,RSV=reserve
-C     HSK=husk,EAR=ear,GR=grain,SHT=shoot
+C        HSK=husk,EAR=ear,GR=grain,SHT=shoot
 C     PART=organ partitioning fraction
-C     CGROS=total non-structural C used in growth and growth respiration
+C     CGROS=total non-structural C used in growth and growth
+C        respiration
 C     CN*,CP*=N:C,P:C ratios in plant organs
-C     ZPLFM=min N:C,P:C in leaves relative to max values from PFT file
+C     ZPLFM=minimum N:C,P:C in leaves relative to maximum values 
+C        from PFT file
 C     ZPLFD=1.0-ZPLFM
 C     CNPG=N,P constraint on growth respiration
 C     WT*,WT*N,WT*P=organ C,N,P mass
@@ -1765,8 +1942,10 @@ C
 C
 C     ETOLIATION
 C
-C     CCPOLB,CZPOLB,CPPOLB=nonstructural C,N,P concn in branch(g g-1)
-C     CNKI,CPKI=nonstruct N,P inhibition constant on growth (g N,P g-1 C)
+C     CCPOLB,CZPOLB,CPPOLB=nonstructural C,N,P concentration 
+C        in branch(g g-1)
+C     CNKI,CPKI=nonstructural N,P inhibition constant on growth,
+C        nutrient recycling
 C     ETOL=coefficient for etoliation effects on expansion,extension
 C
       CCE=AMIN1(CZPOLB(NB,NZ,NY,NX)/(CZPOLB(NB,NZ,NY,NX)
@@ -1777,16 +1956,15 @@ C
 C
 C     DISTRIBUTE LEAF GROWTH AMONG CURRENTLY GROWING NODES
 C
-C     MXNOD,MNNOD=max,min node number currently growing
+C     MXNOD,MNNOD=maximum,minimum node number currently growing
 C     KVSTG=integer of most recent leaf number
 C     KNOD,GNOD=number of currently growing nodes
 C     ALLOCL=fraction of leaf growth allocated to each node
 C     GRO,GRON,GROP=leaf C,N,P growth at each node
-C     GSLA=allocation of leaf area growth to each node
-C     FNOD=scales node number for perennial vegetation (e.g. trees)
 C     NNOD=number of concurrently growing nodes
 C
-      IF(NB.EQ.NB1(NZ,NY,NX).AND.HTCTL(NZ,NY,NX).LE.SDPTH(NZ,NY,NX))THEN
+      IF(NB.EQ.NB1(NZ,NY,NX)
+     2.AND.HTCTL(NZ,NY,NX).LE.SDPTH(NZ,NY,NX))THEN
       NNOD1=0
       ELSE
       NNOD1=1
@@ -1801,7 +1979,6 @@ C
       GRO=ALLOCL*GROLF
       GRON=ALLOCL*GROLFN
       GROP=ALLOCL*GROLFP
-      GSLA=ALLOCL*FNOD(NZ,NY,NX)*NNOD(NZ,NY,NX)
 C
 C     GROWTH AT EACH CURRENT NODE
 C
@@ -1827,28 +2004,28 @@ C     SLA1=growth in leaf area vs mass from PFT file
 C     SLA2=parameter for calculating leaf area expansion 
 C     WGLF=leaf C mass
 C     PP=PFT population
-C     GSLA=allocation of leaf area growth to each node
-C     WFNS=turgor expansion,extension function
+C     WFNST=turgor expansion,extension function
 C     GROA,GRO=leaf area,mass growth
 C     ARLFB,ARLF=branch,node leaf area 
 C
-      SLA=ETOL*SLA1(NZ,NY,NX)*(AMAX1(ZEROL(NZ,NY,NX)
-     2,WGLF(K,NB,NZ,NY,NX))/(PP(NZ,NY,NX)*GSLA))**SLA2*WFNS
+      SLA=ETOL*SLA1(NZ,NY,NX)*(AMAX1(ZEROP2(NZ,NY,NX)
+     2,WGLF(K,NB,NZ,NY,NX)*NBR(NZ,NY,NX))
+     3/AMAX1(PPM*AREA(3,NU(NY,NX),NY,NX),PP(NZ,NY,NX)))
+     3**SLA2(IBTYP(NZ,NY,NX))*WFNST
       GROA=GRO*SLA 
       ARLFB(NB,NZ,NY,NX)=ARLFB(NB,NZ,NY,NX)+GROA
       ARLF(K,NB,NZ,NY,NX)=ARLF(K,NB,NZ,NY,NX)+GROA
 490   CONTINUE
       ENDIF
 C
-C     DISTRIBUTE SHEATH OR PETIOLE GROWTH AMONG CURRENTLY GROWING NODES
+C     DISTRIBUTE SHEATH OR PETIOLE GROWTH AMONG 
+C     CURRENTLY GROWING NODES
 C
 C     MXNOD,MNNOD=max,min node number currently growing
 C     KVSTG=integer of most recent leaf number
 C     GNOD=number of currently growing nodes
 C     ALLOCS=fraction of petiole growth allocated to each node
 C     GRO,GRON,GROP=petiole C,N,P growth at each node
-C     GSSL=allocation of petiole length growth to each node
-C     FNOD=scales node number for perennial vegetation (e.g. trees)
 C     NNOD=number of concurrently growing nodes
 C
       IF(GROSHE.GT.0.0)THEN
@@ -1860,7 +2037,6 @@ C
       GRO=ALLOCS*GROSHE
       GRON=ALLOCS*GROSHN
       GROP=ALLOCS*GROSHP
-      GSSL=ALLOCL*FNOD(NZ,NY,NX)*NNOD(NZ,NY,NX)
 C
 C     GROWTH AT EACH CURRENT NODE
 C
@@ -1886,20 +2062,20 @@ C     SSL1=growth in petiole length vs mass from PFT file
 C     SSL2=parameter for calculating petiole extension 
 C     WGSHE=petiole C mass
 C     PP=PFT population
-C     GSSL=allocation of petiole length growth to each node
-C     WFNS=turgor expansion,extension function
+C     WFNST=turgor expansion,extension function
 C     GROS,GRO=petiole length,mass growth
 C     HTSHE=petiole length
 C
       IF(WGLF(K,NB,NZ,NY,NX).GT.0.0)THEN
-      SSL=ETOL*SSL1(NZ,NY,NX)*(AMAX1(ZEROL(NZ,NY,NX) 
-     4,WGSHE(K,NB,NZ,NY,NX))/(PP(NZ,NY,NX)*GSSL))**SSL2*WFNS 
+      SSL=ETOL*SSL1(NZ,NY,NX)*(AMAX1(ZEROP2(NZ,NY,NX) 
+     2,WGSHE(K,NB,NZ,NY,NX)*NBR(NZ,NY,NX))
+     3/AMAX1(PPM*AREA(3,NU(NY,NX),NY,NX),PP(NZ,NY,NX)))**SSL2*WFNST
       GROS=GRO/PP(NZ,NY,NX)*SSL
       HTSHE(K,NB,NZ,NY,NX)=HTSHE(K,NB,NZ,NY,NX)+GROS*ANGSH(NZ,NY,NX)
 C     IF(I.EQ.120.AND.J.EQ.24)THEN
 C     WRITE(*,2526)'HTSHE',I,J,NZ,NB,K,SSL,WGSHE(K,NB,NZ,NY,NX)
 C    2,HTSHE(K,NB,NZ,NY,NX),PP(NZ,NY,NX),SSL1(NZ,NY,NX)
-C    3,GSLA,SSL3,WFNS,GROS,GRO,ANGSH(NZ,NY,NX),ZEROL(NZ,NY,NX)
+C    3,SSL3,WFNST,GROS,GRO,ANGSH(NZ,NY,NX),ZEROP2(NZ,NY,NX)
 C    4,CCPOLB(NB,NZ,NY,NX),ETOL
 2526  FORMAT(A8,5I4,20E12.4)
 C     ENDIF
@@ -1909,7 +2085,7 @@ C     ENDIF
 C
 C     DISTRIBUTE STALK GROWTH AMONG CURRENTLY GROWING NODES
 C
-C     MXNOD,MNNOD=max,min node number currently growing
+C     MXNOD,MNNOD=maximum,minimum node number currently growing
 C     KVSTG=integer of most recent leaf number
 C     GNOD=number of currently growing nodes
 C     ALLOCN=fraction of stalk growth allocated to each node
@@ -1942,7 +2118,8 @@ C     WTSKB=stalk C mass
 C     PP=PFT population
 C     GROH,GRO=stalk length,mass growth
 C
-      SNL=ETOL*SNL1(NZ,NY,NX)*(WTSTKB(NB,NZ,NY,NX)/PP(NZ,NY,NX))**SNL2
+      SNL=ETOL*SNL1(NZ,NY,NX)*(AMAX1(ZEROP2(NZ,NY,NX)
+     2,WTSTKB(NB,NZ,NY,NX)*NBR(NZ,NY,NX))/PP(NZ,NY,NX))**SNL2
       GROH=GRO/PP(NZ,NY,NX)*SNL
       KX=MOD(MNNOD-1,25)
       IF(KX.EQ.0.AND.MNNOD-1.NE.0)KX=25
@@ -1962,7 +2139,8 @@ C
       WGNODE(K1,NB,NZ,NY,NX)=WGNODE(K1,NB,NZ,NY,NX)+GRO
       WGNODN(K1,NB,NZ,NY,NX)=WGNODN(K1,NB,NZ,NY,NX)+GRON
       WGNODP(K1,NB,NZ,NY,NX)=WGNODP(K1,NB,NZ,NY,NX)+GROP
-      HTNODX(K1,NB,NZ,NY,NX)=HTNODX(K1,NB,NZ,NY,NX)+GROH*ANGBR(NZ,NY,NX) 
+      HTNODX(K1,NB,NZ,NY,NX)=HTNODX(K1,NB,NZ,NY,NX)
+     2+GROH*ANGBR(NZ,NY,NX) 
       IF(K1.NE.0)THEN
       HTNODE(K1,NB,NZ,NY,NX)=HTNODX(K1,NB,NZ,NY,NX)
      2+HTNODE(K2,NB,NZ,NY,NX)
@@ -1983,12 +2161,15 @@ C
 C     RECOVERY OF REMOBILIZABLE N,P DURING REMOBILIZATION DEPENDS
 C     ON SHOOT NON-STRUCTURAL C:N:P
 C
-C     CCPOLB,CZPOLB,CPPOLB=nonstructural C,N,P concn in branch(g g-1)
-C     CNKI,CPKI=nonstruct N,P inhibition constant on growth (g N,P g-1 C)
+C     IDAY(1,=emergence date
+C     CCPOLB,CZPOLB,CPPOLB=nonstructural C,N,P concentration 
+C        in branch(g g-1)
+C     CNKI,CPKI=nonstructural N,P inhibition constant on growth,
+C        nutrient recycling
 C     RCCC,RCCN,RCCP=remobilization coefficient for C,N,P
-C     RCCZ,RCCY=min,max fractions for shoot C recycling
-C     RCCX,RCCQ=max fractions for shoot N,P recycling 
-C     IGTYP=growth type:0=bryophyte,1=graminoid,2=shrub,tree
+C     RCCZ,RCCY=minimum,maximum fractions for shoot C recycling
+C     RCCX,RCCQ=maximum fractions for shoot N,P recycling 
+C     IGTYP=growth type:0=bryophyte,1=grass,herb,2=woody shrub,tree
 C
       IF(IDAY(1,NB,NZ,NY,NX).NE.0
      2.AND.CCPOLB(NB,NZ,NY,NX).GT.ZERO)THEN
@@ -2008,9 +2189,9 @@ C
       CNC=0.0
       CPC=0.0
       ENDIF
-      RCCC=RCCZ(IGTYP(NZ,NY,NX))+CCC*RCCY(IGTYP(NZ,NY,NX))
-      RCCN=CNC*RCCX(IGTYP(NZ,NY,NX))
-      RCCP=CPC*RCCQ(IGTYP(NZ,NY,NX))
+      RCCC=RCCZ(IBTYP(NZ,NY,NX))+CCC*RCCY(IBTYP(NZ,NY,NX))
+      RCCN=CNC*RCCX(IBTYP(NZ,NY,NX))
+      RCCP=CPC*RCCQ(IBTYP(NZ,NY,NX))
 C
 C     WITHDRAW REMOBILIZABLE C,N,P FROM LOWEST NODE AFTER
 C     MAXIMUM NODE NUMBER OF 25 IS REACHED
@@ -2056,6 +2237,7 @@ C
 C     FRACTION OF CURRENT LEAF TO BE REMOBILIZED
 C
 C     FSNC,FSNCL=fraction of lowest leaf to be remobilized
+C     WGLF,WGLFX=node living,senescing leaf C mass
 C
       IF(FSNC*WGLFX(NB,NZ,NY,NX).GT.WGLF(K,NB,NZ,NY,NX)
      2.AND.WGLFX(NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
@@ -2063,12 +2245,15 @@ C
       ELSE
       FSNCL=FSNC
       ENDIF
+      FSNAL=0.0
 C
 C     NON-REMOBILIZABLE C,N,P BECOMES LITTERFALL ALLOCATED
 C     TO FRACTIONS SET IN 'STARTQ'
 C
 C     CSNC,ZSNC,PSNC=C,N,P litterfall from senescence
-C     CFOPC,CFOPN,CFOPC=fraction of litterfall C,N,P allocated to litter components
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     FSNCL=fraction of lowest leaf to be remobilized
 C     RCCLX,RCZLX,RCPLX=remobilization of C,N,P from senescing leaf 
 C     WGLFX,WGLFNX,WGLFPX=senescing leaf C,N,P mass
@@ -2077,31 +2262,32 @@ C     FWODLN,FWODLP=N,P woody fraction in leaf:0=woody,1=non-woody
 C
       DO 6300 M=1,4
       CSNC(M,0,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)+CFOPC(5,M,NZ,NY,NX)
-     2*FSNCL*(WGLFX(NB,NZ,NY,NX)-RCCLX(NB,NZ,NY,NX))*FWODB(0)
+     2*FSNCL*WGLFX(NB,NZ,NY,NX)*FWODB(0,NZ)
       ZSNC(M,0,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)+CFOPN(5,M,NZ,NY,NX)
-     2*FSNCL*(WGLFNX(NB,NZ,NY,NX)-RCZLX(NB,NZ,NY,NX))*FWODLN(0)
+     2*FSNCL*WGLFNX(NB,NZ,NY,NX)*FWODLN(0,NZ)
       PSNC(M,0,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)+CFOPP(5,M,NZ,NY,NX)
-     2*FSNCL*(WGLFPX(NB,NZ,NY,NX)-RCPLX(NB,NZ,NY,NX))*FWODLP(0)
+     2*FSNCL*WGLFPX(NB,NZ,NY,NX)*FWODLP(0,NZ)
       CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)+CFOPC(1,M,NZ,NY,NX)
-     2*FSNCL*(WGLFX(NB,NZ,NY,NX)-RCCLX(NB,NZ,NY,NX))*FWODB(1)
+     2*FSNCL*(WGLFX(NB,NZ,NY,NX)-RCCLX(NB,NZ,NY,NX))*FWODB(1,NZ)
       ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)+CFOPN(1,M,NZ,NY,NX)
-     2*FSNCL*(WGLFNX(NB,NZ,NY,NX)-RCZLX(NB,NZ,NY,NX))*FWODLN(1)
+     2*FSNCL*(WGLFNX(NB,NZ,NY,NX)-RCZLX(NB,NZ,NY,NX))*FWODLN(1,NZ)
       PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)+CFOPP(1,M,NZ,NY,NX)
-     2*FSNCL*(WGLFPX(NB,NZ,NY,NX)-RCPLX(NB,NZ,NY,NX))*FWODLP(1)
+     2*FSNCL*(WGLFPX(NB,NZ,NY,NX)-RCPLX(NB,NZ,NY,NX))*FWODLP(1,NZ)
 6300  CONTINUE
 C
 C     UPDATE STATE VARIABLES FOR REMOBILIZATION AND LITTERFALL
 C
 C     FSNCL=fraction of lowest leaf to be remobilized
 C     ARLFB,ARLFZ=branch living,senescing leaf area 
-C     WTLFB,WTLFBN,WTLFBP,WGLFX,WGLFNX,WGLFPX=C,N,P mass in living,senescing leaf
+C     WTLFB,WTLFBN,WTLFBP,WGLFX,WGLFNX,WGLFPX=C,N,P mass in
+C        living,senescing leaf
 C     WSLF=leaf protein mass
 C     CNWS,CPWS=protein:N,protein:P ratios from startq.f
 C     CPOOL,ZPOOL,PPOOL=non-structural C,N,P in branch
 C     RCCLX,RCZLX,RCPLX=remobilization of C,N,P from senescing leaf 
 C
       ARLFB(NB,NZ,NY,NX)=ARLFB(NB,NZ,NY,NX)
-     2-FSNCL*ARLFZ(NB,NZ,NY,NX)
+     2-FSNAL*ARLFZ(NB,NZ,NY,NX)
       WTLFB(NB,NZ,NY,NX)=WTLFB(NB,NZ,NY,NX)
      2-FSNCL*WGLFX(NB,NZ,NY,NX)
       WTLFBN(NB,NZ,NY,NX)=WTLFBN(NB,NZ,NY,NX)
@@ -2109,7 +2295,7 @@ C
       WTLFBP(NB,NZ,NY,NX)=WTLFBP(NB,NZ,NY,NX)
      2-FSNCL*WGLFPX(NB,NZ,NY,NX)
       ARLF(K,NB,NZ,NY,NX)=ARLF(K,NB,NZ,NY,NX)
-     2-FSNCL*ARLFZ(NB,NZ,NY,NX)
+     2-FSNAL*ARLFZ(NB,NZ,NY,NX)
       WGLF(K,NB,NZ,NY,NX)=WGLF(K,NB,NZ,NY,NX)
      2-FSNCL*WGLFX(NB,NZ,NY,NX)
       WGLFN(K,NB,NZ,NY,NX)=WGLFN(K,NB,NZ,NY,NX)
@@ -2119,9 +2305,12 @@ C
       WSLF(K,NB,NZ,NY,NX)=AMAX1(0.0,WSLF(K,NB,NZ,NY,NX)
      2-FSNCL*AMAX1(WGLFNX(NB,NZ,NY,NX)*CNWS(NZ,NY,NX)
      3,WGLFPX(NB,NZ,NY,NX)*CPWS(NZ,NY,NX)))
-      CPOOL(NB,NZ,NY,NX)=CPOOL(NB,NZ,NY,NX)+FSNCL*RCCLX(NB,NZ,NY,NX) 
-      ZPOOL(NB,NZ,NY,NX)=ZPOOL(NB,NZ,NY,NX)+FSNCL*RCZLX(NB,NZ,NY,NX)
-      PPOOL(NB,NZ,NY,NX)=PPOOL(NB,NZ,NY,NX)+FSNCL*RCPLX(NB,NZ,NY,NX)
+      CPOOL(NB,NZ,NY,NX)=CPOOL(NB,NZ,NY,NX)
+     2+FSNCL*RCCLX(NB,NZ,NY,NX)*FWODB(1,NZ) 
+      ZPOOL(NB,NZ,NY,NX)=ZPOOL(NB,NZ,NY,NX)
+     2+FSNCL*RCZLX(NB,NZ,NY,NX)*FWODLN(1,NZ)
+      PPOOL(NB,NZ,NY,NX)=PPOOL(NB,NZ,NY,NX)
+     2+FSNCL*RCPLX(NB,NZ,NY,NX)*FWODLP(1,NZ)
 C
 C     REMOBILIZATION OF SHEATHS OR PETIOLE C,N,P ALSO DEPENDS ON
 C     STRUCTURAL C:N:P
@@ -2164,6 +2353,7 @@ C
 C     FRACTION OF CURRENT SHEATH TO BE REMOBILIZED
 C
 C     FSNCS=fraction of lowest petiole to be remobilized
+C     WGSHE,WGSHEX=node living,senescing sheath C mass
 C
       IF(FSNC*WGSHEX(NB,NZ,NY,NX).GT.WGSHE(K,NB,NZ,NY,NX)
      2.AND.WGSHEX(NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
@@ -2176,7 +2366,9 @@ C     NON-REMOBILIZABLE C,N,P BECOMES LITTERFALL ALLOCATED
 C     TO FRACTIONS SET IN 'STARTQ'
 C
 C     CSNC,ZSNC,PSNC=C,N,P litterfall from senescence
-C     CFOPC,CFOPN,CFOPC=fraction of litterfall C,N,P allocated to litter components
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     FSNCS=fraction of lowest petiole to be remobilized
 C     RCCSX,RCZSX,RCPSX=remobilization of C,N,P from senescing petiole 
 C     WGSHX,WGSHNX,WGSHPX=senescing petiole C,N,P mass
@@ -2185,24 +2377,25 @@ C     FWODSN,FWODSP=N,P woody fraction in petiole:0=woody,1=non-woody
 C
       DO 6305 M=1,4
       CSNC(M,0,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)+CFOPC(5,M,NZ,NY,NX)
-     2*FSNCS*(WGSHEX(NB,NZ,NY,NX)-RCCSX(NB,NZ,NY,NX))*FWODB(0)
+     2*FSNCS*WGSHEX(NB,NZ,NY,NX)*FWODB(0,NZ)
       ZSNC(M,0,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)+CFOPN(5,M,NZ,NY,NX)
-     2*FSNCS*(WGSHNX(NB,NZ,NY,NX)-RCZSX(NB,NZ,NY,NX))*FWODSN(0)
+     2*FSNCS*WGSHNX(NB,NZ,NY,NX)*FWODSN(0,NZ)
       PSNC(M,0,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)+CFOPP(5,M,NZ,NY,NX)
-     2*FSNCS*(WGSHPX(NB,NZ,NY,NX)-RCPSX(NB,NZ,NY,NX))*FWODSP(0)
+     2*FSNCS*WGSHPX(NB,NZ,NY,NX)*FWODSP(0,NZ)
       CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)+CFOPC(2,M,NZ,NY,NX)
-     2*FSNCS*(WGSHEX(NB,NZ,NY,NX)-RCCSX(NB,NZ,NY,NX))*FWODB(1)
+     2*FSNCS*(WGSHEX(NB,NZ,NY,NX)-RCCSX(NB,NZ,NY,NX))*FWODB(1,NZ)
       ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)+CFOPN(2,M,NZ,NY,NX)
-     2*FSNCS*(WGSHNX(NB,NZ,NY,NX)-RCZSX(NB,NZ,NY,NX))*FWODSN(1)
+     2*FSNCS*(WGSHNX(NB,NZ,NY,NX)-RCZSX(NB,NZ,NY,NX))*FWODSN(1,NZ)
       PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)+CFOPP(2,M,NZ,NY,NX)
-     2*FSNCS*(WGSHPX(NB,NZ,NY,NX)-RCPSX(NB,NZ,NY,NX))*FWODSP(1)
+     2*FSNCS*(WGSHPX(NB,NZ,NY,NX)-RCPSX(NB,NZ,NY,NX))*FWODSP(1,NZ)
 6305  CONTINUE
 C
 C     UPDATE STATE VARIABLES FOR REMOBILIZATION AND LITTERFALL
 C
 C     FSNCS=fraction of lowest petiole to be remobilized
 C     HTSHE,HTSHEX=living,senescing petiole length 
-C     WTSHB,WTSHBN,WTSHBP,WGSHEX,WGSHNX,WGSHPX=C,N,P mass in living,senescing petiole
+C     WTSHB,WTSHBN,WTSHBP,WGSHEX,WGSHNX,WGSHPX=C,N,P mass in
+C        living,senescing petiole
 C     WSSHE=petiole protein mass
 C     CNWS,CPWS=protein:N,protein:P ratios from startq.f
 C     CPOOL,ZPOOL,PPOOL=non-structural C,N,P mass
@@ -2225,14 +2418,18 @@ C
       WSSHE(K,NB,NZ,NY,NX)=AMAX1(0.0,WSSHE(K,NB,NZ,NY,NX)
      2-FSNCS*AMAX1(WGSHNX(NB,NZ,NY,NX)*CNWS(NZ,NY,NX)
      3,WGSHPX(NB,NZ,NY,NX)*CPWS(NZ,NY,NX)))
-      CPOOL(NB,NZ,NY,NX)=CPOOL(NB,NZ,NY,NX)+FSNCS*RCCSX(NB,NZ,NY,NX)
-      ZPOOL(NB,NZ,NY,NX)=ZPOOL(NB,NZ,NY,NX)+FSNCS*RCZSX(NB,NZ,NY,NX)
-      PPOOL(NB,NZ,NY,NX)=PPOOL(NB,NZ,NY,NX)+FSNCS*RCPSX(NB,NZ,NY,NX)
+      CPOOL(NB,NZ,NY,NX)=CPOOL(NB,NZ,NY,NX)
+     2+FSNCS*RCCSX(NB,NZ,NY,NX)*FWODB(1,NZ)
+      ZPOOL(NB,NZ,NY,NX)=ZPOOL(NB,NZ,NY,NX)
+     2+FSNCS*RCZSX(NB,NZ,NY,NX)*FWODSN(1,NZ)
+      PPOOL(NB,NZ,NY,NX)=PPOOL(NB,NZ,NY,NX)
+     2+FSNCS*RCPSX(NB,NZ,NY,NX)*FWODSP(1,NZ)
       ENDIF
       ENDIF
 C
 C     REMOBILIZATION OF STALK RESERVE C,N,P IF GROWTH RESPIRATION < 0  
 C
+C     IFLGZ=remobilization flag
 C     SNCR=excess maintenance respiration
 C     WTRSVB=stalk reserve C mass
 C     RCO2V=remobilization of stalk reserve C
@@ -2241,7 +2438,7 @@ C     TFN3=temperature function for canopy growth
 C
       IF(IFLGZ.EQ.0)THEN
       IF(SNCR.GT.0.0.AND.WTRSVB(NB,NZ,NY,NX).GT.0.0)THEN
-      RCO2V=AMIN1(SNCR,VMXC*WTRSVB(NB,NZ,NY,NX)*TFN3(NZ,NY,NX))
+      RCO2V=AMIN1(SNCR,VMXC*WTRSVB(NB,NZ,NY,NX)*TFN3(NZ,NY,NX))*XNFH
       WTRSVB(NB,NZ,NY,NX)=WTRSVB(NB,NZ,NY,NX)-RCO2V
       SNCR=SNCR-RCO2V
       ENDIF
@@ -2252,20 +2449,29 @@ C     FALL DURING AUTUMN + REMOBILZATION DURING GRAIN FILL IN ANNUALS
 C
 C     ISTYP=growth habit:0=annual,1=perennial from PFT file
 C     IFLGY,IFLGZ=remobilization flags
-C     SNCZ=phenologically-driven respiration senescence during late-season 
-C     FXFB=rate constant for plant-storage nonstructural C,N,P exchange
-C     IBTYP=turnover:0=all abve-grd,1=all leaf+petiole,2=none,3=between 1,2
+C     SNCZ=phenologically-driven respiration senescence during 
+C        late-season 
+C     FXFB=rate constant for plant-storage nonstructural C,N,P 
+C        exchange
+C     IBTYP=turnover rate of above-ground biomass
+C              :0,1=fully deciduous,
+C              :2=needleleaf evergreen
+C              :3=broadleaf evergreen
+C              :4=semi-deciduous
+C              :5=semi-evergreen
 C     WTLSB=leaf+petiole mass
 C     FLGZ=control rate of remobilization
 C     FLGZX=number of hours until full senescence after physl maturity
 C     SNCX=total senescence respiration
-C     KVSTG,KVSTGN=integer of highest,lowest leaf number currently growing
+C     KVSTG,KVSTGN=integer of highest,lowest leaf number currently
+C        growing
 C     KSNC=number of nodes undergoing remobilization
-C     SNCF=ratio of phenologically-driven vs total senescence respiration
+C     SNCF=ratio of phenologically-driven vs total senescence
+C        respiration
 C
       IF(IFLGZ.EQ.1.AND.IFLGY.EQ.1.AND.ISTYP(NZ,NY,NX).NE.0)THEN
-      SNCZ=FXFB(IBTYP(NZ,NY,NX))
-     2*WTLSB(NB,NZ,NY,NX)*AMIN1(1.0,FLGZ(NB,NZ,NY,NX)/FLGZX)
+      SNCZ=FXFB(IBTYP(NZ,NY,NX))*WTLSB(NB,NZ,NY,NX)
+     2*AMIN1(1.0,FLGZ(NB,NZ,NY,NX)/FLGZX)*XNFH
       ELSE
       SNCZ=0.0
       ENDIF
@@ -2281,57 +2487,49 @@ C    2,CPOOL(NB,NZ,NY,NX),WTLSB(NB,NZ,NY,NX),RCCC
 1266  FORMAT(A8,6I4,12E16.8)
 C     ENDIF
 C
-C     TRANSFER NON-STRUCTURAL C,N,P FROM BRANCHES TO MAIN STEM
-C     IF MAIN STEM POOLS ARE DEPLETED
+C     TRANSFER NON-STRUCTURAL C,N,P AMONG BRANCH STALK RESERVES
+C     FROM NON-STRUCTURAL C,N,P CONCENTRATION DIFFERENCES
 C
-C     IBTYP=turnover:0=all abve-grd,1=all leaf+petiole,2=none,3=between 1,2
-C     IGTYP=growth type:0=bryophyte,1=graminoid,2=shrub,tree
-C     CPOOL,ZPOOL,PPOOL=non-structural C,N,P mass
-C     XFRC,XFRN,XFRC=nonstructural C,N,P transfer
-C
-      IF(IBTYP(NZ,NY,NX).NE.0.AND.IGTYP(NZ,NY,NX).GT.1
-     2.AND.NB.EQ.NB1(NZ,NY,NX).AND.SNCF.EQ.0)THEN
-      NBY=0
-      DO 584 NBL=1,NBR(NZ,NY,NX)
-      NBZ(NBL)=0
-584   CONTINUE
-      DO 586 NBL=1,NBR(NZ,NY,NX)
-      NBX=KVSTG(NB,NZ,NY,NX)
-      DO 585 NBK=1,NBR(NZ,NY,NX)
-      IF(IDTHB(NBK,NZ,NY,NX).EQ.0.AND.NBK.NE.NB1(NZ,NY,NX)
-     2.AND.NBTB(NBK,NZ,NY,NX).LT.NBX
-     3.AND.NBTB(NBK,NZ,NY,NX).GT.NBY)THEN
-      NBZ(NBL)=NBK
-      NBX=NBTB(NBK,NZ,NY,NX)
-      ENDIF
-585   CONTINUE
-      IF(NBZ(NBL).NE.0)THEN
-      NBY=NBTB(NBZ(NBL),NZ,NY,NX)
-      ENDIF
-586   CONTINUE
+C     WVSTKB=stalk sapwood mass
+C     WTSTKB=branch stalk mass
+C     WTRSVB,WTRSBN,WTRSBP=stalk reserve C,N,P mass
+C     XFRC,XFRN,XFRC=C,N,P transfer among branches 
+C     FXFY,FXFZ=rate constant for leaf-reserve nonstructural C,N,P
+C        exchange (h-1)
+
+      IF(NB.EQ.NB1(NZ,NY,NX))THEN
       DO 580 NBL=1,NBR(NZ,NY,NX)
-      IF(NBZ(NBL).NE.0)THEN
-      IF(NBTB(NBZ(NBL),NZ,NY,NX).LT.KK)THEN
-      IF(CPOOL(NBZ(NBL),NZ,NY,NX).GT.0)THEN
-      XFRC=1.0E-02*AMIN1(SNCX,CPOOL(NBZ(NBL),NZ,NY,NX))
-      XFRN=XFRC*ZPOOL(NBZ(NBL),NZ,NY,NX)/CPOOL(NBZ(NBL),NZ,NY,NX)
-      XFRP=XFRC*PPOOL(NBZ(NBL),NZ,NY,NX)/CPOOL(NBZ(NBL),NZ,NY,NX)
-      ELSE
-      XFRC=0.0
-      XFRN=1.0E-02*ZPOOL(NBZ(NBL),NZ,NY,NX)
-      XFRP=1.0E-02*PPOOL(NBZ(NBL),NZ,NY,NX)
+      IF(NBL.NE.NB1(NZ,NY,NX))THEN
+      IF(WVSTKB(NBL,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
+      WVSTKT=WVSTKB(NB1(NZ,NY,NX),NZ,NY,NX)+WVSTKB(NBL,NZ,NY,NX)
+      WTRSVT=WTRSVB(NB1(NZ,NY,NX),NZ,NY,NX)+WTRSVB(NBL,NZ,NY,NX)
+      WTRSVD=(WTRSVB(NB1(NZ,NY,NX),NZ,NY,NX)*WVSTKB(NBL,NZ,NY,NX)
+     2-WTRSVB(NBL,NZ,NY,NX)*WVSTKB(NB1(NZ,NY,NX),NZ,NY,NX))/WVSTKT
+      XFRC=FXFY(ISTYP(NZ,NY,NX))*WTRSVD
+      WTRSVB(NB1(NZ,NY,NX),NZ,NY,NX)=WTRSVB(NB1(NZ,NY,NX),NZ,NY,NX)
+     2-XFRC
+      WTRSVB(NBL,NZ,NY,NX)=WTRSVB(NBL,NZ,NY,NX)+XFRC
+      IF(WTRSVT.GT.ZEROP(NZ,NY,NX))THEN
+      WTRSND=(WTRSBN(NB1(NZ,NY,NX),NZ,NY,NX)*WTRSVB(NBL,NZ,NY,NX)
+     2-WTRSBN(NBL,NZ,NY,NX)*WTRSVB(NB1(NZ,NY,NX),NZ,NY,NX))/WTRSVT
+      WTRSPD=(WTRSBP(NB1(NZ,NY,NX),NZ,NY,NX)*WTRSVB(NBL,NZ,NY,NX)
+     2-WTRSBP(NBL,NZ,NY,NX)*WTRSVB(NB1(NZ,NY,NX),NZ,NY,NX))/WTRSVT
+      XFRN=FXFZ(ISTYP(NZ,NY,NX))*WTRSND
+      XFRP=FXFZ(ISTYP(NZ,NY,NX))*WTRSPD 
+      WTRSBN(NB1(NZ,NY,NX),NZ,NY,NX)=WTRSBN(NB1(NZ,NY,NX),NZ,NY,NX)
+     2-XFRN
+      WTRSBN(NBL,NZ,NY,NX)=WTRSBN(NBL,NZ,NY,NX)+XFRN
+      WTRSBP(NB1(NZ,NY,NX),NZ,NY,NX)=WTRSBP(NB1(NZ,NY,NX),NZ,NY,NX)
+     2-XFRP
+      WTRSBP(NBL,NZ,NY,NX)=WTRSBP(NBL,NZ,NY,NX)+XFRP
+C     WRITE(*,4487)'BRANCH',I,J,NFZ,NX,NY,NZ,NB1(NZ,NY,NX),NBL
+C    2,XFRC,XFRN,XFRP
+C    2,WVSTKB(NB1(NZ,NY,NX),NZ,NY,NX),WTRSVB(NB1(NZ,NY,NX),NZ,NY,NX)
+C    3,WTRSBN(NB1(NZ,NY,NX),NZ,NY,NX),WTRSBP(NB1(NZ,NY,NX),NZ,NY,NX)
+C    2,WVSTKB(NBL,NZ,NY,NX),WTRSVB(NBL,NZ,NY,NX)
+C    3,WTRSBN(NBL,NZ,NY,NX),WTRSBP(NBL,NZ,NY,NX)
+4487  FORMAT(A8,8I4,20E12.4)
       ENDIF
-      CPOOL(NBZ(NBL),NZ,NY,NX)=CPOOL(NBZ(NBL),NZ,NY,NX)-XFRC
-      ZPOOL(NBZ(NBL),NZ,NY,NX)=ZPOOL(NBZ(NBL),NZ,NY,NX)-XFRN
-      PPOOL(NBZ(NBL),NZ,NY,NX)=PPOOL(NBZ(NBL),NZ,NY,NX)-XFRP
-      CPOOL(NB1(NZ,NY,NX),NZ,NY,NX)=CPOOL(NB1(NZ,NY,NX),NZ,NY,NX)
-     2+XFRC*SNCF
-      ZPOOL(NB1(NZ,NY,NX),NZ,NY,NX)=ZPOOL(NB1(NZ,NY,NX),NZ,NY,NX)
-     2+XFRN
-      PPOOL(NB1(NZ,NY,NX),NZ,NY,NX)=PPOOL(NB1(NZ,NY,NX),NZ,NY,NX)
-     2+XFRP
-      SNCX=SNCX-XFRC
-      IF(SNCX.LE.0.0)GO TO 595
       ENDIF
       ENDIF
 580   CONTINUE
@@ -2361,7 +2559,7 @@ C     WGLF,WGSHE=node leaf,petiole C mass
 C     SCNF,SCNSH=leaf,petiole senescence respiration
 C     RCCL,RCZL,RCPL=remobilization of C,N,P from senescing leaf 
 C     RCCC,RCCN,RCCP=remobilization coefficient for C,N,P
-C     RCCZ,RCCY=min,max fractions for shoot C recycling
+C     RCCZ,RCCY=minimum,maximum fractions for shoot C recycling
 C
       IF(WGLF(K,NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
       FNCLF=WGLF(K,NB,NZ,NY,NX)/(WGLF(K,NB,NZ,NY,NX)
@@ -2375,20 +2573,23 @@ C
 C     FRACTION OF CURRENT LEAF TO BE REMOBILIZED
 C
 C     FSNCL,FSNAL=fraction of current leaf C,area to be remobilized
+C     SCNLF=leaf senescence respiration
+C     RCCL=remobilization of C from senescing leaf 
 C
       IF(RCCL.GT.ZEROP(NZ,NY,NX))THEN
       FSNCL=AMAX1(0.0,AMIN1(1.0,SNCLF/RCCL))
       ELSE
       FSNCL=1.0
       ENDIF
-      FSNAL=FSNCL
+      FSNAL=0.0
 C
 C     NON-REMOBILIZABLE C,N,P BECOMES LITTERFALL ALLOCATED
 C     TO FRACTIONS SET IN 'STARTQ'
 C
 C     CSNC,ZSNC,PSNC=literfall C,N,P
-C     CFOPC=fraction of plant litter allocated in nonstructural(0,*),
-C     foliar(1,*),non-foliar(2,*),stalk(3,*),root(4,*), coarse woody (5,*)
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     FSNCL=fraction of current leaf to be remobilized
 C     WGLF,WGLFN,WGLFP=node leaf C,N,P mass
 C     RCCL,RCZL,RCPL=remobilization of C,N,P from senescing leaf 
@@ -2398,17 +2599,17 @@ C     CPOOL3,CPOOL4=C4 nonstructural C mass in bundle sheath,mesophyll
 C
       DO 6310 M=1,4
       CSNC(M,0,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)+CFOPC(5,M,NZ,NY,NX)
-     2*FSNCL*(WGLF(K,NB,NZ,NY,NX)-RCCL)*FWODB(0)
+     2*FSNCL*WGLF(K,NB,NZ,NY,NX)*FWODB(0,NZ)
       ZSNC(M,0,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)+CFOPN(5,M,NZ,NY,NX)
-     2*FSNCL*(WGLFN(K,NB,NZ,NY,NX)-RCZL)*FWODLN(0)
+     2*FSNCL*WGLFN(K,NB,NZ,NY,NX)*FWODLN(0,NZ)
       PSNC(M,0,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)+CFOPP(5,M,NZ,NY,NX)
-     2*FSNCL*(WGLFP(K,NB,NZ,NY,NX)-RCPL)*FWODLP(0)
+     2*FSNCL*WGLFP(K,NB,NZ,NY,NX)*FWODLP(0,NZ)
       CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)+CFOPC(1,M,NZ,NY,NX)
-     2*FSNCL*(WGLF(K,NB,NZ,NY,NX)-RCCL)*FWODB(1)
+     2*FSNCL*(WGLF(K,NB,NZ,NY,NX)-RCCL)*FWODB(1,NZ)
       ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)+CFOPN(1,M,NZ,NY,NX)
-     2*FSNCL*(WGLFN(K,NB,NZ,NY,NX)-RCZL)*FWODLN(1)
+     2*FSNCL*(WGLFN(K,NB,NZ,NY,NX)-RCZL)*FWODLN(1,NZ)
       PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)+CFOPP(1,M,NZ,NY,NX)
-     2*FSNCL*(WGLFP(K,NB,NZ,NY,NX)-RCPL)*FWODLP(1)
+     2*FSNCL*(WGLFP(K,NB,NZ,NY,NX)-RCPL)*FWODLP(1,NZ)
 6310  CONTINUE
       IF(K.NE.0)THEN
       CSNC(2,1,0,NZ,NY,NX)=CSNC(2,1,0,NZ,NY,NX)
@@ -2454,13 +2655,15 @@ C     CPOOL,ZPOOL,PPOOL=non-structural C,N,P mass
 C     FSNCL=fraction of current leaf C to be remobilized
 C     RCCL,RCZL,RCPL=remobilization of C,N,P from senescing leaf 
 C     SNCLF,SNCT=remaining senescence respiration carried to next node
+C     WTLFB=leaf C mass
 C
       CPOOL(NB,NZ,NY,NX)=CPOOL(NB,NZ,NY,NX)+FSNCL*RCCL*SNCF
-      ZPOOL(NB,NZ,NY,NX)=ZPOOL(NB,NZ,NY,NX)+FSNCL*RCZL
-      PPOOL(NB,NZ,NY,NX)=PPOOL(NB,NZ,NY,NX)+FSNCL*RCPL
-      SNCLF=SNCLF-FSNCL*RCCL
-      SNCT=SNCT-FSNCL*RCCL
-      IF(WTLFB(NB,NZ,NY,NX).LE.ZEROL(NZ,NY,NX))THEN 
+     2*FWODB(1,NZ)
+      ZPOOL(NB,NZ,NY,NX)=ZPOOL(NB,NZ,NY,NX)+FSNCL*RCZL*FWODLN(1,NZ)
+      PPOOL(NB,NZ,NY,NX)=PPOOL(NB,NZ,NY,NX)+FSNCL*RCPL*FWODLP(1,NZ)
+      SNCLF=SNCLF-FSNCL*RCCL*FWODB(1,NZ)
+      SNCT=SNCT-FSNCL*RCCL*FWODB(1,NZ)
+      IF(WTLFB(NB,NZ,NY,NX).LE.ZEROP2(NZ,NY,NX))THEN 
       WTLFB(NB,NZ,NY,NX)=0.0
       ARLFB(NB,NZ,NY,NX)=0.0
       ENDIF
@@ -2472,8 +2675,9 @@ C
 C     OTHERWISE REMAINING C,N,P IN LEAF GOES TO LITTERFALL
 C
 C     CSNC,ZSNC,PSNC=literfall C,N,P
-C     CFOPC=fraction of plant litter allocated in nonstructural(0,*),
-C     foliar(1,*),non-foliar(2,*),stalk(3,*),root(4,*), coarse woody (5,*)
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     FWODB=C woody fraction in other organs:0=woody,1=non-woody
 C     FWODLN,FWODLP=N,P woody fraction in leaf:0=woody,1=non-woody     
 C     CPOOL3,CPOOL4=C4 nonstructural C mass in bundle sheath,mesophyll 
@@ -2484,17 +2688,17 @@ C
       ELSE
       DO 6315 M=1,4
       CSNC(M,0,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)+CFOPC(5,M,NZ,NY,NX)
-     2*WGLF(K,NB,NZ,NY,NX)*FWODB(0)
+     2*WGLF(K,NB,NZ,NY,NX)*FWODB(0,NZ)
       ZSNC(M,0,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)+CFOPN(5,M,NZ,NY,NX)
-     2*WGLFN(K,NB,NZ,NY,NX)*FWODLN(0)
+     2*WGLFN(K,NB,NZ,NY,NX)*FWODLN(0,NZ)
       PSNC(M,0,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)+CFOPP(5,M,NZ,NY,NX)
-     2*WGLFP(K,NB,NZ,NY,NX)*FWODLP(0)
+     2*WGLFP(K,NB,NZ,NY,NX)*FWODLP(0,NZ)
       CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)+CFOPC(1,M,NZ,NY,NX)
-     2*WGLF(K,NB,NZ,NY,NX)*FWODB(1)
+     2*WGLF(K,NB,NZ,NY,NX)*FWODB(1,NZ)
       ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)+CFOPN(1,M,NZ,NY,NX)
-     2*WGLFN(K,NB,NZ,NY,NX)*FWODLN(1)
+     2*WGLFN(K,NB,NZ,NY,NX)*FWODLN(1,NZ)
       PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)+CFOPP(1,M,NZ,NY,NX)
-     2*WGLFP(K,NB,NZ,NY,NX)*FWODLP(1)
+     2*WGLFP(K,NB,NZ,NY,NX)*FWODLP(1,NZ)
 6315  CONTINUE
       IF(K.NE.0)THEN
       CSNC(2,1,0,NZ,NY,NX)=CSNC(2,1,0,NZ,NY,NX)
@@ -2515,7 +2719,7 @@ C
       WGLFN(K,NB,NZ,NY,NX)=0.0
       WGLFP(K,NB,NZ,NY,NX)=0.0
       WSLF(K,NB,NZ,NY,NX)=0.0
-      IF(WTLFB(NB,NZ,NY,NX).LE.ZEROL(NZ,NY,NX))THEN 
+      IF(WTLFB(NB,NZ,NY,NX).LE.ZEROP2(NZ,NY,NX))THEN 
       WTLFB(NB,NZ,NY,NX)=0.0
       ARLFB(NB,NZ,NY,NX)=0.0
       ENDIF
@@ -2537,7 +2741,10 @@ C
 C     FRACTION OF REMOBILIZATION THAT CAN BE MET FROM CURRENT SHEATH
 C     OR PETIOLE
 C
-C     FSNCS,FSNAS=fraction of current petiole C,length to be remobilized
+C     FSNCS,FSNAS=fraction of current petiole C,length to be
+C        remobilized
+C     SCNSH=petiole senescence respiration
+C     RCCS=remobilization of C from senescing petiole 
 C
       IF(RCCS.GT.ZEROP(NZ,NY,NX))THEN
       FSNCS=AMAX1(0.0,AMIN1(1.0,SNCSH/RCCS))
@@ -2550,8 +2757,9 @@ C     NON-REMOBILIZABLE C,N,P BECOMES LITTERFALL ALLOCATED
 C     TO FRACTIONS SET IN 'STARTQ'
 C
 C     CSNC,ZSNC,PSNC=literfall C,N,P
-C     CFOPC=fraction of plant litter allocated in nonstructural(0,*),
-C     foliar(1,*),non-foliar(2,*),stalk(3,*),root(4,*), coarse woody (5,*)
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     FSNCS=fraction of current petiole to be remobilized
 C     WGSHE,WGSHN,WGSHP=node petiole C,N,P mass
 C     RCCS,RCZS,RCPS=remobilization of C,N,P from senescing petiole 
@@ -2560,17 +2768,17 @@ C     FWODSN,FWODSP=N,P woody fraction in petiole:0=woody,1=non-woody
 C
       DO 6320 M=1,4
       CSNC(M,0,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)+CFOPC(5,M,NZ,NY,NX)
-     2*FSNCS*(WGSHE(K,NB,NZ,NY,NX)-RCCS)*FWODB(0)
+     2*FSNCS*WGSHE(K,NB,NZ,NY,NX)*FWODB(0,NZ)
       ZSNC(M,0,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)+CFOPN(5,M,NZ,NY,NX)
-     2*FSNCS*(WGSHN(K,NB,NZ,NY,NX)-RCZS)*FWODSN(0)
+     2*FSNCS*WGSHN(K,NB,NZ,NY,NX)*FWODSN(0,NZ)
       PSNC(M,0,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)+CFOPP(5,M,NZ,NY,NX)
-     2*FSNCS*(WGSHP(K,NB,NZ,NY,NX)-RCPS)*FWODSP(0)
+     2*FSNCS*WGSHP(K,NB,NZ,NY,NX)*FWODSP(0,NZ)
       CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)+CFOPC(2,M,NZ,NY,NX)
-     2*FSNCS*(WGSHE(K,NB,NZ,NY,NX)-RCCS)*FWODB(1)
+     2*FSNCS*(WGSHE(K,NB,NZ,NY,NX)-RCCS)*FWODB(1,NZ)
       ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)+CFOPN(2,M,NZ,NY,NX)
-     2*FSNCS*(WGSHN(K,NB,NZ,NY,NX)-RCZS)*FWODSN(1)
+     2*FSNCS*(WGSHN(K,NB,NZ,NY,NX)-RCZS)*FWODSN(1,NZ)
       PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)+CFOPP(2,M,NZ,NY,NX)
-     2*FSNCS*(WGSHP(K,NB,NZ,NY,NX)-RCPS)*FWODSP(1)
+     2*FSNCS*(WGSHP(K,NB,NZ,NY,NX)-RCPS)*FWODSP(1,NZ)
 6320  CONTINUE
 C
 C     UPDATE STATE VARIABLES FOR REMOBILIZATION AND LITTERFALL
@@ -2608,23 +2816,28 @@ C     RCCS,RCZS,RCPS=remobilization of C,N,P from senescing petiole
 C     SNCSH,SNCT=remaining senescence respiration carried to next node
 C
       CPOOL(NB,NZ,NY,NX)=CPOOL(NB,NZ,NY,NX)+FSNCS*RCCS*SNCF
-      ZPOOL(NB,NZ,NY,NX)=ZPOOL(NB,NZ,NY,NX)+FSNCS*RCZS
-      PPOOL(NB,NZ,NY,NX)=PPOOL(NB,NZ,NY,NX)+FSNCS*RCPS
-      SNCSH=SNCSH-FSNCS*RCCS
-      SNCT=SNCT-FSNCS*RCCS
-      IF(WTSHEB(NB,NZ,NY,NX).LE.ZEROL(NZ,NY,NX))THEN 
+     2*FWODB(1,NZ)
+      ZPOOL(NB,NZ,NY,NX)=ZPOOL(NB,NZ,NY,NX)+FSNCS*RCZS*FWODSN(1,NZ)
+      PPOOL(NB,NZ,NY,NX)=PPOOL(NB,NZ,NY,NX)+FSNCS*RCPS*FWODSN(1,NZ)
+      SNCSH=SNCSH-FSNCS*RCCS*FWODB(1,NZ)
+      SNCT=SNCT-FSNCS*RCCS*FWODB(1,NZ)
+      IF(WTSHEB(NB,NZ,NY,NX).LE.ZEROP2(NZ,NY,NX))THEN 
       WTSHEB(NB,NZ,NY,NX)=0.0
       ENDIF
 C
 C     EXIT LOOP IF REMOBILIZATION REQUIREMENT HAS BEEN MET
 C
+C     SNCSH=remaining senescence respiration carried to next node
+C
       IF(SNCSH.LE.ZEROP(NZ,NY,NX))GO TO 565
 C
-C     OTHERWISE REMAINING C,N,P IN SHEATH OR PETIOLE GOES TO LITTERFALL
+C     OTHERWISE REMAINING C,N,P IN SHEATH OR PETIOLE GOES TO
+C     LITTERFALL
 C
 C     CSNC,ZSNC,PSNC=literfall C,N,P
-C     CFOPC=fraction of plant litter allocated in nonstructural(0,*),
-C     foliar(1,*),non-foliar(2,*),stalk(3,*),root(4,*), coarse woody (5,*)
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     FWODB=C woody fraction in branch:0=woody,1=non-woody
 C     FWODSN,FWODSP=N,P woody fraction in petiole:0=woody,1=non-woody     
 C     HTSHE=petiole length
@@ -2634,17 +2847,17 @@ C
       ELSE
       DO 6325 M=1,4
       CSNC(M,0,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)+CFOPC(5,M,NZ,NY,NX)
-     2*WGSHE(K,NB,NZ,NY,NX)*FWODB(0)
+     2*WGSHE(K,NB,NZ,NY,NX)*FWODB(0,NZ)
       ZSNC(M,0,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)+CFOPN(5,M,NZ,NY,NX)
-     2*WGSHN(K,NB,NZ,NY,NX)*FWODSN(0)
+     2*WGSHN(K,NB,NZ,NY,NX)*FWODSN(0,NZ)
       PSNC(M,0,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)+CFOPP(5,M,NZ,NY,NX)
-     2*WGSHP(K,NB,NZ,NY,NX)*FWODSP(0)
+     2*WGSHP(K,NB,NZ,NY,NX)*FWODSP(0,NZ)
       CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)+CFOPC(2,M,NZ,NY,NX)
-     2*WGSHE(K,NB,NZ,NY,NX)*FWODB(1)
+     2*WGSHE(K,NB,NZ,NY,NX)*FWODB(1,NZ)
       ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)+CFOPN(2,M,NZ,NY,NX)
-     2*WGSHN(K,NB,NZ,NY,NX)*FWODSN(1)
+     2*WGSHN(K,NB,NZ,NY,NX)*FWODSN(1,NZ)
       PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)+CFOPP(2,M,NZ,NY,NX)
-     2*WGSHP(K,NB,NZ,NY,NX)*FWODSP(1)
+     2*WGSHP(K,NB,NZ,NY,NX)*FWODSP(1,NZ)
 6325  CONTINUE
       WTSHEB(NB,NZ,NY,NX)=AMAX1(0.0,WTSHEB(NB,NZ,NY,NX)
      2-WGSHE(K,NB,NZ,NY,NX))
@@ -2657,7 +2870,7 @@ C
       WGSHN(K,NB,NZ,NY,NX)=0.0
       WGSHP(K,NB,NZ,NY,NX)=0.0
       WSSHE(K,NB,NZ,NY,NX)=0.0
-      IF(WTSHEB(NB,NZ,NY,NX).LE.ZEROL(NZ,NY,NX))THEN 
+      IF(WTSHEB(NB,NZ,NY,NX).LE.ZEROP2(NZ,NY,NX))THEN 
       WTSHEB(NB,NZ,NY,NX)=0.0
       ENDIF
       ENDIF
@@ -2678,16 +2891,16 @@ C
 C
 C     REMOBILIZATION OF STALK C,N,P 
 C
-C     FXFS=rate constant for remobilization of stalk C,N,P (h-1)
-C     SNCZ=phenologically-driven respiration senescence during late-season 
+C     SNCZ=phenologically-driven respiration senescence during 
+C        late-season 
 C     ISTYP=growth habit:0=annual,1=perennial from PFT file
 C     WTSTKB,WVSTKB=stalk,sapwood C mass
 C     RCCC,RCCN,RCCP=remobilization coefficient for C,N,P
-C     MXNOD,MNNOD=max,min node number currently growing
+C     MXNOD,MNNOD=maximum,minimum node number currently growing
 C     NNOD=number of concurrently growing nodes
 C     KVSTG=integer of most recent leaf number
 C
-      SNCZ=FXFS*SNCR
+      SNCZ=0.0
       SNCT=SNCR+SNCZ
       IF(ISTYP(NZ,NY,NX).NE.0.AND.SNCT.GT.ZEROP(NZ,NY,NX)
      2.AND.WTSTKB(NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
@@ -2701,14 +2914,8 @@ C
      2,KVSTG(NB,NZ,NY,NX)-23)
       MXNOD=MAX(MXNOD,MNNOD)
       DO 1650 KK=MXNOD,MNNOD,-1
-      K=MOD(KK,25)
+      K=MAX(0,MOD(KK,25))
       IF(K.EQ.0.AND.KK.NE.0)K=25
-C     IF(NZ.EQ.1.OR.NZ.EQ.4)THEN
-C     WRITE(*,2356)'WGNODE1',I,J,NX,NY,NZ,NB,K,KK,MXNOD,MNNOD
-C    2,KSNC,RCCC,FRCC,RCSC,SNCT,WGNODE(K,NB,NZ,NY,NX)
-C    3,HTNODX(K,NB,NZ,NY,NX),WTSTKB(NB,NZ,NY,NX)
-C    4,CPOOL(NB,NZ,NY,NX)
-C     ENDIF
 C
 C     REMOBILIZATION OF STALK C,N,P DEPENDS ON NON-STRUCTURAL C:N:P
 C
@@ -2723,6 +2930,8 @@ C
 C     FRACTION OF CURRENT NODE TO BE REMOBILIZED
 C
 C     FSNCS=fraction of lowest internode to be remobilized
+C     SNCT=remaining node senescence respiration
+C     RCCK=remobilization of C from senescing internode 
 C
       IF(RCCK.GT.ZEROP(NZ,NY,NX))THEN
       FSNCK=AMAX1(0.0,AMIN1(1.0,SNCT/RCCK))
@@ -2734,31 +2943,34 @@ C     NON-REMOBILIZABLE C,N,P BECOMES LITTERFALL ALLOCATED
 C     TO FRACTIONS SET IN 'STARTQ'
 C
 C     CSNC,ZSNC,PSNC=C,N,P litterfall from senescence
-C     CFOPC,CFOPN,CFOPC=fraction of litterfall C,N,P allocated to litter components
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     FSNCK=fraction of lowest internode to be remobilized
 C     RCCK,RCZK,RCPK=remobilization of C,N,P from senescing internode 
 C     WGNODE,WGNODN,WGNODP=senescing internode C,N,P mass
 C
       DO 7310 M=1,4
-      CSNC(M,0,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)+CFOPC(3,M,NZ,NY,NX)
-     2*FSNCK*(WGNODE(K,NB,NZ,NY,NX)-RCCK)*FWOOD(0)
-      ZSNC(M,0,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)+CFOPN(3,M,NZ,NY,NX)
-     2*FSNCK*(WGNODN(K,NB,NZ,NY,NX)-RCZK)*FWOODN(0)
-      PSNC(M,0,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)+CFOPP(3,M,NZ,NY,NX)
-     2*FSNCK*(WGNODP(K,NB,NZ,NY,NX)-RCPK)*FWOODP(0)
-      CSNC(M,1,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)+CFOPC(3,M,NZ,NY,NX)
-     2*FSNCK*(WGNODE(K,NB,NZ,NY,NX)-RCCK)*FWOOD(1)
-      ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)+CFOPN(3,M,NZ,NY,NX)
-     2*FSNCK*(WGNODN(K,NB,NZ,NY,NX)-RCZK)*FWOODN(1)
-      PSNC(M,1,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)+CFOPP(3,M,NZ,NY,NX)
-     2*FSNCK*(WGNODP(K,NB,NZ,NY,NX)-RCPK)*FWOODP(1)
+      CSNC(M,0,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)+CFOPC(5,M,NZ,NY,NX)
+     2*FSNCK*WGNODE(K,NB,NZ,NY,NX)*FWOOD(0,NZ)
+      ZSNC(M,0,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)+CFOPN(5,M,NZ,NY,NX)
+     2*FSNCK*WGNODN(K,NB,NZ,NY,NX)*FWOODN(0,NZ)
+      PSNC(M,0,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)+CFOPP(5,M,NZ,NY,NX)
+     2*FSNCK*WGNODP(K,NB,NZ,NY,NX)*FWOODP(0,NZ)
+      CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)+CFOPC(3,M,NZ,NY,NX)
+     2*FSNCK*(WGNODE(K,NB,NZ,NY,NX)-RCCK)*FWOOD(1,NZ)
+      ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)+CFOPN(3,M,NZ,NY,NX)
+     2*FSNCK*(WGNODN(K,NB,NZ,NY,NX)-RCZK)*FWOODN(1,NZ)
+      PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)+CFOPP(3,M,NZ,NY,NX)
+     2*FSNCK*(WGNODP(K,NB,NZ,NY,NX)-RCPK)*FWOODP(1,NZ)
 7310  CONTINUE
 C
 C     UPDATE STATE VARIABLES FOR REMOBILIZATION AND LITTERFALL
 C
 C     FSNCK=fraction of lowest internode to be remobilized
 C     HTNODE,HTNODX=living,senescing internode length 
-C     WTSTKB,WTSTBN,WTSTBP,WGNODE,WGNODN,WGNODP=C,N,P mass in senescing internode
+C     WTSTKB,WTSTBN,WTSTBP,WGNODE,WGNODN,WGNODP=C,N,P mass in
+C        senescing internode
 C
       WTSTKB(NB,NZ,NY,NX)=AMAX1(0.0,WTSTKB(NB,NZ,NY,NX)
      2-FSNCK*WGNODE(K,NB,NZ,NY,NX))
@@ -2776,6 +2988,12 @@ C
      2-FSNCK*WGNODP(K,NB,NZ,NY,NX)
       HTNODX(K,NB,NZ,NY,NX)=HTNODX(K,NB,NZ,NY,NX)
      2-FSNCK*HTNODX(K,NB,NZ,NY,NX)
+C     IF(NZ.EQ.1.AND.ICHKF.EQ.1)THEN
+C     WRITE(*,2356)'WGNODE1',I,J,NFZ,NX,NY,NZ,NB,K,KK,MXNOD,MNNOD
+C    2,KSNC,RCCC,FRCC,RCSC,SNCT,WGNODE(K,NB,NZ,NY,NX)
+C    3,HTNODX(K,NB,NZ,NY,NX),WTSTKB(NB,NZ,NY,NX)
+C    4,CPOOL(NB,NZ,NY,NX)
+C     ENDIF
 C
 C     FRACTION OF C REMOBILIZED FOR GROWTH RESPIRATION < 0 IS
 C     RESPIRED AND NOT TRANSFERRED TO NON-STRUCTURAL POOLS
@@ -2785,17 +3003,11 @@ C     WTRSVB,WTRSBN,WTRSBP=stalk reserve C,N,P mass
 C     FSNCK=fraction of lowest internode to be remobilized
 C     SNCT=remaining node senescence respiration
 C 
-      WTRSVB(NB,NZ,NY,NX)=WTRSVB(NB,NZ,NY,NX)+FSNCK*RCCK*SNCF 
-      WTRSBN(NB,NZ,NY,NX)=WTRSBN(NB,NZ,NY,NX)+FSNCK*RCZK
-      WTRSBP(NB,NZ,NY,NX)=WTRSBP(NB,NZ,NY,NX)+FSNCK*RCPK
-      SNCT=SNCT-FSNCK*RCCK
-C     IF(NZ.EQ.1.OR.NZ.EQ.4)THEN
-C     WRITE(*,2356)'WGNODE2',I,J,NX,NY,NZ,NB,K,KK,MXNOD,MNNOD
-C    2,KSNC,RCCC,FRCC,RCSC,SNCT,WGNODE(K,NB,NZ,NY,NX)
-C    3,HTNODX(K,NB,NZ,NY,NX),WTSTKB(NB,NZ,NY,NX)
-C    4,CPOOL(NB,NZ,NY,NX)
-2356  FORMAT(A8,11I4,12E16.8)
-C     ENDIF
+      WTRSVB(NB,NZ,NY,NX)=WTRSVB(NB,NZ,NY,NX)+FSNCK*RCCK*SNCF
+     2*FWOOD(1,NZ) 
+      WTRSBN(NB,NZ,NY,NX)=WTRSBN(NB,NZ,NY,NX)+FSNCK*RCZK*FWOODN(1,NZ)
+      WTRSBP(NB,NZ,NY,NX)=WTRSBP(NB,NZ,NY,NX)+FSNCK*RCPK*FWOODP(1,NZ)
+      SNCT=SNCT-FSNCK*RCCK*FWOOD(1,NZ)
 C
 C     EXIT LOOP IF REMOBILIZATION REQUIREMENT HAS BEEN MET
 C
@@ -2804,24 +3016,27 @@ C
 C     OTHERWISE REMAINING C,N,P IN NODE GOES TO LITTERFALL
 C
 C     CSNC,ZSNC,PSNC=literfall C,N,P
-C     CFOPC=fraction of plant litter allocated in nonstructural(0,*),
-C     WTSTKB,WTSTBN,WTSTBP,WGNODE,WGNODN,WGNODP=C,N,P mass in senescing internode
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
+C     WTSTKB,WTSTBN,WTSTBP,WGNODE,WGNODN,WGNODP=C,N,P mass in
+C        senescing internode
 C     HTNODE,HTNODX=living,senescing internode length 
 C
       ELSE
       DO 7315 M=1,4
-      CSNC(M,0,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)+CFOPC(3,M,NZ,NY,NX)
-     2*WGNODE(K,NB,NZ,NY,NX)*FWOOD(0)
-      ZSNC(M,0,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)+CFOPN(3,M,NZ,NY,NX)
-     2*WGNODN(K,NB,NZ,NY,NX)*FWOODN(0)
-      PSNC(M,0,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)+CFOPP(3,M,NZ,NY,NX)
-     2*WGNODP(K,NB,NZ,NY,NX)*FWOODP(0)
-      CSNC(M,1,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)+CFOPC(3,M,NZ,NY,NX)
-     2*WGNODE(K,NB,NZ,NY,NX)*FWOOD(1)
-      ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)+CFOPN(3,M,NZ,NY,NX)
-     2*WGNODN(K,NB,NZ,NY,NX)*FWOODN(1)
-      PSNC(M,1,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)+CFOPP(3,M,NZ,NY,NX)
-     2*WGNODP(K,NB,NZ,NY,NX)*FWOODP(1)
+      CSNC(M,0,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)+CFOPC(5,M,NZ,NY,NX)
+     2*WGNODE(K,NB,NZ,NY,NX)*FWOOD(0,NZ)
+      ZSNC(M,0,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)+CFOPN(5,M,NZ,NY,NX)
+     2*WGNODN(K,NB,NZ,NY,NX)*FWOODN(0,NZ)
+      PSNC(M,0,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)+CFOPP(5,M,NZ,NY,NX)
+     2*WGNODP(K,NB,NZ,NY,NX)*FWOODP(0,NZ)
+      CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)+CFOPC(3,M,NZ,NY,NX)
+     2*WGNODE(K,NB,NZ,NY,NX)*FWOOD(1,NZ)
+      ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)+CFOPN(3,M,NZ,NY,NX)
+     2*WGNODN(K,NB,NZ,NY,NX)*FWOODN(1,NZ)
+      PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)+CFOPP(3,M,NZ,NY,NX)
+     2*WGNODP(K,NB,NZ,NY,NX)*FWOODP(1,NZ)
 7315  CONTINUE
       WTSTKB(NB,NZ,NY,NX)=AMAX1(0.0,WTSTKB(NB,NZ,NY,NX)
      2-WGNODE(K,NB,NZ,NY,NX))
@@ -2835,6 +3050,13 @@ C
       WGNODN(K,NB,NZ,NY,NX)=0.0
       WGNODP(K,NB,NZ,NY,NX)=0.0
       HTNODX(K,NB,NZ,NY,NX)=0.0
+C     IF(NZ.EQ.1.AND.ICHKF.EQ.1)THEN
+C     WRITE(*,2356)'WGNODE2',I,J,NFZ,NX,NY,NZ,NB,K,KK,MXNOD,MNNOD
+C    2,KSNC,RCCC,FRCC,RCSC,SNCT,WGNODE(K,NB,NZ,NY,NX)
+C    3,HTNODX(K,NB,NZ,NY,NX),WTSTKB(NB,NZ,NY,NX)
+C    4,CPOOL(NB,NZ,NY,NX)
+2356  FORMAT(A8,12I4,12E16.8)
+C     ENDIF
       ENDIF
 1650  CONTINUE
 C
@@ -2852,7 +3074,9 @@ C     FRACTION OF RESIDUAL STALK TO BE REMOBILIZED
 C
 C     FSNCR=fraction of residual stalk to be remobilized
 C     CSNC,ZSNC,PSNC=C,N,P litterfall from senescence
-C     CFOPC,CFOPN,CFOPC=fraction of litterfall C,N,P allocated to litter components
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     WTSTXB,WTSTXN,WTSTXP=residual C,N,P mass in senescing stalk
 C
       IF(RCCK.GT.ZEROP(NZ,NY,NX))THEN
@@ -2864,19 +3088,28 @@ C
 C     NON-REMOBILIZABLE C,N,P BECOMES LITTERFALL ALLOCATED
 C     TO FRACTIONS SET IN 'STARTQ'
 C
+C     CSNC,ZSNC,PSNC=C,N,P litterfall from senescence
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
+C     FSNCR=fraction of residual stalk to be remobilized
+C     WTSTXB,WTSTXN,WTSTXP=residual C,N,P mass in senescing stalk
+C     FWOOD,FWOODN,FWOODP=C,N,P woody fraction in root:0=woody,
+C        1=non-woody
+C
       DO 8310 M=1,4
-      CSNC(M,0,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)+CFOPC(3,M,NZ,NY,NX)
-     2*FSNCR*(WTSTXB(NB,NZ,NY,NX)-RCCK)*FWOOD(0)
-      ZSNC(M,0,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)+CFOPN(3,M,NZ,NY,NX)
-     2*FSNCR*(WTSTXN(NB,NZ,NY,NX)-RCZK)*FWOODN(0)
-      PSNC(M,0,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)+CFOPP(3,M,NZ,NY,NX)
-     2*FSNCR*(WTSTXP(NB,NZ,NY,NX)-RCPK)*FWOODP(0)
-      CSNC(M,1,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)+CFOPC(3,M,NZ,NY,NX)
-     2*FSNCR*(WTSTXB(NB,NZ,NY,NX)-RCCK)*FWOOD(1)
-      ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)+CFOPN(3,M,NZ,NY,NX)
-     2*FSNCR*(WTSTXN(NB,NZ,NY,NX)-RCZK)*FWOODN(1)
-      PSNC(M,1,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)+CFOPP(3,M,NZ,NY,NX)
-     2*FSNCR*(WTSTXP(NB,NZ,NY,NX)-RCPK)*FWOODP(1)
+      CSNC(M,0,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)+CFOPC(5,M,NZ,NY,NX)
+     2*FSNCR*WTSTXB(NB,NZ,NY,NX)*FWOOD(0,NZ)
+      ZSNC(M,0,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)+CFOPN(5,M,NZ,NY,NX)
+     2*FSNCR*WTSTXN(NB,NZ,NY,NX)*FWOODN(0,NZ)
+      PSNC(M,0,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)+CFOPP(5,M,NZ,NY,NX)
+     2*FSNCR*WTSTXP(NB,NZ,NY,NX)*FWOODP(0,NZ)
+      CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)+CFOPC(3,M,NZ,NY,NX)
+     2*FSNCR*(WTSTXB(NB,NZ,NY,NX)-RCCK)*FWOOD(1,NZ)
+      ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)+CFOPN(3,M,NZ,NY,NX)
+     2*FSNCR*(WTSTXN(NB,NZ,NY,NX)-RCZK)*FWOODN(1,NZ)
+      PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)+CFOPP(3,M,NZ,NY,NX)
+     2*FSNCR*(WTSTXP(NB,NZ,NY,NX)-RCPK)*FWOODP(1,NZ)
 8310  CONTINUE
 C
 C     UPDATE STATE VARIABLES FOR REMOBILIZATION AND LITTERFALL
@@ -2915,43 +3148,54 @@ C     RCCK,RCZK,RCPK=remobilization of C,N,P from senescing internode
 C     FSNCR=fraction of residual stalk to be remobilized
 C     SNCT=remaining node senescence respiration
 C
-      WTRSVB(NB,NZ,NY,NX)=WTRSVB(NB,NZ,NY,NX)+FSNCR*RCCK*SNCF 
-      WTRSBN(NB,NZ,NY,NX)=WTRSBN(NB,NZ,NY,NX)+FSNCR*RCZK
-      WTRSBP(NB,NZ,NY,NX)=WTRSBP(NB,NZ,NY,NX)+FSNCR*RCPK
-      SNCT=SNCT-FSNCR*RCCK
-      ENDIF
-C     IF(NZ.EQ.1.OR.NZ.EQ.4)THEN
-C     WRITE(*,2357)'WTSTXB1',I,J,NZ,NB,K,FSNCR,SNCT
+      WTRSVB(NB,NZ,NY,NX)=WTRSVB(NB,NZ,NY,NX)+FSNCR*RCCK*SNCF
+     2*FWOOD(1,NZ) 
+      WTRSBN(NB,NZ,NY,NX)=WTRSBN(NB,NZ,NY,NX)+FSNCR*RCZK*FWOODN(1,NZ)
+      WTRSBP(NB,NZ,NY,NX)=WTRSBP(NB,NZ,NY,NX)+FSNCR*RCPK*FWOODP(1,NZ)
+      SNCT=SNCT-FSNCR*RCCK*FWOOD(1,NZ)
+C     IF(NZ.EQ.1.AND.ICHKF.EQ.1)THEN
+C     WRITE(*,2357)'WTSTXB1',I,J,NFZ,NX,NY,NZ,NB,K,FSNCR,SNCT
 C    3,WTSTKB(NB,NZ,NY,NX),WTSTXB(NB,NZ,NY,NX)
 C    4,(HTNODE(K,NB,NZ,NY,NX),K=0,25)
-2357  FORMAT(A8,5I4,40E12.4)
+2357  FORMAT(A8,8I4,40E12.4)
 C     ENDIF
+      ENDIF
 C
 C     EXIT LOOP IF REMOBILIZATION REQUIREMENT HAS BEEN MET
+C
+C     SNCT=remaining node senescence respiration
 C
       IF(SNCT.LE.ZEROP(NZ,NY,NX))GO TO 565
 C
 C     OTHERWISE REMAINING C,N,P IN NODE GOES TO LITTERFALL
 C
 C     CSNC,ZSNC,PSNC=C,N,P litterfall from senescence
-C     CFOPC,CFOPN,CFOPC=fraction of litterfall C,N,P allocated to litter components
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     WTSTXB,WTSTXN,WTSTXP=residual C,N,P mass in senescing stalk
 C
       ELSE
+      IF(ICHKF.EQ.0)THEN
       DO 8315 M=1,4
-      CSNC(M,0,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)+CFOPC(3,M,NZ,NY,NX)
-     2*WTSTXB(NB,NZ,NY,NX)*FWOOD(0)
-      ZSNC(M,0,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)+CFOPN(3,M,NZ,NY,NX)
-     2*WTSTXN(NB,NZ,NY,NX)*FWOODN(0)
-      PSNC(M,0,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)+CFOPP(3,M,NZ,NY,NX)
-     2*WTSTXP(NB,NZ,NY,NX)*FWOODP(0)
-      CSNC(M,1,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)+CFOPC(3,M,NZ,NY,NX)
-     2*WTSTXB(NB,NZ,NY,NX)*FWOOD(1)
-      ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)+CFOPN(3,M,NZ,NY,NX)
-     2*WTSTXN(NB,NZ,NY,NX)*FWOODN(1)
-      PSNC(M,1,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)+CFOPP(3,M,NZ,NY,NX)
-     2*WTSTXP(NB,NZ,NY,NX)*FWOODP(1)
+      CSNC(M,0,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)+CFOPC(5,M,NZ,NY,NX)
+     2*WTSTXB(NB,NZ,NY,NX)*FWOOD(0,NZ)
+      ZSNC(M,0,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)+CFOPN(5,M,NZ,NY,NX)
+     2*WTSTXN(NB,NZ,NY,NX)*FWOODN(0,NZ)
+      PSNC(M,0,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)+CFOPP(5,M,NZ,NY,NX)
+     2*WTSTXP(NB,NZ,NY,NX)*FWOODP(0,NZ)
+      CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)+CFOPC(3,M,NZ,NY,NX)
+     2*WTSTXB(NB,NZ,NY,NX)*FWOOD(1,NZ)
+      ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)+CFOPN(3,M,NZ,NY,NX)
+     2*WTSTXN(NB,NZ,NY,NX)*FWOODN(1,NZ)
+      PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)+CFOPP(3,M,NZ,NY,NX)
+     2*WTSTXP(NB,NZ,NY,NX)*FWOODP(1,NZ)
 8315  CONTINUE
+C     IF(NZ.EQ.1.AND.ICHKF.EQ.1)THEN
+C     WRITE(*,2357)'WTSTXB2',I,J,NFZ,NX,NY,NZ,NB,K,FSNCR,SNCT
+C    3,WTSTKB(NB,NZ,NY,NX),WTSTXB(NB,NZ,NY,NX)
+C    4,(HTNODE(K,NB,NZ,NY,NX),K=0,25)
+C     ENDIF
       WTSTKB(NB,NZ,NY,NX)=AMAX1(0.0,WTSTKB(NB,NZ,NY,NX)
      2-WTSTXB(NB,NZ,NY,NX))
       WTSTBN(NB,NZ,NY,NX)=AMAX1(0.0,WTSTBN(NB,NZ,NY,NX)
@@ -2962,6 +3206,7 @@ C
       WTSTXN(NB,NZ,NY,NX)=0.0
       WTSTXP(NB,NZ,NY,NX)=0.0
       ENDIF
+      ENDIF
 C
 C     REMOBILIZATION OF STORAGE C,N,P 
 C
@@ -2969,13 +3214,24 @@ C     WTRVC=storage C
 C     IDTHB=branch living flag: 0=alive,1=dead
 C     SNCR=remaining excess maintenance respiration
 C
-      SNCR=SNCT/(1.0+FXFS)
+      SNCR=SNCT
       IF(WTRVC(NZ,NY,NX).GT.SNCR)THEN
       WTRVC(NZ,NY,NX)=WTRVC(NZ,NY,NX)-SNCR
       SNCR=0.0
       GO TO 565
-      ELSEIF(ISTYP(NZ,NY,NX).NE.0)THEN
+      ELSE
+      SNCR=SNCR-WTRVC(NZ,NY,NX)
+      WTRVC(NZ,NY,NX)=0.0
+      WTSTKB(NB,NZ,NY,NX)=WTSTKB(NB,NZ,NY,NX)-SNCR
+      IF(ISTYP(NZ,NY,NX).NE.0.OR.IWTYP(NZ,NY,NX).EQ.0)THEN
       IDTHB(NB,NZ,NY,NX)=1
+      ELSE      
+      VRNF(NB,NZ,NY,NX)=VRNX(NB,NZ,NY,NX)+0.5
+      ENDIF
+      WRITE(*,1113)'DEATHC',IYRC,I,J,NFZ,NX,NY,NZ,NB
+     2,IFLGF(NB,NZ,NY,NX),IDTHB(NB,NZ,NY,NX),IDTHP(NZ,NY,NX)
+     3,IDTHR(NZ,NY,NX),SNCT,SNCR,WTRVC(NZ,NY,NX),VRNF(NB,NZ,NY,NX) 
+1113  FORMAT(A8,12I4,12E12.4)
       ENDIF
 565   CONTINUE
 575   CONTINUE
@@ -2984,10 +3240,16 @@ C
 C
 C     DEATH IF MAIN STALK OF TREE DIES
 C
-C     IBTYP=turnover:0=all abve-grd,1=all leaf+petiole,2=none,3=between 1,2
-C     IGTYP=growth type:0=bryophyte,1=graminoid,2=shrub,tree
+C     IBTYP=turnover rate of above-ground biomass
+C              :0,1=fully deciduous,
+C              :2=needleleaf evergreen
+C              :3=broadleaf evergreen
+C              :4=semi-deciduous
+C              :5=semi-evergreen
+C     IGTYP=growth type:0=bryophyte,1=grass,herb,2=woody shrub,tree
 C     IDTHB=branch living flag: 0=alive,1=dead
-C     KVSTGX,KVSTG=integer of lowest,highest leaf number currently growing
+C     KVSTGX,KVSTG=integer of lowest,highest leaf number currently
+C        growing
 C     WGLF,WGLFN,WGLFP,WSLF=node leaf C,N,P,protein mass
 C     CPOOL,ZPOOL,PPOOL=non-structural C,N,P mass
 C     ZPLFM=min N:C,P:C in leaves relative to max values from PFT file
@@ -3000,7 +3262,7 @@ C     REMOBILIZE EXCESS LEAF STRUCTURAL N,P
 C
       KVSTGX=MAX(0,KVSTG(NB,NZ,NY,NX)-24)
       DO 495 KK=KVSTGX,KVSTG(NB,NZ,NY,NX)
-      K=MOD(KK,25)
+      K=MAX(0,MOD(KK,25))
       IF(K.EQ.0.AND.KK.NE.0)K=25
       IF(WGLF(K,NB,NZ,NY,NX).GT.0.0)THEN
       CPOOLT=WGLF(K,NB,NZ,NY,NX)+CPOOL(NB,NZ,NY,NX) 
@@ -3043,7 +3305,7 @@ C
      2+HTNODE(0,NB1(NZ,NY,NX),NZ,NY,NX)
       ENDIF
 C
-C     IF CANOPY HAS EMERGED
+C     IF CANOPY HAS EMERGED INITIALIZE LEAF VARIABLES
 C
       IF(HTCTL(NZ,NY,NX).GT.SDPTH(NZ,NY,NX))THEN
       DO 540 K=0,25
@@ -3059,9 +3321,15 @@ C
 C
 C     BRANCH HEIGHT
 C
-C     IBTYP=turnover:0=all abve-grd,1=all leaf+petiole,2=none,3=between 1,2
-C     IGTYP=growth type:0=bryophyte,1=graminoid,2=shrub,tree
-C     KVSTG1,KVSTGN=integer of highest,lowest leaf number currently growing
+C     IBTYP=turnover rate of above-ground biomass
+C              :0,1=fully deciduous,
+C              :2=needleleaf evergreen
+C              :3=broadleaf evergreen
+C              :4=semi-deciduous
+C              :5=semi-evergreen
+C     IGTYP=growth type:0=bryophyte,1=grass,herb,2=woody shrub,tree
+C     KVSTG1,KVSTGN=integer of highest,lowest leaf number currently
+C        growing
 C     HTNODE=internode length
 C     HTBR=branch base height 
 C
@@ -3069,7 +3337,7 @@ C
       IF(NB.NE.NB1(NZ,NY,NX))THEN
       KVSTG1=MAX(1,KVSTG(NB1(NZ,NY,NX),NZ,NY,NX)-24)
       IF(NBTB(NB,NZ,NY,NX).GE.KVSTG1)THEN
-      K=MOD(NBTB(NB,NZ,NY,NX),25)
+      K=MAX(0,MOD(NBTB(NB,NZ,NY,NX),25))
       IF(K.EQ.0.AND.KK.NE.0)K=25
       HTBR=HTNODE(K,NB1(NZ,NY,NX),NZ,NY,NX)
       ELSE
@@ -3086,7 +3354,7 @@ C
 C     FOR ALL LEAFED NODES
 C
       DO 560 KK=KVSTGX,KVSTG(NB,NZ,NY,NX)
-      K=MOD(KK,25)
+      K=MAX(0,MOD(KK,25))
       IF(K.EQ.0.AND.KK.NE.0)K=25
 C
 C     HEIGHT OF STALK INTERNODE + SHEATH OR PETIOLE
@@ -3097,13 +3365,12 @@ C     HTNODE=internode length
 C     HTLF=leaf node height
 C     ARLF=leaf node area
 C     PP=plant population
-C     FNOD=scales node number for perennial vegetation (e.g. trees)
 C     XLGLF=leaf length
 C
       HTSTK=HTBR+HTNODE(K,NB,NZ,NY,NX)
       HTLF=HTSTK+HTSHE(K,NB,NZ,NY,NX)
       XLGLF=AMAX1(0.0,SQRT(WDLF(NZ,NY,NX)*AMAX1(0.0
-     2,ARLF(K,NB,NZ,NY,NX))/(PP(NZ,NY,NX)*FNOD(NZ,NY,NX))))
+     2,ARLF(K,NB,NZ,NY,NX))/PP(NZ,NY,NX)))
       TLGLF=0.0
 C
 C     ALLOCATE FRACTIONS OF LEAF IN EACH INCLINATION CLASS
@@ -3154,7 +3421,7 @@ C
 C
 C     ACCUMULATE LAYER LEAF AREAS, C, N AND P CONTENTS
 C
-C     ARLFL=leaf node area in canopy layer
+C     ARLFL=node leaf area in canopy layer
 C     WGLFL,WGLFLN,WGLFLP=leaf node C,N,P in canopy layer
 C     ARLFV,WGLFV=total leaf area,C in canopy layer
 C     HTNODE=internode length
@@ -3186,9 +3453,9 @@ C     ENDIF
 560   CONTINUE
       IF(KVSTGN(NB,NZ,NY,NX).EQ.0)KVSTGN(NB,NZ,NY,NX)
      2=KVSTG(NB,NZ,NY,NX)
-      K1=MOD(KVSTG(NB,NZ,NY,NX),25)
+      K1=MAX(0,MOD(KVSTG(NB,NZ,NY,NX),25))
       IF(K1.EQ.0.AND.KVSTG(NB,NZ,NY,NX).NE.0)K1=25
-      K2=MOD(KVSTG(NB,NZ,NY,NX)-1,25)
+      K2=MAX(0,MOD(KVSTG(NB,NZ,NY,NX)-1,25))
       IF(K2.EQ.0.AND.KVSTG(NB,NZ,NY,NX)-1.NE.0)K2=25
       IF(HTNODE(K1,NB,NZ,NY,NX).EQ.0.0)THEN
       HTNODE(K1,NB,NZ,NY,NX)=HTNODE(K2,NB,NZ,NY,NX)
@@ -3203,8 +3470,6 @@ C     HTLFB=leaf base height
 C     ZL=height to bottom of each canopy layer
 C     LHTBRL,LHTBRU=layer number of branch base,tip
 C     WTSTKB,ARSTKB=branch stalk mass,surface area
-C     FSTK=fraction of stalk area contributing to water,heat flow
-C     DSTK,VSTK=stalk density (Mg m-3),specific volume (m3 g-1)
 C     WVSTKB=stalk sapwood mass
 C     FRACL=stalk fraction in each layer
 C     ARSTK=total branch stalk surface area in each layer
@@ -3233,17 +3498,19 @@ C     ENDIF
 546   CONTINUE
       RSTK=SQRT(VSTK*(AMAX1(0.0,WTSTKB(NB,NZ,NY,NX))/PP(NZ,NY,NX))
      3/(3.1416*HTNODE(K1,NB,NZ,NY,NX)))
-      ARSTKB(NB)=3.1416*HTNODE(K1,NB,NZ,NY,NX)*PP(NZ,NY,NX)*RSTK
+      ARSTKB(NB)=6.2832*RSTK*HTNODE(K1,NB,NZ,NY,NX)*PP(NZ,NY,NX)
       IF(ISTYP(NZ,NY,NX).EQ.0)THEN
       WVSTKB(NB,NZ,NY,NX)=WTSTKB(NB,NZ,NY,NX)
       ELSE
-      ZSTK=AMIN1(ZSTX,FSTK*RSTK)
+      ZSTK=AMIN1(YSTK,0.1*RSTK)
       ASTV=3.1416*(2.0*RSTK*ZSTK-ZSTK**2)
-      WVSTKB(NB,NZ,NY,NX)=ASTV/VSTK*HTNODE(K1,NB,NZ,NY,NX)*PP(NZ,NY,NX)
+      WVSTKB(NB,NZ,NY,NX)=ASTV/VSTK
+     2*HTNODE(K1,NB,NZ,NY,NX)*PP(NZ,NY,NX)
       ENDIF
-C     IF(NZ.EQ.1)THEN
+C     IF((I/210)*210.EQ.I.AND.J.EQ.24.AND.NFZ.EQ.1.AND.NZ.EQ.1)THEN
 C     WRITE(*,6677)'WVSTK',I,J,NX,NY,NZ,NB,K1,WVSTKB(NB,NZ,NY,NX)
-C    2,ASTV,VSTK,HTNODE(K1,NB,NZ,NY,NX),PP(NZ,NY,NX)
+C    2,ASTV,VSTK,ZSTK,RSTK,HTNODE(K1,NB,NZ,NY,NX),PP(NZ,NY,NX)
+C    3,WTSTKB(NB,NZ,NY,NX),WTLSB(NB,NZ,NY,NX)
 6677  FORMAT(A8,7I4,12E12.4)
 C     ENDIF
       DO 445 L=LHTBRL,LHTBRU
@@ -3260,13 +3527,21 @@ C     ENDIF
       ARSTK(L,NB,NZ,NY,NX)=FRACL*ARSTKB(NB)
 445   CONTINUE
       ELSE
+      IF(SNL1(NZ,NY,NX).GT.0.0)THEN
       WVSTKB(NB,NZ,NY,NX)=0.0
+      ELSE
+      WVSTKB(NB,NZ,NY,NX)=WTLSB(NB,NZ,NY,NX)
+      ENDIF
       DO 450 L=1,JC
       ARSTK(L,NB,NZ,NY,NX)=0.0
 450   CONTINUE
       ENDIF
       ELSE
+      IF(SNL1(NZ,NY,NX).GT.0.0)THEN
       WVSTKB(NB,NZ,NY,NX)=0.0
+      ELSE
+      WVSTKB(NB,NZ,NY,NX)=WTLSB(NB,NZ,NY,NX)
+      ENDIF
       DO 455 L=1,JC
       ARSTK(L,NB,NZ,NY,NX)=0.0
 455   CONTINUE
@@ -3315,8 +3590,8 @@ C
 C     ALLOCATE STALK AREA TO INCLINATION CLASSES ACCORDING TO
 C     BRANCH ANGLE ENTERED IN 'READQ' ASSUMING AZIMUTH IS UNIFORM
 C
-C     SURFB=stalk surface area in canopy layer
-C     ANGBR=stem angle from horizontal
+C     SURFB=stalk surface area in canopy layer used in ‘hour1.f’
+C     ANGBR=stem angle from horizontal from PFT file
 C     ARSTK=total branch stalk surface area in each layer
 C
       DO 910 L=1,JC
@@ -3328,7 +3603,7 @@ C
       ELSE
       N=MIN(4,INT(ASIN(ANGBR(NZ,NY,NX))/0.3927)+1)
       ENDIF
-      DO 710 L=JC,1,-1
+      DO 710 L=1,JC
       SURFB(N,L,NB,NZ,NY,NX)=0.25*ARSTK(L,NB,NZ,NY,NX)
 710   CONTINUE
       ENDIF
@@ -3341,26 +3616,32 @@ C     GRNXB=potential number of seed set sites
 C     STMX=maximum potential seed number from PFT file 
 C     GROSTK=stalk growth rate
 C
-      IF(IDAY(3,NB,NZ,NY,NX).NE.0.AND.IDAY(6,NB,NZ,NY,NX).EQ.0)THEN
-      GRNXB(NB,NZ,NY,NX)=GRNXB(NB,NZ,NY,NX)
-     2+STMX(NZ,NY,NX)*AMAX1(0.0,GROSTK)
-C     WRITE(*,4246)'GRNX',I,J,NZ,NB,IDAY(3,NB,NZ,NY,NX)
-C    2,GRNXB(NB,NZ,NY,NX),STMX(NZ,NY,NX),CGROS,GROSTK
+      IF(IDAY(3,NB,NZ,NY,NX).NE.0.AND.IDAY(6,NB,NZ,NY,NX).EQ.0
+     2.AND.WTSHT(NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
+      SETM=AMAX1(0.0,DWTSHT(NZ,NY,NX)/XNFH)**0.5*XNFH
+     2*WTSHTB(NB,NZ,NY,NX)/WTSHT(NZ,NY,NX) 
+      GRNXB(NB,NZ,NY,NX)=GRNXB(NB,NZ,NY,NX)+STMX(NZ,NY,NX)*SETM
+C     WRITE(*,4246)'GRNX',I,J,NFZ,NZ,NB,IDAY(3,NB,NZ,NY,NX)
+C    2,GRNXB(NB,NZ,NY,NX),STMX(NZ,NY,NX),SETM,DWTSHT(NZ,NY,NX)
+C    3,WTSHTB(NB,NZ,NY,NX),WTSHT(NZ,NY,NX),XNFH
       ENDIF
 C
-C     SET FINAL GRAIN NUMBER FROM C,N,P NON-STRUCTURAL POOLS AFTER ANTHESIS
+C     SET FINAL GRAIN NUMBER FROM C,N,P NON-STRUCTURAL POOLS 
+C     AFTER ANTHESIS
 C
 C     IDAY(6,=start of anthesis and setting final seed number
 C     IDAY(7,=start of grain filling and setting max seed size
-C     IDAY(8,=end date setting for final seed number
+C     IDAY(8,=end date for setting final seed number
 C     IDAY(9,=end of setting max seed size
 C     SET=seed set limited by nonstructural C,N,P
 C     CCPOLB,CZPOLB,CPPOLB=nonstructural C,N,P concn in branch(g g-1)
 C     TCC=canopy temperature 
 C     CTC=chilling temperature for CO2 fixation, seed loss (oC)
+C        from PFT file
 C     HTC=high temperature threshold for grain number loss
-C     FGRNX=loss of seed set
-C     SSTX=sensitivity to TCC > HTC,TCC < CTC from startq.f (seeds oC-1)
+C     FGRNX=loss of seed set from high or low temperature
+C     SSTX=sensitivity to TCC > HTC,TCC < CTC from ‘startq.f’ 
+C        (seeds oC-1)
 C     GRNOB=seed set number
 C     GRNXB=potential number of seed set sites
 C     SDMX=maximum seed number per STMX from PFT file 
@@ -3372,17 +3653,17 @@ C
      3,CPPOLB(NB,NZ,NY,NX)/(CPPOLB(NB,NZ,NY,NX)+SETP))
       IF(TCC(NZ,NY,NX).LT.CTC(NZ,NY,NX))THEN
       IF(IDAY(7,NB,NZ,NY,NX).EQ.0)THEN
-      FGRNX=SSTX(NZ,NY,NX)*(CTC(NZ,NY,NX)-TCC(NZ,NY,NX))
+      FGRNX=SSTX(NZ,NY,NX)*(CTC(NZ,NY,NX)-TCC(NZ,NY,NX))*XNFH
       ELSEIF(IDAY(8,NB,NZ,NY,NX).EQ.0)THEN
-      FGRNX=SSTX(NZ,NY,NX)*(CTC(NZ,NY,NX)-TCC(NZ,NY,NX))
+      FGRNX=SSTX(NZ,NY,NX)*(CTC(NZ,NY,NX)-TCC(NZ,NY,NX))*XNFH
       ELSE
       FGRNX=0.0
       ENDIF
       ELSEIF(TCC(NZ,NY,NX).GT.HTC(NZ,NY,NX))THEN
       IF(IDAY(7,NB,NZ,NY,NX).EQ.0)THEN
-      FGRNX=SSTX(NZ,NY,NX)*(TCC(NZ,NY,NX)-HTC(NZ,NY,NX))
+      FGRNX=SSTX(NZ,NY,NX)*(TCC(NZ,NY,NX)-HTC(NZ,NY,NX))*XNFH
       ELSEIF(IDAY(8,NB,NZ,NY,NX).EQ.0)THEN
-      FGRNX=SSTX(NZ,NY,NX)*(TCC(NZ,NY,NX)-HTC(NZ,NY,NX))
+      FGRNX=SSTX(NZ,NY,NX)*(TCC(NZ,NY,NX)-HTC(NZ,NY,NX))*XNFH
       ELSE
       FGRNX=0.0
       ENDIF
@@ -3390,174 +3671,38 @@ C
       FGRNX=0.0
       ENDIF
       IF(IDAY(6,NB,NZ,NY,NX).NE.0.AND.IDAY(8,NB,NZ,NY,NX).EQ.0)THEN
-C     GRNXB(NB,NZ,NY,NX)=GRNXB(NB,NZ,NY,NX)*FGRNX
+      SETG=AMIN1(SET,WFNSR) 
       GRNOB(NB,NZ,NY,NX)=AMIN1(SDMX(NZ,NY,NX)*GRNXB(NB,NZ,NY,NX)
-     2,GRNOB(NB,NZ,NY,NX)+SDMX(NZ,NY,NX)*GRNXB(NB,NZ,NY,NX)
-     3*SET*DGSTGF(NB,NZ,NY,NX)-FGRNX*GRNOB(NB,NZ,NY,NX)) 
+     2,GRNOB(NB,NZ,NY,NX)+(SDMX(NZ,NY,NX)*GRNXB(NB,NZ,NY,NX)
+     3*SETG*DGSTGF(NB,NZ,NY,NX)-FGRNX*GRNOB(NB,NZ,NY,NX))) 
 C     IF(FGRNX.LT.1.0)THEN 
-C     WRITE(*,4246)'GRNO',I,J,NZ,NB,IDAY(7,NB,NZ,NY,NX),TCC(NZ,NY,NX)
-C    2,HTC(NZ,NY,NX),FGRNX,GRNXB(NB,NZ,NY,NX),GRNOB(NB,NZ,NY,NX)
+C     WRITE(*,4246)'GRNO',I,J,NFZ,NZ,NB,IDAY(6,NB,NZ,NY,NX)
+C    2,GRNOB(NB,NZ,NY,NX),GRNXB(NB,NZ,NY,NX) 
+C    2,TCC(NZ,NY,NX),HTC(NZ,NY,NX),FGRNX
 C    3,SET,CCPOLB(NB,NZ,NY,NX),CZPOLB(NB,NZ,NY,NX)
 C    4,CPPOLB(NB,NZ,NY,NX)
-4246  FORMAT(A8,5I4,20E12.4)
+4246  FORMAT(A8,6I4,20E12.4)
 C     ENDIF
       ENDIF
 C
-C     SET MAXIMUM GRAIN SIZE FROM C,N,P NON-STRUCTURAL POOLS AFTER ANTHESIS
+C     SET MAXIMUM GRAIN SIZE FROM C,N,P NON-STRUCTURAL POOLS 
+C     AFTER ANTHESIS
 C
 C     GRMX=maximum individual seed size from PFT file (g)
-C     DGSTGF=change in reproductive node number normalized for maturity group
+C     DGSTGF=change in reproductive node number normalized for
+C        maturity group
 C     GRWTB=individual seed size 
 C     SET=seed set limited by nonstructural C,N,P
 C
       IF(IDAY(7,NB,NZ,NY,NX).NE.0.AND.IDAY(9,NB,NZ,NY,NX).EQ.0)THEN
-      GRMXB=GRMX(NZ,NY,NX) 
+      SETW=AMIN1(SET,WFNSR)**0.25
       GRWTB(NB,NZ,NY,NX)=AMIN1(GRMX(NZ,NY,NX),GRWTB(NB,NZ,NY,NX) 
-     2+GRMXB*AMAX1(0.50,SET**0.25)*DGSTGF(NB,NZ,NY,NX))
+     2+GRMX(NZ,NY,NX)*AMAX1(0.50,SETW)*DGSTGF(NB,NZ,NY,NX))
 C     IF(FGRNX.LT.1.0)THEN
-C     WRITE(*,4246)'GRWT',I,J,NZ,NB,IDAY(8,NB,NZ,NY,NX),TCC(NZ,NY,NX)
+C     WRITE(*,4246)'GRWT',I,J,NFZ,NZ,NB,IDAY(8,NB,NZ,NY,NX)
+C    2,TCC(NZ,NY,NX)
 C    2,HTC(NZ,NY,NX),FGRNX,GRMX(NZ,NY,NX),GRWTB(NB,NZ,NY,NX)
 C     ENDIF
-      ENDIF
-      ENDIF
-C
-C     GRAIN FILL BY TRANSLOCATION FROM STALK RESERVES
-C     UNTIL GRAIN SINK (=FINAL GRAIN NUMBER X MAXIMUM
-C     GRAIN SIZE) IS FILLED OR RESERVES ARE EXHAUSTED
-C
-C     IDAY(7,=start of grain filling and setting max seed size
-C     WTGRB=total seed C mass
-C     GRWTB=individual seed size 
-C     GRNOB=seed set number
-C     GROLM=maximum grain fill rate
-C     GFILL=grain filling rate at 25 oC from PFT file
-C     TFN3=temperature function for canopy growth
-C     TFN4=temperature function for root growth
-C
-      IF(IDAY(7,NB,NZ,NY,NX).NE.0)THEN
-      IF(WTGRB(NB,NZ,NY,NX).GE.GRWTB(NB,NZ,NY,NX)
-     2*GRNOB(NB,NZ,NY,NX))THEN
-      GROLM=0.0
-      ELSEIF(IRTYP(NZ,NY,NX).EQ.0)THEN
-      GROLM=AMAX1(0.0,GFILL(NZ,NY,NX)*GRNOB(NB,NZ,NY,NX)
-     2*SQRT(TFN3(NZ,NY,NX)))
-      ELSE
-      GROLM=AMAX1(0.0,GFILL(NZ,NY,NX)*GRNOB(NB,NZ,NY,NX)
-     2*SQRT(TFN4(NG(NZ,NY,NX),NZ,NY,NX)))
-      ENDIF
-C
-C     GRAIN FILL RATE MAY BE CONSTRAINED BY HIGH GRAIN C:N OR C:P
-C
-C     WTGRB,WTGRBN,WTGRBP=total seed C,N,P mass
-C     ZPGRM=min N:C,P:C in grain relative to max values from PFT file
-C     CNGR,CPGR=maximum N:C,P:C ratios in grain from PFT file
-C     GROLM,GROLC=maximum,actual grain fill rate
-C     XLOCM,XLOCC=maximum,actual C translocation rate from reserve to grain 
-C
-      IF(WTGRBN(NB,NZ,NY,NX).LT.ZPGRM*CNGR(NZ,NY,NX)
-     2*WTGRB(NB,NZ,NY,NX).OR.WTGRBP(NB,NZ,NY,NX).LT.ZPGRM
-     3*CPGR(NZ,NY,NX)*WTGRB(NB,NZ,NY,NX))THEN
-      GROLC=0.0
-      ELSE
-      GROLC=GROLM
-      ENDIF
-      XLOCM=AMIN1(GROLM,WTRSVB(NB,NZ,NY,NX))
-      XLOCC=AMIN1(GROLC,WTRSVB(NB,NZ,NY,NX))
-C
-C     GRAIN N OR P FILL RATE MAY BE LIMITED BY C:N OR C:P RATIOS
-C     OF STALK RESERVES
-C
-C     WTRSVB,WTRSBN,WTRSBP=stalk reserve C,N,P mass
-C     ZNPGN,ZNPGP=effect of reserve N:C,P:C on grain fill N:C,P:C 
-C     SETN,SETP=Km for nonstructural N,P concn on seed set (g g-1)
-C     ZPGRM=min N:C,P:C in grain relative to max values from PFT file
-C     ZPGRD=1.0-ZPGRM 
-C     ZPGRN,ZPGRP=N:C,P:C ratios during grain fill
-C     XLOCM,XLOCC=maximum,actual C translocation rate from reserve to grain 
-C     CNGR,CPGR=maximum N:C,P:C ratios in grain from PFT file
-C     XLOCN,XLOCP=N,P translocation rate from reserve to grain 
-C
-      IF(WTRSVB(NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
-      ZNPGN=WTRSBN(NB,NZ,NY,NX)/(WTRSBN(NB,NZ,NY,NX)
-     2+SETN*WTRSVB(NB,NZ,NY,NX))
-      ZNPGP=WTRSBP(NB,NZ,NY,NX)/(WTRSBP(NB,NZ,NY,NX)
-     3+SETP*WTRSVB(NB,NZ,NY,NX))
-      ZPGRN=ZPGRM+ZPGRD*AMAX1(0.0,AMIN1(1.0,ZNPGN))
-      ZPGRP=ZPGRM+ZPGRD*AMAX1(0.0,AMIN1(1.0,ZNPGP))
-      XLOCN=AMIN1(XLOCM*CNGR(NZ,NY,NX)
-     2,AMAX1(0.0,WTRSBN(NB,NZ,NY,NX)*ZPGRN)
-     3,(WTGRB(NB,NZ,NY,NX)+XLOCC)*CNGR(NZ,NY,NX)-WTGRBN(NB,NZ,NY,NX))
-      XLOCP=AMIN1(XLOCM*CPGR(NZ,NY,NX)
-     2,AMAX1(0.0,WTRSBP(NB,NZ,NY,NX)*ZPGRP)
-     3,(WTGRB(NB,NZ,NY,NX)+XLOCC)*CPGR(NZ,NY,NX)-WTGRBP(NB,NZ,NY,NX))
-      ELSE
-      XLOCN=0.0
-      XLOCP=0.0
-      ENDIF
-C     IF(NX.EQ.1.AND.NY.EQ.6.AND.NZ.EQ.3)THEN
-C     WRITE(*,85)'XLOC',I,J,NZ,NB,WTGRB(NB,NZ,NY,NX),WTGRBN(NB,NZ,NY,NX)
-C    2,WTRSVB(NB,NZ,NY,NX),WTRSBN(NB,NZ,NY,NX),XLOCC,XLOCN,XLOCP,XLOCM
-C    3,CNGR(NZ,NY,NX),ZPGRX,ZNPG,GROLC,GROLM,GROGR,GROGRN
-C    3,XLOCM*CNGR(NZ,NY,NX),AMAX1(0.0,WTRSBN(NB,NZ,NY,NX)*ZPGRX)
-C    4,(WTGRB(NB,NZ,NY,NX)+XLOCC)*CNGR(NZ,NY,NX)-WTGRBN(NB,NZ,NY,NX)
-C    4,GRNOB(NB,NZ,NY,NX),GRWTB(NB,NZ,NY,NX),GFILL(NZ,NY,NX)
-C    5,SQRT(TFN3(NZ,NY,NX)),FLG4(NB,NZ,NY,NX) 
-85    FORMAT(A8,4I4,20E12.4)
-C     ENDIF
-C
-C     TRANSLOCATE C,N,P FROM STALK RESERVES TO GRAIN
-C
-C     WTRSVB,WTRSBN,WTRSBP=stalk reserve C,N,P mass
-C     GROGR=grain growth rate
-C     XLOCC,XLOCN,XLOCP=C,N,P translocation rate from reserve to grain 
-C
-      WTRSVB(NB,NZ,NY,NX)=WTRSVB(NB,NZ,NY,NX)+GROGR-XLOCC
-      WTRSBN(NB,NZ,NY,NX)=WTRSBN(NB,NZ,NY,NX)+GROGRN-XLOCN
-      WTRSBP(NB,NZ,NY,NX)=WTRSBP(NB,NZ,NY,NX)+GROGRP-XLOCP
-      WTGRB(NB,NZ,NY,NX)=WTGRB(NB,NZ,NY,NX)+XLOCC
-      WTGRBN(NB,NZ,NY,NX)=WTGRBN(NB,NZ,NY,NX)+XLOCN
-      WTGRBP(NB,NZ,NY,NX)=WTGRBP(NB,NZ,NY,NX)+XLOCP
-      ELSE
-      XLOCC=0.0
-      XLOCN=0.0
-      XLOCP=0.0
-      ENDIF
-C
-C     SET DATE OF PHYSIOLOGICAL MATURITY WHEN GRAIN FILL
-C     HAS STOPPED FOR SET PERIOD OF TIME
-C
-C     IDAY(8,=end date setting for final seed number
-C     XLOCC=C translocation rate from reserve to grain 
-C     PP=PFT population
-C     FLG4=number of hours with no grain fill
-C     FLG4X=number of hours with no grain filling until physl maturity
-C     IDAY(10,=date of physiological maturity
-C
-      IF(IDAY(8,NB,NZ,NY,NX).NE.0)THEN
-      IF(XLOCC.LE.1.0E-09*PP(NZ,NY,NX))THEN
-      FLG4(NB,NZ,NY,NX)=FLG4(NB,NZ,NY,NX)+1.0
-      ELSE
-      FLG4(NB,NZ,NY,NX)=0.0
-      ENDIF
-      IF(FLG4(NB,NZ,NY,NX).GE.FLG4X)THEN
-      IF(IDAY(10,NB,NZ,NY,NX).EQ.0)THEN
-      IDAY(10,NB,NZ,NY,NX)=I
-      ENDIF
-      ENDIF
-C
-C     TERMINATE ANNUALS AFTER GRAIN FILL
-C
-C     ISTYP=growth habit:0=annual,1=perennial
-C     IWTYP=phenology type:0=evergreen,1=cold decid,2=drought decid,3=1+2
-C     FLG4=number of hours with no grain fill
-C     FLG4X=number of hours with no grain filling until physl maturity
-C     FLG4Y=number of hours after physiol maturity required for senescence
-C     VRNF,VRNX=leafoff hours,hours required for leafoff
-C
-      IF(ISTYP(NZ,NY,NX).EQ.0.AND.IWTYP(NZ,NY,NX).NE.0)THEN
-      IF(FLG4(NB,NZ,NY,NX).GT.FLG4X+FLG4Y(IWTYP(NZ,NY,NX)))THEN
-      VRNF(NB,NZ,NY,NX)=VRNX(NB,NZ,NY,NX)+0.5
-      ENDIF
       ENDIF
       ENDIF
 C
@@ -3565,12 +3710,14 @@ C     RESET PHENOLOGY AT EMERGENCE ('VRNS' > 'VRNL')
 C     AND END OF SEASON ('VRNF' > 'VRNX')
 C
 C     ISTYP=growth habit:0=annual,1=perennial from PFT file
-C     IWTYP=phenology type:0=evergreen,1=cold decid,2=drought decid,3=1+2
+C     IWTYP=phenology type:0=evergreen,1=cold deciduous,2=drought
+C        deciduous,3=cold and drought deciduous
 C     IFLGE=flag for enabling leafout:0=enable,1=disable
 C     VRNS,VRNL=leafout hours,hours required for leafout 
 C     IFLGF=flag for enabling leafoff:0=enable,1=disable
 C     VRNF,VRNX=leafoff hours,hours required for leafoff
 C
+      IF(NFZ.EQ.1)THEN
       IF(ISTYP(NZ,NY,NX).NE.0
      2.OR.(ISTYP(NZ,NY,NX).EQ.0.AND.IWTYP(NZ,NY,NX).GT.1))THEN
       IF((IFLGE(NB,NZ,NY,NX).EQ.0
@@ -3584,8 +3731,10 @@ C     GROUP,GROUPI=node number required for floral initiation
 C     PSTGI=node number at floral initiation
 C     PSTGF=node number at flowering
 C     VSTGX=leaf number on date of floral initiation 
-C     TGSTGI=total change in vegve node number normalized for maturity group 
-C     TGSTGF=total change in reprve node number normalized for maturity group 
+C     TGSTGI=total change in vegetative node number normalized 
+C        for maturity group 
+C     TGSTGF=total change in reproductive node number normalized 
+C        for maturity group 
 C     IDAY(1,=emergence date
 C
       IF((IFLGE(NB,NZ,NY,NX).EQ.0.AND.ISTYP(NZ,NY,NX).NE.0)
@@ -3618,11 +3767,13 @@ C     VSTG=number of leaves appeared
 C     KVSTG=integer of most recent leaf number currently growing
 C     FLG4=number of hours with no grain fill
 C     CSNC,ZSNC,PSNC=C,N,P litterfall from senescence
-C     CFOPC,CFOPN,CFOPC=fraction of litterfall C,N,P allocated to litter components
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     WT*,WT*N,WT*P=branch organ C,N,P mass
 C     WG,WG*N,WG*P=node organ C,N,P mass
 C     organ key:LF=leaf,SHE=petiole,STK=stalk,RSV=reserve
-C     HSK=husk,EAR=ear,GR=grain,SHT=shoot
+C        HSK=husk,EAR=ear,GR=grain,SHT=shoot
 C     ARLFB,ARLF=branch,node leaf area 
 C     WGNODE,WGNODN,WGNODP=node stalk C,N,P mass
 C     HTNODX,HTNODE=stalk height,stalk internode length
@@ -3640,23 +3791,23 @@ C
       FLG4(NB,NZ,NY,NX)=0.0
       DO 5330 M=1,4
       CSNC(M,0,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)
-     2+CFOPC(5,M,NZ,NY,NX)*WTLFB(NB,NZ,NY,NX)*FWODB(0)
-     3+CFOPC(5,M,NZ,NY,NX)*WTSHEB(NB,NZ,NY,NX)*FWODB(0)
+     2+CFOPC(5,M,NZ,NY,NX)*WTLFB(NB,NZ,NY,NX)*FWODB(0,NZ)
+     3+CFOPC(5,M,NZ,NY,NX)*WTSHEB(NB,NZ,NY,NX)*FWODB(0,NZ)
       ZSNC(M,0,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)
-     2+CFOPN(5,M,NZ,NY,NX)*WTLFBN(NB,NZ,NY,NX)*FWODLN(0)
-     3+CFOPN(5,M,NZ,NY,NX)*WTSHBN(NB,NZ,NY,NX)*FWODSN(0)
+     2+CFOPN(5,M,NZ,NY,NX)*WTLFBN(NB,NZ,NY,NX)*FWODLN(0,NZ)
+     3+CFOPN(5,M,NZ,NY,NX)*WTSHBN(NB,NZ,NY,NX)*FWODSN(0,NZ)
       PSNC(M,0,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)
-     2+CFOPP(5,M,NZ,NY,NX)*WTLFBP(NB,NZ,NY,NX)*FWODLP(0) 
-     3+CFOPP(5,M,NZ,NY,NX)*WTSHBP(NB,NZ,NY,NX)*FWODSP(0) 
+     2+CFOPP(5,M,NZ,NY,NX)*WTLFBP(NB,NZ,NY,NX)*FWODLP(0,NZ) 
+     3+CFOPP(5,M,NZ,NY,NX)*WTSHBP(NB,NZ,NY,NX)*FWODSP(0,NZ) 
       CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)
-     2+CFOPC(1,M,NZ,NY,NX)*WTLFB(NB,NZ,NY,NX)*FWODB(1)
-     3+CFOPC(2,M,NZ,NY,NX)*WTSHEB(NB,NZ,NY,NX)*FWODB(1)
+     2+CFOPC(1,M,NZ,NY,NX)*WTLFB(NB,NZ,NY,NX)*FWODB(1,NZ)
+     3+CFOPC(2,M,NZ,NY,NX)*WTSHEB(NB,NZ,NY,NX)*FWODB(1,NZ)
       ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)
-     2+CFOPN(1,M,NZ,NY,NX)*WTLFBN(NB,NZ,NY,NX)*FWODLN(1)
-     3+CFOPN(2,M,NZ,NY,NX)*WTSHBN(NB,NZ,NY,NX)*FWODSN(1)
+     2+CFOPN(1,M,NZ,NY,NX)*WTLFBN(NB,NZ,NY,NX)*FWODLN(1,NZ)
+     3+CFOPN(2,M,NZ,NY,NX)*WTSHBN(NB,NZ,NY,NX)*FWODSN(1,NZ)
       PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)
-     2+CFOPP(1,M,NZ,NY,NX)*WTLFBP(NB,NZ,NY,NX)*FWODLP(1) 
-     3+CFOPP(2,M,NZ,NY,NX)*WTSHBP(NB,NZ,NY,NX)*FWODSP(1)
+     2+CFOPP(1,M,NZ,NY,NX)*WTLFBP(NB,NZ,NY,NX)*FWODLP(1,NZ) 
+     3+CFOPP(2,M,NZ,NY,NX)*WTSHBP(NB,NZ,NY,NX)*FWODSP(1,NZ)
 5330  CONTINUE
       ARLFB(NB,NZ,NY,NX)=0.0
       WTLFB(NB,NZ,NY,NX)=0.0
@@ -3680,10 +3831,10 @@ C
       ENDIF
       ENDIF
 C
-C     RESIDUAL STALKS BECOME LITTERFALL IN GRASSES, SHRUBS AT
-C     START OF SEASON
+C     REPRODUCTIVE ORGANS BECOME LITTERFALL IN GRASSES, SHRUBS 
+C     AT START OF SEASON
 C
-      IF((IFLGE(NB,NZ,NY,NX).EQ.0.AND.ISTYP(NZ,NY,NX).NE.0)
+      IF(IFLGE(NB,NZ,NY,NX).EQ.0.AND.ISTYP(NZ,NY,NX).NE.0
      2.AND.VRNS(NB,NZ,NY,NX).GE.VRNL(NB,NZ,NY,NX))THEN
       DO 6245 M=1,4
       CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)+CFOPC(2,M,NZ,NY,NX)
@@ -3705,14 +3856,33 @@ C
       GRNXB(NB,NZ,NY,NX)=0.0
       GRNOB(NB,NZ,NY,NX)=0.0
       GRWTB(NB,NZ,NY,NX)=0.0
+C
+C     REMAINING STALKS BECOME STANDING DEAD IN GRASSES, SHRUBS 
+C     AT START OF SEASON
+C
+C     IBTYP=turnover rate of above-ground biomass
+C              :0,1=fully deciduous,
+C              :2=needleleaf evergreen
+C              :3=broadleaf evergreen
+C              :4=semi-deciduous
+C              :5=semi-evergreen
+C     IGTYP=growth type:0=bryophyte,1=grass,herb,2=woody shrub,tree
+C     WTSTDG,WTSTDN,WTSTDP=standing dead C,N,P mass
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
+C     WTSTKB,WTSTBN,WTSTBP=stalk C,N,P mass
+C     WTRSVB,WTRSBN,WTRSBP=stalk reserve C,N,P mass
+C     WGNODE,WGNODN,WGNODP=internode C,N,P mass
+C
       IF(IBTYP(NZ,NY,NX).EQ.0.OR.IGTYP(NZ,NY,NX).LE.1)THEN
       DO 6345 M=1,4
-      CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)+CFOPC(3,M,NZ,NY,NX)
-     2*WTSTKB(NB,NZ,NY,NX)
-      ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)+CFOPN(3,M,NZ,NY,NX)
-     2*WTSTBN(NB,NZ,NY,NX)
-      PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)+CFOPP(3,M,NZ,NY,NX)
-     2*WTSTBP(NB,NZ,NY,NX)
+      WTSTDG(M,NZ,NY,NX)=WTSTDG(M,NZ,NY,NX)+CFOPC(3,M,NZ,NY,NX)
+     5*(WTSTKB(NB,NZ,NY,NX)+WTRSVB(NB,NZ,NY,NX))
+      WTSTDN(M,NZ,NY,NX)=WTSTDN(M,NZ,NY,NX)+CFOPN(3,M,NZ,NY,NX)
+     5*(WTSTBN(NB,NZ,NY,NX)+WTRSBN(NB,NZ,NY,NX))
+      WTSTDP(M,NZ,NY,NX)=WTSTDP(M,NZ,NY,NX)+CFOPP(3,M,NZ,NY,NX)
+     5*(WTSTBP(NB,NZ,NY,NX)+WTRSBP(NB,NZ,NY,NX))
 6345  CONTINUE
       WTSTKB(NB,NZ,NY,NX)=0.0
       WTSTBN(NB,NZ,NY,NX)=0.0
@@ -3720,6 +3890,9 @@ C
       WTSTXB(NB,NZ,NY,NX)=0.0
       WTSTXN(NB,NZ,NY,NX)=0.0
       WTSTXP(NB,NZ,NY,NX)=0.0
+      WTRSVB(NB,NZ,NY,NX)=0.0
+      WTRSBN(NB,NZ,NY,NX)=0.0
+      WTRSBP(NB,NZ,NY,NX)=0.0
       DO 6340 K=0,25
       HTNODE(K,NB,NZ,NY,NX)=0.0
       HTNODX(K,NB,NZ,NY,NX)=0.0
@@ -3733,6 +3906,14 @@ C
 C
 C     SPRING OR FALL FLAG RESET
 C
+C     IFLGE=flag for enabling leafout:0=enable,1=disable
+C     VRNS,VRNL=leafout hours,hours required for leafout 
+C     IFLGF=flag for enabling leafoff:0=enable,1=disable
+C     IFLGR=flag for reproductive growth
+C     IFLGQ=current hours after physlogical maturity 
+C        until start of litterfall
+C     IFLGA=flag for initializing leafout 
+C
       IF(IFLGE(NB,NZ,NY,NX).EQ.0
      2.AND.VRNS(NB,NZ,NY,NX).GE.VRNL(NB,NZ,NY,NX))THEN
       IFLGE(NB,NZ,NY,NX)=1
@@ -3740,7 +3921,11 @@ C
       IFLGR(NB,NZ,NY,NX)=0
       IFLGQ(NB,NZ,NY,NX)=0
       ELSE
+      IF(ISTYP(NZ,NY,NX).EQ.0.AND.IWTYP(NZ,NY,NX).EQ.1)THEN
+      IFLGE(NB,NZ,NY,NX)=1
+      ELSE
       IFLGE(NB,NZ,NY,NX)=0
+      ENDIF
       IFLGF(NB,NZ,NY,NX)=1
       IFLGR(NB,NZ,NY,NX)=1
       IFLGQ(NB,NZ,NY,NX)=0
@@ -3750,6 +3935,15 @@ C
       ENDIF
 C
 C     REPRODUCTIVE MATERIAL BECOMES LITTERFALL AT END OF SEASON
+C
+C     CSNC,ZSNC,PSNC=C,N,P litterfall from senescence
+C     FSNR=rate constant for litterfall at end of growing season (h-1)
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
+C     WTHSKB,WTEARB=branch husk,ear C mass
+C     WTHSBN,WTEABN=branch husk,ear N mass
+C     WTHSBP,WTEABP=branch husk,ear P mass
 C
       IF(IFLGR(NB,NZ,NY,NX).EQ.1)THEN
       IFLGQ(NB,NZ,NY,NX)=IFLGQ(NB,NZ,NY,NX)+1
@@ -3767,6 +3961,19 @@ C
       PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)
      2+FSNR*CFOPP(2,M,NZ,NY,NX)
      2*(WTHSBP(NB,NZ,NY,NX)+WTEABP(NB,NZ,NY,NX))
+C
+C     IF WINTER ANNUAL
+C
+C     ISTYP=growth habit:0=annual,1=perennial from PFT file
+C     IWTYP=phenology type:0=evergreen,1=cold deciduous,2=drought
+C        deciduous,3=cold and drought deciduous
+C     WTRVC,WTRVN,WTRVP=storage C,N,P
+C     FSNR=rate constant for litterfall (h-1)
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
+C     WTGRB,WTGRBN,WTGRBP=total seed C,N,P mass
+C
       IF(ISTYP(NZ,NY,NX).EQ.0.AND.IWTYP(NZ,NY,NX).NE.0)THEN
       WTRVC(NZ,NY,NX)=WTRVC(NZ,NY,NX)
      2+FSNR*CFOPC(2,M,NZ,NY,NX)*WTGRB(NB,NZ,NY,NX)
@@ -3796,17 +4003,34 @@ C
       GRNOB(NB,NZ,NY,NX)=(1.0-FSNR)*GRNOB(NB,NZ,NY,NX)
       GRWTB(NB,NZ,NY,NX)=(1.0-FSNR)*GRWTB(NB,NZ,NY,NX)
 C
-C     STALKS BECOME LITTERFALL IN GRASSES AT END OF SEASON
+C     REMAINING STALKS BECOME STANDING DEAD IN GRASSES, SHRUBS 
+C     AT END OF SEASON
+C
+C     IBTYP=turnover rate of above-ground biomass
+C              :0,1=fully deciduous,
+C              :2=needleleaf evergreen
+C              :3=broadleaf evergreen
+C              :4=semi-deciduous
+C              :5=semi-evergreen
+C     IGTYP=growth type:0=bryophyte,1=grass,herb,2=woody shrub,tree
+C     ISTYP=growth habit:0=annual,1=perennial from PFT file
+C     WTSTG,WTSTDN,WTSTDP=standing dead C,N,P mass
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
+C     FSNR=rate constant for litterfall (h-1)
+C     WTRSVB,WTRSBN,WTRSBP=stalk reserve C,N,P mass
+C     WGNODE,WGNODN,WGNODP=node stalk C,N,P mass
 C
       IF((IBTYP(NZ,NY,NX).EQ.0.OR.IGTYP(NZ,NY,NX).LE.1)
      2.AND.ISTYP(NZ,NY,NX).NE.0)THEN
       DO 6335 M=1,4
-      CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)
-     2+FSNR*CFOPC(3,M,NZ,NY,NX)*WTSTKB(NB,NZ,NY,NX)
-      ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)
-     2+FSNR*CFOPN(3,M,NZ,NY,NX)*WTSTBN(NB,NZ,NY,NX)
-      PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)
-     2+FSNR*CFOPP(3,M,NZ,NY,NX)*WTSTBP(NB,NZ,NY,NX)
+      WTSTDG(M,NZ,NY,NX)=WTSTDG(M,NZ,NY,NX)+CFOPC(3,M,NZ,NY,NX)
+     5*FSNR*(WTSTKB(NB,NZ,NY,NX)+WTRSVB(NB,NZ,NY,NX))
+      WTSTDN(M,NZ,NY,NX)=WTSTDN(M,NZ,NY,NX)+CFOPN(3,M,NZ,NY,NX)
+     5*FSNR*(WTSTBN(NB,NZ,NY,NX)+WTRSBN(NB,NZ,NY,NX))
+      WTSTDP(M,NZ,NY,NX)=WTSTDP(M,NZ,NY,NX)+CFOPP(3,M,NZ,NY,NX)
+     5*FSNR*(WTSTBP(NB,NZ,NY,NX)+WTRSBP(NB,NZ,NY,NX))
 6335  CONTINUE
       WTSTKB(NB,NZ,NY,NX)=(1.0-FSNR)*WTSTKB(NB,NZ,NY,NX)
       WTSTBN(NB,NZ,NY,NX)=(1.0-FSNR)*WTSTBN(NB,NZ,NY,NX)
@@ -3814,6 +4038,9 @@ C
       WTSTXB(NB,NZ,NY,NX)=(1.0-FSNR)*WTSTXB(NB,NZ,NY,NX) 
       WTSTXN(NB,NZ,NY,NX)=(1.0-FSNR)*WTSTXN(NB,NZ,NY,NX) 
       WTSTXP(NB,NZ,NY,NX)=(1.0-FSNR)*WTSTXP(NB,NZ,NY,NX) 
+      WTRSVB(NB,NZ,NY,NX)=(1.0-FSNR)*WTRSVB(NB,NZ,NY,NX)
+      WTRSBN(NB,NZ,NY,NX)=(1.0-FSNR)*WTRSBN(NB,NZ,NY,NX)
+      WTRSBP(NB,NZ,NY,NX)=(1.0-FSNR)*WTRSBP(NB,NZ,NY,NX)
       DO 2010 K=0,25
 C     HTNODE(K,NB,NZ,NY,NX)=(1.0-FSNR)*HTNODE(K,NB,NZ,NY,NX)
       HTNODX(K,NB,NZ,NY,NX)=(1.0-FSNR)*HTNODX(K,NB,NZ,NY,NX)
@@ -3826,25 +4053,33 @@ C
 C     SELF-SEEDING ANNUALS IF COLD OR DROUGHT DECIDUOUS
 C
 C     ISTYP=growth habit:0=annual,1=perennial
-C     IWTYP=phenology type:0=evergreen,1=cold decid,2=drought decid,3=1+2
+C     IWTYP=phenology type:0=evergreen,1=cold deciduous,2=drought
+C        deciduous,3=cold and drought deciduous
 C     IDAYH,IYRH=day,year of harvesting
 C     IHVST=harvest type:0=none,1=grain,2=all above-ground
-C                       ,3=pruning,4=grazing,5=fire,6=herbivory
+C                       ,3=pruning,4=grazing,6=herbivory
 C     JHVST=terminate PFT:0=no,1=yes,2=yes,but reseed
 C     HVST=IHVST=0-2:>0=cutting height,<0=fraction of LAI removed
 C          IHVST=3:reduction of clumping factor
-C          IHVST=4 or 6:animal or insect biomass(g LM m-2),IHVST=5:fire
+C          IHVST=4 or 6:animal or insect biomass(g LM m-2) 
 C     THIN=IHVST=0-3,5: fraction of population removed, 
 C          IHVST=4 or 6:specific herbivory rate (g DM g-1 LM d-1)
 C     EHVST(1,1,EHVST(1,2,EHVST(1,3,EHVST(1,4=fraction of 
 C           leaf,non-foliar,woody, standing dead removed from PFT
 C     EHVST(2,1,EHVST(2,2,EHVST(2,3,EHVST(2,4=fraction of 
-C           leaf,non-foliar,woody, standing dead removed from ecosystem
+C           leaf,non-foliar,woody, standing dead removed from
+C         ecosystem
 C     IDAY0,IYR0=day,year of planting 
 C     IFLGI=PFT initialization flag:0=no,1=yes
 C
-C     IF(J.EQ.INT(ZNOON(NY,NX)))THEN
       IF(NB.EQ.NB1(NZ,NY,NX))THEN
+C
+C     IF WINTER ANNUAL
+C
+C     ISTYP=growth habit:0=annual,1=perennial
+C     IWTYP=phenology type:0=evergreen,1=cold deciduous,2=drought
+C        deciduous,3=cold and drought deciduous
+C
       IF(ISTYP(NZ,NY,NX).EQ.0.AND.IWTYP(NZ,NY,NX).NE.0)THEN
       IDAYH(NZ,NY,NX)=I
       IYRH(NZ,NY,NX)=IYRC
@@ -3863,12 +4098,13 @@ C     IF(J.EQ.INT(ZNOON(NY,NX)))THEN
       IDAY0(NZ,NY,NX)=-1E+06
       IYR0(NZ,NY,NX)=-1E+06
       IFLGI(NZ,NY,NX)=1
-C     WRITE(*,3366)'HVST',I,J,IYRC,IDAYH(NZ,NY,NX),IYRH(NZ,NY,NX)
+C     WRITE(*,3366)'HVST',I,J,NFZ,NZ,IYRC
+C    2,IDAYH(NZ,NY,NX),IYRH(NZ,NY,NX)
 C    2,IHVST(NZ,I,NY,NX),JHVST(NZ,I,NY,NX),IFLGI(NZ,NY,NX)
-3366  FORMAT(A8,8I8)
+3366  FORMAT(A8,10I8)
       ENDIF
       ENDIF
-C     ENDIF
+      ENDIF
       ENDIF
 C
 C     TRANSFER C,N,P FROM SEASONAL STORAGE TO SHOOT AND ROOT
@@ -3879,9 +4115,19 @@ C     WRITE(*,2322)'VRNS',I,J,NX,NY,NZ,NB,NB1(NZ,NY,NX),IFLGZ
 C    2,ISTYP(NZ,NY,NX),IFLGI(NZ,NY,NX),IFLGE(NB,NZ,NY,NX)
 C    3,IFLGF(NB,NZ,NY,NX),IDAY0(NZ,NY,NX),IYR0(NZ,NY,NX)
 C    3,VRNS(NB1(NZ,NY,NX),NZ,NY,NX),VRNL(NB,NZ,NY,NX)
-C    3,VRNF(NB,NZ,NY,NX),VRNX(NB,NZ,NY,NX)
+C    3,VRNF(NB,NZ,NY,NX),VRNX(NB,NZ,NY,NX),WTRVC(NZ,NY,NX)
 2322  FORMAT(A8,14I4,20E12.4)
 C     ENDIF
+C
+C     ISTYP=growth habit:0=annual,1=perennial from PFT file
+C     IDAY0,IYR0=day,year of planting 
+C     IYRC=current year
+C     VRNF,VRNX=leafoff hours,hours required for leafoff
+C     FVRN=fraction of hours required for leafoff to initiate
+C        remobilization
+C     VRNS,VRNL=leafout hours,hours required for leafout
+C     WTRTD,CPOOLR=root structural,nonstructural C 
+C
       IF((ISTYP(NZ,NY,NX).EQ.0.AND.IFLGI(NZ,NY,NX).EQ.0)
      2.OR.(I.GE.IDAY0(NZ,NY,NX).AND.IYRC.EQ.IYR0(NZ,NY,NX)
      3.AND.VRNF(NB,NZ,NY,NX)
@@ -3906,16 +4152,18 @@ C
       IFLGA(NB,NZ,NY,NX)=1
       ENDIF
 C
-C     INCREMENT TIME COUNTER
+C     INCREMENT TIME COUNTER FOR GERMINATION, LEAFOUT
 C
 C     IPTYP=photoperiod type:0=day neutral,1=short day,2=long day
-C     IWTYP=phenology type:0=evergreen,1=cold decid,2=drought decid,3=1+2
+C     IWTYP=phenology type:0=evergreen,1=cold deciduous,2=drought
+C        deciduous,3=cold and drought deciduous
 C     XDL=critical photoperiod (h):<0=maximum daylength from site file
 C     XPPD=photoperiod sensitivity (node h-1)
 C     DYLN=daylength
-C     WFNSG=expansion,extension function of canopy water potential
+C     WFNSR=expansion,extension function of canopy water potential
 C     TFN3=temperature function for canopy growth
-C     ATRPX=number of hours required to initiate remobilization of storage C for leafout
+C     ATRPX=number of hours required to initiate remobilization of
+C        storage C for leafout
 C
       IF(NB.EQ.NB1(NZ,NY,NX))THEN
       IF(IPTYP(NZ,NY,NX).EQ.2
@@ -3925,44 +4173,37 @@ C
       ELSE
       ATRPPD=1.0
       ENDIF
-      IF(IGTYP(NZ,NY,NX).NE.0)THEN
-      WFNSP=WFNSG
-      ELSE
-      WFNSP=1.0
-      ENDIF
-      DATRP=ATRPPD*TFN3(NZ,NY,NX)*WFNSP 
-      ATRP(NB,NZ,NY,NX)=ATRP(NB,NZ,NY,NX)+DATRP
+      DATRP=ATRPPD*TFN3(NZ,NY,NX)*WFNSG*XNFH 
+      ATRP(NB,NZ,NY,NX)=ATRP(NB,NZ,NY,NX)+DATRP 
 C     IF(NZ.EQ.2)THEN
-C     WRITE(*,2323)'ATRP',I,J,NX,NY,NZ,NB,ATRP(NB,NZ,NY,NX),DATRP
+C     WRITE(*,2323)'ATRP',I,J,NFZ,NX,NY,NZ,NB,NG(NZ,NY,NX)
+C    2,NI(NZ,NY,NX)
+C    2,ATRP(NB,NZ,NY,NX),DATRP,PSILT(NZ,NY,NX),SDPTHI(NZ,NY,NX)
 C    2,ATRPPD,TFN3(NZ,NY,NX),WFNSG,PPDX,XDL(NZ,NY,NX),XPPD(NZ,NY,NX) 
-C    3,DYLN(NY,NX),WTLFB(NB,NZ,NY,NX),ARLFB(NB,NZ,NY,NX)
-C    4,HTCTL(NZ,NY,NX)
-2323  FORMAT(A8,6I4,20E12.4)
+C    3,DYLN(NY,NX),WTLFB(NB,NZ,NY,NX),ARLFB(NB,NZ,NY,NX) 
+C    4,WTRVC(NZ,NY,NX),HTCTL(NZ,NY,NX),PSILT(NZ,NY,NX)
+2323  FORMAT(A8,9I4,20E12.4)
 C     ENDIF
-      IF(ATRP(NB,NZ,NY,NX).LE.ATRPX(ISTYP(NZ,NY,NX))
-     2.OR.(ISTYP(NZ,NY,NX).EQ.0.AND.IWTYP(NZ,NY,NX).EQ.0))THEN
-      IF(WTRVC(NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
-      CPOOLT=CPOOLM+CPOOL(NB,NZ,NY,NX)
 C
+C     IF GERMINATION OR LEAFOUT IS ENABLED,
 C     REMOBILIZE C FROM SEASONAL STORAGE AT FIRST-ORDER RATE
 C     MODIFIED BY SOIL TEMPERATURE AT SEED DEPTH
 C
-C     GVMX=specific oxidation rate of storage C during leafout at 25 C
+      IF(ATRP(NB,NZ,NY,NX).LE.ATRPX(ISTYP(NZ,NY,NX))
+     2.OR.(ISTYP(NZ,NY,NX).EQ.0.AND.IWTYP(NZ,NY,NX).EQ.0))THEN
+C
+C     VMXG=specific oxidation rate of storage C during leafout at 25 C
 C     WTRVC=storage C
 C     CH2OH=storage C oxidation rate during leafout
 C     CPOOL,CPOOLR=non-structural C mass in branch,root
+C     FXFC=fraction of total root mass in layer
 C     FXSH,FXRT=shoot-root partitioning of storage C during leafout
 C     WTRTD=root C mass 
 C
-      GFNX=GVMX(ISTYP(NZ,NY,NX))*DATRP
+      IF(WTRVC(NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
+      CPOOLT=CPOOLM+CPOOL(NB,NZ,NY,NX)
+      GFNX=VMXG(ISTYP(NZ,NY,NX))*DATRP
       CH2OH=AMAX1(0.0,GFNX*WTRVC(NZ,NY,NX))
-C     IF(NZ.EQ.2)THEN
-C     WRITE(*,2123)'GERM0',I,J,NX,NY,NZ,NB
-C    2,GFNX,CH2OH,WTRVC(NZ,NY,NX)
-C    2,CPOOL(NB,NZ,NY,NX),CPOOLR(1,NG(NZ,NY,NX),NZ,NY,NX)
-C    3,FXSH(ISTYP(NZ,NY,NX)),FXRT(ISTYP(NZ,NY,NX))
-2123  FORMAT(A8,6I4,20E12.4)
-C     ENDIF
       WTRVC(NZ,NY,NX)=WTRVC(NZ,NY,NX)-CH2OH
       CPOOL(NB,NZ,NY,NX)=CPOOL(NB,NZ,NY,NX)
      2+CH2OH*FXSH(ISTYP(NZ,NY,NX))
@@ -3976,6 +4217,14 @@ C     ENDIF
       CPOOLR(1,NG(NZ,NY,NX),NZ,NY,NX)=CPOOLR(1,NG(NZ,NY,NX),NZ,NY,NX)
      2+CH2OH*FXRT(ISTYP(NZ,NY,NX))
       ENDIF
+C     IF(NZ.EQ.2)THEN
+C     WRITE(*,2123)'GERM',I,J,NFZ,NX,NY,NZ,NB,NG(NZ,NY,NX) 
+C    2,NIX(NZ,NY,NX),GFNX,VMXG(ISTYP(NZ,NY,NX)),DATRP
+C    2,CH2OH,WTRVC(NZ,NY,NX),WTRVN(NZ,NY,NX),WTRVP(NZ,NY,NX)
+C    2,CPOOL(NB,NZ,NY,NX),CPOOLR(1,NG(NZ,NY,NX),NZ,NY,NX)
+C    3,FXSH(ISTYP(NZ,NY,NX)),FXRT(ISTYP(NZ,NY,NX))
+2123  FORMAT(A8,9I4,20E12.4)
+C     ENDIF
       ELSE
       CH2OH=0.0
       ENDIF
@@ -3991,7 +4240,9 @@ C     ISTYP=growth habit:0=annual,1=perennial from PFT file
 C     CPOOL,ZPOOL,PPOOL=non-structural C,N,P mass in branch 
 C     UPNH4B,UPPO4B=N,P transfer from storage to shoot
 C     CH2OH=storage C oxidation rate during leafout
-C     FRSV=rate constant for remobiln of storage C,N,P during leafout C     FXSH=shoot partitioning of storage C during leafout 
+C     FRSV=rate constant for remobilization of storage C,N,P 
+C        during leafout 
+C     FXSH=shoot partitioning of storage C during leafout 
 C
       IF(WTRVC(NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
       IF(ISTYP(NZ,NY,NX).NE.0)THEN
@@ -4019,7 +4270,8 @@ C     CPOOLR,ZPOOLR,PPOOLR=non-structural C,N,P mass in root
 C     WTRVC,WTRVN,WTRVP=storage C,N,P
 C     ISTYP=growth habit:0=annual,1=perennial from PFT file
 C     UPNH4R,UPPO4R=N,P transfer from storage to root
-C     FRSV=rate constant for remobiln of storage C,N,P during leafout 
+C     FRSV=rate constant for remobilization of storage C,N,P 
+C        during leafout 
 C     FXRT=root partitioning of storage C during leafout 
 C 
       CPOOLM=0.0
@@ -4097,14 +4349,15 @@ C     REDISTRIBUTE TRANFERRED C FROM MAIN STEM TO OTHER BRANCHES
 C
 C     ATRP=hourly leafout counter
 C     TFN3=temperature function for canopy growth
-C     ATRPX=number of hours required for remobilization of storage C during leafout
-C     WFNG=growth function of canopy water potential
+C     ATRPX=number of hours required for remobilization of storage C
+C        during leafout
+C     WFNSG=growth function of canopy water potential
 C     CPOOL,ZPOOL,PPOOL=non-structural C,N,P mass
 C     XFRC,XFRN,XFRC=nonstructural C,N,P transfer
 C
       IF(NB.NE.NB1(NZ,NY,NX).AND.ATRP(NB,NZ,NY,NX)
      2.LE.ATRPX(ISTYP(NZ,NY,NX)))THEN
-      ATRP(NB,NZ,NY,NX)=ATRP(NB,NZ,NY,NX)+TFN3(NZ,NY,NX)*WFNG 
+      ATRP(NB,NZ,NY,NX)=ATRP(NB,NZ,NY,NX)+TFN3(NZ,NY,NX)*WFNSG*XNFH 
       XFRC=AMAX1(0.0,0.05*TFN3(NZ,NY,NX)
      2*(0.5*(CPOOL(NB1(NZ,NY,NX),NZ,NY,NX)+CPOOL(NB,NZ,NY,NX))
      3-CPOOL(NB,NZ,NY,NX)))
@@ -4131,65 +4384,45 @@ C     ISTYP=growth habit:0=annual,1=perennial from PFT file
 C     IFLGZ=remobilization flag
 C     WVSTKB=stalk sapwood mass
 C     WTRSVB,WTRSBN,WTRSBP=stalk reserve C,N,P mass
-C     CNKI,CPKI=nonstructural N,P inhibition constant on growth 
-C     FXFB=rate constant for plant-storage nonstructural C,N,P exchange
-C     XFRC,XFRN,XFRC=nonstructural C,N,P transfer
-C     CCPOLB,CZPOLB,CPPOLB=nonstructural C,N,P concn in branch
-C     ISTYP=growth habit:0=annual,1=perennial from PFT file
-C     IFLGZ=remobilization flag
-C     WVSTKB=stalk sapwood mass
-C     WTRSVB,WTRSBN,WTRSBP=stalk reserve C,N,P mass
-C     CNKI,CPKI=nonstructural N,P inhibition constant on growth 
-C     XFRC,XFRN,XFRC=nonstructural C,N,P transfer
+C     CNKI,CPKI=nonstructural N,P inhibition constant on growth,
+C        nutrient recycling
+C     FXFB=rate constant for plant-storage nonstructural C,N,P
+C        exchange
+C     XFRCX,XFRNX,XFRPX=nonstructural C,N,P transfer unconstrained
+C        by C,N,P
+C     XFRC,XFRN,XFRP=nonstructural C,N,P transfer constrained 
+C        by C,N,P
+C     CCPOLB,CZPOLB,CPPOLB=nonstructural C,N,P concentration in branch
 C     WTRVC,WTRVN,WTRVP=storage C,N,P
-C     CCPOLB,CZPOLB,CPPOLB=nonstructural C,N,P concn in branch
+C     CCPOLB,CZPOLB,CPPOLB=nonstructural C,N,P concentration in branch
 C     CPOOL,ZPOOL,PPOOL=non-structural C,N,P mass
+C     XNFH=time step from ‘wthr.f’
 C
       IF(IFLGZ.EQ.1.AND.ISTYP(NZ,NY,NX).NE.0)THEN
-      IF(WVSTKB(NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX)
-     2.AND.WTRSVB(NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
-      CWTRSV=AMAX1(0.0,WTRSVB(NB,NZ,NY,NX)/WVSTKB(NB,NZ,NY,NX))
-      CWTRSN=AMAX1(0.0,WTRSBN(NB,NZ,NY,NX)/WVSTKB(NB,NZ,NY,NX))
-      CWTRSP=AMAX1(0.0,WTRSBP(NB,NZ,NY,NX)/WVSTKB(NB,NZ,NY,NX))
-      CNR=CWTRSV/(CWTRSV+CWTRSN/CNKI)
-      CPR=CWTRSV/(CWTRSV+CWTRSP/CPKI)
-      ELSE
-      CNR=0.0
-      CPR=0.0
-      ENDIF
       XFRCX=FXFB(IBTYP(NZ,NY,NX))
-     2*AMAX1(0.0,WTRSVB(NB,NZ,NY,NX))
+     2*AMAX1(0.0,WTRSVB(NB,NZ,NY,NX))*XNFH
       XFRNX=FXFB(IBTYP(NZ,NY,NX))
-     2*AMAX1(0.0,WTRSBN(NB,NZ,NY,NX))*(1.0+CNR)
+     2*AMAX1(0.0,WTRSBN(NB,NZ,NY,NX))*XNFH
       XFRPX=FXFB(IBTYP(NZ,NY,NX))
-     2*AMAX1(0.0,WTRSBP(NB,NZ,NY,NX))*(1.0+CPR)
+     2*AMAX1(0.0,WTRSBP(NB,NZ,NY,NX))*XNFH
       XFRC=AMIN1(XFRCX,XFRNX/CNMN,XFRPX/CPMN)
-      XFRN=AMIN1(XFRNX,XFRC*CNMX,XFRPX*CNMX/CPMN*0.5)
-      XFRP=AMIN1(XFRPX,XFRC*CPMX,XFRNX*CPMX/CNMN*0.5)
+      XFRN=AMIN1(XFRNX,XFRC*CNMX,XFRPX*CNMX/CPMN)
+      XFRP=AMIN1(XFRPX,XFRC*CPMX,XFRNX*CPMX/CNMN)
       WTRSVB(NB,NZ,NY,NX)=WTRSVB(NB,NZ,NY,NX)-XFRC
       WTRVC(NZ,NY,NX)=WTRVC(NZ,NY,NX)+XFRC
       WTRSBN(NB,NZ,NY,NX)=WTRSBN(NB,NZ,NY,NX)-XFRN
       WTRVN(NZ,NY,NX)=WTRVN(NZ,NY,NX)+XFRN
       WTRSBP(NB,NZ,NY,NX)=WTRSBP(NB,NZ,NY,NX)-XFRP
       WTRVP(NZ,NY,NX)=WTRVP(NZ,NY,NX)+XFRP
-      IF(CCPOLB(NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
-      CNL=CCPOLB(NB,NZ,NY,NX)/(CCPOLB(NB,NZ,NY,NX)
-     2+CZPOLB(NB,NZ,NY,NX)/CNKI)
-      CPL=CCPOLB(NB,NZ,NY,NX)/(CCPOLB(NB,NZ,NY,NX)
-     2+CPPOLB(NB,NZ,NY,NX)/CPKI)
-      ELSE
-      CNL=0.0
-      CPL=0.0
-      ENDIF
       XFRCX=FXFB(IBTYP(NZ,NY,NX))
-     2*AMAX1(0.0,CPOOL(NB,NZ,NY,NX))
+     2*AMAX1(0.0,CPOOL(NB,NZ,NY,NX))*XNFH
       XFRNX=FXFB(IBTYP(NZ,NY,NX))
-     2*AMAX1(0.0,ZPOOL(NB,NZ,NY,NX))*(1.0+CNL)
+     2*AMAX1(0.0,ZPOOL(NB,NZ,NY,NX))*XNFH
       XFRPX=FXFB(IBTYP(NZ,NY,NX))
-     2*AMAX1(0.0,PPOOL(NB,NZ,NY,NX))*(1.0+CPL)
+     2*AMAX1(0.0,PPOOL(NB,NZ,NY,NX))*XNFH
       XFRC=AMIN1(XFRCX,XFRNX/CNMN,XFRPX/CPMN)
-      XFRN=AMIN1(XFRNX,XFRC*CNMX,XFRPX*CNMX/CPMN*0.5)
-      XFRP=AMIN1(XFRPX,XFRC*CPMX,XFRNX*CPMX/CNMN*0.5)
+      XFRN=AMIN1(XFRNX,XFRC*CNMX,XFRPX*CNMX/CPMN)
+      XFRP=AMIN1(XFRPX,XFRC*CPMX,XFRNX*CPMX/CNMN)
       CPOOL(NB,NZ,NY,NX)=CPOOL(NB,NZ,NY,NX)-XFRC
       WTRVC(NZ,NY,NX)=WTRVC(NZ,NY,NX)+XFRC
       ZPOOL(NB,NZ,NY,NX)=ZPOOL(NB,NZ,NY,NX)-XFRN
@@ -4205,32 +4438,36 @@ C    4,FXFB(IBTYP(NZ,NY,NX))
 C     ENDIF
       ENDIF
 C
-C     TRANSFER NON-STRUCTURAL C,N,P FROM LEAVES AND ROOTS TO RESERVES
-C     IN STALKS DURING GRAIN FILL IN ANNUALS OR BETWEEN STALK RESERVES
-C     AND LEAVES IN PERENNIALS ACCORDING TO CONCENTRATION DIFFERENCES
+C     TRANSFER NON-STRUCTURAL C,N,P FROM LEAVES TO RESERVES
+C     IN STALKS DURING GRAIN FILL IN ANNUALS OR BETWEEN LEAVES AND 
+C     STALK RESERVES IN PERENNIALS ACCORDING TO CONCENTRATION
+C     DIFFERENCES
 C
 C     ISTYP=growth habit:0=annual,1=perennial from PFT file
 C     IDAY(3,=start of stem elongation and setting max seed number 
-C     IDAY(8,=end date setting for final seed number
+C     IDAY(8,=end date for setting final seed number
+C     WTGRB=total seed C mass
+C     GRWTB=individual seed size 
+C     GRNOB=seed set number
 C     WTLSB=leaf+petiole mass
 C     WVSTKB=stalk sapwood mass
 C     CPOOL,ZPOOL,PPOOL=non-structural C,N,P mass in branch 
 C     WTRSVB,WTRSBN,WTRSBP=stalk reserve C,N,P mass
-C     FXFY,FXFZ=rate constant for plant-reserve nonstructural C,N,P exchange 
+C     FXFY,FXFZ=rate constant for plant-reserve nonstructural C,N,P
+C        exchange 
 C     XFRC,XFRN,XFRC=nonstructural C,N,P transfer
 C     CPOOLR,ZPOOLR,PPOOLR=non-structural C,N,P mass in root
 C
       IF((ISTYP(NZ,NY,NX).EQ.0.AND.IDAY(8,NB,NZ,NY,NX).NE.0)
-     2.OR.(ISTYP(NZ,NY,NX).EQ.1.AND.IDAY(3,NB,NZ,NY,NX).NE.0))THEN
+     4.OR.(ISTYP(NZ,NY,NX).NE.0.AND.IDAY(3,NB,NZ,NY,NX).NE.0))THEN
+      IF(WTLSB(NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
       WTPLTT=WTLSB(NB,NZ,NY,NX)+WVSTKB(NB,NZ,NY,NX)
       CPOOLT=CPOOL(NB,NZ,NY,NX)+WTRSVB(NB,NZ,NY,NX)
-      IF(WTPLTT.GT.ZEROP(NZ,NY,NX))THEN
       CPOOLD=(CPOOL(NB,NZ,NY,NX)*WVSTKB(NB,NZ,NY,NX)
      2-WTRSVB(NB,NZ,NY,NX)*WTLSB(NB,NZ,NY,NX))/WTPLTT 
       XFRC=FXFY(ISTYP(NZ,NY,NX))*CPOOLD
       CPOOL(NB,NZ,NY,NX)=CPOOL(NB,NZ,NY,NX)-XFRC
       WTRSVB(NB,NZ,NY,NX)=WTRSVB(NB,NZ,NY,NX)+XFRC
-      ENDIF
       IF(CPOOLT.GT.ZEROP(NZ,NY,NX))THEN
       ZPOOLD=(ZPOOL(NB,NZ,NY,NX)*WTRSVB(NB,NZ,NY,NX)
      2-WTRSBN(NB,NZ,NY,NX)*CPOOL(NB,NZ,NY,NX))/CPOOLT 
@@ -4243,52 +4480,13 @@ C
       PPOOL(NB,NZ,NY,NX)=PPOOL(NB,NZ,NY,NX)-XFRP
       WTRSBP(NB,NZ,NY,NX)=WTRSBP(NB,NZ,NY,NX)+XFRP
       ENDIF
-C     IF(NZ.EQ.1)THEN
-C     WRITE(*,4488)'EXCHC',I,J,NX,NY,NZ,NB,NS,XFRC,XFRN
-C    2,FXFZ(ISTYP(NZ,NY,NX)),WTRSVB(NB,NZ,NY,NX),CPOOL(NB,NZ,NY,NX) 
-C    3,WVSTKB(NB,NZ,NY,NX),WTLSB(NB,NZ,NY,NX) 
-C    4,CPOOLT,CPOOLD,ZPOOL(NB,NZ,NY,NX),WTRSBN(NB,NZ,NY,NX)
-4488  FORMAT(A8,7I4,12E12.4)
+C     IF(NZ.EQ.2)THEN
+C     WRITE(*,4488)'EXCHC',I,J,NFZ,NX,NY,NZ,NB,XFRC,XFRN
+C    2,WTRSVB(NB,NZ,NY,NX),WVSTKB(NB,NZ,NY,NX),CPOOL(NB,NZ,NY,NX) 
+C    3,WTLSB(NB,NZ,NY,NX) 
+C    4,CPOOLT,CPOOLD,ZPOOLD,ZPOOL(NB,NZ,NY,NX),WTRSBN(NB,NZ,NY,NX)
+4488  FORMAT(A8,7I4,20E12.4)
 C     ENDIF
-      IF(ISTYP(NZ,NY,NX).EQ.0.AND.IDAY(8,NB,NZ,NY,NX).NE.0)THEN
-      DO 2050 L=NU(NY,NX),NI(NZ,NY,NX)
-      IF(VOLX(L,NY,NX).GT.ZEROS2(NY,NX))THEN
-      WTRTRX=AMAX1(ZEROP(NZ,NY,NX),WTRTL(1,L,NZ,NY,NX)*FWODR(1))
-      WTPLTX=WTRTRX+WVSTKB(NB,NZ,NY,NX)
-      IF(WTPLTX.GT.ZEROP(NZ,NY,NX))THEN
-      CPOOLD=(CPOOLR(1,L,NZ,NY,NX)*WVSTKB(NB,NZ,NY,NX)
-     2-WTRSVB(NB,NZ,NY,NX)*WTRTRX)/WTPLTX 
-      XFRC=AMAX1(0.0,FXFY(ISTYP(NZ,NY,NX))*CPOOLD)
-      CPOOLR(1,L,NZ,NY,NX)=CPOOLR(1,L,NZ,NY,NX)-XFRC
-      WTRSVB(NB,NZ,NY,NX)=WTRSVB(NB,NZ,NY,NX)+XFRC
-      CPOOLT=CPOOLR(1,L,NZ,NY,NX)+WTRSVB(NB,NZ,NY,NX)
-      IF(CPOOLT.GT.ZEROP(NZ,NY,NX))THEN
-      ZPOOLD=(ZPOOLR(1,L,NZ,NY,NX)*WTRSVB(NB,NZ,NY,NX)
-     2-WTRSBN(NB,NZ,NY,NX)*CPOOLR(1,L,NZ,NY,NX))/CPOOLT 
-      PPOOLD=(PPOOLR(1,L,NZ,NY,NX)*WTRSVB(NB,NZ,NY,NX)
-     2-WTRSBP(NB,NZ,NY,NX)*CPOOLR(1,L,NZ,NY,NX))/CPOOLT 
-      XFRN=AMAX1(0.0,FXFZ(ISTYP(NZ,NY,NX))*ZPOOLD) 
-      XFRP=AMAX1(0.0,FXFZ(ISTYP(NZ,NY,NX))*PPOOLD) 
-      ZPOOLR(1,L,NZ,NY,NX)=ZPOOLR(1,L,NZ,NY,NX)-XFRN
-      WTRSBN(NB,NZ,NY,NX)=WTRSBN(NB,NZ,NY,NX)+XFRN
-      PPOOLR(1,L,NZ,NY,NX)=PPOOLR(1,L,NZ,NY,NX)-XFRP
-      WTRSBP(NB,NZ,NY,NX)=WTRSBP(NB,NZ,NY,NX)+XFRP
-C     IF(NZ.EQ.1)THEN
-C     WRITE(*,4489)'EXCHC',I,J,NZ,NB,L,WTRSVB(NB,NZ,NY,NX)
-C    2,WVSTKB(NB,NZ,NY,NX),CPOOLR(1,L,NZ,NY,NX) 
-C    3,WTRTL(1,L,NZ,NY,NX),FWOOD(1),WTRTRX,WTPLTX
-C    4,CPOOLT,CPOOLD,XFRC,FXFZ(ISTYP(NZ,NY,NX)) 
-4489  FORMAT(A8,5I4,12E16.8)
-C     ENDIF
-C     IF(NZ.EQ.1.OR.NZ.EQ.4)THEN
-C     WRITE(*,4489)'EXCHN',I,J,NZ,NB,L,WTRSBN(NB,NZ,NY,NX)
-C    2,WTRSVB(NB,NZ,NY,NX),ZPOOLR(1,L,NZ,NY,NX) 
-C    3,CPOOLR(1,L,NZ,NY,NX),FWOOD(1),ZPOOLD,XFRN
-C     ENDIF
-      ENDIF
-      ENDIF
-      ENDIF
-2050  CONTINUE
       ENDIF
       ENDIF
 C
@@ -4298,7 +4496,8 @@ C
 C     WVSTKB,WVSTK=stalk,total stalk sapwood mass
 C     WTRT=total root mass
 C     WTRSVB,WTRSBN,WTRSBP=stalk reserve C,N,P mass
-C     XFRX=maximum storage C content for remobiln from stalk,root reserves
+C     XFRX=maximum storage C content for remobilization from
+C        stalk,root reserves
 C     XFRC=C transfer
 C
       IF(WVSTKB(NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX)
@@ -4317,6 +4516,213 @@ C
       WTRVC(NZ,NY,NX)=WTRVC(NZ,NY,NX)-XFRC
       ENDIF
 C
+C     TRANSFER NON-STRUCTURAL C,N,P FROM ROOTS TO RESERVES
+C     IN STALKS DURING GRAIN FILL IN ANNUALS OR BETWEEN LEAVES AND 
+C     STALK RESERVES IN PERENNIALS ACCORDING TO CONCENTRATION
+C     DIFFERENCES
+C
+C     ISTYP=growth habit:0=annual,1=perennial from PFT file
+C     IDAY(8,=end date for setting final seed number
+C     WTRTL=active root C mass
+C     FWODR=root woody fraction
+C     WVSTKB,WTRSVB=stalk sapwood C
+C     WTRSVB,WTRSBN,WTRSBP=stalk nonstructural C,N,P mass
+C     CPOOLR,ZPOOLR,PPOOLR=root nonstructural C,N,P 
+C     XFRC,XFRN,XFRP=root-reserve nonstructural C,N,P transfer
+C
+      IF(ISTYP(NZ,NY,NX).EQ.0.AND.IDAY(8,NB,NZ,NY,NX).NE.0)THEN
+      DO 2050 L=NU(NY,NX),NI(NZ,NY,NX)
+      IF(VOLX(L,NY,NX).GT.ZEROS2(NY,NX))THEN
+      IF(WTRTL(1,L,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
+      WTRTRX=AMAX1(ZEROP(NZ,NY,NX),WTRTL(1,L,NZ,NY,NX)*FWODR(1,NZ))
+      WTPLTX=WTRTRX+WVSTKB(NB,NZ,NY,NX)
+      CPOOLD=(CPOOLR(1,L,NZ,NY,NX)*WVSTKB(NB,NZ,NY,NX)
+     2-WTRSVB(NB,NZ,NY,NX)*WTRTRX)/WTPLTX 
+      XFRC=AMAX1(0.0,FXFY(ISTYP(NZ,NY,NX))*CPOOLD) 
+      CPOOLR(1,L,NZ,NY,NX)=CPOOLR(1,L,NZ,NY,NX)-XFRC
+      WTRSVB(NB,NZ,NY,NX)=WTRSVB(NB,NZ,NY,NX)+XFRC
+      CPOOLT=CPOOLR(1,L,NZ,NY,NX)+WTRSVB(NB,NZ,NY,NX)
+      IF(CPOOLT.GT.ZEROP(NZ,NY,NX))THEN
+      ZPOOLD=(ZPOOLR(1,L,NZ,NY,NX)*WTRSVB(NB,NZ,NY,NX)
+     2-WTRSBN(NB,NZ,NY,NX)*CPOOLR(1,L,NZ,NY,NX))/CPOOLT 
+      PPOOLD=(PPOOLR(1,L,NZ,NY,NX)*WTRSVB(NB,NZ,NY,NX)
+     2-WTRSBP(NB,NZ,NY,NX)*CPOOLR(1,L,NZ,NY,NX))/CPOOLT 
+      XFRN=AMAX1(0.0,FXFZ(ISTYP(NZ,NY,NX))*ZPOOLD)
+      XFRP=AMAX1(0.0,FXFZ(ISTYP(NZ,NY,NX))*PPOOLD)
+      ZPOOLR(1,L,NZ,NY,NX)=ZPOOLR(1,L,NZ,NY,NX)-XFRN
+      WTRSBN(NB,NZ,NY,NX)=WTRSBN(NB,NZ,NY,NX)+XFRN
+      PPOOLR(1,L,NZ,NY,NX)=PPOOLR(1,L,NZ,NY,NX)-XFRP
+      WTRSBP(NB,NZ,NY,NX)=WTRSBP(NB,NZ,NY,NX)+XFRP
+C     IF(L.EQ.12)THEN
+C     WRITE(*,4489)'EXCHR',I,J,NFZ,NZ,NB,L,XFRC,XFRN
+C    2,WTRSVB(NB,NZ,NY,NX),WVSTKB(NB,NZ,NY,NX),CPOOLR(1,L,NZ,NY,NX) 
+C    3,WTRTL(1,L,NZ,NY,NX),FWOOD(1,NZ),WTRTRX,WTPLTX
+C    4,CPOOLT,CPOOLD,XFRC,FXFZ(ISTYP(NZ,NY,NX)) 
+4489  FORMAT(A8,6I4,29E12.4)
+C     ENDIF
+C     IF(NZ.EQ.1.OR.NZ.EQ.4)THEN
+C     WRITE(*,4489)'EXCHN',I,J,NZ,NB,L,WTRSBN(NB,NZ,NY,NX)
+C    2,WTRSVB(NB,NZ,NY,NX),ZPOOLR(1,L,NZ,NY,NX) 
+C    3,CPOOLR(1,L,NZ,NY,NX),FWOOD(1,NZ),ZPOOLD,XFRN
+C     ENDIF
+      ENDIF
+      ENDIF
+      ENDIF
+2050  CONTINUE
+      ENDIF
+C
+C     GRAIN FILL BY TRANSLOCATION FROM STALK RESERVES
+C     UNTIL GRAIN SINK (=FINAL GRAIN NUMBER X MAXIMUM
+C     GRAIN SIZE) IS FILLED OR RESERVES ARE EXHAUSTED
+C
+C     IDAY(7,=start of grain filling and setting max seed size
+C     WTGRB=total seed C mass
+C     GRWTB=individual seed size 
+C     GRNOB=seed set number
+C     GROLM=maximum grain fill rate
+C     GFILL=grain filling rate at 25 oC from PFT file
+C     TFN3=temperature function for canopy growth
+C     TFN4=temperature function for root growth
+C
+      IF(IDAY(7,NB,NZ,NY,NX).NE.0)THEN
+      IF(WTGRB(NB,NZ,NY,NX).GE.GRWTB(NB,NZ,NY,NX)
+     2*GRNOB(NB,NZ,NY,NX))THEN
+      GROLM=0.0
+      ELSEIF(IRTYP(NZ,NY,NX).EQ.0)THEN
+      GROLM=AMAX1(0.0,GFILL(NZ,NY,NX)*GRNOB(NB,NZ,NY,NX)
+     2*SQRT(TFN3(NZ,NY,NX))*XNFH) 
+      ELSE
+      GROLM=AMAX1(0.0,GFILL(NZ,NY,NX)*GRNOB(NB,NZ,NY,NX)
+     2*SQRT(TFN4(NG(NZ,NY,NX),NZ,NY,NX))*XNFH)
+      ENDIF
+C
+C     GRAIN FILL RATE MAY BE CONSTRAINED BY HIGH GRAIN C:N OR C:P
+C
+C     WTGRB,WTGRBN,WTGRBP=total seed C,N,P mass
+C     ZPGRM=min N:C,P:C in grain relative to max values from PFT file
+C     CNGR,CPGR=maximum N:C,P:C ratios in grain from PFT file
+C     GROLM,GROLC=maximum,actual grain fill rate
+C     XLOCM,XLOCC=maximum,actual C translocation rate from reserve 
+C        to grain 
+C
+      IF(WTGRBN(NB,NZ,NY,NX).LT.ZPGRM*CNGR(NZ,NY,NX)
+     2*WTGRB(NB,NZ,NY,NX).OR.WTGRBP(NB,NZ,NY,NX).LT.ZPGRM
+     3*CPGR(NZ,NY,NX)*WTGRB(NB,NZ,NY,NX))THEN
+      GROLC=0.0
+      ELSE
+      GROLC=GROLM
+      ENDIF
+      XLOCM=AMIN1(GROLM,WTRSVB(NB,NZ,NY,NX))
+      XLOCC=AMIN1(GROLC,WTRSVB(NB,NZ,NY,NX))
+C
+C     GRAIN N OR P FILL RATE MAY BE LIMITED BY LOW C:N OR C:P RATIOS
+C     OF STALK RESERVES
+C
+C     WTRSVB,WTRSBN,WTRSBP=stalk reserve C,N,P mass
+C     ZNPGN,ZNPGP=effect of reserve N:C,P:C on grain fill N:C,P:C 
+C     SETN,SETP=Km for nonstructural N,P concn on seed set (g g-1)
+C     ZPGRM=min N:C,P:C in grain relative to max values from PFT file
+C     ZPGRD=1.0-ZPGRM 
+C     ZPGRN,ZPGRP=N:C,P:C ratios during grain fill
+C     XLOCM,XLOCC=maximum,actual C translocation rate from reserve 
+C        to grain 
+C     CNGR,CPGR=maximum N:C,P:C ratios in grain from PFT file
+C     XLOCN,XLOCP=N,P translocation rate from reserve to grain 
+C
+      IF(WTRSBN(NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
+      ZNPGN=WTRSBN(NB,NZ,NY,NX)/(WTRSBN(NB,NZ,NY,NX)
+     2+SETN*WTRSVB(NB,NZ,NY,NX))
+      ZPGRN=ZPGRM+ZPGRD*AMAX1(0.0,AMIN1(1.0,ZNPGN))
+      XLOCN=AMIN1(XLOCM*CNGR(NZ,NY,NX)
+     2,AMAX1(0.0,WTRSBN(NB,NZ,NY,NX)*ZPGRN)
+     3,(WTGRB(NB,NZ,NY,NX)+XLOCC)*CNGR(NZ,NY,NX)-WTGRBN(NB,NZ,NY,NX))
+      ELSE
+      XLOCN=0.0
+      ENDIF
+      IF(WTRSBP(NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
+      ZNPGP=WTRSBP(NB,NZ,NY,NX)/(WTRSBP(NB,NZ,NY,NX)
+     3+SETP*WTRSVB(NB,NZ,NY,NX))
+      ZPGRP=ZPGRM+ZPGRD*AMAX1(0.0,AMIN1(1.0,ZNPGP))
+      XLOCP=AMIN1(XLOCM*CPGR(NZ,NY,NX)
+     2,AMAX1(0.0,WTRSBP(NB,NZ,NY,NX)*ZPGRP)
+     3,(WTGRB(NB,NZ,NY,NX)+XLOCC)*CPGR(NZ,NY,NX)-WTGRBP(NB,NZ,NY,NX))
+      ELSE
+      XLOCP=0.0
+      ENDIF
+C     IF(NX.EQ.1.AND.NY.EQ.6.AND.NZ.EQ.3)THEN
+C     WRITE(*,85)'XLOC',I,J,NFZ,NZ,NB
+C    2,WTGRB(NB,NZ,NY,NX),WTGRBN(NB,NZ,NY,NX)
+C    2,WTRSVB(NB,NZ,NY,NX),WTRSBN(NB,NZ,NY,NX),XLOCC,XLOCN,XLOCP,XLOCM
+C    3,CNGR(NZ,NY,NX),ZPGRX,ZNPG,GROLC,GROLM,GROGR,GROGRN
+C    3,XLOCM*CNGR(NZ,NY,NX),AMAX1(0.0,WTRSBN(NB,NZ,NY,NX)*ZPGRX)
+C    4,(WTGRB(NB,NZ,NY,NX)+XLOCC)*CNGR(NZ,NY,NX)-WTGRBN(NB,NZ,NY,NX)
+C    4,GRNOB(NB,NZ,NY,NX),GRWTB(NB,NZ,NY,NX),GFILL(NZ,NY,NX)
+C    5,SQRT(TFN3(NZ,NY,NX)),FLG4(NB,NZ,NY,NX) 
+85    FORMAT(A8,5I4,30E12.4)
+C     ENDIF
+C
+C     TRANSLOCATE C,N,P FROM STALK RESERVES TO GRAIN
+C
+C     WTRSVB,WTRSBN,WTRSBP=stalk reserve C,N,P mass
+C     GROGR=grain growth rate
+C     XLOCC,XLOCN,XLOCP=C,N,P translocation rate from reserve to grain 
+C
+      WTRSVB(NB,NZ,NY,NX)=WTRSVB(NB,NZ,NY,NX)+GROGR-XLOCC
+      WTRSBN(NB,NZ,NY,NX)=WTRSBN(NB,NZ,NY,NX)+GROGRN-XLOCN
+      WTRSBP(NB,NZ,NY,NX)=WTRSBP(NB,NZ,NY,NX)+GROGRP-XLOCP
+      WTGRB(NB,NZ,NY,NX)=WTGRB(NB,NZ,NY,NX)+XLOCC
+      WTGRBN(NB,NZ,NY,NX)=WTGRBN(NB,NZ,NY,NX)+XLOCN
+      WTGRBP(NB,NZ,NY,NX)=WTGRBP(NB,NZ,NY,NX)+XLOCP
+      ELSE
+      XLOCC=0.0
+      XLOCN=0.0
+      XLOCP=0.0
+      ENDIF
+C
+C     SET DATE OF PHYSIOLOGICAL MATURITY WHEN GRAIN FILL
+C     HAS STOPPED FOR SET PERIOD OF TIME
+C
+C     IDAY(8,=end date for setting final seed number
+C     XLOCC=C translocation rate from reserve to grain 
+C     PP=PFT population
+C     FLG4=number of hours with no grain fill
+C     FLG4X=number of hours with no grain filling until 
+C        physiological maturity
+C     IDAY(10,=date of physiological maturity
+C
+      IF(IDAY(8,NB,NZ,NY,NX).NE.0)THEN
+      IF(XLOCC.LE.1.0E-09*PP(NZ,NY,NX))THEN
+      FLG4(NB,NZ,NY,NX)=FLG4(NB,NZ,NY,NX)+1.0*XNFH 
+      ELSE
+      FLG4(NB,NZ,NY,NX)=0.0
+      ENDIF
+      IF(FLG4(NB,NZ,NY,NX).GE.FLG4X)THEN
+      IF(IDAY(10,NB,NZ,NY,NX).EQ.0)THEN
+      IDAY(10,NB,NZ,NY,NX)=I
+      ENDIF
+      ENDIF
+C
+C     TERMINATE ANNUALS AFTER GRAIN FILL
+C
+C     ISTYP=growth habit:0=annual,1=perennial
+C     IWTYP=phenology type:0=evergreen,1=cold deciduous,2=drought
+C        deciduous,3=cold and drought deciduous
+C     FLG4=number of hours with no grain fill
+C     FLG4X=number of hours with no grain filling until 
+C        physiological maturity
+C     FLG4Y=number of hours after physiological maturity required 
+C        for senescence
+C     VRNF,VRNX=leafoff hours,hours required for leafoff
+C
+C     IF WINTER ANNUAL
+C
+      IF(ISTYP(NZ,NY,NX).EQ.0.AND.IWTYP(NZ,NY,NX).NE.0)THEN
+      IF(FLG4(NB,NZ,NY,NX).GT.FLG4X+FLG4Y(IWTYP(NZ,NY,NX)))THEN
+      VRNF(NB,NZ,NY,NX)=VRNX(NB,NZ,NY,NX)+0.5
+      ENDIF
+      ENDIF
+      ENDIF
+C
 C     CANOPY N2 FIXATION (CYANOBACTERIA)
 C
 C     INTYP=N2 fixation: 4,5,6=rapid to slow canopy symbiosis
@@ -4330,7 +4736,8 @@ C     WTNDI=initial bacterial mass at infection
 C     AREA=grid cell area
 C     CNND,CPND=bacterial N:C,P:C ratio from PFT file
 C
-      IF(WTNDB(NB,NZ,NY,NX).LE.0.0)THEN
+      IF(NFZ.EQ.1.AND.WTNDB(NB,NZ,NY,NX).LE.0.0
+     2.AND.ICHKF.EQ.0)THEN
       WTNDB(NB,NZ,NY,NX)=WTNDB(NB,NZ,NY,NX)
      2+WTNDI*AREA(3,NU(NY,NX),NY,NX)
       WTNDBN(NB,NZ,NY,NX)=WTNDBN(NB,NZ,NY,NX)
@@ -4339,16 +4746,18 @@ C
      2+WTNDI*AREA(3,NU(NY,NX),NY,NX)*CPND(NZ,NY,NX)
       ENDIF
 C
-C     O2-UNCONSTRAINED RESPIRATION RATES BY HETEROTROPHIC AEROBES
-C     IN NODULE FROM SPECIFIC OXIDATION RATE, ACTIVE BIOMASS,
-C     NON-STRUCTURAL C CONCENTRATION, MICROBIAL C:N:P FACTOR,
-C     AND TEMPERATURE
+C     CONSTRAINTS ON BACTERIAL ACTIVITY IMPOSED BY
+C     C,P AND BIOMASS 
 C
 C     WTNDB,WTNDBN,WTNDBP=bacterial C,N,P mass
-C     CPOLNB,ZPOLNB,PPOLNB=nonstructural C,N,P in bacteria
-C     CCPOLN,CZPOLN,CPPOLN=nonstructural C,N,P concn in bacteria
-C     CNKI,CPKI=nonstructural N,P inhibition constant on growth 
-C     FCNPF=N,P constraint to bacterial activity
+C     CPOLNB,ZPOLNB,PPOLNB=nonstructural C,N,P mass in bacteria
+C     CCPOLN,CZPOLN,CPPOLN=nonstructural C,N,P concentration 
+C        in bacteria
+C     ZCPOLI,ZPPOLI=nonstructural N:C,N:P
+C     ZCKI,ZPKI=nonstructural C,P inhibition on bacterial growth,
+C        nutrient recycling
+C     FCNPF=N,P constraint to bacterial growth
+C     CNDLB=bacteria:leaf+petiole ratio
 C
       IF(WTNDB(NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
       CCPOLN=AMAX1(0.0,CPOLNB(NB,NZ,NY,NX)/WTNDB(NB,NZ,NY,NX))
@@ -4358,6 +4767,16 @@ C
       CCPOLN=1.0
       CZPOLN=1.0
       CPPOLN=1.0
+      ENDIF
+      IF(CCPOLN.GT.ZERO)THEN
+      ZCPOLI=CZPOLN/CCPOLN
+      ELSE
+      ZCPOLI=0.0
+      ENDIF
+      IF(CPPOLN.GT.ZERO)THEN 
+      ZPPOLI=CZPOLN/CPPOLN 
+      ELSE
+      ZPPOLI=0.0
       ENDIF
       IF(CCPOLN.GT.ZERO)THEN 
       CCC=AMAX1(0.0,AMIN1(1.0
@@ -4379,10 +4798,16 @@ C
       ELSE
       FCNPF=1.0
       ENDIF
-      SPNDLI=CCPOLN/(CCPOLN+SPNDLK)
+      IF(ARLFB(NB,NZ,NY,NX).GT.ZEROP2(NZ,NY,NX))THEN
+      CNDLB=AMAX1(0.0,WTNDB(NB,NZ,NY,NX)/ARLFB(NB,NZ,NY,NX))
+      ELSE
+      CNDLB=0.0
+      ENDIF
 C
-C     RESPIRATION FROM NON-STRUCTURAL C DETERMINED BY TEMPERATURE,
-C     NON-STRUCTURAL C:N:P
+C     O2-UNCONSTRAINED RESPIRATION RATES BY HETEROTROPHIC AEROBES
+C     IN NODULE FROM SPECIFIC OXIDATION RATE, ACTIVE BIOMASS,
+C     NON-STRUCTURAL C CONCENTRATION, MICROBIAL C:N:P FACTOR,
+C     AND TEMPERATURE WITH EXCESS N FEEDBACK
 C
 C     RCNDL=respiration from non-structural C
 C     CPOLNB,ZPOLNB,PPOLNB=nonstructural C,N,P in bacteria
@@ -4390,12 +4815,12 @@ C     VMXO=specific respiration rate by bacterial N2 fixers
 C     WTNDB=bacterial C mass
 C     TFN3=temperature function for canopy growth
 C     FCNPF=N,P constraint to bacterial activity
-C     WFNG=growth function of canopy water potential
+C     WFNSG=growth function of canopy water potential
+C     ZCPOLI,ZPPOLI=nonstructural N:C,N:P
 C
       RCNDL=AMAX1(0.0,AMIN1(CPOLNB(NB,NZ,NY,NX) 
-     2,VMXO*WTNDB(NB,NZ,NY,NX))*FCNPF*TFN3(NZ,NY,NX)*WFNG) 
-C     CPOOLNX=CPOLNB(NB,NZ,NY,NX)
-C     VMXOX=VMXO*WTNDB(NB,NZ,NY,NX)*FCNPF*TFN3(NZ,NY,NX)*WFNG
+     2,VMXO*WTNDB(NB,NZ,NY,NX))*FCNPF*TFN3(NZ,NY,NX)*WFNSG*XNFH) 
+     2/(1.0+AMAX1(ZCPOLI/ZCKI,ZPPOLI/ZPKI)) 
 C
 C     NODULE MAINTENANCE RESPIRATION FROM SOIL TEMPERATURE,
 C     NODULE STRUCTURAL N
@@ -4404,13 +4829,15 @@ C     RMNDL=bacterial maintenance respiration
 C     RMPLT=specific maintenance respiration rate (g C g-1 N h-1)
 C     TFN5=temperature function for canopy maintenance respiration 
 C     WTNDBN=bacterial N mass
+C     WFNSR=expansion,extension function of canopy water potential
 C
-      RMNDL=AMAX1(0.0,RMPLT*TFN5*WTNDBN(NB,NZ,NY,NX))*SPNDLI 
+      RMNDL=AMAX1(0.0,RMPLT*TFN5*WTNDBN(NB,NZ,NY,NX)*WFNSR*XNFH) 
 C
 C     NODULE GROWTH RESPIRATION FROM TOTAL - MAINTENANCE
 C     IF > 0 DRIVES GROWTH, IF < 0 DRIVES REMOBILIZATION
 C
-C     RXNDL=difference between non-structural C respn and mntc respn
+C     RXNDL=difference between non-structural C respiration and
+C        maintenance respiration 
 C     RGNDL=growth respiration unlimited by N,P
 C     RSNDL=excess maintenance respiration
 C
@@ -4433,7 +4860,7 @@ C
       RGN2P=AMAX1(0.0,WTNDB(NB,NZ,NY,NX)*CNND(NZ,NY,NX)
      2-WTNDBN(NB,NZ,NY,NX))/EN2F 
       IF(RGNDL.GT.ZEROP(NZ,NY,NX))THEN
-      RGN2F=RGNDL*RGN2P/(RGNDL+RGN2P) 
+      RGN2F=RGNDL*RGN2P/(RGNDL+RGN2P)
       ELSE
       RGN2F=0.0
       ENDIF
@@ -4445,11 +4872,13 @@ C
 C     RCCC,RCCN,RCCP=remobilization coefficient for C,N,P
 C     RCCZN,RCCYN=min,max fractions for bacteria C recycling
 C     RCCXN,RCCQN=max fractions for bacteria N,P recycling 
-C     WTLSB=leaf+petiole mass
-C     CCNDLB=bacteria:leaf+petiole ratio
-C     RDNDBX=effect of CCNDLB on bacteria decomposition rate
-C     SPNDX=specific bacterial decomposition rate at current CCNDLB
+C     SPNDX=specific bacterial decomposition rate at current CNDLB
 C     SPNDL=specific decomposition rate by bacterial N2 fixers 
+C     CNDLB=bacteria:leaf+petiole ratio
+C     CNDLI=bacteria: leaf+petiole ratio controlling bacterial
+C        decomposition
+C     TFN3=temperature function for canopy growth
+C     WFNSG=growth function of canopy water potential
 C     WTNDB,WTNDBN,WTNDBP=bacterial C,N,P mass
 C     RXNDLC,RXNDLN,RXNDLP=bacterial C,N,P loss from decomposition
 C     RDNDLC,RDNDLN,RDNDLP=bacterial C,N,P decomposition to litterfall
@@ -4458,7 +4887,8 @@ C
       RCCC=RCCZN+CCC*RCCYN
       RCCN=CNC*RCCXN
       RCCP=CPC*RCCQN
-      SPNDX=SPNDL*SQRT(TFN3(NZ,NY,NX)*WFNG) 
+      SPNDX=AMIN1(1.0,SPNDL*CNDLB/CNDLI(INTYP(NZ,NY,NX)))
+     2*SQRT(TFN3(NZ,NY,NX)*WFNSG)*XNFH 
       RXNDLC=SPNDX*WTNDB(NB,NZ,NY,NX) 
       RXNDLN=SPNDX*WTNDBN(NB,NZ,NY,NX) 
       RXNDLP=SPNDX*WTNDBP(NB,NZ,NY,NX)
@@ -4473,7 +4903,8 @@ C     TOTAL NON-STRUCTURAL C,N,P USED IN NODULE GROWTH
 C     AND GROWTH RESPIRATION DEPENDS ON GROWTH YIELD 
 C     ENTERED IN 'READQ'
 C
-C     CGNDL=total non-structural C used in bacterial growth and growth respiration 
+C     CGNDL=total non-structural C used in bacterial growth 
+C        and growth respiration 
 C     CPOLNB,ZPOLNB,PPOLNB=nonstructural C,N,P in bacteria
 C     RMNDL=bacterial maintenance respiration
 C     RCNDL=respiration from non-structural C
@@ -4485,7 +4916,8 @@ C     DMND=bacterial growth yield
 C     RGNDG=bacterial respiration for growth and N2 fixation 
 C     ZADDN,PADDN=nonstructural N,P used in growth
 C     CNND,CPND=bacterial N:C,P:C ratio from PFT file
-C     CCPOLN,CZPOLN,CPPOLN=nonstructural C,N,P concn in bacteria
+C     CCPOLN,CZPOLN,CPPOLN=nonstructural C,N,P concentration 
+C        in bacteria
 C     CZKM,CPKM=Km for nonstructural N,P uptake by bacteria 
 C
       CGNDL=AMIN1(CPOLNB(NB,NZ,NY,NX)-AMIN1(RMNDL,RCNDL)
@@ -4506,9 +4938,8 @@ C     RXNSNC,RXNSNC,RXNSNP=bacterial C,N,P loss from senescence
 C     RDNSNC,RDNSNC,RDNSNP=bacterial C,N,P senescence to litterfall 
 C     RCNSNC,RCNSNC,RCNSNP=bacterial C,N,P senescence to recycling
 C
-      IF(RSNDL.GT.0.0.AND.WTNDB(NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX)
-     2.AND.RCCC.GT.ZERO)THEN
-      RXNSNC=RSNDL/RCCC
+      IF(RSNDL.GT.0.0.AND.WTNDB(NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
+      RXNSNC=RSNDL 
       RXNSNN=RXNSNC*WTNDBN(NB,NZ,NY,NX)/WTNDB(NB,NZ,NY,NX)
       RXNSNP=RXNSNC*WTNDBP(NB,NZ,NY,NX)/WTNDB(NB,NZ,NY,NX)
       RDNSNC=RXNSNC*(1.0-RCCC)
@@ -4545,13 +4976,17 @@ C
       TCO2T(NZ,NY,NX)=TCO2T(NZ,NY,NX)-RCO2T
       TCO2A(NZ,NY,NX)=TCO2A(NZ,NY,NX)-RCO2T
       CNET(NZ,NY,NX)=CNET(NZ,NY,NX)-RCO2T
+      HCNET(NZ,NY,NX)=HCNET(NZ,NY,NX)-RCO2T
       RECO(NY,NX)=RECO(NY,NX)-RCO2T
       TRAU(NY,NX)=TRAU(NY,NX)-RCO2T
 C
 C     NODULE LITTERFALL CAUSED BY REMOBILIZATION
 C
-C     CSNC,ZSNC,PSNC=C,N,P litterfall from decomposition and senescence
-C     CFOPC,CFOPN,CFOPC=fraction of litterfall C,N,P allocated to litter components
+C     CSNC,ZSNC,PSNC=C,N,P litterfall from decomposition and
+C        senescence
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     RDNDLC,RDNDLN,RDNDLP=bacterial C,N,P decomposition to litterfall
 C     RDNSNC,RDNSNC,RDNSNP=bacterial C,N,P senescence to litterfall 
 C
@@ -4562,6 +4997,10 @@ C
      2*(RDNDLN+RDNSNN)
       PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)+CFOPP(1,M,NZ,NY,NX)
      2*(RDNDLP+RDNSNP) 
+C     WRITE(*,2119)'NODLIT',I,J,NFZ,NZ,NB,M,INTYP(NZ,NY,NX)
+C    2,CSNC(M,1,0,NZ,NY,NX),CFOPC(1,M,NZ,NY,NX)
+C    2,RDNDLC,RDNSNC,RXNDLC,(1.0-RCCC),SPNDX,WTNDB(NB,NZ,NY,NX)
+2119  FORMAT(A8,7I4,12E12.4)
 6470  CONTINUE
 C
 C     CONSUMPTION OF NON-STRUCTURAL C,N,P BY NODULE
@@ -4570,7 +5009,8 @@ C     CPOLNB,ZPOLNB,PPOLNB=nonstructural C,N,P in bacteria
 C     RMNDL=bacterial maintenance respiration
 C     RCNDL=respiration from non-structural C
 C     RGN2F=respiration for N2 fixation
-C     CGNDL=total non-structural C used in bacterial growth and growth respiration 
+C     CGNDL=total non-structural C used in bacterial growth 
+C        and growth respiration 
 C     RCNDLC,RCNDLN,RCNDLP=bacterial C,N,P decomposition to recycling 
 C     RCNSNC,RCNSNC,RCNSNP=bacterial C,N,P senescence to recycling
 C     ZADDN,PADDN=nonstructural N,P used in growth
@@ -4593,55 +5033,59 @@ C
       WTNDB(NB,NZ,NY,NX)=WTNDB(NB,NZ,NY,NX)+GRNDG-RXNDLC-RXNSNC
       WTNDBN(NB,NZ,NY,NX)=WTNDBN(NB,NZ,NY,NX)+ZADDN-RXNDLN-RXNSNN
       WTNDBP(NB,NZ,NY,NX)=WTNDBP(NB,NZ,NY,NX)+PADDN-RXNDLP-RXNSNP
-C     IF((I/30)*30.EQ.I.AND.J.EQ.12)THEN
-C     WRITE(*,2121)'NODGR',I,J,NZ,NB
-C    2,RCNDL,RMNDL,RGNDL,RGN2P,RCO2T,RXNDLC,SPNDLI 
-C    2,RGN2P,RGN2F,CGNDL,RSNDL,GRNDG,RGNDG,RCNSNC
-C    3,ZADDN,PADDN,RCCC,RCCN 
+C     IF((I/10)*10.EQ.I.AND.J.EQ.15)THEN
+C     WRITE(*,2121)'NODGB',I,J,NFZ,NZ,NB,INTYP(NZ,NY,NX)
+C    2,CNDLB,WTNDB(NB,NZ,NY,NX),ARLFB(NB,NZ,NY,NX)
+C    2,GRNDG,RXNDLC,RXNSNC,CNDLB/CNDLI(INTYP(NZ,NY,NX))
+C    2,RCNDL,RMNDL,RGNDL,RGN2P,RCO2T,RXNDLC 
+C    2,RGN2P,RGN2F,CGNDL,RSNDL,RGNDG,RCNSNC
+C    3,ZADDN,PADDN,RCCC,RCCN,SPNDX,SPNDL
+C    2,TFN3(NZ,NY,NX),WFNSG,CNDLB,CNDLI(INTYP(NZ,NY,NX)) 
 C    8,RCCP,RDNDLC,RDNDLN,RDNDLP,RDNDLX,WTLSB(NB,NZ,NY,NX) 
 C    3,WTNDB(NB,NZ,NY,NX),WTNDBN(NB,NZ,NY,NX),WTNDBP(NB,NZ,NY,NX) 
 C    4,CPOLNB(NB,NZ,NY,NX),ZPOLNB(NB,NZ,NY,NX),PPOLNB(NB,NZ,NY,NX)
-C    5,CCPOLN,CZPOLN,CPPOLN 
-C    6,TFN3(NZ,NY,NX),FCNPF,WFNG,CCNDLB,RDNDBX,CPOOLNX,VMXOX
-2121  FORMAT(A8,4I4,60F16.8)
+C    5,CCPOLN,CZPOLN,CPPOLN,ZCPOLI,ZPPOLI
+C    6,(1.0+AMAX1(ZCPOLI/ZCKI,ZPPOLI/ZPKI)) 
+C    6,TFN3(NZ,NY,NX),FCNPF,WFNSG,CPOOLNX,VMXOX
+2121  FORMAT(A8,6I4,60F16.8)
 C     ENDIF
 C
 C     TRANSFER NON-STRUCTURAL C,N,P BETWEEN BRANCH AND NODULES
 C     FROM NON-STRUCTURAL C,N,P CONCENTRATION DIFFERENCES
 C
-C     CPOOL,ZPOOL,PPOOL=branch non-structural C,N,P mass
+C     CPOOL,ZPOOL,PPOOL=branch non-structural C,N,P 
+C     CPOLNB,ZPOLNB,PPOLNB=nonstructural C,N,P in bacteria
+C     ISTYP=growth habit:0=annual,1=perennial from PFT file
 C     WTLSB=leaf+petiole C mass
+C     IDAY(10,=physiological maturity date
 C     WTNDB=bacterial C mass
 C     WTNDI=initial bacterial mass at infection
-C     FXRN=rate constant for plant-bacteria nonstructural C,N,P exchange
-C     CCNGB=parameter to calculate nonstructural C,N,P exchange
-C     CCNDLB=bacteria:leaf+petiole ratio
-C     XFRC,XFRN,XFRC=nonstructural C,N,P transfer
-C     CPOLNB,ZPOLNB,PPOLNB=nonstructural C,N,P in bacteria
+C     FXRN=rate constant for plant-bacteria nonstructural C,N,P
+C        exchange
+C     XFRC,XFRN,XFRC=nonstructural canopy-bacteria C,N,P transfer
 C
       IF(CPOOL(NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX)
-     2.AND.WTLSB(NB,NZ,NY,NX).GT.ZEROL(NZ,NY,NX))THEN
-      CCNDLB=WTNDB(NB,NZ,NY,NX)/WTLSB(NB,NZ,NY,NX)
+     2.AND.WTLSB(NB,NZ,NY,NX).GT.ZEROP2(NZ,NY,NX)
+     3.AND.(ISTYP(NZ,NY,NX).NE.0
+     4.OR.IDAY(10,NB,NZ,NY,NX).EQ.0))THEN
       WTLSB1=WTLSB(NB,NZ,NY,NX)
       WTNDB1=AMIN1(WTLSB(NB,NZ,NY,NX)
      2,AMAX1(WTNDI*AREA(3,NU(NY,NX),NY,NX),WTNDB(NB,NZ,NY,NX)))
       WTLSBT=WTLSB1+WTNDB1
       IF(WTLSBT.GT.ZEROP(NZ,NY,NX))THEN
-      FXRNX=FXRN(INTYP(NZ,NY,NX))/(1.0+CCNDLB/CCNGB)
-C    2/(1.0+CCNDLB/(CCNGB*FXRN(INTYP(NZ,NY,NX))))
       CPOOLD=(CPOOL(NB,NZ,NY,NX)*WTNDB1
      2-CPOLNB(NB,NZ,NY,NX)*WTLSB1)/WTLSBT
-      XFRC=FXRNX*CPOOLD
+      XFRC=FXRN(INTYP(NZ,NY,NX))*CPOOLD
       CPOOL(NB,NZ,NY,NX)=CPOOL(NB,NZ,NY,NX)-XFRC
       CPOLNB(NB,NZ,NY,NX)=CPOLNB(NB,NZ,NY,NX)+XFRC 
       CPOOLT=CPOOL(NB,NZ,NY,NX)+CPOLNB(NB,NZ,NY,NX)
       IF(CPOOLT.GT.ZEROP(NZ,NY,NX))THEN
       ZPOOLD=(ZPOOL(NB,NZ,NY,NX)*CPOLNB(NB,NZ,NY,NX)
      2-ZPOLNB(NB,NZ,NY,NX)*CPOOL(NB,NZ,NY,NX))/CPOOLT 
-      XFRN=FXRNX*ZPOOLD 
+      XFRN=FXRN(INTYP(NZ,NY,NX))*ZPOOLD 
       PPOOLD=(PPOOL(NB,NZ,NY,NX)*CPOLNB(NB,NZ,NY,NX)
      2-PPOLNB(NB,NZ,NY,NX)*CPOOL(NB,NZ,NY,NX))/CPOOLT 
-      XFRP=FXRNX*PPOOLD 
+      XFRP=FXRN(INTYP(NZ,NY,NX))*PPOOLD 
       ZPOOL(NB,NZ,NY,NX)=ZPOOL(NB,NZ,NY,NX)-XFRN
       PPOOL(NB,NZ,NY,NX)=PPOOL(NB,NZ,NY,NX)-XFRP
       ZPOLNB(NB,NZ,NY,NX)=ZPOLNB(NB,NZ,NY,NX)+XFRN
@@ -4649,7 +5093,7 @@ C    2/(1.0+CCNDLB/(CCNGB*FXRN(INTYP(NZ,NY,NX))))
 C     IF((I/30)*30.EQ.I.AND.J.EQ.12)THEN
 C     WRITE(*,2120)'NODEX',I,J,NZ,NB,IFLGA(NB,NZ,NY,NX)
 C    2,XFRC,XFRN,XFRP
-C    3,WTLSB(NB,NZ,NY,NX),WTNDB(NB,NZ,NY,NX),CPOOLT,CCNDLB,FXRNX 
+C    3,WTLSB(NB,NZ,NY,NX),WTNDB(NB,NZ,NY,NX),CPOOLT 
 C    4,CPOLNB(NB,NZ,NY,NX),ZPOLNB(NB,NZ,NY,NX),PPOLNB(NB,NZ,NY,NX)
 C    4,CPOOL(NB,NZ,NY,NX),ZPOOL(NB,NZ,NY,NX),PPOOL(NB,NZ,NY,NX)
 C    5,WTLSB1,WTNDB1,WTLSBT
@@ -4669,7 +5113,6 @@ C
 C     ROOT GROWTH
 C
       NIX(NZ,NY,NX)=NG(NZ,NY,NX)
-      IDTHRN=0
 C
 C     FOR ROOTS (N=1) AND MYCORRHIZAE (N=2) IN EACH SOIL LAYER
 C
@@ -4682,12 +5125,18 @@ C
 C     VOLX=soil layer volume excluding macropore, rocks
 C     CUPRL=C respiration for nutrient uptake
 C     CUPRO,CUPRC=CUPRL unlimited by O2,root nonstructural C
-C     RUPNH4,RUPNHB,RUPN03,RUPNOB=uptake from non-band,band of NH4,NO3
-C     RUPH2P,RUPH2B,RUPH1P,RUPH1B=uptake from non-band,band of H2PO4,HPO4
-C     RUONH4,RUONHB,RUON03,RUONOB=uptake from non-band,band of NH4,NO3 unlimited by O2
-C     RUOH2P,RUOH2B,RUOH1P,RUOH1B=uptake from non-band,band of H2PO4,HPO4 unlimited by O2
-C     RUCNH4,RUCNHB,RUCN03,RUCNOB=uptake from non-band,band of NH4,NO3 unlimited by nonstructural C
-C     RUCH2P,RUCH2B,RUCH1P,RUCH1B=uptake from non-band,band of H2PO4,HPO4 unlimited by nonstructural C 
+C     RUPNH4,RUPNHB,RUPN03,RUPNOB=uptake from non-band,band of 
+C        NH4,NO3
+C     RUPH2P,RUPH2B,RUPH1P,RUPH1B=uptake from non-band,band of
+C        H2PO4,HPO4
+C     RUONH4,RUONHB,RUON03,RUONOB=uptake from non-band,band of 
+C        NH4,NO3 unlimited by O2
+C     RUOH2P,RUOH2B,RUOH1P,RUOH1B=uptake from non-band,band of
+C        H2PO4,HPO4 unlimited by O2
+C     RUCNH4,RUCNHB,RUCN03,RUCNOB=uptake from non-band,band of 
+C        NH4,NO3 unlimited by nonstructural C
+C     RUCH2P,RUCH2B,RUCH1P,RUCH1B=uptake from non-band,band of
+C        H2PO4,HPO4 unlimited by nonstructural C 
 C
       IF(VOLX(L,NY,NX).GT.ZEROS2(NY,NX))THEN
       CUPRL=0.86*(RUPNH4(N,L,NZ,NY,NX)+RUPNHB(N,L,NZ,NY,NX)
@@ -4703,7 +5152,7 @@ C
 C     ACCUMULATE RESPIRATION IN FLUX ARRAYS
 C
 C     RCO2A=total root respiration
-C     RCO2M,RCO2N=RCO2A unltd by O2,nonstructural C  
+C     RCO2M,RCO2N=RCO2A unlimited by O2,nonstructural C  
 C     CUPRL=C respiration for nutrient uptake
 C     CUPRO,CUPRC=CUPRL unlimited by O2,root nonstructural C
 C     CPOOLR=non-structural C mass in root
@@ -4712,19 +5161,31 @@ C
       RCO2N(N,L,NZ,NY,NX)=RCO2N(N,L,NZ,NY,NX)+CUPRC
       RCO2A(N,L,NZ,NY,NX)=RCO2A(N,L,NZ,NY,NX)-CUPRL
       CPOOLR(N,L,NZ,NY,NX)=CPOOLR(N,L,NZ,NY,NX)-CUPRL
+C     WRITE(*,8876)'CUPRL',I,J,NFZ,NZ,L,N 
+C    2,CPOOLR(N,L,NZ,NY,NX),CUPRL,RUPNH4(N,L,NZ,NY,NX)
+C    3,RUPNHB(N,L,NZ,NY,NX)
+C    2,RUPNO3(N,L,NZ,NY,NX),RUPNOB(N,L,NZ,NY,NX),RUPH2P(N,L,NZ,NY,NX)
+C    3,RUPH2B(N,L,NZ,NY,NX),RUPH1P(N,L,NZ,NY,NX),RUPH1B(N,L,NZ,NY,NX)
+8876  FORMAT(A8,6I4,20E12.4)
 C
 C     EXUDATION AND UPTAKE OF C, N AND P TO/FROM SOIL AND ROOT
 C     OR MYCORRHIZAL NON-STRUCTURAL C,N,P POOLS
 C
 C     CPOOLR,ZPOOLR,PPOOLR=non-structural C,N,P mass in root
-C     RDFOMC,RDFOMN,RDFOMP=nonstructl C,N,P exchange:-ve=exudn,+ve=uptake
-C     RUPNH4,RUPNHB,RUPN03,RUPNOB=uptake from non-band,band of NH4,NO3
-C     RUPH2P,RUPH2B,RUPH1P,RUPH1B=uptake from non-band,band of H2PO4,HPO4
+C     RDFOMC,RDFOMN,RDFOMP=nonstructl C,N,P exchange
+C        -ve=exudn,+ve=uptake
+C     RUPNH4,RUPNHB,RUPN03,RUPNOB=uptake from non-band,band of 
+C        NH4,NO3
+C     RUPH2P,RUPH2B,RUPH1P,RUPH1B=uptake from non-band,band of
+C        H2PO4,HPO4
 C
       DO 195 K=0,4
       CPOOLR(N,L,NZ,NY,NX)=CPOOLR(N,L,NZ,NY,NX)+RDFOMC(N,K,L,NZ,NY,NX)
       ZPOOLR(N,L,NZ,NY,NX)=ZPOOLR(N,L,NZ,NY,NX)+RDFOMN(N,K,L,NZ,NY,NX)
       PPOOLR(N,L,NZ,NY,NX)=PPOOLR(N,L,NZ,NY,NX)+RDFOMP(N,K,L,NZ,NY,NX)
+C     WRITE(*,8877)'RDFOMC',I,J,NFZ,NZ,L,N,K 
+C    2,CPOOLR(N,L,NZ,NY,NX),RDFOMC(N,K,L,NZ,NY,NX)
+8877  FORMAT(A8,7I4,12E12.4)
 195   CONTINUE
       ZPOOLR(N,L,NZ,NY,NX)=ZPOOLR(N,L,NZ,NY,NX) 
      2+RUPNH4(N,L,NZ,NY,NX)+RUPNHB(N,L,NZ,NY,NX) 
@@ -4732,14 +5193,15 @@ C
       PPOOLR(N,L,NZ,NY,NX)=PPOOLR(N,L,NZ,NY,NX)
      2+RUPH2P(N,L,NZ,NY,NX)+RUPH2B(N,L,NZ,NY,NX)
      3+RUPH1P(N,L,NZ,NY,NX)+RUPH1B(N,L,NZ,NY,NX)
-C     IF(L.EQ.1)THEN
-C     WRITE(*,9881)'CUPNH4',I,J,NZ,L,N,CPOOLR(N,L,NZ,NY,NX)
+C     IF(NZ.EQ.2.AND.L.EQ.6)THEN
+C     WRITE(*,9881)'RUPNH4',I,J,NFZ,NZ,L,N,CPOOLR(N,L,NZ,NY,NX)
 C    2,ZPOOLR(N,L,NZ,NY,NX),PPOOLR(N,L,NZ,NY,NX),CUPRL
-C    2,RDFOMC(N,L,NZ,NY,NX),RDFOMN(N,L,NZ,NY,NX),RDFOMP(N,L,NZ,NY,NX)
+C    2,RDFOMC(N,K,L,NZ,NY,NX),RDFOMN(N,K,L,NZ,NY,NX)
+C    3,RDFOMP(N,K,L,NZ,NY,NX)
 C    2,RUPNH4(N,L,NZ,NY,NX),RUPNHB(N,L,NZ,NY,NX),RUPNO3(N,L,NZ,NY,NX)
 C    2,RUPNOB(N,L,NZ,NY,NX),RUPH2P(N,L,NZ,NY,NX),RUPH2B(N,L,NZ,NY,NX)
-C    3,RUPH12P(N,L,NZ,NY,NX),RUPH1B(N,L,NZ,NY,NX),WFR(N,L,NZ,NY,NX)
-9881  FORMAT(A8,5I4,30E24.16)
+C    3,RUPH1P(N,L,NZ,NY,NX),RUPH1B(N,L,NZ,NY,NX),WFR(N,L,NZ,NY,NX)
+9881  FORMAT(A8,6I4,30E12.4)
 C     ENDIF
 C
 C     GROWTH OF EACH ROOT AXIS
@@ -4826,14 +5288,28 @@ C     ENDIF
 4990  CONTINUE
 4995  CONTINUE
 C
-C     RESPIRATION AND GROWTH OF ROOT, MYCORRHIZAE IN EACH LAYER
+C     ADAPT ROOT POROSITY TO O2 STRESS
+C
+C     PORT,PORTI=current,initial root porosity from PFT file
+C     OSTR=O2 root uptake:demand
 C
       DO 5010 N=1,MY(NZ,NY,NX)
+      PORT(N,NZ,NY,NX)=AMIN1(0.75,PORT(N,NZ,NY,NX)
+     2+(1.0E-02*PORTI(N,NZ,NY,NX)*(1.0-OSTR(NZ,NY,NX))
+     3-1.0E-02*(PORT(N,NZ,NY,NX)-PORTI(N,NZ,NY,NX)))*XNFH)
+C     IF((I/10)*10.EQ.I.AND.J.EQ.12)THEN
+C     WRITE(*,2127)'PORT',I,J,NZ,N,PORT(N,NZ,NY,NX)
+C    2,PORTI(N,NZ,NY,NX),OSTR(NZ,NY,NX)
+2127  FORMAT(A8,4I4,12E12.4)
+C     ENDIF 
+C
+C     RESPIRATION AND GROWTH OF ROOT, MYCORRHIZAE IN EACH LAYER
+C
       DO 5000 L=NU(NY,NX),NI(NZ,NY,NX)
 C
-C     IDENTIFY NEXT LOWER ROOT LAYER
+C     IDENTIFY NEXT LOWER ROOT LAYER L1
 C
-C     VOLX=soil layer volume excluding macropore, rocks
+C     VOLX=soil layer volume excluding macropore, rocks (0=pond)
 C
       IF(VOLX(L,NY,NX).GT.ZEROS2(NY,NX))THEN
 C     WRITE(*,4994)'5004',I,J,NZ,N,L,NI(NZ,NY,NX)
@@ -4857,20 +5333,20 @@ C     BY ROOT TURGOR AND SOIL PENETRATION RESISTANCE
 C
 C     RSCS,RSCS2=soil resistance to secondary root penetration (MPa)
 C     RRAD2=secondary root radius
-C     WFNR=water function for root extension     
-C     IGTYP=growth type:0=bryophyte,1=graminoid,2=shrub,tree
-C     WFNGR,WFNRG=growth,respiration function of root water potential
+C     WFNRT=water function for root extension     
+C     IGTYP=growth type:0=bryophyte,1=grass,herb,2=woody shrub,tree
+C     WFNRG,WFNRR=growth,respiration function of root water potential
 C     PSIRT,PSIRG=root total,turgor water potential
 C     DMRT=root growth yield
 C
       RSCS2=RSCS(L,NY,NX)*RRAD2(N,L,NZ,NY,NX)/1.0E-03
-      WFNR=AMIN1(1.0,AMAX1(0.0,PSIRG(N,L,NZ,NY,NX)-PSILM-RSCS2))
+      WFNRT=AMIN1(1.0,AMAX1(0.0,PSIRG(N,L,NZ,NY,NX)-PSILM-RSCS2))
       IF(IGTYP(NZ,NY,NX).EQ.0)THEN
-      WFNGR(N,L)=EXP(0.05*PSIRT(N,L,NZ,NY,NX))
-      WFNRG=WFNR**0.10
+      WFNRG(N,L)=EXP(0.05*PSIRT(N,L,NZ,NY,NX))
+      WFNRR(N,L)=WFNRG(N,L)**0.25
       ELSE
-      WFNGR(N,L)=EXP(0.10*PSIRT(N,L,NZ,NY,NX))
-      WFNRG=WFNR**0.25
+      WFNRG(N,L)=EXP(0.10*PSIRT(N,L,NZ,NY,NX))
+      WFNRR(N,L)=WFNRG(N,L)**0.25
       ENDIF
       DMRTD=1.0-DMRT(NZ,NY,NX)
       RTLGL=0.0
@@ -4904,7 +5380,8 @@ C     NON-STRUCTURAL C:N:P
 C
 C     CCPOLR,CZPOLR,CPPOLR=root non-structural C,N,P concentration
 C     CNPG=N,P constraint on growth respiration
-C     CNKI,CPKI=nonstructural N,P inhibition constant on growth 
+C     CNKI,CPKI=nonstructural N,P inhibition constant on growth,
+C        nutrient recycling
 C
       IF(CCPOLR(N,L,NZ,NY,NX).GT.ZERO)THEN
       CNPG=AMIN1(CZPOLR(N,L,NZ,NY,NX)/(CZPOLR(N,L,NZ,NY,NX)
@@ -4914,50 +5391,58 @@ C
       CNPG=1.0
       ENDIF
 C
-C     SECONDARY ROOT MAINTENANCE RESPIRATION FROM SOIL TEMPERATURE,
-C     ROOT STRUCTURAL N
-C
-C     RMNCR=root maintenance respiration
-C     RMPLT=specific maintenance respiration rate (g C g-1 N h-1)
-C     WTRT2N=secondary root N mass
-C     TFN6=temperature function for root maintenance respiration 
-C     IGTYP=growth type:0=bryophyte,1=graminoid,2=shrub,tree
-C     IWTYP=phenology type:0=evergreen,1=cold decid,2=drought decid,3=1+2
-C     WFNGR=growth function of root water potential
-C
-      RMNCR=AMAX1(0.0,RMPLT*WTRT2N(N,L,NR,NZ,NY,NX))*TFN6(L)
-      IF(IGTYP(NZ,NY,NX).EQ.0.OR.IWTYP(NZ,NY,NX).EQ.2)THEN
-      RMNCR=RMNCR*WFNGR(N,L)
-      ENDIF 
-C
 C     O2-UNLIMITED SECONDARY ROOT RESPIRATION FROM NON-STRUCTURAL C
 C     CONSTRAINED BY TEMPERATURE AND NON-STRUCTURAL C:N:P
 C
+C     IGTYP=growth type:0=bryophyte,1=grass,herb,2=woody shrub,tree
+C     IWTYP=phenology type:0=evergreen,1=cold deciduous,2=drought
+C        deciduous,3=cold and drought deciduous
+C     WFNRG=growth function of root water potential
 C     RCO2RM=respiration from non-structural C unlimited by O2
-C     VMXC=rate constant for nonstructural C oxidation in respiration C     FRTN=fraction of secondary root sink strength in axis
+C     VMXC=rate constant for nonstructural C oxidation in respiration 
+C     FRTN=fraction of secondary root sink strength in axis
 C     CPOOL=non-structural C mass
 C     TFN4=temperature function for root growth
 C     CNPG=N,P constraint on respiration
 C     FDBKX=termination feedback inhibition on C3 CO2 
-C     WFNGR=growth function of root water potential
+C     WFNRG=growth function of root water potential
+C     RMNCR=root maintenance respiration
+C     RMPLT=specific maintenance respiration rate (g C g-1 N h-1)
+C     WTRT2N=secondary root N mass
+C     TFN6=temperature function for root maintenance respiration
+C     XNFH=time step from ‘wthr.f’ 
 C
+      IF(ISTYP(NZ,NY,NX).NE.0
+     2.OR.IDAY(10,NB1(NZ,NY,NX),NZ,NY,NX).EQ.0)THEN
+      CPOOLRX=CPOOLR(N,L,NZ,NY,NX)
       RCO2RM=AMAX1(0.0,VMXC*FRTN*CPOOLR(N,L,NZ,NY,NX)
      2*TFN4(L,NZ,NY,NX))*CNPG*FDBKX(NB1(NZ,NY,NX),NZ,NY,NX)
-     3*WFNGR(N,L)
+     3*WFNRG(N,L)*XNFH
+      RMNCR=AMAX1(0.0,RMPLT*WTRT2N(N,L,NR,NZ,NY,NX)*TFN6(L)*XNFH)
+      IF(IGTYP(NZ,NY,NX).EQ.0.OR.IWTYP(NZ,NY,NX).EQ.2)THEN
+      RMNCR=RMNCR*WFNRG(N,L)
+      ELSE
+      RMNCR=RMNCR*WFNRR(N,L)
+      ENDIF
+      ELSE
+      RCO2RM=0.0
+      RMNCR=0.0
+      ENDIF
 C
 C     O2-LIMITED SECONDARY ROOT RESPIRATION FROM 'WFR' IN 'UPTAKE'
 C
 C     RCO2R=respiration from non-structural C limited by O2
 C     WFR=constraint by O2 consumption on all root processes
-C     RCO2XM,RCO2X=diff between C respn unltd,ltd by O2 and mntc respn
-C     RCO2YM,RCO2Y=growth respiration unltd,ltd by O2 and unlimited by N,P
-C     WFNRG=respiration function of root water potential
+C     RCO2XM,RCO2X=diff between C respiration unlimited,limited by O2
+C        and maintenance respiration
+C     RCO2YM,RCO2Y=growth respiration unlimited,limited by O2 and
+C        unlimited by N,P
 C
       RCO2R=RCO2RM*WFR(N,L,NZ,NY,NX)
       RCO2XM=RCO2RM-RMNCR
       RCO2X=RCO2R-RMNCR
-      RCO2YM=AMAX1(0.0,RCO2XM)*WFNRG
-      RCO2Y=AMAX1(0.0,RCO2X)*WFNRG
+      RCO2YM=AMAX1(0.0,RCO2XM)
+      RCO2Y=AMAX1(0.0,RCO2X)
 C
 C     SECONDARY ROOT GROWTH RESPIRATION MAY BE LIMITED BY
 C     NON-STRUCTURAL N,P AVAILABLE FOR GROWTH
@@ -4966,7 +5451,8 @@ C     FRTN=fraction of secondary root sink strength in axis
 C     ZPOOLR,PPOOLR=non-structural N,P mass in root
 C     CNRTS,CPRTS=N,P root growth yield
 C     FNP=growth respiration limited by non-structural N,P 
-C     RCO2GM,RCO2G=growth respiration limited by N,P unltd,ltd by O2
+C     RCO2GM,RCO2G=growth respiration limited by N,P unlimited,limited
+C        by O2
 C
       DMRTR=DMRTD*FRTN
       ZPOOLB=AMAX1(0.0,ZPOOLR(N,L,NZ,NY,NX))
@@ -4985,15 +5471,20 @@ C
       ENDIF
 C
 C     TOTAL NON-STRUCTURAL C,N,P USED IN SECONDARY ROOT GROWTH
-C     AND GROWTH RESPIRATION DEPENDS ON GROWTH YIELD ENTERED IN 'READQ'
+C     AND GROWTH RESPIRATION DEPENDS ON GROWTH YIELD ENTERED IN
+C     'READQ'
 C
-C     CGRORM,CGROR=total non-structural C used in growth and respn unltd,ltd by O2 
-C     RCO2GM,RCO2G=growth respiration limited by N,P unltd,ltd by O2
+C     CGRORM,CGROR=total non-structural C used in growth and
+C        respiration unlimited,limited by O2 
+C     RCO2GM,RCO2G=growth respiration limited by N,P unlimited,limited
+C        by O2
 C     DMRTD=root C respiration vs nonstructural C consumption
-C     GRTWGM,GRTWTG=root C growth unltd,ltd by O2
+C     GRTWGM,GRTWTG=root C growth unlimited,limited by O2
 C     DMRT=root growth yield
-C     ZADD2M,ZADD2,PADD2=nonstructural N,P unltd,ltd by O2 used in growth
-C     CNRDM,CNRDA=respiration for N assimilation unltd,ltd by O2
+C     ZADD2M,ZADD2,PADD2=nonstructural N,P unlimited,limited 
+C        by O2 used in growth
+C     CNRDM,CNRDA=respiration for N assimilation unlimited,limited 
+C        by O2
 C
       CGRORM=RCO2GM/DMRTD
       CGROR=RCO2G/DMRTD
@@ -5007,14 +5498,16 @@ C
 C
 C     SECONDARY ROOT GROWTH RESPIRATION FROM TOTAL - MAINTENANCE
 C     IF > 0 DRIVES GROWTH, IF < 0 DRIVES REMOBILIZATION, ALSO
-C     SECONDARY ROOT C LOSS FROM REMOBILIZATION AND CONSEQUENT LITTERFALL
+C     SECONDARY ROOT C LOSS FROM REMOBILIZATION AND CONSEQUENT
+C     LITTERFALL
 C
 C     IDAY(1,=emergence date
 C     CCPOLR,CZPOLR,CPPOLR=root non-structural C,N,P concentration
-C     CNKI,CPKI=nonstructural N,P inhibition constant on growth 
+C     CNKI,CPKI=nonstructural N,P inhibition constant on growth,
+C        nutrient recycling
 C     RCCC,RCCN,RCCP=remobilization coefficient for C,N,P
-C     RCCZR,RCCYR=min,max fractions for root C recycling
-C     RCCXR,RCCQR=max fractions for root N,P recycling 
+C     RCCZR,RCCYR=minimum,maximum fractions for root C recycling
+C     RCCXR,RCCQR=maximum fractions for root N,P recycling 
 C
       IF(IDAY(1,NB1(NZ,NY,NX),NZ,NY,NX).NE.0
      2.AND.CCPOLR(N,L,NZ,NY,NX).GT.ZERO)THEN
@@ -5034,15 +5527,20 @@ C
       CNC=0.0
       CPC=0.0
       ENDIF
-      RCCC=RCCZR+CCC*RCCYR
-      RCCN=CNC*RCCXR
-      RCCP=CPC*RCCQR
+      RCCC=RCCZR(IBTYP(NZ,NY,NX))+CCC*RCCYR(IBTYP(NZ,NY,NX))
+      RCCN=CNC*RCCXR(IBTYP(NZ,NY,NX))
+      RCCP=CPC*RCCQR(IBTYP(NZ,NY,NX))
 C
 C     RECOVERY OF REMOBILIZABLE N,P FROM SECONDARY ROOT DURING
 C     REMOBILIZATION DEPENDS ON ROOT NON-STRUCTURAL C:N:P
 C
-C     RCO2XM,RCO2X=diff between C respn unltd,ltd by O2 and mntc respn
-C     SNCRM,SNCR=excess maintenance respiration unltd,ltd by O2
+C     RCO2XM,RCO2X=diff between C respiration unlimited,limited 
+C        by O2 and maintenance respiration 
+C     SNCRM,SNCR=excess maintenance respiration unlimited,limited 
+C        by O2
+C     SCNZ=phenologically driven root senescence
+C     FXFR=rate constant for root-storage nonstructural C,N,P exchange
+C          from IBTYP in PFT file
 C     WTRT2,WTRT2N,WTRT2P=secondary root C,N,P mass
 C     WFR=constraint by O2 consumption on all root processes
 C     RCCR,RCZR,RCPR=remobilization of C,N,P from senescing root 
@@ -5068,13 +5566,23 @@ C
       ELSE
       SNCR=0.0
       ENDIF
+C     IF(IFLGZR.EQ.1.AND.IFLGYR.EQ.1.AND.ISTYP(NZ,NY,NX).NE.0)THEN
+      IF(IFLGZR.EQ.1.AND.IFLGYR.EQ.1)THEN
+      SNCZ=FXFR(IBTYP(NZ,NY,NX))*WTRT2(N,L,NR,NZ,NY,NX)
+     2*AMIN1(1.0,FLGZR/FLGZX)*XNFH
+      SNCR=SNCR+SNCZ
+      IF(J.EQ.24)THEN
+C     WRITE(*,9776)'IFLGR',I,J,NFZ,NZ,NR,L,N
+C    2,IFLGZR,IFLGYR,ISTYP(NZ,NY,NX),FLGZR,FLGZX
+C    3,WTRT2(N,L,NR,NZ,NY,NX),SNCZ,SNCR,XNFH 
+9776  FORMAT(A8,10I4,20E12.4)
+      ENDIF
+      ENDIF
       IF(SNCR.GT.0.0.AND.WTRT2(N,L,NR,NZ,NY,NX)
      2.GT.ZEROP(NZ,NY,NX))THEN
       RCCR=RCCC*WTRT2(N,L,NR,NZ,NY,NX)
-      RCZR=WTRT2N(N,L,NR,NZ,NY,NX)*(RCCN+(1.0-RCCN)
-     2*RCCR/WTRT2(N,L,NR,NZ,NY,NX))
-      RCPR=WTRT2P(N,L,NR,NZ,NY,NX)*(RCCP+(1.0-RCCP)
-     2*RCCR/WTRT2(N,L,NR,NZ,NY,NX))
+      RCZR=WTRT2N(N,L,NR,NZ,NY,NX)*(RCCN+(1.0-RCCN)*RCCC)
+      RCPR=WTRT2P(N,L,NR,NZ,NY,NX)*(RCCP+(1.0-RCCP)*RCCC)
       IF(RCCR.GT.ZEROP(NZ,NY,NX))THEN
       FSNC2=AMAX1(0.0,AMIN1(1.0,SNCR/RCCR))
       ELSE
@@ -5090,26 +5598,37 @@ C
 C     SECONDARY ROOT LITTERFALL CAUSED BY REMOBILIZATION
 C
 C     CSNC,ZSNC,PSNC=literfall C,N,P
-C     CFOPC=fraction of plant litter allocated in nonstructural(0,*),
-C     foliar(1,*),non-foliar(2,*),stalk(3,*),root(4,*), coarse woody (5,*)
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     FSNC2=fraction of secondary root C to be remobilized
 C     WTRT2,WTRT2N,WTRT2P=secondary root C,N,P mass
 C     RCCR,RCZR,RCPR=remobilization of C,N,P from senescing root 
-C     FWOOD,FWOODN,FWOODP=C,N,P woody fraction in root:0=woody,1=non-woody
+C     FWOOD,FWOODN,FWOODP=C,N,P woody fraction in root:0=woody,
+C        1=non-woody
 C
       DO 6350 M=1,4
       CSNC(M,0,L,NZ,NY,NX)=CSNC(M,0,L,NZ,NY,NX)+CFOPC(5,M,NZ,NY,NX)
-     2*FSNC2*(WTRT2(N,L,NR,NZ,NY,NX)-RCCR)*FWODR(0)
+     2*FSNC2*WTRT2(N,L,NR,NZ,NY,NX)*FWODR(0,NZ)
       ZSNC(M,0,L,NZ,NY,NX)=ZSNC(M,0,L,NZ,NY,NX)+CFOPN(5,M,NZ,NY,NX)
-     2*FSNC2*(WTRT2N(N,L,NR,NZ,NY,NX)-RCZR)*FWODRN(0)
+     2*FSNC2*WTRT2N(N,L,NR,NZ,NY,NX)*FWODRN(0,NZ)
       PSNC(M,0,L,NZ,NY,NX)=PSNC(M,0,L,NZ,NY,NX)+CFOPP(5,M,NZ,NY,NX)
-     2*FSNC2*(WTRT2P(N,L,NR,NZ,NY,NX)-RCPR)*FWODRP(0)
+     2*FSNC2*WTRT2P(N,L,NR,NZ,NY,NX)*FWODRP(0,NZ)
       CSNC(M,1,L,NZ,NY,NX)=CSNC(M,1,L,NZ,NY,NX)+CFOPC(4,M,NZ,NY,NX)
-     2*FSNC2*(WTRT2(N,L,NR,NZ,NY,NX)-RCCR)*FWODR(1)
+     2*FSNC2*(WTRT2(N,L,NR,NZ,NY,NX)-RCCR)*FWODR(1,NZ)
       ZSNC(M,1,L,NZ,NY,NX)=ZSNC(M,1,L,NZ,NY,NX)+CFOPN(4,M,NZ,NY,NX)
-     2*FSNC2*(WTRT2N(N,L,NR,NZ,NY,NX)-RCZR)*FWODRN(1)
+     2*FSNC2*(WTRT2N(N,L,NR,NZ,NY,NX)-RCZR)*FWODRN(1,NZ)
       PSNC(M,1,L,NZ,NY,NX)=PSNC(M,1,L,NZ,NY,NX)+CFOPP(4,M,NZ,NY,NX)
-     2*FSNC2*(WTRT2P(N,L,NR,NZ,NY,NX)-RCPR)*FWODRP(1)
+     2*FSNC2*(WTRT2P(N,L,NR,NZ,NY,NX)-RCPR)*FWODRP(1,NZ)
+C     IF(ZSNC(M,1,L,NZ,NY,NX).LT.0.0)THEN
+C     WRITE(*,9777)'ZSNC',I,J,NFZ,NZ,NR,L,N,M
+C    2,CSNC(M,1,L,NZ,NY,NX),CFOPC(4,M,NZ,NY,NX)
+C    2,FSNC2,WTRT2(N,L,NR,NZ,NY,NX),RCCR,FWODR(1,NZ)
+C    2,ZSNC(M,1,L,NZ,NY,NX),CFOPN(4,M,NZ,NY,NX)
+C    2,FSNC2,WTRT2N(N,L,NR,NZ,NY,NX),RCZR,FWODRN(1,NZ)
+C    3,FWODRN(0,NZ),FWODR(0,NZ),FWODR(1,NZ),CNRT(NZ,NY,NX),CNRTW
+9777  FORMAT(A8,8I4,30E14.6)
+C     ENDIF
 6350  CONTINUE
 C
 C     CONSUMPTION OF NON-STRUCTURAL C,N,P BY SECONDARY ROOT
@@ -5117,31 +5636,39 @@ C
 C     CPOOLR,ZPOOLR,PPOOLR=non-structural C,N,P mass in root
 C     RMNCR=root maintenance respiration
 C     RCO2R=respiration from non-structural C limited by O2
-C     CGROR=total non-structural C used in growth and respn ltd by O2 
-C     CNRDA=respiration for N assimilation unltd,ltd by O2
-C     SNCR=excess maintenance respiration ltd by O2
+C     CGROR=total non-structural C used in growth and respiration
+C        limited by O2 
+C     CNRDA=respiration for N assimilation unlimited,limited by O2
+C     SNCR=excess maintenance respiration limited by O2
 C     FSNC2=fraction of secondary root C to be remobilized
 C     RCCR,RCZR,RCPR=remobilization of C,N,P from senescing root 
 C     ZADD2,PADD2=nonstructural N,P ltd by O2 used in growth 
 C
       CPOOLR(N,L,NZ,NY,NX)=CPOOLR(N,L,NZ,NY,NX)-AMIN1(RMNCR,RCO2R)
-     2-CGROR-CNRDA-SNCR+FSNC2*RCCR
-      ZPOOLR(N,L,NZ,NY,NX)=ZPOOLR(N,L,NZ,NY,NX)-ZADD2+FSNC2*RCZR
-      PPOOLR(N,L,NZ,NY,NX)=PPOOLR(N,L,NZ,NY,NX)-PADD2+FSNC2*RCPR
+     2-CGROR-CNRDA-SNCR+FSNC2*RCCR*FWODR(1,NZ)
+      ZPOOLR(N,L,NZ,NY,NX)=ZPOOLR(N,L,NZ,NY,NX)
+     2-ZADD2+FSNC2*RCZR*FWODRN(1,NZ)
+      PPOOLR(N,L,NZ,NY,NX)=PPOOLR(N,L,NZ,NY,NX)
+     2-PADD2+FSNC2*RCPR*FWODRP(1,NZ)
 C
 C     TOTAL SECONDARY ROOT RESPIRATION
 C
-C     RCO2TM,RCO2T=total C respiration unltd,ltd by O2
+C     RCO2TM,RCO2T=total C respiration unlimited,limited 
+C        by O2
 C     RMNCR=root maintenance respiration
-C     RCO2RM,RCO2R=respiration from non-structural C unltd,ltd by O2
-C     RCO2GM,RCO2G=growth respiration limited by N,P unltd,ltd by O2
-C     SNCRM,SNCR=excess maintenance respiration unltd,ltd by O2
-C     CNRDM,CNRDA=respiration for N assimilation unltd,ltd by O2
+C     RCO2RM,RCO2R=respiration from non-structural C unlimited,limited
+C        by O2
+C     RCO2GM,RCO2G=growth respiration limited by N,P unlimited,limited
+C        by O2
+C     SNCRM,SNCR=excess maintenance respiration unlimited,limited 
+C        by O2
+C     CNRDM,CNRDA=respiration for N assimilation unlimited,limited 
+C        by O2
 C     RCO2A=total root respiration
-C     RCO2M,RCO2N=RCO2A unltd by O2,nonstructural C  
+C     RCO2M,RCO2N=RCO2A unlimited by O2,nonstructural C  
 C
       RCO2TM=AMIN1(RMNCR,RCO2RM)+RCO2GM+SNCRM+CNRDM
-      RCO2T=AMIN1(RMNCR,RCO2R)+RCO2G+SNCR+CNRDA
+      RCO2T=AMIN1(RMNCR,RCO2R)+RCO2G+SNCR+CNRDA    
       RCO2M(N,L,NZ,NY,NX)=RCO2M(N,L,NZ,NY,NX)+RCO2TM
       RCO2N(N,L,NZ,NY,NX)=RCO2N(N,L,NZ,NY,NX)+RCO2T
       RCO2A(N,L,NZ,NY,NX)=RCO2A(N,L,NZ,NY,NX)-RCO2T
@@ -5149,9 +5676,9 @@ C
 C     SECONDARY ROOT EXTENSION FROM ROOT GROWTH AND ROOT TURGOR
 C
 C     GRTLGL=secondary root length extension
-C     GRTWTG=secondary root C growth ltd by O2
+C     GRTWTG=secondary root C growth limited by O2
 C     RTLG2X=specific secondary root length from startq.f
-C     WFNR=water function for root extension     
+C     WFNRT=water function for root extension     
 C     FWOOD=C,N,P woody fraction in root:0=woody,1=non-woody
 C     FSNC2=fraction of secondary root C to be remobilized
 C     RTLG2=secondary root length
@@ -5159,7 +5686,7 @@ C     GRTWTL,GRTWTN,GRTWTP=net root C,N,P growth
 C     WTRT2,WTRT2N,WTRT2P=secondary root C,N,P mass
 C     ZADD2,PADD2=nonstructural N,P ltd by O2 used in growth 
 C
-      GRTLGL=GRTWTG*RTLG2X(N,NZ,NY,NX)*WFNR*FWODR(1)
+      GRTLGL=GRTWTG*RTLG2X(N,NZ,NY,NX)*WFNRT
      2-FSNC2*RTLG2(N,L,NR,NZ,NY,NX)
       GRTWTL=GRTWTG-FSNC2*WTRT2(N,L,NR,NZ,NY,NX)
       GRTWTN=ZADD2-FSNC2*WTRT2N(N,L,NR,NZ,NY,NX) 
@@ -5190,21 +5717,23 @@ C
       RTN2Y=RTFQ(NZ,NY,NX)*RTN2X
       RTN2(N,L,NR,NZ,NY,NX)=(RTN2X+RTN2Y)*DLYR(3,L,NY,NX) 
       RTNL(N,L,NZ,NY,NX)=RTNL(N,L,NZ,NY,NX)+RTN2(N,L,NR,NZ,NY,NX)
-C     IF((I/10)*10.EQ.I.AND.J.EQ.12)THEN
-C     WRITE(*,9876)'RCO22',I,J,NZ,NR,L,N,NINR(NR,NZ,NY,NX)
-C    2,RCO2TM,RCO2T,RMNCR,RCO2RM,RCO2R,RCO2GM,RCO2G
+C     IF(NZ.EQ.2.AND.L.EQ.6.AND.N.EQ.1)THEN
+C     WRITE(*,9876)'RCO22',I,J,NFZ,NZ,NR,L,N,NINR(NR,NZ,NY,NX)
+C    2,RCO2TM,RCO2T,RMNCR,RCO2RM,RCO2R,RCO2GM,RCO2G,CPOOLRX
 C    3,RCO2XM,RCO2X,CGROR,SNCRM,SNCR,CNRDA,CPOOLR(N,L,NZ,NY,NX),FRTN 
-C    4,TFN4(L,NZ,NY,NX),CNPG,FDBKX(NB1(NZ,NY,NX),NZ,NY,NX),WFNGR(N,L)
-C    5,TFN6(L),GRTWTG,GRTWTL,GRTLGL,RTLG2(N,L,NR,NZ,NY,NX)
-C     5,WTRT2(N,L,NR,NZ,NY,NX) 
-C    4,RCO2M(N,L,NZ,NY,NX),RCO2A(N,L,NZ,NY,NX),WFR(N,L,NZ,NY,NX) 
+C    4,TFN4(L,NZ,NY,NX),CNPG,FDBKX(NB1(NZ,NY,NX),NZ,NY,NX),WFNRG(N,L)
+C    5,TFN6(L),GRTWTG,GRTWTL,GRTLGL,RTLGL,RTLG2(N,L,NR,NZ,NY,NX)
+C    5,WTRT2(N,L,NR,NZ,NY,NX),RTLG2X(N,NZ,NY,NX),WFNRT,FWODR(1,NZ) 
+C    4,FSNC2,RCO2M(N,L,NZ,NY,NX),RCO2A(N,L,NZ,NY,NX),WFR(N,L,NZ,NY,NX)
+C    5,PSIRG(N,L,NZ,NY,NX),PSILM,RSCS1 
 C    8,ZPOOLR(N,L,NZ,NY,NX),PPOOLR(N,L,NZ,NY,NX)
+C    9,ZADD2,FSNC2,RCZR,FWODRN(1,NZ)
 C    9,FSNC2,RLNT(N,L),RTSK1(N,L,NR),RTSK2(N,L,NR) 
 C    4,RTN2X,RTN2Y,XRTN1
 C    5,RTDPL(NR,L),RTDNP(N,L,NZ,NY,NX)
 C    5,RTDP1(1,NR,NZ,NY,NX),CDPTHZ(L-1,NY,NX),DLYR(3,L,NY,NX)
 C    6,SDPTH(NZ,NY,NX),HTCTL(NZ,NY,NX) 
-C    5,WFNRG,RSCS2,PSILM,PSIRG(N,L,NZ,NY,NX),PSIRT(N,L,NZ,NY,NX)
+C    5,WFNRR(N,L),RSCS2,PSILM,PSIRG(N,L,NZ,NY,NX),PSIRT(N,L,NZ,NY,NX)
 C    6,FNP,RTLGP(N,L,NZ,NY,NX),ZADD2,PADD2,CUPRO,CUPRL 
 C    7,RUPNH4(N,L,NZ,NY,NX),RUPNHB(N,L,NZ,NY,NX)
 C    8,RUPNO3(N,L,NZ,NY,NX),RUPNOB(N,L,NZ,NY,NX) 
@@ -5213,12 +5742,12 @@ C    9,RUPH1P(N,L,NZ,NY,NX),RUPH1B(N,L,NZ,NY,NX)
 C    6,RDFOMN(N,L,NZ,NY,NX),RDFOMP(N,L,NZ,NY,NX) 
 C    2,RTN1(N,L,NZ,NY,NX),RTN2(N,L,NR,NZ,NY,NX)
 C    3,RTNL(N,L,NZ,NY,NX),DLYR(3,L,NY,NX) 
-9876  FORMAT(A8,7I4,100F16.8)
+9876  FORMAT(A8,8I4,100F16.8)
 C     ENDIF
 C
 C     PRIMARY ROOT EXTENSION
 C
-C     BKDS=soil bulk density
+C     BKDS=soil bulk density (0=pond)
 C     RTDP1,RTDP1X=primary root depth from soil surface
 C     CDPTHZ=depth from soil surface to layer bottom
 C     ICHKL=flag for identifying layer with primary root tip
@@ -5260,15 +5789,19 @@ C     BY ROOT TURGOR AND SOIL PENETRATION RESISTANCE
 C
 C     RSCS,RSCS1=soil resistance to primary root penetration (MPa)
 C     RRAD1=primary root radius
-C     WFNR=water function for root extension     
-C     WFNRG=respiration function of root water potential
+C     PSIRG=root turgor potential
+C     PSILM=minimum water potential for organ expansion,extension
+C     WFNRT=water stress function for root extension     
+C     WFNRG,WFNRR=growth,respiration function of root water potential
 C
       RSCS1=RSCS(L,NY,NX)*RRAD1(N,L,NZ,NY,NX)/1.0E-03
-      WFNR=AMIN1(1.0,AMAX1(0.0,PSIRG(N,L,NZ,NY,NX)-PSILM-RSCS1))
+      WFNRT=AMIN1(1.0,AMAX1(0.0,PSIRG(N,L,NZ,NY,NX)-PSILM-RSCS1))
       IF(IGTYP(NZ,NY,NX).EQ.0)THEN
-      WFNRG=WFNR**0.10
+      WFNRG(N,L)=EXP(0.05*PSIRT(N,L,NZ,NY,NX))
+      WFNRR(N,L)=WFNRG(N,L)**0.25
       ELSE
-      WFNRG=WFNR**0.25
+      WFNRG(N,L)=EXP(0.10*PSIRT(N,L,NZ,NY,NX))
+      WFNRR(N,L)=WFNRG(N,L)**0.25
       ENDIF
 C
 C     N,P CONSTRAINT ON PRIMARY ROOT RESPIRATION FROM
@@ -5276,7 +5809,8 @@ C     NON-STRUCTURAL C:N:P
 C
 C     CCPOLR,CZPOLR,CPPOLR=root non-structural C,N,P concentration
 C     CNPG=N,P constraint on growth respiration
-C     CNKI,CPKI=nonstructural N,P inhibition constant on growth 
+C     CNKI,CPKI=nonstructural N,P inhibition constant on growth,
+C        nutrient recycling
 C
       IF(CCPOLR(N,L,NZ,NY,NX).GT.ZERO)THEN
       CNPG=AMIN1(CZPOLR(N,L,NZ,NY,NX)/(CZPOLR(N,L,NZ,NY,NX)
@@ -5286,53 +5820,59 @@ C
       CNPG=1.0
       ENDIF
 C
-C     PRIMARY ROOT MAINTENANCE RESPIRATION FROM SOIL TEMPERATURE,
-C     ROOT STRUCTURAL N
-C
-C     RMNCR=root maintenance respiration
-C     RMPLT=specific maintenance respiration rate (g C g-1 N h-1)
-C     WTRT1N=primary root N mass
-C     TFN6=temperature function for root maintenance respiration 
-C     IGTYP=growth type:0=bryophyte,1=graminoid,2=shrub,tree
-C     IWTYP=phenology type:0=evergreen,1=cold decid,2=drought decid,3=1+2
-C     WFNGR=growth function of root water potential
-C
-      RMNCR=AMAX1(0.0,RMPLT*RTWT1N(N,NR,NZ,NY,NX))*TFN6(L)
-      IF(IGTYP(NZ,NY,NX).EQ.0.OR.IWTYP(NZ,NY,NX).EQ.2)THEN
-      RMNCR=RMNCR*WFNGR(N,L)
-      ENDIF 
-C
 C     O2-UNLIMITED PRIMARY ROOT RESPIRATION FROM ROOT NON-STRUCTURAL C
 C     CONSTRAINED BY TEMPERATURE AND NON-STRUCTURAL C:N:P
 C
+C     IGTYP=growth type:0=bryophyte,1=grass,herb,2=woody shrub,tree
+C     IWTYP=phenology type:0=evergreen,1=cold deciduous,2=drought
+C        deciduous,3=cold and drought deciduous
+C     WFNRG=growth function of root water potential
 C     RCO2RM=respiration from non-structural C unlimited by O2
 C     VMXC=rate constant for nonstructural C oxidation in respiration C     FRTN=fraction of primary root sink strength in axis
 C     CPOOL=non-structural C mass
 C     TFN4=temperature function for root growth
 C     CNPG=N,P constraint on respiration
 C     FDBKX=termination feedback inhibition on C3 CO2 
-C     WFNGR=growth function of root water potential
+C     WFNRG=growth function of root water potential
+C     RMNCR=root maintenance respiration
+C     RMPLT=specific maintenance respiration rate (g C g-1 N h-1)
+C     WTRT1N=primary root N mass
+C     TFN6=temperature function for root maintenance respiration 
+C     XNFH=time step from ‘wthr.f’ 
 C
+      IF(ISTYP(NZ,NY,NX).NE.0
+     2.OR.IDAY(10,NB1(NZ,NY,NX),NZ,NY,NX).EQ.0)THEN
       RCO2RM=AMAX1(0.0,VMXC*FRTN*CPOOLR(N,L,NZ,NY,NX)
      2*TFN4(L,NZ,NY,NX))*CNPG*FDBKX(NB1(NZ,NY,NX),NZ,NY,NX)
-     3*WFNGR(N,L)
+     3*WFNRG(N,L)*XNFH
       IF(RTDP1X.GE.CDPTHZ(NJ(NY,NX),NY,NX))THEN
       RCO2RM=AMIN1(RMNCR,RCO2RM)
+      ENDIF
+      RMNCR=AMAX1(0.0,RMPLT*RTWT1N(N,NR,NZ,NY,NX)*TFN6(L)*XNFH)
+      IF(IGTYP(NZ,NY,NX).EQ.0.OR.IWTYP(NZ,NY,NX).EQ.2)THEN
+      RMNCR=RMNCR*WFNRG(N,L)
+      ELSE
+      RMNCR=RMNCR*WFNRR(N,L)
+      ENDIF 
+      ELSE
+      RCO2RM=0.0
+      RMNCR=0.0
       ENDIF
 C
 C     O2-LIMITED PRIMARY ROOT RESPIRATION FROM 'WFR' IN 'UPTAKE'
 C
 C     RCO2R=respiration from non-structural C limited by O2
 C     WFR=constraint by O2 consumption on all root processes
-C     RCO2XM,RCO2X=diff between C respn unltd,ltd by O2 and mntc respn
-C     RCO2YM,RCO2Y=growth respiration unltd,ltd by O2 and unlimited by N,P
-C     WFNRG=respiration function of root water potential
+C     RCO2XM,RCO2X=diff between C respiration unlimited,limited by O2
+C        and maintenance respiration
+C     RCO2YM,RCO2Y=growth respiration unlimited,limited by O2 and
+C        unlimited by N,P
 C
       RCO2R=RCO2RM*WFR(N,L,NZ,NY,NX)
       RCO2XM=RCO2RM-RMNCR
       RCO2X=RCO2R-RMNCR
-      RCO2YM=AMAX1(0.0,RCO2XM)*WFNRG
-      RCO2Y=AMAX1(0.0,RCO2X)*WFNRG
+      RCO2YM=AMAX1(0.0,RCO2XM)
+      RCO2Y=AMAX1(0.0,RCO2X)
 C
 C     PRIMARY ROOT GROWTH RESPIRATION MAY BE LIMITED BY
 C     NON-STRUCTURAL N,P AVAILABLE FOR GROWTH
@@ -5363,13 +5903,17 @@ C     TOTAL NON-STRUCTURAL C,N,P USED IN PRIMARY ROOT GROWTH
 C     AND GROWTH RESPIRATION DEPENDS ON GROWTH YIELD
 C     ENTERED IN 'READQ'
 C
-C     CGRORM,CGROR=total non-structural C used in growth and respn unltd,ltd by O2 
-C     RCO2GM,RCO2G=growth respiration limited by N,P unltd,ltd by O2
+C     CGRORM,CGROR=total non-structural C used in growth and
+C        respiration unlimited,limited by O2 
+C     RCO2GM,RCO2G=growth respiration limited by N,P unlimited,limited
+C        by O2
 C     DMRTD=root C respiration vs nonstructural C consumption
-C     GRTWGM,GRTWTG=root C growth unltd,ltd by O2
+C     GRTWGM,GRTWTG=root C growth unlimited,limited by O2
 C     DMRT=root growth yield
-C     ZADD1M,ZADD1,PADD1=nonstructural N,P unltd,ltd by O2 used in growth
-C     CNRDM,CNRDA=respiration for N assimilation unltd,ltd by O2
+C     ZADD1M,ZADD1,PADD1=nonstructural N,P unlimited,limited 
+C        by O2 used in growth
+C     CNRDM,CNRDA=respiration for N assimilation unlimited,limited 
+C        by O2
 C
       CGRORM=RCO2GM/DMRTD
       CGROR=RCO2G/DMRTD
@@ -5383,11 +5927,13 @@ C
 C
 C     PRIMARY ROOT GROWTH RESPIRATION FROM TOTAL - MAINTENANCE
 C     IF > 0 DRIVES GROWTH, IF < 0 DRIVES REMOBILIZATION, ALSO
-C     PRIMARY ROOT C LOSS FROM REMOBILIZATION AND CONSEQUENT LITTERFALL
+C     PRIMARY ROOT C LOSS FROM REMOBILIZATION AND CONSEQUENT
+C     LITTERFALL
 C
 C     IDAY(1,=emergence date
 C     CCPOLR,CZPOLR,CPPOLR=root non-structural C,N,P concentration
-C     CNKI,CPKI=nonstructural N,P inhibition constant on growth 
+C     CNKI,CPKI=nonstructural N,P inhibition constant on growth,
+C        nutrient recycling
 C     RCCC,RCCN,RCCP=remobilization coefficient for C,N,P
 C     RCCZR,RCCYR=min,max fractions for root C recycling
 C     RCCXR,RCCQR=max fractions for root N,P recycling 
@@ -5410,15 +5956,17 @@ C
       CNC=0.0
       CPC=0.0
       ENDIF
-      RCCC=RCCZR+CCC*RCCYR
-      RCCN=CNC*RCCXR
-      RCCP=CPC*RCCQR
+      RCCC=RCCZR(IBTYP(NZ,NY,NX))+CCC*RCCYR(IBTYP(NZ,NY,NX))
+      RCCN=CNC*RCCXR(IBTYP(NZ,NY,NX))
+      RCCP=CPC*RCCQR(IBTYP(NZ,NY,NX))
 C
 C     RECOVERY OF REMOBILIZABLE N,P DURING PRIMARY ROOT REMOBILIZATION
 C     DEPENDS ON ROOT NON-STRUCTURAL C:N:P
 C
-C     RCO2XM,RCO2X=diff between C respn unltd,ltd by O2 and mntc respn
-C     SNCRM,SNCR=excess maintenance respiration unltd,ltd by O2
+C     RCO2XM,RCO2X=diff between C respiration unlimited,limited 
+C        by O2 and maintenance respiration 
+C     SNCRM,SNCR=excess maintenance respiration unlimited,limited 
+C        by O2
 C     RTWT1,RTWT1N,RTWT1P=primary root C,N,P mass
 C     WFR=constraint by O2 consumption on all root processes
 C     RCCR,RCZR,RCPR=remobilization of C,N,P from senescing root 
@@ -5447,10 +5995,8 @@ C
       IF(SNCR.GT.0.0.AND.RTWT1(N,NR,NZ,NY,NX)
      2.GT.ZEROP(NZ,NY,NX))THEN
       RCCR=RCCC*RTWT1(N,NR,NZ,NY,NX)
-      RCZR=RTWT1N(N,NR,NZ,NY,NX)*(RCCN+(1.0-RCCN)
-     2*RCCR/RTWT1(N,NR,NZ,NY,NX))
-      RCPR=RTWT1P(N,NR,NZ,NY,NX)*(RCCP+(1.0-RCCP)
-     2*RCCR/RTWT1(N,NR,NZ,NY,NX))
+      RCZR=RTWT1N(N,NR,NZ,NY,NX)*(RCCN+(1.0-RCCN)*RCCC)
+      RCPR=RTWT1P(N,NR,NZ,NY,NX)*(RCCP+(1.0-RCCP)*RCCC)
       IF(RCCR.GT.ZEROP(NZ,NY,NX))THEN
       FSNC1=AMAX1(0.0,AMIN1(1.0,SNCR/RCCR))
       ELSE
@@ -5466,26 +6012,31 @@ C
 C     PRIMARY ROOT LITTERFALL CAUSED BY REMOBILIZATION
 C
 C     CSNC,ZSNC,PSNC=literfall C,N,P
-C     CFOPC=fraction of plant litter allocated in nonstructural(0,*),
-C     foliar(1,*),non-foliar(2,*),stalk(3,*),root(4,*), coarse woody (5,*)
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     FSNC1=fraction of primary root C to be remobilized
 C     RTWT1,RTWT1N,RTWT1P=primary root C,N,P mass
 C     RCCR,RCZR,RCPR=remobilization of C,N,P from senescing root 
-C     FWOOD,FWOODN,FWOODP=C,N,P woody fraction in root:0=woody,1=non-woody
+C     FWOOD,FWOODN,FWOODP=C,N,P woody fraction in root:0=woody,
+C        1=non-woody
 C
       DO 6355 M=1,4
       CSNC(M,0,L,NZ,NY,NX)=CSNC(M,0,L,NZ,NY,NX)+CFOPC(5,M,NZ,NY,NX)
-     2*FSNC1*(RTWT1(N,NR,NZ,NY,NX)-RCCR)*FWODR(0)
+     2*FSNC1*RTWT1(N,NR,NZ,NY,NX)*FWODR(0,NZ)
       ZSNC(M,0,L,NZ,NY,NX)=ZSNC(M,0,L,NZ,NY,NX)+CFOPN(5,M,NZ,NY,NX)
-     2*FSNC1*(RTWT1N(N,NR,NZ,NY,NX)-RCZR)*FWODRN(0)
+     2*FSNC1*RTWT1N(N,NR,NZ,NY,NX)*FWODRN(0,NZ)
       PSNC(M,0,L,NZ,NY,NX)=PSNC(M,0,L,NZ,NY,NX)+CFOPP(5,M,NZ,NY,NX)
-     2*FSNC1*(RTWT1P(N,NR,NZ,NY,NX)-RCPR)*FWODRP(0)
+     2*FSNC1*RTWT1P(N,NR,NZ,NY,NX)*FWODRP(0,NZ)
       CSNC(M,1,L,NZ,NY,NX)=CSNC(M,1,L,NZ,NY,NX)+CFOPC(4,M,NZ,NY,NX)
-     2*FSNC1*(RTWT1(N,NR,NZ,NY,NX)-RCCR)*FWODR(1)
+     2*FSNC1*(RTWT1(N,NR,NZ,NY,NX)-RCCR)*FWODR(1,NZ)
       ZSNC(M,1,L,NZ,NY,NX)=ZSNC(M,1,L,NZ,NY,NX)+CFOPN(4,M,NZ,NY,NX)
-     2*FSNC1*(RTWT1N(N,NR,NZ,NY,NX)-RCZR)*FWODRN(1)
+     2*FSNC1*(RTWT1N(N,NR,NZ,NY,NX)-RCZR)*FWODRN(1,NZ)
       PSNC(M,1,L,NZ,NY,NX)=PSNC(M,1,L,NZ,NY,NX)+CFOPP(4,M,NZ,NY,NX)
-     2*FSNC1*(RTWT1P(N,NR,NZ,NY,NX)-RCPR)*FWODRP(1)
+     2*FSNC1*(RTWT1P(N,NR,NZ,NY,NX)-RCPR)*FWODRP(1,NZ)
 6355  CONTINUE
 C
 C     CONSUMPTION OF NON-STRUCTURAL C,N,P BY PRIMARY ROOTS
@@ -5493,28 +6044,36 @@ C
 C     CPOOLR,ZPOOLR,PPOOLR=non-structural C,N,P mass in root
 C     RMNCR=root maintenance respiration
 C     RCO2R=respiration from non-structural C limited by O2
-C     CGROR=total non-structural C used in growth and respn ltd by O2 
-C     CNRDA=respiration for N assimilation unltd,ltd by O2
-C     SNCR=excess maintenance respiration ltd by O2
+C     CGROR=total non-structural C used in growth and respiration
+C        limited by O2 
+C     CNRDA=respiration for N assimilation unlimited,limited by O2
+C     SNCR=excess maintenance respiration limited by O2
 C     FSNC1=fraction of primary root C to be remobilized
 C     RCCR,RCZR,RCPR=remobilization of C,N,P from senescing root 
 C     ZADD1,PADD1=nonstructural N,P ltd by O2 used in growth 
 C
       CPOOLR(N,L,NZ,NY,NX)=CPOOLR(N,L,NZ,NY,NX)-AMIN1(RMNCR,RCO2R)
-     2-CGROR-CNRDA-SNCR+FSNC1*RCCR
-      ZPOOLR(N,L,NZ,NY,NX)=ZPOOLR(N,L,NZ,NY,NX)-ZADD1+FSNC1*RCZR 
-      PPOOLR(N,L,NZ,NY,NX)=PPOOLR(N,L,NZ,NY,NX)-PADD1+FSNC1*RCPR 
+     2-CGROR-CNRDA-SNCR+FSNC1*RCCR*FWODR(1,NZ)
+      ZPOOLR(N,L,NZ,NY,NX)=ZPOOLR(N,L,NZ,NY,NX)
+     2-ZADD1+FSNC1*RCZR*FWODRN(1,NZ) 
+      PPOOLR(N,L,NZ,NY,NX)=PPOOLR(N,L,NZ,NY,NX)
+     2-PADD1+FSNC1*RCPR 
 C
 C     TOTAL PRIMARY ROOT RESPIRATION
 C
-C     RCO2TM,RCO2T=total C respiration unltd,ltd by O2
+C     RCO2TM,RCO2T=total C respiration unlimited,limited 
+C        by O2
 C     RMNCR=root maintenance respiration
-C     RCO2RM,RCO2R=respiration from non-structural C unltd,ltd by O2
-C     RCO2GM,RCO2G=growth respiration limited by N,P unltd,ltd by O2
-C     SNCRM,SNCR=excess maintenance respiration unltd,ltd by O2
-C     CNRDM,CNRDA=respiration for N assimilation unltd,ltd by O2
+C     RCO2RM,RCO2R=respiration from non-structural C unlimited,limited
+C        by O2
+C     RCO2GM,RCO2G=growth respiration limited by N,P unlimited,limited
+C        by O2
+C     SNCRM,SNCR=excess maintenance respiration unlimited,limited 
+C        by O2
+C     CNRDM,CNRDA=respiration for N assimilation unlimited,limited 
+C        by O2
 C     RCO2A=total root respiration
-C     RCO2M,RCO2N=RCO2A unltd by O2,nonstructural C  
+C     RCO2M,RCO2N=RCO2A unlimited by O2,nonstructural C  
 C
       RCO2TM=AMIN1(RMNCR,RCO2RM)+RCO2GM+SNCRM+CNRDM
       RCO2T=AMIN1(RMNCR,RCO2R)+RCO2G+SNCR+CNRDA
@@ -5528,8 +6087,8 @@ C     RTLG1=primary root length
 C     SDPTH=seeding depth
 C     FRCO2=fraction of primary root respiration attributed to layer
 C     RCO2A=total root respiration
-C     RCO2M,RCO2N=RCO2A unltd by O2,nonstructural C  
-C     RCO2TM,RCO2T=total C respiration unltd,ltd by O2
+C     RCO2M,RCO2N=RCO2A unlimited by O2,nonstructural C  
+C     RCO2TM,RCO2T=total C respiration unlimited,limited by O2
 C
       IF(RTDP1(N,NR,NZ,NY,NX).GT.CDPTHZ(NG(NZ,NY,NX),NY,NX))THEN
       TFRCO2=0.0
@@ -5561,11 +6120,11 @@ C     ALLOCATE ANY NEGATIVE PRIMARY ROOT C,N,P GROWTH TO SECONDARY
 C     ROOTS ON THE SAME AXIS IN THE SAME LAYER UNTIL SECONDARY ROOTS
 C     HAVE DISAPPEARED
 C
-C     GRTWTG=primary root C growth ltd by O2
+C     GRTWTG=primary root C growth limited by O2
 C     GRTWTL,GRTWTN,GRTWTP=net primary root C,N,P growth
 C     FSNC1=fraction of primary root C to be remobilized
 C     RTWT1,RTWT1N,RTWT1P=primary root C,N,P mass
-C     ZADD1,PADD1=nonstructural N,P ltd by O2 used in growth
+C     ZADD1,PADD1=nonstructural N,P limited by O2 used in growth
 C     WTRT2,WTRT2N,WTRT2P=secondary root C,N,P mass
 C     RTLG2=secondary root length
 C
@@ -5618,12 +6177,16 @@ C     OF SECONDARY ROOTS
 C
 C     GRTWTM=negative primary root C growth
 C     WTRT2,WTRT2N,WTRT2P=secondary root C,N,P mass
-C     FSNCM,FSNCP=fraction of mycorrhizal structural,nonstructural C to be remobilized
+C     FSNCM,FSNCP=fraction of mycorrhizal structural,nonstructural C
+C        to be remobilized
 C     WTRTL=active root C mass
 C     CSNC,ZSNC,PSNC=C,N,P litterfall from senescence
-C     CFOPC,CFOPN,CFOPC=fraction of litterfall C,N,P allocated to litter components
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     WTRT2,WTRT2N,WTRT2P=mycorrhizal C,N,P mass
-C     FWOOD,FWOODN,FWOODP=C,N,P woody fraction in root:0=woody,1=non-woody
+C     FWOOD,FWOODN,FWOODP=C,N,P woody fraction in root:0=woody,
+C        1=non-woody
 C     RTLG2=mycorrhizal length
 C     CPOOLR,ZPOOLR,PPOOLR=non-structural C,N,P mass in mycorrhizae
 C
@@ -5640,17 +6203,17 @@ C
       ENDIF
       DO 6450 M=1,4
       CSNC(M,0,LL,NZ,NY,NX)=CSNC(M,0,LL,NZ,NY,NX)+CFOPC(5,M,NZ,NY,NX)
-     2*FSNCM*AMAX1(0.0,WTRT2(2,LL,NR,NZ,NY,NX))*FWODR(0)
+     2*FSNCM*AMAX1(0.0,WTRT2(2,LL,NR,NZ,NY,NX))*FWODR(0,NZ)
       ZSNC(M,0,LL,NZ,NY,NX)=ZSNC(M,0,LL,NZ,NY,NX)+CFOPN(5,M,NZ,NY,NX)
-     2*FSNCM*AMAX1(0.0,WTRT2N(2,LL,NR,NZ,NY,NX))*FWODRN(0)
+     2*FSNCM*AMAX1(0.0,WTRT2N(2,LL,NR,NZ,NY,NX))*FWODRN(0,NZ)
       PSNC(M,0,LL,NZ,NY,NX)=PSNC(M,0,LL,NZ,NY,NX)+CFOPP(5,M,NZ,NY,NX)
-     2*FSNCM*AMAX1(0.0,WTRT2P(2,LL,NR,NZ,NY,NX))*FWODRP(0)
+     2*FSNCM*AMAX1(0.0,WTRT2P(2,LL,NR,NZ,NY,NX))*FWODRP(0,NZ)
       CSNC(M,1,LL,NZ,NY,NX)=CSNC(M,1,LL,NZ,NY,NX)+CFOPC(4,M,NZ,NY,NX)
-     2*FSNCM*AMAX1(0.0,WTRT2(2,LL,NR,NZ,NY,NX))*FWODR(1)
+     2*FSNCM*AMAX1(0.0,WTRT2(2,LL,NR,NZ,NY,NX))*FWODR(1,NZ)
       ZSNC(M,1,LL,NZ,NY,NX)=ZSNC(M,1,LL,NZ,NY,NX)+CFOPN(4,M,NZ,NY,NX)
-     2*FSNCM*AMAX1(0.0,WTRT2N(2,LL,NR,NZ,NY,NX))*FWODRN(1)
+     2*FSNCM*AMAX1(0.0,WTRT2N(2,LL,NR,NZ,NY,NX))*FWODRN(1,NZ)
       PSNC(M,1,LL,NZ,NY,NX)=PSNC(M,1,LL,NZ,NY,NX)+CFOPP(4,M,NZ,NY,NX)
-     2*FSNCM*AMAX1(0.0,WTRT2P(2,LL,NR,NZ,NY,NX))*FWODRP(1)
+     2*FSNCM*AMAX1(0.0,WTRT2P(2,LL,NR,NZ,NY,NX))*FWODRP(1,NZ)
       CSNC(M,1,LL,NZ,NY,NX)=CSNC(M,1,LL,NZ,NY,NX)+CFOPC(0,M,NZ,NY,NX)
      2*FSNCP*AMAX1(0.0,CPOOLR(2,LL,NZ,NY,NX)) 
       ZSNC(M,1,LL,NZ,NY,NX)=ZSNC(M,1,LL,NZ,NY,NX)+CFOPN(0,M,NZ,NY,NX)
@@ -5673,16 +6236,21 @@ C
       PPOOLR(2,LL,NZ,NY,NX)=AMAX1(0.0,PPOOLR(2,LL,NZ,NY,NX))
      2*(1.0-FSNCP)
       ENDIF
+C     IF(LL.EQ.12)THEN
+C     WRITE(*,2126)'WITHMY',I,J,NZ,NR,LL,NN,CPOOLR(2,LL,NZ,NY,NX)
+C    2,FSNCP
+2126  FORMAT(A8,6I4,12E12.4)
+C     ENDIF
 5105  CONTINUE
       ENDIF
 C
 C     PRIMARY ROOT EXTENSION FROM ROOT GROWTH AND ROOT TURGOR
 C
 C     GRTLGL=primary root length extension
-C     GRTWTG=primary root C growth ltd by O2
-C     RTLG1X=specific primary root length from startq.f
+C     GRTWTG=primary root C growth limited by O2
+C     RTLG1X=specific primary root length from ‘startq.f’
 C     PP=PFT population
-C     WFNR=water function for root extension     
+C     WFNRT=water function for root extension     
 C     FWOOD=C,N,P woody fraction in root:0=woody,1=non-woody
 C     GRTWTL,GRTWTN,GRTWTP=net primary root C,N,P growth
 C     RTDP1=primary root depth from soil surface
@@ -5695,11 +6263,11 @@ C     DLYR=soil layer thickness
 C
       IF(GRTWTL.LT.0.0.AND.RTWT1(N,NR,NZ,NY,NX)
      2.GT.ZEROP(NZ,NY,NX))THEN
-      GRTLGL=GRTWTG*RTLG1X(N,NZ,NY,NX)/PP(NZ,NY,NX)*WFNR*FWODR(1)
+      GRTLGL=GRTWTG*RTLG1X(N,NZ,NY,NX)/PP(NZ,NY,NX)*WFNRT
      2+GRTWTL*(RTDP1(N,NR,NZ,NY,NX)-SDPTH(NZ,NY,NX))
      3/RTWT1(N,NR,NZ,NY,NX)
       ELSE
-      GRTLGL=GRTWTG*RTLG1X(N,NZ,NY,NX)/PP(NZ,NY,NX)*WFNR*FWODR(1)
+      GRTLGL=GRTWTG*RTLG1X(N,NZ,NY,NX)/PP(NZ,NY,NX)*WFNRT
       ENDIF
       IF(L.LT.NJ(NY,NX))THEN
       GRTLGL=AMIN1(DLYR(3,L1,NY,NX),GRTLGL)
@@ -5711,6 +6279,8 @@ C     BOUNDARY OF CURRENT LAYER
 C
 C     GRTLGL=primary root length extension
 C     FGROL,FGROZ=fraction of GRTLGL in current,next lower soil layer
+C     CDPTHZ=depth from soil surface to layer bottom
+C     RTDP1,RTDP1X=primary root depth from soil surface
 C
       IF(GRTLGL.GT.ZEROP(NZ,NY,NX).AND.L.LT.NJ(NY,NX))THEN
       FGROL=AMAX1(0.0,AMIN1(1.0,(CDPTHZ(L,NY,NX)
@@ -5731,7 +6301,7 @@ C     GRTLGL=primary root length extension
 C     WTRT1,WTRT1N,WTRT1P=primary root C,N,P mass in soil layer
 C     FGROL,FGROZ=fraction of GRTLGL in current,next lower soil layer
 C     WSRTL=total root protein C mass 
-C     CNWS,CPWS=protein:N,protein:P ratios from startq.f
+C     CNWS,CPWS=protein:N,protein:P ratios from ‘startq.f’
 C     RTLG1=primary root length
 C
       RTWT1(N,NR,NZ,NY,NX)=RTWT1(N,NR,NZ,NY,NX)+GRTWTL
@@ -5754,7 +6324,7 @@ C     FGROZ=fraction of GRTLGL in next lower soil layer
 C     WTRT1,WTRT1N,WTRT1P=primary root C,N,P mass in soil layer
 C     GRTWTL,GRTWTN,GRTWTP=net root C,N,P growth
 C     WSRTL=total root protein C mass 
-C     CNWS,CPWS=protein:N,protein:P ratios from startq.f
+C     CNWS,CPWS=protein:N,protein:P ratios from ‘startq.f’
 C     WTRTD=root C mass
 C     RTLG1=primary root length
 C     GRTLGL=primary root length extension
@@ -5798,21 +6368,22 @@ C    2,FRTN,WTRTD(N,L1,NZ,NY,NX),CPOOLR(N,L1,NZ,NY,NX)
 C    2,FGROZ,RTDP1(N,NR,NZ,NY,NX),GRTLGL,CDPTHZ(L,NY,NX)
 C     ENDIF
       ENDIF
-C     IF(NZ.EQ.2.AND.NR.EQ.5)THEN
-C     WRITE(*,9877)'RCO21',I,J,NZ,NR,L,L-1,L1,N,NINR(NR,NZ,NY,NX)
-C    2,CDPTHZ(L,NY,NX),CDPTHZ(L-1,NY,NX),CDPTHZ(L1,NY,NX) 
+C     IF(L.EQ.12)THEN
+C     WRITE(*,9877)'RCO21',I,J,NFZ,NX,NY,NZ,NR,L,L-1,L1,N
+C    2,NINR(NR,NZ,NY,NX)
 C    2,RCO2TM,RCO2T,RMNCR,RCO2RM,RCO2R,RCO2GM,RCO2G
 C    3,RCO2XM,RCO2X,CGROR,SNCRM,SNCR,CNRDA,CPOOLR(N,L,NZ,NY,NX),FRTN 
-C    4,TFN4(L,NZ,NY,NX),CNPG,FDBKX(NB1(NZ,NY,NX),NZ,NY,NX),WFNGR(N,L)
-C    5,TFN6(L),GRTWTG,GRTWTL,GRTLGL,FGROL,RTLG1(N,L,NR,NZ,NY,NX)
+C    4,TFN4(L,NZ,NY,NX),CNPG,FDBKX(NB1(NZ,NY,NX),NZ,NY,NX),WFNRG(N,L)
+C    5,TFN6(L),GRTWTG,GRTWTL,GRTLGL,RTLGL,FGROL,RTLG1(N,L,NR,NZ,NY,NX)
 C    6,WTRT1(N,L,NR,NZ,NY,NX),RTDP1(N,NR,NZ,NY,NX),RTDP1X
 C    3,RCO2M(N,L,NZ,NY,NX),RCO2A(N,L,NZ,NY,NX),WFR(N,L,NZ,NY,NX)
 C    4,RTSK1(N,L,NR),RRAD1(N,L,NZ,NY,NX),RTDPP 
-C    5,PSIRG(N,L,NZ,NY,NX),WFNR,WFNRG,FWOOD(1)
+C    5,PSIRG(N,L,NZ,NY,NX),WFNRT,WFNRR(N,L),FWOOD(1,NZ)
 C    6,FGROZ,RTWT1(N,NR,NZ,NY,NX),FSNC1 
 C    9,ZADD1,PADD1,ZPOOLR(N,L,NZ,NY,NX),PPOOLR(N,L,NZ,NY,NX)
 C    1,RUPNH4(N,L,NZ,NY,NX),RUPNO3(N,L,NZ,NY,NX)
-9877  FORMAT(A8,9I4,100E12.4)
+C    2,CDPTHZ(L,NY,NX),CDPTHZ(L-1,NY,NX),CDPTHZ(L1,NY,NX) 
+9877  FORMAT(A8,12I4,100E12.4)
 C     ENDIF
       ENDIF
 C
@@ -5881,12 +6452,20 @@ C
       PPOOLR(NN,LL-1,NZ,NY,NX)=PPOOLR(NN,LL-1,NZ,NY,NX)+XFRP
       WSRTL(NN,LL-1,NZ,NY,NX)=WSRTL(NN,LL-1,NZ,NY,NX)+XFRW 
       WTRTD(NN,LL-1,NZ,NY,NX)=WTRTD(NN,LL-1,NZ,NY,NX)+XFRD
+C     IF(LL.EQ.12)THEN
+C     WRITE(*,2128)'WITHPR',I,J,NZ,NR,LL,NN,CPOOLR(N,LL,NZ,NY,NX)
+C    2,FRTN,XFRC
+2128  FORMAT(A8,6I4,12E12.4)
+C     ENDIF
 C
 C     WITHDRAW GASES IN PRIMARY ROOTS
 C
-C     RCO2Z,ROXYZ,RCH4Z,RN2OZ,RNH3Z,RH2GZ=loss of root CO2, O2, CH4, N2O, NH3, H2
-C     CO2A,OXYA,CH4A,Z2OA,ZH3A,H2GA=root gaseous CO2, O2, CH4, N2O, NH3, H2
-C     CO2P,OXYP,CH4P,Z2OP,ZH3P,H2GP=root aqueous CO2, O2, CH4, N2O, NH3, H2
+C     RCO2Z,ROXYZ,RCH4Z,RN2OZ,RNH3Z,RH2GZ=loss of root CO2,O2,CH4,
+C        N2O,NH3,H2
+C     CO2A,OXYA,CH4A,Z2OA,ZH3A,H2GA=root gaseous CO2,O2,CH4,
+C        N2O,NH3,H2
+C     CO2P,OXYP,CH4P,Z2OP,ZH3P,H2GP=root aqueous CO2,O2,CH4,
+C        N2O,NH3,H2
 C     FRTN=fraction of primary root sink strength in axis
 C
       RCO2Z(NZ,NY,NX)=RCO2Z(NZ,NY,NX)-FRTN*(CO2A(NN,LL,NZ,NY,NX)
@@ -5913,7 +6492,7 @@ C
       Z2OP(NN,LL,NZ,NY,NX)=(1.0-FRTN)*Z2OP(NN,LL,NZ,NY,NX)
       ZH3P(NN,LL,NZ,NY,NX)=(1.0-FRTN)*ZH3P(NN,LL,NZ,NY,NX)
       H2GP(NN,LL,NZ,NY,NX)=(1.0-FRTN)*H2GP(NN,LL,NZ,NY,NX)
-C     IF(NZ.EQ.2)THEN
+C     IF(L.EQ.12)THEN
 C     WRITE(*,9868)'WITHDR',I,J,NZ,NR,LL,NN,NINR(NR,NZ,NY,NX) 
 C    2,FRTN,RTSK1(N,LL,NR),RTSK2(N,LL,NR),RLNT(N,LL)
 C    2,WTRTD(NN,LL-1,NZ,NY,NX),WTRTD(NN,LL,NZ,NY,NX)
@@ -5933,6 +6512,7 @@ C     RTN2,RTNL=number of secondary root axes
 C     RTN1=number of primary root axes
 C     RTLG1=primary root length
 C     CDPTHZ=depth from soil surface to layer bottom
+C     RTDP1=primary root depth from soil surface
 C     SDPTH=seeding depth
 C
       RTNL(N,LL,NZ,NY,NX)=RTNL(N,LL,NZ,NY,NX)
@@ -5952,7 +6532,7 @@ C
 C
 C     WITHDRAW C,N,P FROM ROOT NODULES IN LEGUMES
 C
-C     INTYP=N2 fixation: 1,2,3=rapid to slow root symbiosis
+C     INTYP=N2 fixation:1,2,3=rapid to slow root symbiosis
 C     FRTN=fraction of primary root sink strength in axis
 C     WTNDL,WTNDLN,WTNDLP=root bacterial C,N,P mass
 C     CPOOLN,ZPOOLN,PPOOLN=nonstructural C,N,P in root bacteria
@@ -5975,9 +6555,13 @@ C
       PPOOLN(LL,NZ,NY,NX)=PPOOLN(LL,NZ,NY,NX)-XFRP 
       CPOOLN(LL-1,NZ,NY,NX)=CPOOLN(LL-1,NZ,NY,NX)+XFRC
       ZPOOLN(LL-1,NZ,NY,NX)=ZPOOLN(LL-1,NZ,NY,NX)+XFRN 
-      PPOOLN(LL-1,NZ,NY,NX)=PPOOLN(LL-1,NZ,NY,NX)+XFRP 
-C     WRITE(*,9868)'WITHDRN',I,J,NZ,NR,LL,NN,NINR(NR,NZ,NY,NX)
-C    2,WTNDL(LL,NZ,NY,NX),CPOOLN(LL,NZ,NY,NX),RTDP1(N,NR,NZ,NY,NX)
+      PPOOLN(LL-1,NZ,NY,NX)=PPOOLN(LL-1,NZ,NY,NX)+XFRP
+C     IF(NZ.EQ.2.AND.LL-1.EQ.6)THEN
+C     WRITE(*,9869)'WITHDRN',I,J,NFZ,NZ,NR,LL,NN,NINR(NR,NZ,NY,NX)
+C    2,XFRN,WTNDLN(LL,NZ,NY,NX),ZPOOLN(LL,NZ,NY,NX)
+C    3,RTDP1(N,NR,NZ,NY,NX)
+9869  FORMAT(A8,8I4,12E12.4)
+C     ENDIF
       ENDIF
       NINR(NR,NZ,NY,NX)=MAX(NG(NZ,NY,NX),LL-1)
       ELSE
@@ -5989,6 +6573,9 @@ C    2,WTNDL(LL,NZ,NY,NX),CPOOLN(LL,NZ,NY,NX),RTDP1(N,NR,NZ,NY,NX)
 C
 C     REMOVE ANY NEGATIVE ROOT MASS FROM NONSTRUCTURAL C
 C
+C     WTRT1,WTRT2=primary,secondary root C mass in soil layer
+C     CPOOLR=non-structural C mass in root
+C
       IF(WTRT1(N,L,NR,NZ,NY,NX).LT.0.0)THEN
       CPOOLR(N,L,NZ,NY,NX)=CPOOLR(N,L,NZ,NY,NX)+WTRT1(N,L,NR,NZ,NY,NX)
       WTRT1(N,L,NR,NZ,NY,NX)=0.0
@@ -5997,6 +6584,10 @@ C
       CPOOLR(N,L,NZ,NY,NX)=CPOOLR(N,L,NZ,NY,NX)+WTRT2(N,L,NR,NZ,NY,NX)
       WTRT2(N,L,NR,NZ,NY,NX)=0.0
       ENDIF
+C     IF(L.EQ.12)THEN
+C     WRITE(*,2129)'REMOVE',I,J,NZ,NR,L,N,CPOOLR(N,L,NZ,NY,NX)
+2129  FORMAT(A8,6I4,12E12.4)
+C     ENDIF
 C
 C     TOTAL PRIMARY ROOT LENGTH AND MASS
 C
@@ -6019,15 +6610,19 @@ C     ENDIF
       NIX(NZ,NY,NX)=MAX(NIX(NZ,NY,NX),NINR(NR,NZ,NY,NX))
 5050  CONTINUE
 C
-C     DRAW FROM ROOT NON-STRUCTURAL POOL WHEN
+C     DRAW FROM ROOT NON-STRUCTURAL TO SEASONAL STORAGE POOL WHEN
 C     SEASONAL STORAGE POOL IS DEPLETED
 C
+C     ISTYP=growth habit:0=annual,1=perennial from PFT file
 C     WTRTL,WTRT=total root C mass
 C     WTRVC=storage C
-C     XFRX=maximum storage C content for remobiln from stalk,root reserves
+C     XFRX=maximum storage C content for remobilization 
+C        from stalk,root reserves
 C     CPOOLR=non-structural C mass in root
+C     XFRC=root-storage nonstructural C transfer
 C
-      IF(L.LE.NIX(NZ,NY,NX))THEN
+      IF(ISTYP(NZ,NY,NX).NE.0
+     2.AND.L.LE.NIX(NZ,NY,NX))THEN
       IF(WTRTL(N,L,NZ,NY,NX).GT.ZEROP(NZ,NY,NX)
      2.AND.WTRT(NZ,NY,NX).GT.ZEROP(NZ,NY,NX)
      2.AND.WTRVC(NZ,NY,NX).LT.XFRX*WTRT(NZ,NY,NX))THEN
@@ -6041,37 +6636,35 @@ C
       XFRC=AMIN1(0.0,XFRY*CPOOLD)
       CPOOLR(N,L,NZ,NY,NX)=CPOOLR(N,L,NZ,NY,NX)+XFRC
       WTRVC(NZ,NY,NX)=WTRVC(NZ,NY,NX)-XFRC
-C     WRITE(*,3471)'RVC',I,J,NX,NY,NZ,L 
+C     WRITE(*,3471)'RVC',I,J,NX,NY,NZ,L,N 
 C    2,XFRC,CPOOLR(N,L,NZ,NY,NX),WTRTD(N,L,NZ,NY,NX)
-C    3,WTRVC(NZ,NY,NX),WTRT(NZ,NY,NX),FWTRT
-3471  FORMAT(A8,6I4,12E12.4)
+C    3,WTRVC(NZ,NY,NX),WTRT(NZ,NY,NX),FWTRT,XFRY,CPOOLD
+C    4,WTRVCX,WTRTLX,CPOOLX,WTRTTX,WTRTTT 
+3471  FORMAT(A8,7I4,30E12.4)
       ENDIF
       ENDIF
 C
 C     ROOT AND MYCORRHIZAL LENGTH, DENSITY, VOLUME, RADIUS, AREA
 C     TO CALCULATE WATER AND NUTRIENT UPTAKE IN 'UPTAKE'
 C
-C     RTLGZ=total primary root length 
+C     RTLGZ,RTLGX=total primary root length per plant,population
+C     PP=PFT population
 C     WTRTZ=total primary root C mass
 C     RTLGL=total secondary root length
 C     WTRTX=total secondary root C mass
 C     RTLGT=total root length
 C     WTRTT=total root C mass 
 C     FWOOD=C woody fraction in root:0=woody,1=non-woody
-C     PP=PFT population
 C     RTDNP,RTLGP=root length density,root length per plant
 C     RTVL,RTVLW,RTVLP=root or myco total,aqueous,gaseous volume
 C     RRAD1,RRAD2=primary,secondary root radius
 C     RTARP=root surface area per plant
 C     RTLGA=average secondary root length
-C     RCO2Z,ROXYZ,RCH4Z,RN2OZ,RNH3Z,RH2GZ=loss of root CO2, O2, CH4, N2O, NH3, H2
+C     RCO2Z,ROXYZ,RCH4Z,RN2OZ,RNH3Z,RH2GZ=loss of root CO2,O2,CH4,
+C        N2O,NH3,H2
 C     CO2A,OXYA,CH4A,Z2OA,ZH3A,H2GA=root gaseous CO2,O2,CH4,N2O,NH3,H2
 C     CO2P,OXYP,CH4P,Z2OP,ZH3P,H2GP=root aqueous CO2,O2,CH4,N2O,NH3,H2
 C
-      IF(N.EQ.1)THEN
-      RTLGZ=RTLGZ*FWODR(1)
-      RTLGL=RTLGL*FWODR(1)
-      ENDIF
       RTLGX=RTLGZ*PP(NZ,NY,NX)
       RTLGT=RTLGL+RTLGX
       WTRTT=WTRTX+WTRTZ
@@ -6099,15 +6692,6 @@ C
       RTLGA(N,L,NZ,NY,NX)=RTLGAX
       ENDIF
       RTARP(N,L,NZ,NY,NX)=RTAR/PP(NZ,NY,NX)
-C     IF(N.EQ.1)THEN
-C     RTARP(N,L,NZ,NY,NX)=RTARP(N,L,NZ,NY,NX)*RTLGAX/RTLGA(N,L,NZ,NY,NX)
-C     ENDIF
-C     IF((I/10)*10.EQ.I.AND.J.EQ.12)THEN
-C     WRITE(*,2124)'RTLGA',I,J,NZ,L,N
-C    2,RTLGAX,RTLGA(N,L,NZ,NY,NX),RTLGP(N,L,NZ,NY,NX),RTLGT,PP(NZ,NY,NX)
-C    3,RTLGL,CPOOLR(N,L,NZ,NY,NX),WTRTD(N,L,NZ,NY,NX)
-2124  FORMAT(A8,5I4,12E12.4)
-C     ENDIF 
       ELSE
       RTLGP(N,L,NZ,NY,NX)=0.0
       RTDNP(N,L,NZ,NY,NX)=0.0
@@ -6149,6 +6733,13 @@ C
 C     ADD SEED DIMENSIONS TO ROOT DIMENSIONS (ONLY IMPORTANT DURING
 C     GERMINATION)
 C
+C     RTLGP=root length per plant
+C     SDVL,SDLG,SDAR=seed volume,length,area from ‘startq.f’
+C     DLYR=layer thickness
+C     RTDNP=root length density per plant
+C     RTVLW,RTVLP=root water,air volume
+C     RTARP=root surface area per plant 
+C
       RTLGP(1,NG(NZ,NY,NX),NZ,NY,NX)=RTLGP(1,NG(NZ,NY,NX),NZ,NY,NX)
      2+SDLG(NZ,NY,NX)
       IF(DLYR(3,NG(NZ,NY,NX),NY,NX).GT.ZERO)THEN
@@ -6163,27 +6754,54 @@ C
       RTVLW(1,NG(NZ,NY,NX),NZ,NY,NX)=(1.0-PORT(1,NZ,NY,NX))*RTVL
       RTARP(1,NG(NZ,NY,NX),NZ,NY,NX)=RTARP(1,NG(NZ,NY,NX),NZ,NY,NX)
      2+SDAR(NZ,NY,NX)
-      IF(IDTHRN.EQ.NRT(NZ,NY,NX).OR.(WTRVC(NZ,NY,NX)
-     2.LE.ZEROL(NZ,NY,NX).AND.ISTYP(NZ,NY,NX).NE.0))THEN
-      IDTHR(NZ,NY,NX)=1
+C
+C     PLANT DEATH IF STORAGE EXHAUSTED
+C
+C     WTRVC,WTRVN,WTRVP=storage C,N,P
+C     ISTYP=growth habit:0=annual,1=perennial from PFT file
+C     IDTHB=branch living flag: 0=alive,1=dead
+C     IDTHP,IDTHR=PFT shoot,root living flag: 0=alive,1=dead
+C     PPX,PP=PFT population per m2,grid cell
+C     VOLWP,VOLWC,VOLWQ=water volume in canopy,on canopy,standing dead
+C        surfaces
+C  
+      IF((WTRVC(NZ,NY,NX).LE.ZEROP2(NZ,NY,NX)
+     2.OR.WTRVN(NZ,NY,NX).LE.ZEROP2(NZ,NY,NX)
+     2.OR.WTRVP(NZ,NY,NX).LE.ZEROP2(NZ,NY,NX))
+     2.AND.ISTYP(NZ,NY,NX).NE.0)THEN
+      DO 301 NB=1,NBR(NZ,NY,NX)
+      IDTHB(NB,NZ,NY,NX)=1
+301   CONTINUE
       IDTHP(NZ,NY,NX)=1
+      IDTHR(NZ,NY,NX)=1
+      PPX(NZ,NY,NX)=0.0
+      PP(NZ,NY,NX)=0.0
+      VOLWQ(NZ,NY,NX)=VOLWQ(NZ,NY,NX)+VOLWC(NZ,NY,NX)+VOLWP(NZ,NY,NX)
+      VOLWC(NZ,NY,NX)=0.0
+      VOLWP(NZ,NY,NX)=0.0
+      WRITE(*,1115)'DEATHR',IYRC,I,J,NFZ,NX,NY,NZ,VOLWP(NZ,NY,NX)
+     2,WTRVC(NZ,NY,NX),WTRVN(NZ,NY,NX),WTRVP(NZ,NY,NX)
+     3,ZEROP2(NZ,NY,NX)
+1115  FORMAT(A8,7I4,12E12.4)
       ENDIF
 C
 C     ROOT N2 FIXATION (RHIZOBIA)
 C
 C     INTYP=N2 fixation: 1,2,3=rapid to slow root symbiosis
+C
+      IF(INTYP(NZ,NY,NX).GE.1.AND.INTYP(NZ,NY,NX).LE.3)THEN
+      DO 5400 L=NU(NY,NX),NIX(NZ,NY,NX)
+      IF(WTRTD(1,L,NZ,NY,NX).GT.ZEROP2(NZ,NY,NX))THEN 
+C
+C     INITIAL INFECTION
+C
 C     WTNDL,WTNDLN,WTNDLP=bacterial C,N,P mass
 C     WTNDI=initial bacterial mass at infection
 C     AREA=grid cell area
 C     CNND,CPND=bacterial N:C,P:C ratio from PFT file
 C
-      IF(INTYP(NZ,NY,NX).GE.1.AND.INTYP(NZ,NY,NX).LE.3)THEN
-      DO 5400 L=NU(NY,NX),NIX(NZ,NY,NX)
-      IF(WTRTD(1,L,NZ,NY,NX).GT.ZEROL(NZ,NY,NX))THEN 
-C
-C     INITIAL INFECTION
-C
-      IF(WTNDL(L,NZ,NY,NX).LE.0.0)THEN
+      IF(NFZ.EQ.1.AND.WTNDL(L,NZ,NY,NX).LE.0.0
+     2.AND.ICHKF.EQ.0)THEN
       WTNDL(L,NZ,NY,NX)=WTNDL(L,NZ,NY,NX)
      2+WTNDI*AREA(3,NU(NY,NX),NY,NX)
       WTNDLN(L,NZ,NY,NX)=WTNDLN(L,NZ,NY,NX) 
@@ -6199,9 +6817,13 @@ C     AND TEMPERATURE
 C
 C     WTNDL,WTNDLN,WTNDLP=bacterial C,N,P mass
 C     CPOOLN,ZPOOLN,PPOOLN=nonstructural C,N,P in bacteria
-C     CCPOLN,CZPOLN,CPPOLN=nonstructural C,N,P concn in bacteria
-C     CNKI,CPKI=nonstructural N,P inhibition constant on growth 
+C     CCPOLN,CZPOLN,CPPOLN=nonstructural C,N,P concentration 
+C        in bacteria
+C     ZCPOLI,ZPPOLI=nonstructural N:C,N:P
+C     CNKI,CPKI=nonstructural N,P inhibition constant on growth,
+C        nutrient recycling
 C     FCNPF=N,P constraint to bacterial activity
+C     CCNDLF=nodule:root mass ratio
 C
       IF(WTNDL(L,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
       CCPOLN=AMAX1(0.0,CPOOLN(L,NZ,NY,NX)/WTNDL(L,NZ,NY,NX))
@@ -6211,6 +6833,16 @@ C
       CCPOLN=1.0
       CZPOLN=1.0
       CPPOLN=1.0
+      ENDIF
+      IF(CCPOLN.GT.ZERO)THEN
+      ZCPOLI=CZPOLN/CCPOLN
+      ELSE
+      ZCPOLI=0.0
+      ENDIF
+      IF(CPPOLN.GT.ZERO)THEN 
+      ZPPOLI=CZPOLN/CPPOLN 
+      ELSE
+      ZPPOLI=0.0
       ENDIF
       IF(CCPOLN.GT.ZERO)THEN 
       CCC=AMAX1(0.0,AMIN1(1.0
@@ -6232,10 +6864,14 @@ C
       ELSE
       FCNPF=1.0
       ENDIF
-      SPNDLI=CCPOLN/(CCPOLN+SPNDLK)
+      IF(WTRTD(1,L,NZ,NY,NX).GT.ZEROP2(NZ,NY,NX))THEN
+      CNDLR=AMAX1(0.0,WTNDL(L,NZ,NY,NX)/WTRTD(1,L,NZ,NY,NX))
+      ELSE
+      CNDLR=0.0
+      ENDIF
 C
 C     RESPIRATION FROM NON-STRUCTURAL C DETERMINED BY TEMPERATURE,
-C     NON-STRUCTURAL C:N:P
+C     NON-STRUCTURAL C:N:P WITH EXCESS N FEEDBACK 
 C
 C     RCNDLM=respiration from non-structural C unltd by O2
 C     CPOOLN,ZPOOLN,PPOOLN=nonstructural C,N,P in bacteria
@@ -6243,11 +6879,14 @@ C     VMXO=specific respiration rate by bacterial N2 fixers
 C     WTNDL=bacterial C mass
 C     TFN4=temperature function for root growth
 C     FCNPF=N,P constraint to bacterial activity
-C     WFNGR=growth function of root water potential
+C     WFNRG=growth function of root water potential
+C     ZCPOLI,ZPPOLI=nonstructural N:C,N:P
 C
       RCNDLM=AMAX1(0.0,AMIN1(CPOOLN(L,NZ,NY,NX)
-     2,VMXO*WTNDL(L,NZ,NY,NX))*FCNPF*TFN4(L,NZ,NY,NX)*WFNGR(1,L))
-      CPOOLNX=CPOOLN(L,NZ,NY,NX) 
+     2,VMXO*WTNDL(L,NZ,NY,NX))*FCNPF*TFN4(L,NZ,NY,NX)
+     2/(1.0+AMAX1(ZCPOLI/ZCKI,ZPPOLI/ZPKI)) 
+     3*WFNRG(1,L)*XNFH)
+C     CPOOLNX=CPOOLN(L,NZ,NY,NX) 
 C
 C     O2-LIMITED NODULE RESPIRATION FROM 'WFR' IN 'UPTAKE'
 C
@@ -6263,15 +6902,20 @@ C     RMNDL=bacterial maintenance respiration
 C     RMPLT=specific maintenance respiration rate (g C g-1 N h-1)
 C     TFN6=temperature function for root maintenance respiration 
 C     WTNDLN=bacterial N mass
+C     WFNRR=respiration function of root water potential
 C
-      RMNDL=AMAX1(0.0,RMPLT*TFN6(L)*WTNDLN(L,NZ,NY,NX))*SPNDLI 
+      RMNDL=AMAX1(0.0,RMPLT*TFN6(L)*WTNDLN(L,NZ,NY,NX)
+     2*WFNRR(1,L)*XNFH) 
 C
 C     NODULE GROWTH RESPIRATION FROM TOTAL - MAINTENANCE
 C     IF > 0 DRIVES GROWTH, IF < 0 DRIVES REMOBILIZATION
 C
-C     RXNDLM,RXNDL=difference between non-structural C respn and mntc respn unltd,ltd by O2
-C     RGNDLM,RGNDL=growth respiration unlimited by N,P and unltd,ltd by O2 
-C     RSNDLM,RSNDL=excess maintenance respiration unltd,ltd by O2
+C     RXNDLM,RXNDL=difference between non-structural C respiration and
+C        maintenance respiration unlimited,limited by O2
+C     RGNDLM,RGNDL=growth respiration unlimited by N,P and
+C        unlimited,limited by O2 
+C     RSNDLM,RSNDL=excess maintenance respiration unlimited,limited 
+C        by O2
 C
       RXNDLM=RCNDLM-RMNDL
       RXNDL=RCNDL-RMNDL
@@ -6295,7 +6939,7 @@ C
       RGN2P=AMAX1(0.0,WTNDL(L,NZ,NY,NX)*CNND(NZ,NY,NX)
      2-WTNDLN(L,NZ,NY,NX))/EN2F
       IF(RGNDL.GT.ZEROP(NZ,NY,NX))THEN
-      RGN2F=RGNDL*RGN2P/(RGNDL+RGN2P) 
+      RGN2F=(RGNDL*RGN2P/(RGNDL+RGN2P))
       ELSE
       RGN2F=0.0
       ENDIF
@@ -6308,10 +6952,12 @@ C     RCCC,RCCN,RCCP=remobilization coefficient for C,N,P
 C     RCCZN,RCCYN=min,max fractions for bacteria C recycling
 C     RCCXN,RCCQN=max fractions for bacteria N,P recycling 
 C     WTRTD=root C mass
-C     CCNDLR=bacteria:root ratio
-C     RDNDLX=effect of CCNDLR on bacteria decomposition rate
-C     CCNKR=Km for bacterial vs root mass in decomposition
-C     SPNDX=specific bacterial decomposition rate at current CCNDLR
+C     SPNDX=specific bacterial decomposition rate at current CNDLR
+C     SPNDL=specific decomposition rate by bacterial N2 fixers 
+C     CNDLR=bacteria:root ratio
+C     CNDLI=bacteria:root ratio controlling bacterial decomposition
+C     TFN4=temperature function for root growth
+C     WFNRG=growth function of root water potential
 C     WTNDL,WTNDLN,WTNDLP=bacterial C,N,P mass
 C     RXNDLC,RXNDLN,RXNDLP=bacterial C,N,P loss from decomposition
 C     RDNDLC,RDNDLN,RDNDLP=bacterial C,N,P decomposition to litterfall
@@ -6320,7 +6966,8 @@ C
       RCCC=RCCZN+CCC*RCCYN
       RCCN=CNC*RCCXN
       RCCP=CPC*RCCQN
-      SPNDX=SPNDL*SQRT(TFN4(L,NZ,NY,NX)*WFNGR(1,L)) 
+      SPNDX=AMIN1(1.0,SPNDL*CNDLR/CNDLI(INTYP(NZ,NY,NX)))
+     2*SQRT(TFN4(L,NZ,NY,NX)*WFNRG(1,L))*XNFH
       RXNDLC=SPNDX*WTNDL(L,NZ,NY,NX) 
       RXNDLN=SPNDX*WTNDLN(L,NZ,NY,NX) 
       RXNDLP=SPNDX*WTNDLP(L,NZ,NY,NX) 
@@ -6335,7 +6982,8 @@ C     TOTAL NON-STRUCTURAL C,N,P USED IN NODULE GROWTH
 C     AND GROWTH RESPIRATION DEPENDS ON GROWTH YIELD
 C     ENTERED IN 'READQ'
 C
-C     CGNDL=total non-structural C used in bacterial growth and growth respiration 
+C     CGNDL=total non-structural C used in bacterial growth
+C        and growth respiration 
 C     CPOOLN,ZPOOLN,PPOOLN=nonstructural C,N,P in bacteria
 C     RMNDL=bacterial maintenance respiration
 C     RCNDL=respiration from non-structural C
@@ -6347,7 +6995,8 @@ C     DMND=bacterial growth yield
 C     RGNDG=bacterial respiration for growth and N2 fixation 
 C     ZADDN,PADDN=nonstructural N,P used in growth
 C     CNND,CPND=bacterial N:C,P:C ratio from PFT file
-C     CCPOLN,CZPOLN,CPPOLN=nonstructural C,N,P concn in bacteria
+C     CCPOLN,CZPOLN,CPPOLN=nonstructural C,N,P concentration 
+C        in bacteria
 C     CZKM,CPKM=Km for nonstructural N,P uptake by bacteria 
 C
       CGNDL=AMIN1(CPOOLN(L,NZ,NY,NX)-AMIN1(RMNDL,RCNDL)
@@ -6368,9 +7017,8 @@ C     RXNSNC,RXNSNC,RXNSNP=bacterial C,N,P loss from senescence
 C     RDNSNC,RDNSNC,RDNSNP=bacterial C,N,P senescence to litterfall 
 C     RCNSNC,RCNSNC,RCNSNP=bacterial C,N,P senescence to recycling
 C
-      IF(RSNDL.GT.0.0.AND.WTNDL(L,NZ,NY,NX).GT.ZEROP(NZ,NY,NX)
-     2.AND.RCCC.GT.ZERO)THEN
-      RXNSNC=RSNDL/RCCC 
+      IF(RSNDL.GT.0.0.AND.WTNDL(L,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
+      RXNSNC=RSNDL 
       RXNSNN=RXNSNC*WTNDLN(L,NZ,NY,NX)/WTNDL(L,NZ,NY,NX)
       RXNSNP=RXNSNC*WTNDLP(L,NZ,NY,NX)/WTNDL(L,NZ,NY,NX)
       RDNSNC=RXNSNC*(1.0-RCCC)
@@ -6410,8 +7058,11 @@ C
 C
 C     NODULE LITTERFALL CAUSED BY REMOBILIZATION
 C
-C     CSNC,ZSNC,PSNC=C,N,P litterfall from decomposition and senescence
-C     CFOPC,CFOPN,CFOPC=fraction of litterfall C,N,P allocated to litter components
+C     CSNC,ZSNC,PSNC=C,N,P litterfall from decomposition and
+C        senescence
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     RDNDLC,RDNDLN,RDNDLP=bacterial C,N,P decomposition to litterfall
 C     RDNSNC,RDNSNC,RDNSNP=bacterial C,N,P senescence to litterfall 
 C
@@ -6430,7 +7081,8 @@ C     CPOOLN,ZPOOLN,PPOOLN=nonstructural C,N,P in bacteria
 C     RMNDL=bacterial maintenance respiration
 C     RCNDL=respiration from non-structural C
 C     RGN2F=respiration for N2 fixation
-C     CGNDL=total non-structural C used in bacterial growth and growth respiration 
+C     CGNDL=total non-structural C used in bacterial growth 
+C        and growth respiration 
 C     RCNDLC,RCNDLN,RCNDLP=bacterial C,N,P decomposition to recycling 
 C     RCNSNC,RCNSNC,RCNSNP=bacterial C,N,P senescence to recycling
 C     ZADDN,PADDN=nonstructural N,P used in growth
@@ -6453,61 +7105,66 @@ C
       WTNDL(L,NZ,NY,NX)=WTNDL(L,NZ,NY,NX)+GRNDG-RXNDLC-RXNSNC
       WTNDLN(L,NZ,NY,NX)=WTNDLN(L,NZ,NY,NX)+ZADDN-RXNDLN-RXNSNN
       WTNDLP(L,NZ,NY,NX)=WTNDLP(L,NZ,NY,NX)+PADDN-RXNDLP-RXNSNP
-C     IF((I/30)*30.EQ.I.AND.J.EQ.12)THEN
-C     WRITE(*,2122)'NODGR',I,J,NZ,L,RCNDLM,RCNDL,RMNDL,RGNDL,RGN2P 
+C     IF((I/10)*10.EQ.I.AND.J.EQ.15)THEN
+C     WRITE(*,2122)'NODGR',I,J,NFZ,NZ,L
+C    2,CNDLR,WTNDL(L,NZ,NY,NX),WTRTD(1,L,NZ,NY,NX)
+C    3,CNDLR/CNDLI(INTYP(NZ,NY,NX))
+C    2,RCNDLM,RCNDL,RMNDL,RGNDL,RGN2P
 C    2,RGN2F,CGNDL,RSNDL,GRNDG,ZADDN,PADDN,RCCC,RCCN,RCCP 
-C    8,RDNDLC,RDNDLN,RDNDLP,RCNDLC,RDNDLX,WFR(1,L,NZ,NY,NX) 
+C    8,RDNDLC,RDNDLN,RDNDLP,RCNDLC,RDNDLX,WFR(1,L,NZ,NY,NX)
+C    5,RCNSNN,RUPNF(L,NZ,NY,NX) 
 C    3,WTNDL(L,NZ,NY,NX),WTNDLN(L,NZ,NY,NX),WTNDLP(L,NZ,NY,NX)
+C    3,ZADDN,RCNDLN,RCNSNN,RUPNF(L,NZ,NY,NX) 
 C    2,CPOOLN(L,NZ,NY,NX),ZPOOLN(L,NZ,NY,NX),PPOOLN(L,NZ,NY,NX)
-C    5,FCNPF,TFN4(L,NZ,NY,NX),WFNGR(1,L),PSIRT(1,L,NZ,NY,NX)
-C    5,CCPOLN,CZPOLN,CPPOLN,CPOOLNX
-C    6,VMXO*WTNDL(L,NZ,NY,NX)*TFN4(L,NZ,NY,NX)*FCNPF*WFNGR(1,L) 
-2122  FORMAT(A8,4I4,60E14.6)
+C    5,FCNPF,TFN4(L,NZ,NY,NX),WFNRG(1,L),PSIRT(1,L,NZ,NY,NX)
+C    5,CCPOLN,CZPOLN,CPPOLN,ZCPOLI,ZPPOLI
+C    6,(1.0+AMAX1(ZCPOLI/ZCKI,ZPPOLI/ZPKI))
+C    6,VMXO*WTNDL(L,NZ,NY,NX)*TFN4(L,NZ,NY,NX)*FCNPF*WFNRG(1,L) 
+2122  FORMAT(A8,5I4,60E14.6)
 C     ENDIF
 C
 C     TRANSFER NON-STRUCTURAL C,N,P BETWEEN ROOT AND NODULES
 C     FROM NON-STRUCTURAL C,N,P CONCENTRATION DIFFERENCES
 C
 C     CPOOLR,ZPOOLR,PPOOLR=root non-structural C,N,P mass
+C     CPOOLN,ZPOOLN,PPOOLN=nonstructural C,N,P in bacteria
 C     WTRTD=root C mass
 C     WTNDL=bacterial C mass
 C     WTNDI=initial bacterial mass at infection
-C     FXRN=rate constant for plant-bacteria nonstructural C,N,P exchange
-C     CCNGR=parameter to calculate nonstructural C,N,P exchange
-C     CCNDLR=bacteria:root ratio
-C     XFRC,XFRN,XFRC=nonstructural C,N,P transfer
-C     CPOOLN,ZPOOLN,PPOOLN=nonstructural C,N,P in bacteria
+C     FXRN=rate constant for plant-bacteria nonstructural C,N,P
+C        exchange
+C     XFRC,XFRN,XFRC=nonstructural root-bacteria C,N,P transfer
 C
       IF(CPOOLR(1,L,NZ,NY,NX).GT.ZEROP(NZ,NY,NX)
-     2.AND.WTRTD(1,L,NZ,NY,NX).GT.ZEROL(NZ,NY,NX))THEN
-      CCNDLR=WTNDL(L,NZ,NY,NX)/WTRTD(1,L,NZ,NY,NX)
+     2.AND.WTRTD(1,L,NZ,NY,NX).GT.ZEROP2(NZ,NY,NX)
+     3.AND.(ISTYP(NZ,NY,NX).NE.0
+     4.OR.IDAY(10,NB1(NZ,NY,NX),NZ,NY,NX).EQ.0))THEN
       WTRTD1=WTRTD(1,L,NZ,NY,NX)
       WTNDL1=AMIN1(WTRTD(1,L,NZ,NY,NX)
      2,AMAX1(WTNDI*AREA(3,NU(NY,NX),NY,NX),WTNDL(L,NZ,NY,NX)))
       WTRTDT=WTRTD1+WTNDL1
       IF(WTRTDT.GT.ZEROP(NZ,NY,NX))THEN
-      FXRNX=FXRN(INTYP(NZ,NY,NX))/(1.0+CCNDLR/CCNGR)
-C    2/(1.0+CCNDLR/(CCNGR*FXRN(INTYP(NZ,NY,NX))))
       CPOOLD=(CPOOLR(1,L,NZ,NY,NX)*WTNDL1
      2-CPOOLN(L,NZ,NY,NX)*WTRTD1)/WTRTDT 
-      XFRC=FXRNX*CPOOLD
+      XFRC=FXRN(INTYP(NZ,NY,NX))*CPOOLD
       CPOOLR(1,L,NZ,NY,NX)=CPOOLR(1,L,NZ,NY,NX)-XFRC
       CPOOLN(L,NZ,NY,NX)=CPOOLN(L,NZ,NY,NX)+XFRC 
       CPOOLT=CPOOLR(1,L,NZ,NY,NX)+CPOOLN(L,NZ,NY,NX)
       IF(CPOOLT.GT.ZEROP(NZ,NY,NX))THEN
       ZPOOLD=(ZPOOLR(1,L,NZ,NY,NX)*CPOOLN(L,NZ,NY,NX)
      2-ZPOOLN(L,NZ,NY,NX)*CPOOLR(1,L,NZ,NY,NX))/CPOOLT 
-      XFRN=FXRNX*ZPOOLD 
+      XFRN=FXRN(INTYP(NZ,NY,NX))*ZPOOLD
       PPOOLD=(PPOOLR(1,L,NZ,NY,NX)*CPOOLN(L,NZ,NY,NX)
      2-PPOOLN(L,NZ,NY,NX)*CPOOLR(1,L,NZ,NY,NX))/CPOOLT 
-      XFRP=FXRNX*PPOOLD 
+      XFRP=FXRN(INTYP(NZ,NY,NX))*PPOOLD 
       ZPOOLR(1,L,NZ,NY,NX)=ZPOOLR(1,L,NZ,NY,NX)-XFRN
       PPOOLR(1,L,NZ,NY,NX)=PPOOLR(1,L,NZ,NY,NX)-XFRP
       ZPOOLN(L,NZ,NY,NX)=ZPOOLN(L,NZ,NY,NX)+XFRN 
       PPOOLN(L,NZ,NY,NX)=PPOOLN(L,NZ,NY,NX)+XFRP 
-C     IF((I/30)*30.EQ.I.AND.J.EQ.12)THEN
-C     WRITE(*,2122)'NODEX',I,J,NZ,L,XFRC,XFRN,XFRP
-C    3,WTRTD(1,L,NZ,NY,NX),WTNDL1,CPOOLT,CCNDLR,FXRNX
+C     IF(NZ.EQ.2.AND.L.EQ.6)THEN
+C     WRITE(*,2122)'NODEX',I,J,NFZ,NZ,L
+C    3,XFRC,XFRN,XFRP
+C    3,WTRTD(1,L,NZ,NY,NX),WTNDL1,CPOOLT
 C    4,WTNDL(L,NZ,NY,NX),WTNDLN(L,NZ,NY,NX),WTNDLP(L,NZ,NY,NX)
 C    2,CPOOLN(L,NZ,NY,NX),ZPOOLN(L,NZ,NY,NX),PPOOLN(L,NZ,NY,NX)
 C    3,CPOOLR(1,L,NZ,NY,NX),ZPOOLR(1,L,NZ,NY,NX),PPOOLR(1,L,NZ,NY,NX)
@@ -6525,9 +7182,11 @@ C     WHEN SEASONAL STORAGE C IS NOT BEING MOBILIZED
 C
 C     IDTHB=branch living flag: 0=alive,1=dead
 C     ATRP=hourly leafout counter
-C     ATRPX=number of hours required to initiate remobilization of storage C for leafout
+C     ATRPX=number of hours required to initiate remobilization of
+C        storage C for leafout
 C     WTLSB=leaf+petiole mass
-C     CPOOL,ZPOOL,PPOOL=non-structural C,N,P mass in branch 
+C     CPOOL,ZPOOL,PPOOL=non-structural C,N,P mass in branch
+C     XFRC,XFRN,XFRP=interbranch nonstructural C,N,P transfer 
 C
       IF(NBR(NZ,NY,NX).GT.1)THEN
       WTPLTT=0.0
@@ -6568,97 +7227,55 @@ C
 305   CONTINUE
       ENDIF
 C
-C     TRANSFER NON-STRUCTURAL C,N,P AMONG BRANCH STALK RESERVES
-C     FROM NON-STRUCTURAL C,N,P CONCENTRATION DIFFERENCES
-C
-C     IDTHB=branch living flag: 0=alive,1=dead
-C     WVSTKB=stalk sapwood mass
-C     WTRSVB,WTRSBN,WTRSBP=stalk reserve C,N,P mass
-C     IDAY(7,=start of grain filling and setting max seed size
-C
-      IF(NBR(NZ,NY,NX).GT.1)THEN
-      WTSTKT=0.0
-      WTRSVT=0.0
-      WTRSNT=0.0
-      WTRSPT=0.0
-      DO 330 NB=1,NBR(NZ,NY,NX)
-      IF(IDTHB(NB,NZ,NY,NX).EQ.0)THEN
-      IF(IDAY(7,NB,NZ,NY,NX).NE.0)THEN
-      WTSTKT=WTSTKT+WVSTKB(NB,NZ,NY,NX)
-      WTRSVT=WTRSVT+WTRSVB(NB,NZ,NY,NX)
-      WTRSNT=WTRSNT+WTRSBN(NB,NZ,NY,NX)
-      WTRSPT=WTRSPT+WTRSBP(NB,NZ,NY,NX)
-      ENDIF
-      ENDIF
-330   CONTINUE
-      IF(WTSTKT.GT.ZEROP(NZ,NY,NX)
-     2.AND.WTRSVT.GT.ZEROP(NZ,NY,NX))THEN
-      DO 335 NB=1,NBR(NZ,NY,NX)
-      IF(IDTHB(NB,NZ,NY,NX).EQ.0)THEN
-      IF(IDAY(7,NB,NZ,NY,NX).NE.0)THEN
-      WTRSVD=WTRSVT*WVSTKB(NB,NZ,NY,NX)
-     2-WTRSVB(NB,NZ,NY,NX)*WTSTKT
-      XFRC=0.1*WTRSVD/WTSTKT
-      WTRSVB(NB,NZ,NY,NX)=WTRSVB(NB,NZ,NY,NX)+XFRC
-      WTRSND=WTRSNT*WTRSVB(NB,NZ,NY,NX)
-     2-WTRSBN(NB,NZ,NY,NX)*WTRSVT
-      XFRN=0.1*WTRSND/WTRSVT
-      WTRSBN(NB,NZ,NY,NX)=WTRSBN(NB,NZ,NY,NX)+XFRN
-      WTRSPD=WTRSPT*WTRSVB(NB,NZ,NY,NX)
-     2-WTRSBP(NB,NZ,NY,NX)*WTRSVT
-      XFRP=0.1*WTRSPD/WTRSVT
-      WTRSBP(NB,NZ,NY,NX)=WTRSBP(NB,NZ,NY,NX)+XFRP
-      ENDIF
-      ENDIF
-335   CONTINUE
-      ENDIF
-      ENDIF
-C
 C     TRANSFER NON-STRUCTURAL C,N,P BWTWEEN ROOT AND MYCORRHIZAE
 C     IN EACH ROOTED SOIL LAYER FROM NON-STRUCTURAL C,N,P
 C     CONCENTRATION DIFFERENCES
 C
 C     MY=mycorrhizal:1=no,2=yes
-C     CPOOLR,ZPOOLR,PPOOLR=non-structural C,N,P mass in 1:root,2:mycorrhizae
+C     CPOOLR,ZPOOLR,PPOOLR=non-structural C,N,P mass in
+C        1:root,2:mycorrhizae
 C     WTRTD=1:root,2:mycorrhizal C mass
-C     FSNK=min ratio of branch or mycorrhizae to root for calculating C transfer 
-C     FMYC=rate constant for root-mycorrhizal C,N,P exchange (h-1) 
+C     FSNK=min ratio of branch or mycorrhizae to root for calculating
+C        C transfer 
+C     FMYC=rate constant for root-mycorrhizal C,N,P exchange 
+C     XFRC,XFRN,XFRP=root-mycorrhizal nonstructural C,N,P transfer 
 C
       IF(MY(NZ,NY,NX).EQ.2)THEN
       DO 425 L=NU(NY,NX),NIX(NZ,NY,NX)
-      IF(CPOOLR(1,L,NZ,NY,NX).GT.ZEROP(NZ,NY,NX)
-     2.AND.WTRTD(1,L,NZ,NY,NX).GT.ZEROL(NZ,NY,NX))THEN
-      WTRTD1=WTRTD(1,L,NZ,NY,NX)
-      WTRTD2=AMIN1(WTRTD(1,L,NZ,NY,NX),AMAX1(FSNK
-     2*WTRTD(1,L,NZ,NY,NX),WTRTD(2,L,NZ,NY,NX)))
+      CPOOLR1=AMAX1(0.0,CPOOLR(1,L,NZ,NY,NX))
+      CPOOLR2=AMAX1(0.0,CPOOLR(2,L,NZ,NY,NX))
+      WTRTD1=AMAX1(0.0,WTRTD(1,L,NZ,NY,NX))
+      WTRTD2=AMAX1(0.0,AMIN1(WTRTD(1,L,NZ,NY,NX),AMAX1(FSNK
+     2*WTRTD(1,L,NZ,NY,NX),WTRTD(2,L,NZ,NY,NX))))
       WTPLTT=WTRTD1+WTRTD2
       IF(WTPLTT.GT.ZEROP(NZ,NY,NX))THEN
-      CPOOLD=(CPOOLR(1,L,NZ,NY,NX)*WTRTD2
-     2-CPOOLR(2,L,NZ,NY,NX)*WTRTD1)/WTPLTT
+      CPOOLD=(CPOOLR1*WTRTD2-CPOOLR2*WTRTD1)/WTPLTT
       XFRC=FMYC*CPOOLD
       CPOOLR(1,L,NZ,NY,NX)=CPOOLR(1,L,NZ,NY,NX)-XFRC
       CPOOLR(2,L,NZ,NY,NX)=CPOOLR(2,L,NZ,NY,NX)+XFRC
-      CPOOLT=CPOOLR(1,L,NZ,NY,NX)+CPOOLR(2,L,NZ,NY,NX)
+      CPOOLT=CPOOLR1+CPOOLR2
       IF(CPOOLT.GT.ZEROP(NZ,NY,NX))THEN
-      ZPOOLD=(ZPOOLR(1,L,NZ,NY,NX)*CPOOLR(2,L,NZ,NY,NX)
-     2-ZPOOLR(2,L,NZ,NY,NX)*CPOOLR(1,L,NZ,NY,NX))/CPOOLT 
+      ZPOOLR1=AMAX1(0.0,ZPOOLR(1,L,NZ,NY,NX))
+      ZPOOLR2=AMAX1(0.0,ZPOOLR(2,L,NZ,NY,NX))
+      PPOOLR1=AMAX1(0.0,PPOOLR(1,L,NZ,NY,NX))
+      PPOOLR2=AMAX1(0.0,PPOOLR(2,L,NZ,NY,NX))
+      ZPOOLD=(ZPOOLR1*CPOOLR2-ZPOOLR2*CPOOLR1)/CPOOLT 
       XFRN=FMYC*ZPOOLD 
-      PPOOLD=(PPOOLR(1,L,NZ,NY,NX)*CPOOLR(2,L,NZ,NY,NX)
-     2-PPOOLR(2,L,NZ,NY,NX)*CPOOLR(1,L,NZ,NY,NX))/CPOOLT 
-      XFRP=FMYC*PPOOLD 
+      PPOOLD=(PPOOLR1*CPOOLR2-PPOOLR2*CPOOLR1)/CPOOLT 
+      XFRP=FMYC*PPOOLD
       ZPOOLR(1,L,NZ,NY,NX)=ZPOOLR(1,L,NZ,NY,NX)-XFRN
       ZPOOLR(2,L,NZ,NY,NX)=ZPOOLR(2,L,NZ,NY,NX)+XFRN
       PPOOLR(1,L,NZ,NY,NX)=PPOOLR(1,L,NZ,NY,NX)-XFRP
       PPOOLR(2,L,NZ,NY,NX)=PPOOLR(2,L,NZ,NY,NX)+XFRP
-C     IF(L.EQ.NIX(NZ,NY,NX))THEN
-C     WRITE(*,9873)'MYCO',I,J,NZ,L,XFRC,XFRN,XFRP
-C    2,CPOOLR(1,L,NZ,NY,NX),WTRTD(1,L,NZ,NY,NX)
-C    3,CPOOLR(2,L,NZ,NY,NX),WTRTD2
-C    3,WTPLTT,ZPOOLR(1,L,NZ,NY,NX),ZPOOLR(2,L,NZ,NY,NX)
-C    4,PPOOLR(1,L,NZ,NY,NX),PPOOLR(2,L,NZ,NY,NX),CPOOLT 
-9873  FORMAT(A8,4I4,20E24.16)
+C     IF(NZ.EQ.2.AND.L.EQ.6)THEN
+C     WRITE(*,9873)'MYCO',I,J,NFZ,NZ,L,XFRC,XFRN,XFRP
+C    2,CPOOLR(1,L,NZ,NY,NX),CPOOLR(2,L,NZ,NY,NX)
+C    3,WTRTD(1,L,NZ,NY,NX),WTRTD2,WTPLTT 
+C    3,ZPOOLR(1,L,NZ,NY,NX),ZPOOLR(2,L,NZ,NY,NX)
+C    4,ZPOOLD,CPOOLT 
+C    4,PPOOLR(1,L,NZ,NY,NX),PPOOLR(2,L,NZ,NY,NX) 
+9873  FORMAT(A8,5I4,20E18.6)
 C     ENDIF
-      ENDIF
       ENDIF
       ENDIF
 425   CONTINUE
@@ -6667,35 +7284,43 @@ C
 C     TRANSFER ROOT NON-STRUCTURAL C,N,P TO SEASONAL STORAGE
 C     IN PERENNIALS 
 C
-      IF(IFLGZ.EQ.1.AND.ISTYP(NZ,NY,NX).NE.0)THEN
-      DO 5545 N=1,MY(NZ,NY,NX)
+C     ISTYP=growth habit:0=annual,1=perennial from PFT file
+C     IFLGZR=remobilization flag
+C     FXFR=rate constant for root-storage nonstructural C,N,P
+C        exchange
+C     XFRCX,XFRNX,XFRPX=nonstructural C,N,P transfer unconstrained
+C        by C,N,P
+C     XFRC,XFRN,XFRP=nonstructural C,N,P transfer constrained 
+C        by C,N,P
+C     CPOOLR,ZPOOLR,PPOOLR=non-structural C,N,P mass in root
+C     WTRVC,WTRVN,WTRVP=storage C,N,P
+C     XNFH=time step from ‘wthr.f’
+C
+      IF(IFLGZR.EQ.1.AND.ISTYP(NZ,NY,NX).NE.0)THEN
       DO 5550 L=NU(NY,NX),NI(NZ,NY,NX)
-      IF(CCPOLR(N,L,NZ,NY,NX).GT.ZERO)THEN
-      CNL=CCPOLR(N,L,NZ,NY,NX)/(CCPOLR(N,L,NZ,NY,NX)
-     2+CZPOLR(N,L,NZ,NY,NX)/CNKI)
-      CPL=CCPOLR(N,L,NZ,NY,NX)/(CCPOLR(N,L,NZ,NY,NX)
-     2+CPPOLR(N,L,NZ,NY,NX)/CPKI)
-      ELSE
-      CNL=0.0
-      CPL=0.0
-      ENDIF
       XFRCX=FXFR(IBTYP(NZ,NY,NX))
-     2*AMAX1(0.0,CPOOLR(N,L,NZ,NY,NX))
+     2*AMAX1(0.0,CPOOLR(1,L,NZ,NY,NX))*XNFH
       XFRNX=FXFR(IBTYP(NZ,NY,NX))
-     2*AMAX1(0.0,ZPOOLR(N,L,NZ,NY,NX))*(1.0+CNL)
+     2*AMAX1(0.0,ZPOOLR(1,L,NZ,NY,NX))*XNFH
       XFRPX=FXFR(IBTYP(NZ,NY,NX))
-     2*AMAX1(0.0,PPOOLR(N,L,NZ,NY,NX))*(1.0+CPL)
+     2*AMAX1(0.0,PPOOLR(1,L,NZ,NY,NX))*XNFH
       XFRC=AMIN1(XFRCX,XFRNX/CNMN,XFRPX/CPMN)
-      XFRN=AMIN1(XFRNX,XFRC*CNMX,XFRPX*CNMX/CPMN*0.5)
-      XFRP=AMIN1(XFRPX,XFRC*CPMX,XFRNX*CPMX/CNMN*0.5)
-      CPOOLR(N,L,NZ,NY,NX)=CPOOLR(N,L,NZ,NY,NX)-XFRC
+      XFRN=AMIN1(XFRNX,XFRC*CNMX,XFRPX*CNMX/CPMN)
+      XFRP=AMIN1(XFRPX,XFRC*CPMX,XFRNX*CPMX/CNMN)
+      CPOOLR(1,L,NZ,NY,NX)=CPOOLR(1,L,NZ,NY,NX)-XFRC
       WTRVC(NZ,NY,NX)=WTRVC(NZ,NY,NX)+XFRC
-      ZPOOLR(N,L,NZ,NY,NX)=ZPOOLR(N,L,NZ,NY,NX)-XFRN
+      ZPOOLR(1,L,NZ,NY,NX)=ZPOOLR(1,L,NZ,NY,NX)-XFRN
       WTRVN(NZ,NY,NX)=WTRVN(NZ,NY,NX)+XFRN
-      PPOOLR(N,L,NZ,NY,NX)=PPOOLR(N,L,NZ,NY,NX)-XFRP
+      PPOOLR(1,L,NZ,NY,NX)=PPOOLR(1,L,NZ,NY,NX)-XFRP
       WTRVP(NZ,NY,NX)=WTRVP(NZ,NY,NX)+XFRP
+C     IF(NZ.EQ.1)THEN
+C     WRITE(*,9871)'STORE',I,J,NFZ,NZ,L,FXFR(IBTYP(NZ,NY,NX))
+C    2,XFRC,XFRN,XFRP,XFRCX,XFRNX,XFRPX 
+C    2,CPOOLR(1,L,NZ,NY,NX),ZPOOLR(1,L,NZ,NY,NX),PPOOLR(1,L,NZ,NY,NX)
+C    3,WTRVC(NZ,NY,NX),WTRVN(NZ,NY,NX),WTRVP(NZ,NY,NX) 
+9871  FORMAT(A8,5I4,20E12.4)
+C     ENDIF
 5550  CONTINUE
-5545  CONTINUE
       ENDIF
 C
 C     ROOT AND NODULE TOTALS
@@ -6734,10 +7359,15 @@ C     OF TOTAL SINK STRENGTH OF ROOTS IN ALL SOIL LAYERS
 C
 C     ISTYP=growth habit:0=annual,1=perennial from PFT file
 C     WTLS,WTRT=total PFT leaf+petiole,root C mass
-C     FWTC,FWTS,FWTR=canopy,root system,root layer sink weighting factor
+C     FWTC,FWTS,FWTR=canopy,root system,root layer sink 
+C        weighting factor
 C     RLNT,RTNT=root layer,root system sink strength
 C
-C     IF(ISTYP(NZ,NY,NX).EQ.1)THEN
+C     IF(ISTYP(NZ,NY,NX).EQ.0
+C    2.OR.(VRNS(NB1(NZ,NY,NX),NZ,NY,NX)
+C    3.GE.VRNL(NB1(NZ,NY,NX),NZ,NY,NX)
+C    4.AND.VRNF(NB1(NZ,NY,NX),NZ,NY,NX)
+C    5.LT.VRNX(NB1(NZ,NY,NX),NZ,NY,NX)))THEN
       IF(WTLS(NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
       FWTC=AMIN1(1.0,0.667*WTRT(NZ,NY,NX)/WTLS(NZ,NY,NX))
       ELSE
@@ -6748,10 +7378,6 @@ C     IF(ISTYP(NZ,NY,NX).EQ.1)THEN
       ELSE
       FWTS=1.0
       ENDIF
-C     ELSE
-C     FWTC=1.0
-C     FWTS=1.0
-C     ENDIF
       DO 290 L=NU(NY,NX),NI(NZ,NY,NX)
       IF(RTNT(1).GT.ZEROP(NZ,NY,NX))THEN
       FWTR(L)=AMAX1(0.0,RLNT(1,L)/RTNT(1))
@@ -6777,14 +7403,20 @@ C     IDTHB=branch living flag: 0=alive,1=dead
 C     ISTYP=growth habit:0=annual,1=perennial from PFT file
 C     IDAY(8,=end date for setting final seed number
 C     FWTB=branch sink weighting factor
-C     PTSHT=rate constant for equilibrating shoot-root nonstructural C concn from PFT file
-C     PTRT=allocation to leaf+petiole used to modify PTSHT in annuals
-C     FWTC,FWTS,FWTR=canopy,root system,root layer sink weighting factor
-C     FWOOD,FWOODN,FWOODP=C,N,P woody fraction in root:0=woody,1=non-woody
+C     PTSHT=rate constant for equilibrating shoot-root 
+C        nonstructural C concentration from PFT file
+C     PTRT=allocation to leaf+petiole used to simulate phenology
+C        effect on shoot-root C transfer
+C     FWTC,FWTS,FWTR=canopy,root system,root layer sink 
+C        weighting factor
+C     FWOOD,FWOODN,FWOODP=C,N,P woody fraction in root:0=woody,
+C        1=non-woody
 C     FWODB=C woody fraction in branch:0=woody,1=non-woody
-C     FSNK=min ratio of branch or mycorrhizae to root for calculating C transfer 
+C     FSNK=min ratio of branch or mycorrhizae to root for 
+C        calculating C transfer 
 C     CPOOL,ZPOOL,PPOOL=non-structural C,N,P mass in branch
 C     CPOOLR,ZPOOLR,PPOOLR=non-structural C,N,P mass in root
+C     XFRC,XFRN,XFRC=nonstructural shoot-root C,N,P transfer
 C
       DO 310 NB=1,NBR(NZ,NY,NX)
       IF(IDTHB(NB,NZ,NY,NX).EQ.0)THEN
@@ -6794,13 +7426,13 @@ C
       FWTB(NB)=1.0
       ENDIF
       IF(ISTYP(NZ,NY,NX).EQ.0)THEN
-      PTSHTR=PTSHT(NZ,NY,NX)*PTRT**0.167
+      PTSHTR=PTSHT(NZ,NY,NX)*PTRT**0.25
       ELSE
       PTSHTR=PTSHT(NZ,NY,NX) 
       ENDIF
       DO 415 L=NU(NY,NX),NI(NZ,NY,NX)
-      WTLSBX=WTLSB(NB,NZ,NY,NX)*FWODB(1)*FWTR(L)*FWTC 
-      WTRTLX=WTRTL(1,L,NZ,NY,NX)*FWODR(1)*FWTB(NB)*FWTS 
+      WTLSBX=WTLSB(NB,NZ,NY,NX)*FWODB(1,NZ)*FWTR(L)*FWTC 
+      WTRTLX=WTRTL(1,L,NZ,NY,NX)*FWODR(1,NZ)*FWTB(NB)*FWTS 
       WTLSBB=AMAX1(0.0,WTLSBX,FSNK*WTRTLX)
       WTRTLR=AMAX1(0.0,WTRTLX,FSNK*WTLSBX)
       WTPLTT=WTLSBB+WTRTLR
@@ -6808,7 +7440,7 @@ C
       CPOOLB=AMAX1(0.0,CPOOL(NB,NZ,NY,NX)*FWTR(L))
       CPOOLS=AMAX1(0.0,CPOOLR(1,L,NZ,NY,NX)*FWTB(NB))
       CPOOLD=(CPOOLB*WTRTLR-CPOOLS*WTLSBB)/WTPLTT
-      XFRC=PTSHTR*CPOOLD
+      XFRC=PTSHTR*CPOOLD*XNFH
       CPOOL(NB,NZ,NY,NX)=CPOOL(NB,NZ,NY,NX)-XFRC
       CPOOLR(1,L,NZ,NY,NX)=CPOOLR(1,L,NZ,NY,NX)+XFRC
       CPOOLT=CPOOLS+CPOOLB
@@ -6816,11 +7448,11 @@ C
       ZPOOLB=AMAX1(0.0,ZPOOL(NB,NZ,NY,NX)*FWTR(L))
       ZPOOLS=AMAX1(0.0,ZPOOLR(1,L,NZ,NY,NX)*FWTB(NB))
       ZPOOLD=(ZPOOLB*CPOOLS-ZPOOLS*CPOOLB)/CPOOLT
-      XFRN=PTSHTR*ZPOOLD 
+      XFRN=PTSHTR*ZPOOLD*XNFH 
       PPOOLB=AMAX1(0.0,PPOOL(NB,NZ,NY,NX)*FWTR(L))
       PPOOLS=AMAX1(0.0,PPOOLR(1,L,NZ,NY,NX)*FWTB(NB))
       PPOOLD=(PPOOLB*CPOOLS-PPOOLS*CPOOLB)/CPOOLT
-      XFRP=PTSHTR*PPOOLD 
+      XFRP=PTSHTR*PPOOLD*XNFH 
       ELSE
       XFRN=0.0
       XFRP=0.0
@@ -6829,21 +7461,22 @@ C
       ZPOOLR(1,L,NZ,NY,NX)=ZPOOLR(1,L,NZ,NY,NX)+XFRN
       PPOOL(NB,NZ,NY,NX)=PPOOL(NB,NZ,NY,NX)-XFRP
       PPOOLR(1,L,NZ,NY,NX)=PPOOLR(1,L,NZ,NY,NX)+XFRP
-C     IF(NZ.EQ.2.AND.NB.EQ.1)THEN
-C     WRITE(*,3344)'ROOT',I,J,NX,NY,NZ,NB,L 
+C     IF(NZ.EQ.2.AND.L.EQ.6)THEN
+C     WRITE(*,3344)'ROOT',I,J,NFZ,NX,NY,NZ,NB,L 
 C    2,XFRC,XFRN,XFRP,CPOOL(NB,NZ,NY,NX)
 C    3,CPOOLR(1,L,NZ,NY,NX),ZPOOL(NB,NZ,NY,NX)
 C    3,ZPOOLR(1,L,NZ,NY,NX),FWTB(NB),FWTR(L) 
 C    3,FWTC,FWTS,WTLSBX,WTRTLX,FSNK,FDBK(NB,NZ,NY,NX) 
 C    4,CPOOLD,CPOOLB,WTLSBB,CPOOLS,WTRTLR 
-C    5,FWOOD(1),FWODB(1),WTRTL(1,L,NZ,NY,NX) 
+C    5,FWOOD(1,NZ),FWODB(1,NZ),WTRTL(1,L,NZ,NY,NX) 
 C    6,WTLSB(NB,NZ,NY,NX),RLNT(1,L),RTNT(1)
-3344  FORMAT(A8,7I4,30E12.4)
+3344  FORMAT(A8,8I4,30E12.4)
 C     ENDIF
       ENDIF
 415   CONTINUE
       ENDIF
 310   CONTINUE
+C     ENDIF
 C
 C     TOTAL C,N,P IN EACH BRANCH
 C
@@ -6853,7 +7486,6 @@ C     CO2B,HCOB=aqueous CO2,HCO3-C mass in bundle sheath
 C     CPOOL,ZPOOL,PPOOL=C3 non-structural C,N,P mass
 C     CPOOL,ZPOOL,PPOOL=non-structural C,N,P in branch
 C     CPOLNB,ZPOLNB,PPOLNB=nonstructural C,N,P in bacteria
-C     CPOOLK=total C4 nonstructural C in branch
 C     WTSHTB,WTSHTN,WTSHTP=branch total C,N,P mass
 C     WTRSVB,WTRSBN,WTRSBP=stalk reserve C,N,P mass
 C     WTLFB,WTLFBN,WTLFBP=branch leaf C,N,P mass
@@ -6864,7 +7496,8 @@ C     WTHSKB,WTEARB,WTGRB=branch husk,ear,grain C mass
 C     WTHSBN,WTEABN,WTGRBN=branch husk,ear,grain N mass
 C     WTHSBP,WTEABP,WTGRBP=branch husk,ear,grain P mass
 C     ISTYP=growth habit:0=annual,1=perennial from PFT file
-C     IWTYP=phenology type:0=evergreen,1=cold decid,2=drought decid,3=1+2
+C     IWTYP=phenology type:0=evergreen,1=cold deciduous,2=drought
+C        deciduous,3=cold and drought deciduous
 C     WTRVC,WTRVN,WTRVP=storage C,N,P
 C
 C
@@ -6887,33 +7520,43 @@ C
      2+WTSHBP(NB,NZ,NY,NX)+WTSTBP(NB,NZ,NY,NX)+WTRSBP(NB,NZ,NY,NX)
      3+WTHSBP(NB,NZ,NY,NX)+WTEABP(NB,NZ,NY,NX)+WTGRBP(NB,NZ,NY,NX)
      4+PPOOL(NB,NZ,NY,NX)
+C     IF(NB.EQ.1)THEN
+C     WRITE(*,1009)'WTSHB',I,J,NFZ,NX,NY,NZ,NB
+C    2,WTSHTB(NB,NZ,NY,NX),WTLFB(NB,NZ,NY,NX)
+C    2,WTSHEB(NB,NZ,NY,NX),WTSTKB(NB,NZ,NY,NX),WTRSVB(NB,NZ,NY,NX)
+C    3,WTHSKB(NB,NZ,NY,NX),WTEARB(NB,NZ,NY,NX),WTGRB(NB,NZ,NY,NX)
+C    4,CPOOL(NB,NZ,NY,NX),CPOOLK(NB,NZ,NY,NX)
+C     ENDIF
+1009  FORMAT(A8,7I4,30F16.8)
 320   CONTINUE
 C
 C     TOTAL C,N,P IN ROOTS AND MYCORRHIZAE IN EACH SOIL LAYER
 C
 C     WTRTD=root C mass 
 C     CPOOLR=non-structural C mass in root
-C     HCUPTK,HZUPTK,HPUPTK=net PFT root-soil C,N,P exchange 
-C     UPOMC,UPOMN,UPOMP=net PFT root-soil nonstructl C,N,P exchange 
-C     UPNH4,UPNO3,UPH2P,UPH1P=PFT uptake of NH4,NO3,H2PO4,HPO4
-C     UPNF=PFT N2 fixation
 C
       DO 345 N=1,MY(NZ,NY,NX)
       DO 345 L=NU(NY,NX),NI(NZ,NY,NX)
       WTRTD(N,L,NZ,NY,NX)=WTRTD(N,L,NZ,NY,NX)+CPOOLR(N,L,NZ,NY,NX)
 345   CONTINUE
-      ELSE
-      HCUPTK(NZ,NY,NX)=UPOMC(NZ,NY,NX)
-      HZUPTK(NZ,NY,NX)=UPOMN(NZ,NY,NX)+UPNH4(NZ,NY,NX)+UPNO3(NZ,NY,NX)
-     2+UPNF(NZ,NY,NX)
-      HPUPTK(NZ,NY,NX)=UPOMP(NZ,NY,NX)+UPH2P(NZ,NY,NX)+UPH1P(NZ,NY,NX)
       ENDIF
 C
-C     TRANSFER ABOVE-GROUND C,N,P AT HARVEST OR DISTURBANCE
+C     HARVEST, DISTURBANCE, DEATH
+C
+      IF(NFZ.EQ.1)THEN
+C
+C     TRANSFER ABOVE-GROUND C,N,P 
 C
 C     IHVST=harvest type:0=none,1=grain,2=all above-ground
-C                       ,3=pruning,4=grazing,5=fire,6=herbivory
+C                       ,3=pruning,4=grazing,6=herbivory
 C
+      DO 11 M=1,4
+      CSNM(M,NZ,NY,NX)=0.0
+      ZSNM(M,NZ,NY,NX)=0.0
+      PSNM(M,NZ,NY,NX)=0.0
+11    CONTINUE
+      ZSNI(NZ,NY,NX)=0.0
+      PSNI(NZ,NY,NX)=0.0
       IF((IHVST(NZ,I,NY,NX).GE.0.AND.J.EQ.INT(ZNOON(NY,NX))
      2.AND.IHVST(NZ,I,NY,NX).NE.4.AND.IHVST(NZ,I,NY,NX).NE.6)
      3.OR.(IHVST(NZ,I,NY,NX).EQ.4.OR.IHVST(NZ,I,NY,NX).EQ.6))THEN
@@ -6927,7 +7570,7 @@ C     THIN=thinning:fraction of population removed
 C     CF=clumping factor
 C     HVST=IHVST=0-2:>0=cutting height,<0=fraction of LAI removed
 C          IHVST=3:reduction of clumping factor
-C          IHVST=4 or 6:animal or insect biomass(g LM m-2),IHVST=5:fire
+C          IHVST=4 or 6:animal or insect biomass(g LM m-2) 
 C     THIN=IHVST=0-3,5: fraction of population removed, 
 C          IHVST=4 or 6:specific herbivory rate (g DM g-1 LM d-1)
 C     ARLFC,ARLFT=leaf area of combined canopy, canopy layer
@@ -6939,9 +7582,7 @@ C
       PPX(NZ,NY,NX)=PPX(NZ,NY,NX)*(1.0-THIN(NZ,I,NY,NX))
       PP(NZ,NY,NX)=PP(NZ,NY,NX)*(1.0-THIN(NZ,I,NY,NX))
       ELSE
-C     PPI(NZ,NY,NX)=AMAX1(1.0,0.5*(PPI(NZ,NY,NX)+GRNO(NZ,NY,NX)
-C    2/AREA(3,NU(NY,NX),NY,NX)))
-      PPX(NZ,NY,NX)=PPI(NZ,NY,NX)
+      PPX(NZ,NY,NX)=PPZ(NZ,NY,NX)
       PP(NZ,NY,NX)=PPX(NZ,NY,NX)*AREA(3,NU(NY,NX),NY,NX)
       ENDIF
       IF(IHVST(NZ,I,NY,NX).EQ.3)THEN
@@ -6957,15 +7598,17 @@ C    2/AREA(3,NU(NY,NX),NY,NX)))
       IF(ARLFR+ARLFT(L,NY,NX).GT.ARLFY)THEN
       HVST(NZ,I,NY,NX)=ZL(L-1,NY,NX)+((ARLFY-ARLFR)
      2/ARLFT(L,NY,NX))*(ZL(L,NY,NX)-ZL(L-1,NY,NX))
-      ENDIF
       ELSE
       HVST(NZ,I,NY,NX)=0.0
-      ENDIF 
+      ENDIF
       ARLFR=ARLFR+ARLFT(L,NY,NX)
-C     WRITE(*,6544)'HVST',I,J,L,NZ,IHVST(NZ,I,NY,NX),ARLFC(NY,NX) 
+      ENDIF
+C     IF(NZ.EQ.2)THEN 
+C     WRITE(*,6544)'HVST',I,J,NFZ,L,NZ,IHVST(NZ,I,NY,NX),ARLFC(NY,NX) 
 C    2,ARLFT(L,NY,NX),ARLFY,ARLFR,ZL(L,NY,NX),ZL(L-1,NY,NX)
-C    3,ARLFV(L,NZ,NY,NX),HVST(NZ,I,NY,NX)
-6544  FORMAT(A8,5I4,20E12.4)
+C    3,ARLFV(L,NZ,NY,NX)
+6544  FORMAT(A8,6I4,20E12.4)
+C     ENDIF
 9875  CONTINUE
       ENDIF
       WHVSTT=0.0
@@ -6983,10 +7626,10 @@ C
 C     WTSHTA=average biomass in landscape grazing section
 C     HVST=IHVST=0-2:>0=cutting height,<0=fraction of LAI removed
 C          IHVST=3:reduction of clumping factor
-C          IHVST=4 or 6:animal or insect biomass(g LM m-2),IHVST=5:fire
-C     THIN=IHVST=0-3,5: fraction of population removed, 
+C          IHVST=4 or 6:animal or insect biomass(g LM m-2)
+C     THIN=IHVST=0-3: fraction of population removed, 
 C          IHVST=4 or 6:specific herbivory rate (g DM g-1 LM d-1)
-C     WHVSTT=total phytomass grazed, removed
+C     WHVSTT=total phytomass grazed or removed
 C     TFN3=temperature function for canopy growth
 C     CCPOLP=nonstructural C concentration in canopy
 C     CCPLNP=nonstructural C concentration in canopy nodules
@@ -7008,7 +7651,8 @@ C
 C     EHVST(1,1,EHVST(1,2,EHVST(1,3,EHVST(1,4=fraction of 
 C           leaf,non-foliar,woody, standing dead removed from PFT
 C     EHVST(2,1,EHVST(2,2,EHVST(2,3,EHVST(2,4=fraction of 
-C           leaf,non-foliar,woody, standing dead removed from ecosyst
+C           leaf,non-foliar,woody, standing dead removed from
+C        ecosystem
 C     WHVSL*,WHVSC*,WHVSN=leaf,nonstructural,bacteria removed
 C     WTLF=PFT leaf C mass
 C     WHVXXX=grazing requirement unmet by leaf
@@ -7024,8 +7668,8 @@ C
 C     OTHER NON-FOLIAR GRAZED,REMOVED
 C
 C     WTSHE,WTHSK,WTEAR,WTGR=PFT petiole,husk,ear,grain C mass
-C     WHVSH*,WHVHS*,WHVEA*,WHVGR*,WHVSC*=
-C            petiole,husk,ear,grain,nonstructural C removed
+C     WHVSH*,WHVHS*,WHVEA*,WHVGR*,WHVSC*
+C        =petiole,husk,ear,grain,nonstructural C removed
 C     WHVXXX=grazing requirement unmet by non-foliar removal
 C
       WTSHTT=WTSHE(NZ,NY,NX)+WTHSK(NZ,NY,NX)+WTEAR(NZ,NY,NX)
@@ -7087,8 +7731,8 @@ C     ALLOCATE UNMET DEMAND FOR GRAZING TO LEAF,PETIOLE,HUSK
 C     EAR,GRAIN
 C
 C     WHVSL*,WHVSC*,WHVSN=leaf,nonstructural,bacteria removed
-C     WHVSH*,WHVHS,WHVEA,WHVGR,WHVSC=
-C            petiole,husk,ear,grain,nonstructural C removed
+C     WHVSH*,WHVHS,WHVEA,WHVGR,WHVSC
+C        =petiole,husk,ear,grain,nonstructural C removed
 C
       IF(WHVXXX.GT.0.0)THEN
       WHVSLY=AMIN1(WTLF(NZ,NY,NX)-WHVSLF-WHVSCL,WHVXXX) 
@@ -7139,14 +7783,14 @@ C
 C     HARVEST REMOVAL FROM TOP TO BOTTOM OF CANOPY
 C
 C     IHVST=harvest type:0=none,1=grain,2=all above-ground
-C                       ,3=pruning,4=grazing,5=fire,6=herbivory
+C                       ,3=pruning,4=grazing,6=herbivory
 C     ZL=height to bottom of each canopy layer
 C     FHGT=fraction of canopy layer height not harvested
 C     FHVST=fraction of canopy layer mass not harvested 
 C     THIN=IHVST=0-3,5: fraction of population removed, 
 C          IHVST=4 or 6:specific herbivory rate (g DM g-1 LM d-1)
 C     EHVST(1,1,EHVST(1,2,EHVST(1,3,EHVST(1,4=fraction of 
-C           leaf,non-foliar,woody, standing dead removed from PFT
+C        leaf,non-foliar,woody, standing dead removed from PFT
 C
       DO 9865 L=JC,1,-1
       IF(IHVST(NZ,I,NY,NX).NE.4.AND.IHVST(NZ,I,NY,NX).NE.6)THEN
@@ -7179,7 +7823,7 @@ C
 C     CUT LEAVES AT HARVESTED NODES AND LAYERS
 C
 C     IHVST=harvest type:0=none,1=grain,2=all above-ground
-C                       ,3=pruning,4=grazing,5=fire,6=herbivory
+C                       ,3=pruning,4=grazing,6=herbivory
 C     WTLF=PFT leaf C mass
 C     WGLFBL=branch leaf C mass in canopy layer
 C     WHVBSL,WHVSLF=layer,total leaf C mass removed
@@ -7188,7 +7832,7 @@ C     FHVST=fraction of leaf node mass not harvested
 C
       DO 9855 NB=1,NBR(NZ,NY,NX)
       IF((IHVST(NZ,I,NY,NX).EQ.4.OR.IHVST(NZ,I,NY,NX).EQ.6)
-     2.AND.WTLF(NZ,NY,NX).GT.ZEROL(NZ,NY,NX))THEN
+     2.AND.WTLF(NZ,NY,NX).GT.ZEROP2(NZ,NY,NX))THEN
       WHVSBL=WHVSLF*AMAX1(0.0,WGLFBL(L,NB,NZ,NY,NX))/WTLF(NZ,NY,NX)
       ELSE
       WHVSBL=0.0
@@ -7220,18 +7864,18 @@ C     FWODB=C woody fraction in other organs:0=woody,1=non-woody
 C     FWODLN,FWODLP=N,P woody fraction in leaf:0=woody,1=non-woody     
 C
       WHVSBL=WHVSBL-(1.0-FHVST)*WGLFL(L,K,NB,NZ,NY,NX)
-      WTHTH1=WTHTH1+(1.0-FHVSH)*WGLFL(L,K,NB,NZ,NY,NX)*FWODB(1)
-      WTHNH1=WTHNH1+(1.0-FHVSH)*WGLFLN(L,K,NB,NZ,NY,NX)*FWODLN(1)
-      WTHPH1=WTHPH1+(1.0-FHVSH)*WGLFLP(L,K,NB,NZ,NY,NX)*FWODLP(1)
-      WTHTX1=WTHTX1+(FHVSH-FHVST)*WGLFL(L,K,NB,NZ,NY,NX)*FWODB(1) 
-      WTHNX1=WTHNX1+(FHVSH-FHVST)*WGLFLN(L,K,NB,NZ,NY,NX)*FWODLN(1) 
-      WTHPX1=WTHPX1+(FHVSH-FHVST)*WGLFLP(L,K,NB,NZ,NY,NX)*FWODLP(1) 
-      WTHTH3=WTHTH3+(1.0-FHVSH)*WGLFL(L,K,NB,NZ,NY,NX)*FWODB(0)
-      WTHNH3=WTHNH3+(1.0-FHVSH)*WGLFLN(L,K,NB,NZ,NY,NX)*FWODLN(0)
-      WTHPH3=WTHPH3+(1.0-FHVSH)*WGLFLP(L,K,NB,NZ,NY,NX)*FWODLP(0)
-      WTHTX3=WTHTX3+(FHVSH-FHVST)*WGLFL(L,K,NB,NZ,NY,NX)*FWODB(0) 
-      WTHNX3=WTHNX3+(FHVSH-FHVST)*WGLFLN(L,K,NB,NZ,NY,NX)*FWODLN(0) 
-      WTHPX3=WTHPX3+(FHVSH-FHVST)*WGLFLP(L,K,NB,NZ,NY,NX)*FWODLP(0) 
+      WTHTH1=WTHTH1+(1.0-FHVSH)*WGLFL(L,K,NB,NZ,NY,NX)*FWODB(1,NZ)
+      WTHNH1=WTHNH1+(1.0-FHVSH)*WGLFLN(L,K,NB,NZ,NY,NX)*FWODLN(1,NZ)
+      WTHPH1=WTHPH1+(1.0-FHVSH)*WGLFLP(L,K,NB,NZ,NY,NX)*FWODLP(1,NZ)
+      WTHTX1=WTHTX1+(FHVSH-FHVST)*WGLFL(L,K,NB,NZ,NY,NX)*FWODB(1,NZ) 
+      WTHNX1=WTHNX1+(FHVSH-FHVST)*WGLFLN(L,K,NB,NZ,NY,NX)*FWODLN(1,NZ) 
+      WTHPX1=WTHPX1+(FHVSH-FHVST)*WGLFLP(L,K,NB,NZ,NY,NX)*FWODLP(1,NZ) 
+      WTHTH3=WTHTH3+(1.0-FHVSH)*WGLFL(L,K,NB,NZ,NY,NX)*FWODB(0,NZ)
+      WTHNH3=WTHNH3+(1.0-FHVSH)*WGLFLN(L,K,NB,NZ,NY,NX)*FWODLN(0,NZ)
+      WTHPH3=WTHPH3+(1.0-FHVSH)*WGLFLP(L,K,NB,NZ,NY,NX)*FWODLP(0,NZ)
+      WTHTX3=WTHTX3+(FHVSH-FHVST)*WGLFL(L,K,NB,NZ,NY,NX)*FWODB(0,NZ) 
+      WTHNX3=WTHNX3+(FHVSH-FHVST)*WGLFLN(L,K,NB,NZ,NY,NX)*FWODLN(0,NZ) 
+      WTHPX3=WTHPX3+(FHVSH-FHVST)*WGLFLP(L,K,NB,NZ,NY,NX)*FWODLP(0,NZ) 
 C
 C     REMAINING LEAF C,N,P AND AREA
 C
@@ -7261,6 +7905,9 @@ C     ENDIF
       ARSTV(L,NZ,NY,NX)=ARSTV(L,NZ,NY,NX)*FHVST
 9865  CONTINUE
       DO 9835 NB=1,NBR(NZ,NY,NX)
+      IF(JHVST(NZ,I,NY,NX).NE.0)THEN
+      IDTHB(NB,NZ,NY,NX)=1
+      ENDIF
       CPOOLG=0.0
       ZPOOLG=0.0
       PPOOLG=0.0
@@ -7297,10 +7944,10 @@ C
 C     CUT STALK AT HARVESTED NODES AND LAYERS
 C
 C     IHVST=harvest type:0=none,1=grain,2=all above-ground
-C                       ,3=pruning,4=grazing,5=fire,6=herbivory
+C                       ,3=pruning,4=grazing,6=herbivory
 C     WGLF=leaf node C mass
 C     EHVST(1,1,EHVST(1,2,EHVST(1,3,EHVST(1,4=fraction of 
-C           leaf,non-foliar,woody, standing dead removed from PFT
+C        leaf,non-foliar,woody, standing dead removed from PFT
 C     FHVSTK=fraction of internode layer mass not harvested 
 C     THIN=IHVST=0-3,5: fraction of population removed, 
 C          IHVST=4 or 6:specific herbivory rate (g DM g-1 LM d-1)
@@ -7361,7 +8008,7 @@ C
 C     CUT SHEATHS OR PETIOLES AND STALKS HARVESTED NODES AND LAYERS
 C
 C     IHVST=harvest type:0=none,1=grain,2=all above-ground
-C                       ,3=pruning,4=grazing,5=fire,6=herbivory
+C                       ,3=pruning,4=grazing,6=herbivory
 C     WTSHE,WTSHEB=PFT,branch petiole C mass
 C     WHVSBS,WHVSHH=branch, PFT petiole C mass removed
 C     HTNODE=internode length
@@ -7385,7 +8032,7 @@ C
 C     HARVESTED SHEATH OR PETIOLE C,N,P
 C
 C     IHVST=harvest type:0=none,1=grain,2=all above-ground
-C                       ,3=pruning,4=grazing,5=fire,6=herbivory
+C                       ,3=pruning,4=grazing,6=herbivory
 C     WHVSBS=branch petiole C mass removed
 C     WGSHE,WGSHN,WGSHP,WSSHE=node petiole C,N,P,protein mass
 C     FHVSTK=fraction of internode layer mass not harvested 
@@ -7408,24 +8055,24 @@ C
       ENDIF
       ENDIF
       WHVSBS=WHVSBS-(1.0-FHVSTK(K))*WGSHE(K,NB,NZ,NY,NX)
-      WTHTH2=WTHTH2+(1.0-FHVSHK(K))*WGSHE(K,NB,NZ,NY,NX)*FWODB(1)
-      WTHNH2=WTHNH2+(1.0-FHVSHK(K))*WGSHN(K,NB,NZ,NY,NX)*FWODSN(1)
-      WTHPH2=WTHPH2+(1.0-FHVSHK(K))*WGSHP(K,NB,NZ,NY,NX)*FWODSP(1)
+      WTHTH2=WTHTH2+(1.0-FHVSHK(K))*WGSHE(K,NB,NZ,NY,NX)*FWODB(1,NZ)
+      WTHNH2=WTHNH2+(1.0-FHVSHK(K))*WGSHN(K,NB,NZ,NY,NX)*FWODSN(1,NZ)
+      WTHPH2=WTHPH2+(1.0-FHVSHK(K))*WGSHP(K,NB,NZ,NY,NX)*FWODSP(1,NZ)
       WTHTX2=WTHTX2+(FHVSHK(K)-FHVSTK(K))*WGSHE(K,NB,NZ,NY,NX)
-     2*FWODB(1)
+     2*FWODB(1,NZ)
       WTHNX2=WTHNX2+(FHVSHK(K)-FHVSTK(K))*WGSHN(K,NB,NZ,NY,NX)
-     2*FWODSN(1)
+     2*FWODSN(1,NZ)
       WTHPX2=WTHPX2+(FHVSHK(K)-FHVSTK(K))*WGSHP(K,NB,NZ,NY,NX)
-     2*FWODSP(1)
-      WTHTH3=WTHTH3+(1.0-FHVSHK(K))*WGSHE(K,NB,NZ,NY,NX)*FWODB(0)
-      WTHNH3=WTHNH3+(1.0-FHVSHK(K))*WGSHN(K,NB,NZ,NY,NX)*FWODSN(0)
-      WTHPH3=WTHPH3+(1.0-FHVSHK(K))*WGSHP(K,NB,NZ,NY,NX)*FWODSP(0)
+     2*FWODSP(1,NZ)
+      WTHTH3=WTHTH3+(1.0-FHVSHK(K))*WGSHE(K,NB,NZ,NY,NX)*FWODB(0,NZ)
+      WTHNH3=WTHNH3+(1.0-FHVSHK(K))*WGSHN(K,NB,NZ,NY,NX)*FWODSN(0,NZ)
+      WTHPH3=WTHPH3+(1.0-FHVSHK(K))*WGSHP(K,NB,NZ,NY,NX)*FWODSP(0,NZ)
       WTHTX3=WTHTX3+(FHVSHK(K)-FHVSTK(K))*WGSHE(K,NB,NZ,NY,NX)
-     2*FWODB(0)
+     2*FWODB(0,NZ)
       WTHNX3=WTHNX3+(FHVSHK(K)-FHVSTK(K))*WGSHN(K,NB,NZ,NY,NX)
-     2*FWODSN(0)
+     2*FWODSN(0,NZ)
       WTHPX3=WTHPX3+(FHVSHK(K)-FHVSTK(K))*WGSHP(K,NB,NZ,NY,NX)
-     2*FWODSP(0)
+     2*FWODSP(0,NZ)
 C
 C     ACCUMULATE REMAINING SHEATH OR PETIOLE C,N,P AND LENGTH
 C
@@ -7476,10 +8123,12 @@ C     CPOOL,ZPOOL,PPOOL=branch non-structural C,N,P mass
 C     CPOLNB,ZPOLNB,PPOLNB=nonstructural C,N,P in bacteria
 C     WTNDB,WTNDBN,WTNDBP=bacterial C,N,P mass
 C     IHVST=harvest type:0=none,1=grain,2=all above-ground
-C                       ,3=pruning,4=grazing,5=fire,6=herbivory
+C                       ,3=pruning,4=grazing,6=herbivory
 C     FHVST=fraction of leaf+petiole node mass not harvested 
-C     CPOOLG,ZPOOLG,PPOOLG=branch non-structural C,N,P mass after harvest
-C     CPOLNG,ZPOLNG,PPOLNG=nonstructural C,N,P in bacteria after harvest
+C     CPOOLG,ZPOOLG,PPOOLG=branch non-structural C,N,P mass 
+C        after harvest
+C     CPOLNG,ZPOLNG,PPOLNG=nonstructural C,N,P in bacteria 
+C        after harvest
 C     WTNDG,WTNDNG,WTNDPG=bacterial C,N,P mass after harvest
 C     WTLS,WTLSB=total,branch PFT leaf+petiole C mass
 C     WHVSC*=nonstructural C removed
@@ -7515,7 +8164,7 @@ C
       WTNDPG=0.0
       ENDIF
       ELSE
-      IF(WTLS(NZ,NY,NX).GT.ZEROL(NZ,NY,NX))THEN
+      IF(WTLS(NZ,NY,NX).GT.ZEROP2(NZ,NY,NX))THEN
       WTLSBX=AMAX1(0.0,WTLSB(NB,NZ,NY,NX))
       IF(CPOOL(NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
       WHVSCX=AMAX1(0.0,WHVSCP)*WTLSBX/WTLS(NZ,NY,NX)
@@ -7609,15 +8258,15 @@ C
 C     CUT STALKS
 C
 C     IHVST=harvest type:0=none,1=grain,2=all above-ground
-C                       ,3=pruning,4=grazing,5=fire,6=herbivory
+C                       ,3=pruning,4=grazing,6=herbivory
 C     HTSTKX=internode length removed  
 C     HVST=IHVST=0-2:>0=cutting height,<0=fraction of LAI removed
 C          IHVST=3:reduction of clumping factor
-C          IHVST=4 or 6:animal or insect biomass(g LM m-2),IHVST=5:fire
+C          IHVST=4 or 6:animal or insect biomass(g LM m-2) 
 C     FHGT=fraction of canopy layer height not harvested
 C     FHVST=fraction of canopy layer mass not harvested 
 C     EHVST(1,1,EHVST(1,2,EHVST(1,3,EHVST(1,4=fraction of 
-C           leaf,non-foliar,woody, standing dead removed from PFT
+C        leaf,non-foliar,woody, standing dead removed from PFT
 C     THIN=IHVST=0-3,5: fraction of population removed, 
 C          IHVST=4 or 6:specific herbivory rate (g DM g-1 LM d-1)
 C     WTSTK=stalk C mass
@@ -7646,7 +8295,7 @@ C
       FHVSH=1.0
       ENDIF
       ELSE
-      IF(WTSTK(NZ,NY,NX).GT.ZEROL(NZ,NY,NX))THEN
+      IF(WTSTK(NZ,NY,NX).GT.ZEROP2(NZ,NY,NX))THEN
       FHVST=AMAX1(0.0,AMIN1(1.0,1.0-WHVSTH/WTSTK(NZ,NY,NX)))
       FHVSH=FHVST
       ELSE
@@ -7683,13 +8332,13 @@ C
 C     CUT STALK NODES
 C
 C     IHVST=harvest type:0=none,1=grain,2=all above-ground
-C                       ,3=pruning,4=grazing,5=fire,6=herbivory
+C                       ,3=pruning,4=grazing,6=herbivory
 C     HTNODX,HTNODE=stalk height,stalk internode length
 C     FHGTK=fraction of internode length not harvested
 C     THIN=IHVST=0-3,5: fraction of population removed, 
 C          IHVST=4 or 6:specific herbivory rate (g DM g-1 LM d-1)
 C     EHVST(1,1,EHVST(1,2,EHVST(1,3,EHVST(1,4=fraction of 
-C           leaf,non-foliar,woody, standing dead removed from PFT
+C        leaf,non-foliar,woody, standing dead removed from PFT
 C     WTSTK=stalk C mass
 C     WGNODE,WGNODN,WGNODP=node stalk C,N,P mass
 C
@@ -7737,7 +8386,7 @@ C
 C     CUT STALK RESERVES
 C
 C     IHVST=harvest type:0=none,1=grain,2=all above-ground
-C                       ,3=pruning,4=grazing,5=fire,6=herbivory
+C                       ,3=pruning,4=grazing,6=herbivory
 C     WTSTKB=C mass remaining in harvested stalk
 C     WTRSV=stalk reserve C mass
 C     WHVRVH=remaining stalk reserve C mass 
@@ -7783,15 +8432,16 @@ C
 C     CUT REPRODUCTIVE ORGANS
 C
 C     IHVST=harvest type:0=none,1=grain,2=all above-ground
-C                       ,3=pruning,4=grazing,5=fire,6=herbivory
+C                       ,3=pruning,4=grazing,6=herbivory
 C     HVST=IHVST=0-2:>0=cutting height,<0=fraction of LAI removed
 C          IHVST=3:reduction of clumping factor
-C          IHVST=4 or 6:animal or insect biomass(g LM m-2),IHVST=5:fire
+C          IHVST=4 or 6:animal or insect biomass(g LM m-2) 
 C     THIN=IHVST=0-3,5: fraction of population removed, 
 C          IHVST=4 or 6:specific herbivory rate (g DM g-1 LM d-1)
-C     FHVSTG,FHVSTH,FHVSTE=fraction of grain,husk,ear mass not harvested 
+C     FHVSTG,FHVSTH,FHVSTE=fraction of grain,husk,ear mass 
+C        not harvested 
 C     EHVST(1,1,EHVST(1,2,EHVST(1,3,EHVST(1,4=fraction of 
-C           leaf,non-foliar,woody, standing dead removed from PFT
+C        leaf,non-foliar,woody, standing dead removed from PFT
 C     WTHSK,WTEAR,WTGR=PFT husk,ear,grain C mass
 C
       IF(IHVST(NZ,I,NY,NX).NE.4.AND.IHVST(NZ,I,NY,NX).NE.6)THEN
@@ -7851,11 +8501,14 @@ C
      2*WTEABN(NB,NZ,NY,NX)+(1.0-FHVSHG)*WTGRBN(NB,NZ,NY,NX)
       WTHPH2=WTHPH2+(1.0-FHVSHH)*WTHSBP(NB,NZ,NY,NX)+(1.0-FHVSHE)
      2*WTEABP(NB,NZ,NY,NX)+(1.0-FHVSHG)*WTGRBP(NB,NZ,NY,NX)
-      WTHTX2=WTHTX2+(FHVSHH-FHVSTH)*WTHSKB(NB,NZ,NY,NX)+(FHVSHE-FHVSTE)
+      WTHTX2=WTHTX2+(FHVSHH-FHVSTH)*WTHSKB(NB,NZ,NY,NX)
+     2+(FHVSHE-FHVSTE)
      2*WTEARB(NB,NZ,NY,NX)+(FHVSHG-FHVSTG)*WTGRB(NB,NZ,NY,NX)
-      WTHNX2=WTHNX2+(FHVSHH-FHVSTH)*WTHSBN(NB,NZ,NY,NX)+(FHVSHE-FHVSTE)
+      WTHNX2=WTHNX2+(FHVSHH-FHVSTH)*WTHSBN(NB,NZ,NY,NX)
+     2+(FHVSHE-FHVSTE)
      2*WTEABN(NB,NZ,NY,NX)+(FHVSHG-FHVSTG)*WTGRBN(NB,NZ,NY,NX)
-      WTHPX2=WTHPX2+(FHVSHH-FHVSTH)*WTHSBP(NB,NZ,NY,NX)+(FHVSHE-FHVSTE)
+      WTHPX2=WTHPX2+(FHVSHH-FHVSTH)*WTHSBP(NB,NZ,NY,NX)
+     2+(FHVSHE-FHVSTE)
      2*WTEABP(NB,NZ,NY,NX)+(FHVSHG-FHVSTG)*WTGRBP(NB,NZ,NY,NX)
       WTHTG=WTHTG+(1.0-FHVSTG)*WTGRB(NB,NZ,NY,NX)
       WTHNG=WTHNG+(1.0-FHVSTG)*WTGRBN(NB,NZ,NY,NX)
@@ -7895,8 +8548,6 @@ C     WTEARB,WTEABN,WTEABP=ear C,N,P mass
 C     WTGRB,WTGRBN,WTGRBP=grain C,N,P mass 
 C     WVSTKB=stalk sapwood mass
 C     PSILT=canopy water potential
-C     VOLWP=water volume in canopy
-C     VOLWOU,UVOLO=accumulated water loss for water balance calculation 
 C
       CPOOLK(NB,NZ,NY,NX)=0.0
       DO 1325 K=1,25
@@ -7918,33 +8569,34 @@ C
      2+WTSHBP(NB,NZ,NY,NX)+WTSTBP(NB,NZ,NY,NX)+WTRSBP(NB,NZ,NY,NX)
      3+WTHSBP(NB,NZ,NY,NX)+WTEABP(NB,NZ,NY,NX)+WTGRBP(NB,NZ,NY,NX)
      4+PPOOL(NB,NZ,NY,NX))
-      VOLWPX=VOLWP(NZ,NY,NX)
-      WVPLT=AMAX1(0.0,WTLS(NZ,NY,NX)+WVSTK(NZ,NY,NX))
-      APSILT=ABS(PSILT(NZ,NY,NX))
-      FDM=0.16+0.10*APSILT/(0.05*APSILT+2.0)
-      VOLWP(NZ,NY,NX)=1.0E-06*WVPLT/FDM
-      VOLWOU=VOLWOU+VOLWPX-VOLWP(NZ,NY,NX)
-      UVOLO(NY,NX)=UVOLO(NY,NX)+VOLWPX-VOLWP(NZ,NY,NX)
 C
 C     RESET PHENOLOGY, GROWTH STAGE IF STALKS ARE CUT
 C
-C     IBTYP=turnover:0=all abve-grd,1=all leaf+petiole,2=none,3=between 1,2
-C     IGTYP=growth type:0=bryophyte,1=graminoid,2=shrub,tree
+C     IBTYP=turnover rate of above-ground biomass
+C              :0,1=fully deciduous,
+C              :2=needleleaf evergreen
+C              :3=broadleaf evergreen
+C              :4=semi-deciduous
+C              :5=semi-evergreen
+C     IGTYP=growth type:0=bryophyte,1=grass,herb,2=woody shrub,tree
 C     IHVST=harvest type:0=none,1=grain,2=all above-ground
-C                       ,3=pruning,4=grazing,5=fire,6=herbivory
+C                       ,3=pruning,4=grazing,6=herbivory
 C     HVST=IHVST=0-2:>0=cutting height,<0=fraction of LAI removed
 C          IHVST=3:reduction of clumping factor
-C          IHVST=4 or 6:animal or insect biomass(g LM m-2),IHVST=5:fire
+C          IHVST=4 or 6:animal or insect biomass(g LM m-2) 
 C     ZC=canopy height
-C     IWTYP=phenology type:0=evergreen,1=cold decid,2=drought decid,3=1+2
+C     IWTYP=phenology type:0=evergreen,1=cold deciduous,2=drought
+C        deciduous,3=cold and drought deciduous
 C     VRNF,VRNX=leafoff hours,hours required for leafoff
 C     IDAY(1,=emergence date
 C     GROUP=node number required for floral initiation
 C     PSTGI=node number at floral initiation
 C     PSTGF=node number at flowering
 C     VSTGX=leaf number on date of floral initiation 
-C     TGSTGI=total change in vegve node number normalized for maturity group 
-C     TGSTGF=total change in reprve node number normalized for maturity group 
+C     TGSTGI=total change in vegetative node number normalized 
+C        for maturity group 
+C     TGSTGF=total change in reproductive node number normalized 
+C        for maturity group 
 C     FLG4=number of hours with no grain fill
 C     IFLGA=flag for initializing leafout 
 C
@@ -7998,8 +8650,6 @@ C     WTSTK=total PFT stalk C mass
 C     WVSTK=total PFT sapwood C mass
 C     ARSTK=total PFT stalk surface area
 C
-      IF(JHVST(NZ,I,NY,NX).NE.0)IDTHB(NB,NZ,NY,NX)=1
-      IF(PP(NZ,NY,NX).LE.0.0)IDTHB(NB,NZ,NY,NX)=1
 9835  CONTINUE
       WTLS(NZ,NY,NX)=0.0
       WTSTK(NZ,NY,NX)=0.0
@@ -8014,119 +8664,82 @@ C
 9830  CONTINUE
 9840  CONTINUE
 C
-C     ROOT LITTERFALL FROM HARVESTING OR FIRE
+C     ROOT LITTERFALL FROM HARVESTING 
 C
 C     IHVST=harvest type:0=none,1=grain,2=all above-ground
-C                       ,3=pruning,4=grazing,5=fire,6=herbivory
-C     XHVST,XHVSN,XHVSP=fraction of root C,N,P remaining after disturbance
+C                       ,3=pruning,4=grazing,6=herbivory
+C     XHVST,XHVSN,XHVSP=fraction of root C,N,P remaining 
+C        after disturbance
 C     THIN=IHVST=0-3,5: fraction of population removed, 
 C          IHVST=4 or 6:specific herbivory rate (g DM g-1 LM d-1)
 C     THETW=soil water concentration
 C     CORGC=SOC concentration
-C     ITILL=soil disturbance type 1-20:tillage,21=litter removal,22=fire,23-24=drainage
-C     EFIRE=combustion  of N,P relative to C
-C     FHVST,FHVSN,FHVSP=fraction of root layer C,N,P not removed by disturbance
-C     CFOPC,CFOPN,CFOPC=fraction of litterfall C,N,P allocated to litter components
+C     ITILL=soil disturbance type 1-20:tillage,21=litter removal
+C                                 22=fire,23-24=drainage
+C     FHVST,FHVSN,FHVSP=fraction of root layer C,N,P not removed 
+C        by disturbance
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     CPOOLR,ZPOOLR,PPOOLR=non-structural C,N,P mass in root
 C     CSNC,ZSNC,PSNC=C,N,P litterfall from disturbance
-C     VCO2F,VCH4F,VOXYF,VNH3F,VN2OF,VPO4F=CO2,CH4,O2,NH3,N2O,PO4 emission from disturbance
+C     VCOXF,VNOXF,VPOXF=C,N,P gaseous emissions from disturbance
 C     CNET=PFT net CO2 fixation
 C     TNBP=total net biome productivity
 C     WTRT1,WTRT1N,WTRT1P=primary root C,N,P mass in soil layer
 C     WTRT2,WTRT2N,WTRT2P=secondary root C,N,P mass in soil layer
-C     FWOOD,FWOODN,FWOODP=C,N,P woody fraction in root:0=woody,1=non-woody
+C     FWOOD,FWOODN,FWOODP=C,N,P woody fraction in root:0=woody,
+C        1=non-woody
 C
       IF(IHVST(NZ,I,NY,NX).NE.4.AND.IHVST(NZ,I,NY,NX).NE.6)THEN
       XHVST=1.0-THIN(NZ,I,NY,NX)
+      XHVSN=XHVST
+      XHVSP=XHVST
       DO 3985 N=1,MY(NZ,NY,NX)
       DO 3980 L=NU(NY,NX),NJ(NY,NX)
-      IF(IHVST(NZ,I,NY,NX).NE.5)THEN
-      XHVST=1.0-THIN(NZ,I,NY,NX)
-      XHVSN=XHVST
-      XHVSP=XHVST
-      FFIRE=0.0
-      FFIRN=0.0
-      FFIRP=0.0
-      ELSE
-      IF(THETW(L,NY,NX).GT.FVLWB.OR.CORGC(L,NY,NX).LE.FORGC
-     2.OR.ITILL(I,NY,NX).NE.22)THEN
-      XHVST=1.0
-      XHVSN=XHVST
-      XHVSP=XHVST
-      FFIRE=0.0
-      FFIRN=0.0
-      FFIRP=0.0
-      ELSE
-      XHVST=1.0-DCORP(I,NY,NX)*EHVST(1,3,NZ,I,NY,NX)
-     2*AMIN1(1.0,(CORGC(L,NY,NX)-FORGC)/(0.55E+06-FORGC))
-      XHVSN=XHVST
-      XHVSP=XHVST
-      FFIRE=EHVST(2,3,NZ,I,NY,NX)
-      FFIRN=FFIRE*EFIRE(1,IHVST(NZ,I,NY,NX)) 
-      FFIRP=FFIRE*EFIRE(2,IHVST(NZ,I,NY,NX)) 
-      ENDIF
-      ENDIF
       DO 3385 M=1,4
       FHVST=(1.0-XHVST)*CFOPC(0,M,NZ,NY,NX)*CPOOLR(N,L,NZ,NY,NX)
       FHVSN=(1.0-XHVSN)*CFOPN(0,M,NZ,NY,NX)*ZPOOLR(N,L,NZ,NY,NX)
       FHVSP=(1.0-XHVSP)*CFOPP(0,M,NZ,NY,NX)*PPOOLR(N,L,NZ,NY,NX)
-      CSNC(M,1,L,NZ,NY,NX)=CSNC(M,1,L,NZ,NY,NX)+(1.0-FFIRE)*FHVST 
-      ZSNC(M,1,L,NZ,NY,NX)=ZSNC(M,1,L,NZ,NY,NX)+(1.0-FFIRN)*FHVSN 
-      PSNC(M,1,L,NZ,NY,NX)=PSNC(M,1,L,NZ,NY,NX)+(1.0-FFIRP)*FHVSP
-      VCO2F(NZ,NY,NX)=VCO2F(NZ,NY,NX)-(1.0-FCH4F)*FFIRE*FHVST 
-      VCH4F(NZ,NY,NX)=VCH4F(NZ,NY,NX)-FCH4F*FFIRE*FHVST 
-      VOXYF(NZ,NY,NX)=VOXYF(NZ,NY,NX)-(1.0-FCH4F)*FFIRE*FHVST*2.667 
-      VNH3F(NZ,NY,NX)=VNH3F(NZ,NY,NX)-FFIRN*FHVSN
-      VN2OF(NZ,NY,NX)=VN2OF(NZ,NY,NX)-0.0
-      VPO4F(NZ,NY,NX)=VPO4F(NZ,NY,NX)-FFIRP*FHVSP
-      CNET(NZ,NY,NX)=CNET(NZ,NY,NX)-(1.0-FCH4F)*FFIRE*FHVST
-      TNBP(NY,NX)=TNBP(NY,NX)-FCH4F*FFIRE*FHVST 
+      CSNC(M,1,L,NZ,NY,NX)=CSNC(M,1,L,NZ,NY,NX)+FHVST 
+      ZSNC(M,1,L,NZ,NY,NX)=ZSNC(M,1,L,NZ,NY,NX)+FHVSN 
+      PSNC(M,1,L,NZ,NY,NX)=PSNC(M,1,L,NZ,NY,NX)+FHVSP
+      CNET(NZ,NY,NX)=CNET(NZ,NY,NX)-FHVST
+      HCNET(NZ,NY,NX)=HCNET(NZ,NY,NX)-FHVST
+      TNBP(NY,NX)=TNBP(NY,NX)-0.0 
       DO 3385 NR=1,NRT(NZ,NY,NX)
       FHVST=(1.0-XHVST)*CFOPC(5,M,NZ,NY,NX)*(WTRT1(N,L,NR,NZ,NY,NX)
-     3+WTRT2(N,L,NR,NZ,NY,NX))*FWODR(0)
+     3+WTRT2(N,L,NR,NZ,NY,NX))*FWODR(0,NZ)
       FHVSN=(1.0-XHVSN)*CFOPN(5,M,NZ,NY,NX)*(WTRT1N(N,L,NR,NZ,NY,NX)
-     3+WTRT2N(N,L,NR,NZ,NY,NX))*FWODRN(0)
+     3+WTRT2N(N,L,NR,NZ,NY,NX))*FWODRN(0,NZ)
       FHVSP=(1.0-XHVSP)*CFOPP(5,M,NZ,NY,NX)*(WTRT1P(N,L,NR,NZ,NY,NX)
-     3+WTRT2P(N,L,NR,NZ,NY,NX))*FWODRP(0)
-      CSNC(M,1,L,NZ,NY,NX)=CSNC(M,1,L,NZ,NY,NX)+(1.0-FFIRE)*FHVST 
-      ZSNC(M,1,L,NZ,NY,NX)=ZSNC(M,1,L,NZ,NY,NX)+(1.0-FFIRN)*FHVSN 
-      PSNC(M,1,L,NZ,NY,NX)=PSNC(M,1,L,NZ,NY,NX)+(1.0-FFIRP)*FHVSP
-      VCO2F(NZ,NY,NX)=VCO2F(NZ,NY,NX)-(1.0-FCH4F)*FFIRE*FHVST 
-      VCH4F(NZ,NY,NX)=VCH4F(NZ,NY,NX)-FCH4F*FFIRE*FHVST 
-      VOXYF(NZ,NY,NX)=VOXYF(NZ,NY,NX)-(1.0-FCH4F)*FFIRE*FHVST*2.667 
-      VNH3F(NZ,NY,NX)=VNH3F(NZ,NY,NX)-FFIRN*FHVSN
-      VN2OF(NZ,NY,NX)=VN2OF(NZ,NY,NX)-0.0
-      VPO4F(NZ,NY,NX)=VPO4F(NZ,NY,NX)-FFIRP*FHVSP
-      CNET(NZ,NY,NX)=CNET(NZ,NY,NX)-(1.0-FCH4F)*FFIRE*FHVST 
-      TNBP(NY,NX)=TNBP(NY,NX)-FCH4F*FFIRE*FHVST 
+     3+WTRT2P(N,L,NR,NZ,NY,NX))*FWODRP(0,NZ)
+      CSNC(M,1,L,NZ,NY,NX)=CSNC(M,1,L,NZ,NY,NX)+FHVST 
+      ZSNC(M,1,L,NZ,NY,NX)=ZSNC(M,1,L,NZ,NY,NX)+FHVSN 
+      PSNC(M,1,L,NZ,NY,NX)=PSNC(M,1,L,NZ,NY,NX)+FHVSP
+      CNET(NZ,NY,NX)=CNET(NZ,NY,NX)-FHVST 
+      HCNET(NZ,NY,NX)=HCNET(NZ,NY,NX)-FHVST 
+      TNBP(NY,NX)=TNBP(NY,NX)-0.0 
       FHVST=(1.0-XHVST)*CFOPC(4,M,NZ,NY,NX)*(WTRT1(N,L,NR,NZ,NY,NX)
-     3+WTRT2(N,L,NR,NZ,NY,NX))*FWODR(1)
+     3+WTRT2(N,L,NR,NZ,NY,NX))*FWODR(1,NZ)
       FHVSN=(1.0-XHVSN)*CFOPN(4,M,NZ,NY,NX)*(WTRT1N(N,L,NR,NZ,NY,NX)
-     3+WTRT2N(N,L,NR,NZ,NY,NX))*FWODRN(1)
+     3+WTRT2N(N,L,NR,NZ,NY,NX))*FWODRN(1,NZ)
       FHVSP=(1.0-XHVSP)*CFOPP(4,M,NZ,NY,NX)*(WTRT1P(N,L,NR,NZ,NY,NX)
-     3+WTRT2P(N,L,NR,NZ,NY,NX))*FWODRP(1)
-      CSNC(M,1,L,NZ,NY,NX)=CSNC(M,1,L,NZ,NY,NX)+(1.0-FFIRE)*FHVST 
-      ZSNC(M,1,L,NZ,NY,NX)=ZSNC(M,1,L,NZ,NY,NX)+(1.0-FFIRN)*FHVSN 
-      PSNC(M,1,L,NZ,NY,NX)=PSNC(M,1,L,NZ,NY,NX)+(1.0-FFIRP)*FHVSP
-      VCO2F(NZ,NY,NX)=VCO2F(NZ,NY,NX)-(1.0-FCH4F)*FFIRE*FHVST 
-      VCH4F(NZ,NY,NX)=VCH4F(NZ,NY,NX)-FCH4F*FFIRE*FHVST 
-      VOXYF(NZ,NY,NX)=VOXYF(NZ,NY,NX)-(1.0-FCH4F)*FFIRE*FHVST*2.667 
-      VNH3F(NZ,NY,NX)=VNH3F(NZ,NY,NX)-FFIRN*FHVSN
-      VN2OF(NZ,NY,NX)=VN2OF(NZ,NY,NX)-0.0
-      VPO4F(NZ,NY,NX)=VPO4F(NZ,NY,NX)-FFIRP*FHVSP
-      CNET(NZ,NY,NX)=CNET(NZ,NY,NX)-(1.0-FCH4F)*FFIRE*FHVST 
-      TNBP(NY,NX)=TNBP(NY,NX)-FCH4F*FFIRE*FHVST
+     3+WTRT2P(N,L,NR,NZ,NY,NX))*FWODRP(1,NZ)
+      CSNC(M,1,L,NZ,NY,NX)=CSNC(M,1,L,NZ,NY,NX)+FHVST 
+      ZSNC(M,1,L,NZ,NY,NX)=ZSNC(M,1,L,NZ,NY,NX)+FHVSN 
+      PSNC(M,1,L,NZ,NY,NX)=PSNC(M,1,L,NZ,NY,NX)+FHVSP
+      CNET(NZ,NY,NX)=CNET(NZ,NY,NX)-FHVST 
+      HCNET(NZ,NY,NX)=HCNET(NZ,NY,NX)-FHVST 
+      TNBP(NY,NX)=TNBP(NY,NX)-0.0
 3385  CONTINUE
-C     WRITE(*,6161)'FIRE',I,J,NZ,L,N,M,VCO2F(NZ,NY,NX),FFIRE
-C    2,FHVST,CFOPC(4,M,NZ,NY,NX),CPOOLR(N,L,NZ,NY,NX),THETW(L,NY,NX)
-C    3,CORGC(L,NY,NX)
-6161  FORMAT(A8,6I4,20E12.4) 
 C
 C     RELEASE ROOT GAS CONTENTS DURING HARVESTING
 C
 C     CO2A,OXYA,CH4A,Z2OA,ZH3A,H2GA=root gaseous CO2,O2,CH4,N2O,NH3,H2
 C     CO2P,OXYP,CH4P,Z2OP,ZH3P,H2GP=root aqueous CO2,O2,CH4,N2O,NH3,H2
-C     RCO2Z,ROXYZ,RCH4Z,RN2OZ,RNH3Z,RH2GZ=root gaseous CO2,O2,CH4,N2O,NH3,H2 loss from disturbance
+C     RCO2Z,ROXYZ,RCH4Z,RN2OZ,RNH3Z,RH2GZ=root gaseous
+C        CO2,O2,CH4,N2O,NH3,H2 loss from disturbance
 C
       RCO2Z(NZ,NY,NX)=RCO2Z(NZ,NY,NX)-(1.0-XHVST)
      2*(CO2A(N,L,NZ,NY,NX)+CO2P(N,L,NZ,NY,NX))
@@ -8155,7 +8768,8 @@ C
 C
 C     REDUCE ROOT STATE VARIABLES DURING HARVESTING
 C
-C     XHVST,XHVSN,XHVSP=fraction of root C,N,P remaining after disturbance
+C     XHVST,XHVSN,XHVSP=fraction of root C,N,P remaining 
+C        after disturbance
 C     WTRT1,WTRT1N,WTRT1P=primary root C,N,P mass in soil layer
 C     WTRT2,WTRT2N,WTRT2P=secondary root C,N,P mass in soil layer
 C     RTWT1,RTWT1N,RTWT1P=primary root C,N,P mass
@@ -8204,8 +8818,11 @@ C
 C     NODULE LITTERFALL AND STATE VARIABLES DURING HARVESTING
 C
 C     CSNC,ZSNC,PSNC=C,N,P litterfall from disturbance
-C     XHVST,XHVSN,XHVSP=fraction of root C,N,P remaining after disturbance
-C     CFOPC,CFOPN,CFOPC=fraction of litterfall C,N,P allocated to litter components
+C     XHVST,XHVSN,XHVSP=fraction of root C,N,P remaining 
+C        after disturbance
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     WTNDL,WTNDLN,WTNDLP=bacterial C,N,P mass
 C     CPOOLN,ZPOOLN,PPOOLN=nonstructural C,N,P in bacteria
 C
@@ -8235,24 +8852,27 @@ C     STORAGE LITTERFALL AND STATE VARIABLES DURING HARVESTING
 C
 C     ISTYP=growth habit:0=annual,1=perennial from PFT file
 C     CSNC,ZSNC,PSNC=C,N,P litterfall from disturbance
-C     CFOPC,CFOPN,CFOPC=fraction of litterfall C,N,P allocated to litter components
-C     XHVST,XHVSN,XHVSP=fraction of root C,N,P remaining after disturbance
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
+C     XHVST,XHVSN,XHVSP=fraction of root C,N,P remaining 
+C        after disturbance
 C     WTRVC,WTRVN,WTRVP=storage C,N,P
 C
       IF(ISTYP(NZ,NY,NX).NE.0)THEN
       DO 3400 M=1,4
       CSNC(M,0,NG(NZ,NY,NX),NZ,NY,NX)=CSNC(M,0,NG(NZ,NY,NX),NZ,NY,NX)
-     2+((1.0-XHVST)*CFOPC(0,M,NZ,NY,NX)*WTRVC(NZ,NY,NX))*FWOOD(0)
+     2+((1.0-XHVST)*CFOPC(0,M,NZ,NY,NX)*WTRVC(NZ,NY,NX))*FWOOD(0,NZ)
       ZSNC(M,0,NG(NZ,NY,NX),NZ,NY,NX)=ZSNC(M,0,NG(NZ,NY,NX),NZ,NY,NX)
-     2+((1.0-XHVSN)*CFOPN(0,M,NZ,NY,NX)*WTRVN(NZ,NY,NX))*FWOODN(0)
+     2+((1.0-XHVSN)*CFOPN(0,M,NZ,NY,NX)*WTRVN(NZ,NY,NX))*FWOODN(0,NZ)
       PSNC(M,0,NG(NZ,NY,NX),NZ,NY,NX)=PSNC(M,0,NG(NZ,NY,NX),NZ,NY,NX)
-     2+((1.0-XHVSP)*CFOPP(0,M,NZ,NY,NX)*WTRVP(NZ,NY,NX))*FWOODP(0)
+     2+((1.0-XHVSP)*CFOPP(0,M,NZ,NY,NX)*WTRVP(NZ,NY,NX))*FWOODP(0,NZ)
       CSNC(M,1,NG(NZ,NY,NX),NZ,NY,NX)=CSNC(M,1,NG(NZ,NY,NX),NZ,NY,NX)
-     2+((1.0-XHVST)*CFOPC(0,M,NZ,NY,NX)*WTRVC(NZ,NY,NX))*FWOOD(1)
+     2+((1.0-XHVST)*CFOPC(0,M,NZ,NY,NX)*WTRVC(NZ,NY,NX))*FWOOD(1,NZ)
       ZSNC(M,1,NG(NZ,NY,NX),NZ,NY,NX)=ZSNC(M,1,NG(NZ,NY,NX),NZ,NY,NX)
-     2+((1.0-XHVSN)*CFOPN(0,M,NZ,NY,NX)*WTRVN(NZ,NY,NX))*FWOODN(1)
+     2+((1.0-XHVSN)*CFOPN(0,M,NZ,NY,NX)*WTRVN(NZ,NY,NX))*FWOODN(1,NZ)
       PSNC(M,1,NG(NZ,NY,NX),NZ,NY,NX)=PSNC(M,1,NG(NZ,NY,NX),NZ,NY,NX)
-     2+((1.0-XHVSP)*CFOPP(0,M,NZ,NY,NX)*WTRVP(NZ,NY,NX))*FWOODP(1)
+     2+((1.0-XHVSP)*CFOPP(0,M,NZ,NY,NX)*WTRVP(NZ,NY,NX))*FWOODP(1,NZ)
 3400  CONTINUE
       WTRVC(NZ,NY,NX)=WTRVC(NZ,NY,NX)*XHVST
       WTRVN(NZ,NY,NX)=WTRVN(NZ,NY,NX)*XHVSN
@@ -8264,15 +8884,20 @@ C
 C     REDUCE OR REMOVE PLANT POPULATIONS DURING TILLAGE
 C
 C     ZNOON=hour of solar noon
-C     IBTYP=turnover:0=all abve-grd,1=all leaf+petiole,2=none,3=between 1,2
-C     IGTYP=growth type:0=bryophyte,1=graminoid,2=shrub,tree
+C     IBTYP=turnover rate of above-ground biomass
+C              :0,1=fully deciduous,
+C              :2=needleleaf evergreen
+C              :3=broadleaf evergreen
+C              :4=semi-deciduous
+C              :5=semi-evergreen
+C     IGTYP=growth type:0=bryophyte,1=grass,herb,2=woody shrub,tree
 C     IDAY0,IYR0=day,year of planting
 C     IYRC=current year 
-C     ITILL=soil disturbance type 1-20:tillage,21=litter removal,22=fire,23-24=drainage
+C     ITILL=soil disturbance type 1-20:tillage,21=litter removal
+C                                 22=fire,23-24=drainage
 C     XHVST=fraction of PFT remaining after disturbance
 C     PPX,PP=PFT population per m2,grid cell
 C     FRADP=fraction of radiation received by each PFT canopy
-C     VHCPC=canopy heat capacity
 C
       IF(J.EQ.INT(ZNOON(NY,NX)).AND.(IBTYP(NZ,NY,NX).EQ.0
      2.OR.IGTYP(NZ,NY,NX).LE.1).AND.(I.NE.IDAY0(NZ,NY,NX)
@@ -8283,7 +8908,6 @@ C
       PPX(NZ,NY,NX)=PPX(NZ,NY,NX)*XHVST
       PP(NZ,NY,NX)=PP(NZ,NY,NX)*XHVST
       FRADP(NZ,NY,NX)=FRADP(NZ,NY,NX)*XHVST
-      VHCPC(NZ,NY,NX)=VHCPC(NZ,NY,NX)*XHVST
       WTLS(NZ,NY,NX)=0.0
       WVSTK(NZ,NY,NX)=0.0
 C
@@ -8300,7 +8924,9 @@ C     LITTERFALL FROM BRANCHES DURING TILLAGE
 C
 C     CSNC,ZSNC,PSNC=C,N,P litterfall from disturbance
 C     XHVST=fraction of PFT remaining after disturbance
-C     CFOPC,CFOPN,CFOPC=fraction of litterfall C,N,P allocated to litter components
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     CPOOL,ZPOOL,PPOOL=non-structural C,N,P in branch
 C     CPOLNB,ZPOLNB,PPOLNB=nonstructural C,N,P in bacteria
 C     CPOOLK=total C4 nonstructural C in branch
@@ -8313,42 +8939,51 @@ C     WTHSKB,WTEARB,WTGRB=branch husk,ear,grain C mass
 C     WTHSBN,WTEABN,WTGRBN=branch husk,ear,grain N mass
 C     WTHSBP,WTEABP,WTGRBP=branch husk,ear,grain P mass
 C     ISTYP=growth habit:0=annual,1=perennial from PFT file
-C     IWTYP=phenology type:0=evergreen,1=cold decid,2=drought decid,3=1+2
+C     IWTYP=phenology type:0=evergreen,1=cold deciduous,2=drought
+C        deciduous,3=cold and drought deciduous
 C     WTRVC,WTRVN,WTRVP=storage C,N,P
-C     IBTYP=turnover:0=all abve-grd,1=all leaf+petiole,2=none,3=between 1,2
-C     IGTYP=growth type:0=bryophyte,1=graminoid,2=shrub,tree
+C     IBTYP=turnover rate of above-ground biomass
+C              :0,1=fully deciduous,
+C              :2=needleleaf evergreen
+C              :3=broadleaf evergreen
+C              :4=semi-deciduous
+C              :5=semi-evergreen
+C     IGTYP=growth type:0=bryophyte,1=grass,herb,2=woody shrub,tree
 C
       DO 6380 M=1,4
       CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)+(1.0-XHVST)
      2*(CFOPC(0,M,NZ,NY,NX)*(CPOOL(NB,NZ,NY,NX)+CPOLNB(NB,NZ,NY,NX)
      3+CPOOLK(NB,NZ,NY,NX)+WTRSVB(NB,NZ,NY,NX)) 
-     4+CFOPC(1,M,NZ,NY,NX)*(WTLFB(NB,NZ,NY,NX)*FWODB(1) 
+     4+CFOPC(1,M,NZ,NY,NX)*(WTLFB(NB,NZ,NY,NX)*FWODB(1,NZ) 
      5+WTNDB(NB,NZ,NY,NX)) 
-     6+CFOPC(2,M,NZ,NY,NX)*(WTSHEB(NB,NZ,NY,NX)*FWODB(1) 
+     6+CFOPC(2,M,NZ,NY,NX)*(WTSHEB(NB,NZ,NY,NX)*FWODB(1,NZ) 
      7+WTHSKB(NB,NZ,NY,NX)+WTEARB(NB,NZ,NY,NX)))
       CSNC(M,0,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)+(1.0-XHVST)
-     2*CFOPC(5,M,NZ,NY,NX)*(WTLFB(NB,NZ,NY,NX)*FWODB(0)
-     3+WTSHEB(NB,NZ,NY,NX)*FWODB(0))
+     2*CFOPC(5,M,NZ,NY,NX)*(WTLFB(NB,NZ,NY,NX)*FWODB(0,NZ)
+     3+WTSHEB(NB,NZ,NY,NX)*FWODB(0,NZ))
       ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)+(1.0-XHVST)
      2*(CFOPN(0,M,NZ,NY,NX)*(ZPOOL(NB,NZ,NY,NX)+ZPOLNB(NB,NZ,NY,NX)
      3+WTRSBN(NB,NZ,NY,NX))
-     4+CFOPN(1,M,NZ,NY,NX)*(WTLFBN(NB,NZ,NY,NX)*FWODLN(1)
+     4+CFOPN(1,M,NZ,NY,NX)*(WTLFBN(NB,NZ,NY,NX)*FWODLN(1,NZ)
      5+WTNDBN(NB,NZ,NY,NX))
-     6+CFOPN(2,M,NZ,NY,NX)*(WTSHBN(NB,NZ,NY,NX)*FWODSN(1) 
+     6+CFOPN(2,M,NZ,NY,NX)*(WTSHBN(NB,NZ,NY,NX)*FWODSN(1,NZ) 
      7+WTHSBN(NB,NZ,NY,NX)+WTEABN(NB,NZ,NY,NX)))
       ZSNC(M,0,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)+(1.0-XHVST)
-     2*CFOPN(5,M,NZ,NY,NX)*(WTLFBN(NB,NZ,NY,NX)*FWODLN(0)
-     3+WTSHBN(NB,NZ,NY,NX)*FWODSN(0))
+     2*CFOPN(5,M,NZ,NY,NX)*(WTLFBN(NB,NZ,NY,NX)*FWODLN(0,NZ)
+     3+WTSHBN(NB,NZ,NY,NX)*FWODSN(0,NZ))
       PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)+(1.0-XHVST)
      2*(CFOPP(0,M,NZ,NY,NX)*(PPOOL(NB,NZ,NY,NX)+PPOLNB(NB,NZ,NY,NX)
      3+WTRSBP(NB,NZ,NY,NX))
-     4+CFOPP(1,M,NZ,NY,NX)*(WTLFBP(NB,NZ,NY,NX)*FWODLP(1)
+     4+CFOPP(1,M,NZ,NY,NX)*(WTLFBP(NB,NZ,NY,NX)*FWODLP(1,NZ)
      5+WTNDBP(NB,NZ,NY,NX))
-     6+CFOPP(2,M,NZ,NY,NX)*(WTSHBP(NB,NZ,NY,NX)*FWODSP(1)
+     6+CFOPP(2,M,NZ,NY,NX)*(WTSHBP(NB,NZ,NY,NX)*FWODSP(1,NZ)
      7+WTHSBP(NB,NZ,NY,NX)+WTEABP(NB,NZ,NY,NX)))
       PSNC(M,0,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)+(1.0-XHVST)
-     2*CFOPP(5,M,NZ,NY,NX)*(WTLFBP(NB,NZ,NY,NX)*FWODLP(0)
-     3+WTSHBP(NB,NZ,NY,NX)*FWODSP(0))
+     2*CFOPP(5,M,NZ,NY,NX)*(WTLFBP(NB,NZ,NY,NX)*FWODLP(0,NZ)
+     3+WTSHBP(NB,NZ,NY,NX)*FWODSP(0,NZ))
+C
+C     IF WINTER ANNUAL
+C
       IF(ISTYP(NZ,NY,NX).EQ.0.AND.IWTYP(NZ,NY,NX).NE.0)THEN
       WTRVC(NZ,NY,NX)=WTRVC(NZ,NY,NX)+(1.0-XHVST)
      2*CFOPC(2,M,NZ,NY,NX)*WTGRB(NB,NZ,NY,NX)
@@ -8365,17 +9000,17 @@ C
      2*CFOPP(2,M,NZ,NY,NX)*WTGRBP(NB,NZ,NY,NX)
       ENDIF
       CSNC(M,0,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)+(1.0-XHVST)
-     2*CFOPC(5,M,NZ,NY,NX)*WTSTKB(NB,NZ,NY,NX)*FWOOD(0)
+     2*CFOPC(5,M,NZ,NY,NX)*WTSTKB(NB,NZ,NY,NX)*FWOOD(0,NZ)
       ZSNC(M,0,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)+(1.0-XHVST)
-     2*CFOPN(5,M,NZ,NY,NX)*WTSTBN(NB,NZ,NY,NX)*FWOODN(0)
+     2*CFOPN(5,M,NZ,NY,NX)*WTSTBN(NB,NZ,NY,NX)*FWOODN(0,NZ)
       PSNC(M,0,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)+(1.0-XHVST)
-     2*CFOPP(5,M,NZ,NY,NX)*WTSTBP(NB,NZ,NY,NX)*FWOODP(0)
+     2*CFOPP(5,M,NZ,NY,NX)*WTSTBP(NB,NZ,NY,NX)*FWOODP(0,NZ)
       CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)+(1.0-XHVST)
-     2*CFOPC(3,M,NZ,NY,NX)*WTSTKB(NB,NZ,NY,NX)*FWOOD(1)
+     2*CFOPC(3,M,NZ,NY,NX)*WTSTKB(NB,NZ,NY,NX)*FWOOD(1,NZ)
       ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)+(1.0-XHVST)
-     2*CFOPN(3,M,NZ,NY,NX)*WTSTBN(NB,NZ,NY,NX)*FWOODN(1)
+     2*CFOPN(3,M,NZ,NY,NX)*WTSTBN(NB,NZ,NY,NX)*FWOODN(1,NZ)
       PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)+(1.0-XHVST)
-     2*CFOPP(3,M,NZ,NY,NX)*WTSTBP(NB,NZ,NY,NX)*FWOODP(1)
+     2*CFOPP(3,M,NZ,NY,NX)*WTSTBP(NB,NZ,NY,NX)*FWOODP(1,NZ)
 6380  CONTINUE
 C
 C     PLANT STATE VARIABLES REMAINING AFTER TILLAGE
@@ -8458,18 +9093,6 @@ C     HTNODX(K,NB,NZ,NY,NX)=HTNODX(K,NB,NZ,NY,NX)*XHVST
       ENDIF
 8975  CONTINUE
 C
-C     PSILT=canopy water potential
-C     VOLWP=water volume in canopy
-C     VOLWOU,UVOLO=accumulated water loss for water balance calculation 
-C
-      VOLWPX=VOLWP(NZ,NY,NX)
-      WVPLT=AMAX1(0.0,WTLS(NZ,NY,NX)+WVSTK(NZ,NY,NX))
-      APSILT=ABS(PSILT(NZ,NY,NX))
-      FDM=0.16+0.10*APSILT/(0.05*APSILT+2.0)
-      VOLWP(NZ,NY,NX)=1.0E-06*WVPLT/FDM
-      VOLWOU=VOLWOU+VOLWPX-VOLWP(NZ,NY,NX)
-      UVOLO(NY,NX)=UVOLO(NY,NX)+VOLWPX-VOLWP(NZ,NY,NX)
-C
 C     TERMINATE ROOTS IF TILLAGE IMPLEMENT 10 IS SELECTED
 C
 C     PP=PFT population
@@ -8479,7 +9102,7 @@ C     JHVST=terminate PFT:0=no,1=yes,2=yes,and reseed
 C     IDAYH,IYRH=day,year of harvesting
 C     IYRC=current year 
 C
-      IF(PP(NZ,NY,NX).LE.0.0)THEN
+      IF(PP(NZ,NY,NX).LE.ZERO)THEN
       IDTHR(NZ,NY,NX)=1
       IDTHP(NZ,NY,NX)=1
       IDTH(NZ,NY,NX)=1
@@ -8492,7 +9115,9 @@ C     LITTERFALL FROM ROOTS DURING TILLAGE
 C
 C     CSNC,ZSNC,PSNC=C,N,P litterfall from disturbance
 C     XHVST=fraction of PFT remaining after disturbance
-C     CFOPC,CFOPN,CFOPC=fraction of litterfall C,N,P allocated to litter components
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     CPOOLR,ZPOOLR,PPOOLR=non-structural C,N,P mass in root
 C     WTRT1,WTRT1N,WTRT1P=primary root C,N,P mass in soil layer
 C     WTRT2,WTRT2N,WTRT2P=secondary root C,N,P mass in soil layer
@@ -8509,29 +9134,30 @@ C
       DO 6385 NR=1,NRT(NZ,NY,NX)
       CSNC(M,0,L,NZ,NY,NX)=CSNC(M,0,L,NZ,NY,NX)+(1.0-XHVST)
      2*CFOPC(5,M,NZ,NY,NX)*(WTRT1(N,L,NR,NZ,NY,NX)
-     3+WTRT2(N,L,NR,NZ,NY,NX))*FWODR(0)
+     3+WTRT2(N,L,NR,NZ,NY,NX))*FWODR(0,NZ)
       ZSNC(M,0,L,NZ,NY,NX)=ZSNC(M,0,L,NZ,NY,NX)+(1.0-XHVST)
      2*CFOPN(5,M,NZ,NY,NX)*(WTRT1N(N,L,NR,NZ,NY,NX)
-     3+WTRT2N(N,L,NR,NZ,NY,NX))*FWODRN(0)
+     3+WTRT2N(N,L,NR,NZ,NY,NX))*FWODRN(0,NZ)
       PSNC(M,0,L,NZ,NY,NX)=PSNC(M,0,L,NZ,NY,NX)+(1.0-XHVST)
      2*CFOPP(5,M,NZ,NY,NX)*(WTRT1P(N,L,NR,NZ,NY,NX)
-     3+WTRT2P(N,L,NR,NZ,NY,NX))*FWODRP(0)
+     3+WTRT2P(N,L,NR,NZ,NY,NX))*FWODRP(0,NZ)
       CSNC(M,1,L,NZ,NY,NX)=CSNC(M,1,L,NZ,NY,NX)+(1.0-XHVST)
      2*CFOPC(4,M,NZ,NY,NX)*(WTRT1(N,L,NR,NZ,NY,NX)
-     3+WTRT2(N,L,NR,NZ,NY,NX))*FWODR(1)
+     3+WTRT2(N,L,NR,NZ,NY,NX))*FWODR(1,NZ)
       ZSNC(M,1,L,NZ,NY,NX)=ZSNC(M,1,L,NZ,NY,NX)+(1.0-XHVST)
      2*CFOPN(4,M,NZ,NY,NX)*(WTRT1N(N,L,NR,NZ,NY,NX)
-     3+WTRT2N(N,L,NR,NZ,NY,NX))*FWODRN(1)
+     3+WTRT2N(N,L,NR,NZ,NY,NX))*FWODRN(1,NZ)
       PSNC(M,1,L,NZ,NY,NX)=PSNC(M,1,L,NZ,NY,NX)+(1.0-XHVST)
      2*CFOPP(4,M,NZ,NY,NX)*(WTRT1P(N,L,NR,NZ,NY,NX)
-     3+WTRT2P(N,L,NR,NZ,NY,NX))*FWODRP(1)
+     3+WTRT2P(N,L,NR,NZ,NY,NX))*FWODRP(1,NZ)
 6385  CONTINUE
 C
 C     RELEASE ROOT GAS CONTENTS DURING TILLAGE
 C
 C     CO2A,OXYA,CH4A,Z2OA,ZH3A,H2GA=root gaseous CO2,O2,CH4,N2O,NH3,H2
 C     CO2P,OXYP,CH4P,Z2OP,ZH3P,H2GP=root aqueous CO2,O2,CH4,N2O,NH3,H2
-C     RCO2Z,ROXYZ,RCH4Z,RN2OZ,RNH3Z,RH2GZ=root gaseous CO2,O2,CH4,N2O,NH3,H2 loss from disturbance
+C     RCO2Z,ROXYZ,RCH4Z,RN2OZ,RNH3Z,RH2GZ=root gaseous
+C        CO2,O2,CH4,N2O,NH3,H2 loss from disturbance
 C
       RCO2Z(NZ,NY,NX)=RCO2Z(NZ,NY,NX)-(1.0-XHVST)
      2*(CO2A(N,L,NZ,NY,NX)+CO2P(N,L,NZ,NY,NX))
@@ -8608,8 +9234,11 @@ C
 C     LITTERFALL AND STATE VARIABLES FOR NODULES DURING TILLAGE
 C
 C     CSNC,ZSNC,PSNC=C,N,P litterfall from disturbance
-C     XHVST,XHVSN,XHVSP=fraction of root C,N,P remaining after disturbance
-C     CFOPC,CFOPN,CFOPC=fraction of litterfall C,N,P allocated to litter components
+C     XHVST,XHVSN,XHVSP=fraction of root C,N,P remaining 
+C        after disturbance
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     WTNDL,WTNDLN,WTNDLP=bacterial C,N,P mass
 C     CPOOLN,ZPOOLN,PPOOLN=nonstructural C,N,P in bacteria
 C
@@ -8640,23 +9269,26 @@ C     DURING TILLAGE
 C
 C     ISTYP=growth habit:0=annual,1=perennial from PFT file
 C     CSNC,ZSNC,PSNC=C,N,P litterfall from disturbance
-C     CFOPC,CFOPN,CFOPC=fraction of litterfall C,N,P allocated to litter components
-C     XHVST,XHVSN,XHVSP=fraction of root C,N,P remaining after disturbance
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
+C     XHVST,XHVSN,XHVSP=fraction of root C,N,P remaining 
+C        after disturbance
 C     WTRVC,WTRVN,WTRVP=storage C,N,P
 C
       DO 6400 M=1,4
       CSNC(M,0,NG(NZ,NY,NX),NZ,NY,NX)=CSNC(M,0,NG(NZ,NY,NX),NZ,NY,NX)
-     2+((1.0-XHVST)*CFOPC(0,M,NZ,NY,NX)*WTRVC(NZ,NY,NX))*FWOOD(0)
+     2+((1.0-XHVST)*CFOPC(0,M,NZ,NY,NX)*WTRVC(NZ,NY,NX))*FWOOD(0,NZ)
       ZSNC(M,0,NG(NZ,NY,NX),NZ,NY,NX)=ZSNC(M,0,NG(NZ,NY,NX),NZ,NY,NX)
-     2+((1.0-XHVST)*CFOPN(0,M,NZ,NY,NX)*WTRVN(NZ,NY,NX))*FWOODN(0)
+     2+((1.0-XHVST)*CFOPN(0,M,NZ,NY,NX)*WTRVN(NZ,NY,NX))*FWOODN(0,NZ)
       PSNC(M,0,NG(NZ,NY,NX),NZ,NY,NX)=PSNC(M,0,NG(NZ,NY,NX),NZ,NY,NX)
-     2+((1.0-XHVST)*CFOPP(0,M,NZ,NY,NX)*WTRVP(NZ,NY,NX))*FWOODP(0)
+     2+((1.0-XHVST)*CFOPP(0,M,NZ,NY,NX)*WTRVP(NZ,NY,NX))*FWOODP(0,NZ)
       CSNC(M,1,NG(NZ,NY,NX),NZ,NY,NX)=CSNC(M,1,NG(NZ,NY,NX),NZ,NY,NX)
-     2+((1.0-XHVST)*CFOPC(0,M,NZ,NY,NX)*WTRVC(NZ,NY,NX))*FWOOD(1)
+     2+((1.0-XHVST)*CFOPC(0,M,NZ,NY,NX)*WTRVC(NZ,NY,NX))*FWOOD(1,NZ)
       ZSNC(M,1,NG(NZ,NY,NX),NZ,NY,NX)=ZSNC(M,1,NG(NZ,NY,NX),NZ,NY,NX)
-     2+((1.0-XHVST)*CFOPN(0,M,NZ,NY,NX)*WTRVN(NZ,NY,NX))*FWOODN(1)
+     2+((1.0-XHVST)*CFOPN(0,M,NZ,NY,NX)*WTRVN(NZ,NY,NX))*FWOODN(1,NZ)
       PSNC(M,1,NG(NZ,NY,NX),NZ,NY,NX)=PSNC(M,1,NG(NZ,NY,NX),NZ,NY,NX)
-     2+((1.0-XHVST)*CFOPP(0,M,NZ,NY,NX)*WTRVP(NZ,NY,NX))*FWOODP(1)
+     2+((1.0-XHVST)*CFOPP(0,M,NZ,NY,NX)*WTRVP(NZ,NY,NX))*FWOODP(1,NZ)
 6400  CONTINUE
       WTRVC(NZ,NY,NX)=WTRVC(NZ,NY,NX)*XHVST
       WTRVN(NZ,NY,NX)=WTRVN(NZ,NY,NX)*XHVST
@@ -8665,6 +9297,381 @@ C
       ENDIF
       ENDIF
 C
+C     HARVEST STANDING DEAD
+C
+C     IHVST=harvest type:0=none,1=grain,2=all above-ground
+C                       ,3=pruning,4=grazing,6=herbivory
+C     THIN=thinning:fraction of population removed
+C     FHVST=fraction of standing dead mass not harvested 
+C     EHVST(1,1,EHVST(1,2,EHVST(1,3,EHVST(1,4=fraction of 
+C           leaf,non-foliar,woody, standing dead removed from PFT
+C     HVST=IHVST=0-2:>0=cutting height,<0=fraction of LAI removed
+C          IHVST=3:reduction of clumping factor
+C          IHVST=4 or 6:animal or insect biomass(g LM m-2) 
+C     WTSTG,WTSTDN,WTSTDP=standing dead C,N,P mass
+C     WTHTH4,WTHNH4,WTHPH4=harvested standing dead C,N,P
+C     WTHTX4,WTHNX4,WTHPX4=harvested standing dead C,N,P to litter
+C
+      IF(IHVST(NZ,I,NY,NX).GE.0)THEN
+      IF(J.EQ.INT(ZNOON(NY,NX)).AND.IHVST(NZ,I,NY,NX).NE.4
+     2.AND.IHVST(NZ,I,NY,NX).NE.6)THEN
+      IF(THIN(NZ,I,NY,NX).EQ.0.0)THEN
+      FHVST=AMAX1(0.0,1.0-EHVST(1,4,NZ,I,NY,NX))
+      FHVSH=FHVST
+      ELSE
+      FHVST=AMAX1(0.0,1.0-THIN(NZ,I,NY,NX))
+      IF(IHVST(NZ,I,NY,NX).EQ.0)THEN
+      FHVSH=AMAX1(0.0,1.0-EHVST(1,4,NZ,I,NY,NX)*THIN(NZ,I,NY,NX))
+      ELSE
+      FHVSH=FHVST
+      ENDIF
+      ENDIF
+      ELSEIF(IHVST(NZ,I,NY,NX).EQ.4.OR.IHVST(NZ,I,NY,NX).EQ.6)THEN
+      IF(WTSTG(NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
+      WHVSTD=HVST(NZ,I,NY,NX)*THIN(NZ,I,NY,NX)*0.45/24.0
+     2*AREA(3,NU(NY,NX),NY,NX)*EHVST(1,4,NZ,I,NY,NX)
+      FHVST=AMAX1(0.0,1.0-WHVSTD/WTSTG(NZ,NY,NX))
+      FHVSH=FHVST
+      ELSE
+      FHVST=1.0
+      FHVSH=1.0
+      ENDIF
+      ELSE
+      FHVST=1.0
+      FHVSH=1.0
+      ENDIF
+      DO 6475 M=1,5
+      WTHTH4=WTHTH4+(1.0-FHVSH)*WTSTDG(M,NZ,NY,NX)
+      WTHNH4=WTHNH4+(1.0-FHVSH)*WTSTDN(M,NZ,NY,NX)
+      WTHPH4=WTHPH4+(1.0-FHVSH)*WTSTDP(M,NZ,NY,NX)
+      WTHTX4=WTHTX4+(FHVSH-FHVST)*WTSTDG(M,NZ,NY,NX)
+      WTHNX4=WTHNX4+(FHVSH-FHVST)*WTSTDN(M,NZ,NY,NX)
+      WTHPX4=WTHPX4+(FHVSH-FHVST)*WTSTDP(M,NZ,NY,NX)
+      WTSTDG(M,NZ,NY,NX)=FHVST*WTSTDG(M,NZ,NY,NX)
+      WTSTDN(M,NZ,NY,NX)=FHVST*WTSTDN(M,NZ,NY,NX)
+      WTSTDP(M,NZ,NY,NX)=FHVST*WTSTDP(M,NZ,NY,NX)
+6475  CONTINUE
+C
+C     IF NO PLANT C,N,P REMOVED AT HARVEST (ALL RESIDUE RETURNED)
+C
+C     IHVST=harvest type:0=none,1=grain,2=all above-ground
+C                       ,3=pruning,4=grazing,6=herbivory
+C     WTHTH0,WTHNH0,WTHPH0=nonstructural C,N,P removed
+C     WTHTH1,WTHNH1,WTHPH1=leaf C,N,P removed
+C     WTHTH2,WTHNH2,WTHPH2=fine,non-leaf C,N,P removed
+C     WTHTH3,WTHNH3,WTHPH3=woody C,N,P removed
+C     WTHTH4,WTHNH4,WTHPH4=standing dead C,N,P removed
+C     WTHTR0,WTHNR0,WTHPR0=nonstructural C,N,P to litter
+C     WTHTR1,WTHNR1,WTHPR1=leaf C,N,P to litter 
+C     WTHTR2,WTHNR2,WTHPR2=fine,non-leaf C,N,P to litter 
+C     WTHTR3,WTHNR3,WTHPR3=woody C,N,P to litter 
+C     WTHTR4,WTHNR4,WTHPR4=standing dead C,N,P to litter 
+C     EHVST(1,1,EHVST(1,2,EHVST(1,3,EHVST(1,4=fraction of 
+C        leaf,non-foliar,woody, standing dead removed from PFT
+C
+      IF(IHVST(NZ,I,NY,NX).EQ.0)THEN
+      WTHTR0=WTHTH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
+      WTHNR0=WTHNH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
+      WTHPR0=WTHPH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
+      WTHTR1=WTHTH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
+      WTHNR1=WTHNH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
+      WTHPR1=WTHPH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
+      WTHTR2=WTHTH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
+      WTHNR2=WTHNH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
+      WTHPR2=WTHPH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
+      WTHTR3=WTHTH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
+      WTHNR3=WTHNH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
+      WTHPR3=WTHPH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
+      WTHTR4=WTHTH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
+      WTHNR4=WTHNH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
+      WTHPR4=WTHPH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
+C
+C     IF ONLY GRAIN C,N,P REMOVED AT HARVEST
+C
+      ELSEIF(IHVST(NZ,I,NY,NX).EQ.1)THEN
+      WTHTR0=WTHTH0
+      WTHNR0=WTHNH0
+      WTHPR0=WTHPH0
+      WTHTR1=WTHTH1
+      WTHNR1=WTHNH1
+      WTHPR1=WTHPH1
+      WTHTR2=WTHTH2-WTHTG*EHVST(2,2,NZ,I,NY,NX)
+      WTHNR2=WTHNH2-WTHNG*EHVST(2,2,NZ,I,NY,NX)
+      WTHPR2=WTHPH2-WTHPG*EHVST(2,2,NZ,I,NY,NX)
+      WTHTR3=WTHTH3
+      WTHNR3=WTHNH3
+      WTHPR3=WTHPH3
+      WTHTR4=WTHTH4
+      WTHNR4=WTHNH4
+      WTHPR4=WTHPH4
+C
+C     IF ONLY WOOD C,N,P REMOVED AT HARVEST
+C
+      ELSEIF(IHVST(NZ,I,NY,NX).EQ.2)THEN
+      WTHTR0=WTHTH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
+      WTHNR0=WTHNH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
+      WTHPR0=WTHPH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
+      WTHTR1=WTHTH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
+      WTHNR1=WTHNH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
+      WTHPR1=WTHPH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
+      WTHTR2=WTHTH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
+      WTHNR2=WTHNH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
+      WTHPR2=WTHPH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
+      WTHTR3=WTHTH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
+      WTHNR3=WTHNH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
+      WTHPR3=WTHPH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
+      WTHTR4=WTHTH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
+      WTHNR4=WTHNH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
+      WTHPR4=WTHPH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
+C
+C     IF ALL PLANT C,N,P REMOVED AT HARVEST (NO RESIDUE RETURNED)
+C
+      ELSEIF(IHVST(NZ,I,NY,NX).EQ.3)THEN
+      WTHTR0=WTHTH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
+      WTHNR0=WTHNH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
+      WTHPR0=WTHPH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
+      WTHTR1=WTHTH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
+      WTHNR1=WTHNH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
+      WTHPR1=WTHPH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
+      WTHTR2=WTHTH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
+      WTHNR2=WTHNH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
+      WTHPR2=WTHPH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
+      WTHTR3=WTHTH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
+      WTHNR3=WTHNH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
+      WTHPR3=WTHPH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
+      WTHTR4=WTHTH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
+      WTHNR4=WTHNH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
+      WTHPR4=WTHPH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
+C
+C     IF PLANT C,N,P REMOVED BY GRAZING
+C
+      ELSEIF(IHVST(NZ,I,NY,NX).EQ.4.OR.IHVST(NZ,I,NY,NX).EQ.6)THEN
+      WTHTR0=WTHTH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
+      WTHNR0=WTHNH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
+      WTHPR0=WTHPH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
+      WTHTR1=WTHTH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
+      WTHNR1=WTHNH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
+      WTHPR1=WTHPH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
+      WTHTR2=WTHTH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
+      WTHNR2=WTHNH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
+      WTHPR2=WTHPH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
+      WTHTR3=WTHTH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
+      WTHNR3=WTHNH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
+      WTHPR3=WTHPH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
+      WTHTR4=WTHTH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
+      WTHNR4=WTHNH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
+      WTHPR4=WTHPH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
+      ENDIF
+C
+C     TOTAL C,N,P REMOVAL FROM DISTURBANCE
+C
+C     WTHTHT,WTHNHT,WTHPHT=total C,N,P removed
+C     WTHTRT,WTHNRT,WTHPRT=total removed C,N,P to litter
+C     IHVST=harvest type:0=none,1=grain,2=all above-ground
+C                       ,3=pruning,4=grazing,6=herbivory
+C     JHVST=terminate PFT:0=no,1=yes,2=yes,but reseed
+C     HVSTC,HVSTN,HVSTP=total C,N,P removed from ecosystem from PFT
+C     XHVSTC,XHVSTN,XHVSTP=total C,N,P removed from ecosystem 
+C        from all PFT
+C     WTRVC,WTRVN,WTRVP=storage C,N,P
+C
+      WTHTHT=WTHTH0+WTHTH1+WTHTH2+WTHTH3+WTHTH4
+      WTHTRT=WTHTR0+WTHTR1+WTHTR2+WTHTR3+WTHTR4
+      WTHNHT=WTHNH0+WTHNH1+WTHNH2+WTHNH3+WTHNH4
+      WTHNRT=WTHNR0+WTHNR1+WTHNR2+WTHNR3+WTHNR4
+      WTHPHT=WTHPH0+WTHPH1+WTHPH2+WTHPH3+WTHPH4
+      WTHPRT=WTHPR0+WTHPR1+WTHPR2+WTHPR3+WTHPR4
+      WTHTXT=WTHTX0+WTHTX1+WTHTX2+WTHTX3+WTHTX4
+      WTHNXT=WTHNX0+WTHNX1+WTHNX2+WTHNX3+WTHNX4
+      WTHPXT=WTHPX0+WTHPX1+WTHPX2+WTHPX3+WTHPX4
+      IF(IHVST(NZ,I,NY,NX).NE.4.AND.IHVST(NZ,I,NY,NX).NE.6)THEN
+C     IF(IHVST(NZ,I,NY,NX).NE.5)THEN
+      IF(JHVST(NZ,I,NY,NX).NE.2)THEN
+      HVSTC(NZ,NY,NX)=HVSTC(NZ,NY,NX)+WTHTHT-WTHTRT 
+      HVSTN(NZ,NY,NX)=HVSTN(NZ,NY,NX)+WTHNHT-WTHNRT 
+      HVSTP(NZ,NY,NX)=HVSTP(NZ,NY,NX)+WTHPHT-WTHPRT 
+      TNBP(NY,NX)=TNBP(NY,NX)+WTHTRT-WTHTHT
+      XHVSTC(NY,NX)=XHVSTC(NY,NX)+WTHTHT-WTHTRT
+      XHVSTN(NY,NX)=XHVSTN(NY,NX)+WTHNHT-WTHNRT
+      XHVSTP(NY,NX)=XHVSTP(NY,NX)+WTHPHT-WTHPRT
+      ELSE
+      WTRVC(NZ,NY,NX)=WTRVC(NZ,NY,NX)+WTHTHT-WTHTRT
+      WTRVN(NZ,NY,NX)=WTRVN(NZ,NY,NX)+WTHNHT-WTHNRT
+      WTRVP(NZ,NY,NX)=WTRVP(NZ,NY,NX)+WTHPHT-WTHPRT
+      ENDIF
+C     ENDIF
+C
+C     C,N,P REMOVED FROM GRAZING
+C
+C     HVSTC,HVSTN,HVSTP=total C,N,P removed from ecosystem from PFT
+C     XHVSTC,XHVSTN,XHVSTP=total C,N,P removed from ecosystem 
+C        from all PFT
+C     GY=growth yield of grazers
+C     WTHTHT,WTHNHT,WTHPHT=total C,N,P removed
+C     WTHTRT,WTHNRT,WTHPRT=total removed C,N,P to litter
+C     RECO=ecosystem respiration 
+C     TRAU=total autotrophic respiration
+C
+      ELSE
+      HVSTC(NZ,NY,NX)=HVSTC(NZ,NY,NX)+GY*(WTHTHT-WTHTRT)
+      HVSTN(NZ,NY,NX)=HVSTN(NZ,NY,NX)+WTHNHT-WTHNRT
+      HVSTP(NZ,NY,NX)=HVSTP(NZ,NY,NX)+WTHPHT-WTHPRT
+      TCO2T(NZ,NY,NX)=TCO2T(NZ,NY,NX)-GZ*(WTHTHT-WTHTRT)
+      TCO2A(NZ,NY,NX)=TCO2A(NZ,NY,NX)-GZ*(WTHTHT-WTHTRT)
+C     TNBP(NY,NX)=TNBP(NY,NX)+GY*(WTHTRT-WTHTHT)
+C     CNET(NZ,NY,NX)=CNET(NZ,NY,NX)+GZ*(WTHTRT-WTHTHT)
+C     HCNET(NZ,NY,NX)=HCNET(NZ,NY,NX)+GZ*(WTHTRT-WTHTHT)
+      XHVSTC(NY,NX)=XHVSTC(NY,NX)+GY*(WTHTHT-WTHTRT)
+      XHVSTN(NY,NX)=XHVSTN(NY,NX)+WTHNHT-WTHNRT
+      XHVSTP(NY,NX)=XHVSTP(NY,NX)+WTHPHT-WTHPRT
+      RECO(NY,NX)=RECO(NY,NX)-GZ*(WTHTHT-WTHTRT)
+      TRAU(NY,NX)=TRAU(NY,NX)-GZ*(WTHTHT-WTHTRT)
+C     WRITE(*,6542)'GRAZ',I,J,NFZ,NX,NY,NZ,HVSTC(NZ,NY,NX)
+C    2,GY,GZ,WTHTHT,WTHTRT 
+      ENDIF
+C
+C     ABOVE-GROUND LITTERFALL FROM HARVESTING
+C
+C     IHVST=harvest type:0=none,1=grain,2=all above-ground
+C                       ,3=pruning,4=grazing,6=herbivory
+C     CSNC,ZSNC,PSNC=C,N,P litterfall from disturbance
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
+C     WTHTR0,WTHNR0,WTHPR0=nonstructural C,N,P to litter
+C     WTHTR1,WTHNR1,WTHPR1=leaf C,N,P to litter 
+C     WTHTR2,WTHNR2,WTHPR2=fine,non-leaf C,N,P to litter 
+C     WTHTR3,WTHNR3,WTHPR3=woody C,N,P to litter 
+C     WTHTR4,WTHNR4,WTHPR4=standing dead C,N,P to litter 
+C     WTHTX1,WTHNX1,WTHPX1=harvested leaf C,N,P to litter
+C     WTHTX2,WTHNX2,WTHPX2=harvested petiole C,N,P to litter
+C     WTHTX3,WTHNX3,WTHPX3=harvested woody C,N,P to litter
+C     WTHTX4,WTHNX4,WTHPX4=harvested standing dead C,N,P to litter
+C     IBTYP=turnover rate of above-ground biomass
+C              :0,1=fully deciduous,
+C              :2=needleleaf evergreen
+C              :3=broadleaf evergreen
+C              :4=semi-deciduous
+C              :5=semi-evergreen
+C     IGTYP=growth type:0=bryophyte,1=grass,herb,2=woody shrub,tree
+C
+      IF(IHVST(NZ,I,NY,NX).NE.4.AND.IHVST(NZ,I,NY,NX).NE.6)THEN
+C     IF(IHVST(NZ,I,NY,NX).NE.5)THEN
+      DO 6375 M=1,4
+      CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)
+     2+CFOPC(0,M,NZ,NY,NX)*(WTHTR0+WTHTX0)
+     3+CFOPC(1,M,NZ,NY,NX)*(WTHTR1+WTHTX1)
+     4+CFOPC(2,M,NZ,NY,NX)*(WTHTR2+WTHTX2)
+      ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)
+     2+CFOPN(0,M,NZ,NY,NX)*(WTHNR0+WTHNX0)
+     3+CFOPN(1,M,NZ,NY,NX)*(WTHNR1+WTHNX1)
+     4+CFOPN(2,M,NZ,NY,NX)*(WTHNR2+WTHNX2)
+      PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)
+     2+CFOPP(0,M,NZ,NY,NX)*(WTHPR0+WTHPX0)
+     3+CFOPP(1,M,NZ,NY,NX)*(WTHPR1+WTHPX1)
+     4+CFOPP(2,M,NZ,NY,NX)*(WTHPR2+WTHPX2)
+      IF(IBTYP(NZ,NY,NX).EQ.0.OR.IGTYP(NZ,NY,NX).LE.1)THEN
+      CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)
+     2+CFOPC(3,M,NZ,NY,NX)*(WTHTR3+WTHTX3+WTHTR4+WTHTX4)
+      ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)
+     2+CFOPN(3,M,NZ,NY,NX)*(WTHNR3+WTHNX3+WTHNR4+WTHNX4)
+      PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)
+     2+CFOPP(3,M,NZ,NY,NX)*(WTHPR3+WTHPX3+WTHPR4+WTHPX4)
+      ELSE
+      WTSTDG(M,NZ,NY,NX)=WTSTDG(M,NZ,NY,NX)
+     2+CFOPC(5,M,NZ,NY,NX)*(WTHTX3+WTHTX4)
+      WTSTDN(M,NZ,NY,NX)=WTSTDN(M,NZ,NY,NX)
+     2+CFOPN(5,M,NZ,NY,NX)*(WTHNX3+WTHNX4)
+      WTSTDP(M,NZ,NY,NX)=WTSTDP(M,NZ,NY,NX)
+     2+CFOPP(5,M,NZ,NY,NX)*(WTHPX3+WTHPX4)
+      CSNC(M,0,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)
+     2+CFOPC(5,M,NZ,NY,NX)*(WTHTR3+WTHTR4)*FWOOD(0,NZ)
+      ZSNC(M,0,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)
+     2+CFOPN(5,M,NZ,NY,NX)*(WTHNR3+WTHNR4)*FWOODN(0,NZ)
+      PSNC(M,0,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)
+     2+CFOPP(5,M,NZ,NY,NX)*(WTHPR3+WTHPR4)*FWOODP(0,NZ)
+      CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)
+     2+CFOPC(2,M,NZ,NY,NX)*(WTHTR3+WTHTR4)*FWOOD(1,NZ)
+      ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)
+     2+CFOPN(2,M,NZ,NY,NX)*(WTHNR3+WTHNR4)*FWOODN(1,NZ)
+      PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)
+     2+CFOPP(2,M,NZ,NY,NX)*(WTHPR3+WTHPR4)*FWOODP(1,NZ)
+      ENDIF
+6375  CONTINUE
+C     ENDIF
+      ELSE
+C
+C     ABOVE-GROUND LITTERFALL FROM GRAZING
+C
+C     HCSNC,HZSNC,HPSNC=hourly C,N,P litterfall 
+C     TCSNC,TZSNC,TPSNC=cumulative C,N,P litterfall 
+C     TCSN0,TZSN0,TPSN0=cumulative above-ground C,N,P litterfall 
+C
+      HCSNC(NZ,NY,NX)=HCSNC(NZ,NY,NX)+WTHTRT+WTHTXT
+      HZSNC(NZ,NY,NX)=HZSNC(NZ,NY,NX)+WTHNRT+WTHNXT 
+      HPSNC(NZ,NY,NX)=HPSNC(NZ,NY,NX)+WTHPRT+WTHPXT
+      TCSNC(NZ,NY,NX)=TCSNC(NZ,NY,NX)+WTHTRT+WTHTXT
+      TZSNC(NZ,NY,NX)=TZSNC(NZ,NY,NX)+WTHNRT+WTHNXT 
+      TPSNC(NZ,NY,NX)=TPSNC(NZ,NY,NX)+WTHPRT+WTHPXT
+      TCSN0(NZ,NY,NX)=TCSN0(NZ,NY,NX)+WTHTRT+WTHTXT
+      TZSN0(NZ,NY,NX)=TZSNC(NZ,NY,NX)+WTHNRT+WTHNXT 
+      TPSN0(NZ,NY,NX)=TPSNC(NZ,NY,NX)+WTHPRT+WTHPXT
+C     WRITE(*,4812)'GRAZ',I,J,NFZ,NX,NY,NZ,NB,IHVST(NZ,I,NY,NX)
+C    2,TCSN0(NZ,NY,NX),WTHTRT,WTHTXT
+4812  FORMAT(A8,8I4,12E12.4)
+C
+C     ADD MANURE FROM GRAZING TO SURFACE LITTERFALL 
+C
+C     RUMINANT
+C
+C     IHVST=harvest type:0=none,1=grain,2=all above-ground
+C                       ,3=pruning,4=grazing,6=herbivory
+C     CMOSC=manure protein(1),carbohydrate(2),cellulose(3),
+C        lignin(4) fractions
+C     CSNM,ZSNM,PSNM=manure organic C,N,P deposition
+C     ZSNI,PSNI=manure inorganic N,P deposition 
+C     WTHTRT,WTHNRT,WTHPRT=total removed C,N,P to litter
+C     UORGF,UFERTN,UFERTP=accumulated litter C,N,P application
+C
+      IF(IHVST(NZ,I,NY,NX).EQ.4)THEN
+      CMOSC(1)=0.036
+      CMOSC(2)=0.044
+      CMOSC(3)=0.630
+      CMOSC(4)=0.290
+C
+C     NON-RUMINANT
+C
+      ELSEIF(IHVST(NZ,I,NY,NX).EQ.6)THEN
+      CMOSC(1)=0.138
+      CMOSC(2)=0.401
+      CMOSC(3)=0.316
+      CMOSC(4)=0.145
+      ENDIF
+      DO 6500 M=1,4
+      CSNM(M,NZ,NY,NX)=CMOSC(M)*(WTHTRT+WTHTXT) 
+      ZSNM(M,NZ,NY,NX)=CMOSC(M)*(WTHNRT+WTHNXT)*0.5 
+      PSNM(M,NZ,NY,NX)=CMOSC(M)*(WTHPRT+WTHPXT)*0.5 
+C     IF(NX.EQ.2)THEN
+C     WRITE(*,6542)'MANURE',I,J,NFZ,NX,NY,NZ,M,CSNM(M,NZ,NY,NX)
+C    2,ZSNM(M,NZ,NY,NX),PSNM(M,NZ,NY,NX),WTHTRT,WTHNRT,WTHPRT
+C    3,WTHTXT,WTHNXT,WTHPXT
+6542  FORMAT(A8,7I4,20E12.4)
+C     ENDIF
+6500  CONTINUE
+      ZSNI(NZ,NY,NX)=(WTHNRT+WTHNXT)*0.5 
+      PSNI(NZ,NY,NX)=(WTHPRT+WTHPXT)*0.5 
+      UORGF(NY,NX)=UORGF(NY,NX)+WTHTRT+WTHTXT
+      UFERTN(NY,NX)=UFERTN(NY,NX)+WTHNRT+WTHNXT
+      UFERTP(NY,NX)=UFERTP(NY,NX)+WTHPRT+WTHPXT
+      ENDIF
+      ZEROP(NZ,NY,NX)=ZERO*PP(NZ,NY,NX)
+      ZEROQ(NZ,NY,NX)=ZERO*PP(NZ,NY,NX)/AREA(3,NU(NY,NX),NY,NX)
+      ZEROP2(NZ,NY,NX)=ZERO2*PP(NZ,NY,NX)
+      ENDIF
+      ENDIF
+C
+C     END OF HARVEST
+C 
 C     RESET DEAD BRANCHES
 C
 C     ZNOON=hour of solar noon
@@ -8679,8 +9686,10 @@ C     PSTGF=node number at flowering
 C     VSTG=number of leaves appeared
 C     KVSTG=integer of most recent leaf number currently growing
 C     VSTGX=leaf number on date of floral initiation 
-C     TGSTGI=total change in vegve node number normalized for maturity group 
-C     TGSTGF=total change in reprve node number normalized for maturity group 
+C     TGSTGI=total change in vegetative node number normalized 
+C        for maturity group 
+C     TGSTGF=total change in reproductive node number normalized 
+C        for maturity group 
 C     FLG4=number of hours with no grain fill
 C     IFLGA=flag for initializing leafout 
 C     VRNS,VRNL=leafout hours,hours required for leafout 
@@ -8689,12 +9698,12 @@ C     ATRP=hourly leafout counter
 C     FDBK,FDBKX=N,P feedback inhibition on C3 CO2 fixation
 C     IFLGA,IFLGE=flag for initializing,enabling leafout 
 C     IFLGF=flag for enabling leafoff:0=enable,1=disable
-C     IFLGQ=current hours after physl maturity until start of litterfall
+C     IFLGQ=current hours after physlogical maturity 
+C        until start of litterfall
 C
-      IF(J.EQ.INT(ZNOON(NY,NX))
-     2.AND.IDAY(1,NB1(NZ,NY,NX),NZ,NY,NX).NE.0
-     2.AND.(ISTYP(NZ,NY,NX).NE.0.OR.(I.GE.IDAYH(NZ,NY,NX)
-     3.AND.IYRC.GE.IYRH(NZ,NY,NX))))THEN
+      IF(IDAY(1,NB1(NZ,NY,NX),NZ,NY,NX).NE.0
+     3.AND.(ISTYP(NZ,NY,NX).NE.0.OR.(I.GT.IDAYH(NZ,NY,NX)
+     4.AND.IYRC.GE.IYRH(NZ,NY,NX))))THEN
       IDTHY=0
 C
 C     RESET PHENOLOGY AND GROWTH STAGE OF DEAD BRANCHES
@@ -8732,7 +9741,9 @@ C
 C     LITTERFALL FROM DEAD BRANCHES
 C
 C     CSNC,ZSNC,PSNC=C,N,P litterfall from senescence
-C     CFOPC,CFOPN,CFOPC=fraction of litterfall C,N,P allocated to litter components
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     CPOOL,ZPOOL,PPOOL=non-structural C,N,P in branch
 C     CPOLNB,ZPOLNB,PPOLNB=nonstructural C,N,P in bacteria
 C     WTNDB,WTNDBN,WTNDBP=bacterial C,N,P mass
@@ -8746,38 +9757,47 @@ C     WTGRB,WTGRBN,WTGRBP=grain C,N,P mass
 C     WTRVC,WTRVN,WTRVP=storage C,N,P
 C     WTSTG,WTSTDN,WTSTDP=standing dead C,N,P mass
 C     ISTYP=growth habit:0=annual,1=perennial from PFT file
-C     IWTYP=phenology type:0=evergreen,1=cold decid,2=drought decid,3=1+2
-C     IBTYP=turnover:0=all abve-grd,1=all leaf+petiole,2=none,3=between 1,2
-C     IGTYP=growth type:0=bryophyte,1=graminoid,2=shrub,tree
+C     IWTYP=phenology type:0=evergreen,1=cold deciduous,2=drought
+C        deciduous,3=cold and drought deciduous
+C     IBTYP=turnover rate of above-ground biomass
+C              :0,1=fully deciduous,
+C              :2=needleleaf evergreen
+C              :3=broadleaf evergreen
+C              :4=semi-deciduous
+C              :5=semi-evergreen
+C     IGTYP=growth type:0=bryophyte,1=grass,herb,2=woody shrub,tree
 C
       DO 6405 M=1,4
       CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)
      2+CFOPC(0,M,NZ,NY,NX)*CPOLNB(NB,NZ,NY,NX) 
-     4+CFOPC(1,M,NZ,NY,NX)*(WTLFB(NB,NZ,NY,NX)*FWODB(1) 
+     4+CFOPC(1,M,NZ,NY,NX)*(WTLFB(NB,NZ,NY,NX)*FWODB(1,NZ) 
      5+WTNDB(NB,NZ,NY,NX)) 
-     6+CFOPC(2,M,NZ,NY,NX)*(WTSHEB(NB,NZ,NY,NX)*FWODB(1) 
+     6+CFOPC(2,M,NZ,NY,NX)*(WTSHEB(NB,NZ,NY,NX)*FWODB(1,NZ) 
      7+WTHSKB(NB,NZ,NY,NX)+WTEARB(NB,NZ,NY,NX))
       CSNC(M,0,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX) 
-     2+CFOPC(5,M,NZ,NY,NX)*(WTLFB(NB,NZ,NY,NX)*FWODB(0)
-     3+WTSHEB(NB,NZ,NY,NX)*FWODB(0))
+     2+CFOPC(5,M,NZ,NY,NX)*(WTLFB(NB,NZ,NY,NX)*FWODB(0,NZ)
+     3+WTSHEB(NB,NZ,NY,NX)*FWODB(0,NZ))
       ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)
      2+CFOPN(0,M,NZ,NY,NX)*ZPOLNB(NB,NZ,NY,NX)
-     4+CFOPN(1,M,NZ,NY,NX)*(WTLFBN(NB,NZ,NY,NX)*FWODLN(1)
+     4+CFOPN(1,M,NZ,NY,NX)*(WTLFBN(NB,NZ,NY,NX)*FWODLN(1,NZ)
      5+WTNDBN(NB,NZ,NY,NX))
-     6+CFOPN(2,M,NZ,NY,NX)*(WTSHBN(NB,NZ,NY,NX)*FWODSN(1) 
+     6+CFOPN(2,M,NZ,NY,NX)*(WTSHBN(NB,NZ,NY,NX)*FWODSN(1,NZ) 
      7+WTHSBN(NB,NZ,NY,NX)+WTEABN(NB,NZ,NY,NX))
       ZSNC(M,0,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX) 
-     2+CFOPN(5,M,NZ,NY,NX)*(WTLFBN(NB,NZ,NY,NX)*FWODLN(0)
-     3+WTSHBN(NB,NZ,NY,NX)*FWODSN(0))
+     2+CFOPN(5,M,NZ,NY,NX)*(WTLFBN(NB,NZ,NY,NX)*FWODLN(0,NZ)
+     3+WTSHBN(NB,NZ,NY,NX)*FWODSN(0,NZ))
       PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX) 
      2+CFOPP(0,M,NZ,NY,NX)*PPOLNB(NB,NZ,NY,NX)
-     4+CFOPP(1,M,NZ,NY,NX)*(WTLFBP(NB,NZ,NY,NX)*FWODLP(1)
+     4+CFOPP(1,M,NZ,NY,NX)*(WTLFBP(NB,NZ,NY,NX)*FWODLP(1,NZ)
      5+WTNDBP(NB,NZ,NY,NX))
-     6+CFOPP(2,M,NZ,NY,NX)*(WTSHBP(NB,NZ,NY,NX)*FWODSP(1)
+     6+CFOPP(2,M,NZ,NY,NX)*(WTSHBP(NB,NZ,NY,NX)*FWODSP(1,NZ)
      7+WTHSBP(NB,NZ,NY,NX)+WTEABP(NB,NZ,NY,NX))
       PSNC(M,0,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX) 
-     2+CFOPP(5,M,NZ,NY,NX)*(WTLFBP(NB,NZ,NY,NX)*FWODLP(0)
-     3+WTSHBP(NB,NZ,NY,NX)*FWODSP(0))
+     2+CFOPP(5,M,NZ,NY,NX)*(WTLFBP(NB,NZ,NY,NX)*FWODLP(0,NZ)
+     3+WTSHBP(NB,NZ,NY,NX)*FWODSP(0,NZ))
+C
+C     IF WINTER ANNUAL
+C
       IF(ISTYP(NZ,NY,NX).EQ.0.AND.IWTYP(NZ,NY,NX).NE.0)THEN
       WTRVC(NZ,NY,NX)=WTRVC(NZ,NY,NX)
      2+CFOPC(2,M,NZ,NY,NX)*WTGRB(NB,NZ,NY,NX)
@@ -8793,21 +9813,12 @@ C
       PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX) 
      2+CFOPP(2,M,NZ,NY,NX)*WTGRBP(NB,NZ,NY,NX)
       ENDIF
-      IF(IBTYP(NZ,NY,NX).EQ.0.OR.IGTYP(NZ,NY,NX).LE.1)THEN
-      CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)
-     5+CFOPC(3,M,NZ,NY,NX)*WTSTKB(NB,NZ,NY,NX)
-      ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)
-     5+CFOPN(3,M,NZ,NY,NX)*WTSTBN(NB,NZ,NY,NX)
-      PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)
-     5+CFOPP(3,M,NZ,NY,NX)*WTSTBP(NB,NZ,NY,NX)
-      ELSE
-      WTSTDG(M,NZ,NY,NX)=WTSTDG(M,NZ,NY,NX)
-     5+CFOPC(5,M,NZ,NY,NX)*WTSTKB(NB,NZ,NY,NX)
-      WTSTDN(M,NZ,NY,NX)=WTSTDN(M,NZ,NY,NX)
-     5+CFOPN(5,M,NZ,NY,NX)*WTSTBN(NB,NZ,NY,NX)
-      WTSTDP(M,NZ,NY,NX)=WTSTDP(M,NZ,NY,NX)
-     5+CFOPP(5,M,NZ,NY,NX)*WTSTBP(NB,NZ,NY,NX)
-      ENDIF
+      WTSTDG(M,NZ,NY,NX)=WTSTDG(M,NZ,NY,NX)+CFOPC(3,M,NZ,NY,NX)
+     5*(WTSTKB(NB,NZ,NY,NX)+WTRSVB(NB,NZ,NY,NX))
+      WTSTDN(M,NZ,NY,NX)=WTSTDN(M,NZ,NY,NX)+CFOPN(3,M,NZ,NY,NX)
+     5*(WTSTBN(NB,NZ,NY,NX)+WTRSBN(NB,NZ,NY,NX))
+      WTSTDP(M,NZ,NY,NX)=WTSTDP(M,NZ,NY,NX)+CFOPP(3,M,NZ,NY,NX)
+     5*(WTSTBP(NB,NZ,NY,NX)+WTRSBP(NB,NZ,NY,NX))
 6405  CONTINUE
 C
 C     RECOVER NON-STRUCTURAL C,N,P FROM BRANCH TO
@@ -8818,26 +9829,26 @@ C     CPOOL,ZPOOL,PPOOL=non-structural C,N,P in branch
 C     CPOOLK=total C4 nonstructural C in branch
 C     WTRSVB,WTRSBN,WTRSBP=stalk reserve C,N,P mass
 C     IHVST=harvest type:0=none,1=grain,2=all above-ground
-C                       ,3=pruning,4=grazing,5=fire,6=herbivory
+C                       ,3=pruning,4=grazing,6=herbivory
 C
       WTRVC(NZ,NY,NX)=WTRVC(NZ,NY,NX)+CPOOL(NB,NZ,NY,NX)
      2+CPOOLK(NB,NZ,NY,NX)
       WTRVN(NZ,NY,NX)=WTRVN(NZ,NY,NX)+ZPOOL(NB,NZ,NY,NX) 
       WTRVP(NZ,NY,NX)=WTRVP(NZ,NY,NX)+PPOOL(NB,NZ,NY,NX) 
-      IF(IHVST(NZ,I,NY,NX).NE.4.AND.IHVST(NZ,I,NY,NX).NE.6)THEN
-      DO 6406 M=1,4
-      CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)
-     2+CFOPC(0,M,NZ,NY,NX)*WTRSVB(NB,NZ,NY,NX)
-      ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)
-     2+CFOPN(0,M,NZ,NY,NX)*WTRSBN(NB,NZ,NY,NX)
-      PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX) 
-     2+CFOPP(0,M,NZ,NY,NX)*WTRSBP(NB,NZ,NY,NX)
+C     IF(IHVST(NZ,I,NY,NX).NE.4.AND.IHVST(NZ,I,NY,NX).NE.6)THEN
+C     DO 6406 M=1,4
+C     CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)
+C    2+CFOPC(0,M,NZ,NY,NX)*WTRSVB(NB,NZ,NY,NX)
+C     ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)
+C    2+CFOPN(0,M,NZ,NY,NX)*WTRSBN(NB,NZ,NY,NX)
+C     PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX) 
+C    2+CFOPP(0,M,NZ,NY,NX)*WTRSBP(NB,NZ,NY,NX)
 6406  CONTINUE
-      ELSE
-      WTRVC(NZ,NY,NX)=WTRVC(NZ,NY,NX)+WTRSVB(NB,NZ,NY,NX)
-      WTRVN(NZ,NY,NX)=WTRVN(NZ,NY,NX)+WTRSBN(NB,NZ,NY,NX)
-      WTRVP(NZ,NY,NX)=WTRVP(NZ,NY,NX)+WTRSBP(NB,NZ,NY,NX)
-      ENDIF
+C     ELSE
+C     WTRVC(NZ,NY,NX)=WTRVC(NZ,NY,NX)+WTRSVB(NB,NZ,NY,NX)
+C     WTRVN(NZ,NY,NX)=WTRVN(NZ,NY,NX)+WTRSBN(NB,NZ,NY,NX)
+C     WTRVP(NZ,NY,NX)=WTRVP(NZ,NY,NX)+WTRSBP(NB,NZ,NY,NX)
+C     ENDIF
 C
 C     RESET STATE VARIABLES FROM DEAD BRANCHES
 C
@@ -8954,17 +9965,23 @@ C
 8845  CONTINUE
       IF(IDTHY.EQ.NBR(NZ,NY,NX))THEN
       IDTHP(NZ,NY,NX)=1
+      IDTHR(NZ,NY,NX)=1
       NBT(NZ,NY,NX)=0
       WSTR(NZ,NY,NX)=0.0
-      IF(IFLGI(NZ,NY,NX).EQ.1)THEN
+C
+C     IF WINTER ANNUAL
+C
+      IF(ISTYP(NZ,NY,NX).EQ.0.AND.IWTYP(NZ,NY,NX).NE.0)THEN
       NBR(NZ,NY,NX)=1
       ELSE
       NBR(NZ,NY,NX)=0
+      PPX(NZ,NY,NX)=0.0
+      PP(NZ,NY,NX)=0.0
       ENDIF
       HTCTL(NZ,NY,NX)=0.0
-      VOLWOU=VOLWOU+VOLWP(NZ,NY,NX)
-      UVOLO(NY,NX)=UVOLO(NY,NX)+VOLWP(NZ,NY,NX)
-      VOLWP(NZ,NY,NX)=0.0
+C     VOLWOU=VOLWOU+VOLWP(NZ,NY,NX)
+C     UVOLO(NY,NX)=UVOLO(NY,NX)+VOLWP(NZ,NY,NX)
+C     VOLWP(NZ,NY,NX)=0.0
 C
 C     RESET LIVING FLAGS
 C
@@ -8974,29 +9991,32 @@ C     JHVST=terminate PFT:0=no,1=yes,2=yes,but reseed
 C     PP=PFT population
 C     IDTHP,IDTHR=PFT shoot,root living flag: 0=alive,1=dead
 C
-      IF(WTRVC(NZ,NY,NX).LT.1.0E-04*WTRT(NZ,NY,NX)
-     2.AND.ISTYP(NZ,NY,NX).NE.0)IDTHR(NZ,NY,NX)=1
-      IF(ISTYP(NZ,NY,NX).EQ.0)IDTHR(NZ,NY,NX)=1
-      IF(JHVST(NZ,I,NY,NX).NE.0)IDTHR(NZ,NY,NX)=1
-      IF(PP(NZ,NY,NX).LE.0.0)IDTHR(NZ,NY,NX)=1
-      IF(IDTHR(NZ,NY,NX).EQ.1)IDTHP(NZ,NY,NX)=1
+C     IF(WTRVC(NZ,NY,NX).LT.1.0E-04*WTRT(NZ,NY,NX)
+C    2.AND.ISTYP(NZ,NY,NX).NE.0)IDTHR(NZ,NY,NX)=1
+C     IF(ISTYP(NZ,NY,NX).EQ.0)IDTHR(NZ,NY,NX)=1
+C     IF(JHVST(NZ,I,NY,NX).NE.0)IDTHR(NZ,NY,NX)=1
+C     IF(PP(NZ,NY,NX).LE.0.0)IDTHR(NZ,NY,NX)=1
+C     IF(IDTHP(NZ,NY,NX).EQ.1)IDTHR(NZ,NY,NX)=1
       ENDIF
 C
 C     DEAD ROOTS
-C
 C
 C     LITTERFALL FROM DEAD ROOTS
 C
 C     IDTHR=PFT root living flag: 0=alive,1=dead
 C     CSNC,ZSNC,PSNC=C,N,P litterfall from senescence
-C     CFOPC,CFOPN,CFOPC=fraction of litterfall C,N,P allocated to litter components
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     CPOOLR,ZPOOLR,PPOOLR=non-structural C,N,P mass in root
 C     WTRT1,WTRT1N,WTRT1P=primary root C,N,P mass in soil layer
 C     WTRT2,WTRT2N,WTRT2P=secondary root C,N,P mass in soil layer
-C     FWOOD,FWOODN,FWOODP=C,N,P woody fraction in root:0=woody,1=non-woody
+C     FWOOD,FWOODN,FWOODP=C,N,P woody fraction in root:0=woody,
+C        1=non-woody
 C     CO2A,OXYA,CH4A,Z2OA,ZH3A,H2GA=root gaseous CO2,O2,CH4,N2O,NH3,H2
 C     CO2P,OXYP,CH4P,Z2OP,ZH3P,H2GP=root aqueous CO2,O2,CH4,N2O,NH3,H2
-C     RCO2Z,ROXYZ,RCH4Z,RN2OZ,RNH3Z,RH2GZ=root gaseous CO2,O2,CH4,N2O,NH3,H2 loss from disturbance
+C     RCO2Z,ROXYZ,RCH4Z,RN2OZ,RNH3Z,RH2GZ=root gaseous
+C        CO2,O2,CH4,N2O,NH3,H2 loss from disturbance
 C
       IF(IDTHR(NZ,NY,NX).EQ.1)THEN
       DO 8900 N=1,MY(NZ,NY,NX)
@@ -9010,17 +10030,17 @@ C
      2*PPOOLR(N,L,NZ,NY,NX)
       DO 6410 NR=1,NRT(NZ,NY,NX)
       CSNC(M,0,L,NZ,NY,NX)=CSNC(M,0,L,NZ,NY,NX)+CFOPC(5,M,NZ,NY,NX)
-     2*(WTRT1(N,L,NR,NZ,NY,NX)+WTRT2(N,L,NR,NZ,NY,NX))*FWODR(0)
+     2*(WTRT1(N,L,NR,NZ,NY,NX)+WTRT2(N,L,NR,NZ,NY,NX))*FWODR(0,NZ)
       ZSNC(M,0,L,NZ,NY,NX)=ZSNC(M,0,L,NZ,NY,NX)+CFOPN(5,M,NZ,NY,NX)
-     2*(WTRT1N(N,L,NR,NZ,NY,NX)+WTRT2N(N,L,NR,NZ,NY,NX))*FWODRN(0)
+     2*(WTRT1N(N,L,NR,NZ,NY,NX)+WTRT2N(N,L,NR,NZ,NY,NX))*FWODRN(0,NZ)
       PSNC(M,0,L,NZ,NY,NX)=PSNC(M,0,L,NZ,NY,NX)+CFOPP(5,M,NZ,NY,NX)
-     2*(WTRT1P(N,L,NR,NZ,NY,NX)+WTRT2P(N,L,NR,NZ,NY,NX))*FWODRP(0)
+     2*(WTRT1P(N,L,NR,NZ,NY,NX)+WTRT2P(N,L,NR,NZ,NY,NX))*FWODRP(0,NZ)
       CSNC(M,1,L,NZ,NY,NX)=CSNC(M,1,L,NZ,NY,NX)+CFOPC(4,M,NZ,NY,NX)
-     2*(WTRT1(N,L,NR,NZ,NY,NX)+WTRT2(N,L,NR,NZ,NY,NX))*FWODR(1)
+     2*(WTRT1(N,L,NR,NZ,NY,NX)+WTRT2(N,L,NR,NZ,NY,NX))*FWODR(1,NZ)
       ZSNC(M,1,L,NZ,NY,NX)=ZSNC(M,1,L,NZ,NY,NX)+CFOPN(4,M,NZ,NY,NX)
-     2*(WTRT1N(N,L,NR,NZ,NY,NX)+WTRT2N(N,L,NR,NZ,NY,NX))*FWODRN(1)
+     2*(WTRT1N(N,L,NR,NZ,NY,NX)+WTRT2N(N,L,NR,NZ,NY,NX))*FWODRN(1,NZ)
       PSNC(M,1,L,NZ,NY,NX)=PSNC(M,1,L,NZ,NY,NX)+CFOPP(4,M,NZ,NY,NX)
-     2*(WTRT1P(N,L,NR,NZ,NY,NX)+WTRT2P(N,L,NR,NZ,NY,NX))*FWODRP(1)
+     2*(WTRT1P(N,L,NR,NZ,NY,NX)+WTRT2P(N,L,NR,NZ,NY,NX))*FWODRP(1,NZ)
 6410  CONTINUE
 C
 C     RELEASE GAS CONTENTS OF DEAD ROOTS
@@ -9100,8 +10120,11 @@ C
 C     LITTERFALL AND STATE VARIABLES FROM DEAD NODULES
 C
 C     INTYP=N2 fixation: 1,2,3=rapid to slow root symbiosis
-C     CSNC,ZSNC,PSNC=C,N,P litterfall from decomposition and senescence
-C     CFOPC,CFOPN,CFOPC=fraction of litterfall C,N,P allocated to litter components
+C     CSNC,ZSNC,PSNC=C,N,P litterfall from decomposition 
+C        and senescence
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     WTNDL,WTNDLN,WTNDLP=bacterial C,N,P mass
 C     CPOOLN,ZPOOLN,PPOOLN=nonstructural C,N,P in bacteria
 C
@@ -9149,7 +10172,9 @@ C
 C     IDTHP,IDTHR=PFT shoot,root living flag: 0=alive,1=dead
 C     IFLGI=PFT initialization flag:0=no,1=yes
 C     CSNC,ZSNC,PSNC=C,N,P litterfall from senescence
-C     CFOPC,CFOPN,CFOPC=fraction of litterfall C,N,P allocated to litter components
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     CPOOL,ZPOOL,PPOOL=non-structural C,N,P in branch
 C     CPOLNB,ZPOLNB,PPOLNB=nonstructural C,N,P in bacteria
 C     CPOOLK=total C4 nonstructural C in branch
@@ -9162,44 +10187,65 @@ C     WTHSKB,WTEARB,WTGRB=branch husk,ear,grain C mass
 C     WTHSBN,WTEABN,WTGRBN=branch husk,ear,grain N mass
 C     WTHSBP,WTEABP,WTGRBP=branch husk,ear,grain P mass
 C     ISTYP=growth habit:0=annual,1=perennial from PFT file
-C     IWTYP=phenology type:0=evergreen,1=cold decid,2=drought decid,3=1+2
+C     IWTYP=phenology type:0=evergreen,1=cold deciduous,2=drought
+C        deciduous,3=cold and drought deciduous
 C     WTRVC,WTRVN,WTRVP=storage C,N,P
 C     WTSTG,WTSTDN,WTSTDP=standing dead C,N,P mass
 C
       IF(IDTHP(NZ,NY,NX).EQ.1.AND.IDTHR(NZ,NY,NX).EQ.1)THEN
-      IF(IFLGI(NZ,NY,NX).EQ.0)THEN
+      IF(ISTYP(NZ,NY,NX).NE.0.OR.IWTYP(NZ,NY,NX).EQ.0)THEN
+      IDTH(NZ,NY,NX)=1
+      DO 6426 M=1,4
+      CSNC(M,0,NG(NZ,NY,NX),NZ,NY,NX)=CSNC(M,0,NG(NZ,NY,NX),NZ,NY,NX)
+     2+CFOPC(0,M,NZ,NY,NX)*WTRVC(NZ,NY,NX)*FWOOD(0,NZ)
+      ZSNC(M,0,NG(NZ,NY,NX),NZ,NY,NX)=ZSNC(M,0,NG(NZ,NY,NX),NZ,NY,NX)
+     2+CFOPN(0,M,NZ,NY,NX)*WTRVN(NZ,NY,NX)*FWOODN(0,NZ)
+      PSNC(M,0,NG(NZ,NY,NX),NZ,NY,NX)=PSNC(M,0,NG(NZ,NY,NX),NZ,NY,NX)
+     2+CFOPP(0,M,NZ,NY,NX)*WTRVP(NZ,NY,NX)*FWOODP(0,NZ)
+      CSNC(M,1,NG(NZ,NY,NX),NZ,NY,NX)=CSNC(M,1,NG(NZ,NY,NX),NZ,NY,NX)
+     2+CFOPC(0,M,NZ,NY,NX)*WTRVC(NZ,NY,NX)*FWOOD(1,NZ)
+      ZSNC(M,1,NG(NZ,NY,NX),NZ,NY,NX)=ZSNC(M,1,NG(NZ,NY,NX),NZ,NY,NX)
+     2+CFOPN(0,M,NZ,NY,NX)*WTRVN(NZ,NY,NX)*FWOODN(1,NZ)
+      PSNC(M,1,NG(NZ,NY,NX),NZ,NY,NX)=PSNC(M,1,NG(NZ,NY,NX),NZ,NY,NX)
+     2+CFOPP(0,M,NZ,NY,NX)*WTRVP(NZ,NY,NX)*FWOODP(1,NZ)
+6426  CONTINUE
+      WTRVC(NZ,NY,NX)=0.0
+      WTRVN(NZ,NY,NX)=0.0
+      WTRVP(NZ,NY,NX)=0.0
+      ENDIF
       DO 6425 M=1,4
       DO 8825 NB=1,NBR(NZ,NY,NX)
       CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)
      2+CFOPC(0,M,NZ,NY,NX)*(CPOOL(NB,NZ,NY,NX)+CPOLNB(NB,NZ,NY,NX)
-     3+CPOOLK(NB,NZ,NY,NX)+WTRSVB(NB,NZ,NY,NX)) 
-     4+CFOPC(1,M,NZ,NY,NX)*(WTLFB(NB,NZ,NY,NX)*FWODB(1) 
+     3+CPOOLK(NB,NZ,NY,NX)) 
+     4+CFOPC(1,M,NZ,NY,NX)*(WTLFB(NB,NZ,NY,NX)*FWODB(1,NZ) 
      5+WTNDB(NB,NZ,NY,NX)) 
-     6+CFOPC(2,M,NZ,NY,NX)*(WTSHEB(NB,NZ,NY,NX)*FWODB(1) 
+     6+CFOPC(2,M,NZ,NY,NX)*(WTSHEB(NB,NZ,NY,NX)*FWODB(1,NZ) 
      7+WTHSKB(NB,NZ,NY,NX)+WTEARB(NB,NZ,NY,NX))
       CSNC(M,0,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX) 
-     2+CFOPC(5,M,NZ,NY,NX)*(WTLFB(NB,NZ,NY,NX)*FWODB(0)
-     3+WTSHEB(NB,NZ,NY,NX)*FWODB(0))
+     2+CFOPC(5,M,NZ,NY,NX)*(WTLFB(NB,NZ,NY,NX)*FWODB(0,NZ)
+     3+WTSHEB(NB,NZ,NY,NX)*FWODB(0,NZ))
       ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)
-     2+CFOPN(0,M,NZ,NY,NX)*(ZPOOL(NB,NZ,NY,NX)+ZPOLNB(NB,NZ,NY,NX)
-     3+WTRSBN(NB,NZ,NY,NX))
-     4+CFOPN(1,M,NZ,NY,NX)*(WTLFBN(NB,NZ,NY,NX)*FWODLN(1)
+     2+CFOPN(0,M,NZ,NY,NX)*(ZPOOL(NB,NZ,NY,NX)+ZPOLNB(NB,NZ,NY,NX))
+     4+CFOPN(1,M,NZ,NY,NX)*(WTLFBN(NB,NZ,NY,NX)*FWODLN(1,NZ)
      5+WTNDBN(NB,NZ,NY,NX))
-     6+CFOPN(2,M,NZ,NY,NX)*(WTSHBN(NB,NZ,NY,NX)*FWODSN(1) 
+     6+CFOPN(2,M,NZ,NY,NX)*(WTSHBN(NB,NZ,NY,NX)*FWODSN(1,NZ) 
      7+WTHSBN(NB,NZ,NY,NX)+WTEABN(NB,NZ,NY,NX))
       ZSNC(M,0,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX) 
-     2+CFOPN(5,M,NZ,NY,NX)*(WTLFBN(NB,NZ,NY,NX)*FWODLN(0)
-     3+WTSHBN(NB,NZ,NY,NX)*FWODSN(0))
+     2+CFOPN(5,M,NZ,NY,NX)*(WTLFBN(NB,NZ,NY,NX)*FWODLN(0,NZ)
+     3+WTSHBN(NB,NZ,NY,NX)*FWODSN(0,NZ))
       PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX) 
-     2+CFOPP(0,M,NZ,NY,NX)*(PPOOL(NB,NZ,NY,NX)+PPOLNB(NB,NZ,NY,NX)
-     3+WTRSBP(NB,NZ,NY,NX))
-     4+CFOPP(1,M,NZ,NY,NX)*(WTLFBP(NB,NZ,NY,NX)*FWODLP(1)
+     2+CFOPP(0,M,NZ,NY,NX)*(PPOOL(NB,NZ,NY,NX)+PPOLNB(NB,NZ,NY,NX))
+     4+CFOPP(1,M,NZ,NY,NX)*(WTLFBP(NB,NZ,NY,NX)*FWODLP(1,NZ)
      5+WTNDBP(NB,NZ,NY,NX))
-     6+CFOPP(2,M,NZ,NY,NX)*(WTSHBP(NB,NZ,NY,NX)*FWODSP(1)
+     6+CFOPP(2,M,NZ,NY,NX)*(WTSHBP(NB,NZ,NY,NX)*FWODSP(1,NZ)
      7+WTHSBP(NB,NZ,NY,NX)+WTEABP(NB,NZ,NY,NX))
       PSNC(M,0,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX) 
-     2+CFOPP(5,M,NZ,NY,NX)*(WTLFBP(NB,NZ,NY,NX)*FWODLP(0)
-     3+WTSHBP(NB,NZ,NY,NX)*FWODSP(0))
+     2+CFOPP(5,M,NZ,NY,NX)*(WTLFBP(NB,NZ,NY,NX)*FWODLP(0,NZ)
+     3+WTSHBP(NB,NZ,NY,NX)*FWODSP(0,NZ))
+C
+C     IF WINTER ANNUAL
+C
       IF(ISTYP(NZ,NY,NX).EQ.0.AND.IWTYP(NZ,NY,NX).NE.0)THEN
       WTRVC(NZ,NY,NX)=WTRVC(NZ,NY,NX)
      2+CFOPC(2,M,NZ,NY,NX)*WTGRB(NB,NZ,NY,NX)
@@ -9215,32 +10261,26 @@ C
       PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX) 
      2+CFOPP(2,M,NZ,NY,NX)*WTGRBP(NB,NZ,NY,NX)
       ENDIF
-      IF(IBTYP(NZ,NY,NX).EQ.0.OR.IGTYP(NZ,NY,NX).LE.1)THEN
-      CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)
-     5+CFOPC(3,M,NZ,NY,NX)*WTSTKB(NB,NZ,NY,NX)
-      ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)
-     5+CFOPN(3,M,NZ,NY,NX)*WTSTBN(NB,NZ,NY,NX)
-      PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)
-     5+CFOPP(3,M,NZ,NY,NX)*WTSTBP(NB,NZ,NY,NX)
-      ELSE
-      WTSTDG(M,NZ,NY,NX)=WTSTDG(M,NZ,NY,NX)
-     5+CFOPC(5,M,NZ,NY,NX)*WTSTKB(NB,NZ,NY,NX)
-      WTSTDN(M,NZ,NY,NX)=WTSTDN(M,NZ,NY,NX)
-     5+CFOPN(5,M,NZ,NY,NX)*WTSTBN(NB,NZ,NY,NX)
-      WTSTDP(M,NZ,NY,NX)=WTSTDP(M,NZ,NY,NX)
-     5+CFOPP(5,M,NZ,NY,NX)*WTSTBP(NB,NZ,NY,NX)
-      ENDIF
+      WTSTDG(M,NZ,NY,NX)=WTSTDG(M,NZ,NY,NX)+CFOPC(3,M,NZ,NY,NX)
+     5*(WTSTKB(NB,NZ,NY,NX)+WTRSVB(NB,NZ,NY,NX))
+      WTSTDN(M,NZ,NY,NX)=WTSTDN(M,NZ,NY,NX)+CFOPN(3,M,NZ,NY,NX)
+     5*(WTSTBN(NB,NZ,NY,NX)+WTRSBN(NB,NZ,NY,NX))
+      WTSTDP(M,NZ,NY,NX)=WTSTDP(M,NZ,NY,NX)+CFOPP(3,M,NZ,NY,NX)
+     5*(WTSTBP(NB,NZ,NY,NX)+WTRSBP(NB,NZ,NY,NX))
 8825  CONTINUE
 C
 C     LITTERFALL AND STATE VARIABLES FOR SEASONAL STORAGE
 C     RESERVES FROM ROOT AND STORGE AT DEATH
 C
 C     CSNC,ZSNC,PSNC=C,N,P litterfall from senescence
-C     CFOPC,CFOPN,CFOPC=fraction of litterfall C,N,P allocated to litter components
+C     CFOPC,CFOPN,CFOPC=fraction of plant litter C,N,P allocated 
+C        to nonstructural(0,*),foliar(1,*),non-foliar(2,*),
+C        stalk(3,*),root(4,*),coarse woody (5,*)
 C     CPOOLR,ZPOOLR,PPOOLR=non-structural C,N,P mass in root
 C     WTRT1,WTRT1N,WTRT1P=primary root C,N,P mass in soil layer
 C     WTRT2,WTRT2N,WTRT2P=secondary root C,N,P mass in soil layer
-C     FWOOD,FWOODN,FWOODP=C,N,P woody fraction in root:0=woody,1=non-woody
+C     FWOOD,FWOODN,FWOODP=C,N,P woody fraction in root:0=woody,
+C        1=non-woody
 C     WTRVC,WTRVN,WTRVP=storage C,N,P
 C
       DO 6415 L=NU(NY,NX),NJ(NY,NX)
@@ -9253,30 +10293,18 @@ C
      2*PPOOLR(N,L,NZ,NY,NX)
       DO 6415 NR=1,NRT(NZ,NY,NX)
       CSNC(M,0,L,NZ,NY,NX)=CSNC(M,0,L,NZ,NY,NX)+CFOPC(5,M,NZ,NY,NX)
-     2*(WTRT1(N,L,NR,NZ,NY,NX)+WTRT2(N,L,NR,NZ,NY,NX))*FWODR(0)
+     2*(WTRT1(N,L,NR,NZ,NY,NX)+WTRT2(N,L,NR,NZ,NY,NX))*FWODR(0,NZ)
       ZSNC(M,0,L,NZ,NY,NX)=ZSNC(M,0,L,NZ,NY,NX)+CFOPN(5,M,NZ,NY,NX)
-     2*(WTRT1N(N,L,NR,NZ,NY,NX)+WTRT2N(N,L,NR,NZ,NY,NX))*FWODRN(0)
+     2*(WTRT1N(N,L,NR,NZ,NY,NX)+WTRT2N(N,L,NR,NZ,NY,NX))*FWODRN(0,NZ)
       PSNC(M,0,L,NZ,NY,NX)=PSNC(M,0,L,NZ,NY,NX)+CFOPP(5,M,NZ,NY,NX)
-     2*(WTRT1P(N,L,NR,NZ,NY,NX)+WTRT2P(N,L,NR,NZ,NY,NX))*FWODRP(0)
+     2*(WTRT1P(N,L,NR,NZ,NY,NX)+WTRT2P(N,L,NR,NZ,NY,NX))*FWODRP(0,NZ)
       CSNC(M,1,L,NZ,NY,NX)=CSNC(M,1,L,NZ,NY,NX)+CFOPC(4,M,NZ,NY,NX)
-     2*(WTRT1(N,L,NR,NZ,NY,NX)+WTRT2(N,L,NR,NZ,NY,NX))*FWODR(1)
+     2*(WTRT1(N,L,NR,NZ,NY,NX)+WTRT2(N,L,NR,NZ,NY,NX))*FWODR(1,NZ)
       ZSNC(M,1,L,NZ,NY,NX)=ZSNC(M,1,L,NZ,NY,NX)+CFOPN(4,M,NZ,NY,NX)
-     2*(WTRT1N(N,L,NR,NZ,NY,NX)+WTRT2N(N,L,NR,NZ,NY,NX))*FWODRN(1)
+     2*(WTRT1N(N,L,NR,NZ,NY,NX)+WTRT2N(N,L,NR,NZ,NY,NX))*FWODRN(1,NZ)
       PSNC(M,1,L,NZ,NY,NX)=PSNC(M,1,L,NZ,NY,NX)+CFOPP(4,M,NZ,NY,NX)
-     2*(WTRT1P(N,L,NR,NZ,NY,NX)+WTRT2P(N,L,NR,NZ,NY,NX))*FWODRP(1)
+     2*(WTRT1P(N,L,NR,NZ,NY,NX)+WTRT2P(N,L,NR,NZ,NY,NX))*FWODRP(1,NZ)
 6415  CONTINUE
-      CSNC(M,0,NG(NZ,NY,NX),NZ,NY,NX)=CSNC(M,0,NG(NZ,NY,NX),NZ,NY,NX)
-     2+CFOPC(0,M,NZ,NY,NX)*WTRVC(NZ,NY,NX)*FWOOD(0)
-      ZSNC(M,0,NG(NZ,NY,NX),NZ,NY,NX)=ZSNC(M,0,NG(NZ,NY,NX),NZ,NY,NX)
-     2+CFOPN(0,M,NZ,NY,NX)*WTRVN(NZ,NY,NX)*FWOODN(0)
-      PSNC(M,0,NG(NZ,NY,NX),NZ,NY,NX)=PSNC(M,0,NG(NZ,NY,NX),NZ,NY,NX)
-     2+CFOPP(0,M,NZ,NY,NX)*WTRVP(NZ,NY,NX)*FWOODP(0)
-      CSNC(M,1,NG(NZ,NY,NX),NZ,NY,NX)=CSNC(M,1,NG(NZ,NY,NX),NZ,NY,NX)
-     2+CFOPC(0,M,NZ,NY,NX)*WTRVC(NZ,NY,NX)*FWOOD(1)
-      ZSNC(M,1,NG(NZ,NY,NX),NZ,NY,NX)=ZSNC(M,1,NG(NZ,NY,NX),NZ,NY,NX)
-     2+CFOPN(0,M,NZ,NY,NX)*WTRVN(NZ,NY,NX)*FWOODN(1)
-      PSNC(M,1,NG(NZ,NY,NX),NZ,NY,NX)=PSNC(M,1,NG(NZ,NY,NX),NZ,NY,NX)
-     2+CFOPP(0,M,NZ,NY,NX)*WTRVP(NZ,NY,NX)*FWOODP(1)
 6425  CONTINUE
 C
 C     RESET BRANCH STATE VARIABLES
@@ -9344,11 +10372,6 @@ C
       RTLG2(N,L,NR,NZ,NY,NX)=0.0
       RTN2(N,L,NR,NZ,NY,NX)=0.0
 6416  CONTINUE
-      WTRVC(NZ,NY,NX)=0.0
-      WTRVN(NZ,NY,NX)=0.0
-      WTRVP(NZ,NY,NX)=0.0
-      IDTH(NZ,NY,NX)=1
-      ENDIF
 C
 C     RESEED DEAD PERENNIALS
 C
@@ -9365,15 +10388,883 @@ C
       IDAY0(NZ,NY,NX)=1
       IYR0(NZ,NY,NX)=IDATA(3)+1
       ENDIF
+      IDTH(NZ,NY,NX)=1
+      WRITE(*,1114)'RESEED',IYRC,I,J,NFZ,NX,NY,NZ
+     2,IDAY0(NZ,NY,NX),IYR0(NZ,NY,NX)
+1114  FORMAT(A8,9I4)
+      ENDIF
       ENDIF
       ENDIF
       ENDIF
 C
-C     INITIALIZE PFT STATE VARIABLES
+C     ACCUMULATE TOTAL SOIL-PLANT C,N,P EXCHANGE
+C
+C     HCUPTK,HZUPTK,HPUPTK=net PFT root-soil C,N,P exchange
+C     UPOMC,UPOMN,UPOMP=net PFT root-soil nonstructl C,N,P exchange
+C     UPNH4,UPNO3,UPH2P,UPH1P=PFT uptake of NH4,NO3,H2PO4,HPO4
+C     UPNF=PFT N2 fixation
+C     TCUPTK,TZUPTK,TPUPTK=cumulative PFT root-soil C,N,P exchange
+C     TZUPFX=cumulative PFT N2 fixation
+C     ZNPP=net primary productivity
+C
+      HCUPTK(NZ,NY,NX)=UPOMC(NZ,NY,NX)
+      HZUPTK(NZ,NY,NX)=UPOMN(NZ,NY,NX)+UPNH4(NZ,NY,NX)
+     2+UPNO3(NZ,NY,NX)+UPNF(NZ,NY,NX)
+      HPUPTK(NZ,NY,NX)=UPOMP(NZ,NY,NX)+UPH2P(NZ,NY,NX)
+     2+UPH1P(NZ,NY,NX)
+      TCUPTK(NZ,NY,NX)=TCUPTK(NZ,NY,NX)+UPOMC(NZ,NY,NX)
+      TZUPTK(NZ,NY,NX)=TZUPTK(NZ,NY,NX)+UPOMN(NZ,NY,NX)
+     2+UPNH4(NZ,NY,NX)+UPNO3(NZ,NY,NX)
+      TPUPTK(NZ,NY,NX)=TPUPTK(NZ,NY,NX)+UPOMP(NZ,NY,NX)
+     2+UPH2P(NZ,NY,NX)+UPH1P(NZ,NY,NX)
+      TZUPFX(NZ,NY,NX)=TZUPFX(NZ,NY,NX)+UPNF(NZ,NY,NX)
+     2+UPNFC(NZ,NY,NX)
+      ZNPP(NZ,NY,NX)=CARBN(NZ,NY,NX)+TCO2T(NZ,NY,NX)
+C
+C     TRANSFORMATIONS IN LIVING OR DEAD PLANT POPULATIONS
+C
+C     TOTAL STANDING DEAD
+C
+C     WTSTG,WTSTDN,WTSTDP=standing dead C,N,P mass
+C     ZG=standing dead height
+C     ARSTG,ARSTD=standing dead surface area:total,layer
+C     SURFD=standing dead layer surface area accounting for
+C        inclination,azimuth used in ‘hour1.f’ 
+C
+      WTSTG(NZ,NY,NX)=0.0
+      WTSTGN(NZ,NY,NX)=0.0
+      WTSTGP(NZ,NY,NX)=0.0
+      DO 6435 M=1,5
+      WTSTG(NZ,NY,NX)=WTSTG(NZ,NY,NX)+WTSTDG(M,NZ,NY,NX) 
+      WTSTGN(NZ,NY,NX)=WTSTGN(NZ,NY,NX)+WTSTDN(M,NZ,NY,NX) 
+      WTSTGP(NZ,NY,NX)=WTSTGP(NZ,NY,NX)+WTSTDP(M,NZ,NY,NX)
+6435  CONTINUE
+      IF(WTSTG(NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
+      VSTD=VSTK*WTSTG(NZ,NY,NX)/AREA(3,NU(NY,NX),NY,NX)
+      RSTD=(0.01*VSTD/3.1416)**0.4
+      ZG(NZ,NY,NX)=100.0*RSTD
+      ARSTG(NZ,NY,NX)=6.2832*RSTD*ZG(NZ,NY,NX) 
+      DO 6440 L=1,JC
+      IF(ZG(NZ,NY,NX).GT.ZERO.AND.ZL(L-1,NY,NX).LT.ZG(NZ,NY,NX)
+     2.AND.ZL(L,NY,NX).GT.ZL(L-1,NY,NX))THEN
+      FARSTD=AMIN1(1.0,(ZG(NZ,NY,NX)-ZL(L-1,NY,NX))
+     2/(ZL(L,NY,NX)-ZL(L-1,NY,NX)))
+      ARSTD(L,NZ,NY,NX)=FARSTD*ARSTG(NZ,NY,NX)
+     2*(ZL(L,NY,NX)-ZL(L-1,NY,NX))/AMIN1(ZG(NZ,NY,NX),ZL(JC,NY,NX))
+      ELSE
+      FARSTD=0.0
+      ARSTD(L,NZ,NY,NX)=0.0
+      ENDIF
+      SURFD(4,L,NZ,NY,NX)=0.25*ARSTD(L,NZ,NY,NX)
+C     WRITE(*,4248)'ARSTG',I,J,NFZ,NZ,L
+C    2,ARSTG(NZ,NY,NX),ARSTD(L,NZ,NY,NX),FARSTD,ZL(L,NY,NX)
+C    3,ZL(L-1,NY,NX),ZT(NY,NX),ZG(NZ,NY,NX),WTSTG(NZ,NY,NX)
+C    4/AREA(3,NU(NY,NX),NY,NX),SURFD(4,L,NZ,NY,NX),RSTD
+4248  FORMAT(A8,5I4,20E12.4)
+6440  CONTINUE
+      ELSE
+      ZG(NZ,NY,NX)=0.0
+      ARSTG(NZ,NY,NX)=0.0 
+      DO 6441 L=1,JC
+      ARSTD(L,NZ,NY,NX)=0.0
+      SURFD(4,L,NZ,NY,NX)=0.0
+6441  CONTINUE
+      ENDIF
+9985  CONTINUE
+C
+C     IF FIRE EVENT IS IN PROGRESS
+C
+C     ICHKF=fire flag
+C
+      IF(ICHKF.EQ.1)THEN
+C
+C     COMBUST CANOPY CH4
+C
+C     TKQ=canopy air temperature
+C     TCMBX=minimum temperature for combustion (K)
+C     TFNCO=temperature function for combusting C (600K = 1)
+C     RC4CK=CH4 combustion fraction for use in ‘trnsfr.f’
+C
+      IF(TKQ(NY,NX).GT.TCMBX)THEN
+      RTK=8.3143*TKQ(NY,NX)
+      TFNCO=AMIN1(TFNCX,EXP(12.028-60000/RTK))
+      RC4CK(NY,NX)=AMIN1(1.0,TFNCO)
+      ELSE
+      RC4CK(NY,NX)=0.0
+      ENDIF
+C
+C     TOTAL SHOOT C POOLS FOR ALL PFTS USED TO CALCULATE
+C     COMBUSTION RATES
+C
+C     CPOOLP,WTLF,WTSHE,WTSTK,WTRSV,WTHSK,WTEAR,WTGR,CPOLNP
+C        WTND,WTSTG=total canopy nonstructural,leaf,petiole,
+C        stalk,reserve,husk,ear,grain,bacterial nonstructural,
+C        biomass,standing dead C
+C
+      TWPOOL(NY,NX)=0.0
+      TWTLF(NY,NX)=0.0
+      TWTSHE(NY,NX)=0.0
+      TWTSTK(NY,NX)=0.0
+      TWTRSV(NY,NX)=0.0
+      TWTHSK(NY,NX)=0.0
+      TWTEAR(NY,NX)=0.0
+      TWTGR(NY,NX)=0.0
+      TWPOLN(NY,NX)=0.0
+      TWTNDC(NY,NX)=0.0
+      TWTRVC(NY,NX)=0.0
+      TWTSTG(NY,NX)=0.0
+      DO 2980 L=NU(NY,NX),NJ(NY,NX)
+      TWPOLR(L,NY,NX)=0.0
+      TWTRTL(L,NY,NX)=0.0
+      TWPODL(L,NY,NX)=0.0
+      TWTNDL(L,NY,NX)=0.0
+2980  CONTINUE
+      DO 9965 NZ=1,NP0(NY,NX)
+      TWPOOL(NY,NX)=TWPOOL(NY,NX)+CPOOLP(NZ,NY,NX) 
+      TWTLF(NY,NX)=TWTLF(NY,NX)+WTLF(NZ,NY,NX)
+      TWTSHE(NY,NX)=TWTSHE(NY,NX)+WTSHE(NZ,NY,NX)
+      TWTSTK(NY,NX)=TWTSTK(NY,NX)+WTSTK(NZ,NY,NX)
+      TWTRSV(NY,NX)=TWTRSV(NY,NX)+WTRSV(NZ,NY,NX)
+      TWTHSK(NY,NX)=TWTHSK(NY,NX)+WTHSK(NZ,NY,NX)
+      TWTEAR(NY,NX)=TWTEAR(NY,NX)+WTEAR(NZ,NY,NX)
+      TWTGR(NY,NX)=TWTGR(NY,NX)+WTGR(NZ,NY,NX)
+      IF(INTYP(NZ,NY,NX).GE.4)THEN
+      TWPOLN(NY,NX)=TWPOLN(NY,NX)+CPOLNP(NZ,NY,NX)
+      TWTNDC(NY,NX)=TWTNDC(NY,NX)+WTND(NZ,NY,NX)
+      ENDIF
+      TWTSTG(NY,NX)=TWTSTG(NY,NX)+WTSTG(NZ,NY,NX)
+C
+C     TOTAL ROOT C POOLS FOR ALL PFTS
+C
+C     WTRVC,CPOOLN,WTNDL,CPOOLR,WTRT1,WTRT2=storage,bacterial 
+C        nonstructural,biomass,root nonstructural,primary,secondary C
+C
+      TWTRVC(NY,NX)=TWTRVC(NY,NX)+WTRVC(NZ,NY,NX)
+      DO 2975 L=NU(NY,NX),NJ(NY,NX)
+      TWPODL(L,NY,NX)=TWPODL(L,NY,NX)+CPOOLN(L,NZ,NY,NX)
+      TWTNDL(L,NY,NX)=TWTNDL(L,NY,NX)+WTNDL(L,NZ,NY,NX)
+      DO 2975 N=1,MY(NZ,NY,NX)
+      TWPOLR(L,NY,NX)=TWPOLR(L,NY,NX)+CPOOLR(N,L,NZ,NY,NX)
+      DO 2975 NR=1,NRT(NZ,NY,NX)
+      TWTRTL(L,NY,NX)=TWTRTL(L,NY,NX)+WTRT1(N,L,NR,NZ,NY,NX)
+     2+WTRT2(N,L,NR,NZ,NY,NX)
+2975  CONTINUE
+9965  CONTINUE
+C
+C     COMBUST SHOOT
+C
+C     TKC,TKD=canopy,standing dead surface temperature
+C     TCMBX=minimum temperature for combustion (K)
+C     TFNCO,TFNDO=temperature function for combusting living,
+C        standing dead C (600K = 1)
+C     SPCMB=specific combustion rate of different combustion types
+C        living plant material (0-4) at 600K, charcoal(5) at 700K
+C     RCBC*=combustion rate for each combustion type 
+C
+      DO 9970 NZ=1,NP0(NY,NX)
+      IF(TKC(NZ,NY,NX).GT.TCMBX.OR.TKD(NZ,NY,NX).GT.TCMBX)THEN
+      RTK=8.3143*TKC(NZ,NY,NX)
+      RTKD=8.3143*TKD(NZ,NY,NX)
+      TFNCO=AMIN1(TFNCX,EXP(12.028-60000/RTK))
+      TFNDO=AMIN1(TFNCX,EXP(12.028-60000/RTKD))
+      RCBCX=TFNCO*AREA(3,NU(NY,NX),NY,NX)*XNFH
+      RCBDX=TFNDO*AREA(3,NU(NY,NX),NY,NX)*XNFH
+      RCBC1=SPCMB(1)*RCBCX 
+      RCBC2=SPCMB(2)*RCBCX 
+      RCBC3=SPCMB(3)*RCBCX 
+      RCBC4=SPCMB(4)*RCBCX 
+      RCBC5=SPCMB(5)*RCBDX
+C
+C     SHOOT C POOL COMBUSTION FRACTIONS
+C
+C     FW*=fraction of C combusted for each total C pool
+C     R*=C,N,P combustion rate for each PFT C pool
+C     PFT pool code:
+C        CPOOL,ZPOOL,PPOOL=non-structural C,N,P mass
+C        WTLFB,WTLFBN,WTLFBP=leaf C,N,P mass
+C        WTSHEB,WTSHBN,WTSHBP=petiole C,N,P mass
+C        WTSTKB,WTSTBN,WTSTBP=stalk C,N,P mass 
+C        WTRSVB,WTRSBN,WTRSBP=stalk reserve C,N,P mass
+C        WTHSKB,WTHSBN,WTHSBP=husk C,N,P mass 
+C        WTEARB,WTEABN,WTEABP=ear C,N,P mass 
+C        WTGRB,WTGRBN,WTGRBP=grain C,N,P mass 
+C        CPOLNB,ZPOLNB,PPOLNB=nonstructural C,N,P in bacteria
+C        WTNDB,WTNDBN,WTNDBP=bacterial C,N,P mass
+C
+      IF(TWPOOL(NY,NX).GT.ZEROS(NY,NX))THEN 
+      FWPOOL=AMIN1(1.0,RCBC1/TWPOOL(NY,NX))
+      ELSE
+      FWPOOL=0.0
+      ENDIF
+      IF(TWTLF(NY,NX).GT.ZEROS(NY,NX))THEN 
+      FWTLF=AMIN1(1.0,RCBC1/TWTLF(NY,NX))
+      ELSE
+      FWTLF=0.0
+      ENDIF
+      IF(TWTSHE(NY,NX).GT.ZEROS(NY,NX))THEN 
+      IF(IBTYP(NZ,NY,NX).EQ.0.OR.IGTYP(NZ,NY,NX).LE.1)THEN 
+      FWTSHE=AMIN1(1.0,RCBC2/TWTSHE(NY,NX))
+      ELSE
+      FWTSHE=AMIN1(1.0,RCBC3/TWTSHE(NY,NX))
+      ENDIF
+      ELSE
+      FWTSHE=0.0
+      ENDIF
+      IF(TWTSTK(NY,NX).GT.ZEROS(NY,NX))THEN
+      IF(IBTYP(NZ,NY,NX).EQ.0.OR.IGTYP(NZ,NY,NX).LE.1)THEN 
+      FWTSTK=AMIN1(1.0,RCBC2/TWTSTK(NY,NX))
+      ELSE
+      FWTSTK=AMIN1(1.0,RCBC4/TWTSTK(NY,NX))
+      ENDIF
+      ELSE
+      FWTSTK=0.0
+      ENDIF
+      FWTRSV=FWTSTK 
+      IF(TWTHSK(NY,NX).GT.ZEROS(NY,NX))THEN 
+      FWTHSK=AMIN1(1.0,RCBC1/TWTHSK(NY,NX))
+      ELSE
+      FWTHSK=0.0
+      ENDIF
+      IF(TWTEAR(NY,NX).GT.ZEROS(NY,NX))THEN 
+      FWTEAR=AMIN1(1.0,RCBC2/TWTEAR(NY,NX))
+      ELSE
+      FWTEAR=0.0
+      ENDIF
+      IF(TWTGR(NY,NX).GT.ZEROS(NY,NX))THEN 
+      FWTGR=AMIN1(1.0,RCBC2/TWTGR(NY,NX))
+      ELSE
+      FWTGR=0.0
+      ENDIF
+      IF(TWPOLN(NY,NX).GT.ZEROS(NY,NX))THEN 
+      FWPOLN=AMIN1(1.0,RCBC1/TWPOLN(NY,NX))
+      ELSE
+      FWPOLN=0.0
+      ENDIF
+      IF(TWTNDC(NY,NX).GT.ZEROS(NY,NX))THEN 
+      FWTNDC=AMIN1(1.0,RCBC2/TWTNDC(NY,NX))
+      ELSE
+      FWTNDC=0.0
+      ENDIF
+      IF(TWTSTG(NY,NX).GT.ZEROS(NY,NX))THEN 
+      FWTSTG=AMIN1(1.0,RCBC5/TWTSTG(NY,NX))
+      ELSE
+      FWTSTG=0.0
+      ENDIF
+C
+C     SHOOT COMBUSTION RATES
+C
+C     R*=C,N,P combustion rate for each PFT C pool
+C     PFT pool code:
+C        CPOOL,ZPOOL,PPOOL=non-structural C,N,P mass
+C        WTLFB,WTLFBN,WTLFBP=leaf C,N,P mass
+C        WTSHEB,WTSHBN,WTSHBP=petiole C,N,P mass
+C        WTSTKB,WTSTBN,WTSTBP=stalk C,N,P mass 
+C        WTRSVB,WTRSBN,WTRSBP=stalk reserve C,N,P mass
+C        WTHSKB,WTHSBN,WTHSBP=husk C,N,P mass 
+C        WTEARB,WTEABN,WTEABP=ear C,N,P mass 
+C        WTGRB,WTGRBN,WTGRBP=grain C,N,P mass 
+C        CPOLNB,ZPOLNB,PPOLNB=nonstructural C,N,P in bacteria
+C        WTNDB,WTNDBN,WTNDBP=bacterial C,N,P mass
+C     ARLFB=leaf area
+C
+      DO 8750 NB=1,NBR(NZ,NY,NX)
+      RCPOOL(NB,NZ,NY,NX)=CPOOL(NB,NZ,NY,NX)*FWPOOL
+      RZPOOL(NB,NZ,NY,NX)=ZPOOL(NB,NZ,NY,NX)*FWPOOL 
+      RPPOOL(NB,NZ,NY,NX)=PPOOL(NB,NZ,NY,NX)*FWPOOL 
+      RWTLFB(NB,NZ,NY,NX)=WTLFB(NB,NZ,NY,NX)*FWTLF
+      RWTLFBN(NB,NZ,NY,NX)=WTLFBN(NB,NZ,NY,NX)*FWTLF
+      RWTLFBP(NB,NZ,NY,NX)=WTLFBP(NB,NZ,NY,NX)*FWTLF
+      RWTSHEB(NB,NZ,NY,NX)=WTSHEB(NB,NZ,NY,NX)*FWTSHE 
+      RWTSHBN(NB,NZ,NY,NX)=WTSHBN(NB,NZ,NY,NX)*FWTSHE 
+      RWTSHBP(NB,NZ,NY,NX)=WTSHBP(NB,NZ,NY,NX)*FWTSHE 
+      RWTSTKB(NB,NZ,NY,NX)=WTSTKB(NB,NZ,NY,NX)*FWTSTK 
+      RWTSTBN(NB,NZ,NY,NX)=WTSTBN(NB,NZ,NY,NX)*FWTSTK 
+      RWTSTBP(NB,NZ,NY,NX)=WTSTBP(NB,NZ,NY,NX)*FWTSTK 
+      RWTRSVB(NB,NZ,NY,NX)=WTRSVB(NB,NZ,NY,NX)*FWTRSV 
+      RWTRSBN(NB,NZ,NY,NX)=WTRSBN(NB,NZ,NY,NX)*FWTRSV 
+      RWTRSBP(NB,NZ,NY,NX)=WTRSBP(NB,NZ,NY,NX)*FWTRSV 
+      RWTHSKB(NB,NZ,NY,NX)=WTHSKB(NB,NZ,NY,NX)*FWTHSK 
+      RWTHSBN(NB,NZ,NY,NX)=WTHSBN(NB,NZ,NY,NX)*FWTHSK 
+      RWTHSBP(NB,NZ,NY,NX)=WTHSBP(NB,NZ,NY,NX)*FWTHSK 
+      RWTEARB(NB,NZ,NY,NX)=WTEARB(NB,NZ,NY,NX)*FWTEAR 
+      RWTEABN(NB,NZ,NY,NX)=WTEABN(NB,NZ,NY,NX)*FWTEAR 
+      RWTEABP(NB,NZ,NY,NX)=WTEABP(NB,NZ,NY,NX)*FWTEAR 
+      RWTGRB(NB,NZ,NY,NX)=WTGRB(NB,NZ,NY,NX)*FWTGR
+      RWTGRBN(NB,NZ,NY,NX)=WTGRBN(NB,NZ,NY,NX)*FWTGR
+      RWTGRBP(NB,NZ,NY,NX)=WTGRBP(NB,NZ,NY,NX)*FWTGR
+      RCPOLNB(NB,NZ,NY,NX)=CPOLNB(NB,NZ,NY,NX)*FWPOLN
+      RZPOLNB(NB,NZ,NY,NX)=ZPOLNB(NB,NZ,NY,NX)*FWPOLN
+      RPPOLNB(NB,NZ,NY,NX)=PPOLNB(NB,NZ,NY,NX)*FWPOLN
+      RWTNDB(NB,NZ,NY,NX)=WTNDB(NB,NZ,NY,NX)*FWTNDC 
+      RWTNDBN(NB,NZ,NY,NX)=WTNDBN(NB,NZ,NY,NX)*FWTNDC 
+      RWTNDBP(NB,NZ,NY,NX)=WTNDBP(NB,NZ,NY,NX)*FWTNDC
+C
+C     REMAINING UNCOMBUSTED SHOOT C POOLS AND ATTRIBUTES
+C 
+      CPOOL(NB,NZ,NY,NX)=CPOOL(NB,NZ,NY,NX)-RCPOOL(NB,NZ,NY,NX) 
+      ZPOOL(NB,NZ,NY,NX)=ZPOOL(NB,NZ,NY,NX)-RZPOOL(NB,NZ,NY,NX) 
+      PPOOL(NB,NZ,NY,NX)=PPOOL(NB,NZ,NY,NX)-RPPOOL(NB,NZ,NY,NX) 
+      WTLFB(NB,NZ,NY,NX)=WTLFB(NB,NZ,NY,NX)-RWTLFB(NB,NZ,NY,NX) 
+      WTLFBN(NB,NZ,NY,NX)=WTLFBN(NB,NZ,NY,NX)-RWTLFBN(NB,NZ,NY,NX)
+      WTLFBP(NB,NZ,NY,NX)=WTLFBP(NB,NZ,NY,NX)-RWTLFBP(NB,NZ,NY,NX)
+      WTSHEB(NB,NZ,NY,NX)=WTSHEB(NB,NZ,NY,NX)-RWTSHEB(NB,NZ,NY,NX)
+      WTSHBN(NB,NZ,NY,NX)=WTSHBN(NB,NZ,NY,NX)-RWTSHBN(NB,NZ,NY,NX)
+      WTSHBP(NB,NZ,NY,NX)=WTSHBP(NB,NZ,NY,NX)-RWTSHBP(NB,NZ,NY,NX)
+      WTSTKB(NB,NZ,NY,NX)=WTSTKB(NB,NZ,NY,NX)-RWTSTKB(NB,NZ,NY,NX)
+      WTSTBN(NB,NZ,NY,NX)=WTSTBN(NB,NZ,NY,NX)-RWTSTBN(NB,NZ,NY,NX)
+      WTSTBP(NB,NZ,NY,NX)=WTSTBP(NB,NZ,NY,NX)-RWTSTBP(NB,NZ,NY,NX)
+      WTRSVB(NB,NZ,NY,NX)=WTRSVB(NB,NZ,NY,NX)-RWTRSVB(NB,NZ,NY,NX)
+      WTRSBN(NB,NZ,NY,NX)=WTRSBN(NB,NZ,NY,NX)-RWTRSBN(NB,NZ,NY,NX)
+      WTRSBP(NB,NZ,NY,NX)=WTRSBP(NB,NZ,NY,NX)-RWTRSBP(NB,NZ,NY,NX)
+      WTHSKB(NB,NZ,NY,NX)=WTHSKB(NB,NZ,NY,NX)-RWTHSKB(NB,NZ,NY,NX)
+      WTHSBN(NB,NZ,NY,NX)=WTHSBN(NB,NZ,NY,NX)-RWTHSBN(NB,NZ,NY,NX)
+      WTHSBP(NB,NZ,NY,NX)=WTHSBP(NB,NZ,NY,NX)-RWTHSBP(NB,NZ,NY,NX)
+      WTEARB(NB,NZ,NY,NX)=WTEARB(NB,NZ,NY,NX)-RWTEARB(NB,NZ,NY,NX)
+      WTEABN(NB,NZ,NY,NX)=WTEABN(NB,NZ,NY,NX)-RWTEABN(NB,NZ,NY,NX)
+      WTEABP(NB,NZ,NY,NX)=WTEABP(NB,NZ,NY,NX)-RWTEABP(NB,NZ,NY,NX)
+      WTGRB(NB,NZ,NY,NX)=WTGRB(NB,NZ,NY,NX)-RWTGRB(NB,NZ,NY,NX)  
+      WTGRBN(NB,NZ,NY,NX)=WTGRBN(NB,NZ,NY,NX)-RWTGRBN(NB,NZ,NY,NX)
+      WTGRBP(NB,NZ,NY,NX)=WTGRBP(NB,NZ,NY,NX)-RWTGRBP(NB,NZ,NY,NX)
+      CPOLNB(NB,NZ,NY,NX)=CPOLNB(NB,NZ,NY,NX)-RCPOLNB(NB,NZ,NY,NX)
+      ZPOLNB(NB,NZ,NY,NX)=ZPOLNB(NB,NZ,NY,NX)-RZPOLNB(NB,NZ,NY,NX)
+      PPOLNB(NB,NZ,NY,NX)=PPOLNB(NB,NZ,NY,NX)-RPPOLNB(NB,NZ,NY,NX)
+      WTNDB(NB,NZ,NY,NX)=WTNDB(NB,NZ,NY,NX)-RWTNDB(NB,NZ,NY,NX) 
+      WTNDBN(NB,NZ,NY,NX)=WTNDBN(NB,NZ,NY,NX)-RWTNDBN(NB,NZ,NY,NX) 
+      WTNDBP(NB,NZ,NY,NX)=WTNDBP(NB,NZ,NY,NX)-RWTNDBP(NB,NZ,NY,NX)
+      WTSHTB(NB,NZ,NY,NX)=WTLFB(NB,NZ,NY,NX)
+     2+WTSHEB(NB,NZ,NY,NX)+WTSTKB(NB,NZ,NY,NX)+WTRSVB(NB,NZ,NY,NX)
+     3+WTHSKB(NB,NZ,NY,NX)+WTEARB(NB,NZ,NY,NX)+WTGRB(NB,NZ,NY,NX)
+     4+CPOOL(NB,NZ,NY,NX)+CPOOLK(NB,NZ,NY,NX)
+      WTSHTN(NB,NZ,NY,NX)=WTLFBN(NB,NZ,NY,NX)
+     2+WTSHBN(NB,NZ,NY,NX)+WTSTBN(NB,NZ,NY,NX)+WTRSBN(NB,NZ,NY,NX)
+     3+WTHSBN(NB,NZ,NY,NX)+WTEABN(NB,NZ,NY,NX)+WTGRBN(NB,NZ,NY,NX)
+     4+ZPOOL(NB,NZ,NY,NX)
+      WTSHTP(NB,NZ,NY,NX)=WTLFBP(NB,NZ,NY,NX)
+     2+WTSHBP(NB,NZ,NY,NX)+WTSTBP(NB,NZ,NY,NX)+WTRSBP(NB,NZ,NY,NX)
+     3+WTHSBP(NB,NZ,NY,NX)+WTEABP(NB,NZ,NY,NX)+WTGRBP(NB,NZ,NY,NX)
+     4+PPOOL(NB,NZ,NY,NX)
+      ARLFB(NB,NZ,NY,NX)=ARLFB(NB,NZ,NY,NX)*(1.0-FWTLF) 
+C
+C     TOTAL SHOOT COMBUSTION LOSSES
+C
+C     RCGCKZ=total canopy C combustion of PFT
+C     VCOXF,VNOXF,VPOXF=total C,N,P combustion loss for output
+C
+      RCGCKB=RCPOOL(NB,NZ,NY,NX)
+     2+RWTLFB(NB,NZ,NY,NX)+RWTSHEB(NB,NZ,NY,NX)+RWTSTKB(NB,NZ,NY,NX)
+     3+RWTRSVB(NB,NZ,NY,NX)+RWTHSKB(NB,NZ,NY,NX)+RWTEARB(NB,NZ,NY,NX)
+     4+RWTGRB(NB,NZ,NY,NX)+RCPOLNB(NB,NZ,NY,NX)+RWTNDB(NB,NZ,NY,NX)
+      RCGNKB=RZPOOL(NB,NZ,NY,NX)
+     2+RWTLFBN(NB,NZ,NY,NX)+RWTSHBN(NB,NZ,NY,NX)+RWTSTBN(NB,NZ,NY,NX)
+     3+RWTRSBN(NB,NZ,NY,NX)+RWTHSBN(NB,NZ,NY,NX)+RWTEABN(NB,NZ,NY,NX)
+     4+RWTGRBN(NB,NZ,NY,NX)+RZPOLNB(NB,NZ,NY,NX)+RWTNDBN(NB,NZ,NY,NX)
+      RCGPKB=RPPOOL(NB,NZ,NY,NX)
+     2+RWTLFBP(NB,NZ,NY,NX)+RWTSHBP(NB,NZ,NY,NX)+RWTSTBP(NB,NZ,NY,NX) 
+     3+RWTRSBP(NB,NZ,NY,NX)+RWTHSBP(NB,NZ,NY,NX)+RWTEABP(NB,NZ,NY,NX)
+     4+RWTGRBP(NB,NZ,NY,NX)+RPPOLNB(NB,NZ,NY,NX)+RWTNDBP(NB,NZ,NY,NX)
+      RCGCKZ(NZ,NY,NX)=RCGCKZ(NZ,NY,NX)+RCGCKB 
+      VCOXF(NZ,NY,NX)=VCOXF(NZ,NY,NX)-RCGCKB 
+      VNOXF(NZ,NY,NX)=VNOXF(NZ,NY,NX)-RCGNKB
+      VPOXF(NZ,NY,NX)=VPOXF(NZ,NY,NX)-RCGPKB 
+C     WRITE(*,1910)'BURNSH',I,J,NFZ,NX,NY,NZ,NB,ICHKF
+C    2,IDTHB(NB,NZ,NY,NX),RCGCKZ(NZ,NY,NX)
+C    2,TKC(NZ,NY,NX),TFNCO,XNFH 
+C    2,VCOXF(NZ,NY,NX),VNOXF(NZ,NY,NX),VPOXF(NZ,NY,NX)
+C    2,RCBCX,RCBC1,RCBC2,RCBC3,RCBC4,RCBC5
+C    3,FWPOOL,FWTLF,FWTSHE,FWTSTK,FWTRSV,FWTHSK,FWTEAR,FWTGR
+C    4,FWPOLN,FWTNDC,FWTSTG,WTLFB(NB,NZ,NY,NX),WTLF(NZ,NY,NX)
+C    4,TWTLF(NY,NX),TKC(NZ,NY,NX),TKD(NZ,NY,NX)
+1910  FORMAT(A8,9I4,40E12.4)
+C
+C     REMAINING UNCOMBUSTED SHOOT C POOLS AT EACH NODE
+C 
+      DO 8745 K=0,25
+      ARLF(K,NB,NZ,NY,NX)=ARLF(K,NB,NZ,NY,NX)*(1.0-FWTLF) 
+      HTSHE(K,NB,NZ,NY,NX)=HTSHE(K,NB,NZ,NY,NX)*(1.0-FWTSHE) 
+      WGLF(K,NB,NZ,NY,NX)=WGLF(K,NB,NZ,NY,NX)*(1.0-FWTLF)  
+      WSLF(K,NB,NZ,NY,NX)=WSLF(K,NB,NZ,NY,NX)*(1.0-FWTLF)  
+      WGLFN(K,NB,NZ,NY,NX)=WGLFN(K,NB,NZ,NY,NX)*(1.0-FWTLF)  
+      WGLFP(K,NB,NZ,NY,NX)=WGLFP(K,NB,NZ,NY,NX)*(1.0-FWTLF)  
+      WGSHE(K,NB,NZ,NY,NX)=WGSHE(K,NB,NZ,NY,NX)*(1.0-FWTSHE)  
+      WSSHE(K,NB,NZ,NY,NX)=WSSHE(K,NB,NZ,NY,NX)*(1.0-FWTSHE) 
+      WGSHN(K,NB,NZ,NY,NX)=WGSHN(K,NB,NZ,NY,NX)*(1.0-FWTSHE) 
+      WGSHP(K,NB,NZ,NY,NX)=WGSHP(K,NB,NZ,NY,NX)*(1.0-FWTSHE) 
+      WGNODE(K,NB,NZ,NY,NX)=WGNODE(K,NB,NZ,NY,NX)*(1.0-FWTSTK)
+      WGNODN(K,NB,NZ,NY,NX)=WGNODN(K,NB,NZ,NY,NX)*(1.0-FWTSTK)
+      WGNODP(K,NB,NZ,NY,NX)=WGNODP(K,NB,NZ,NY,NX)*(1.0-FWTSTK)
+      DO 8745 L=1,JC
+      ARLFL(L,K,NB,NZ,NY,NX)=ARLFL(L,K,NB,NZ,NY,NX)*(1.0-FWTLF)
+      WGLFL(L,K,NB,NZ,NY,NX)=WGLFL(L,K,NB,NZ,NY,NX)*(1.0-FWTLF)
+      WGLFLN(L,K,NB,NZ,NY,NX)=WGLFLN(L,K,NB,NZ,NY,NX)*(1.0-FWTLF)
+      WGLFLP(L,K,NB,NZ,NY,NX)=WGLFLP(L,K,NB,NZ,NY,NX)*(1.0-FWTLF)
+8745  CONTINUE
+8750  CONTINUE
+C
+C     COMBUST STANDING DEAD
+C
+C     FW*=fraction of C combusted for each total C pool
+C     R*=C,N,P combustion rate for each PFT C pool
+C     PFT pool code:
+C        WTSTDG,WTSTDN,WTSTDP=standing dead C,N,P mass
+C
+      DO 8740 M=1,4
+      RWTSTDG(M,NZ,NY,NX)=WTSTDG(M,NZ,NY,NX)*FWTSTG
+      RWTSTDN(M,NZ,NY,NX)=WTSTDN(M,NZ,NY,NX)*FWTSTG
+      RWTSTDP(M,NZ,NY,NX)=WTSTDP(M,NZ,NY,NX)*FWTSTG
+      WTSTDG(M,NZ,NY,NX)=WTSTDG(M,NZ,NY,NX)-RWTSTDG(M,NZ,NY,NX)
+      WTSTDN(M,NZ,NY,NX)=WTSTDN(M,NZ,NY,NX)-RWTSTDN(M,NZ,NY,NX)
+      WTSTDP(M,NZ,NY,NX)=WTSTDP(M,NZ,NY,NX)-RWTSTDP(M,NZ,NY,NX)
+C
+C     TOTAL STANDING DEAD COMBUSTION LOSSES
+C
+C     RCGDKZ=total standing dead C combustion of PFT
+C     VCOXF,VNOXF,VPOXF=total C,N,P combustion loss for output
+C
+      RCGDKZ(NZ,NY,NX)=RCGDKZ(NZ,NY,NX)+RWTSTDG(M,NZ,NY,NX)
+      VCOXF(NZ,NY,NX)=VCOXF(NZ,NY,NX)-RWTSTDG(M,NZ,NY,NX)
+      VNOXF(NZ,NY,NX)=VNOXF(NZ,NY,NX)-RWTSTDN(M,NZ,NY,NX)
+      VPOXF(NZ,NY,NX)=VPOXF(NZ,NY,NX)-RWTSTDP(M,NZ,NY,NX)
+C     WRITE(*,1912)'BURNST',I,J,NFZ,NX,NY,NZ,M,ICHKF
+C    2,RCGDKZ(NZ,NY,NX),RWTSTDG(M,NZ,NY,NX),WTSTDG(M,NZ,NY,NX),FWTSTG
+C    3,TFNDO,RCBC5,TWTSTG(NY,NX),WTSTG(NZ,NY,NX),RCGCK(NY,NX)
+1912  FORMAT(A8,8I4,30E12.4) 
+8740  CONTINUE
+C
+C     COMBUST CHARCOAL
+C
+C     TFNCH=temperature function for combusting charcoal C
+C        (700K = 1)
+C     SPCMB=specific combustion rate of different combustion types
+C        living plant material (0-4) at 600K, charcoal(5) at 700K
+C     RCBC*=combustion rate for each combustion type
+C     FWSTG=fraction of charcoal combusted
+C     WTSTDG(5,WTSTDN(5,WTSTDP(5=charcoal C,N,P in standing dead 
+C
+      TFNCH=AMIN1(TFNCX,EXP(20.620-120000/RTKD))
+      RCBCX=TFNCH*AREA(3,NU(NY,NX),NY,NX)*XNFH
+      RCBC5=SPCMB(5)*RCBCX
+      IF(TWTSTG(NY,NX).GT.ZEROS(NY,NX))THEN 
+      FWTSTG=AMIN1(1.0,RCBC5/TWTSTG(NY,NX))
+      ELSE
+      FWTSTG=0.0
+      ENDIF
+      RWTSTDG(5,NZ,NY,NX)=WTSTDG(5,NZ,NY,NX)*FWTSTG
+      RWTSTDN(5,NZ,NY,NX)=WTSTDN(5,NZ,NY,NX)*FWTSTG
+      RWTSTDP(5,NZ,NY,NX)=WTSTDP(5,NZ,NY,NX)*FWTSTG
+      WTSTDG(5,NZ,NY,NX)=WTSTDG(5,NZ,NY,NX)-RWTSTDG(5,NZ,NY,NX)
+      WTSTDN(5,NZ,NY,NX)=WTSTDN(5,NZ,NY,NX)-RWTSTDN(5,NZ,NY,NX)
+      WTSTDP(5,NZ,NY,NX)=WTSTDP(5,NZ,NY,NX)-RWTSTDP(5,NZ,NY,NX)
+C
+C     TOTAL CHARCOAL COMBUSTION LOSSES
+C
+C     RCGCKZ=total C combustion of each PFT
+C     RCGCK=total canopy+standing dead C combustion of all PFT
+C     VCOXF,VNOXF,VPOXF=total C,N,P combustion loss for output
+C
+      RCGDKZ(NZ,NY,NX)=RCGDKZ(NZ,NY,NX)+RWTSTDG(5,NZ,NY,NX)
+      VCOXF(NZ,NY,NX)=VCOXF(NZ,NY,NX)-RWTSTDG(5,NZ,NY,NX)
+      VNOXF(NZ,NY,NX)=VNOXF(NZ,NY,NX)-RWTSTDN(5,NZ,NY,NX)
+      VPOXF(NZ,NY,NX)=VPOXF(NZ,NY,NX)-RWTSTDP(5,NZ,NY,NX)
+      RCGCK(NY,NX)=RCGCK(NY,NX)+RCGCKZ(NZ,NY,NX)+RCGDKZ(NZ,NY,NX)
+C
+C     IF NO FIRE
+C
+      ELSE
+      RCGCKZ(NZ,NY,NX)=0.0
+      RCGDKZ(NZ,NY,NX)=0.0
+      DO 8751 NB=1,NBR(NZ,NY,NX)
+      RCPOOL(NB,NZ,NY,NX)=0.0
+      RZPOOL(NB,NZ,NY,NX)=0.0 
+      RPPOOL(NB,NZ,NY,NX)=0.0 
+      RWTLFB(NB,NZ,NY,NX)=0.0
+      RWTLFBN(NB,NZ,NY,NX)=0.0
+      RWTLFBP(NB,NZ,NY,NX)=0.0
+      RWTSHEB(NB,NZ,NY,NX)=0.0 
+      RWTSHBN(NB,NZ,NY,NX)=0.0 
+      RWTSHBP(NB,NZ,NY,NX)=0.0 
+      RWTSTKB(NB,NZ,NY,NX)=0.0 
+      RWTSTBN(NB,NZ,NY,NX)=0.0 
+      RWTSTBP(NB,NZ,NY,NX)=0.0 
+      RWTRSVB(NB,NZ,NY,NX)=0.0 
+      RWTRSBN(NB,NZ,NY,NX)=0.0 
+      RWTRSBP(NB,NZ,NY,NX)=0.0 
+      RWTHSKB(NB,NZ,NY,NX)=0.0 
+      RWTHSBN(NB,NZ,NY,NX)=0.0 
+      RWTHSBP(NB,NZ,NY,NX)=0.0 
+      RWTEARB(NB,NZ,NY,NX)=0.0 
+      RWTEABN(NB,NZ,NY,NX)=0.0 
+      RWTEABP(NB,NZ,NY,NX)=0.0 
+      RWTGRB(NB,NZ,NY,NX)=0.0
+      RWTGRBN(NB,NZ,NY,NX)=0.0
+      RWTGRBP(NB,NZ,NY,NX)=0.0
+      RCPOLNB(NB,NZ,NY,NX)=0.0
+      RZPOLNB(NB,NZ,NY,NX)=0.0
+      RPPOLNB(NB,NZ,NY,NX)=0.0
+      RWTNDB(NB,NZ,NY,NX)=0.0 
+      RWTNDBN(NB,NZ,NY,NX)=0.0 
+      RWTNDBP(NB,NZ,NY,NX)=0.0 
+8751  CONTINUE
+      DO 8741 M=1,5
+      RWTSTDG(M,NZ,NY,NX)=0.0
+      RWTSTDN(M,NZ,NY,NX)=0.0
+      RWTSTDP(M,NZ,NY,NX)=0.0
+8741  CONTINUE
+C     WRITE(*,1913)'BURNCH',I,J,NFZ,NX,NY,NZ,ICHKF
+C    2,RCGDKZ(NZ,NY,NX),RWTSTDG(5,NZ,NY,NX),WTSTDG(5,NZ,NY,NX),FWTSTG
+C    3,TFNCH,RCBC5,TWTSTG(NY,NX),WTSTG(NZ,NY,NX),RCGCK(NY,NX) 
+1913  FORMAT(A8,7I4,30E12.4) 
+      ENDIF
+C
+C     COMBUST ROOTS AND STORAGE
+C
+C     TKS=soil temperature
+C     TCMBX=minimum temperature for combustion (K)
+C     TFNCO,TFNDO=temperature function for combusting living C
+C        (600K = 1)
+C     SPCMB=specific combustion rate of different combustion types
+C        living plant material (0-4) at 600K, charcoal(5) at 700K
+C     RCBC*=combustion rate for each combustion type 
+C
+      DO 8880 L=NU(NY,NX),NJ(NY,NX)
+      IF(TKS(L,NY,NX).GT.TCMBX)THEN
+      RTK=8.3143*TKS(L,NY,NX)
+      TFNCO=AMIN1(TFNCX,EXP(12.028-60000/RTK))
+      RCBCX=TFNCO*AREA(3,NU(NY,NX),NY,NX)*XNFH
+      RCBC1=SPCMB(1)*RCBCX 
+      RCBC2=SPCMB(2)*RCBCX 
+      RCBC3=SPCMB(3)*RCBCX 
+      RCBC4=SPCMB(4)*RCBCX 
+      RCBC5=SPCMB(5)*RCBCX
+C
+C     ROOT AND STORAGE C POOL COMBUSTION FRACTIONS
+C
+C     FW*=fraction of C combusted for each total C pool
+C     R*=C,N,P combustion rate for each PFT C pool
+C     PFT pool code:
+C        CPOOLR,ZPOOLR,PPOOLR=non-structural C,N,P mass in root
+C        WTRTL=total active root C
+C        WTRT1,WTRT1N,WTRT1P=primary root C,N,P mass in soil layer
+C        WTRT2,WTRT2N,WTRT2P=secondary root C,N,P mass in soil layer
+C        CPOOLN,ZPOOLN,PPOOLN=nonstructural C,N,P in bacteria
+C        WTNDL,WTNDLN,WTNDLP=bacterial C,N,P mass
+C        WTRVC=storage C,N,P
+C
+      IF(TWPOLR(L,NY,NX).GT.ZEROS(NY,NX))THEN 
+      FWPOLR=AMIN1(1.0,RCBC1/TWPOLR(L,NY,NX))
+      ELSE
+      FWPOLR=0.0
+      ENDIF
+      IF(TWTRTL(L,NY,NX).GT.ZEROS(NY,NX))THEN 
+      FWTRTL=AMIN1(1.0,RCBC4/TWTRTL(L,NY,NX))
+      ELSE
+      FWTRTL=0.0
+      ENDIF
+      IF(TWPODL(L,NY,NX).GT.ZEROS(NY,NX))THEN 
+      FWPODL=AMIN1(1.0,RCBC1/TWPODL(L,NY,NX))
+      ELSE
+      FWPODL=0.0
+      ENDIF
+      IF(TWTNDL(L,NY,NX).GT.ZEROS(NY,NX))THEN 
+      FWTNDL=AMIN1(1.0,RCBC2/TWTNDL(L,NY,NX))
+      ELSE
+      FWTNDL=0.0
+      ENDIF
+      IF(L.EQ.NU(NY,NX))THEN
+C     IF(TWTRVC(NY,NX).GT.ZEROS(NY,NX))THEN 
+C     FWTRVC=AMIN1(1.0,RCBC1/TWTRVC(NY,NX))
+C     ELSE
+      FWTRVC=FWTRTL
+C     ENDIF
+C
+C     STORAGE COMBUSTION RATES
+C
+C     R*=C,N,P combustion rate for each PFT C pool
+C
+      RWTRVC(NZ,NY,NX)=WTRVC(NZ,NY,NX)*FWTRVC
+      RWTRVN(NZ,NY,NX)=WTRVN(NZ,NY,NX)*FWTRVC
+      RWTRVP(NZ,NY,NX)=WTRVP(NZ,NY,NX)*FWTRVC
+C
+C     REMAINING UNCOMBUSTED STORAGE C POOLS
+C 
+      WTRVC(NZ,NY,NX)=WTRVC(NZ,NY,NX)-RWTRVC(NZ,NY,NX)
+      WTRVN(NZ,NY,NX)=WTRVN(NZ,NY,NX)-RWTRVN(NZ,NY,NX)
+      WTRVP(NZ,NY,NX)=WTRVP(NZ,NY,NX)-RWTRVP(NZ,NY,NX)
+C
+C     TOTAL STORAGE COMBUSTION LOSSES
+C
+C     RCGSKR=total root C combustion of PFT
+C     VCOXF,VNOXF,VPOXF=total C,N,P combustion loss for output
+C
+      RCGSKR(L,NZ,NY,NX)=RCGSKR(L,NZ,NY,NX)+RWTRVC(NZ,NY,NX)
+      VCOXF(NZ,NY,NX)=VCOXF(NZ,NY,NX)-RWTRVC(NZ,NY,NX)
+      VNOXF(NZ,NY,NX)=VNOXF(NZ,NY,NX)-RWTRVN(NZ,NY,NX)
+      VPOXF(NZ,NY,NX)=VPOXF(NZ,NY,NX)-RWTRVP(NZ,NY,NX)
+C     WRITE(*,1909)'BURNRV',I,J,NFZ,NX,NY,NZ,L,NR,N,ICHKF
+C    2,WTRVC(NZ,NY,NX),RWTRVC(NZ,NY,NX),FWTRVC,FWTRTL 
+C    3,RCBC4,TWTRTL(L,NY,NX)
+      ENDIF
+C
+C     ROOT COMBUSTION RATES
+C
+C     R*=C,N,P combustion rate for each PFT C pool
+C
+      DO 8885 N=1,MY(NZ,NY,NX)
+      RCPOOLR(N,L,NZ,NY,NX)=CPOOLR(N,L,NZ,NY,NX)*FWPOLR 
+      RZPOOLR(N,L,NZ,NY,NX)=ZPOOLR(N,L,NZ,NY,NX)*FWPOLR 
+      RPPOOLR(N,L,NZ,NY,NX)=PPOOLR(N,L,NZ,NY,NX)*FWPOLR 
+      CPOOLR(N,L,NZ,NY,NX)=CPOOLR(N,L,NZ,NY,NX)-RCPOOLR(N,L,NZ,NY,NX)
+      ZPOOLR(N,L,NZ,NY,NX)=ZPOOLR(N,L,NZ,NY,NX)-RZPOOLR(N,L,NZ,NY,NX)
+      PPOOLR(N,L,NZ,NY,NX)=PPOOLR(N,L,NZ,NY,NX)-RPPOOLR(N,L,NZ,NY,NX)
+C
+C     TOTAL ROOT COMBUSTION LOSSES
+C
+C     RCGSKR=total root C combustion of PFT
+C     VCOXF,VNOXF,VPOXF=total C,N,P combustion loss for output
+C
+      RCGSKR(L,NZ,NY,NX)=RCGSKR(L,NZ,NY,NX)+RCPOOLR(N,L,NZ,NY,NX)
+      VCOXF(NZ,NY,NX)=VCOXF(NZ,NY,NX)-RCPOOLR(N,L,NZ,NY,NX)
+      VNOXF(NZ,NY,NX)=VNOXF(NZ,NY,NX)-RZPOOLR(N,L,NZ,NY,NX)
+      VPOXF(NZ,NY,NX)=VPOXF(NZ,NY,NX)-RPPOOLR(N,L,NZ,NY,NX)
+C
+C     REMAINING UNCOMBUSTED ROOT C POOLS AND ATTRIBUTES
+C 
+      WTRTL(N,L,NZ,NY,NX)=WTRTL(N,L,NZ,NY,NX)*(1.0-FWTRTL) 
+      WTRTD(N,L,NZ,NY,NX)=WTRTD(N,L,NZ,NY,NX)*(1.0-FWTRTL) 
+      WSRTL(N,L,NZ,NY,NX)=WSRTL(N,L,NZ,NY,NX)*(1.0-FWTRTL) 
+      RTN1(N,L,NZ,NY,NX)=RTN1(N,L,NZ,NY,NX)*(1.0-FWTRTL)
+      RTNL(N,L,NZ,NY,NX)=RTNL(N,L,NZ,NY,NX)*(1.0-FWTRTL)
+      RTLGP(N,L,NZ,NY,NX)=RTLGP(N,L,NZ,NY,NX)*(1.0-FWTRTL)
+      RTDNP(N,L,NZ,NY,NX)=RTDNP(N,L,NZ,NY,NX)*(1.0-FWTRTL)
+      RTVLP(N,L,NZ,NY,NX)=RTVLP(N,L,NZ,NY,NX)*(1.0-FWTRTL)
+      RTVLW(N,L,NZ,NY,NX)=RTVLW(N,L,NZ,NY,NX)*(1.0-FWTRTL)
+      RTARP(N,L,NZ,NY,NX)=RTARP(N,L,NZ,NY,NX)*(1.0-FWTRTL)
+      DO 8785 NR=1,NRT(NZ,NY,NX)
+      RWTRT1(N,L,NR,NZ,NY,NX)=WTRT1(N,L,NR,NZ,NY,NX)*FWTRTL
+      RWTRT2(N,L,NR,NZ,NY,NX)=WTRT2(N,L,NR,NZ,NY,NX)*FWTRTL
+      RWTRT1N(N,L,NR,NZ,NY,NX)=WTRT1N(N,L,NR,NZ,NY,NX)*FWTRTL 
+      RWTRT2N(N,L,NR,NZ,NY,NX)=WTRT2N(N,L,NR,NZ,NY,NX)*FWTRTL 
+      RWTRT1P(N,L,NR,NZ,NY,NX)=WTRT1P(N,L,NR,NZ,NY,NX)*FWTRTL 
+      RWTRT2P(N,L,NR,NZ,NY,NX)=WTRT2P(N,L,NR,NZ,NY,NX)*FWTRTL 
+      WTRT1(N,L,NR,NZ,NY,NX)=WTRT1(N,L,NR,NZ,NY,NX)
+     2-RWTRT1(N,L,NR,NZ,NY,NX)
+      WTRT2(N,L,NR,NZ,NY,NX)=WTRT2(N,L,NR,NZ,NY,NX)
+     2-RWTRT2(N,L,NR,NZ,NY,NX)
+      WTRT1N(N,L,NR,NZ,NY,NX)=WTRT1N(N,L,NR,NZ,NY,NX)
+     2-RWTRT1N(N,L,NR,NZ,NY,NX)
+      WTRT2N(N,L,NR,NZ,NY,NX)=WTRT2N(N,L,NR,NZ,NY,NX)
+     2-RWTRT2N(N,L,NR,NZ,NY,NX)
+      WTRT1P(N,L,NR,NZ,NY,NX)=WTRT1P(N,L,NR,NZ,NY,NX)
+     2-RWTRT1P(N,L,NR,NZ,NY,NX)
+      WTRT2P(N,L,NR,NZ,NY,NX)=WTRT2P(N,L,NR,NZ,NY,NX)
+     2-RWTRT2P(N,L,NR,NZ,NY,NX)
+C
+C     TOTAL ROOT COMBUSTION LOSSES
+C
+C     RCGSKR=total root C combustion of PFT
+C     VCOXF,VNOXF,VPOXF=total C,N,P combustion loss for output
+C
+      RCGSKR(L,NZ,NY,NX)=RCGSKR(L,NZ,NY,NX)+RWTRT1(N,L,NR,NZ,NY,NX)
+     2+RWTRT2(N,L,NR,NZ,NY,NX)
+      VCOXF(NZ,NY,NX)=VCOXF(NZ,NY,NX)-(RWTRT1(N,L,NR,NZ,NY,NX)
+     2+RWTRT2(N,L,NR,NZ,NY,NX))
+      VNOXF(NZ,NY,NX)=VNOXF(NZ,NY,NX)-(RWTRT1N(N,L,NR,NZ,NY,NX)
+     2+RWTRT2N(N,L,NR,NZ,NY,NX))
+      VPOXF(NZ,NY,NX)=VPOXF(NZ,NY,NX)-(RWTRT1P(N,L,NR,NZ,NY,NX)
+     2+RWTRT2P(N,L,NR,NZ,NY,NX))
+      RTWT1(N,NR,NZ,NY,NX)=RTWT1(N,NR,NZ,NY,NX)*(1.0-FWTRTL)
+      RTWT1N(N,NR,NZ,NY,NX)=RTWT1N(N,NR,NZ,NY,NX)*(1.0-FWTRTL)
+      RTWT1P(N,NR,NZ,NY,NX)=RTWT1P(N,NR,NZ,NY,NX)*(1.0-FWTRTL)
+      RTLG1(N,L,NR,NZ,NY,NX)=RTLG1(N,L,NR,NZ,NY,NX)*(1.0-FWTRTL)
+      RTLG2(N,L,NR,NZ,NY,NX)=RTLG2(N,L,NR,NZ,NY,NX)*(1.0-FWTRTL)
+      RTN2(N,L,NR,NZ,NY,NX)=RTN2(N,L,NR,NZ,NY,NX)*(1.0-FWTRTL)
+C     WRITE(*,1909)'BURNRT',I,J,NFZ,NX,NY,NZ,L,NR,N,ICHKF
+C    2,RCGSKR(L,NZ,NY,NX),RWTRT1(N,L,NR,NZ,NY,NX)
+C    3,RWTRT2(N,L,NR,NZ,NY,NX) 
+1909  FORMAT(A8,10I4,30E12.4) 
+8785  CONTINUE
+8885  CONTINUE
+C
+C     ROOT NODULE COMBUSTION RATES
+C
+C     R*=C,N,P combustion rate for each PFT C pool
+C
+      RCPOOLN(L,NZ,NY,NX)=CPOOLN(L,NZ,NY,NX)*FWPODL
+      RZPOOLN(L,NZ,NY,NX)=ZPOOLN(L,NZ,NY,NX)*FWPODL
+      RPPOOLN(L,NZ,NY,NX)=PPOOLN(L,NZ,NY,NX)*FWPODL
+      RWTNDL(L,NZ,NY,NX)=WTNDL(L,NZ,NY,NX)*FWTNDL
+      RWTNDLN(L,NZ,NY,NX)=WTNDLN(L,NZ,NY,NX)*FWTNDL 
+      RWTNDLP(L,NZ,NY,NX)=WTNDLP(L,NZ,NY,NX)*FWTNDL
+C
+C     REMAINING UNCOMBUSTED ROOT NODULE C,N,P
+C 
+      CPOOLN(L,NZ,NY,NX)=CPOOLN(L,NZ,NY,NX)-RCPOOLN(L,NZ,NY,NX)
+      ZPOOLN(L,NZ,NY,NX)=ZPOOLN(L,NZ,NY,NX)-RZPOOLN(L,NZ,NY,NX)
+      PPOOLN(L,NZ,NY,NX)=PPOOLN(L,NZ,NY,NX)-RPPOOLN(L,NZ,NY,NX)
+      WTNDL(L,NZ,NY,NX)=WTNDL(L,NZ,NY,NX)-RWTNDL(L,NZ,NY,NX) 
+      WTNDLN(L,NZ,NY,NX)=WTNDLN(L,NZ,NY,NX)-RWTNDLN(L,NZ,NY,NX)
+      WTNDLP(L,NZ,NY,NX)=WTNDLP(L,NZ,NY,NX)-RWTNDLP(L,NZ,NY,NX)
+C
+C     TOTAL ROOT NODULE COMBUSTION LOSSES
+C
+C     RCGSKR=total root C combustion of PFT
+C     VCOXF,VNOXF,VPOXF=total C,N,P combustion loss for output
+C     RCGSK=total root+soil C combustion
+C
+      RCGSKR(L,NZ,NY,NX)=RCGSKR(L,NZ,NY,NX)+RCPOOLN(L,NZ,NY,NX)
+     2+RWTNDL(L,NZ,NY,NX)
+      VCOXF(NZ,NY,NX)=VCOXF(NZ,NY,NX)-(RCPOOLN(L,NZ,NY,NX)
+     2+RWTNDL(L,NZ,NY,NX))
+      VNOXF(NZ,NY,NX)=VNOXF(NZ,NY,NX)-(RZPOOLN(L,NZ,NY,NX)
+     2+RWTNDLN(L,NZ,NY,NX))
+      VPOXF(NZ,NY,NX)=VPOXF(NZ,NY,NX)-(RPPOOLN(L,NZ,NY,NX)
+     2+RWTNDLP(L,NZ,NY,NX))
+      RCGSK(L,NY,NX)=RCGSK(L,NY,NX)+RCGSKR(L,NZ,NY,NX)
+C     IF(L.EQ.NU(NY,NX)+1)THEN
+C     WRITE(*,1911)'BURNRT',I,J,NFZ,NX,NY,NZ,L,ICHKF,NG(NZ,NY,NX)
+C    2,RCGSKR(L,NZ,NY,NX),RCGSK(L,NY,NX)
+C    3,RCPOOLN(L,NZ,NY,NX),RWTNDL(L,NZ,NY,NX)
+C    3,RWTRVC(NZ,NY,NX),(RCPOOLR(N,L,NZ,NY,NX),N=1,2)
+C    4,WTRVC(NZ,NY,NX),TFNCO,TKS(L,NY,NX)
+1911  FORMAT(A8,9I4,30E12.4)
+C     ENDIF
+C
+C     IF NO FIRE
+C 
+      ELSE
+      RCGSKR(L,NZ,NY,NX)=0.0
+      IF(L.EQ.NU(NY,NX)+1)THEN
+      RWTRVC(NZ,NY,NX)=0.0
+      RWTRVN(NZ,NY,NX)=0.0
+      RWTRVP(NZ,NY,NX)=0.0
+      ENDIF
+      DO 8886 N=1,MY(NZ,NY,NX)
+      RCPOOLR(N,L,NZ,NY,NX)=0.0 
+      RZPOOLR(N,L,NZ,NY,NX)=0.0
+      RPPOOLR(N,L,NZ,NY,NX)=0.0 
+      DO 8786 NR=1,NRT(NZ,NY,NX)
+      RWTRT1(N,L,NR,NZ,NY,NX)=0.0
+      RWTRT2(N,L,NR,NZ,NY,NX)=0.0
+      RWTRT1N(N,L,NR,NZ,NY,NX)=0.0 
+      RWTRT2N(N,L,NR,NZ,NY,NX)=0.0 
+      RWTRT1P(N,L,NR,NZ,NY,NX)=0.0 
+      RWTRT2P(N,L,NR,NZ,NY,NX)=0.0 
+8786  CONTINUE
+8886  CONTINUE
+      RCPOOLN(L,NZ,NY,NX)=0.0
+      RZPOOLN(L,NZ,NY,NX)=0.0
+      RPPOOLN(L,NZ,NY,NX)=0.0
+      RWTNDL(L,NZ,NY,NX)=0.0 
+      RWTNDLN(L,NZ,NY,NX)=0.0 
+      RWTNDLP(L,NZ,NY,NX)=0.0 
+      ENDIF
+8880  CONTINUE
+9970  CONTINUE
+      ENDIF
+C
+C     END FIRE
+C
+C
+C     ACTIVATE DORMANT SEEDS
+C
+C     IFLGI=PFT initialization flag:0=no,1=yes
+C     IFLGE=flag for enabling leafout:0=enable,1=disable
+C     VRNS,VRNL=leafout hours,hours required for leafout 
+C     IDAY0,IYR0=day,year of planting 
+C     IYRC=current year
+C     SDPTHI=seeding depth
+C
+      DO 9975 NZ=1,NP0(NY,NX)
+      DO 205 NB=1,NBR(NZ,NY,NX)
+      IF(NFZ.EQ.1)THEN
+      IF(IFLGI(NZ,NY,NX).EQ.1)THEN
+      IF(IFLGE(NB,NZ,NY,NX).EQ.0
+     2.AND.VRNS(NB,NZ,NY,NX).GE.VRNL(NB,NZ,NY,NX))THEN
+      IDAY0(NZ,NY,NX)=I
+      IYR0(NZ,NY,NX)=IYRC
+      SDPTHI(NZ,NY,NX)=0.005+CDPTHZ(0,NY,NX)
+      IFLGI(NZ,NY,NX)=0
+      ENDIF
+      ENDIF
+      ENDIF
+205   CONTINUE
+C
+C     LITTERFALL FROM STANDING DEAD
+C
+C     IBTYP=turnover rate of above-ground biomass
+C              :0,1=fully deciduous,
+C              :2=needleleaf evergreen
+C              :3=broadleaf evergreen
+C              :4=semi-deciduous
+C              :5=semi-evergreen
+C     IGTYP=growth type:0=bryophyte,1=grass,herb,2=woody shrub,tree
+C     XFRC,XFRN,XFRP=litterfall from standing dead
+C     TFN3=temperature function for canopy growth
+C     WTSTG,WTSTDN,WTSTDP=standing dead C,N,P mass
+C     CSNC,ZSNC,PSNC=C,N,P litterfall 
+C     FWOOD,FWOODN,FWOODP=C,N,P woody fraction in root:0=woody,
+C        1=non-woody
+C
+      DO 6235 M=1,5
+      TFNS=SQRT(TFN3(NZ,NY,NX))      
+      IF(IBTYP(NZ,NY,NX).EQ.0.OR.IGTYP(NZ,NY,NX).LE.1)THEN
+      XFRC=1.5814E-04*TFNS*WTSTDG(M,NZ,NY,NX)*XNFH
+      XFRN=1.5814E-04*TFNS*WTSTDN(M,NZ,NY,NX)*XNFH
+      XFRP=1.5814E-04*TFNS*WTSTDP(M,NZ,NY,NX)*XNFH
+      ELSE
+      XFRC=1.5814E-05*TFNS*WTSTDG(M,NZ,NY,NX)*XNFH
+      XFRN=1.5814E-05*TFNS*WTSTDN(M,NZ,NY,NX)*XNFH
+      XFRP=1.5814E-05*TFNS*WTSTDP(M,NZ,NY,NX)*XNFH
+      ENDIF 
+      CSNC(M,0,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)+XFRC*FWOOD(0,NZ)
+      ZSNC(M,0,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)+XFRN*FWOODN(0,NZ)
+      PSNC(M,0,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)+XFRP*FWOODP(0,NZ)
+      CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)+XFRC*FWOOD(1,NZ)
+      ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)+XFRN*FWOODN(1,NZ)
+      PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)+XFRP*FWOODP(1,NZ)
+      WTSTDG(M,NZ,NY,NX)=WTSTDG(M,NZ,NY,NX)-XFRC
+      WTSTDN(M,NZ,NY,NX)=WTSTDN(M,NZ,NY,NX)-XFRN
+      WTSTDP(M,NZ,NY,NX)=WTSTDP(M,NZ,NY,NX)-XFRP
+C     IF(NZ.EQ.2)THEN
+C     WRITE (*,1919)'STGLIT',I,J,NFZ,NZ,M,XFRC,XFRN,XFRP
+C    2,FWOOD(1,NZ),FWOOD(0,NZ),TFN3(NZ,NY,NX)
+C    2,WTSTDG(M,NZ,NY,NX),WTSTDN(M,NZ,NY,NX),WTSTDP(M,NZ,NY,NX)
+C    3,CSNC(M,1,0,NZ,NY,NX),ZSNC(M,1,0,NZ,NY,NX),PSNC(M,1,0,NZ,NY,NX)
+C    3,CSNC(M,0,0,NZ,NY,NX),ZSNC(M,0,0,NZ,NY,NX),PSNC(M,0,0,NZ,NY,NX)
+1919  FORMAT(A8,5I4,20E12.4)
+C     ENDIF
+6235  CONTINUE
+C
+C     ACCUMULATE TOTAL SURFACE, SUBSURFACE LITTERFALL
+C
+C     TCSN0,TZSN0,TPSN0=cumulative above-ground C,N,P litterfall 
+C     TCSNC,TZSNC,TPSNC=cumulative C,N,P litterfall 
+C     HCSNC,HZSNC,HPSNC=hourly C,N,P litterfall 
+C     CSNC,ZSNC,PSNC=C,N,P litterfall 
+C
+      DO 6430 K=0,1
+      DO 6430 M=1,5
+      TCSN0(NZ,NY,NX)=TCSN0(NZ,NY,NX)+CSNC(M,K,0,NZ,NY,NX)
+      TZSN0(NZ,NY,NX)=TZSN0(NZ,NY,NX)+ZSNC(M,K,0,NZ,NY,NX)
+      TPSN0(NZ,NY,NX)=TPSN0(NZ,NY,NX)+PSNC(M,K,0,NZ,NY,NX)
+C     WRITE(*,4814)'CSNC0',I,J,NFZ,NX,NY,NZ,NB,K,M
+C    2,TCSN0(NZ,NY,NX),CSNC(M,K,0,NZ,NY,NX)
+4814  FORMAT(A8,9I4,12E12.4)
+      DO 8955 L=0,NJ(NY,NX)
+      HCSNC(NZ,NY,NX)=HCSNC(NZ,NY,NX)+CSNC(M,K,L,NZ,NY,NX)
+      HZSNC(NZ,NY,NX)=HZSNC(NZ,NY,NX)+ZSNC(M,K,L,NZ,NY,NX)
+      HPSNC(NZ,NY,NX)=HPSNC(NZ,NY,NX)+PSNC(M,K,L,NZ,NY,NX)
+      TCSNC(NZ,NY,NX)=TCSNC(NZ,NY,NX)+CSNC(M,K,L,NZ,NY,NX)
+      TZSNC(NZ,NY,NX)=TZSNC(NZ,NY,NX)+ZSNC(M,K,L,NZ,NY,NX)
+      TPSNC(NZ,NY,NX)=TPSNC(NZ,NY,NX)+PSNC(M,K,L,NZ,NY,NX)
+8955  CONTINUE
+6430  CONTINUE
+C
+C     CALCULATE PFT STATE VARIABLES
 C
       CPOOLP(NZ,NY,NX)=0.0
       ZPOOLP(NZ,NY,NX)=0.0
       PPOOLP(NZ,NY,NX)=0.0
+      WTSHTX=WTSHT(NZ,NY,NX)
       WTSHT(NZ,NY,NX)=0.0
       WTSHN(NZ,NY,NX)=0.0
       WTSHP(NZ,NY,NX)=0.0
@@ -9464,6 +11355,7 @@ C
       ARSTV(L,NZ,NY,NX)=ARSTV(L,NZ,NY,NX)+ARSTK(L,NB,NZ,NY,NX)
 8945  CONTINUE
 8950  CONTINUE
+      DWTSHT(NZ,NY,NX)=WTSHT(NZ,NY,NX)-WTSHTX
 C
 C     ACCUMULATE ROOT STATE VARIABLES FROM ROOT LAYER STATE VARIABLES
 C
@@ -9523,694 +11415,116 @@ C
       ENDIF
       ENDIF
 C
-C     ACCUMULATE TOTAL SOIL-PLANT C,N,P EXCHANGE
-C
-C     HCUPTK,HZUPTK,HPUPTK=net PFT root-soil C,N,P exchange 
-C     UPOMC,UPOMN,UPOMP=net PFT root-soil nonstructl C,N,P exchange 
-C     UPNH4,UPNO3,UPH2P,UPH1P=PFT uptake of NH4,NO3,H2PO4,HPO4
-C     UPNF=PFT N2 fixation
-C     TCUPTK,TZUPTK,TPUPTK=cumulative PFT root-soil C,N,P exchange
-C     TZUPFX=cumulative PFT N2 fixation 
-C
-      HCUPTK(NZ,NY,NX)=UPOMC(NZ,NY,NX)
-      HZUPTK(NZ,NY,NX)=UPOMN(NZ,NY,NX)+UPNH4(NZ,NY,NX)+UPNO3(NZ,NY,NX)
-     2+UPNF(NZ,NY,NX)
-      HPUPTK(NZ,NY,NX)=UPOMP(NZ,NY,NX)+UPH2P(NZ,NY,NX)+UPH1P(NZ,NY,NX)
-      TCUPTK(NZ,NY,NX)=TCUPTK(NZ,NY,NX)+UPOMC(NZ,NY,NX)
-      TZUPTK(NZ,NY,NX)=TZUPTK(NZ,NY,NX)+UPOMN(NZ,NY,NX)+UPNH4(NZ,NY,NX)
-     2+UPNO3(NZ,NY,NX)
-      TPUPTK(NZ,NY,NX)=TPUPTK(NZ,NY,NX)+UPOMP(NZ,NY,NX)+UPH2P(NZ,NY,NX)
-     2+UPH1P(NZ,NY,NX)
-      TZUPFX(NZ,NY,NX)=TZUPFX(NZ,NY,NX)+UPNF(NZ,NY,NX)+UPNFC(NZ,NY,NX)
-      ENDIF
-C
-C     HARVEST STANDING DEAD
-C
-C     IHVST=harvest type:0=none,1=grain,2=all above-ground
-C                       ,3=pruning,4=grazing,5=fire,6=herbivory
-C     THIN=thinning:fraction of population removed
-C     FHVST=fraction of standing dead mass not harvested 
-C     EHVST(1,1,EHVST(1,2,EHVST(1,3,EHVST(1,4=fraction of 
-C           leaf,non-foliar,woody, standing dead removed from PFT
-C     HVST=IHVST=0-2:>0=cutting height,<0=fraction of LAI removed
-C          IHVST=3:reduction of clumping factor
-C          IHVST=4 or 6:animal or insect biomass(g LM m-2),IHVST=5:fire
-C     WTSTG,WTSTDN,WTSTDP=standing dead C,N,P mass
-C     WTHTH4,WTHNH4,WTHPH4=harvested standing dead C,N,P
-C     WTHTX4,WTHNX4,WTHPX4=harvested standing dead C,N,P to litter
-C
-      IF(IHVST(NZ,I,NY,NX).GE.0)THEN
-      IF(J.EQ.INT(ZNOON(NY,NX)).AND.IHVST(NZ,I,NY,NX).NE.4
-     2.AND.IHVST(NZ,I,NY,NX).NE.6)THEN
-      IF(THIN(NZ,I,NY,NX).EQ.0.0)THEN
-      FHVST=AMAX1(0.0,1.0-EHVST(1,4,NZ,I,NY,NX))
-      FHVSH=FHVST
-      ELSE
-      FHVST=AMAX1(0.0,1.0-THIN(NZ,I,NY,NX))
-      IF(IHVST(NZ,I,NY,NX).EQ.0)THEN
-      FHVSH=AMAX1(0.0,1.0-EHVST(1,4,NZ,I,NY,NX)*THIN(NZ,I,NY,NX))
-      ELSE
-      FHVSH=FHVST
-      ENDIF
-      ENDIF
-      ELSEIF(IHVST(NZ,I,NY,NX).EQ.4.OR.IHVST(NZ,I,NY,NX).EQ.6)THEN
-      IF(WTSTG(NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
-      WHVSTD=HVST(NZ,I,NY,NX)*THIN(NZ,I,NY,NX)*0.45/24.0
-     2*AREA(3,NU(NY,NX),NY,NX)*EHVST(1,4,NZ,I,NY,NX)
-      FHVST=AMAX1(0.0,1.0-WHVSTD/WTSTG(NZ,NY,NX))
-      FHVSH=FHVST
-      ELSE
-      FHVST=1.0
-      FHVSH=1.0
-      ENDIF
-      ELSE
-      FHVST=1.0
-      FHVSH=1.0
-      ENDIF
-      DO 6475 M=1,4
-      WTHTH4=WTHTH4+(1.0-FHVSH)*WTSTDG(M,NZ,NY,NX)
-      WTHNH4=WTHNH4+(1.0-FHVSH)*WTSTDN(M,NZ,NY,NX)
-      WTHPH4=WTHPH4+(1.0-FHVSH)*WTSTDP(M,NZ,NY,NX)
-      WTHTX4=WTHTX4+(FHVSH-FHVST)*WTSTDG(M,NZ,NY,NX)
-      WTHNX4=WTHNX4+(FHVSH-FHVST)*WTSTDN(M,NZ,NY,NX)
-      WTHPX4=WTHPX4+(FHVSH-FHVST)*WTSTDP(M,NZ,NY,NX)
-      WTSTDG(M,NZ,NY,NX)=FHVST*WTSTDG(M,NZ,NY,NX)
-      WTSTDN(M,NZ,NY,NX)=FHVST*WTSTDN(M,NZ,NY,NX)
-      WTSTDP(M,NZ,NY,NX)=FHVST*WTSTDP(M,NZ,NY,NX)
-6475  CONTINUE
-C
-C     IF NO PLANT C,N,P REMOVED AT HARVEST (ALL RESIDUE RETURNED)
-C
-C     IHVST=harvest type:0=none,1=grain,2=all above-ground
-C                       ,3=pruning,4=grazing,5=fire,6=herbivory
-C     WTHTH0,WTHNH0,WTHPH0=nonstructural C,N,P removed
-C     WTHTH1,WTHNH1,WTHPH1=leaf C,N,P removed
-C     WTHTH2,WTHNH2,WTHPH2=fine,non-leaf C,N,P removed
-C     WTHTH3,WTHNH3,WTHPH3=woody C,N,P removed
-C     WTHTH4,WTHNH4,WTHPH4=standing dead C,N,P removed
-C     WTHTR0,WTHNR0,WTHPR0=nonstructural C,N,P to litter
-C     WTHTR1,WTHNR1,WTHPR1=leaf C,N,P to litter 
-C     WTHTR2,WTHNR2,WTHPR2=fine,non-leaf C,N,P to litter 
-C     WTHTR3,WTHNR3,WTHPR3=woody C,N,P to litter 
-C     WTHTR4,WTHNR4,WTHPR4=standing dead C,N,P to litter 
-C     EHVST(1,1,EHVST(1,2,EHVST(1,3,EHVST(1,4=fraction of 
-C           leaf,non-foliar,woody, standing dead removed from PFT
-C
-      IF(IHVST(NZ,I,NY,NX).EQ.0)THEN
-      WTHTR0=WTHTH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHNR0=WTHNH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHPR0=WTHPH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHTR1=WTHTH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHNR1=WTHNH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHPR1=WTHPH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHTR2=WTHTH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
-      WTHNR2=WTHNH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
-      WTHPR2=WTHPH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
-      WTHTR3=WTHTH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
-      WTHNR3=WTHNH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
-      WTHPR3=WTHPH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
-      WTHTR4=WTHTH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
-      WTHNR4=WTHNH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
-      WTHPR4=WTHPH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
-C
-C     IF ONLY GRAIN C,N,P REMOVED AT HARVEST
-C
-      ELSEIF(IHVST(NZ,I,NY,NX).EQ.1)THEN
-      WTHTR0=WTHTH0
-      WTHNR0=WTHNH0
-      WTHPR0=WTHPH0
-      WTHTR1=WTHTH1
-      WTHNR1=WTHNH1
-      WTHPR1=WTHPH1
-      WTHTR2=WTHTH2-WTHTG*EHVST(2,2,NZ,I,NY,NX)
-      WTHNR2=WTHNH2-WTHNG*EHVST(2,2,NZ,I,NY,NX)
-      WTHPR2=WTHPH2-WTHPG*EHVST(2,2,NZ,I,NY,NX)
-      WTHTR3=WTHTH3
-      WTHNR3=WTHNH3
-      WTHPR3=WTHPH3
-      WTHTR4=WTHTH4
-      WTHNR4=WTHNH4
-      WTHPR4=WTHPH4
-C
-C     IF ONLY WOOD C,N,P REMOVED AT HARVEST
-C
-      ELSEIF(IHVST(NZ,I,NY,NX).EQ.2)THEN
-      WTHTR0=WTHTH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHNR0=WTHNH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHPR0=WTHPH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHTR1=WTHTH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHNR1=WTHNH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHPR1=WTHPH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHTR2=WTHTH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
-      WTHNR2=WTHNH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
-      WTHPR2=WTHPH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
-      WTHTR3=WTHTH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
-      WTHNR3=WTHNH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
-      WTHPR3=WTHPH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
-      WTHTR4=WTHTH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
-      WTHNR4=WTHNH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
-      WTHPR4=WTHPH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
-C
-C     IF ALL PLANT C,N,P REMOVED AT HARVEST (NO RESIDUE RETURNED)
-C
-      ELSEIF(IHVST(NZ,I,NY,NX).EQ.3)THEN
-      WTHTR0=WTHTH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHNR0=WTHNH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHPR0=WTHPH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHTR1=WTHTH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHNR1=WTHNH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHPR1=WTHPH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHTR2=WTHTH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
-      WTHNR2=WTHNH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
-      WTHPR2=WTHPH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
-      WTHTR3=WTHTH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
-      WTHNR3=WTHNH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
-      WTHPR3=WTHPH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
-      WTHTR4=WTHTH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
-      WTHNR4=WTHNH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
-      WTHPR4=WTHPH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
-C
-C     IF PLANT C,N,P REMOVED BY GRAZING
-C
-      ELSEIF(IHVST(NZ,I,NY,NX).EQ.4.OR.IHVST(NZ,I,NY,NX).EQ.6)THEN
-      WTHTR0=WTHTH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHNR0=WTHNH0*(1.0-EHVST(2,1,NZ,I,NY,NX)*0.5)
-      WTHPR0=WTHPH0*(1.0-EHVST(2,1,NZ,I,NY,NX)*0.5)
-      WTHTR1=WTHTH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHNR1=WTHNH1*(1.0-EHVST(2,1,NZ,I,NY,NX)*0.5)
-      WTHPR1=WTHPH1*(1.0-EHVST(2,1,NZ,I,NY,NX)*0.5)
-      WTHTR2=WTHTH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
-      WTHNR2=WTHNH2*(1.0-EHVST(2,2,NZ,I,NY,NX)*0.5)
-      WTHPR2=WTHPH2*(1.0-EHVST(2,2,NZ,I,NY,NX)*0.5)
-      WTHTR3=WTHTH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
-      WTHNR3=WTHNH3*(1.0-EHVST(2,3,NZ,I,NY,NX)*0.5)
-      WTHPR3=WTHPH3*(1.0-EHVST(2,3,NZ,I,NY,NX)*0.5)
-      WTHTR4=WTHTH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
-      WTHNR4=WTHNH4*(1.0-EHVST(2,4,NZ,I,NY,NX)*0.5)
-      WTHPR4=WTHPH4*(1.0-EHVST(2,4,NZ,I,NY,NX)*0.5)
-C
-C     ADD MANURE FROM GRAZING TO NEXT DAY FERTILIZER 
-C
-C     FERT=fertilizer type from fertilizer input file
-C     IYTYP=fertilizer release type from fertilizer input file
-C
-      FERT(17,I+1,NY,NX)=FERT(17,I+1,NY,NX)
-     2+(WTHTR0+WTHTR1+WTHTR2+WTHTR3+WTHTR4)/AREA(3,NU(NY,NX),NY,NX)
-      FERT(18,I+1,NY,NX)=FERT(18,I+1,NY,NX)
-     2+(WTHNR0+WTHNR1+WTHNR2+WTHNR3+WTHNR4)/AREA(3,NU(NY,NX),NY,NX)*0.5
-      FERT(3,I+1,NY,NX)=FERT(3,I+1,NY,NX)
-     2+(WTHNR0+WTHNR1+WTHNR2+WTHNR3+WTHNR4)/AREA(3,NU(NY,NX),NY,NX)*0.5
-      FERT(19,I+1,NY,NX)=FERT(19,I+1,NY,NX)
-     2+(WTHPR0+WTHPR1+WTHPR2+WTHPR3+WTHPR4)/AREA(3,NU(NY,NX),NY,NX)
-      IYTYP(2,I+1,NY,NX)=3
-C     IF(NX.EQ.2)THEN
-C     WRITE(*,6542)'MANURE',I,J,NX,NY,NZ,FERT(17,I+1,NY,NX)
-C    2,WTHTR1,WTHTR2,WTHTR3,WTHTR4,WTHNR1,WTHNR2,WTHNR3,WTHNR4
-6542  FORMAT(A8,5I4,20E12.4)
-C     ENDIF
-C
-C     REMOVALS BY FIRE
-C
-C     EFIRE=combustion  of N,P relative to C
-C     EHVST(1,1,EHVST(1,2,EHVST(1,3,EHVST(1,4=fraction of 
-C           leaf,non-foliar,woody, standing dead removed from PFT
-C     EHVST(2,1,EHVST(2,2,EHVST(2,3,EHVST(2,4=fraction of 
-C           leaf,non-foliar,woody, standing dead removed from ecosystem
-C     WTHTH0,WTHNH0,WTHPH0=nonstructural C,N,P removed
-C     WTHTH1,WTHNH1,WTHPH1=leaf C,N,P removed
-C     WTHTH2,WTHNH2,WTHPH2=fine,non-leaf C,N,P removed
-C     WTHTH3,WTHNH3,WTHPH3=woody C,N,P removed
-C     WTHTH4,WTHNH4,WTHPH4=standing dead C,N,P removed
-C     WTHTR0,WTHNR0,WTHPR0=nonstructural C,N,P to litter
-C     WTHTR1,WTHNR1,WTHPR1=leaf C,N,P to litter 
-C     WTHTR2,WTHNR2,WTHPR2=fine,non-leaf C,N,P to litter 
-C     WTHTR3,WTHNR3,WTHPR3=woody C,N,P to litter 
-C     WTHTR4,WTHNR4,WTHPR4=standing dead C,N,P to litter 
-C     WTHTL0,WTHNL0,WTHPL0=nonstructural C,N,P removed from ecosystem
-C     WTHTL1,WTHNL1,WTHPL1=leaf C,N,P removed from ecosystem 
-C     WTHTL2,WTHNL2,WTHPL2=fine,non-leaf C,N,P removed from ecosystem 
-C     WTHTL3,WTHNL3,WTHPL3=woody C,N,P removed from ecosystem 
-C     WTHTL4,WTHNL4,WTHPL4=standing dead C,N,P removed from ecosystem 
-C
-      ELSEIF(IHVST(NZ,I,NY,NX).EQ.5)THEN
-      WTHTR0=WTHTH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHNR0=WTHNH0*(1.0-EFIRE(1,IHVST(NZ,I,NY,NX))
-     2*EHVST(2,1,NZ,I,NY,NX))
-      WTHPR0=WTHPH0*(1.0-EFIRE(2,IHVST(NZ,I,NY,NX))
-     2*EHVST(2,1,NZ,I,NY,NX))
-      WTHNL0=WTHNH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHPL0=WTHPH0*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHTR1=WTHTH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHNR1=WTHNH1*(1.0-EFIRE(1,IHVST(NZ,I,NY,NX))
-     2*EHVST(2,1,NZ,I,NY,NX))
-      WTHPR1=WTHPH1*(1.0-EFIRE(2,IHVST(NZ,I,NY,NX))
-     2*EHVST(2,1,NZ,I,NY,NX))
-      WTHNL1=WTHNH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHPL1=WTHPH1*(1.0-EHVST(2,1,NZ,I,NY,NX))
-      WTHTR2=WTHTH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
-      WTHNR2=WTHNH2*(1.0-EFIRE(1,IHVST(NZ,I,NY,NX))
-     2*EHVST(2,2,NZ,I,NY,NX))
-      WTHPR2=WTHPH2*(1.0-EFIRE(2,IHVST(NZ,I,NY,NX))
-     2*EHVST(2,2,NZ,I,NY,NX))
-      WTHNL2=WTHNH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
-      WTHPL2=WTHPH2*(1.0-EHVST(2,2,NZ,I,NY,NX))
-      WTHTR3=WTHTH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
-      WTHNR3=WTHNH3*(1.0-EFIRE(1,IHVST(NZ,I,NY,NX))
-     2*EHVST(2,3,NZ,I,NY,NX))
-      WTHPR3=WTHPH3*(1.0-EFIRE(2,IHVST(NZ,I,NY,NX))
-     2*EHVST(2,3,NZ,I,NY,NX))
-      WTHNL3=WTHNH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
-      WTHPL3=WTHPH3*(1.0-EHVST(2,3,NZ,I,NY,NX))
-      WTHTR4=WTHTH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
-      WTHNR4=WTHNH4*(1.0-EFIRE(1,IHVST(NZ,I,NY,NX))
-     2*EHVST(2,4,NZ,I,NY,NX))
-      WTHPR4=WTHPH4*(1.0-EFIRE(2,IHVST(NZ,I,NY,NX))
-     2*EHVST(2,4,NZ,I,NY,NX))
-      WTHNL4=WTHNH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
-      WTHPL4=WTHPH4*(1.0-EHVST(2,4,NZ,I,NY,NX))
-      ENDIF
-C
-C     TOTAL C,N,P REMOVAL FROM DISTURBANCE
-C
-C     WTHTHT,WTHNHT,WTHPHT=total C,N,P removed
-C     WTHTRT,WTHNRT,WTHPRT=total C,N,P to litter
-C     IHVST=harvest type:0=none,1=grain,2=all above-ground
-C                       ,3=pruning,4=grazing,5=fire,6=herbivory
-C     JHVST=terminate PFT:0=no,1=yes,2=yes,but reseed
-C     HVSTC,HVSTN,HVSTP=total C,N,P removed from ecosystem from PFT
-C     XHVSTC,XHVSTN,XHVSTP=total C,N,P removed from ecosystem from all PFT
-C     WTRVC,WTRVN,WTRVP=storage C,N,P
-C
-      WTHTHT=WTHTH0+WTHTH1+WTHTH2+WTHTH3+WTHTH4
-      WTHTRT=WTHTR0+WTHTR1+WTHTR2+WTHTR3+WTHTR4
-      WTHNHT=WTHNH0+WTHNH1+WTHNH2+WTHNH3+WTHNH4
-      WTHNRT=WTHNR0+WTHNR1+WTHNR2+WTHNR3+WTHNR4
-      WTHPHT=WTHPH0+WTHPH1+WTHPH2+WTHPH3+WTHPH4
-      WTHPRT=WTHPR0+WTHPR1+WTHPR2+WTHPR3+WTHPR4
-      WTHTXT=WTHTX0+WTHTX1+WTHTX2+WTHTX3+WTHTX4
-      WTHNXT=WTHNX0+WTHNX1+WTHNX2+WTHNX3+WTHNX4
-      WTHPXT=WTHPX0+WTHPX1+WTHPX2+WTHPX3+WTHPX4
-      IF(IHVST(NZ,I,NY,NX).NE.4.AND.IHVST(NZ,I,NY,NX).NE.6)THEN
-      IF(IHVST(NZ,I,NY,NX).NE.5)THEN
-      IF(JHVST(NZ,I,NY,NX).NE.2)THEN
-      HVSTC(NZ,NY,NX)=HVSTC(NZ,NY,NX)+WTHTHT-WTHTRT 
-      HVSTN(NZ,NY,NX)=HVSTN(NZ,NY,NX)+WTHNHT-WTHNRT 
-      HVSTP(NZ,NY,NX)=HVSTP(NZ,NY,NX)+WTHPHT-WTHPRT 
-      TNBP(NY,NX)=TNBP(NY,NX)+WTHTRT-WTHTHT
-      XHVSTC(NY,NX)=XHVSTC(NY,NX)+WTHTHT-WTHTRT
-      XHVSTN(NY,NX)=XHVSTN(NY,NX)+WTHNHT-WTHNRT
-      XHVSTP(NY,NX)=XHVSTP(NY,NX)+WTHPHT-WTHPRT
-      ELSE
-      WTRVC(NZ,NY,NX)=WTRVC(NZ,NY,NX)+WTHTHT-WTHTRT
-      WTRVN(NZ,NY,NX)=WTRVN(NZ,NY,NX)+WTHNHT-WTHNRT
-      WTRVP(NZ,NY,NX)=WTRVP(NZ,NY,NX)+WTHPHT-WTHPRT
-      ENDIF
-C
-C     C,N,P LOST AS GAS IF FIRE
-C
-C     VCO2F,VCH4F,VOXYF,VNH3F,VN2OF,VPO4F=CO2,CH4,O2,NH3,N2O,PO4 emission from disturbance
-C     CNET=PFT net CO2 fixation
-C     TNBP=total net biome productivity
-C
-      ELSE
-      VCO2F(NZ,NY,NX)=VCO2F(NZ,NY,NX)-(1.0-FCH4F)*(WTHTHT-WTHTRT)
-      VCH4F(NZ,NY,NX)=VCH4F(NZ,NY,NX)-FCH4F*(WTHTHT-WTHTRT)
-      VOXYF(NZ,NY,NX)=VOXYF(NZ,NY,NX)-(1.0-FCH4F)*(WTHTHT-WTHTRT)*2.667 
-      VNH3F(NZ,NY,NX)=VNH3F(NZ,NY,NX)-WTHNHT+WTHNRT
-      VN2OF(NZ,NY,NX)=VN2OF(NZ,NY,NX)-0.0
-      VPO4F(NZ,NY,NX)=VPO4F(NZ,NY,NX)-WTHPHT+WTHPRT
-      CNET(NZ,NY,NX)=CNET(NZ,NY,NX)-(1.0-FCH4F)*(WTHTHT-WTHTRT)
-      TNBP(NY,NX)=TNBP(NY,NX)-FCH4F*(WTHTHT-WTHTRT)
-C     WRITE(*,5679)'FIRE2',I,J,NZ,VCO2F(NZ,NY,NX),FCH4F,WTHNH0
-C    2,WTHNH1,WTHNH2,WTHNH3,WTHNH4,WTHNR0,WTHNR1,WTHNR2
-C    3,WTHNR3,WTHNR4,WTHNHT,WTHNRT 
-5679  FORMAT(A8,3I4,20E12.4)
-      ENDIF
-C
-C     C,N,P REMOVED FROM GRAZING
-C
-C     HVSTC,HVSTN,HVSTP=total C,N,P removed from ecosystem from PFT
-C     XHVSTC,XHVSTN,XHVSTP=total C,N,P removed from ecosystem from all PFT
-C     GY=growth yield of grazers
-C     WTHTHT,WTHNHT,WTHPHT=total C,N,P removed
-C     WTHTRT,WTHNRT,WTHPRT=total C,N,P to litter
-C     RECO=ecosystem respiration 
-C     TRAU=total autotrophic respiration
-C
-      ELSE
-      HVSTC(NZ,NY,NX)=HVSTC(NZ,NY,NX)+GY*(WTHTHT-WTHTRT)
-      HVSTN(NZ,NY,NX)=HVSTN(NZ,NY,NX)+WTHNHT-WTHNRT
-      HVSTP(NZ,NY,NX)=HVSTP(NZ,NY,NX)+WTHPHT-WTHPRT
-      TCO2T(NZ,NY,NX)=TCO2T(NZ,NY,NX)-GZ*(WTHTHT-WTHTRT)
-      TCO2A(NZ,NY,NX)=TCO2A(NZ,NY,NX)-GZ*(WTHTHT-WTHTRT)
-C     TNBP(NY,NX)=TNBP(NY,NX)+GY*(WTHTRT-WTHTHT)
-C     CNET(NZ,NY,NX)=CNET(NZ,NY,NX)+GZ*(WTHTRT-WTHTHT)
-      XHVSTC(NY,NX)=XHVSTC(NY,NX)+GY*(WTHTHT-WTHTRT)
-      XHVSTN(NY,NX)=XHVSTN(NY,NX)+WTHNHT-WTHNRT
-      XHVSTP(NY,NX)=XHVSTP(NY,NX)+WTHPHT-WTHPRT
-      RECO(NY,NX)=RECO(NY,NX)-GZ*(WTHTHT-WTHTRT)
-      TRAU(NY,NX)=TRAU(NY,NX)-GZ*(WTHTHT-WTHTRT)
-C     WRITE(*,6542)'GRAZ',I,J,NX,NY,NZ,HVSTC(NZ,NY,NX)
-C    2,GY,GZ,WTHTHT,WTHTRT 
-      ENDIF
-C
-C     ABOVE-GROUND LITTERFALL FROM HARVESTING
-C
-C     IHVST=harvest type:0=none,1=grain,2=all above-ground
-C                       ,3=pruning,4=grazing,5=fire,6=herbivory
-C     CSNC,ZSNC,PSNC=C,N,P litterfall from disturbance
-C     CFOPC,CFOPN,CFOPC=fraction of litterfall C,N,P allocated to litter components
-C     WTHTR0,WTHNR0,WTHPR0=nonstructural C,N,P to litter
-C     WTHTR1,WTHNR1,WTHPR1=leaf C,N,P to litter 
-C     WTHTR2,WTHNR2,WTHPR2=fine,non-leaf C,N,P to litter 
-C     WTHTR3,WTHNR3,WTHPR3=woody C,N,P to litter 
-C     WTHTR4,WTHNR4,WTHPR4=standing dead C,N,P to litter 
-C     WTHTX1,WTHNX1,WTHPX1=harvested leaf C,N,P to litter
-C     WTHTX2,WTHNX2,WTHPX2=harvested petiole C,N,P to litter
-C     WTHTX3,WTHNX3,WTHPX3=harvested woody C,N,P to litter
-C     WTHTX4,WTHNX4,WTHPX4=harvested standing dead C,N,P to litter
-C     IBTYP=turnover:0=all abve-grd,1=all leaf+petiole,2=none,3=between 1,2
-C     IGTYP=growth type:0=bryophyte,1=graminoid,2=shrub,tree
-C
-      IF(IHVST(NZ,I,NY,NX).NE.4.AND.IHVST(NZ,I,NY,NX).NE.6)THEN
-      IF(IHVST(NZ,I,NY,NX).NE.5)THEN
-      DO 6375 M=1,4
-      CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)
-     2+CFOPC(0,M,NZ,NY,NX)*(WTHTR0+WTHTX0)
-     3+CFOPC(1,M,NZ,NY,NX)*(WTHTR1+WTHTX1)
-     4+CFOPC(2,M,NZ,NY,NX)*(WTHTR2+WTHTX2)
-      ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)
-     2+CFOPN(0,M,NZ,NY,NX)*(WTHNR0+WTHNX0)
-     3+CFOPN(1,M,NZ,NY,NX)*(WTHNR1+WTHNX1)
-     4+CFOPN(2,M,NZ,NY,NX)*(WTHNR2+WTHNX2)
-      PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)
-     2+CFOPP(0,M,NZ,NY,NX)*(WTHPR0+WTHPX0)
-     3+CFOPP(1,M,NZ,NY,NX)*(WTHPR1+WTHPX1)
-     4+CFOPP(2,M,NZ,NY,NX)*(WTHPR2+WTHPX2)
-      IF(IBTYP(NZ,NY,NX).EQ.0.OR.IGTYP(NZ,NY,NX).LE.1)THEN
-      CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)
-     2+CFOPC(3,M,NZ,NY,NX)*(WTHTR3+WTHTX3+WTHTR4+WTHTX4)
-      ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)
-     2+CFOPN(3,M,NZ,NY,NX)*(WTHNR3+WTHNX3+WTHNR4+WTHNX4)
-      PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)
-     2+CFOPP(3,M,NZ,NY,NX)*(WTHPR3+WTHPX3+WTHPR4+WTHPX4)
-      ELSE
-      WTSTDG(M,NZ,NY,NX)=WTSTDG(M,NZ,NY,NX)
-     2+CFOPC(5,M,NZ,NY,NX)*(WTHTX3+WTHTX4)
-      WTSTDN(M,NZ,NY,NX)=WTSTDN(M,NZ,NY,NX)
-     2+CFOPN(5,M,NZ,NY,NX)*(WTHNX3+WTHNX4)
-      WTSTDP(M,NZ,NY,NX)=WTSTDP(M,NZ,NY,NX)
-     2+CFOPP(5,M,NZ,NY,NX)*(WTHPX3+WTHPX4)
-      CSNC(M,0,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)
-     2+CFOPC(5,M,NZ,NY,NX)*(WTHTR3+WTHTR4)*FWOOD(0)
-      ZSNC(M,0,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)
-     2+CFOPN(5,M,NZ,NY,NX)*(WTHNR3+WTHNR4)*FWOODN(0)
-      PSNC(M,0,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)
-     2+CFOPP(5,M,NZ,NY,NX)*(WTHPR3+WTHPR4)*FWOODP(0)
-      CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)
-     2+CFOPC(5,M,NZ,NY,NX)*(WTHTR3+WTHTR4)*FWOOD(1)
-      ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)
-     2+CFOPN(5,M,NZ,NY,NX)*(WTHNR3+WTHNR4)*FWOODN(1)
-      PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)
-     2+CFOPP(5,M,NZ,NY,NX)*(WTHPR3+WTHPR4)*FWOODP(0)
-      ENDIF
-6375  CONTINUE
-C
-C     ABOVE-GROUND LITTERFALL FROM FIRE
-C
-C     WTHTR0,WTHNR0,WTHPR0=nonstructural C,N,P to litter
-C     WTHTR1,WTHNR1,WTHPR1=leaf C,N,P to litter 
-C     WTHTR2,WTHNR2,WTHPR2=fine,non-leaf C,N,P to litter 
-C     WTHTR3,WTHNR3,WTHPR3=woody C,N,P to litter 
-C     WTHTR4,WTHNR4,WTHPR4=standing dead C,N,P to litter 
-C     WTHTX1,WTHNX1,WTHPX1=harvested leaf C,N,P to litter
-C     WTHTX2,WTHNX2,WTHPX2=harvested petiole C,N,P to litter
-C     WTHTX3,WTHNX3,WTHPX3=harvested woody C,N,P to litter
-C     WTHTX4,WTHNX4,WTHPX4=harvested standing dead C,N,P to litter
-C     WTHNL0,WTHPL0=nonstructural N,P to litter
-C     WTHNL1,WTHPL1=leaf N,P to litter
-C     WTHNL2,WTHPL2=fine,non-leaf N,P to litter
-C     WTHNL3,WTHPL3=woody N,P to litter
-C     WTHNL4,WTHPL4=standing dead N,P to litter
-C     IBTYP=turnover:0=all abve-grd,1=all leaf+petiole,2=none,3=between 1,2
-C     IGTYP=growth type:0=bryophyte,1=graminoid,2=shrub,tree
-C     WTSTG,WTSTDN,WTSTDP=standing dead C,N,P mass
-C
-      ELSE
-      DO 6485 M=1,4
-      CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)
-     2+CFOPC(0,M,NZ,NY,NX)*(WTHTR0+WTHTX0)
-     3+CFOPC(1,M,NZ,NY,NX)*(WTHTR1+WTHTX1)
-     4+CFOPC(2,M,NZ,NY,NX)*(WTHTR2+WTHTX2)
-      ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)
-     2+CFOPN(0,M,NZ,NY,NX)*WTHNL0
-     3+CFOPN(1,M,NZ,NY,NX)*WTHNL1
-     4+CFOPN(2,M,NZ,NY,NX)*WTHNL2
-      PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)
-     2+CFOPP(0,M,NZ,NY,NX)*WTHPL0
-     3+CFOPP(1,M,NZ,NY,NX)*WTHPL1
-     4+CFOPP(2,M,NZ,NY,NX)*WTHPL2
-      ZSNC(4,1,0,NZ,NY,NX)=ZSNC(4,1,0,NZ,NY,NX)
-     2+CFOPN(0,M,NZ,NY,NX)*(WTHNR0+WTHNX0-WTHNL0)
-     3+CFOPN(1,M,NZ,NY,NX)*(WTHNR1+WTHNX1-WTHNL1)
-     4+CFOPN(2,M,NZ,NY,NX)*(WTHNR2+WTHNX2-WTHNL2)
-      PSNC(4,1,0,NZ,NY,NX)=PSNC(4,1,0,NZ,NY,NX)
-     2+CFOPP(0,M,NZ,NY,NX)*(WTHPR0+WTHPX0-WTHPL0)
-     3+CFOPP(1,M,NZ,NY,NX)*(WTHPR1+WTHPX1-WTHPL1)
-     4+CFOPP(2,M,NZ,NY,NX)*(WTHPR2+WTHPX2-WTHPL2)
-      IF(IBTYP(NZ,NY,NX).EQ.0.OR.IGTYP(NZ,NY,NX).LE.1)THEN
-      CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)
-     2+CFOPC(3,M,NZ,NY,NX)*(WTHTR3+WTHTX3+WTHTR4+WTHTX4)
-      ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)
-     2+CFOPN(3,M,NZ,NY,NX)*(WTHNL3+WTHNL4)
-      PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)
-     2+CFOPP(3,M,NZ,NY,NX)*(WTHPL3+WTHPL4)
-      ZSNC(4,1,0,NZ,NY,NX)=ZSNC(4,1,0,NZ,NY,NX)
-     2+CFOPN(3,M,NZ,NY,NX)*(WTHNR3+WTHNX3-WTHNL3+WTHNR4+WTHNX4-WTHNL4)
-      PSNC(4,1,0,NZ,NY,NX)=PSNC(4,1,0,NZ,NY,NX)
-     2+CFOPP(3,M,NZ,NY,NX)*(WTHPR3+WTHPX3-WTHPL3+WTHPR4+WTHPX4-WTHPL4)
-      ELSE
-      WTSTDG(M,NZ,NY,NX)=WTSTDG(M,NZ,NY,NX)
-     2+CFOPC(5,M,NZ,NY,NX)*(WTHTR3+WTHTX3)
-      WTSTDN(M,NZ,NY,NX)=WTSTDN(M,NZ,NY,NX)
-     2+CFOPN(5,M,NZ,NY,NX)*WTHNL3
-      WTSTDP(M,NZ,NY,NX)=WTSTDP(M,NZ,NY,NX)
-     2+CFOPP(5,M,NZ,NY,NX)*WTHPL3
-      CSNC(M,0,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)
-     2*CFOPC(3,M,NZ,NY,NX)*(WTHTR4+WTHTX4)*FWOOD(0)
-      ZSNC(M,0,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)
-     2+CFOPN(3,M,NZ,NY,NX)*WTHNL4*FWOODN(0)
-      PSNC(M,0,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)
-     2+CFOPP(3,M,NZ,NY,NX)*WTHPL4*FWOODP(0)
-      ZSNC(4,0,0,NZ,NY,NX)=ZSNC(4,0,0,NZ,NY,NX)
-     2+CFOPN(5,M,NZ,NY,NX)*(WTHNR3+WTHNX3-WTHNL3
-     3+WTHNR4+WTHNX4-WTHNL4)*FWOODN(0)
-      PSNC(4,0,0,NZ,NY,NX)=PSNC(4,0,0,NZ,NY,NX)
-     2+CFOPP(5,M,NZ,NY,NX)*(WTHPR3+WTHPX3-WTHPL3
-     3+WTHPR4+WTHPX4-WTHPL4)*FWOODP(0)
-      CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)
-     2+CFOPC(3,M,NZ,NY,NX)*(WTHTR4+WTHTX4)*FWOOD(1)
-      ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)
-     2+CFOPN(3,M,NZ,NY,NX)*WTHNL4*FWOODN(1)
-      PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)
-     2+CFOPP(3,M,NZ,NY,NX)*WTHPL4*FWOODP(1)
-      ZSNC(4,1,0,NZ,NY,NX)=ZSNC(4,1,0,NZ,NY,NX)
-     2+CFOPN(5,M,NZ,NY,NX)*(WTHNR3+WTHNX3-WTHNL3
-     3+WTHNR4+WTHNX4-WTHNL4)*FWOODN(1)
-      PSNC(4,1,0,NZ,NY,NX)=PSNC(4,1,0,NZ,NY,NX)
-     2+CFOPP(5,M,NZ,NY,NX)*(WTHPR3+WTHPX3-WTHPL3
-     3+WTHPR4+WTHPX4-WTHPL4)*FWOODP(1)
-      ENDIF
-6485  CONTINUE
-      ENDIF
-      ELSE
-C
-C     ABOVE-GROUND LITTERFALL FROM GRAZING
-C
-C     TCSNC,TZSNC,TPSNC=cumulative C,N,P litterfall 
-C     TCSN0,TZSN0,TPSN0=cumulative above-ground C,N,P litterfall 
-C
-      TCSNC(NZ,NY,NX)=TCSNC(NZ,NY,NX)+WTHTRT+WTHTXT
-      TZSNC(NZ,NY,NX)=TZSNC(NZ,NY,NX)+WTHNRT+WTHNXT 
-      TPSNC(NZ,NY,NX)=TPSNC(NZ,NY,NX)+WTHPRT+WTHPXT
-      TCSN0(NZ,NY,NX)=TCSN0(NZ,NY,NX)+WTHTRT+WTHTXT
-      TZSN0(NZ,NY,NX)=TZSNC(NZ,NY,NX)+WTHNRT+WTHNXT 
-      TPSN0(NZ,NY,NX)=TPSNC(NZ,NY,NX)+WTHPRT+WTHPXT
-      ENDIF
-      ZEROP(NZ,NY,NX)=ZERO*PP(NZ,NY,NX)
-      ZEROQ(NZ,NY,NX)=ZERO*PP(NZ,NY,NX)/AREA(3,NU(NY,NX),NY,NX)
-      ZEROL(NZ,NY,NX)=ZERO*PP(NZ,NY,NX)*1.0E+06
-      ENDIF
-9985  CONTINUE
-C
-C     TRANSFORMATIONS IN LIVING OR DEAD PLANT POPULATIONS
-C
-      DO 9975 NZ=1,NP0(NY,NX)
-C
-C     ACTIVATE DORMANT SEEDS
-C
-      DO 205 NB=1,NBR(NZ,NY,NX)
-      IF(IFLGI(NZ,NY,NX).EQ.1)THEN
-      IF(IFLGE(NB,NZ,NY,NX).EQ.0
-     2.AND.VRNS(NB,NZ,NY,NX).GE.VRNL(NB,NZ,NY,NX))THEN
-      IDAY0(NZ,NY,NX)=I
-      IYR0(NZ,NY,NX)=IYRC
-      SDPTHI(NZ,NY,NX)=0.005+CDPTHZ(0,NY,NX)
-      IFLGI(NZ,NY,NX)=0
-      ENDIF
-      ENDIF
-205   CONTINUE
-C
-C     LITTERFALL FROM STANDING DEAD
-C
-C     XFRC,XFRN,XFRP=litterfall from standing dead
-C     TFN3=temperature function for canopy growth
-C     WTSTG,WTSTDN,WTSTDP=standing dead C,N,P mass
-C     CSNC,ZSNC,PSNC=C,N,P litterfall 
-C
-      DO 6235 M=1,4
-      XFRC=1.5814E-05*TFN3(NZ,NY,NX)*WTSTDG(M,NZ,NY,NX)
-      XFRN=1.5814E-05*TFN3(NZ,NY,NX)*WTSTDN(M,NZ,NY,NX)
-      XFRP=1.5814E-05*TFN3(NZ,NY,NX)*WTSTDP(M,NZ,NY,NX)
-      IF(IBTYP(NZ,NY,NX).EQ.0.OR.IGTYP(NZ,NY,NX).LE.1)THEN
-      CSNC(M,1,0,NZ,NY,NX)=CSNC(M,1,0,NZ,NY,NX)+XFRC
-      ZSNC(M,1,0,NZ,NY,NX)=ZSNC(M,1,0,NZ,NY,NX)+XFRN
-      PSNC(M,1,0,NZ,NY,NX)=PSNC(M,1,0,NZ,NY,NX)+XFRP
-      ELSE
-      CSNC(M,0,0,NZ,NY,NX)=CSNC(M,0,0,NZ,NY,NX)+XFRC
-      ZSNC(M,0,0,NZ,NY,NX)=ZSNC(M,0,0,NZ,NY,NX)+XFRN
-      PSNC(M,0,0,NZ,NY,NX)=PSNC(M,0,0,NZ,NY,NX)+XFRP
-      ENDIF
-      WTSTDG(M,NZ,NY,NX)=WTSTDG(M,NZ,NY,NX)-XFRC
-      WTSTDN(M,NZ,NY,NX)=WTSTDN(M,NZ,NY,NX)-XFRN
-      WTSTDP(M,NZ,NY,NX)=WTSTDP(M,NZ,NY,NX)-XFRP
-6235  CONTINUE
-C
-C     ACCUMULATE TOTAL SURFACE, SUBSURFACE LITTERFALL
-C
-C     TCSN0,TZSN0,TPSN0=cumulative above-ground C,N,P litterfall 
-C     TCSNC,TZSNC,TPSNC=cumulative C,N,P litterfall 
-C     HCSNC,HZSNC,HPSNC=hourly C,N,P litterfall 
-C
-      DO 6430 M=1,4
-      DO 6430 K=0,1
-      TCSN0(NZ,NY,NX)=TCSN0(NZ,NY,NX)+CSNC(M,K,0,NZ,NY,NX)
-      TZSN0(NZ,NY,NX)=TZSN0(NZ,NY,NX)+ZSNC(M,K,0,NZ,NY,NX)
-      TPSN0(NZ,NY,NX)=TPSN0(NZ,NY,NX)+PSNC(M,K,0,NZ,NY,NX)
-6538  FORMAT(A8,4I4,12E12.4)
-      DO 8955 L=0,NJ(NY,NX)
-      HCSNC(NZ,NY,NX)=HCSNC(NZ,NY,NX)+CSNC(M,K,L,NZ,NY,NX)
-      HZSNC(NZ,NY,NX)=HZSNC(NZ,NY,NX)+ZSNC(M,K,L,NZ,NY,NX)
-      HPSNC(NZ,NY,NX)=HPSNC(NZ,NY,NX)+PSNC(M,K,L,NZ,NY,NX)
-      TCSNC(NZ,NY,NX)=TCSNC(NZ,NY,NX)+CSNC(M,K,L,NZ,NY,NX)
-      TZSNC(NZ,NY,NX)=TZSNC(NZ,NY,NX)+ZSNC(M,K,L,NZ,NY,NX)
-      TPSNC(NZ,NY,NX)=TPSNC(NZ,NY,NX)+PSNC(M,K,L,NZ,NY,NX)
-8955  CONTINUE
-6430  CONTINUE
-C
-C     TOTAL STANDING DEAD
-C
-C     WTSTG,WTSTDN,WTSTDP=standing dead C,N,P mass
-C
-      WTSTG(NZ,NY,NX)=WTSTDG(1,NZ,NY,NX)+WTSTDG(2,NZ,NY,NX) 
-     4+WTSTDG(3,NZ,NY,NX)+WTSTDG(4,NZ,NY,NX)
-      WTSTGN(NZ,NY,NX)=WTSTDN(1,NZ,NY,NX)+WTSTDN(2,NZ,NY,NX) 
-     4+WTSTDN(3,NZ,NY,NX)+WTSTDN(4,NZ,NY,NX)
-      WTSTGP(NZ,NY,NX)=WTSTDP(1,NZ,NY,NX)+WTSTDP(2,NZ,NY,NX) 
-     4+WTSTDP(3,NZ,NY,NX)+WTSTDP(4,NZ,NY,NX)
-C
 C     PLANT C BALANCE = TOTAL C STATE VARIABLES + TOTAL
 C     AUTOTROPHIC RESPIRATION + TOTAL LITTERFALL - TOTAL EXUDATION
 C     - TOTAL CO2 FIXATION
 C
+C     IFLGC=PFT flag:0=not active,1=active
 C     BALC=PFT C balance
-C     WTSHT,WTRT,WTND,WTRVC,WTSTG=PFT shoot,root,bacteria,storage,standing dead C
+C     WTSHT,WTRT,WTND,WTRVC,WTSTG=PFT
+C        shoot,root,bacteria,storage,standing dead C
 C     ZNPP=cumulative PFT NPP
 C     TCSNC=cumulative PFT C litterfall 
 C     TCUPTK=cumulative PFT root-soil C exchange 
 C     RSETC=cumulative C balance from previous year
-C     THVSTC=cumulative PFT C removed from ecosystem from previous year 
+C     THVSTC=cumulative PFT C removed from ecosystem from 
+C        previous year 
 C     HVSTC=total PFT C removed from ecosystem in current year
-C     VCO2F,VCH4F=CO2,CH4 emission from disturbance
+C     VCOXF=CO2 emission from disturbance
 C
-      ZNPP(NZ,NY,NX)=CARBN(NZ,NY,NX)+TCO2T(NZ,NY,NX)
       IF(IFLGC(NZ,NY,NX).EQ.1)THEN
       BALC(NZ,NY,NX)=WTSHT(NZ,NY,NX)+WTRT(NZ,NY,NX)+WTND(NZ,NY,NX)
      2+WTRVC(NZ,NY,NX)-ZNPP(NZ,NY,NX)+TCSNC(NZ,NY,NX)-TCUPTK(NZ,NY,NX)
      3-RSETC(NZ,NY,NX)+WTSTG(NZ,NY,NX)+THVSTC(NZ,NY,NX)
-     4+HVSTC(NZ,NY,NX)-VCO2F(NZ,NY,NX)-VCH4F(NZ,NY,NX)
-C     IF(NZ.EQ.2)THEN
-C     WRITE(*,1111)'BALC',I,J,NX,NY,NZ,NRT(NZ,NY,NX)
-C    2,BALC(NZ,NY,NX),WTSHT(NZ,NY,NX)
-C    2,WTRT(NZ,NY,NX),WTND(NZ,NY,NX),WTRVC(NZ,NY,NX),ZNPP(NZ,NY,NX)
+     4+HVSTC(NZ,NY,NX)-VCOXF(NZ,NY,NX)
+C     IF(NZ.EQ.1.AND.ICHKF.EQ.1)THEN
+C     WRITE(*,1111)'BALC',I,J,NFZ,NX,NY,NZ
+C    2,BALC(NZ,NY,NX),WTSHT(NZ,NY,NX),WTRT(NZ,NY,NX)
+C    2,WTND(NZ,NY,NX),WTRVC(NZ,NY,NX),ZNPP(NZ,NY,NX)
 C    3,TCSNC(NZ,NY,NX),TCUPTK(NZ,NY,NX),RSETC(NZ,NY,NX)
-C    3,WTSTG(NZ,NY,NX) 
-C    2,THVSTC(NZ,NY,NX),HVSTC(NZ,NY,NX),VCO2F(NZ,NY,NX)
-C    3,VCH4F(NZ,NY,NX),CARBN(NZ,NY,NX),TCO2T(NZ,NY,NX)  
-C    3,((CSNC(M,1,L,NZ,NY,NX),M=1,4),L=0,NJ(NY,NX))
+C    3,WTSTG(NZ,NY,NX),UPOMC(NZ,NY,NX),THVSTC(NZ,NY,NX)
+C    2,HVSTC(NZ,NY,NX),CARBN(NZ,NY,NX),TCO2T(NZ,NY,NX)
+C    3,TCO2A(NZ,NY,NX),RCGCKZ(NZ,NY,NX),VCOXF(NZ,NY,NX)
+C    4,(WTSTDG(M,NZ,NY,NX),M=1,5)
+C    3,(((CSNC(M,K,L,NZ,NY,NX),M=1,4),K=0,1),L=0,0)
 C    3,WTLF(NZ,NY,NX),WTSHE(NZ,NY,NX),WTSTK(NZ,NY,NX),WTRSV(NZ,NY,NX) 
-C    3,WTHSK(NZ,NY,NX),WTEAR(NZ,NY,NX),WTGR(NZ,NY,NX) 
+C    3,WTHSK(NZ,NY,NX),WTEAR(NZ,NY,NX),WTGR(NZ,NY,NX),CPOOLP(NZ,NY,NX) 
+C    4,(WTSTKB(NB,NZ,NY,NX),NB=1,NBR(NZ,NY,NX))
+C    4,(CPOOL(NB,NZ,NY,NX),NB=1,NBR(NZ,NY,NX))
 C    4,((CPOOLR(N,L,NZ,NY,NX),L=NU(NY,NX),NJ(NY,NX)),N=1,2)
 C    5,(((WTRT1(N,L,NR,NZ,NY,NX),NR=1,NRT(NZ,NY,NX))
 C    2,L=NU(NY,NX),NJ(NY,NX)),N=1,2)
 C    5,(((WTRT2(N,L,NR,NZ,NY,NX),NR=1,NRT(NZ,NY,NX))
 C    2,L=NU(NY,NX),NJ(NY,NX)),N=1,2)
-1111  FORMAT(A8,6I4,360F16.8)
+1111  FORMAT(A8,6I4,360F14.6)
 C     ENDIF
 C
 C     PLANT N BALANCE = TOTAL N STATE VARIABLES + TOTAL N LITTERFALL
 C     - TOTAL N UPTAKE FROM SOIL - TOTAL N ABSORPTION FROM ATMOSPHERE
 C
 C     BALN=PFT N balance
-C     WTSHN,WTRTN,WTNDN,WTRVN,WTSTGN=PFT shoot,root,bacteria,storage,standing dead N
+C     WTSHN,WTRTN,WTNDN,WTRVN,WTSTGN=PFT
+C        shoot,root,bacteria,storage,standing dead N
 C     TZSNC=cumulative PFT N litterfall 
 C     TZUPTK=cumulative PFT root-soil N exchange
 C     TNH3C=cumulative NH3 exchange 
 C     RSETN=cumulative N balance from previous year
-C     THVSTN=cumulative PFT N removed from ecosystem from previous year 
+C     THVSTN=cumulative PFT N removed from ecosystem from 
+C        previous year 
 C     HVSTN=total PFT N removed from ecosystem in current year
-C     VNH3F,VN2OF=NH3,N2O emission from disturbance
+C     VNH3F=NH3 emission from disturbance
 C     TZUPFX=cumulative PFT N2 fixation 
 C
       BALN(NZ,NY,NX)=WTSHN(NZ,NY,NX)+WTRTN(NZ,NY,NX)+WTNDN(NZ,NY,NX)
-     2+WTRVN(NZ,NY,NX)+TZSNC(NZ,NY,NX)-TZUPTK(NZ,NY,NX)-TNH3C(NZ,NY,NX)
-     3-RSETN(NZ,NY,NX)+WTSTGN(NZ,NY,NX)+HVSTN(NZ,NY,NX)+THVSTN(NZ,NY,NX)
-     4-VNH3F(NZ,NY,NX)-VN2OF(NZ,NY,NX)-TZUPFX(NZ,NY,NX) 
-C     IF(NZ.EQ.1)THEN
-C     WRITE(*,1112)'BALN',I,J,NX,NY,NZ,BALN(NZ,NY,NX),WTSHN(NZ,NY,NX)
-C    2,WTRTN(NZ,NY,NX),WTNDN(NZ,NY,NX),WTRVN(NZ,NY,NX),TZSNC(NZ,NY,NX)
-C    3,TZUPTK(NZ,NY,NX),TNH3C(NZ,NY,NX),RSETN(NZ,NY,NX),HVSTN(NZ,NY,NX)
-C    4,WTSTGN(NZ,NY,NX),WTLFN(NZ,NY,NX),WTSHEN(NZ,NY,NX)
+     2+WTRVN(NZ,NY,NX)+TZSNC(NZ,NY,NX)-TZUPTK(NZ,NY,NX)
+     3-TNH3C(NZ,NY,NX)-RSETN(NZ,NY,NX)+WTSTGN(NZ,NY,NX)
+     4+HVSTN(NZ,NY,NX)+THVSTN(NZ,NY,NX)
+     4-VNOXF(NZ,NY,NX)-TZUPFX(NZ,NY,NX) 
+C     IF(NZ.EQ.2)THEN
+C     WRITE(*,1112)'BALN',I,J,NFZ,NX,NY,NZ
+C    2,BALN(NZ,NY,NX),WTSHN(NZ,NY,NX),WTRTN(NZ,NY,NX)
+C    2,WTNDN(NZ,NY,NX),WTRVN(NZ,NY,NX),TZSNC(NZ,NY,NX)
+C    3,TZUPTK(NZ,NY,NX),TNH3C(NZ,NY,NX),RSETN(NZ,NY,NX)
+C    4,WTSTGN(NZ,NY,NX),VNOXF(NZ,NY,NX),TZUPFX(NZ,NY,NX)
+C    5,HVSTN(NZ,NY,NX),THVSTN(NZ,NY,NX)
+C    4,(WTSTDN(M,NZ,NY,NX),M=1,5)
+C    4,WTLFN(NZ,NY,NX),WTSHEN(NZ,NY,NX)
 C    5,WTSTKN(NZ,NY,NX),WTRSVN(NZ,NY,NX),WTHSKN(NZ,NY,NX)
-C    3,WTEARN(NZ,NY,NX),WTGRNN(NZ,NY,NX),UPOMN(NZ,NY,NX),UPNH4(NZ,NY,NX)
-C    2,UPNO3(NZ,NY,NX),VNH3F(NZ,NY,NX),VN2OF(NZ,NY,NX)
-C    4,((RDFOMN(N,L,NZ,NY,NX),N=1,2),L=NU(NY,NX),NI(NZ,NY,NX))
+C    3,WTEARN(NZ,NY,NX),WTGRNN(NZ,NY,NX)
+C    4,UPOMN(NZ,NY,NX),UPNH4(NZ,NY,NX),UPNO3(NZ,NY,NX)
+C    5,(WTNDLN(L,NZ,NY,NX),L=NU(NY,NX),NI(NZ,NY,NX))
+C    5,(ZPOOLR(1,L,NZ,NY,NX),L=NU(NY,NX),NI(NZ,NY,NX))
+C    4,(((RDFOMN(N,K,L,NZ,NY,NX),N=1,2),K=0,4)
+C    5,L=NU(NY,NX),NI(NZ,NY,NX))
 C    4,((ZPOOLR(N,L,NZ,NY,NX),N=1,2),L=NU(NY,NX),NI(NZ,NY,NX))
-1112  FORMAT(A8,5I4,200F18.6)
+1112  FORMAT(A8,6I4,200F18.6)
 C     ENDIF
 C
 C     PLANT P BALANCE = TOTAL P STATE VARIABLES + TOTAL P LITTERFALL
 C     - TOTAL P UPTAKE FROM SOIL
 C
 C     BALP=PFT N balance
-C     WTSHP,WTRTP,WTNDP,WTRVP,WTSTGP=PFT shoot,root,bacteria,storage,standing dead P
+C     WTSHP,WTRTP,WTNDP,WTRVP,WTSTGP=PFT
+C        shoot,root,bacteria,storage,standing dead P
 C     TPSNC=cumulative PFT P litterfall 
 C     TPUPTK=cumulative PFT root-soil P exchange
 C     RSETP=cumulative P balance from previous year
-C     THVSTP=cumulative PFT P removed from ecosystem from previous year 
+C     THVSTP=cumulative PFT P removed from ecosystem from 
+C        previous year 
 C     HVSTP=total PFT P removed from ecosystem in current year
 C     VPO4F=PO4 emission from disturbance
 C
       BALP(NZ,NY,NX)=WTSHP(NZ,NY,NX)+WTRTP(NZ,NY,NX)+WTNDP(NZ,NY,NX)
      2+WTRVP(NZ,NY,NX)+TPSNC(NZ,NY,NX)-TPUPTK(NZ,NY,NX) 
      3-RSETP(NZ,NY,NX)+WTSTDP(1,NZ,NY,NX)+WTSTGP(NZ,NY,NX)
-     4+HVSTP(NZ,NY,NX)+THVSTP(NZ,NY,NX)-VPO4F(NZ,NY,NX)
+     4+HVSTP(NZ,NY,NX)+THVSTP(NZ,NY,NX)-VPOXF(NZ,NY,NX)
 C     IF(NZ.EQ.4)THEN
-C     WRITE(*,1112)'BALP',I,J,NX,NY,NZ,BALP(NZ,NY,NX),WTSHP(NZ,NY,NX)
+C     WRITE(*,1112)'BALP',I,J,NFZ,NX,NY,NZ
+C    2,BALP(NZ,NY,NX),WTSHP(NZ,NY,NX)
 C    2,WTRTP(NZ,NY,NX),WTNDP(NZ,NY,NX),WTRVP(NZ,NY,NX),TPSNC(NZ,NY,NX)
 C    3,TPUPTK(NZ,NY,NX),RSETP(NZ,NY,NX)
 C    4,WTSTDP(1,NZ,NY,NX),WTSTGP(NZ,NY,NX),HVSTP(NZ,NY,NX)
-C    5,THVSTP(NZ,NY,NX),VPO4F(NZ,NY,NX)
+C    5,THVSTP(NZ,NY,NX),VPOXF(NZ,NY,NX)
 C     ENDIF
       ENDIF
 9975  CONTINUE

@@ -1,11 +1,12 @@
 
-      SUBROUTINE redist(I,J,NHW,NHE,NVN,NVS)
+      SUBROUTINE redist(I,J,NFZ,NHW,NHE,NVN,NVS)
 C
 C     THIS SUBROUTINE UPDATES SOIL STATE VARIABLES WITH WATER, HEAT,
 C     C, N, P, SOLUTE FLUXES CALCULATED IN EARLIER SUBROUTINES
 C
       include "parameters.h"
       include "blkc.h"
+      include "blk1g.h"
       include "blk1n.h"
       include "blk1p.h"
       include "blk1cr.h"
@@ -61,11 +62,12 @@ C
      4,TPOFHS(JZ,JY,JX),TH2BHB(JZ,JY,JX),TNXFHS(JZ,JY,JX)
      5,TCOFLG(JZ,JY,JX),TCHFLG(JZ,JY,JX),TOXFLG(JZ,JY,JX)
      6,TNGFLG(JZ,JY,JX),TN2FLG(JZ,JY,JX),TNHFLG(JZ,JY,JX)
-     7,TTHAW(JZ,JY,JX),THTHAW(JZ,JY,JX),TTHAWH(JZ,JY,JX)
+     7,TWFLFL(JZ,JY,JX),THFLFL(JZ,JY,JX),TWFLFH(JZ,JY,JX)
      8,TP1FLS(JZ,JY,JX),TP1FHS(JZ,JY,JX),TH1BFB(JZ,JY,JX)
      9,TH1BHB(JZ,JY,JX),VOLW1(JZ,JY,JX),VOLI1(JZ,JY,JX)
      1,VOLWH1(JZ,JY,JX),VOLIH1(JZ,JY,JX),CDPTHX(JZ,JY,JX)
-     2,CDPTHY(0:JZ,JY,JX)
+     2,TWFLVL(JZ,JY,JX),THFLVL(JZ,JY,JX),CDPTHY(0:JZ,JY,JX)
+     3,TFLV(JZ,JY,JX),TVPFLG(JZ,JY,JX) 
       DIMENSION TQR(JY,JX),THQR(JY,JX),TQS(JY,JX),TQW(JY,JX)
      2,TQI(JY,JX),THQS(JY,JX),TFLWS(JS,JY,JX),TFLWW(JS,JY,JX)
      3,TFLWI(JS,JY,JX),THFLWW(JS,JY,JX),TOCQRS(0:4,JY,JX)
@@ -96,7 +98,7 @@ C
      4,TQSMGS(JY,JX),TQSNAC(JY,JX),TQSNAS(JY,JX),TQSKAS(JY,JX)
      5,TQSH0P(JY,JX),TQSH1P(JY,JX),TQSH3P(JY,JX),TQSF1P(JY,JX)
      6,TQSF2P(JY,JX),TQSC0P(JY,JX),TQSC1P(JY,JX),TQSC2P(JY,JX)
-     7,TQSM1P(JY,JX)
+     7,TQSM1P(JY,JX),TFLWV(JS,JY,JX)
       DIMENSION TALFLS(JZ,JY,JX),TFEFLS(JZ,JY,JX)
      1,TCAFLS(JZ,JY,JX),THYFLS(JZ,JY,JX),TMGFLS(JZ,JY,JX)
      2,TNAFLS(JZ,JY,JX),TKAFLS(JZ,JY,JX),TOHFLS(JZ,JY,JX)
@@ -149,22 +151,22 @@ C
      4,TOMPER(3,7,0:5,JY,JX),TFEER(JY,JX),TFE2ER(JY,JX)
      5,TORCER(2,0:4,JY,JX),TORNER(2,0:4,JY,JX),TORPER(2,0:4,JY,JX)
      6,TOHCER(0:4,JY,JX),TOHNER(0:4,JY,JX),TOHPER(0:4,JY,JX)
-     7,TOHAER(0:4,JY,JX),TOSCER(4,0:4,JY,JX),TOSAER(4,0:4,JY,JX)
-     8,TOSNER(4,0:4,JY,JX),TOSPER(4,0:4,JY,JX),TSEDER(JY,JX)
+     7,TOHAER(0:4,JY,JX),TOSCER(5,0:4,JY,JX),TOSAER(5,0:4,JY,JX)
+     8,TOSNER(5,0:4,JY,JX),TOSPER(5,0:4,JY,JX),TSEDER(JY,JX)
       DIMENSION TOMC(3,7,0:5),TOMN(3,7,0:5),TOMP(3,7,0:5),TORC(2,0:4)
      2,TORN(2,0:4),TORP(2,0:4),TOQC(0:4),TOQN(0:4),TOQP(0:4)
-     3,TOQA(0:4),TOHC(0:4),TOHN(0:4),TOHP(0:4),TOHA(0:4),TOSC(4,0:4)
-     4,TOSA(4,0:4),TOSN(4,0:4),TOSP(4,0:4),TOSGC(4,0:2),TOSGA(4,0:2)
-     5,TOSGN(4,0:2),TOSGP(4,0:2),TOMGC(3,7,0:5),TOMGN(3,7,0:5)
+     3,TOQA(0:4),TOHC(0:4),TOHN(0:4),TOHP(0:4),TOHA(0:4),TOSC(5,0:4)
+     4,TOSA(5,0:4),TOSN(5,0:4),TOSP(5,0:4),TOSGC(5,0:2),TOSGA(5,0:2)
+     5,TOSGN(5,0:2),TOSGP(5,0:2),TOMGC(3,7,0:5),TOMGN(3,7,0:5)
      6,TOMGP(3,7,0:5),TORXC(2,0:2),TORXN(2,0:2),TORXP(2,0:2)
      7,TOQGC(0:2),TOQGN(0:2),TOQGP(0:2),TOQHC(0:2),TOQHN(0:2)
      8,TOQHP(0:2),TOHGC(0:2),TOHGN(0:2),TOHGP(0:2),TOHGA(0:2)
      9,TOQGA(0:2),TOQHA(0:2),THGQRS(JY,JX),THGFHS(JZ,JY,JX)
      1,THGFLG(JZ,JY,JX),THGFLS(JZ,JY,JX),TXCO2(JY,JX),DORGC(JZ,JY,JX)
      2,DORGE(JY,JX),OMCL(0:JZ,JY,JX),OMNL(0:JZ,JY,JX)
-     3,THETCX(0:1),DDLYR(0:JZ,6),DDLYX(0:JZ,6)
+     3,DDLYR(0:JZ,6),DDLYX(0:JZ,6) 
      4,DVOLW(JZ,JY,JX),DVOLI(JZ,JY,JX),VHCPWZ(JZ,JY,JX)
-     5,DDLYRX(3),DDLYRY(JZ),IFLGL(0:JZ,6)
+     5,DDLYRX(3),DDLYRY(JZ),TSEDSK(JY,JX),IFLGL(0:JZ,6),NUL(JY,JX)
       DIMENSION TCOBLS(JS,JY,JX),TCHBLS(JS,JY,JX),TOXBLS(JS,JY,JX)
      2,TNGBLS(JS,JY,JX),TN2BLS(JS,JY,JX),TN4BLW(JS,JY,JX)
      3,TN3BLW(JS,JY,JX),TNOBLW(JS,JY,JX),TH1PBS(JS,JY,JX)
@@ -182,15 +184,28 @@ C
      6,TKASBS(JS,JY,JX),TH0PBS(JS,JY,JX),TH3PBS(JS,JY,JX)
      7,TF1PBS(JS,JY,JX),TF2PBS(JS,JY,JX),TC0PBS(JS,JY,JX)
      8,TC1PBS(JS,JY,JX),TC2PBS(JS,JY,JX),TM1PBS(JS,JY,JX)
-      PARAMETER (ZEROC=0.1E-03)
+C
+C     FCHMC,FCHGC=fraction of anaerobic C combustion to charcoal,CO2
+C     FCHMN,FCHGN=fraction of anaerobic N combustion to NH4,
+C        gaseous NOX
+C     FCHMP,FCHGP=fraction of anaerobic P combustion to H2PO4,
+C        gaseous POX
+C     FCOMC,FCOGC=fraction of aerobic C combustion to charcoal,CO2
+C     FCOMN,FGOMN=fraction of aerobic N combustion to NH4,
+C        gaseous NOX
+C     FCOMP,FCOGP=fraction of aerobic P combustion to H2PO4,
+C        gaseous POX
+C
+      PARAMETER (FCHMC=0.3,FCHGC=1.0-FCHMC
+     2,FCHMN=0.1,FCHGN=1.0-FCHMN
+     3,FCHMP=0.9,FCHGP=1.0-FCHMP
+     4,FCOMC=0.0,FCOGC=1.0-FCOMC 
+     5,FCOMN=0.1,FCOGN=1.0-FCOMN
+     6,FCOMP=0.9,FCOGP=1.0-FCOMP) 
       DATA SG/0.0/
-      DATA TDORGC,TDYLXC/0.0,0.0/
-      DATA TDVOLI,TDLYXF/0.0,0.0/
-      DATA THETCX/8.0E-06,8.0E-06/
-
       VOLISO=0.0
       UDVOLI=0.0
-      UDLYXF=0.0
+      UDLYXF=0.0 
       TFLWT=0.0
       VOLPT=0.0
       VOLTT=0.0
@@ -198,65 +213,89 @@ C
       DO 9990 NY=NVN,NVS
       TXCO2(NY,NX)=0.0
       DORGE(NY,NX)=0.0
-      WQRH(NY,NX)=0.0
 C
-C     ADD ABOVE-GROUND LITTERFALL FROM EXTRACT.F TO SURFACE RESIDUE
+C     ADD MANURE LITTERFALL FROM EXTRACT.F TO SURFACE RESIDUE
 C
 C     OSC,OSN,OSP=SOC,SON,SOP
-C     CSNT,ZSNT,PSNT=total C,N,P litterfall
-C     ORGC=total SOC
-C     RAINR,HRAINR=water,heat in litterfall
-C     FLWR,HFLWR=water,heat flux into litter
-C     HEATIN=cumulative net surface heat transfer
+C     CSNMT,ZSNMT,PSNMT=organic C,N,P in manure litterfall 
+C        from extract.f
+C     ZSNIT,PSNIT=inorganic N,P in manure litterfall 
+C        from extract.f
+C
+      IF(NFZ.EQ.1.AND.CSNMT(1,NY,NX).GT.ZEROS(NY,NX))THEN
+      DO 6955 M=1,4
+      OSC(M,2,0,NY,NX)=OSC(M,2,0,NY,NX)+CSNMT(M,NY,NX)
+      OSA(M,2,0,NY,NX)=OSA(M,2,0,NY,NX)+CSNMT(M,NY,NX)
+      OSN(M,2,0,NY,NX)=OSN(M,2,0,NY,NX)+ZSNMT(M,NY,NX)
+      OSP(M,2,0,NY,NX)=OSP(M,2,0,NY,NX)+PSNMT(M,NY,NX)
+C     WRITE(*,8487)'OSC0',I,J,NFZ,M,OSC(M,2,0,NY,NX)
+C    2,OSN(M,2,0,NY,NX),OSP(M,2,0,NY,NX),CSNMT(M,NY,NX)
+C    3,ZSNMT(M,NY,NX),PSNMT(M,NY,NX),ZSNIT(NY,NX),PSNIT(NY,NX)
+8487  FORMAT(A8,4I4,20E12.4)
+6955  CONTINUE
+      ZNHUFA(0,NY,NX)=ZNHUFA(0,NY,NX)+ZSNIT(NY,NX)/14.0
+      PCAPM(0,NY,NX)=PCAPM(0,NY,NX)+PSNIT(NY,NX)/62.0
+      IUTYP(NY,NX)=0
+      ENDIF
+C
+C     ADD PLANT LITTERFALL FROM EXTRACT.F TO SURFACE RESIDUE
+C
+C     OSC,OSN,OSP=SOC,SON,SOP
+C     CSNT,ZSNT,PSNT=total C,N,P in plant litterfall from extract.f
 C
       DO 6965 K=0,1
-      DO 6965 M=1,4
+      DO 6965 M=1,5
       OSC(M,K,0,NY,NX)=OSC(M,K,0,NY,NX)+CSNT(M,K,0,NY,NX)
-      OSA(M,K,0,NY,NX)=OSA(M,K,0,NY,NX)+CSNT(M,K,0,NY,NX)*OMCI(1,K)
+C     OSA(M,K,0,NY,NX)=OSA(M,K,0,NY,NX)+CSNT(M,K,0,NY,NX)*OMCI(1,K)
       OSN(M,K,0,NY,NX)=OSN(M,K,0,NY,NX)+ZSNT(M,K,0,NY,NX)
       OSP(M,K,0,NY,NX)=OSP(M,K,0,NY,NX)+PSNT(M,K,0,NY,NX)
+      IF(M.LE.4)THEN
       ORGC(0,NY,NX)=ORGC(0,NY,NX)+CSNT(M,K,0,NY,NX)
-      RAINR=CSNT(M,K,0,NY,NX)*THETCX(K)
-      HRAINR=RAINR*4.19*TKA(NY,NX)
-      FLWR(NY,NX)=FLWR(NY,NX)+RAINR
-      HFLWR(NY,NX)=HFLWR(NY,NX)+HRAINR
-      CRAIN=CRAIN+RAINR
-      HEATIN=HEATIN+HRAINR
-C     IF((I/30)*30.EQ.I.AND.J.EQ.15)THEN
-C     WRITE(*,8486)'OSC0',I,J,K,M,OSC(M,K,0,NY,NX)
+      ELSE
+      ORGCC(0,NY,NX)=ORGCC(0,NY,NX)+CSNT(M,K,0,NY,NX)
+      ENDIF
+C     IF(ICHKF.EQ.1)THEN
+C     WRITE(*,8486)'OSC0',I,J,NFZ,K,M,OSC(M,K,0,NY,NX)
 C    2,OSN(M,K,0,NY,NX),OSP(M,K,0,NY,NX),CSNT(M,K,0,NY,NX)
 C    3,ZSNT(M,K,0,NY,NX),PSNT(M,K,0,NY,NX)
-C    4,RAINR,HRAINR,FLWR(NY,NX),HFLWR(NY,NX)
-8486  FORMAT(A8,4I4,20E12.4)
+8486  FORMAT(A8,5I4,20E12.4)
 C     ENDIF
 6965  CONTINUE
 C
 C     GAS AND SOLUTE EXCHANGE WITHIN SURFACE LITTER ADDED TO ECOSYSTEM
-C     TOTALS FOR CALCULATING COMPETITION CONSTRAINTS ON MICROBIAL
-C     AND ROOT POPULATIONS IN NITRO.F AND UPTAKE.F
+C     TOTALS FOR CALCULATING COMPETITION CONSTRAINTS ON MICROBIAL,
+C     ROOT AND MYCORRHIZAL POPULATIONS IN NITRO.F AND UPTAKE.F
 C
-C     ROXYX=O2 demand by all microbial,root,myco populations
-C     RNH4X=NH4 demand in non-band by all microbial,root,myco populations
-C     RNO3X=NO3 demand in non-band by all microbial,root,myco populations
-C     RPO4X=H2PO4 demand in non-band by all microbial,root,myco populations
-C     RP14X=HPO4 demand in non-band by all microbial,root,myco populations
-C     RNHBX=NH4 demand in band by all microbial,root,myco populations
-C     RN3BX=NO3 demand in band by all microbial,root,myco populations
-C     RPOBX=H2PO4 demand in band by all microbial,root,myco populations
-C     RP1BX=HPO4 demand in band by all microbial,root,myco populations
-C     ROXYS=O2 demand from DOC,DOA oxidation
-C     RVMX4=demand for NH4 oxidation
-C     RVMX3=demand for NO3 reduction
-C     RVMX2=demand for NO2 oxidation
-C     RVMX1=demand for N2O reduction
-C     RINHO,RINHOR=substrate-unlimited NH4 immobilization
-C     RINOO,RINOOR=substrate-unlimited NO3 immobilization
-C     RIPOO,RIPOOR=substrate-unlimited H2PO4 immobilization
-C     RIPO1,RIPO1R=substrate-unlimited HPO4 immobilization
-C     ROQCX,ROQAX=total DOC,DOA demand from DOC,DOA oxidation
-C     ROQCS,ROQAS=DOC,DOA demand from DOC,DOA oxidation
-C     RNO2X=total demand for NO2 reduction
-C     RVMXC=demand for NO2 reduction
+C     ROXYX=O2 demand by all microbial,root,mycorrhizal populations 
+C     RNH4X=NH4 demand in non-band by all microbial,root,mycorrhizal 
+C        populations
+C     RNO3X=NO3 demand in non-band by all microbial,root,mycorrhizal
+C        populations
+C     RPO4X=H2PO4 demand in non-band by all microbial,root,mycorrhizal
+C        populations
+C     RP14X=HPO4 demand in non-band by all microbial,root,mycorrhizal
+C        populations
+C     ROXYS=O2 demand from DOC,DOA oxidation by all microbial
+C        populations 
+C     RVMX4=demand for NH4 oxidation by all microbial populations 
+C     RVMX3=demand for NO3 reduction by all microbial populations 
+C     RVMX2=demand for NO2 oxidation by all microbial populations 
+C     RVMX1=demand for N2O reduction by all microbial populations 
+C     RINHO,RINHOR=substrate-unlimited NH4 immobilization by all
+C        microbial,root,mycorrhizal populations 
+C     RINOO,RINOOR=substrate-unlimited NO3 immobilization by all
+C        microbial,root,mycorrhizal populations 
+C     RIPOO,RIPOOR=substrate-unlimited H2PO4 immobilization by all 
+C        microbial,root,mycorrhizal populations 
+C     RIPO1,RIPO1R=substrate-unlimited HPO4 immobilization by all
+C        microbial,root,mycorrhizal populations 
+C     ROQCX,ROQAX=total DOC,DOA demand from DOC,DOA oxidation by all
+C        microbial populations 
+C     ROQCS,ROQAS=DOC,DOA demand from DOC,DOA oxidation by all
+C        microbial populations 
+C     RNO2X=total demand for NO2 reduction by all microbial
+C        populations 
+C     RVMXC=demand for NO2 reduction by all microbial populations 
 C
       DO 8990 K=0,5
       IF(K.NE.3.AND.K.NE.4)THEN
@@ -285,24 +324,30 @@ C
 C
 C     SINK ALL SOLID C,N,P IN POND
 C
-C     BKDS=bulk density
+C     BKDS=bulk density (0=water,>0=soil)
 C     DLYR=layer depth
-C     VLS=hourly sinking rate from hour1.f
-C     FSINK=hourly rate for sediment sinking
+C     VLS=sinking rate from hour1.f
+C     FSINK=sediment sinking fraction
+C     XNFH=time step from wthr.f
+C     L,LL=pond layer from,to which material sinks
 C
+      TSEDSK(NY,NX)=0.0
       DO 9885 L=NL(NY,NX)-1,0,-1
-      IF(BKDS(L,NY,NX).LE.ZERO.AND.DLYR(3,L,NY,NX).GT.ZERO)THEN
+      IF((BKDS(L,NY,NX).LE.ZERO
+     2.OR.(L.EQ.0.AND.BKDS(NU(NY,NX),NY,NX).LE.ZERO))
+     2.AND.DLYR(3,L,NY,NX).GT.ZERO)THEN
       DO 9880 LL=L+1,NL(NY,NX)
       IF(DLYR(3,LL,NY,NX).GT.ZEROS(NY,NX))GO TO 9881
 9880  CONTINUE
 9881  CONTINUE
-      FSINK=AMIN1(1.0,VLS(NY,NX)/DLYR(3,L,NY,NX))
+      FSINK=AMIN1(1.0,VLS(NY,NX)/DLYR(3,L,NY,NX))*XNFH
 C
-C     SOIL MINERALS
+C     SINK SOIL MINERALS
 C
-C     *ER=sediment flux from erosion.f
-C     sediment code:XSED=total,XSAN=sand,XSIL=silt,XCLA=clay
+C     SAND,SILT,CLAY=sand,silt,clay content
+C     XCEC,XAEC=cation,anion exchange capacity
 C
+      IF(L.GT.0)THEN
       FSAN=FSINK*SAND(L,NY,NX)
       FSIL=FSINK*SILT(L,NY,NX)
       FCLA=FSINK*CLAY(L,NY,NX)
@@ -318,11 +363,34 @@ C
       CLAY(LL,NY,NX)=CLAY(LL,NY,NX)+FCLA
       XCEC(LL,NY,NX)=XCEC(LL,NY,NX)+FCEC
       XAEC(LL,NY,NX)=XAEC(LL,NY,NX)+FAEC
+      IF(BKDS(LL,NY,NX).GT.ZERO)THEN
+      NUL(NY,NX)=LL
+      TSEDSK(NY,NX)=TSEDSK(NY,NX)+FSAN+FSIL+FCLA
+      ENDIF
 C
-C     FERTILIZER POOLS
+C     SINK PRECIPITATES
 C
-C     *ER=sediment flux from erosion.f
-C     sediment code:NH4,NH3,NHU,NO3=NH4,NH3,urea,NO3
+C     sediment code
+C       :PALO,PFEO=precipitated AlOH,FeOH 
+C       :PCAC,PCAS=precipitated CaCO3,CaSO4
+C
+      FALO=FSINK*PALOH(L,NY,NX)
+      FFEO=FSINK*PFEOH(L,NY,NX)
+      FCAC=FSINK*PCACO(L,NY,NX)
+      FCAS=FSINK*PCASO(L,NY,NX)
+      PALOH(L,NY,NX)=PALOH(L,NY,NX)-FALO
+      PFEOH(L,NY,NX)=PFEOH(L,NY,NX)-FFEO
+      PCACO(L,NY,NX)=PCACO(L,NY,NX)-FCAC
+      PCASO(L,NY,NX)=PCASO(L,NY,NX)-FCAS
+      PALOH(LL,NY,NX)=PALOH(LL,NY,NX)+FALO
+      PFEOH(LL,NY,NX)=PFEOH(LL,NY,NX)+FFEO
+      PCACO(LL,NY,NX)=PCACO(LL,NY,NX)+FCAC
+      PCASO(LL,NY,NX)=PCASO(LL,NY,NX)+FCAS
+      ENDIF
+C
+C     SINK FERTILIZER POOLS
+C
+C     sediment code:NH4,NH3,NHU,NO3=NH4,NH3,urea,NO3 
 C
       FNH4=FSINK*ZNH4FA(L,NY,NX)
       FNH3=FSINK*ZNH3FA(L,NY,NX)
@@ -337,16 +405,34 @@ C
       ZNHUFA(LL,NY,NX)=ZNHUFA(LL,NY,NX)+FNHU
       ZNO3FA(LL,NY,NX)=ZNO3FA(LL,NY,NX)+FNO3
 C
-C     EXCHANGEABLE CATIONS AND ANIONS
+C     SINK EXCHANGEABLE CATIONS AND ANIONS
 C
 C     sediment code
-C       :XN4=adsorbed NH4
+C       :XN4=adsorbed NH4 
 C       :XHY,XAL,XFE,XCA,XMG,XNA,XKA,XHC,AL2,FE2
-C        =adsorbed H,Al,Fe,Ca,Mg,Na,K,HCO3,AlOH2,FeOH2
-C       :XOH0,XOH1,XOH2=adsorbed R-,R-OH,R-OH2
-C       :XH1P,XH2P=adsorbed HPO4,H2PO4
+C           =adsorbed H,Al,Fe,Ca,Mg,Na,K,HCO3,AlOH2,FeOH2
+C       :XOH0,XOH1,XOH2=adsorbed R-,R-OH,R-OH2 
+C       :XH1P,XH2P=adsorbed HPO4,H2PO4 
 C
       FN4=FSINK*XN4(L,NY,NX)
+      FOH0=FSINK*XOH0(L,NY,NX)
+      FOH1=FSINK*XOH1(L,NY,NX)
+      FOH2=FSINK*XOH2(L,NY,NX)
+      FH1P=FSINK*XH1P(L,NY,NX)
+      FH2P=FSINK*XH2P(L,NY,NX)
+      XN4(L,NY,NX)=XN4(L,NY,NX)-FN4
+      XOH0(L,NY,NX)=XOH0(L,NY,NX)-FOH0
+      XOH1(L,NY,NX)=XOH1(L,NY,NX)-FOH1
+      XOH2(L,NY,NX)=XOH2(L,NY,NX)-FOH2
+      XH1P(L,NY,NX)=XH1P(L,NY,NX)-FH1P
+      XH2P(L,NY,NX)=XH2P(L,NY,NX)-FH2P
+      XN4(LL,NY,NX)=XN4(LL,NY,NX)+FN4
+      XOH0(LL,NY,NX)=XOH0(LL,NY,NX)+FOH0
+      XOH1(LL,NY,NX)=XOH1(LL,NY,NX)+FOH1
+      XOH2(LL,NY,NX)=XOH2(LL,NY,NX)+FOH2
+      XH1P(LL,NY,NX)=XH1P(LL,NY,NX)+FH1P
+      XH2P(LL,NY,NX)=XH2P(LL,NY,NX)+FH2P
+      IF(L.GT.0)THEN
       FHY=FSINK*XHY(L,NY,NX)
       FAL=FSINK*XAL(L,NY,NX)
       FFE=FSINK*XFE(L,NY,NX)
@@ -357,12 +443,6 @@ C
       FHC=FSINK*XHC(L,NY,NX)
       FAL2=FSINK*XALO2(L,NY,NX)
       FFE2=FSINK*XFEO2(L,NY,NX)
-      FOH0=FSINK*XOH0(L,NY,NX)
-      FOH1=FSINK*XOH1(L,NY,NX)
-      FOH2=FSINK*XOH2(L,NY,NX)
-      FH1P=FSINK*XH1P(L,NY,NX)
-      FH2P=FSINK*XH2P(L,NY,NX)
-      XN4(L,NY,NX)=XN4(L,NY,NX)-FN4
       XHY(L,NY,NX)=XHY(L,NY,NX)-FHY
       XAL(L,NY,NX)=XAL(L,NY,NX)-FAL
       XFE(L,NY,NX)=XFE(L,NY,NX)-FFE
@@ -373,12 +453,6 @@ C
       XHC(L,NY,NX)=XHC(L,NY,NX)-FHC
       XALO2(L,NY,NX)=XALO2(L,NY,NX)-FAL2
       XFEO2(L,NY,NX)=XFEO2(L,NY,NX)-FFE2
-      XOH0(L,NY,NX)=XOH0(L,NY,NX)-FOH0
-      XOH1(L,NY,NX)=XOH1(L,NY,NX)-FOH1
-      XOH2(L,NY,NX)=XOH2(L,NY,NX)-FOH2
-      XH1P(L,NY,NX)=XH1P(L,NY,NX)-FH1P
-      XH2P(L,NY,NX)=XH2P(L,NY,NX)-FH2P
-      XN4(LL,NY,NX)=XN4(LL,NY,NX)+FN4
       XHY(LL,NY,NX)=XHY(LL,NY,NX)+FHY
       XAL(LL,NY,NX)=XAL(LL,NY,NX)+FAL
       XFE(LL,NY,NX)=XFE(LL,NY,NX)+FFE
@@ -389,58 +463,35 @@ C
       XHC(LL,NY,NX)=XHC(LL,NY,NX)+FHC
       XALO2(LL,NY,NX)=XALO2(LL,NY,NX)+FAL2
       XFEO2(LL,NY,NX)=XFEO2(LL,NY,NX)+FFE2
-      XOH0(LL,NY,NX)=XOH0(LL,NY,NX)+FOH0
-      XOH1(LL,NY,NX)=XOH1(LL,NY,NX)+FOH1
-      XOH2(LL,NY,NX)=XOH2(LL,NY,NX)+FOH2
-      XH1P(LL,NY,NX)=XH1P(LL,NY,NX)+FH1P
-      XH2P(LL,NY,NX)=XH2P(LL,NY,NX)+FH2P
-
+      ENDIF
 C
-C     PRECIPITATES
+C     SINK PHOSPHORUS PRECIPITATES
 C
 C     sediment code
-C       :PALO,PFEO=precip AlOH,FeOH
-C       :PCAC,PCAS=precip CaCO3,CaSO4
-C       :PALP,PFEP=precip AlPO4,FEPO4
-C       :PCPM,PCPD,PCPH=precip CaH2PO4,CaHPO4,apatite
+C       :PALP,PFEP=precipitated AlPO4,FEPO4 
+C       :PCPM,PCPD,PCPH=precipitated CaH2PO4,CaHPO4,apatite 
 C
-      FALO=FSINK*PALOH(L,NY,NX)
-      FFEO=FSINK*PFEOH(L,NY,NX)
-      FCAC=FSINK*PCACO(L,NY,NX)
-      FCAS=FSINK*PCASO(L,NY,NX)
       FALP=FSINK*PALPO(L,NY,NX)
       FFEP=FSINK*PFEPO(L,NY,NX)
       FCPD=FSINK*PCAPD(L,NY,NX)
       FCPH=FSINK*PCAPH(L,NY,NX)
       FCPM=FSINK*PCAPM(L,NY,NX)
-      PALOH(L,NY,NX)=PALOH(L,NY,NX)-FALO
-      PFEOH(L,NY,NX)=PFEOH(L,NY,NX)-FFEO
-      PCACO(L,NY,NX)=PCACO(L,NY,NX)-FCAC
-      PCASO(L,NY,NX)=PCASO(L,NY,NX)-FCAS
       PALPO(L,NY,NX)=PALPO(L,NY,NX)-FALP
       PFEPO(L,NY,NX)=PFEPO(L,NY,NX)-FFEP
       PCAPD(L,NY,NX)=PCAPD(L,NY,NX)-FCPD
       PCAPH(L,NY,NX)=PCAPH(L,NY,NX)-FCPH
       PCAPM(L,NY,NX)=PCAPM(L,NY,NX)-FCPM
-      PALOH(LL,NY,NX)=PALOH(LL,NY,NX)+FALO
-      PFEOH(LL,NY,NX)=PFEOH(LL,NY,NX)+FFEO
-      PCACO(LL,NY,NX)=PCACO(LL,NY,NX)+FCAC
-      PCASO(LL,NY,NX)=PCASO(LL,NY,NX)+FCAS
       PALPO(LL,NY,NX)=PALPO(LL,NY,NX)+FALP
       PFEPO(LL,NY,NX)=PFEPO(LL,NY,NX)+FFEP
       PCAPD(LL,NY,NX)=PCAPD(LL,NY,NX)+FCPD
       PCAPH(LL,NY,NX)=PCAPH(LL,NY,NX)+FCPH
       PCAPM(LL,NY,NX)=PCAPM(LL,NY,NX)+FCPM
 C
-C     MICROBIAL C,N,P
+C     SINK MICROBIAL C,N,P
+C
+C     OMC,OMN,OMP=microbial C,N,P
 C
       DO 1970 K=0,5
-      IF(K.NE.3.AND.K.NE.4)THEN
-C     OMC,OMN,OMP=microbial C,N,P
-C     ORC,ORN,ORP=microbial residue C,N,P
-C     OHC,OHN,OHP,OHA=adsorbed C,N,P,acetate
-C     OSC,OAA,OSN,OSP=SOC,colonized SOC,SON,SOP
-C
       DO 1960 N=1,7
       DO 1960 M=1,3
       FOMC=FSINK*OMC(M,N,K,L,NY,NX)
@@ -452,13 +503,17 @@ C
       OMC(M,N,K,L,NY,NX)=OMC(M,N,K,L,NY,NX)-FOMC
       OMN(M,N,K,L,NY,NX)=OMN(M,N,K,L,NY,NX)-FOMN
       OMP(M,N,K,L,NY,NX)=OMP(M,N,K,L,NY,NX)-FOMP
+C     IF(BKDS(LL,NY,NX).GT.ZERO)THEN
+C     TSEDSK(NY,NX)=TSEDSK(NY,NX)+FOMC*1.82E-06
+C     ENDIF
 1960  CONTINUE
-      ENDIF
 1970  CONTINUE
 C
-C     MICROBIAL RESIDUE C,N,P
+C     SINK MICROBIAL RESIDUE C,N,P
 C
-      DO 1900 K=0,2
+C     ORC,ORN,ORP=microbial residue C,N,P
+C
+      DO 1900 K=0,4
       DO 1940 M=1,2
       FORC=FSINK*ORC(M,K,L,NY,NX)
       FORN=FSINK*ORN(M,K,L,NY,NX)
@@ -469,9 +524,14 @@ C
       ORC(M,K,L,NY,NX)=ORC(M,K,L,NY,NX)-FORC
       ORN(M,K,L,NY,NX)=ORN(M,K,L,NY,NX)-FORN
       ORP(M,K,L,NY,NX)=ORP(M,K,L,NY,NX)-FORP
+C     IF(BKDS(LL,NY,NX).GT.ZERO)THEN
+C     TSEDSK(NY,NX)=TSEDSK(NY,NX)+FORC*1.82E-06
+C     ENDIF
 1940  CONTINUE
 C
-C     ADSORBED C,N,P
+C     SINK ADSORBED C,N,P
+C
+C     OHC,OHN,OHP,OHA=adsorbed C,N,P,acetate
 C
       FOHC=FSINK*OHC(K,L,NY,NX)
       FOHN=FSINK*OHN(K,L,NY,NX)
@@ -485,10 +545,15 @@ C
       OHN(K,L,NY,NX)=OHN(K,L,NY,NX)-FOHN
       OHP(K,L,NY,NX)=OHP(K,L,NY,NX)-FOHP
       OHA(K,L,NY,NX)=OHA(K,L,NY,NX)-FOHA
+C     IF(BKDS(LL,NY,NX).GT.ZERO)THEN
+C     TSEDSK(NY,NX)=TSEDSK(NY,NX)+FOHC*1.82E-06
+C     ENDIF
 C
-C     SOC,N,P
+C     SINK SOC,SON,SOP
 C
-      DO 1930 M=1,4
+C     OSC,OAA,OSN,OSP=SOC,colonized SOC,SON,SOP
+C
+      DO 1930 M=1,5
       FOSC=FSINK*OSC(M,K,L,NY,NX)
       FOSA=FSINK*OSA(M,K,L,NY,NX)
       FOSN=FSINK*OSN(M,K,L,NY,NX)
@@ -501,6 +566,9 @@ C
       OSA(M,K,L,NY,NX)=OSA(M,K,L,NY,NX)-FOSA
       OSN(M,K,L,NY,NX)=OSN(M,K,L,NY,NX)-FOSN
       OSP(M,K,L,NY,NX)=OSP(M,K,L,NY,NX)-FOSP
+C     IF(BKDS(LL,NY,NX).GT.ZERO)THEN
+C     TSEDSK(NY,NX)=TSEDSK(NY,NX)+FOSC*1.82E-06
+C     ENDIF
 1930  CONTINUE
 1900  CONTINUE
       ENDIF
@@ -576,10 +644,11 @@ C
 C
 C     RUNOFF BOUNDARY FLUXES OF WATER AND HEAT
 C
-C     QR,QS,QW,QI=runoff from surface water, snowpack snow,water,ice from watsub.f
-C     CRUN,URUN=cumulative water and snow runoff
+C     QR,QS,QW,QI=runoff from surface water, snowpack 
+C        snow,water,ice from watsub.f
+C     CRUN,URUN=cumulative water+snow runoff
 C     HEATOU=cumulative heat loss through lateral and lower boundaries
-C
+C 
       IF(N.NE.3.AND.L.EQ.NU(NY,NX))THEN
       WQRN=XN*QR(N,NN,N5,N4)
       WQRH(N2,N1)=WQRH(N2,N1)+WQRN
@@ -588,21 +657,28 @@ C
       URUN(NY,NX)=URUN(NY,NX)-WQRN
       HQRN=XN*HQR(N,NN,N5,N4)
       HEATOU=HEATOU-HQRN
+C     WRITE(*,2229)'WQRN',I,J,NFZ,N,NN,N5,N4
+C    2,HEATOU,HQRN,HQR(N,NN,N5,N4),CRUN,WQRN,QR(N,NN,N5,N4) 
+2229  FORMAT(A8,7I4,20F20.6)
 C
 C     RUNOFF BOUNDARY FLUXES OF C, N AND P
 C
-C     X*QRS,X*QSS=solute in runoff, snow drift from trnsfr.f
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
-C             :OC=DOC,OA=acetate,ON=DON,OP=DOP
-C             :N4=NH4,N3=NH3,NO=NO3,NX=NO2,PI=HPO4,P4=H2PO4 in non-band
+C     X*QRS(W),X*QSS=solute flux in runoff, snow drift from trnsfr.f
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
+C        :N4=NH4,N3=NH3,NO=NO3,NX=NO2,P1=HPO4,P4=H2PO4
 C     XN=direction indicator
-C     TCOU,OXYGOU,H2GOU,TZOU,TPOU=cumulative C,O2,H2,N,P loss through lateral and lower boundaries
-C     UDOCQ,UDICQ=dissolved organic,inorganic C loss through runoff
-C     UDONQ,UDINQ=dissolved organic,inorganic N loss through runoff
-C     UDOPQ,UDIPQ=dissolved organic,inorganic P loss through runoff
+C     TCOU,TZOU,TPOU=cumulative C,N,P loss through lateral and 
+C        lower boundaries
+C     UDOCQ,UDICQ=dissolved organic,inorganic C loss through lateral
+C        and lower boundaries  
+C     UDONQ,UDINQ=dissolved organic,inorganic N loss through lateral
+C        and lower boundaries  
+C     UDOPQ,UDIPQ=dissolved organic,inorganic P loss through lateral
+C        and lower boundaries
 C
       CXR=XN*(XCOQRS(N,NN,N5,N4)+XCHQRS(N,NN,N5,N4))
-      ZXR=XN*(XN4QRW(N,NN,N5,N4)+XN3QRW(N,NN,N5,N4)
+      ZXR=XN*(XN4QRW(N,NN,N5,N4)+XN3QRW(N,NN,N5,N4) 
      2+XNOQRW(N,NN,N5,N4)+XNXQRS(N,NN,N5,N4))
       ZGR=XN*(XN2QRS(N,NN,N5,N4)+XNGQRS(N,NN,N5,N4))
       PXR=XN*(XP4QRW(N,NN,N5,N4)+XP1QRW(N,NN,N5,N4))
@@ -614,40 +690,44 @@ C
       ZOR=ZOR+XN*XONQRS(K,N,NN,N5,N4)
       POR=POR+XN*XOPQRS(K,N,NN,N5,N4)
 2575  CONTINUE
-      TCOU=TCOU-CXR-COR
-      TZOU=TZOU-ZXR-ZOR-ZGR
+      TCOU=TCOU-CXR-COR 
+      TZOU=TZOU-ZXR-ZOR-ZGR 
       TPOU=TPOU-PXR-POR
       UDOCQ(NY,NX)=UDOCQ(NY,NX)-COR
       UDICQ(NY,NX)=UDICQ(NY,NX)-CXR
       UDONQ(NY,NX)=UDONQ(NY,NX)-ZOR
-      UDINQ(NY,NX)=UDINQ(NY,NX)-ZXR-ZGR
+      UDINQ(NY,NX)=UDINQ(NY,NX)-ZXR
       UDOPQ(NY,NX)=UDOPQ(NY,NX)-POR
       UDIPQ(NY,NX)=UDIPQ(NY,NX)-PXR
       OXR=XN*XOXQRS(N,NN,N5,N4)
-      OXYGOU=OXYGOU-OXR
+      OXYGOU=OXYGOU-OXR 
       HGR=XN*XHGQRS(N,NN,N5,N4)
       H2GOU=H2GOU+HGR
-C     WRITE(*,6636)'XPO',I,J,N4,N5,N,XN
-C    2,COR,CXR,ZOR,ZXR,POR,PXR
+C     WRITE(*,6636)'XPO',I,J,NFZ,N4,N5,N,XN
+C    3,UDICQ(NY,NX),UDICQ(NY,NX),UDICQ(NY,NX)
+C    2,COR,CXR,ZOR,ZXR,ZGR,POR,PXR
 C    2,XP4QRW(N,NN,N5,N4),XP1QRW(N,NN,N5,N4)
-6636  FORMAT(A8,5I4,40E12.4)
+6636  FORMAT(A8,6I4,40E12.4)
 C
 C     RUNOFF BOUNDARY FLUXES OF SOLUTES
 C
 C     ISALTG=salt flag
 C     XQR*,XQS*=solute loss in runoff,snow drift from trnsfrs.f
-C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
-C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
-C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
-C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
-C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
-C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
-C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
-C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
-C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
-C          :*1=non-band,*B=band
+C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
+C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
+C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
+C        :*FEO1*=FeOH2-,*FEOH2=F3OH2-,*FEOH3*=FeOH3,*FEOH4*=FeOH4+
+C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
+C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
+C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
+C        :*M1P*=MgHPO4,*COO*=COOH-
+C        :*1=non-band,*B=band
 C     XN=direction indicator
-C     TPOU,TIONOU=total P,salt loss through lateral and lower boundaries
+C     TPOU,TIONOU=accumulated P,salt loss through lateral and lower
+C         boundaries
 C
       IF(ISALTG.NE.0)THEN
       PSS=XN*31.0*(XQRH0P(N,NN,N5,N4)
@@ -657,20 +737,20 @@ C
       SS1=XN*(XQRAL(N,NN,N5,N4)+XQRFE(N,NN,N5,N4)+XQRHY(N,NN,N5,N4)
      2+XQRCA(N,NN,N5,N4)+XQRMG(N,NN,N5,N4)+XQRNA(N,NN,N5,N4)
      3+XQRKA(N,NN,N5,N4)+XQROH(N,NN,N5,N4)+XQRSO(N,NN,N5,N4)
-     4+XQRCL(N,NN,N5,N4)+XQRC3(N,NN,N5,N4)+XQRH0P(N,NN,N5,N4))
+     4+XQRCL(N,NN,N5,N4)+XQRC3(N,NN,N5,N4)+XQRH0P(N,NN,N5,N4)) 
       SS2=XN*2.0*(XQRHC(N,NN,N5,N4)+XQRAL1(N,NN,N5,N4)
      2+XQRALS(N,NN,N5,N4)+XQRFE1(N,NN,N5,N4)+XQRFES(N,NN,N5,N4)
      3+XQRCAO(N,NN,N5,N4)+XQRCAC(N,NN,N5,N4)+XQRCAS(N,NN,N5,N4)
      4+XQRMGO(N,NN,N5,N4)+XQRMGC(N,NN,N5,N4)+XQRMGS(N,NN,N5,N4)
      5+XQRNAC(N,NN,N5,N4)+XQRNAS(N,NN,N5,N4)+XQRKAS(N,NN,N5,N4)
-     6+XQRC0P(N,NN,N5,N4))
+     6+XQRC0P(N,NN,N5,N4)) 
       SS3=XN*3.0*(XQRAL2(N,NN,N5,N4)+XQRFE2(N,NN,N5,N4)
      2+XQRCAH(N,NN,N5,N4)+XQRMGH(N,NN,N5,N4)+XQRF1P(N,NN,N5,N4)
-     3+XQRC1P(N,NN,N5,N4)+XQRM1P(N,NN,N5,N4))
+     3+XQRC1P(N,NN,N5,N4)+XQRM1P(N,NN,N5,N4)) 
       SS4=XN*4.0*(XQRAL3(N,NN,N5,N4)+XQRFE3(N,NN,N5,N4)
      2+XQRH3P(N,NN,N5,N4)+XQRF2P(N,NN,N5,N4)+XQRC2P(N,NN,N5,N4))
      5+XN*5.0*(XQRAL4(N,NN,N5,N4)+XQRFE4(N,NN,N5,N4))
-      PSS=PSS+XN*31.0*XQSH0P(N,N5,N4)
+      PSS=PSS+XN*31.0*XQSH0P(N,NN,N5,N4)
       TPOU=TPOU-PSS
       SSR=SS1+SS2+SS3+SS4
       TIONOU=TIONOU-SSR
@@ -681,8 +761,11 @@ C
 C     SURFACE RUNOFF ELECTRICAL CONDUCTIVITY
 C
 C     QR=surface runoff from watsub.f
-C     XQR*=solute in runoff from trnsfrs.f
-C     ECNDQ=electrical conductivity of runoff
+C     XQR*=solute flux in runoff from trnsfrs.f
+C     EC*=electrical conductivity of ion 
+C     ECNDQ=total electrical conductivity of runoff
+C     ion code:HY=H,OH=OH,AL=Al,FE=Fe,CA=Ca,MG=Mg,NA=Na,KA=K
+C             :CO=CO3,HC=HCO3,SO=SO4,CL=Cl
 C
       WX=QR(N,NN,N5,N4)
       IF(ABS(WX).GT.ZEROS(N5,N4))THEN
@@ -707,33 +790,126 @@ C     WRITE(*,9991)'ECNDQ',IYRC,I,J,N4,N5,N,NN,WX,ECNDQ
       ECNDQ=0.0
       ENDIF
       ENDIF
+      ENDIF
+C
+C     WATER, HEAT, C,N,P, SOLUTES IN SNOW DRIFT
+C
+C     QS,QW,QI=aggregated snow,water,ice transfer from watsub.f
+C     CRUN,URUN=cumulative water+snow runoff
+C     HQS=aggregated convective heat from snow,water,ice transfer
+C        from watsub.f’
+C     HEATOU=cumulative heat loss through lateral and lower boundaries
+C     X*QSS=aggregated solute in snow flux from trnsfr.f
+C     solute code:CO=CO2,CH=CH4,N4=NH4,N3=NH3,NO=NO3,N2=N2O,NG=N2
+C                :P4=H2PO4,P1=HPO4 
+C     XN=direction indicator
+C     TCOU,TZOU,TPOU,OXYGOU=cumulative C,N,P,O2 loss through lateral 
+C        and lower boundaries
+C     UDICQ=dissolved inorganic C loss through lateral
+C        and lower boundaries  
+C     UDINQ=dissolved inorganic N loss through lateral
+C        and lower boundaries  
+C     UDIPQ=dissolved inorganic P loss through lateral
+C        and lower boundaries
+C
+      WQRS=XN*(QS(N,NN,N5,N4)+QW(N,NN,N5,N4)+QI(N,NN,N5,N4)*DENSI)
+      IF(ABS(WQRS).GT.ZEROS(N5,N4))THEN
+      CRUN=CRUN-WQRS
+      URUN(NY,NX)=URUN(NY,NX)-WQRS
+      HQRS=XN*HQS(N,NN,N5,N4)
+      HEATOU=HEATOU-HQRS 
+C     WRITE(*,2229)'HQRS',I,J,NFZ,N,NN,N5,N4
+C    2,HEATOU,HQRS,HQS(N,NN,N5,N4),CRUN,WQRS,QS(N,NN,N5,N4)
+C    3,QW(N,NN,N5,N4),QI(N,NN,N5,N4)  
+      CXS=XN*(XCOQSS(N,NN,N5,N4)+XCHQSS(N,NN,N5,N4))
+      ZXS=XN*(XN4QSS(N,NN,N5,N4)+XN3QSS(N,NN,N5,N4)
+     2+XNOQSS(N,NN,N5,N4))
+      ZGS=XN*(XN2QSS(N,NN,N5,N4)+XNGQSS(N,NN,N5,N4))
+      PXS=XN*(XP4QSS(N,NN,N5,N4)+XP1QSS(N,NN,N5,N4))
+      TCOU=TCOU-CXS
+      TZOU=TZOU-ZXS-ZGS 
+      TPOU=TPOU-PXS
+      UDICQ(NY,NX)=UDICQ(NY,NX)-CXR
+      UDINQ(NY,NX)=UDINQ(NY,NX)-ZXR-ZGR
+      UDIPQ(NY,NX)=UDIPQ(NY,NX)-PXR
+      OXS=XN*XOXQSS(N,NN,N5,N4)
+      OXYGOU=OXYGOU-OXS 
+C
+C     SALT SOLUTES IN SNOW DRIFT
+C
+C     QSS*=aggregated solute in snow flux from trnsfrs.f
+C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
+C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
+C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
+C        :*FEO1*=FeOH2-,*FEOH2=F3OH2-,*FEOH3*=FeOH3,*FEOH4*=FeOH4+
+C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
+C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
+C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
+C        :*M1P*=MgHPO4,*COO*=COOH-
+C     TPOU,TIONOU=accumulated P,salt loss through lateral and lower
+C         boundaries
+C
+      IF(ISALTG.NE.0)THEN
+      PSS=XN*31.0*(XQSC0P(N,NN,N5,N4)+XQSF1P(N,NN,N5,N4) 
+     2+XQSC1P(N,NN,N5,N4)+XQSM1P(N,NN,N5,N4)+XQSH3P(N,NN,N5,N4)
+     3+XQSF2P(N,NN,N5,N4)+XQSC2P(N,NN,N5,N4))
+      TPOU=TPOU-PSS
+      SS1=XN*(XQSAL(N,NN,N5,N4)+XQSFE(N,NN,N5,N4)
+     2+XQSHY(N,NN,N5,N4)+XQSCA(N,NN,N5,N4)+XQSMG(N,NN,N5,N4)
+     3+XQSNA(N,NN,N5,N4) +XQSKA(N,NN,N5,N4)+XQSOH(N,NN,N5,N4)
+     4+XQSSO(N,NN,N5,N4)+XQSCL(N,NN,N5,N4)+XQSC3(N,NN,N5,N4)
+     5+XQSH0P(N,NN,N5,N4)) 
+      SS2=XN*2.0*(XQSHC(N,NN,N5,N4)+XQSAL1(N,NN,N5,N4)
+     2+XQSALS(N,NN,N5,N4)+XQSFE1(N,NN,N5,N4)+XQSFES(N,NN,N5,N4)
+     3+XQSCAO(N,NN,N5,N4)+XQSCAC(N,NN,N5,N4)+XQSCAS(N,NN,N5,N4)
+     4+XQSMGO(N,NN,N5,N4)+XQSMGC(N,NN,N5,N4)+XQSMGS(N,NN,N5,N4)
+     5+XQSNAC(N,NN,N5,N4)+XQSNAS(N,NN,N5,N4)+XQSKAS(N,NN,N5,N4)
+     6+XQSC0P(N,NN,N5,N4)) 
+      SS3=XN*3.0*(XQSAL2(N,NN,N5,N4)+XQSFE2(N,NN,N5,N4)
+     2+XQSCAH(N,NN,N5,N4)+XQSMGH(N,NN,N5,N4)+XQSF1P(N,NN,N5,N4)
+     3+XQSC1P(N,NN,N5,N4)+XQSM1P(N,NN,N5,N4)) 
+      SS4=XN*4.0*(XQSAL3(N,NN,N5,N4)+XQSFE3(N,NN,N5,N4)
+     2+XQSH3P(N,NN,N5,N4)+XQSF2P(N,NN,N5,N4)+XQSC2P(N,NN,N5,N4))
+     3+XN*5.0*(XQSAL4(N,NN,N5,N4)+XQSFE4(N,NN,N5,N4))
+      SSR=SS1+SS2+SS3+SS4
+      TIONOU=TIONOU-SSR
+      UIONOU(NY,NX)=UIONOU(NY,NX)-SSR
+      ENDIF
+      ENDIF
 C
 C     RUNOFF BOUNDARY FLUXES OF SEDIMENT FROM EROSION
 C
-C     IRSNG=erosion flag
-C     *ER=sediment flux from erosion.f
-C     sediment code:XSED=total,XSAN=sand,XSIL=silt,XCLA=clay
-C     TSEDOU,USEDOU=cumulative sediment loss through lateral and lower boundaries
+C     IERSNG=erosion flag from site file
+C     XSEDER=total sediment flux from erosion.f  
+C     TSEDOU,USEDOU=cumulative sediment loss through lateral and 
+C        lower boundaries
 C
-      IF(N.NE.3.AND.IERSNG.EQ.1.OR.IERSNG.EQ.3)THEN
+      IF(IERSNG.EQ.1.OR.IERSNG.EQ.3)THEN
       IF(ABS(XSEDER(N,NN,N5,N4)).GT.ZEROS(N5,N4))THEN
       ER=XN*XSEDER(N,NN,N5,N4)
       TSEDOU=TSEDOU-ER
       USEDOU(NY,NX)=USEDOU(NY,NX)-ER
 C
-C
-C     RUNOFF BOUNDARY FLUXES OF ORGANIC MATTER FROM EROSION
+C     EXCHANGEABLE AND PRECIPITATED N,P IN RUNOFF SEDIMENT
 C
 C     *ER=sediment flux from erosion.f
-C     sediment code:OMC,OMN,OMP=microbial C,N,P; ORC=microbial residue C,N,P
-C                  :OHC,OHN,OHP=adsorbed C,N,P; OSC,OSN,OSP=humus C,N,P
-C     TSEDOU,USEDOU=cumulative sediment loss through lateral and lower boundaries
-C     UDOCQ,UDICQ=dissolved organic,inorganic C loss through lateral and lower boundaries
-C     UDONQ,UDINQ=dissolved organic,inorganic N loss through lateral and lower boundaries
-C     UDOPQ,UDIPQ=dissolved organic,inorganic P loss through lateral and lower boundaries
-C     TCOU,TZOU,TPOU=total C,N,P loss through lateral and lower boundaries
-C
-C     MICROBIAL C IN RUNOFF SEDIMENT
+C     sediment code
+C       :XN4,XNB=adsorbed NH4 in non-band,band
+C       :XNH4,XNH3,XNHU,XNO3=NH4,NH3,urea,NO3 in non-band
+C       :XNH4B,XNH3B,XNHUB,XNO3B=fertilizer NH4,NH3,urea,NO3 in band
+C       :XH1P,XH2P=adsorbed HPO4,H2PO4 in non-band
+C       :XH1PB,XP2PB=adsorbed HPO4,H2PO4 in band
+C       :PALO,PFEO=precipitated AlOH,FeOH 
+C       :PCAC,PCAS=precipitated CaCO3,CaSO4
+C       :PALP,PFEP=precipitated AlPO4,FEPO4 in non-band
+C       :PALPB,PFEPB=precipitated AlPO4,FEPO4 in band
+C       :PCPM,PCPD,PCPH=precipitated CaH2PO4,CaHPO4,apatite
+C          in non-band
+C       :PCPMB,PCPDB,PCPHB= precipitated CaH2PO4,CaHPO4,apatite 
+C          in band
 C
       CXE=0.0
       ZXE=XN*14.0*(XN4ER(N,NN,N5,N4)+XNBER(N,NN,N5,N4))
@@ -747,6 +923,12 @@ C
      3+PFEPEB(N,NN,N5,N4)+PCPDEB(N,NN,N5,N4))
      7+62.0*(PCPMER(N,NN,N5,N4)+PCPMEB(N,NN,N5,N4))
      8+93.0*(PCPHER(N,NN,N5,N4)+PCPHEB(N,NN,N5,N4)))
+C
+C     MICROBIAL RESIDUE C IN RUNOFF SEDIMENT 
+C
+C     *ER=sediment flux from erosion.f
+C     sediment code:OMC,OMN,OMP=microbial C,N,P
+C
       COE=0.0
       ZOE=0.0
       POE=0.0
@@ -760,6 +942,9 @@ C
 C
 C     MICROBIAL RESIDUE C IN RUNOFF SEDIMENT
 C
+C     *ER=sediment flux from erosion.f
+C     sediment code:ORC,ORN,ORP=microbial residue C,N,P
+C
       DO 3575 K=0,4
       DO 3570 M=1,2
       COE=COE+XN*ORCER(M,K,N,NN,N5,N4)
@@ -769,15 +954,34 @@ C
 C
 C     DOC, ADSORBED AND HUMUS C IN RUNOFF SEDIMENT
 C
+C     *ER=sediment flux from erosion.f
+C     sediment code:OHC,OHA,OHN,OHP=adsorbed C,acetate,N,P
+C                  :OSC,OSA,OSN,OSP=SOC,acetate,SON,SOP
+C
       COE=COE+XN*(OHCER(K,N,NN,N5,N4)+OHAER(K,N,NN,N5,N4))
       ZOE=ZOE+XN*OHNER(K,N,NN,N5,N4)
       POE=POE+XN*OHPER(K,N,NN,N5,N4)
-      DO 3565 M=1,4
+      DO 3565 M=1,5
       COE=COE+XN*OSCER(M,K,N,NN,N5,N4)
       ZOE=ZOE+XN*OSNER(M,K,N,NN,N5,N4)
       POE=POE+XN*OSPER(M,K,N,NN,N5,N4)
 3565  CONTINUE
 3575  CONTINUE
+C
+C     TOTAL EROSION C,N,P LOSSES
+C
+C     TCOU,TZOU,TPOU=cumulative C,N,P loss through lateral and 
+C        lower boundaries
+C     UDOCQ,UDICQ=cumulative dissolved organic,inorganic C loss 
+C        through lateral and lower boundaries  
+C     UDONQ,UDINQ=cumulative dissolved organic,inorganic N loss 
+C        through lateral and lower boundaries  
+C     UDOPQ,UDIPQ=cumulative dissolved organic,inorganic P loss 
+C        through lateral and lower boundaries
+C     COE,CXE=organic,exchangeable C  
+C     ZOE,ZXE,ZPE=organic,exchangeable,fertilizer N  
+C     POE,PXE,PPE=organic,exchangeable,precipitated N  
+C 
       TCOU=TCOU-COE-CXE
       TZOU=TZOU-ZOE-ZXE-ZPE
       TPOU=TPOU-POE-PXE-PPE
@@ -789,7 +993,7 @@ C
       UDIPQ(NY,NX)=UDIPQ(NY,NX)-PXE-PPE
 C     WRITE(*,6635)'POE',I,J,N4,N5,N,NN
 C    2,COE,CXE,ZOE,ZXE,ZPE
-C    3,POE,PXE,PPE,TPOU,XSEDER(N,NN,N5,N4)
+C    3,POE,PXE,PPE,TPOU,XSEDER(N,NN,N5,N4) 
 C    3,XN,TCOU,TZOU,TPOU
 6635  FORMAT(A8,6I4,20F17.8)
 C
@@ -802,25 +1006,26 @@ C       :NH4,NH3,NHU,NO3=fertilizer NH4,NH3,urea,NO3 in non-band
 C       :NH4B,NH3B,NHUB,NO3B=fertilizer NH4,NH3,urea,NO3 in band
 C       :XN4,XNB=adsorbed NH4 in non-band,band
 C       :XHY,XAL,XFE,XCA,XMG,XNA,XKA,XHC,AL2,FE2
-C        =adsorbed H,Al,Fe,Ca,Mg,Na,K,HCO3,AlOH2,FeOH2
+C           =adsorbed H,Al,Fe,Ca,Mg,Na,K,HCO3,AlOH2,FeOH2
 C       :XOH0,XOH1,XOH2=adsorbed R-,R-OH,R-OH2 in non-band
 C       :XOH0B,XOH1B,XOH2B=adsorption sites R-,R-OH,R-OH2 in band
 C       :XH1P,XH2P=adsorbed HPO4,H2PO4 in non-band
 C       :XH1PB,XP2PB=adsorbed HPO4,H2PO4 in band
-C       :PALO,PFEO=precip AlOH,FeOH
+C       :PALO,PFEO=precip AlOH,FeOH 
 C       :PCAC,PCAS=precip CaCO3,CaSO4
 C       :PALP,PFEP=precip AlPO4,FEPO4 in non-band
 C       :PALPB,PFEPB=precip AlPO4,FEPO4 in band
 C       :PCPM,PCPD,PCPH=precip CaH2PO4,CaHPO4,apatite in non-band
 C       :PCPMB,PCPDB,PCPHB=precip CaH2PO4,CaHPO4,apatite in band
-C     TIONOU,UIONOU=total salt loss through lateral and lower boundaries
+C     TIONOU,UIONOU=total salt loss through lateral and lower
+C        boundaries
 C
       IF(ISALTG.NE.0)THEN
       SEF=XN*(XNH3ER(N,NN,N5,N4)+XNHUER(N,NN,N5,N4)+XNO3ER(N,NN,N5,N4)
      5+XNH3EB(N,NN,N5,N4)+XNHUEB(N,NN,N5,N4)+XNO3EB(N,NN,N5,N4))
      2+2.0*(XNH4ER(N,NN,N5,N4)+XNH4EB(N,NN,N5,N4))
       SEX=XN*(XHYER(N,NN,N5,N4)+XALER(N,NN,N5,N4)
-     2+XFEER(N,NN,N5,N4)+XCAER(N,NN,N5,N4)+XMGER(N,NN,N5,N4)
+     2+XFEER(N,NN,N5,N4)+XCAER(N,NN,N5,N4)+XMGER(N,NN,N5,N4) 
      3+XNAER(N,NN,N5,N4)+XKAER(N,NN,N5,N4)+XHCER(N,NN,N5,N4)
      4+XOH0ER(N,NN,N5,N4)+XOH0EB(N,NN,N5,N4))
      5+XN*2.0*(XN4ER(N,NN,N5,N4)+XNBER(N,NN,N5,N4)
@@ -830,9 +1035,9 @@ C
      9+XH1PER(N,NN,N5,N4)+XH1PEB(N,NN,N5,N4))
      1+XN*4.0*(XH2PER(N,NN,N5,N4)+XH2PEB(N,NN,N5,N4))
       SEP=XN*2.0*(PCACER(N,NN,N5,N4)+PCASER(N,NN,N5,N4)
-     2+PALPER(N,NN,N5,N4)+PFEPER(N,NN,N5,N4)
-     3+PALPEB(N,NN,N5,N4)+PFEPEB(N,NN,N5,N4))
-     4+XN*3.0*(PCPDER(N,NN,N5,N4)+PCPDEB(N,NN,N5,N4))
+     2+PALPER(N,NN,N5,N4)+PFEPER(N,NN,N5,N4) 
+     3+PALPEB(N,NN,N5,N4)+PFEPEB(N,NN,N5,N4)) 
+     4+XN*3.0*(PCPDER(N,NN,N5,N4)+PCPDEB(N,NN,N5,N4)) 
      5+XN*4.0*(PALOER(N,NN,N5,N4)+PFEOER(N,NN,N5,N4))
      6+XN*7.0*(PCPMER(N,NN,N5,N4)+PCPMEB(N,NN,N5,N4))
      7+XN*9.0*(PCPHER(N,NN,N5,N4)+PCPHEB(N,NN,N5,N4))
@@ -840,8 +1045,7 @@ C
       TIONOU=TIONOU-SET
       UIONOU(NY,NX)=UIONOU(NY,NX)-SET
 C     WRITE(*,3342)'SET',I,J,N4,N5,NN,N,SET,SEF,SEX,SEP,TIONOU
-3342  FORMAT(A8,6I4,12F18.6)
-      ENDIF
+3342  FORMAT(A8,6I4,12F18.6) 
       ENDIF
       ENDIF
       ENDIF
@@ -849,42 +1053,57 @@ C     WRITE(*,3342)'SET',I,J,N4,N5,NN,N,SET,SEF,SEX,SEP,TIONOU
 C
 C     SUBSURFACE BOUNDARY FLUXES OF WATER AND HEAT
 C
-C     FLW,FLWH,HFLW=micropore,macropore,heat flux through lateral and lower boundaries from watsub.f
-C     VOLWOU,HEATOU=cumulative water, heat loss through lateral and lower boundaries
-C     UVOLO,HVOLO=cumulative,hourly water loss through lateral and lower boundaries
+C     FLW,FLWH,HFLW=micropore,macropore water,heat flux through 
+C        lateral and lower boundaries from watsub.f
+C     FLWY,FLWHY=micropore,macropore discharge through lateral and
+C        lower boundaries from artificial drainage from watsub.f
+C     VOLWOU,HEATOU=cumulative water, heat transfer through lateral 
+C        and lower boundaries
+C     UVOLO,HVOLO=water transfer through lateral and lower boundaries
+C     UVOLY=water loss through lateral and lower boundaries from
+C        artificial drainage 
 C
       IF(NCN(NY,NX).NE.3.OR.N.EQ.3)THEN
       HEATOU=HEATOU-XN*HFLW(N,N6,N5,N4)
       WO=XN*(FLW(N,N6,N5,N4)+FLWH(N,N6,N5,N4))
-      IF(WO.NE.0)THEN
+      IF(WO.NE.0.0)THEN
       VOLWOU=VOLWOU-WO
       HVOLO(N2,N1)=HVOLO(N2,N1)-WO
       UVOLO(N2,N1)=UVOLO(N2,N1)-WO
+      WY=XN*(FLWY(N,N6,N5,N4)+FLWHY(N,N6,N5,N4))
+      UVOLY(N2,N1)=UVOLY(N2,N1)-WY
 C     IF((I/10)*10.EQ.I.AND.J.EQ.15)THEN
-C     WRITE(*,3488)'UVOLO',I,J,N6,N5,N4,N,XN,WO
+C     WRITE(*,3488)'UVOLO',I,J,NFZ,N6,N5,N4,N,XN,WO,WY
 C    2,UVOLO(NY,NX),FLW(N,N6,N5,N4),FLWH(N,N6,N5,N4)
-3488  FORMAT(A8,6I4,12E12.4)
+C    2,UVOLY(NY,NX),FLWY(N,N6,N5,N4),FLWHY(N,N6,N5,N4)
+3488  FORMAT(A8,7I4,12E12.4)
 C     ENDIF
 C
-C     SUBSURFACE BOUNDARY FLUXES OF CO2 AND DOC
+C     SUBSURFACE BOUNDARY FLUXES OF C,N,P
 C
 C     X*FLS,X*FHS=solute flux in macropores,micropores from trnsfr.f
-C     X*FLG=convective+diffusive gas flux from trnsfr.f
+C     X*FLG=convective+diffusive gas flux from trnsfr.f 
 C     TCOU=cumulative C loss through lateral and lower boundaries
-C     UDOCD,UDICD=dissolved organic,inorganic C loss through subsurface boundaries
-C
-C     SUBSURFACE BOUNDARY FLUXES OF N2O, N2, NH4, NH3, NO3, NO2 AND DON
-C
-C     X*FLS,X*FHS,X*FLB,X*FHB=solute flux in macropores,micropores in non-band,band from trnsfr.f
-C     X*FLG=convective+diffusive gas flux from trnsfr.f
+C     UDOCD,UDICD=dissolved organic,inorganic C loss through
+C        subsurface boundaries  
 C     TZOU=cumulative N loss through lateral and lower boundaries
-C     UDOND,UDIND=dissolved organic,inorganic N loss through subsurface boundaries
-C
-C     SUBSURFACE BOUNDARY FLUXES OF PO4 AND DOP
-C
-C     X*FLS,X*FHS,X*FLB,X*FHB=solute flux in macropores,micropores in non-band,band from trnsfr.f
+C     UDOND,UDIND=dissolved organic,inorganic N loss through
+C        subsurface boundaries  
 C     TPOU=cumulative P loss through lateral and lower boundaries
-C     UDOPD,UDIPD=dissolved organic,inorganic P loss through subsurface boundaries
+C     UDOPD,UDIPD=dissolved organic,inorganic P loss through
+C        subsurface boundaries  
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
+C        :N4=NH4,N3=NH3,NO=NO3,NX=NO2,H1P=HPO4,H2P=H2PO4 in non-band
+C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,H1B=HPO4,H2B=H2PO4 in band
+C     TCOU,TZOU,TPOU=cumulative C,N,P loss through lateral and 
+C        lower boundaries
+C     UDOCQ,UDICQ=cumulative dissolved organic,inorganic C loss 
+C        through lateral and lower boundaries  
+C     UDONQ,UDINQ=cumulative dissolved organic,inorganic N loss 
+C        through lateral and lower boundaries  
+C     UDOPQ,UDIPQ=cumulative dissolved organic,inorganic P loss 
+C        through lateral and lower boundaries
 C
       COD=0.0
       ZOD=0.0
@@ -898,14 +1117,14 @@ C
       CXD=XN*(XCOFLS(N,N6,N5,N4)+XCOFHS(N,N6,N5,N4)
      2+XCOFLG(N,N6,N5,N4)+XCHFLS(N,N6,N5,N4)
      3+XCHFHS(N,N6,N5,N4)+XCHFLG(N,N6,N5,N4))
-      ZXD=XN*(XN4FLW(N,N6,N5,N4)+XN3FLW(N,N6,N5,N4)+XNOFLW(N,N6,N5,N4)
+      ZXD=XN*(XN4FLW(N,N6,N5,N4)+XN3FLW(N,N6,N5,N4)+XNOFLW(N,N6,N5,N4) 
      2+XN4FLB(N,N6,N5,N4)+XN3FLB(N,N6,N5,N4)+XNOFLB(N,N6,N5,N4)
      3+XNXFLS(N,N6,N5,N4)+XNXFLB(N,N6,N5,N4)
      5+XN4FHW(N,N6,N5,N4)+XN3FHW(N,N6,N5,N4)+XNOFHW(N,N6,N5,N4)
      6+XN4FHB(N,N6,N5,N4)+XN3FHB(N,N6,N5,N4)+XNOFHB(N,N6,N5,N4)
      7+XNXFHS(N,N6,N5,N4)+XNXFHB(N,N6,N5,N4))
       ZGD=XN*(XNGFLS(N,N6,N5,N4)+XNGFLG(N,N6,N5,N4)+XNGFHS(N,N6,N5,N4)
-     2+XN2FLS(N,N6,N5,N4)+XN2FLG(N,N6,N5,N4)+XN2FHS(N,N6,N5,N4)
+     2+XN2FLS(N,N6,N5,N4)+XN2FLG(N,N6,N5,N4)+XN2FHS(N,N6,N5,N4) 
      3+XN3FLG(N,N6,N5,N4))
       PXD=XN*(XH2PFS(N,N6,N5,N4)+XH2BFB(N,N6,N5,N4)
      2+XH2PHS(N,N6,N5,N4)+XH2BHB(N,N6,N5,N4)+XH1PFS(N,N6,N5,N4)
@@ -919,12 +1138,28 @@ C
       UDIND(N2,N1)=UDIND(N2,N1)-ZXD
       UDOPD(N2,N1)=UDOPD(N2,N1)-POD
       UDIPD(N2,N1)=UDIPD(N2,N1)-PXD
+C     IF(J.EQ.15.AND.NFZ.EQ.NFH)THEN
+C     WRITE(*,3489)'UDICD',I,J,NFZ,N,N2,N1,N6,N5,N4,UDICD(N2,N1),CXD
+C    2,XN,FLW(N,N6,N5,N4),XCOFLS(N,N6,N5,N4),XCOFHS(N,N6,N5,N4)
+C    2,XCOFLG(N,N6,N5,N4),XCHFLS(N,N6,N5,N4)
+C    3,XCHFHS(N,N6,N5,N4),XCHFLG(N,N6,N5,N4)
+C     WRITE(*,3489)'UDIND',I,J,NFZ,N,N2,N1,N6,N5,N4,UDIND(N2,N1),ZXD
+C    2,XN,XN4FLW(N,N6,N5,N4),XN3FLW(N,N6,N5,N4),XNOFLW(N,N6,N5,N4) 
+C    2,XN4FLB(N,N6,N5,N4),XN3FLB(N,N6,N5,N4),XNOFLB(N,N6,N5,N4)
+C    3,XNXFLS(N,N6,N5,N4),XNXFLB(N,N6,N5,N4)
+C    5,XN4FHW(N,N6,N5,N4),XN3FHW(N,N6,N5,N4),XNOFHW(N,N6,N5,N4)
+C    6,XN4FHB(N,N6,N5,N4),XN3FHB(N,N6,N5,N4),XNOFHB(N,N6,N5,N4)
+C    7,XNXFHS(N,N6,N5,N4),XNXFHB(N,N6,N5,N4)
+3489  FORMAT(A8,9I4,30E12.4)
+C     ENDIF
 C
 C     SUBSURFACE BOUNDARY FLUXES OF O2
 C
 C     X*FLS,X*FHS=solute flux in macropores,micropores from trnsfr.f
-C     X*FLG=convective+diffusive gas flux from trnsfr.f
-C     OXYGOU,H2GOU=cumulative O2,H2 loss through lateral and lower boundaries
+C     X*FLG=convective+diffusive gas flux from trnsfr.f 
+C     solute code:OX=O2,HG=H2
+C     OXYGOU,H2GOU=cumulative O2,H2 loss through lateral and lower
+C        boundaries
 C
       OOD=XN*(XOXFLS(N,N6,N5,N4)+XOXFHS(N,N6,N5,N4)
      2+XOXFLG(N,N6,N5,N4))
@@ -932,14 +1167,35 @@ C
       HOD=XN*(XHGFLS(N,N6,N5,N4)+XHGFHS(N,N6,N5,N4)
      2+XHGFLG(N,N6,N5,N4))
       H2GOU=H2GOU-HOD
+C     WRITE(*,6643)'OXYGOU',I,J,NFZ,N,N6,N5,N4 
+C    2,OXYGOU,OOD,XN,XOXFLS(N,N6,N5,N4),XOXFHS(N,N6,N5,N4)
+C    3,XOXFLG(N,N6,N5,N4)
+6643  FORMAT(A8,7I4,20E12.4) 
 C
 C     SUBSURFACE BOUNDARY FLUXES OF SOLUTES
 C
-C     X*FLS=hourly convective + diffusive solute flux through micropores from trnsfrs.f
-C     X*FLW,X*FLB= hourly convective + diffusive solute flux through micropores in non-band,band from trnsfrs.f
-C     X*FHS=hourly convective + diffusive solute flux through macropores from trnsfrs.f
-C     X*FHW,X*FHB= hourly convective + diffusive solute flux through macropores in non-band,band from trnsfrs.f
-C     TIONOU,UIONOU=total salt loss through lateral and lower boundaries
+C     X*FLS=convective+diffusive solute flux through micropores 
+C        from trnsfrs.f
+C     X*FLW,X*FLB=convective+diffusive solute flux through micropores
+C        in non-band,band from trnsfrs.f
+C     X*FHS=convective+diffusive solute flux through macropores 
+C        from trnsfrs.f
+C     X*FHW,X*FHB=convective+diffusive solute flux through macropores
+C        in non-band,band from trnsfrs.f
+C     TIONOU,UIONOU=cumulative salt loss through lateral and lower
+C        boundaries
+C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
+C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
+C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
+C        :*FEO1*=FeOH2-,*FEOH2=F3OH2-,*FEOH3*=FeOH3,*FEOH4*=FeOH4+
+C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
+C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
+C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
+C        :*M1P*=MgHPO4,*COO*=COOH-
+C        :*1=non-band,*B=band
 C
       IF(ISALTG.NE.0)THEN
       PQD=XN*31.0*(XH0PFS(N,N6,N5,N4)+XH0BFB(N,N6,N5,N4)
@@ -1022,12 +1278,20 @@ C     ENDIF
 C
 C     SUBSURFACE FLUX ELECTRICAL CONDUCTIVITY
 C
-C     FLW,FLWH=micropore,macropore flux through lateral and lower boundaries from watsub.f
-C     X*FLS=hourly convective + diffusive solute flux through micropores from trnsfrs.f
-C     X*FLW,X*FLB= hourly convective + diffusive solute flux through micropores in non-band,band from trnsfrs.f
-C     X*FHS=hourly convective + diffusive solute flux through macropores from trnsfrs.f
-C     X*FHW,X*FHB= hourly convective + diffusive solute flux through macropores in non-band,band from trnsfrs.f
-C     ECNDQ=electrical conductivity of water flux
+C     FLW,FLWH=micropore,macropore flux through lateral and lower
+C        boundaries from watsub.f
+C     X*FLS=convective+diffusive solute flux through micropores 
+C        from trnsfrs.f
+C     X*FLW,X*FLB=convective+diffusive solute flux through micropores
+C        in non-band,band from trnsfrs.f
+C     X*FHS=convective+diffusive solute flux through macropores 
+C        from trnsfrs.f
+C     X*FHW,X*FHB=convective+diffusive solute flux through macropores
+C        in non-band,band from trnsfrs.f
+C     EC*=electrical conductivity of ion 
+C     ECNDQ=total electrical conductivity of water flux
+C     ion code:HY=H,OH=OH,AL=Al,FE=Fe,CA=Ca,MG=Mg,NA=Na,KA=K
+C             :CO=CO3,HC=HCO3,SO=SO4,CL=Cl
 C
       WX=FLW(N,N6,N5,N4)+FLWH(N,N6,N5,N4)
       IF(ABS(WX).GT.ZEROS(N2,N1))THEN
@@ -1072,103 +1336,10 @@ C     ENDIF
       ENDIF
       ENDIF
 9975  CONTINUE
-C
-C     WATER, HEAT, SOLUTES IN SNOW DRIFT
-C
-      IF(N.NE.3.AND.L.EQ.NU(NY,NX))THEN
-      WQRS=XN*(QS(N,N5,N4)+QW(N,N5,N4)+QI(N,N5,N4))
-      IF(ABS(WQRS).GT.ZEROS(N5,N4))THEN
-      CRUN=CRUN-WQRS
-      URUN(NY,NX)=URUN(NY,NX)-WQRS
-      HQRS=XN*HQS(N,N5,N4)
-      HEATOU=HEATOU-HQRS
-      CXS=XN*(XCOQSS(N,N5,N4)+XCHQSS(N,N5,N4))
-      ZXS=XN*(XN4QSS(N,N5,N4)+XN3QSS(N,N5,N4)+XNOQSS(N,N5,N4))
-      ZGS=XN*(XN2QSS(N,N5,N4)+XNGQSS(N,N5,N4))
-      PXS=XN*(XP4QSS(N,N5,N4)+XP1QSS(N,N5,N4))
-      TCOU=TCOU-CXS
-      TZOU=TZOU-ZXS-ZGS
-      TPOU=TPOU-PXS
-      UDICQ(NY,NX)=UDICQ(NY,NX)-CXR
-      UDINQ(NY,NX)=UDINQ(NY,NX)-ZXR-ZGR
-      UDIPQ(NY,NX)=UDIPQ(NY,NX)-PXR
-      OXS=XN*XOXQSS(N,N5,N4)
-      OXYGOU=OXYGOU-OXS
-      IF(ISALTG.NE.0)THEN
-      PSS=XN*31.0*(XQSC0P(N,N5,N4)+XQSF1P(N,N5,N4)+XQSC1P(N,N5,N4)
-     2+XQSM1P(N,N5,N4)+XQSH3P(N,N5,N4)+XQSF2P(N,N5,N4)
-     3+XQSC2P(N,N5,N4))
-      TPOU=TPOU-PSS
-      SS1=XN*(XQSAL(N,N5,N4)+XQSFE(N,N5,N4)
-     2+XQSHY(N,N5,N4)+XQSCA(N,N5,N4)+XQSMG(N,N5,N4)+XQSNA(N,N5,N4)
-     3+XQSKA(N,N5,N4)+XQSOH(N,N5,N4)+XQSSO(N,N5,N4)+XQSCL(N,N5,N4)
-     4+XQSC3(N,N5,N4)+XQSH0P(N,N5,N4))
-      SS2=XN*2.0*(XQSHC(N,N5,N4)+XQSAL1(N,N5,N4)+XQSALS(N,N5,N4)
-     2+XQSFE1(N,N5,N4)+XQSFES(N,N5,N4)+XQSCAO(N,N5,N4)+XQSCAC(N,N5,N4)
-     3+XQSCAS(N,N5,N4)+XQSMGO(N,N5,N4)+XQSMGC(N,N5,N4)+XQSMGS(N,N5,N4)
-     4+XQSNAC(N,N5,N4)+XQSNAS(N,N5,N4)+XQSKAS(N,N5,N4)+XQSC0P(N,N5,N4))
-      SS3=XN*3.0*(XQSAL2(N,N5,N4)+XQSFE2(N,N5,N4)+XQSCAH(N,N5,N4)
-     2+XQSMGH(N,N5,N4)+XQSF1P(N,N5,N4)+XQSC1P(N,N5,N4)+XQSM1P(N,N5,N4))
-      SS4=XN*4.0*(XQSAL3(N,N5,N4)+XQSFE3(N,N5,N4)
-     2+XQSH3P(N,N5,N4)+XQSF2P(N,N5,N4)+XQSC2P(N,N5,N4))
-     5+XN*5.0*(XQSAL4(N,N5,N4)+XQSFE4(N,N5,N4))
-      SSR=SS1+SS2+SS3+SS4
-      TIONOU=TIONOU-SSR
-      UIONOU(NY,NX)=UIONOU(NY,NX)-SSR
-      ENDIF
-      ENDIF
-      ENDIF
 9980  CONTINUE
 9985  CONTINUE
 C
-C     CHANGE EXTERNAL WATER TABLE DEPTH THROUGH DISTURBANCE
-C
-C     ZNOON=hour of solar noon from weather file
-C     ITILL=soil disturbance type 1-20:tillage,21=litter removal,22=fire,23-24=drainage
-C     DCORP=intensity (fire) or depth (tillage,drainage) of disturbance
-C     CDPTH(NU=soil surface elevation
-C     DTBLI,DTBLDI=depth of natural,artificial water table from readi.f
-C     DTBLX,DTBLZ=current,initial natural water table depth
-C     DTBLY,DTBLD=current,initial artificial water table depth
-C     IDTBL=water table flag from readi.f
-C        :0=none
-C        :1,2=natural stationary,mobile
-C        :3,4=artificial stationary,mobile
-C     HVOLO=hourly water loss through lateral and lower boundaries
-C
-      IF(J.EQ.INT(ZNOON(NY,NX)).AND.ITILL(I,NY,NX).EQ.23)THEN
-      DCORPW=DCORP(I,NY,NX)+CDPTH(NU(NY,NX)-1,NY,NX)
-      DTBLI(NY,NX)=DCORPW
-      DTBLZ(NY,NX)=DTBLI(NY,NX)-(ALTZ(NY,NX)-ALT(NY,NX))
-     2*(1.0-DTBLG(NY,NX))
-      DTBLX(NY,NX)=DTBLZ(NY,NX)+CDPTH(NU(NY,NX)-1,NY,NX)
-      ENDIF
-      IF(J.EQ.INT(ZNOON(NY,NX)).AND.ITILL(I,NY,NX).EQ.24)THEN
-      DCORPW=DCORP(I,NY,NX)+CDPTH(NU(NY,NX)-1,NY,NX)
-      IF(IDTBL(NY,NX).EQ.1)THEN
-      IDTBL(NY,NX)=3
-      ELSEIF(IDTBL(NY,NX).EQ.2)THEN
-      IDTBL(NY,NX)=4
-      ENDIF
-      DTBLDI(NY,NX)=DCORPW
-      DTBLD(NY,NX)=AMAX1(0.0,DTBLDI(NY,NX)-(ALTZ(NY,NX)-ALT(NY,NX))
-     2*(1.0-DTBLG(NY,NX)))
-      DTBLY(NY,NX)=DTBLD(NY,NX)
-      ENDIF
-C
-C     SET DEPTH OF MOBILE EXTERNAL WATER TABLE
-C
-      IF(IDTBL(NY,NX).EQ.2.OR.IDTBL(NY,NX).EQ.4)THEN
-C     DTBLX(NY,NX)=DTBLX(NY,NX)-0.0*HVOLO(NY,NX)/AREA(3,NU(NY,NX),NY,NX)
-C    2-0.00167*(DTBLX(NY,NX)-DTBLZ(NY,NX)-CDPTH(NU(NY,NX)-1,NY,NX))
-      DTBLX(NY,NX)=DTBLZ(NY,NX)+CDPTH(NU(NY,NX)-1,NY,NX)
-      ENDIF
-      IF(IDTBL(NY,NX).EQ.4)THEN
-      DTBLY(NY,NX)=DTBLY(NY,NX)-0.0*HVOLO(NY,NX)/AREA(3,NU(NY,NX),NY,NX)
-     2-0.00167*(DTBLY(NY,NX)-DTBLD(NY,NX))
-      ENDIF
-C
-C     INITIALIZE NET WATER AND HEAT FLUXES FOR RUNOFF
+C     INITIALIZE NET WATER AND HEAT FLUXES FOR RUNOFF 
 C
       TQR(NY,NX)=0.0
       THQR(NY,NX)=0.0
@@ -1177,7 +1348,7 @@ C
       TQI(NY,NX)=0.0
       THQS(NY,NX)=0.0
 C
-C     INITIALIZE NET SOLUTE AND GAS FLUXES FOR RUNOFF
+C     INITIALIZE NET SOLUTE AND GAS FLUXES FOR RUNOFF 
 C
       DO 9960 K=0,2
       TOCQRS(K,NY,NX)=0.0
@@ -1218,7 +1389,7 @@ C
       TNOBLW(L,NY,NX)=0.0
       TH1PBS(L,NY,NX)=0.0
       TH2PBS(L,NY,NX)=0.0
-9955  CONTINUE
+9955  CONTINUE 
       IF(ISALTG.NE.0)THEN
       TQRAL(NY,NX)=0.0
       TQRFE(NY,NX)=0.0
@@ -1420,7 +1591,7 @@ C
       TOHNER(K,NY,NX)=0.0
       TOHPER(K,NY,NX)=0.0
       TOHAER(K,NY,NX)=0.0
-      DO 9465 M=1,4
+      DO 9465 M=1,5
       TOSCER(M,K,NY,NX)=0.0
       TOSAER(M,K,NY,NX)=0.0
       TOSNER(M,K,NY,NX)=0.0
@@ -1429,13 +1600,14 @@ C
 9475  CONTINUE
       ENDIF
 C
-C     INITIALIZE NET SNOWPACK FLUXES WITHIN SNOWPACK
+C     INITIALIZE NET SNOWPACK FLUXES WITHIN SNOWPACK 
 C
       DO 8475 L=1,JS
       TFLWS(L,NY,NX)=0.0
       TFLWW(L,NY,NX)=0.0
+      TFLWV(L,NY,NX)=0.0
       TFLWI(L,NY,NX)=0.0
-      THFLWW(L,NY,NX)=0.0
+      THFLWW(L,NY,NX)=0.0  
 8475  CONTINUE
       LG=0
       LX=0
@@ -1448,7 +1620,7 @@ C     V*G2=molar gas content
 C     *G=soil gas content
 C     VOLP=soil air-filled porosity
 C     VTATM=molar gas content at atmospheric pressure
-C     VTGAS=total molar gas contest
+C     VTGAS=total molar gas contest 
 C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
 C             :*ZN3*=NH3,*H2G*=H2
 C
@@ -1466,20 +1638,23 @@ C
 C     WRITE(*,5431)'LG',I,J,NX,NY,L,LG,LX,THETP(L,NY,NX),THETX
 C    2,VOLP(L,NY,NX),TKS(L,NY,NX),VTGAS,VTATM
 5431  FORMAT(A8,7I4,12E12.4)
-      VOLW1(L,NY,NX)=VOLW(L,NY,NX)
-      VOLI1(L,NY,NX)=VOLI(L,NY,NX)
+      VOLW1(L,NY,NX)=VOLW(L,NY,NX) 
+      VOLI1(L,NY,NX)=VOLI(L,NY,NX) 
       VOLWH1(L,NY,NX)=VOLWH(L,NY,NX)
       VOLIH1(L,NY,NX)=VOLIH(L,NY,NX)
 C
 C     INITIALIZE WATER AND HEAT NET FLUX ACCUMULATORS WITHIN SOIL
 C
       TFLW(L,NY,NX)=0.0
+      TFLV(L,NY,NX)=0.0
       TFLWX(L,NY,NX)=0.0
       TFLWH(L,NY,NX)=0.0
       THFLW(L,NY,NX)=0.0
-      TTHAW(L,NY,NX)=0.0
-      TTHAWH(L,NY,NX)=0.0
-      THTHAW(L,NY,NX)=0.0
+      TWFLFL(L,NY,NX)=0.0
+      TWFLFH(L,NY,NX)=0.0
+      THFLFL(L,NY,NX)=0.0
+      TWFLVL(L,NY,NX)=0.0
+      THFLVL(L,NY,NX)=0.0
 C
 C     INITIALIZE GAS AND SOLUTE NET FLUX ACCUMULATORS WITHIN SOIL
 C
@@ -1529,6 +1704,7 @@ C
       TNXFHB(L,NY,NX)=0.0
       TH1BHB(L,NY,NX)=0.0
       TH2BHB(L,NY,NX)=0.0
+      TVPFLG(L,NY,NX)=0.0
       TCOFLG(L,NY,NX)=0.0
       TCHFLG(L,NY,NX)=0.0
       TOXFLG(L,NY,NX)=0.0
@@ -1673,11 +1849,24 @@ C     TQR,TQS,TQW,TQI=net water and snowpack snow,water,ice runoff
 C     THQR,THQS=net convective heat from surface water and snow runoff
 C     QR,HQR=runoff, convective heat from runoff from watsub.f
 C     QS,QW,QI=snow,water,ice transfer from watsub.f
-C     HQS=convective heat transfer from snow,water,ice transfer from watsub.f
+C     HQS=convective heat transfer from snow,water,ice transfer 
+C        from watsub.f
+C     T*QRS=net overland solute flux from runoff
+C     X*QRS=solute in flux runoff from trnsfr.f
+C     T*QSS=net overland solute flux from snowpack
+C     X*QSS=solute flux in snowpack flux from trnsfr.f
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
+C        :N4=NH4,N3=NH3,NO=NO3,NX=NO2,H1P=HPO4,H2P=H2PO4 in non-band
+C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,H1B=HPO4,H2B=H2PO4 in band
 C
       DO 1202 NN=1,2
-      TQR(N2,N1)=TQR(N2,N1)+QR(N,NN,N2,N1)
+      TQR(N2,N1)=TQR(N2,N1)+QR(N,NN,N2,N1) 
       THQR(N2,N1)=THQR(N2,N1)+HQR(N,NN,N2,N1)
+      TQS(N2,N1)=TQS(N2,N1)+QS(N,NN,N2,N1) 
+      TQW(N2,N1)=TQW(N2,N1)+QW(N,NN,N2,N1) 
+      TQI(N2,N1)=TQI(N2,N1)+QI(N,NN,N2,N1) 
+      THQS(N2,N1)=THQS(N2,N1)+HQS(N,NN,N2,N1)
       DO 8590 K=0,2
       TOCQRS(K,N2,N1)=TOCQRS(K,N2,N1)+XOCQRS(K,N,NN,N2,N1)
       TONQRS(K,N2,N1)=TONQRS(K,N2,N1)+XONQRS(K,N,NN,N2,N1)
@@ -1696,9 +1885,23 @@ C
       TNXQRS(N2,N1)=TNXQRS(N2,N1)+XNXQRS(N,NN,N2,N1)
       TP1QRS(N2,N1)=TP1QRS(N2,N1)+XP1QRW(N,NN,N2,N1)
       TPOQRS(N2,N1)=TPOQRS(N2,N1)+XP4QRW(N,NN,N2,N1)
+      TCOQSS(N2,N1)=TCOQSS(N2,N1)+XCOQSS(N,NN,N2,N1)
+      TCHQSS(N2,N1)=TCHQSS(N2,N1)+XCHQSS(N,NN,N2,N1)
+      TOXQSS(N2,N1)=TOXQSS(N2,N1)+XOXQSS(N,NN,N2,N1)
+      TNGQSS(N2,N1)=TNGQSS(N2,N1)+XNGQSS(N,NN,N2,N1)
+      TN2QSS(N2,N1)=TN2QSS(N2,N1)+XN2QSS(N,NN,N2,N1)
+      TN4QSS(N2,N1)=TN4QSS(N2,N1)+XN4QSS(N,NN,N2,N1)
+      TN3QSS(N2,N1)=TN3QSS(N2,N1)+XN3QSS(N,NN,N2,N1)
+      TNOQSS(N2,N1)=TNOQSS(N2,N1)+XNOQSS(N,NN,N2,N1)
+      TP1QSS(N2,N1)=TP1QSS(N2,N1)+XP1QSS(N,NN,N2,N1)
+      TPOQSS(N2,N1)=TPOQSS(N2,N1)+XP4QSS(N,NN,N2,N1)
       IF(IFLBH(N,NN,N5,N4).EQ.0)THEN
       TQR(N2,N1)=TQR(N2,N1)-QR(N,NN,N5,N4)
       THQR(N2,N1)=THQR(N2,N1)-HQR(N,NN,N5,N4)
+      TQS(N2,N1)=TQS(N2,N1)-QS(N,NN,N5,N4)
+      TQW(N2,N1)=TQW(N2,N1)-QW(N,NN,N5,N4)
+      TQI(N2,N1)=TQI(N2,N1)-QI(N,NN,N5,N4)
+      THQS(N2,N1)=THQS(N2,N1)-HQS(N,NN,N5,N4)
       DO 8591 K=0,2
       TOCQRS(K,N2,N1)=TOCQRS(K,N2,N1)-XOCQRS(K,N,NN,N5,N4)
       TONQRS(K,N2,N1)=TONQRS(K,N2,N1)-XONQRS(K,N,NN,N5,N4)
@@ -1720,10 +1923,26 @@ C
       ENDIF
 C     WRITE(*,6631)'TQR',I,J,N1,N2,N4,N5,N,NN
 C    2,IFLBH(N,NN,N5,N4)
-C    2,TQR(N2,N1),QR(N,NN,N2,N1),QR(N,NN,N5,N4)
+C    2,TQR(N2,N1),QR(N,NN,N2,N1),QR(N,NN,N5,N4) 
+      IF(IFLBHS(N,NN,N5,N4).EQ.0)THEN
+      TCOQSS(N2,N1)=TCOQSS(N2,N1)-XCOQSS(N,NN,N5,N4)
+      TCHQSS(N2,N1)=TCHQSS(N2,N1)-XCHQSS(N,NN,N5,N4)
+      TOXQSS(N2,N1)=TOXQSS(N2,N1)-XOXQSS(N,NN,N5,N4)
+      TNGQSS(N2,N1)=TNGQSS(N2,N1)-XNGQSS(N,NN,N5,N4)
+      TN2QSS(N2,N1)=TN2QSS(N2,N1)-XN2QSS(N,NN,N5,N4)
+      TN4QSS(N2,N1)=TN4QSS(N2,N1)-XN4QSS(N,NN,N5,N4)
+      TN3QSS(N2,N1)=TN3QSS(N2,N1)-XN3QSS(N,NN,N5,N4)
+      TNOQSS(N2,N1)=TNOQSS(N2,N1)-XNOQSS(N,NN,N5,N4)
+      TP1QSS(N2,N1)=TP1QSS(N2,N1)-XP1QSS(N,NN,N5,N4)
+      TPOQSS(N2,N1)=TPOQSS(N2,N1)-XP4QSS(N,NN,N5,N4)
+      ENDIF
       IF(N4B.GT.0.AND.N5B.GT.0.AND.NN.EQ.1)THEN
       TQR(N2,N1)=TQR(N2,N1)-QR(N,NN,N5B,N4B)
       THQR(N2,N1)=THQR(N2,N1)-HQR(N,NN,N5B,N4B)
+      TQS(N2,N1)=TQS(N2,N1)-QS(N,NN,N5B,N4B)
+      TQW(N2,N1)=TQW(N2,N1)-QW(N,NN,N5B,N4B)
+      TQI(N2,N1)=TQI(N2,N1)-QI(N,NN,N5B,N4B)
+      THQS(N2,N1)=THQS(N2,N1)-HQS(N,NN,N5B,N4B)
       DO 8592 K=0,2
       TOCQRS(K,N2,N1)=TOCQRS(K,N2,N1)-XOCQRS(K,N,NN,N5B,N4B)
       TONQRS(K,N2,N1)=TONQRS(K,N2,N1)-XONQRS(K,N,NN,N5B,N4B)
@@ -1742,38 +1961,22 @@ C    2,TQR(N2,N1),QR(N,NN,N2,N1),QR(N,NN,N5,N4)
       TNXQRS(N2,N1)=TNXQRS(N2,N1)-XNXQRS(N,NN,N5B,N4B)
       TP1QRS(N2,N1)=TP1QRS(N2,N1)-XP1QRW(N,NN,N5B,N4B)
       TPOQRS(N2,N1)=TPOQRS(N2,N1)-XP4QRW(N,NN,N5B,N4B)
+      TCOQSS(N2,N1)=TCOQSS(N2,N1)-XCOQSS(N,NN,N5B,N4B)
+      TCHQSS(N2,N1)=TCHQSS(N2,N1)-XCHQSS(N,NN,N5B,N4B)
+      TOXQSS(N2,N1)=TOXQSS(N2,N1)-XOXQSS(N,NN,N5B,N4B)
+      TNGQSS(N2,N1)=TNGQSS(N2,N1)-XNGQSS(N,NN,N5B,N4B)
+      TN2QSS(N2,N1)=TN2QSS(N2,N1)-XN2QSS(N,NN,N5B,N4B)
+      TN4QSS(N2,N1)=TN4QSS(N2,N1)-XN4QSS(N,NN,N5B,N4B)
+      TN3QSS(N2,N1)=TN3QSS(N2,N1)-XN3QSS(N,NN,N5B,N4B)
+      TNOQSS(N2,N1)=TNOQSS(N2,N1)-XNOQSS(N,NN,N5B,N4B)
+      TP1QSS(N2,N1)=TP1QSS(N2,N1)-XP1QSS(N,NN,N5B,N4B)
+      TPOQSS(N2,N1)=TPOQSS(N2,N1)-XP4QSS(N,NN,N5B,N4B)
 C     WRITE(*,6631)'TQRB',I,J,N1,N2,N4B,N5B,N,NN
 C    2,IFLBH(N,NN,N5B,N4B)
-C    2,TQR(N2,N1),QR(N,NN,N5B,N4B)
-6631  FORMAT(A8,9I4,12E12.4)
+C    2,TQR(N2,N1),QR(N,NN,N5B,N4B) 
+6631  FORMAT(A8,9I4,12E12.4) 
       ENDIF
 1202  CONTINUE
-      TQS(N2,N1)=TQS(N2,N1)+QS(N,N2,N1)-QS(N,N5,N4)
-      TQW(N2,N1)=TQW(N2,N1)+QW(N,N2,N1)-QW(N,N5,N4)
-      TQI(N2,N1)=TQI(N2,N1)+QI(N,N2,N1)-QI(N,N5,N4)
-      THQS(N2,N1)=THQS(N2,N1)+HQS(N,N2,N1)-HQS(N,N5,N4)
-C
-C     NET GAS AND SOLUTE FLUXES FROM RUNOFF AND SNOWPACK
-C
-C     T*QRS=net overland solute flux from runoff
-C     X*QRS=solute in runoff from trnsfr.f
-C     T*QSS=net overland solute flux from snowpack
-C     X*QSS=solute in snowpack flux from trnsfr.f
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
-C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
-C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
-C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
-C
-      TCOQSS(N2,N1)=TCOQSS(N2,N1)+XCOQSS(N,N2,N1)-XCOQSS(N,N5,N4)
-      TCHQSS(N2,N1)=TCHQSS(N2,N1)+XCHQSS(N,N2,N1)-XCHQSS(N,N5,N4)
-      TOXQSS(N2,N1)=TOXQSS(N2,N1)+XOXQSS(N,N2,N1)-XOXQSS(N,N5,N4)
-      TNGQSS(N2,N1)=TNGQSS(N2,N1)+XNGQSS(N,N2,N1)-XNGQSS(N,N5,N4)
-      TN2QSS(N2,N1)=TN2QSS(N2,N1)+XN2QSS(N,N2,N1)-XN2QSS(N,N5,N4)
-      TN4QSS(N2,N1)=TN4QSS(N2,N1)+XN4QSS(N,N2,N1)-XN4QSS(N,N5,N4)
-      TN3QSS(N2,N1)=TN3QSS(N2,N1)+XN3QSS(N,N2,N1)-XN3QSS(N,N5,N4)
-      TNOQSS(N2,N1)=TNOQSS(N2,N1)+XNOQSS(N,N2,N1)-XNOQSS(N,N5,N4)
-      TP1QSS(N2,N1)=TP1QSS(N2,N1)+XP1QSS(N,N2,N1)-XP1QSS(N,N5,N4)
-      TPOQSS(N2,N1)=TPOQSS(N2,N1)+XP4QSS(N,N2,N1)-XP4QSS(N,N5,N4)
 C
 C     NET SALT FLUXES FROM RUNOFF AND SNOWPACK
 C
@@ -1781,16 +1984,18 @@ C     TQR*=net overland solute flux in runoff
 C     XQR*=solute in runoff from trnsfrs.f
 C     TQS*=net overland solute flux in snow drift
 C     XQS*=solute in snow drift from trnsfrs.f
-C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
-C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
-C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
-C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
-C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
-C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
-C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
-C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
-C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
-C          :*1=non-band,*B=band
+C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
+C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
+C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
+C        :*FEO1*=FeOH2-,*FEOH2=F3OH2-,*FEOH3*=FeOH3,*FEOH4*=FeOH4+
+C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
+C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
+C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
+C        :*M1P*=MgHPO4,*COO*=COOH-
+C        :*1=non-band,*B=band
 C
       IF(ISALTG.NE.0)THEN
       DO 1203 NN=1,2
@@ -1835,6 +2040,47 @@ C
       TQRC1P(N2,N1)=TQRC1P(N2,N1)+XQRC1P(N,NN,N2,N1)
       TQRC2P(N2,N1)=TQRC2P(N2,N1)+XQRC2P(N,NN,N2,N1)
       TQRM1P(N2,N1)=TQRM1P(N2,N1)+XQRM1P(N,NN,N2,N1)
+      TQSAL(N2,N1)=TQSAL(N2,N1)+XQSAL(N,NN,N2,N1)
+      TQSFE(N2,N1)=TQSFE(N2,N1)+XQSFE(N,NN,N2,N1)
+      TQSHY(N2,N1)=TQSHY(N2,N1)+XQSHY(N,NN,N2,N1)
+      TQSCA(N2,N1)=TQSCA(N2,N1)+XQSCA(N,NN,N2,N1)
+      TQSMG(N2,N1)=TQSMG(N2,N1)+XQSMG(N,NN,N2,N1)
+      TQSNA(N2,N1)=TQSNA(N2,N1)+XQSNA(N,NN,N2,N1)
+      TQSKA(N2,N1)=TQSKA(N2,N1)+XQSKA(N,NN,N2,N1)
+      TQSOH(N2,N1)=TQSOH(N2,N1)+XQSOH(N,NN,N2,N1)
+      TQSSO(N2,N1)=TQSSO(N2,N1)+XQSSO(N,NN,N2,N1)
+      TQSCL(N2,N1)=TQSCL(N2,N1)+XQSCL(N,NN,N2,N1)
+      TQSC3(N2,N1)=TQSC3(N2,N1)+XQSC3(N,NN,N2,N1)
+      TQSHC(N2,N1)=TQSHC(N2,N1)+XQSHC(N,NN,N2,N1)
+      TQSAL1(N2,N1)=TQSAL1(N2,N1)+XQSAL1(N,NN,N2,N1)
+      TQSAL2(N2,N1)=TQSAL2(N2,N1)+XQSAL2(N,NN,N2,N1)
+      TQSAL3(N2,N1)=TQSAL3(N2,N1)+XQSAL3(N,NN,N2,N1)
+      TQSAL4(N2,N1)=TQSAL4(N2,N1)+XQSAL4(N,NN,N2,N1)
+      TQSALS(N2,N1)=TQSALS(N2,N1)+XQSALS(N,NN,N2,N1)
+      TQSFE1(N2,N1)=TQSFE1(N2,N1)+XQSFE1(N,NN,N2,N1)
+      TQSFE2(N2,N1)=TQSFE2(N2,N1)+XQSFE2(N,NN,N2,N1)
+      TQSFE3(N2,N1)=TQSFE3(N2,N1)+XQSFE3(N,NN,N2,N1)
+      TQSFE4(N2,N1)=TQSFE4(N2,N1)+XQSFE4(N,NN,N2,N1)
+      TQSFES(N2,N1)=TQSFES(N2,N1)+XQSFES(N,NN,N2,N1)
+      TQSCAO(N2,N1)=TQSCAO(N2,N1)+XQSCAO(N,NN,N2,N1)
+      TQSCAC(N2,N1)=TQSCAC(N2,N1)+XQSCAC(N,NN,N2,N1)
+      TQSCAH(N2,N1)=TQSCAH(N2,N1)+XQSCAH(N,NN,N2,N1)
+      TQSCAS(N2,N1)=TQSCAS(N2,N1)+XQSCAS(N,NN,N2,N1)
+      TQSMGO(N2,N1)=TQSMGO(N2,N1)+XQSMGO(N,NN,N2,N1)
+      TQSMGC(N2,N1)=TQSMGC(N2,N1)+XQSMGC(N,NN,N2,N1)
+      TQSMGH(N2,N1)=TQSMGH(N2,N1)+XQSMGH(N,NN,N2,N1)
+      TQSMGS(N2,N1)=TQSMGS(N2,N1)+XQSMGS(N,NN,N2,N1)
+      TQSNAC(N2,N1)=TQSNAC(N2,N1)+XQSNAC(N,NN,N2,N1)
+      TQSNAS(N2,N1)=TQSNAS(N2,N1)+XQSNAS(N,NN,N2,N1)
+      TQSKAS(N2,N1)=TQSKAS(N2,N1)+XQSKAS(N,NN,N2,N1)
+      TQSH0P(N2,N1)=TQSH0P(N2,N1)+XQSH0P(N,NN,N2,N1)
+      TQSH3P(N2,N1)=TQSH3P(N2,N1)+XQSH3P(N,NN,N2,N1)
+      TQSF1P(N2,N1)=TQSF1P(N2,N1)+XQSF1P(N,NN,N2,N1)
+      TQSF2P(N2,N1)=TQSF2P(N2,N1)+XQSF2P(N,NN,N2,N1)
+      TQSC0P(N2,N1)=TQSC0P(N2,N1)+XQSC0P(N,NN,N2,N1)
+      TQSC1P(N2,N1)=TQSC1P(N2,N1)+XQSC1P(N,NN,N2,N1)
+      TQSC2P(N2,N1)=TQSC2P(N2,N1)+XQSC2P(N,NN,N2,N1)
+      TQSM1P(N2,N1)=TQSM1P(N2,N1)+XQSM1P(N,NN,N2,N1)
       IF(IFLBH(N,NN,N5,N4).EQ.0)THEN
       TQRAL(N2,N1)=TQRAL(N2,N1)-XQRAL(N,NN,N5,N4)
       TQRFE(N2,N1)=TQRFE(N2,N1)-XQRFE(N,NN,N5,N4)
@@ -1878,6 +2124,49 @@ C
       TQRC2P(N2,N1)=TQRC2P(N2,N1)+XQRC2P(N,NN,N2,N1)
       TQRM1P(N2,N1)=TQRM1P(N2,N1)+XQRM1P(N,NN,N2,N1)
       ENDIF
+      IF(IFLBHS(N,NN,N5,N4).EQ.0)THEN
+      TQSAL(N2,N1)=TQSAL(N2,N1)-XQSAL(N,NN,N5,N4)
+      TQSFE(N2,N1)=TQSFE(N2,N1)-XQSFE(N,NN,N5,N4)
+      TQSHY(N2,N1)=TQSHY(N2,N1)-XQSHY(N,NN,N5,N4)
+      TQSCA(N2,N1)=TQSCA(N2,N1)-XQSCA(N,NN,N5,N4)
+      TQSMG(N2,N1)=TQSMG(N2,N1)-XQSMG(N,NN,N5,N4)
+      TQSNA(N2,N1)=TQSNA(N2,N1)-XQSNA(N,NN,N5,N4)
+      TQSKA(N2,N1)=TQSKA(N2,N1)-XQSKA(N,NN,N5,N4)
+      TQSOH(N2,N1)=TQSOH(N2,N1)-XQSOH(N,NN,N5,N4)
+      TQSSO(N2,N1)=TQSSO(N2,N1)-XQSSO(N,NN,N5,N4)
+      TQSCL(N2,N1)=TQSCL(N2,N1)-XQSCL(N,NN,N5,N4)
+      TQSC3(N2,N1)=TQSC3(N2,N1)-XQSC3(N,NN,N5,N4)
+      TQSHC(N2,N1)=TQSHC(N2,N1)-XQSHC(N,NN,N5,N4)
+      TQSAL1(N2,N1)=TQSAL1(N2,N1)-XQSAL1(N,NN,N5,N4)
+      TQSAL2(N2,N1)=TQSAL2(N2,N1)-XQSAL2(N,NN,N5,N4)
+      TQSAL3(N2,N1)=TQSAL3(N2,N1)-XQSAL3(N,NN,N5,N4)
+      TQSAL4(N2,N1)=TQSAL4(N2,N1)-XQSAL4(N,NN,N5,N4)
+      TQSALS(N2,N1)=TQSALS(N2,N1)-XQSALS(N,NN,N5,N4)
+      TQSFE1(N2,N1)=TQSFE1(N2,N1)-XQSFE1(N,NN,N5,N4)
+      TQSFE2(N2,N1)=TQSFE2(N2,N1)-XQSFE2(N,NN,N5,N4)
+      TQSFE3(N2,N1)=TQSFE3(N2,N1)-XQSFE3(N,NN,N5,N4)
+      TQSFE4(N2,N1)=TQSFE4(N2,N1)-XQSFE4(N,NN,N5,N4)
+      TQSFES(N2,N1)=TQSFES(N2,N1)-XQSFES(N,NN,N5,N4)
+      TQSCAO(N2,N1)=TQSCAO(N2,N1)-XQSCAO(N,NN,N5,N4)
+      TQSCAC(N2,N1)=TQSCAC(N2,N1)-XQSCAC(N,NN,N5,N4)
+      TQSCAH(N2,N1)=TQSCAH(N2,N1)-XQSCAH(N,NN,N5,N4)
+      TQSCAS(N2,N1)=TQSCAS(N2,N1)-XQSCAS(N,NN,N5,N4)
+      TQSMGO(N2,N1)=TQSMGO(N2,N1)-XQSMGO(N,NN,N5,N4)
+      TQSMGC(N2,N1)=TQSMGC(N2,N1)-XQSMGC(N,NN,N5,N4)
+      TQSMGH(N2,N1)=TQSMGH(N2,N1)-XQSMGH(N,NN,N5,N4)
+      TQSMGS(N2,N1)=TQSMGS(N2,N1)-XQSMGS(N,NN,N5,N4)
+      TQSNAC(N2,N1)=TQSNAC(N2,N1)-XQSNAC(N,NN,N5,N4)
+      TQSNAS(N2,N1)=TQSNAS(N2,N1)-XQSNAS(N,NN,N5,N4)
+      TQSKAS(N2,N1)=TQSKAS(N2,N1)-XQSKAS(N,NN,N5,N4)
+      TQSH0P(N2,N1)=TQSH0P(N2,N1)-XQSH0P(N,NN,N5,N4)
+      TQSH3P(N2,N1)=TQSH3P(N2,N1)-XQSH3P(N,NN,N5,N4)
+      TQSF1P(N2,N1)=TQSF1P(N2,N1)-XQSF1P(N,NN,N5,N4)
+      TQSF2P(N2,N1)=TQSF2P(N2,N1)-XQSF2P(N,NN,N5,N4)
+      TQSC0P(N2,N1)=TQSC0P(N2,N1)-XQSC0P(N,NN,N5,N4)
+      TQSC1P(N2,N1)=TQSC1P(N2,N1)-XQSC1P(N,NN,N5,N4)
+      TQSC2P(N2,N1)=TQSC2P(N2,N1)-XQSC2P(N,NN,N5,N4)
+      TQSM1P(N2,N1)=TQSM1P(N2,N1)-XQSM1P(N,NN,N5,N4)
+      ENDIF
       IF(N4B.GT.0.AND.N5B.GT.0.AND.NN.EQ.1)THEN
       TQRAL(N2,N1)=TQRAL(N2,N1)-XQRAL(N,NN,N5B,N4B)
       TQRFE(N2,N1)=TQRFE(N2,N1)-XQRFE(N,NN,N5B,N4B)
@@ -1920,59 +2209,61 @@ C
       TQRC1P(N2,N1)=TQRC1P(N2,N1)-XQRC1P(N,NN,N5B,N4B)
       TQRC2P(N2,N1)=TQRC2P(N2,N1)-XQRC2P(N,NN,N5B,N4B)
       TQRM1P(N2,N1)=TQRM1P(N2,N1)-XQRM1P(N,NN,N5B,N4B)
+      TQSAL(N2,N1)=TQSAL(N2,N1)-XQSAL(N,NN,N5B,N4B)
+      TQSFE(N2,N1)=TQSFE(N2,N1)-XQSFE(N,NN,N5B,N4B)
+      TQSHY(N2,N1)=TQSHY(N2,N1)-XQSHY(N,NN,N5B,N4B)
+      TQSCA(N2,N1)=TQSCA(N2,N1)-XQSCA(N,NN,N5B,N4B)
+      TQSMG(N2,N1)=TQSMG(N2,N1)-XQSMG(N,NN,N5B,N4B)
+      TQSNA(N2,N1)=TQSNA(N2,N1)-XQSNA(N,NN,N5B,N4B)
+      TQSKA(N2,N1)=TQSKA(N2,N1)-XQSKA(N,NN,N5B,N4B)
+      TQSOH(N2,N1)=TQSOH(N2,N1)-XQSOH(N,NN,N5B,N4B)
+      TQSSO(N2,N1)=TQSSO(N2,N1)-XQSSO(N,NN,N5B,N4B)
+      TQSCL(N2,N1)=TQSCL(N2,N1)-XQSCL(N,NN,N5B,N4B)
+      TQSC3(N2,N1)=TQSC3(N2,N1)-XQSC3(N,NN,N5B,N4B)
+      TQSHC(N2,N1)=TQSHC(N2,N1)-XQSHC(N,NN,N5B,N4B)
+      TQSAL1(N2,N1)=TQSAL1(N2,N1)-XQSAL1(N,NN,N5B,N4B)
+      TQSAL2(N2,N1)=TQSAL2(N2,N1)-XQSAL2(N,NN,N5B,N4B)
+      TQSAL3(N2,N1)=TQSAL3(N2,N1)-XQSAL3(N,NN,N5B,N4B)
+      TQSAL4(N2,N1)=TQSAL4(N2,N1)-XQSAL4(N,NN,N5B,N4B)
+      TQSALS(N2,N1)=TQSALS(N2,N1)-XQSALS(N,NN,N5B,N4B)
+      TQSFE1(N2,N1)=TQSFE1(N2,N1)-XQSFE1(N,NN,N5B,N4B)
+      TQSFE2(N2,N1)=TQSFE2(N2,N1)-XQSFE2(N,NN,N5B,N4B)
+      TQSFE3(N2,N1)=TQSFE3(N2,N1)-XQSFE3(N,NN,N5B,N4B)
+      TQSFE4(N2,N1)=TQSFE4(N2,N1)-XQSFE4(N,NN,N5B,N4B)
+      TQSFES(N2,N1)=TQSFES(N2,N1)-XQSFES(N,NN,N5B,N4B)
+      TQSCAO(N2,N1)=TQSCAO(N2,N1)-XQSCAO(N,NN,N5B,N4B)
+      TQSCAC(N2,N1)=TQSCAC(N2,N1)-XQSCAC(N,NN,N5B,N4B)
+      TQSCAH(N2,N1)=TQSCAH(N2,N1)-XQSCAH(N,NN,N5B,N4B)
+      TQSCAS(N2,N1)=TQSCAS(N2,N1)-XQSCAS(N,NN,N5B,N4B)
+      TQSMGO(N2,N1)=TQSMGO(N2,N1)-XQSMGO(N,NN,N5B,N4B)
+      TQSMGC(N2,N1)=TQSMGC(N2,N1)-XQSMGC(N,NN,N5B,N4B)
+      TQSMGH(N2,N1)=TQSMGH(N2,N1)-XQSMGH(N,NN,N5B,N4B)
+      TQSMGS(N2,N1)=TQSMGS(N2,N1)-XQSMGS(N,NN,N5B,N4B)
+      TQSNAC(N2,N1)=TQSNAC(N2,N1)-XQSNAC(N,NN,N5B,N4B)
+      TQSNAS(N2,N1)=TQSNAS(N2,N1)-XQSNAS(N,NN,N5B,N4B)
+      TQSKAS(N2,N1)=TQSKAS(N2,N1)-XQSKAS(N,NN,N5B,N4B)
+      TQSH0P(N2,N1)=TQSH0P(N2,N1)-XQSH0P(N,NN,N5B,N4B)
+      TQSH3P(N2,N1)=TQSH3P(N2,N1)-XQSH3P(N,NN,N5B,N4B)
+      TQSF1P(N2,N1)=TQSF1P(N2,N1)-XQSF1P(N,NN,N5B,N4B)
+      TQSF2P(N2,N1)=TQSF2P(N2,N1)-XQSF2P(N,NN,N5B,N4B)
+      TQSC0P(N2,N1)=TQSC0P(N2,N1)-XQSC0P(N,NN,N5B,N4B)
+      TQSC1P(N2,N1)=TQSC1P(N2,N1)-XQSC1P(N,NN,N5B,N4B)
+      TQSC2P(N2,N1)=TQSC2P(N2,N1)-XQSC2P(N,NN,N5B,N4B)
+      TQSM1P(N2,N1)=TQSM1P(N2,N1)-XQSM1P(N,NN,N5B,N4B)
       ENDIF
 1203  CONTINUE
-      TQSAL(N2,N1)=TQSAL(N2,N1)+XQSAL(N,N2,N1)-XQSAL(N,N5,N4)
-      TQSFE(N2,N1)=TQSFE(N2,N1)+XQSFE(N,N2,N1)-XQSFE(N,N5,N4)
-      TQSHY(N2,N1)=TQSHY(N2,N1)+XQSHY(N,N2,N1)-XQSHY(N,N5,N4)
-      TQSCA(N2,N1)=TQSCA(N2,N1)+XQSCA(N,N2,N1)-XQSCA(N,N5,N4)
-      TQSMG(N2,N1)=TQSMG(N2,N1)+XQSMG(N,N2,N1)-XQSMG(N,N5,N4)
-      TQSNA(N2,N1)=TQSNA(N2,N1)+XQSNA(N,N2,N1)-XQSNA(N,N5,N4)
-      TQSKA(N2,N1)=TQSKA(N2,N1)+XQSKA(N,N2,N1)-XQSKA(N,N5,N4)
-      TQSOH(N2,N1)=TQSOH(N2,N1)+XQSOH(N,N2,N1)-XQSOH(N,N5,N4)
-      TQSSO(N2,N1)=TQSSO(N2,N1)+XQSSO(N,N2,N1)-XQSSO(N,N5,N4)
-      TQSCL(N2,N1)=TQSCL(N2,N1)+XQSCL(N,N2,N1)-XQSCL(N,N5,N4)
-      TQSC3(N2,N1)=TQSC3(N2,N1)+XQSC3(N,N2,N1)-XQSC3(N,N5,N4)
-      TQSHC(N2,N1)=TQSHC(N2,N1)+XQSHC(N,N2,N1)-XQSHC(N,N5,N4)
-      TQSAL1(N2,N1)=TQSAL1(N2,N1)+XQSAL1(N,N2,N1)-XQSAL1(N,N5,N4)
-      TQSAL2(N2,N1)=TQSAL2(N2,N1)+XQSAL2(N,N2,N1)-XQSAL2(N,N5,N4)
-      TQSAL3(N2,N1)=TQSAL3(N2,N1)+XQSAL3(N,N2,N1)-XQSAL3(N,N5,N4)
-      TQSAL4(N2,N1)=TQSAL4(N2,N1)+XQSAL4(N,N2,N1)-XQSAL4(N,N5,N4)
-      TQSALS(N2,N1)=TQSALS(N2,N1)+XQSALS(N,N2,N1)-XQSALS(N,N5,N4)
-      TQSFE1(N2,N1)=TQSFE1(N2,N1)+XQSFE1(N,N2,N1)-XQSFE1(N,N5,N4)
-      TQSFE2(N2,N1)=TQSFE2(N2,N1)+XQSFE2(N,N2,N1)-XQSFE2(N,N5,N4)
-      TQSFE3(N2,N1)=TQSFE3(N2,N1)+XQSFE3(N,N2,N1)-XQSFE3(N,N5,N4)
-      TQSFE4(N2,N1)=TQSFE4(N2,N1)+XQSFE4(N,N2,N1)-XQSFE4(N,N5,N4)
-      TQSFES(N2,N1)=TQSFES(N2,N1)+XQSFES(N,N2,N1)-XQSFES(N,N5,N4)
-      TQSCAO(N2,N1)=TQSCAO(N2,N1)+XQSCAO(N,N2,N1)-XQSCAO(N,N5,N4)
-      TQSCAC(N2,N1)=TQSCAC(N2,N1)+XQSCAC(N,N2,N1)-XQSCAC(N,N5,N4)
-      TQSCAH(N2,N1)=TQSCAH(N2,N1)+XQSCAH(N,N2,N1)-XQSCAH(N,N5,N4)
-      TQSCAS(N2,N1)=TQSCAS(N2,N1)+XQSCAS(N,N2,N1)-XQSCAS(N,N5,N4)
-      TQSMGO(N2,N1)=TQSMGO(N2,N1)+XQSMGO(N,N2,N1)-XQSMGO(N,N5,N4)
-      TQSMGC(N2,N1)=TQSMGC(N2,N1)+XQSMGC(N,N2,N1)-XQSMGC(N,N5,N4)
-      TQSMGH(N2,N1)=TQSMGH(N2,N1)+XQSMGH(N,N2,N1)-XQSMGH(N,N5,N4)
-      TQSMGS(N2,N1)=TQSMGS(N2,N1)+XQSMGS(N,N2,N1)-XQSMGS(N,N5,N4)
-      TQSNAC(N2,N1)=TQSNAC(N2,N1)+XQSNAC(N,N2,N1)-XQSNAC(N,N5,N4)
-      TQSNAS(N2,N1)=TQSNAS(N2,N1)+XQSNAS(N,N2,N1)-XQSNAS(N,N5,N4)
-      TQSKAS(N2,N1)=TQSKAS(N2,N1)+XQSKAS(N,N2,N1)-XQSKAS(N,N5,N4)
-      TQSH0P(N2,N1)=TQSH0P(N2,N1)+XQSH0P(N,N2,N1)-XQSH0P(N,N5,N4)
-      TQSH3P(N2,N1)=TQSH3P(N2,N1)+XQSH3P(N,N2,N1)-XQSH3P(N,N5,N4)
-      TQSF1P(N2,N1)=TQSF1P(N2,N1)+XQSF1P(N,N2,N1)-XQSF1P(N,N5,N4)
-      TQSF2P(N2,N1)=TQSF2P(N2,N1)+XQSF2P(N,N2,N1)-XQSF2P(N,N5,N4)
-      TQSC0P(N2,N1)=TQSC0P(N2,N1)+XQSC0P(N,N2,N1)-XQSC0P(N,N5,N4)
-      TQSC1P(N2,N1)=TQSC1P(N2,N1)+XQSC1P(N,N2,N1)-XQSC1P(N,N5,N4)
-      TQSC2P(N2,N1)=TQSC2P(N2,N1)+XQSC2P(N,N2,N1)-XQSC2P(N,N5,N4)
-      TQSM1P(N2,N1)=TQSM1P(N2,N1)+XQSM1P(N,N2,N1)-XQSM1P(N,N5,N4)
       ENDIF
 C
-C     NET WATER AND HEAT FLUXES THROUGH SNOWPACK
+C     NET WATER AND HEAT FLUXES THROUGH SNOWPACK     
 C
 C     VHCPW,VHCPWX=current, minimum snowpack heat capacities
 C     TFLWS,TFLWW,TFLWI=net fluxes of snow,water,ice in snowpack
 C     THFLWW=convective heat fluxes of snow,water,ice in snowpack
 C     XFLWS,XFLWW,XFLWI=snow,water,ice transfer from watsub.f
-C     XHFLWW=convective heat flux from snow,water,ice transfer from watsub.f
-C     FLSW,FLSWH,FLSWR=water flux from lowest snow layer to soil macropore,micropore,litter
+C     XHFLWW=convective heat flux from snow,water,ice transfer 
+C        from watsub.f 
+C     FLSW,FLSWH,FLSWR=water flux from lowest snow layer to soil
+C        macropore,micropore,litter
 C     HFLSW,HFLSWR=heat flux from lowest snow layer to soil,litter
 C
       ELSEIF(N.EQ.3)THEN
@@ -1988,6 +2279,9 @@ C
       TFLWW(LS,N2,N1)=TFLWW(LS,N2,N1)+XFLWW(LS,N2,N1)
      2-XFLWW(LS2,N2,N1)
      2-FLSWR(LS,N2,N1)-FLSW(LS,N2,N1)-FLSWH(LS,N2,N1)
+      TFLWV(LS,N2,N1)=TFLWV(LS,N2,N1)+XFLWV(LS,N2,N1)
+     2-XFLWV(LS2,N2,N1)
+     2-FLSVR(LS,N2,N1)-FLSV(LS,N2,N1) 
       TFLWI(LS,N2,N1)=TFLWI(LS,N2,N1)+XFLWI(LS,N2,N1)
      2-XFLWI(LS2,N2,N1)
       THFLWW(LS,N2,N1)=THFLWW(LS,N2,N1)+XHFLWW(LS,N2,N1)
@@ -1995,18 +2289,20 @@ C
      2-HFLSWR(LS,N2,N1)-HFLSW(LS,N2,N1)
 C     IF(LS.EQ.5)THEN
 C     WRITE(*,7754)'LS',I,J,N1,N2,LS,LS2,TFLWW(LS,N2,N1),XFLWW(LS,N2,N1)
-C    2,XFLWW(LS2,N2,N1)
+C    2,XFLWW(LS2,N2,N1),TFLWV(LS,N2,N1),XFLWV(LS,N2,N1)
+C    2,XFLWV(LS2,N2,N1),FLSWR(LS,N2,N1),FLSW(LS,N2,N1),FLSWH(LS,N2,N1)
+C    2,FLSVR(LS,N2,N1),FLSV(LS,N2,N1)
 7754  FORMAT(A8,6I4,100E14.6)
 C     ENDIF
 C
-C     NET SOLUTE FLUXES THROUGH SNOWPACK
+C     NET SOLUTE FLUXES THROUGH SNOWPACK     
 C
 C     T*BLS=net solute flux in snowpack
 C     X*BLS=solute flux in snowpack from trnsfr.f
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
-C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
-C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
-C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
+C        :N4=NH4,N3=NH3,NO=NO3,NX=NO2,H1P=HPO4,H2P=H2PO4 in non-band
+C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,H1B=HPO4,H2B=H2PO4 in band
 C
       TCOBLS(LS,N2,N1)=TCOBLS(LS,N2,N1)+XCOBLS(LS,N2,N1)
      2-XCOBLS(LS2,N2,N1)
@@ -2029,20 +2325,22 @@ C
       TH2PBS(LS,N2,N1)=TH2PBS(LS,N2,N1)+XH2PBS(LS,N2,N1)
      2-XH2PBS(LS2,N2,N1)
 C
-C     NET SALT FLUXES THROUGH SNOWPACK
+C     NET SALT FLUXES THROUGH SNOWPACK     
 C
 C     T*BLS=net solute flux in snowpack
 C     X*BLS=solute flux in snowpack from trnsfrs.f
-C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
-C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
-C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
-C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
-C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
-C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
-C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
-C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
-C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
-C          :*1=non-band,*B=band
+C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
+C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
+C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
+C        :*FEO1*=FeOH2-,*FEOH2=F3OH2-,*FEOH3*=FeOH3,*FEOH4*=FeOH4+
+C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
+C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
+C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
+C        :*M1P*=MgHPO4,*COO*=COOH-
+C        :*1=non-band,*B=band
 C
       IF(ISALTG.NE.0)THEN
       TALBLS(LS,N2,N1)=TALBLS(LS,N2,N1)+XALBLS(LS,N2,N1)
@@ -2135,12 +2433,17 @@ C
       TFLWS(LS,N2,N1)=TFLWS(LS,N2,N1)+XFLWS(LS,N2,N1)
       TFLWW(LS,N2,N1)=TFLWW(LS,N2,N1)+XFLWW(LS,N2,N1)
      2-FLSWR(LS,N2,N1)-FLSW(LS,N2,N1)-FLSWH(LS,N2,N1)
+      TFLWV(LS,N2,N1)=TFLWV(LS,N2,N1)+XFLWV(LS,N2,N1)
+     2-FLSVR(LS,N2,N1)-FLSV(LS,N2,N1) 
       TFLWI(LS,N2,N1)=TFLWI(LS,N2,N1)+XFLWI(LS,N2,N1)
       THFLWW(LS,N2,N1)=THFLWW(LS,N2,N1)+XHFLWW(LS,N2,N1)
      2-HFLSWR(LS,N2,N1)-HFLSW(LS,N2,N1)
 C     IF(LS.EQ.5)THEN
-C     WRITE(*,7755)'LS',I,J,N1,N2,LS,LS2,TFLWW(LS,N2,N1),XFLWW(LS,N2,N1)
-C    2,FLSWR(LS,N2,N1),FLSW(LS,N2,N1),FLSWH(LS,N2,N1)
+C     WRITE(*,7755)'LS',I,J,N1,N2,LS,LS2
+C    2,TFLWW(LS,N2,N1),XFLWW(LS,N2,N1)
+C    2,XFLWW(LS2,N2,N1),TFLWV(LS,N2,N1),XFLWV(LS,N2,N1)
+C    2,XFLWV(LS2,N2,N1),FLSWR(LS,N2,N1),FLSW(LS,N2,N1),FLSWH(LS,N2,N1)
+C    2,FLSVR(LS,N2,N1),FLSV(LS,N2,N1)
 7755  FORMAT(A8,6I4,100E14.6)
 C     ENDIF
       TCOBLS(LS,N2,N1)=TCOBLS(LS,N2,N1)+XCOBLS(LS,N2,N1)
@@ -2313,12 +2616,25 @@ C     ENDIF
       ENDIF
       ENDIF
 C
-C     WATER,GAS,SOLUTE,SALT FLUXES INTO SNOWPACK SURFACE
+C     WATER,GAS,SOLUTE FLUXES INTO SNOWPACK SURFACE
+C
+C     TFLWS,TFLWW,TFLWV,TFLWI=net fluxes of snow,water,vapor,ice at 
+C        snowpack surface
+C     THFLWW=convective heat fluxes of snow,water,ice at snowpack
+C        surface
+C     XFLWS,XFLWW,XFLWV,XFLWI=snow,water,vapor,ice transfer 
+C        from watsub.f
+C     T*BLS=net solute flux in snowpack
+C     X*BLS=solute flux in snowpack from trnsfr.f
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
+C        :N4=NH4,N3=NH3,NO=NO3,NX=NO2,H1P=HPO4,H2P=H2PO4 
 C
       ELSEIF(LS.EQ.1)THEN
       IF(XFLWS(LS,N2,N1).NE.0.0)THEN
       TFLWS(LS,N2,N1)=TFLWS(LS,N2,N1)+XFLWS(LS,N2,N1)
       TFLWW(LS,N2,N1)=TFLWW(LS,N2,N1)+XFLWW(LS,N2,N1)
+      TFLWV(LS,N2,N1)=TFLWV(LS,N2,N1)+XFLWV(LS,N2,N1)
       TFLWI(LS,N2,N1)=TFLWI(LS,N2,N1)+XFLWI(LS,N2,N1)
       THFLWW(LS,N2,N1)=THFLWW(LS,N2,N1)+XHFLWW(LS,N2,N1)
       TCOBLS(LS,N2,N1)=TCOBLS(LS,N2,N1)+XCOBLS(LS,N2,N1)
@@ -2331,6 +2647,21 @@ C
       TNOBLW(LS,N2,N1)=TNOBLW(LS,N2,N1)+XNOBLW(LS,N2,N1)
       TH1PBS(LS,N2,N1)=TH1PBS(LS,N2,N1)+XH1PBS(LS,N2,N1)
       TH2PBS(LS,N2,N1)=TH2PBS(LS,N2,N1)+XH2PBS(LS,N2,N1)
+C
+C     SALT FLUXES INTO SNOWPACK SURFACE
+C
+C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
+C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
+C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
+C        :*FEO1*=FeOH2-,*FEOH2=F3OH2-,*FEOH3*=FeOH3,*FEOH4*=FeOH4+
+C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
+C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
+C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
+C        :*M1P*=MgHPO4,*COO*=COOH-
+C
       IF(ISALTG.NE.0)THEN
       TALBLS(LS,N2,N1)=TALBLS(LS,N2,N1)+XALBLS(LS,N2,N1)
       TFEBLS(LS,N2,N1)=TFEBLS(LS,N2,N1)+XFEBLS(LS,N2,N1)
@@ -2379,39 +2710,42 @@ C
 1205  CONTINUE
       ENDIF
 C
-C     TOTAL FLUXES FROM SEDIMENT TRANSPORT
+C     INCOMING FLUXES FROM EROSION
 C
-C     T*ER=net sediment flux
-C     X*ER=sediment flux from erosion.f
-C     sediment code:XSED=total,XSAN=sand,XSIL=silt,XCLA=clay
-C       :OMC,OMN,OMP=microbial C,N,P; ORC=microbial residue C,N,P
-C       :OHC,OHN,OHP=adsorbed C,N,P; OSC,OSN,OSP=humus C,N,P
-C       :NH4,NH3,NHU,NO3=fertilizer NH4,NH3,urea,NO3 in non-band
-C       :NH4B,NH3B,NHUB,NO3B=fertilizer NH4,NH3,urea,NO3 in band
-C       :XN4,XNB=adsorbed NH4 in non-band,band
-C       :XHY,XAL,XFE,XCA,XMG,XNA,XKA,XHC,AL2,FE2
-C        =adsorbed H,Al,Fe,Ca,Mg,Na,K,HCO3,AlOH2,FeOH2
-C       :XOH0,XOH1,XOH2=adsorbed R-,R-OH,R-OH2 in non-band
-C       :XOH0B,XOH1B,XOH2B=adsorption sites R-,R-OH,R-OH2 in band
-C       :XH1P,XH2P=adsorbed HPO4,H2PO4 in non-band
-C       :XH1PB,XP2PB=adsorbed HPO4,H2PO4 in band
-C       :PALO,PFEO=precip AlOH,FeOH
-C       :PCAC,PCAS=precip CaCO3,CaSO4
-C       :PALP,PFEP=precip AlPO4,FEPO4 in non-band
-C       :PALPB,PFEPB=precip AlPO4,FEPO4 in band
-C       :PCPM,PCPD,PCPH=precip CaH2PO4,CaHPO4,apatite in non-band
-C       :PCPMB,PCPDB,PCPHB=precip CaH2PO4,CaHPO4,apatite in band
+C     NN=boundary:N=1:NN=1 east,NN=2 west, N=2:NN=1 south,NN=2 north
 C
       IF(N.NE.3.AND.(IERSNG.EQ.1.OR.IERSNG.EQ.3))THEN
       DO 9350 NN=1,2
+C
+C     T*ER=net sediment flux
+C     X*ER=sediment flux from erosion.f
+C
       IF(ABS(XSEDER(N,NN,N2,N1)).GT.ZEROS(N2,N1)
      3.OR.ABS(XSEDER(N,NN,N5,N4)).GT.ZEROS(N5,N4))THEN
+C
+C     SEDIMENT FROM EROSION
+C
+C     sediment code:XSED=total,XSAN=sand,XSIL=silt,XCLA=clay
+C                  :CEC=cation exchange capacity
+C                  :AEC=anion exchange capacity
+C
       TSEDER(N2,N1)=TSEDER(N2,N1)+XSEDER(N,NN,N2,N1)
       TSANER(N2,N1)=TSANER(N2,N1)+XSANER(N,NN,N2,N1)
       TSILER(N2,N1)=TSILER(N2,N1)+XSILER(N,NN,N2,N1)
       TCLAER(N2,N1)=TCLAER(N2,N1)+XCLAER(N,NN,N2,N1)
       TCECER(N2,N1)=TCECER(N2,N1)+XCECER(N,NN,N2,N1)
       TAECER(N2,N1)=TAECER(N2,N1)+XAECER(N,NN,N2,N1)
+C     IF(N1.EQ.1)THEN
+C     WRITE(*,1139)'TSEDER1',I,J,NFZ,N,NN,N1,N2
+C    2,TSEDER(N2,N1),XSEDER(N,NN,N2,N1)
+1139  FORMAT(A8,7I4,12E12.4)
+C     ENDIF
+C
+C     FERTILIZER FROM EROSION
+C
+C     sediment code:NH4,NH3,NHU,NO3=NH4,NH3,urea,NO3 in non-band
+C                  :NH4B,NH3B,NHUB,NO3B=NH4,NH3,urea,NO3 in band
+C
       TNH4ER(N2,N1)=TNH4ER(N2,N1)+XNH4ER(N,NN,N2,N1)
       TNH3ER(N2,N1)=TNH3ER(N2,N1)+XNH3ER(N,NN,N2,N1)
       TNHUER(N2,N1)=TNHUER(N2,N1)+XNHUER(N,NN,N2,N1)
@@ -2420,6 +2754,18 @@ C
       TNH3EB(N2,N1)=TNH3EB(N2,N1)+XNH3EB(N,NN,N2,N1)
       TNHUEB(N2,N1)=TNHUEB(N2,N1)+XNHUEB(N,NN,N2,N1)
       TNO3EB(N2,N1)=TNO3EB(N2,N1)+XNO3EB(N,NN,N2,N1)
+C
+C     EXCHANGEABLE CATIONS AND ANIONS FROM EROSION
+C
+C     sediment code
+C       :XN4,XNB=adsorbed NH4 in non-band,band
+C       :XHY,XAL,XFE,XCA,XMG,XNA,XKA,XHC,AL2,FE2
+C           =adsorbed H,Al,Fe,Ca,Mg,Na,K,HCO3,AlOH2,FeOH2
+C       :XOH0,XOH1,XOH2=adsorbed R-,R-OH,R-OH2 in non-band
+C       :XOH0B,XOH1B,XOH2B=adsorption sites R-,R-OH,R-OH2 in band
+C       :XH1P,XH2P=adsorbed HPO4,H2PO4 in non-band
+C       :XH1PB,XP2PB=adsorbed HPO4,H2PO4 in band
+C
       TN4ER(N2,N1)=TN4ER(N2,N1)+XN4ER(N,NN,N2,N1)
       TNBER(N2,N1)=TNBER(N2,N1)+XNBER(N,NN,N2,N1)
       THYER(N2,N1)=THYER(N2,N1)+XHYER(N,NN,N2,N1)
@@ -2442,6 +2788,17 @@ C
       TOH2EB(N2,N1)=TOH2EB(N2,N1)+XOH2EB(N,NN,N2,N1)
       TH1PEB(N2,N1)=TH1PEB(N2,N1)+XH1PEB(N,NN,N2,N1)
       TH2PEB(N2,N1)=TH2PEB(N2,N1)+XH2PEB(N,NN,N2,N1)
+C
+C     PRECIPITATES FROM EROSION
+C
+C     sediment code
+C       :PALO,PFEO=precip AlOH,FeOH 
+C       :PCAC,PCAS=precip CaCO3,CaSO4
+C       :PALP,PFEP=precip AlPO4,FEPO4 in non-band
+C       :PALPB,PFEPB=precip AlPO4,FEPO4 in band
+C       :PCPM,PCPD,PCPH=precip CaH2PO4,CaHPO4,apatite in non-band
+C       :PCPMB,PCPDB,PCPHB=precip CaH2PO4,CaHPO4,apatite in band
+C
       TALOER(N2,N1)=TALOER(N2,N1)+PALOER(N,NN,N2,N1)
       TFEOER(N2,N1)=TFEOER(N2,N1)+PFEOER(N,NN,N2,N1)
       TCACER(N2,N1)=TCACER(N2,N1)+PCACER(N,NN,N2,N1)
@@ -2456,37 +2813,74 @@ C
       TCPDEB(N2,N1)=TCPDEB(N2,N1)+PCPDEB(N,NN,N2,N1)
       TCPHEB(N2,N1)=TCPHEB(N2,N1)+PCPHEB(N,NN,N2,N1)
       TCPMEB(N2,N1)=TCPMEB(N2,N1)+PCPMEB(N,NN,N2,N1)
+C
+C     ORGANIC MATTER FROM EROSION
+C
+C     sediment code
+C        :OMC,OMN,OMP=microbial C,N,P
+C        :ORC,ORN,ORP=microbial residue C,N,P
+C        :OHC,OHN,OHP,OHA=adsorbed C,N,P,acetate 
+C        :OSC,OSA,OSN,OSP=SOC,colonized SOC,SON,SOP 
+C           (K=0:woody litter, K=1:non-woody litter,
+C            K=2:manure, K=3:POC, K=4:humus)
+C
       DO 9380 K=0,5
       DO 9380 NO=1,7
       DO 9380 M=1,3
-      TOMCER(M,NO,K,N2,N1)=TOMCER(M,NO,K,N2,N1)+OMCER(M,NO,K,N,NN,N2,N1)
-      TOMNER(M,NO,K,N2,N1)=TOMNER(M,NO,K,N2,N1)+OMNER(M,NO,K,N,NN,N2,N1)
-      TOMPER(M,NO,K,N2,N1)=TOMPER(M,NO,K,N2,N1)+OMPER(M,NO,K,N,NN,N2,N1)
+      TOMCER(M,NO,K,N2,N1)=TOMCER(M,NO,K,N2,N1)
+     2+OMCER(M,NO,K,N,NN,N2,N1) 
+      TOMNER(M,NO,K,N2,N1)=TOMNER(M,NO,K,N2,N1)
+     2+OMNER(M,NO,K,N,NN,N2,N1)
+      TOMPER(M,NO,K,N2,N1)=TOMPER(M,NO,K,N2,N1)
+     2+OMPER(M,NO,K,N,NN,N2,N1)
 9380  CONTINUE
       DO 9375 K=0,4
       DO 9370 M=1,2
       TORCER(M,K,N2,N1)=TORCER(M,K,N2,N1)+ORCER(M,K,N,NN,N2,N1)
       TORNER(M,K,N2,N1)=TORNER(M,K,N2,N1)+ORNER(M,K,N,NN,N2,N1)
-      TORPER(M,K,N2,N1)=TORPER(M,K,N2,N1)+ORPER(M,K,N,NN,N2,N1)
+      TORPER(M,K,N2,N1)=TORPER(M,K,N2,N1)+ORPER(M,K,N,NN,N2,N1) 
 9370  CONTINUE
-      TOHCER(K,N2,N1)=TOHCER(K,N2,N1)+OHCER(K,N,NN,N2,N1)
+      TOHCER(K,N2,N1)=TOHCER(K,N2,N1)+OHCER(K,N,NN,N2,N1) 
       TOHNER(K,N2,N1)=TOHNER(K,N2,N1)+OHNER(K,N,NN,N2,N1)
       TOHPER(K,N2,N1)=TOHPER(K,N2,N1)+OHPER(K,N,NN,N2,N1)
-      TOHAER(K,N2,N1)=TOHAER(K,N2,N1)+OHAER(K,N,NN,N2,N1)
-      DO 9365 M=1,4
-      TOSCER(M,K,N2,N1)=TOSCER(M,K,N2,N1)+OSCER(M,K,N,NN,N2,N1)
-      TOSAER(M,K,N2,N1)=TOSAER(M,K,N2,N1)+OSAER(M,K,N,NN,N2,N1)
+      TOHAER(K,N2,N1)=TOHAER(K,N2,N1)+OHAER(K,N,NN,N2,N1) 
+      DO 9365 M=1,5
+      TOSCER(M,K,N2,N1)=TOSCER(M,K,N2,N1)+OSCER(M,K,N,NN,N2,N1) 
+      TOSAER(M,K,N2,N1)=TOSAER(M,K,N2,N1)+OSAER(M,K,N,NN,N2,N1) 
       TOSNER(M,K,N2,N1)=TOSNER(M,K,N2,N1)+OSNER(M,K,N,NN,N2,N1)
-      TOSPER(M,K,N2,N1)=TOSPER(M,K,N2,N1)+OSPER(M,K,N,NN,N2,N1)
+      TOSPER(M,K,N2,N1)=TOSPER(M,K,N2,N1)+OSPER(M,K,N,NN,N2,N1) 
 9365  CONTINUE
 9375  CONTINUE
 C     IF(NN.EQ.2)THEN
+C
+C     OUTGOING FLUXES FROM EROSION E AND S
+C
+C     NN=boundary:N=1:NN=1 east,NN=2 west, N=2:NN=1 south,NN=2 north
+C
+C
+C     SEDIMENT FROM EROSION
+C
+C     sediment code:XSED=total,XSAN=sand,XSIL=silt,XCLA=clay
+C                  :CEC=cation exchange capacity
+C                  :AEC=anion exchange capacity
+C
       TSEDER(N2,N1)=TSEDER(N2,N1)-XSEDER(N,NN,N5,N4)
       TSANER(N2,N1)=TSANER(N2,N1)-XSANER(N,NN,N5,N4)
       TSILER(N2,N1)=TSILER(N2,N1)-XSILER(N,NN,N5,N4)
       TCLAER(N2,N1)=TCLAER(N2,N1)-XCLAER(N,NN,N5,N4)
       TCECER(N2,N1)=TCECER(N2,N1)-XCECER(N,NN,N5,N4)
       TAECER(N2,N1)=TAECER(N2,N1)-XAECER(N,NN,N5,N4)
+C     IF(N1.EQ.1)THEN
+C     WRITE(*,1138)'TSEDER2',I,J,NFZ,N,NN,N1,N2,N4,N5
+C    2,TSEDER(N2,N1),XSEDER(N,NN,N4,N5)
+1138  FORMAT(A8,9I4,12E12.4)
+C     ENDIF
+C
+C     FERTILIZER FROM EROSION
+C
+C     sediment code:NH4,NH3,NHU,NO3=NH4,NH3,urea,NO3 in non-band
+C                  :NH4B,NH3B,NHUB,NO3B=NH4,NH3,urea,NO3 in band
+C
       TNH4ER(N2,N1)=TNH4ER(N2,N1)-XNH4ER(N,NN,N5,N4)
       TNH3ER(N2,N1)=TNH3ER(N2,N1)-XNH3ER(N,NN,N5,N4)
       TNHUER(N2,N1)=TNHUER(N2,N1)-XNHUER(N,NN,N5,N4)
@@ -2495,6 +2889,18 @@ C     IF(NN.EQ.2)THEN
       TNH3EB(N2,N1)=TNH3EB(N2,N1)-XNH3EB(N,NN,N5,N4)
       TNHUEB(N2,N1)=TNHUEB(N2,N1)-XNHUEB(N,NN,N5,N4)
       TNO3EB(N2,N1)=TNO3EB(N2,N1)-XNO3EB(N,NN,N5,N4)
+C
+C     EXCHANGEABLE CATIONS AND ANIONS FROM EROSION
+C
+C     sediment code
+C       :XN4,XNB=adsorbed NH4 in non-band,band
+C       :XHY,XAL,XFE,XCA,XMG,XNA,XKA,XHC,AL2,FE2
+C           =adsorbed H,Al,Fe,Ca,Mg,Na,K,HCO3,AlOH2,FeOH2
+C       :XOH0,XOH1,XOH2=adsorbed R-,R-OH,R-OH2 in non-band
+C       :XOH0B,XOH1B,XOH2B=adsorption sites R-,R-OH,R-OH2 in band
+C       :XH1P,XH2P=adsorbed HPO4,H2PO4 in non-band
+C       :XH1PB,XP2PB=adsorbed HPO4,H2PO4 in band
+C
       TN4ER(N2,N1)=TN4ER(N2,N1)-XN4ER(N,NN,N5,N4)
       TNBER(N2,N1)=TNBER(N2,N1)-XNBER(N,NN,N5,N4)
       THYER(N2,N1)=THYER(N2,N1)-XHYER(N,NN,N5,N4)
@@ -2517,6 +2923,17 @@ C     IF(NN.EQ.2)THEN
       TOH2EB(N2,N1)=TOH2EB(N2,N1)-XOH2EB(N,NN,N5,N4)
       TH1PEB(N2,N1)=TH1PEB(N2,N1)-XH1PEB(N,NN,N5,N4)
       TH2PEB(N2,N1)=TH2PEB(N2,N1)-XH2PEB(N,NN,N5,N4)
+C
+C     PRECIPITATES FROM EROSION
+C
+C     sediment code
+C       :PALO,PFEO=precip AlOH,FeOH 
+C       :PCAC,PCAS=precip CaCO3,CaSO4
+C       :PALP,PFEP=precip AlPO4,FEPO4 in non-band
+C       :PALPB,PFEPB=precip AlPO4,FEPO4 in band
+C       :PCPM,PCPD,PCPH=precip CaH2PO4,CaHPO4,apatite in non-band
+C       :PCPMB,PCPDB,PCPHB=precip CaH2PO4,CaHPO4,apatite in band
+C
       TALOER(N2,N1)=TALOER(N2,N1)-PALOER(N,NN,N5,N4)
       TFEOER(N2,N1)=TFEOER(N2,N1)-PFEOER(N,NN,N5,N4)
       TCACER(N2,N1)=TCACER(N2,N1)-PCACER(N,NN,N5,N4)
@@ -2531,12 +2948,26 @@ C     IF(NN.EQ.2)THEN
       TCPDEB(N2,N1)=TCPDEB(N2,N1)-PCPDEB(N,NN,N5,N4)
       TCPHEB(N2,N1)=TCPHEB(N2,N1)-PCPHEB(N,NN,N5,N4)
       TCPMEB(N2,N1)=TCPMEB(N2,N1)-PCPMEB(N,NN,N5,N4)
+C
+C     ORGANIC MATTER FROM EROSION
+C
+C     sediment code
+C        :OMC,OMN,OMP=microbial C,N,P
+C        :ORC,ORN,ORP=microbial residue C,N,P
+C        :OHC,OHN,OHP,OHA=adsorbed C,N,P,acetate 
+C        :OSC,OSA,OSN,OSP=SOC,colonized SOC,SON,SOP 
+C           (K=0:woody litter, K=1:non-woody litter,
+C            K=2:manure, K=3:POC, K=4:humus)
+C
       DO 7380 K=0,5
       DO 7380 NO=1,7
       DO 7380 M=1,3
-      TOMCER(M,NO,K,N2,N1)=TOMCER(M,NO,K,N2,N1)-OMCER(M,NO,K,N,NN,N5,N4)
-      TOMNER(M,NO,K,N2,N1)=TOMNER(M,NO,K,N2,N1)-OMNER(M,NO,K,N,NN,N5,N4)
-      TOMPER(M,NO,K,N2,N1)=TOMPER(M,NO,K,N2,N1)-OMPER(M,NO,K,N,NN,N5,N4)
+      TOMCER(M,NO,K,N2,N1)=TOMCER(M,NO,K,N2,N1)
+     2-OMCER(M,NO,K,N,NN,N5,N4)
+      TOMNER(M,NO,K,N2,N1)=TOMNER(M,NO,K,N2,N1)
+     2-OMNER(M,NO,K,N,NN,N5,N4)
+      TOMPER(M,NO,K,N2,N1)=TOMPER(M,NO,K,N2,N1)
+     2-OMPER(M,NO,K,N,NN,N5,N4)
 7380  CONTINUE
       DO 7375 K=0,4
       DO 7370 M=1,2
@@ -2548,7 +2979,7 @@ C     IF(NN.EQ.2)THEN
       TOHNER(K,N2,N1)=TOHNER(K,N2,N1)-OHNER(K,N,NN,N5,N4)
       TOHPER(K,N2,N1)=TOHPER(K,N2,N1)-OHPER(K,N,NN,N5,N4)
       TOHAER(K,N2,N1)=TOHAER(K,N2,N1)-OHAER(K,N,NN,N5,N4)
-      DO 7365 M=1,4
+      DO 7365 M=1,5
       TOSCER(M,K,N2,N1)=TOSCER(M,K,N2,N1)-OSCER(M,K,N,NN,N5,N4)
       TOSAER(M,K,N2,N1)=TOSAER(M,K,N2,N1)-OSAER(M,K,N,NN,N5,N4)
       TOSNER(M,K,N2,N1)=TOSNER(M,K,N2,N1)-OSNER(M,K,N,NN,N5,N4)
@@ -2557,14 +2988,35 @@ C     IF(NN.EQ.2)THEN
 7375  CONTINUE
 C     ENDIF
       ENDIF
+C
+C     OUTGOING FLUXES FROM EROSION W AND N
+C
       IF(N4B.GT.0.AND.N5B.GT.0.AND.NN.EQ.1)THEN
       IF(ABS(XSEDER(N,NN,N5B,N4B)).GT.ZEROS(N5,N4))THEN
+C
+C     SEDIMENT FROM EROSION
+C
+C     sediment code:XSED=total,XSAN=sand,XSIL=silt,XCLA=clay
+C                  :CEC=cation exchange capacity
+C                  :AEC=anion exchange capacity
+C
       TSEDER(N2,N1)=TSEDER(N2,N1)-XSEDER(N,NN,N5B,N4B)
       TSANER(N2,N1)=TSANER(N2,N1)-XSANER(N,NN,N5B,N4B)
       TSILER(N2,N1)=TSILER(N2,N1)-XSILER(N,NN,N5B,N4B)
       TCLAER(N2,N1)=TCLAER(N2,N1)-XCLAER(N,NN,N5B,N4B)
       TCECER(N2,N1)=TCECER(N2,N1)-XCECER(N,NN,N5B,N4B)
       TAECER(N2,N1)=TAECER(N2,N1)-XAECER(N,NN,N5B,N4B)
+C     IF(N1.EQ.1)THEN
+C     WRITE(*,1137)'TSEDER3',I,J,NFZ,N,NN,N1,N2,N4B,N5B
+C    2,TSEDER(N2,N1),XSEDER(N,NN,N5B,N4B)
+1137  FORMAT(A8,9I4,12E12.4)
+C     ENDIF
+C
+C     FERTILIZER FROM EROSION
+C
+C     sediment code:NH4,NH3,NHU,NO3=NH4,NH3,urea,NO3 in non-band
+C                  :NH4B,NH3B,NHUB,NO3B=NH4,NH3,urea,NO3 in band
+C
       TNH4ER(N2,N1)=TNH4ER(N2,N1)-XNH4ER(N,NN,N5B,N4B)
       TNH3ER(N2,N1)=TNH3ER(N2,N1)-XNH3ER(N,NN,N5B,N4B)
       TNHUER(N2,N1)=TNHUER(N2,N1)-XNHUER(N,NN,N5B,N4B)
@@ -2573,6 +3025,18 @@ C     ENDIF
       TNH3EB(N2,N1)=TNH3EB(N2,N1)-XNH3EB(N,NN,N5B,N4B)
       TNHUEB(N2,N1)=TNHUEB(N2,N1)-XNHUEB(N,NN,N5B,N4B)
       TNO3EB(N2,N1)=TNO3EB(N2,N1)-XNO3EB(N,NN,N5B,N4B)
+C
+C     EXCHANGEABLE CATIONS AND ANIONS FROM EROSION
+C
+C     sediment code
+C       :XN4,XNB=adsorbed NH4 in non-band,band
+C       :XHY,XAL,XFE,XCA,XMG,XNA,XKA,XHC,AL2,FE2
+C           =adsorbed H,Al,Fe,Ca,Mg,Na,K,HCO3,AlOH2,FeOH2
+C       :XOH0,XOH1,XOH2=adsorbed R-,R-OH,R-OH2 in non-band
+C       :XOH0B,XOH1B,XOH2B=adsorption sites R-,R-OH,R-OH2 in band
+C       :XH1P,XH2P=adsorbed HPO4,H2PO4 in non-band
+C       :XH1PB,XP2PB=adsorbed HPO4,H2PO4 in band
+C
       TN4ER(N2,N1)=TN4ER(N2,N1)-XN4ER(N,NN,N5B,N4B)
       TNBER(N2,N1)=TNBER(N2,N1)-XNBER(N,NN,N5B,N4B)
       THYER(N2,N1)=THYER(N2,N1)-XHYER(N,NN,N5B,N4B)
@@ -2595,6 +3059,17 @@ C     ENDIF
       TOH2EB(N2,N1)=TOH2EB(N2,N1)-XOH2EB(N,NN,N5B,N4B)
       TH1PEB(N2,N1)=TH1PEB(N2,N1)-XH1PEB(N,NN,N5B,N4B)
       TH2PEB(N2,N1)=TH2PEB(N2,N1)-XH2PEB(N,NN,N5B,N4B)
+C
+C     PRECIPITATES FROM EROSION
+C
+C     sediment code
+C       :PALO,PFEO=precip AlOH,FeOH 
+C       :PCAC,PCAS=precip CaCO3,CaSO4
+C       :PALP,PFEP=precip AlPO4,FEPO4 in non-band
+C       :PALPB,PFEPB=precip AlPO4,FEPO4 in band
+C       :PCPM,PCPD,PCPH=precip CaH2PO4,CaHPO4,apatite in non-band
+C       :PCPMB,PCPDB,PCPHB=precip CaH2PO4,CaHPO4,apatite in band
+C
       TALOER(N2,N1)=TALOER(N2,N1)-PALOER(N,NN,N5B,N4B)
       TFEOER(N2,N1)=TFEOER(N2,N1)-PFEOER(N,NN,N5B,N4B)
       TCACER(N2,N1)=TCACER(N2,N1)-PCACER(N,NN,N5B,N4B)
@@ -2609,6 +3084,17 @@ C     ENDIF
       TCPDEB(N2,N1)=TCPDEB(N2,N1)-PCPDEB(N,NN,N5B,N4B)
       TCPHEB(N2,N1)=TCPHEB(N2,N1)-PCPHEB(N,NN,N5B,N4B)
       TCPMEB(N2,N1)=TCPMEB(N2,N1)-PCPMEB(N,NN,N5B,N4B)
+C
+C     ORGANIC MATTER FROM EROSION
+C
+C     sediment code
+C        :OMC,OMN,OMP=microbial C,N,P
+C        :ORC,ORN,ORP=microbial residue C,N,P
+C        :OHC,OHN,OHP,OHA=adsorbed C,N,P,acetate 
+C        :OSC,OSA,OSN,OSP=SOC,colonized SOC,SON,SOP 
+C           (K=0:woody litter, K=1:non-woody litter,
+C            K=2:manure, K=3:POC, K=4:humus)
+C
       DO 8380 K=0,5
       DO 8380 NO=1,7
       DO 8380 M=1,3
@@ -2629,7 +3115,7 @@ C     ENDIF
       TOHNER(K,N2,N1)=TOHNER(K,N2,N1)-OHNER(K,N,NN,N5B,N4B)
       TOHPER(K,N2,N1)=TOHPER(K,N2,N1)-OHPER(K,N,NN,N5B,N4B)
       TOHAER(K,N2,N1)=TOHAER(K,N2,N1)-OHAER(K,N,NN,N5B,N4B)
-      DO 8365 M=1,4
+      DO 8365 M=1,5
       TOSCER(M,K,N2,N1)=TOSCER(M,K,N2,N1)-OSCER(M,K,N,NN,N5B,N4B)
       TOSAER(M,K,N2,N1)=TOSAER(M,K,N2,N1)-OSAER(M,K,N,NN,N5B,N4B)
       TOSNER(M,K,N2,N1)=TOSNER(M,K,N2,N1)-OSNER(M,K,N,NN,N5B,N4B)
@@ -2637,7 +3123,7 @@ C     ENDIF
 8365  CONTINUE
 8375  CONTINUE
       ENDIF
-      ENDIF
+      ENDIF 
 9350  CONTINUE
       ENDIF
       ENDIF
@@ -2645,9 +3131,12 @@ C
 C     NET HEAT, WATER FLUXES BETWEEN ADJACENT
 C     GRID CELLS
 C
-C     TFLW,TFLWH,TFLWH=net micropore,macropore water flux, heat flux
-C     FLW,FLWH,HFLW=micropore,macropore water flux, heat flux from watsub.f
-C     FLWNU,FLWHNU,HFLWNU=lake surface water flux, heat flux from watsub.f if lake surface disappears
+C     TFLW,TFLV,TFLWH,THFLW=net micropore,macropore water,vapor flux,
+C        heat flux
+C     FLW,FLV,FLWH,HFLW=micropore,macropore water,vapor flux, 
+C        heat flux from watsub.f
+C     FLWNU,FLWHNU,HFLWNU=lake surface water flux, heat flux 
+C        from watsub.f if lake surface disappears
 C
       IF(NCN(N2,N1).NE.3.OR.N.EQ.3)THEN
       DO 1200 LL=N6,NL(N5,N4)
@@ -2660,11 +3149,13 @@ C
       IF(VOLX(N3,N2,N1).GT.ZEROS2(N2,N1))THEN
       IF(N3.EQ.NU(N2,N1).AND.N.EQ.3)THEN
       TFLW(N3,N2,N1)=TFLW(N3,N2,N1)+FLW(N,N3,N2,N1)-FLWNU(N5,N4)
+      TFLV(N3,N2,N1)=TFLV(N3,N2,N1)+FLV(N,N3,N2,N1)-FLVNU(N5,N4)
       TFLWX(N3,N2,N1)=TFLWX(N3,N2,N1)+FLWX(N,N3,N2,N1)-FLWXNU(N5,N4)
       TFLWH(N3,N2,N1)=TFLWH(N3,N2,N1)+FLWH(N,N3,N2,N1)-FLWHNU(N5,N4)
       THFLW(N3,N2,N1)=THFLW(N3,N2,N1)+HFLW(N,N3,N2,N1)-HFLWNU(N5,N4)
       ELSE
       TFLW(N3,N2,N1)=TFLW(N3,N2,N1)+FLW(N,N3,N2,N1)-FLW(N,N6,N5,N4)
+      TFLV(N3,N2,N1)=TFLV(N3,N2,N1)+FLV(N,N3,N2,N1)-FLV(N,N6,N5,N4)
       TFLWX(N3,N2,N1)=TFLWX(N3,N2,N1)+FLWX(N,N3,N2,N1)
      2-FLWX(N,N6,N5,N4)
       TFLWH(N3,N2,N1)=TFLWH(N3,N2,N1)+FLWH(N,N3,N2,N1)
@@ -2682,12 +3173,14 @@ C     ENDIF
 C
 C     NET SOLUTE FLUXES BETWEEN ADJACENT GRID CELLS
 C
-C     T*FLS,T*FHS=net convective+diffusive solute flux through micropores,macropores
-C     X*FLS,X*FHS=convective+diffusive solute flux through micropores, macropores from trnsfr.f
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
-C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
-C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
-C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
+C     T*FLS,T*FHS=net convective+diffusive solute flux through
+C        micropores,macropores
+C     X*FLS,X*FHS=convective+diffusive solute flux through 
+C        micropores, macropores from trnsfr.f
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
+C        :N4=NH4,N3=NH3,NO=NO3,NX=NO2,H1P=HPO4,H2P=H2PO4 in non-band
+C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,H1B=HPO4,H2B=H2PO4 in band
 C
       DO 8585 K=0,4
       TOCFLS(K,N3,N2,N1)=TOCFLS(K,N3,N2,N1)+XOCFLS(K,N,N3,N2,N1)
@@ -2706,6 +3199,9 @@ C
      2-XOPFHS(K,N,N6,N5,N4)
       TOAFHS(K,N3,N2,N1)=TOAFHS(K,N3,N2,N1)+XOAFHS(K,N,N3,N2,N1)
      2-XOAFHS(K,N,N6,N5,N4)
+C     WRITE(*,2629)'TOCFLS',I,J,NFZ,N1,N2,N3,N4,N5,N6,N,K
+C    2,TOCFLS(K,N3,N2,N1),XOCFLS(K,N,N3,N2,N1),XOCFLS(K,N,N6,N5,N4)
+2629  FORMAT(A8,11I4,20E12.4)
 8585  CONTINUE
       TCOFLS(N3,N2,N1)=TCOFLS(N3,N2,N1)+XCOFLS(N,N3,N2,N1)
      2-XCOFLS(N,N6,N5,N4)
@@ -2784,8 +3280,11 @@ C     NET GAS FLUXES BETWEEN ADJACENT GRID CELLS
 C
 C     T*FLG=net convective+diffusive gas flux
 C     X*FLG=convective+diffusive gas flux from trnsfr.f
-C     gas code:*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,*NH*=NH3,*HG*=H2
+C     gas code:*VP*=vapor,*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2 
+C             :*Z2O*=N2O,*ZN3*=NH3,*H2G*=H2
 C
+      TVPFLG(N3,N2,N1)=TVPFLG(N3,N2,N1)+XVPFLG(N,N3,N2,N1)
+     2-XVPFLG(N,N6,N5,N4)
       TCOFLG(N3,N2,N1)=TCOFLG(N3,N2,N1)+XCOFLG(N,N3,N2,N1)
      2-XCOFLG(N,N6,N5,N4)
       TCHFLG(N3,N2,N1)=TCHFLG(N3,N2,N1)+XCHFLG(N,N3,N2,N1)
@@ -2803,18 +3302,22 @@ C
 C
 C     NET SALT FLUXES BETWEEN ADJACENT GRID CELLS
 C
-C     T*FLS,T*FHS=net convective+diffusive solute flux through micropores,macropores
-C     X*FLS,X*FHS=convective+diffusive solute flux through micropores, macropores from trnsfrs.f
-C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
-C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
-C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
-C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
-C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
-C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
-C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
-C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
-C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
-C          :*1=non-band,*B=band
+C     T*FLS,T*FHS=net convective+diffusive solute flux through
+C        micropores,macropores
+C     X*FLS,X*FHS=convective+diffusive solute flux through 
+C        micropores, macropores from trnsfrs.f
+C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
+C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
+C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
+C        :*FEO1*=FeOH2-,*FEOH2=F3OH2-,*FEOH3*=FeOH3,*FEOH4*=FeOH4+
+C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
+C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
+C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
+C        :*M1P*=MgHPO4,*COO*=COOH-
+C        :*1=non-band,*B=band
 C
       IF(ISALTG.NE.0)THEN
       TALFLS(N3,N2,N1)=TALFLS(N3,N2,N1)+XALFLS(N,N3,N2,N1)
@@ -3016,12 +3519,15 @@ C
       ENDIF
       ELSE
       TFLW(N3,N2,N1)=0.0
+      TFLV(N3,N2,N1)=0.0
       TFLWX(N3,N2,N1)=0.0
       TFLWH(N3,N2,N1)=0.0
       THFLW(N3,N2,N1)=0.0
-      TTHAW(N3,N2,N1)=0.0
-      TTHAWH(N3,N2,N1)=0.0
-      THTHAW(N3,N2,N1)=0.0
+      TWFLFL(N3,N2,N1)=0.0
+      TWFLFH(N3,N2,N1)=0.0
+      THFLFL(N3,N2,N1)=0.0
+      TWFLVL(N3,N2,N1)=0.0
+      THFLVL(N3,N2,N1)=0.0
       DO 8596 K=0,4
       TOCFLS(K,N3,N2,N1)=0.0
       TONFLS(K,N3,N2,N1)=0.0
@@ -3068,6 +3574,7 @@ C
       TNXFHB(N3,N2,N1)=0.0
       TH1BHB(N3,N2,N1)=0.0
       TH2BHB(N3,N2,N1)=0.0
+      TVPFLG(N3,N2,N1)=0.0
       TCOFLG(N3,N2,N1)=0.0
       TCHFLG(N3,N2,N1)=0.0
       TOXFLG(N3,N2,N1)=0.0
@@ -3181,16 +3688,26 @@ C
 C
 C     NET FREEZE-THAW
 C
-C     TTHAW,TTHAWH=net freeze-thaw flux in micropores,macropores
-C     THTHAW=net freeze-thaw latent heat flux
-C     THAW,THAWH=freeze-thaw flux in micropores,macropores from watsub.f
-C     HTHAW=freeze-thaw latent heat flux from watsub.f
+C     XWFLFL,XWFLFH=total freeze-thaw flux in micropores,macropores
+C        from watsub.f 
+C     XHFLFL=total freeze-thaw latent heat flux
+C        from watsub.f
+C     XWFLVL=total evaporation-condensation 
+C        from watsub.f
+C     XHFLVL=total evaporation-condensation latent heat flux 
+C        from watsub.f 
+C     TWFLFL,TWFLFH=net freeze-thaw in micropores,macropores
+C     THFLFL=net freeze-thaw latent heat flux 
+C     TWFLVL=net evaporation-condensation 
+C     THFLVL=net evaporation-condensation latent heat flux 
 C
-      TTHAW(N3,N2,N1)=TTHAW(N3,N2,N1)+THAW(N3,N2,N1)
-      TTHAWH(N3,N2,N1)=TTHAWH(N3,N2,N1)+THAWH(N3,N2,N1)
-      THTHAW(N3,N2,N1)=THTHAW(N3,N2,N1)+HTHAW(N3,N2,N1)
+      TWFLFL(N3,N2,N1)=TWFLFL(N3,N2,N1)+XWFLFL(N3,N2,N1)
+      TWFLFH(N3,N2,N1)=TWFLFH(N3,N2,N1)+XWFLFH(N3,N2,N1)
+      THFLFL(N3,N2,N1)=THFLFL(N3,N2,N1)+XHFLFL(N3,N2,N1)
+      TWFLVL(N3,N2,N1)=TWFLVL(N3,N2,N1)+XWFLVL(N3,N2,N1)
+      THFLVL(N3,N2,N1)=THFLVL(N3,N2,N1)+XHFLVL(N3,N2,N1)
 8575  CONTINUE
-C
+C 
 C     CALCULATE SNOWPACK TEMPERATURE FROM ITS CHANGE
 C     IN HEAT STORAGE
 C
@@ -3204,24 +3721,29 @@ C
 C
 C     ADD CHANGES IN SNOW, WATER AND ICE
 C
-C     VOLSSL,VOLWSL,VOLISL=snow water equivalent,water,ice volume in snowpack layer
-C     TFLWS,TFLWW,TFLWI=net fluxes of snow,water,ice in snowpack
-C     XWFLXS,XWFLXI=freeze-thaw flux from watsub.f
-C
-C
-      VOLSSL(L,NY,NX)=VOLSSL(L,NY,NX)+TFLWS(L,NY,NX)-XWFLXS(L,NY,NX)
-      VOLWSL(L,NY,NX)=VOLWSL(L,NY,NX)+TFLWW(L,NY,NX)+XWFLXS(L,NY,NX)
-     2+XWFLXI(L,NY,NX)
+C     VOLSSL,VOLWSL,VOLVSL,VOLISL=snow water equivalent,water,vapor, 
+C        ice volume in snowpack layer 
+C     TFLWS,TFLWW,TFLWV,TFLWI=net fluxes of snow,water,vapor,ice 
+C        in snowpack
+C     XWFLFS,XWFLFI,XWFLVS=freeze-thaw,vapor flux from watsub.f
+C     DENSI=ice density from starts.f
+C     
+      VOLSSL(L,NY,NX)=VOLSSL(L,NY,NX)+TFLWS(L,NY,NX)-XWFLFS(L,NY,NX)
+     2+XWFLVS(L,NY,NX) 
+      VOLWSL(L,NY,NX)=VOLWSL(L,NY,NX)+TFLWW(L,NY,NX)+XWFLFS(L,NY,NX)
+     2+XWFLFI(L,NY,NX)+XWFLVW(L,NY,NX) 
+      VOLVSL(L,NY,NX)=VOLVSL(L,NY,NX)+TFLWV(L,NY,NX)-XWFLVS(L,NY,NX)
+     2-XWFLVW(L,NY,NX) 
       VOLISL(L,NY,NX)=VOLISL(L,NY,NX)+TFLWI(L,NY,NX)
-     2-XWFLXI(L,NY,NX)/DENSI
+     2-XWFLFI(L,NY,NX)/DENSI
 C
 C     ACCUMULATE SNOW MASS FOR CALCULATING COMPRESSION
 C
 C     VOLWSI=accumulated water equivalent volume in snowpack
 C     XFLWS=snow transfer from watsub.f
-C     VOLSF=snowfall volume
+C     TCASF,DENSF,VOLSF=snowfall temperature,density,volume
 C     DENSS=snow density in layer
-C
+C 
       IF(L.EQ.1)THEN
       VOLSWI=VOLSWI+0.5*(VOLSSL(L,NY,NX)+VOLWSL(L,NY,NX)
      2+VOLISL(L,NY,NX)*DENSI)
@@ -3245,8 +3767,9 @@ C
 C     SNOWPACK COMPRESSION
 C
 C     DDENS1,DDENS2=temperature, compression effect on snow density
-C     DENSS=snow density in layer
-C     VOLSSL,VOLWSL,VOLISL=snow water equivalent,water,ice volume in snowpack layer
+C     DENSS=snow density in snowpack layer
+C     VOLSSL,VOLWSL,VOLISL=snow water equivalent,water,ice volume 
+C        in snowpack layer
 C     VOLSL=snowpack layer volume
 C     DLYRS=snowpack layer depth
 C     CDPTHS=cumulative depth to bottom of snowpack layer
@@ -3255,7 +3778,8 @@ C     TKW,TCW=snowpack layer temperature K,oC
 C     THFLWW=convective heat fluxes of snow,water,ice in snowpack
 C     XTHAWW=latent heat flux from freeze-thaw from watsub.f
 C     HEATIN=cumulative net surface heat transfer
-C     VOLSS,VOLWS,VOLIS=total snow water equivalent, water, ice content of snowpack
+C     VOLSS,VOLWS,VOLVS,VOLIS=total snow water equivalent,water,vapor 
+C        ice content of snowpack
 C     VOLS,DPTHS=total snowpack volume, depth
 C
       IF(DENSS(L,NY,NX).LT.0.25)THEN
@@ -3265,7 +3789,7 @@ C
       ENDIF
       CVISC=0.25*EXP(-0.08*TCW(L,NY,NX)+23.0*DENSS(L,NY,NX))
       DDENS2=DENSS(L,NY,NX)*VOLSWI/(AREA(3,NU(NY,NX),NY,NX)*CVISC)
-      DENSS(L,NY,NX)=DENSS(L,NY,NX)+DDENS1+DDENS2
+      DENSS(L,NY,NX)=DENSS(L,NY,NX)+(DDENS1+DDENS2)*XNFH
       IF(VOLSSL(L,NY,NX)+VOLWSL(L,NY,NX)+VOLISL(L,NY,NX)
      2.GT.ZEROS2(NY,NX))THEN
       VOLSL(L,NY,NX)=VOLSSL(L,NY,NX)/DENSS(L,NY,NX)
@@ -3276,19 +3800,20 @@ C
       VHCPWZ(L,NY,NX)=VHCPW(L,NY,NX)
       TKWX=TKW(L,NY,NX)
       ENGYW=VHCPW(L,NY,NX)*TKW(L,NY,NX)
-      VHCPW(L,NY,NX)=2.095*VOLSSL(L,NY,NX)+4.19*VOLWSL(L,NY,NX)
+      VHCPW(L,NY,NX)=2.095*VOLSSL(L,NY,NX)
+     2+4.19*(VOLWSL(L,NY,NX)+VOLVSL(L,NY,NX))
      2+1.9274*VOLISL(L,NY,NX)
       IF(VHCPWZ(L,NY,NX).GT.VHCPWX(NY,NX)
      2.AND.VHCPW(L,NY,NX).GT.ZEROS(NY,NX))THEN
-      TKW(L,NY,NX)=(ENGYW+THFLWW(L,NY,NX)+XTHAWW(L,NY,NX))
-     2/VHCPW(L,NY,NX)
+      TKW(L,NY,NX)=(ENGYW+THFLWW(L,NY,NX)+XHFLF0(L,NY,NX) 
+     2+XHFLV0(L,NY,NX))/VHCPW(L,NY,NX)
       ELSE
       IF(L.EQ.1)THEN
-      TKW(L,NY,NX)=TKA(NY,NX)
+      TKW(L,NY,NX)=TKAM(NY,NX)
       ELSE
       TKW(L,NY,NX)=TKW(L-1,NY,NX)
       ENDIF
-      IF(VHCPWZ(L,NY,NX).GT.ZEROS(NY,NX))THEN
+      IF(VHCPWZ(L,NY,NX).GT.VHCPWX(NY,NX))THEN
       HEATIN=HEATIN+(TKW(L,NY,NX)-TKWX)*VHCPW(L,NY,NX)
       ENDIF
       ENDIF
@@ -3298,33 +3823,37 @@ C
       VOLS(NY,NX)=VOLS(NY,NX)+VOLSL(L,NY,NX)
       DPTHS(NY,NX)=DPTHS(NY,NX)+DLYRS(L,NY,NX)
 C     IF(L.EQ.5)THEN
-C     WRITE(*,7753)'VOLSS',I,J,NX,NY,L
-C    3,VOLSSL(L,NY,NX),VOLWSL(L,NY,NX),VOLISL(L,NY,NX),VOLSL(L,NY,NX)
-C    3,XFLWS(L,NY,NX),XFLWW(L,NY,NX),XFLWI(L,NY,NX)
-C    3,XFLWS(L+1,NY,NX),XFLWW(L+1,NY,NX),XFLWI(L+1,NY,NX)
-C    4,TFLWS(L,NY,NX),TFLWW(L,NY,NX),TFLWI(L,NY,NX)
-C    5,XWFLXS(L,NY,NX),XWFLXI(L,NY,NX)
+C     WRITE(*,7753)'VOLSS',I,J,NFZ,NX,NY,L,VOLSSL(L,NY,NX)
+C    3,VOLWSL(L,NY,NX),VOLVSL(L,NY,NX),VOLISL(L,NY,NX)
+C    3,VOLSL(L,NY,NX),XFLWS(L,NY,NX),XFLWW(L,NY,NX),XFLWI(L,NY,NX) 
+C    3,XFLWS(L+1,NY,NX),XFLWW(L+1,NY,NX),XFLWI(L+1,NY,NX) 
+C    4,TFLWS(L,NY,NX),TFLWW(L,NY,NX),TFLWV(L,NY,NX),TFLWI(L,NY,NX)
+C    5,XWFLFS(L,NY,NX),XWFLFI(L,NY,NX),XWFLVS(L,NY,NX),XWFLVW(L,NY,NX)
 C    3,VOLSS(NY,NX),VOLWS(NY,NX),VOLIS(NY,NX),VOLS(NY,NX),DPTHS(NY,NX)
 C    5,DLYRS(L,NY,NX),DENSS(L,NY,NX),DDENS1,DDENS2,TCW(L,NY,NX)
-C    6,CVISC,VOLSWI,TCA(NY,NX)
-C     WRITE(*,7753)'TKW',I,J,NX,NY,L,TKW(L,NY,NX),TCW(L,NY,NX)
-C    3,THFLWW(L,NY,NX),XTHAWW(L,NY,NX),XHFLWW(L,NY,NX)
+C    6,CVISC,VOLSWI,TCA(NY,NX) 
+C     WRITE(*,7753)'TKW',I,J,NFZ,NX,NY,L,TKW(L,NY,NX),TCW(L,NY,NX)
+C    3,THFLWW(L,NY,NX),XHFLF0(L,NY,NX),XHFLV0(L,NY,NX),XHFLWW(L,NY,NX)
 C    4,XHFLWW(L+1,NY,NX),HFLSWR(L,NY,NX),HFLSW(L,NY,NX)
-C    4,VHCPWX(NY,NX),VHCPW(L,NY,NX),VHCPWZ(L,NY,NX)
-7753  FORMAT(A8,5I4,100E14.6)
+C    4,XHFLV0(L,NY,NX)
+C    4,VHCPWX(NY,NX),VHCPW(L,NY,NX),VHCPWZ(L,NY,NX) 
+7753  FORMAT(A8,6I4,100E14.6)
 C     ENDIF
       ELSE
       VOLSSL(L,NY,NX)=0.0
       VOLWSL(L,NY,NX)=0.0
+      VOLVSL(L,NY,NX)=0.0
       VOLISL(L,NY,NX)=0.0
       VOLSL(L,NY,NX)=0.0
       DLYRS(L,NY,NX)=0.0
       CDPTHS(L,NY,NX)=CDPTHS(L-1,NY,NX)
       VHCPW(L,NY,NX)=0.0
       IF(L.EQ.1)THEN
-      TKW(L,NY,NX)=TKA(NY,NX)
+      TKW(L,NY,NX)=TKAM(NY,NX)
+      DENSS(L,NY,NX)=DENS0(NY,NX)
       ELSE
       TKW(L,NY,NX)=TKW(L-1,NY,NX)
+      DENSS(L,NY,NX)=DENSS(L-1,NY,NX)
       ENDIF
       ENDIF
       TCW(L,NY,NX)=TKW(L,NY,NX)-273.15
@@ -3333,8 +3862,8 @@ C     SNOWPACK SOLUTE CONTENT
 C
 C     *W2=solute content of snowpack
 C     T*BLS=net solute flux in snowpack
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
-C             :N4=NH4,N3=NH3,NO=NO3,1P=HPO4,HP=H2PO4
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C             :N4=NH4,N3=NH3,NO=NO3,1P=HPO4,HP=H2PO4 
 C
       CO2W(L,NY,NX)=CO2W(L,NY,NX)+TCOBLS(L,NY,NX)
       CH4W(L,NY,NX)=CH4W(L,NY,NX)+TCHBLS(L,NY,NX)
@@ -3347,15 +3876,17 @@ C
       Z1PW(L,NY,NX)=Z1PW(L,NY,NX)+TH1PBS(L,NY,NX)
       ZHPW(L,NY,NX)=ZHPW(L,NY,NX)+TH2PBS(L,NY,NX)
 C
-C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
-C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
-C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
-C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
-C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
-C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
-C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
-C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
-C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
+C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
+C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
+C        :*FEO1*=FeOH2-,*FEOH2=F3OH2-,*FEOH3*=FeOH3,*FEOH4*=FeOH4+
+C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
+C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
+C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
+C        :*M1P*=MgHPO4,*COO*=COOH-
 C
       IF(ISALTG.NE.0)THEN
       ZALW(L,NY,NX)=ZALW(L,NY,NX)+TALBLS(L,NY,NX)
@@ -3404,19 +3935,26 @@ C
 C
 C     SNOW RUNOFF
 C
+C     VOLSSL,VOLWSL,VOLISL=snow water equivalent,water,ice volume 
+C        in snowpack layer
+C     TQS,TQW,TQI,THQS=snowpack snow,water,ice,heat runoff
+C     VHCPW=snowpack layer heat capacity
+C     TKW,TCW=snowpack layer temperature K,oC
+C
       VOLSSL(1,NY,NX)=VOLSSL(1,NY,NX)+TQS(NY,NX)
       VOLWSL(1,NY,NX)=VOLWSL(1,NY,NX)+TQW(NY,NX)
       VOLISL(1,NY,NX)=VOLISL(1,NY,NX)+TQI(NY,NX)
       ENGYW=VHCPW(1,NY,NX)*TKW(1,NY,NX)
-      VHCPW(1,NY,NX)=2.095*VOLSSL(1,NY,NX)+4.19*VOLWSL(1,NY,NX)
+      VHCPW(1,NY,NX)=2.095*VOLSSL(1,NY,NX)
+     2+4.19*(VOLWSL(1,NY,NX)+VOLVSL(1,NY,NX))
      2+1.9274*VOLISL(1,NY,NX)
       IF(VHCPW(1,NY,NX).GT.VHCPWX(NY,NX))THEN
       TKW(1,NY,NX)=(ENGYW+THQS(NY,NX))
      2/VHCPW(1,NY,NX)
       ELSE
-      TKW(1,NY,NX)=TKA(NY,NX)
+      TKW(1,NY,NX)=TKAM(NY,NX)
       ENDIF
-C     WRITE(*,7752)'TQS',I,J,NX,NY,TKW(1,NY,NX)
+C     WRITE(*,7752)'TQS',I,J,NX,NY,TKW(1,NY,NX) 
 C    3,VOLSSL(1,NY,NX),VOLWSL(1,NY,NX),VOLISL(1,NY,NX),VOLSL(1,NY,NX)
 C    3,TQS(NY,NX),FLWS(NY,NX),TQW(NY,NX),FLWW(NY,NX)
 C    4,TQI(NY,NX),FLWI(NY,NX),THQS(NY,NX),VHCPW(1,NY,NX)
@@ -3424,151 +3962,217 @@ C    4,TQI(NY,NX),FLWI(NY,NX),THQS(NY,NX),VHCPW(1,NY,NX)
 C
 C     IF SNOWPACK DISAPPEARS
 C
-      IF(VHCPW(1,NY,NX).GT.0.0
-     2.AND.VHCPW(1,NY,NX).LE.VHCPWX(NY,NX)
-     2.AND.TKA(NY,NX).GT.273.15)THEN
-      ENGYS=TKW(1,NY,NX)*VHCPW(1,NY,NX)
-      ENGY1=TKS(NUM(NY,NX),NY,NX)*VHCP(NUM(NY,NX),NY,NX)
-      FLWS=VOLSSL(1,NY,NX)
-      FLWW=VOLWSL(1,NY,NX)
-      FLWI=VOLISL(1,NY,NX)
-      HFLWS=(4.19*FLWW+2.095*FLWS+1.9274*FLWI)*TKW(1,NY,NX)
-      VOLSSL(1,NY,NX)=0.0
-      VOLWSL(1,NY,NX)=0.0
-      VOLISL(1,NY,NX)=0.0
-      VHCPW(1,NY,NX)=0.0
-      VOLSS(NY,NX)=0.0
-      VOLWS(NY,NX)=0.0
-      VOLIS(NY,NX)=0.0
-      VOLS(NY,NX)=0.0
-      DPTHS(NY,NX)=0.0
+C     VHCPW=snowpack layer heat capacity
+C     TKW,TCW,TKA=snowpack layer,air temperature K,oC
+C     VOLSSL,VOLWSL,VOLVSL,VOLISL=snow water equivalent,water,vapor, 
+C        ice volume in snowpack layer
+C     VOLW,VOLV,VOLI=surface water,vapor,ice content
+C
+      IF(XHFLWX(NY,NX).GT.ZEROS(NY,NX))THEN
+      VOLSSL(1,NY,NX)=VOLSSL(1,NY,NX)-XFLWSX(NY,NX)
+      VOLWSL(1,NY,NX)=VOLWSL(1,NY,NX)-XFLWWX(NY,NX)
+      VOLVSL(1,NY,NX)=VOLVSL(1,NY,NX)-XFLWVX(NY,NX)
+      VOLISL(1,NY,NX)=VOLISL(1,NY,NX)-XFLWIX(NY,NX)
+      VOLW(0,NY,NX)=VOLW(0,NY,NX)+XFLWWX(NY,NX)
+      VOLV(0,NY,NX)=VOLV(0,NY,NX)+XFLWVX(NY,NX)
+      VOLI(0,NY,NX)=VOLI(0,NY,NX)+XFLWIX(NY,NX)+XFLWSX(NY,NX)/DENSI
+      ENGYW=TKW(1,NY,NX)*VHCPW(1,NY,NX)
+      VHCPW(1,NY,NX)=2.095*VOLSSL(1,NY,NX)
+     2+4.19*(VOLWSL(1,NY,NX)+VOLVSL(1,NY,NX))
+     2+1.9274*VOLISL(1,NY,NX)
+      IF(VHCPW(1,NY,NX).GT.VHCPWX(NY,NX))THEN
+      TKW(1,NY,NX)=(ENGYW-XHFLWX(NY,NX))/VHCPW(1,NY,NX)
+      ELSE
+      TKW(1,NY,NX)=TKQ(NY,NX)
+      ENDIF
+      ENGY0=TKS(0,NY,NX)*VHCP(0,NY,NX)
+      VHCP(0,NY,NX)=2.496E-06*(ORGC(0,NY,NX)+ORGCC(0,NY,NX))
+     2+4.19*(VOLW(0,NY,NX)+VOLV(0,NY,NX))
+     3+1.9274*VOLI(0,NY,NX)
+      IF(VHCP(0,NY,NX).GT.VHCPRX(NY,NX))THEN
+      TKS(0,NY,NX)=(ENGY0+XHFLWX(NY,NX))/VHCP(0,NY,NX)
+      ELSE
+      TKS(0,NY,NX)=TKS(NUM(NY,NX),NY,NX)
+      ENDIF
+      VOLSS(NY,NX)=VOLSSL(1,NY,NX)
+      VOLWS(NY,NX)=VOLWSL(1,NY,NX)
+      VOLIS(NY,NX)=VOLISL(1,NY,NX)
       DO 9770 L=1,JS
       DENSS(L,NY,NX)=DENS0(NY,NX)
 9770  CONTINUE
-      VOLW(0,NY,NX)=VOLW(0,NY,NX)+FLWW
-      VOLI(0,NY,NX)=VOLI(0,NY,NX)+FLWI+FLWS/DENSI
-      ENGY=VHCP(NUM(NY,NX),NY,NX)*TKS(NUM(NY,NX),NY,NX)
-      VHCP(NUM(NY,NX),NY,NX)=VHCM(NUM(NY,NX),NY,NX)
-     2+4.19*(VOLW(NUM(NY,NX),NY,NX)+VOLWH(NUM(NY,NX),NY,NX))
-     2+1.9274*(VOLI(NUM(NY,NX),NY,NX)+VOLIH(NUM(NY,NX),NY,NX))
-      TKSX=TKS(NUM(NY,NX),NY,NX)
-      IF(VHCP(NUM(NY,NX),NY,NX).GT.ZEROS(NY,NX))THEN
-      TKS(NUM(NY,NX),NY,NX)=(ENGY+HFLWS)
-     2/VHCP(NUM(NY,NX),NY,NX)
-
-      if(abs(TKS(NUM(NY,NX),NY,NX)/tksx-1.)>0.025)then
-      TKS(NUM(NY,NX),NY,NX)=TKSX
-      endif
-      ELSE
-      TKS(NUM(NY,NX),NY,NX)=TKA(NY,NX)
-      ENDIF
-C      if(TKS(NUM(NY,NX),NY,NX)>400.or.
-C     2(I>=200.and.I<=223))then
-C      print*,'tks',I,tksx,TKS(NUM(NY,NX),NY,NX)
-C     2,TKS(NUM(NY,NX)+1,NY,NX),tka(ny,nx)
-C     2,TKS(NUM(NY,NX),NY,NX)/tka(ny,nx)
-C      endif
-      ENGY2=VHCP(NUM(NY,NX),NY,NX)*TKS(NUM(NY,NX),NY,NX)
-C     WRITE(*,2222)'SNW',I,J,IYRC,NX,NY,HEATIN
-C    2,(2.095-1.9274)*FLWS/DENSI*TKSX,HFLWS,ENGY
-C    3,VHCP(NUM(NY,NX),NY,NX)*TKS(NUM(NY,NX),NY,NX),TKSX
-C    3,TKS(NUM(NY,NX),NY,NX),FLWS,DENSI,TKW(1,NY,NX),VHCPWZ(1,NY,NX)
-C    4,ENGY2,ENGYS,ENGY1
-C    5,VOLW(NUM(NY,NX),NY,NX),VOLI(NUM(NY,NX),NY,NX)
-      ENDIF
+      VOLS(NY,NX)=VOLSSL(1,NY,NX)/DENSS(1,NY,NX)
+     2+VOLWSL(1,NY,NX)+VOLISL(1,NY,NX)
+      DPTHS(NY,NX)=0.0
+C     WRITE(*,2122)'SNW',I,J,NFZ,NX,NY
+C    2,XFLWSX(NY,NX),XFLWWX(NY,NX),XFLWIX(NY,NX),XHFLWX(NY,NX)
+C    3,VOLSSL(1,NY,NX),VOLWSL(1,NY,NX),VOLISL(1,NY,NX)
+C    4,VOLVSL(1,NY,NX),VOLW(0,NY,NX),VOLV(0,NY,NX),VOLI(0,NY,NX) 
+C    3,VHCP(0,NY,NX),TKS(0,NY,NX),VHCPW(1,NY,NX),TKW(1,NY,NX)
+2122  FORMAT(A8,5I4,20E12.4)
+      ENDIF 
 C
 C     CALCULATE SURFACE RESIDUE TEMPERATURE FROM ITS CHANGE
 C     IN HEAT STORAGE
 C
+C     VHCP=litter heat capacity
+C     VOLW,VOLV,VOLI=litter water,vapor,ice content
+C     ORGC,ORGCC=litter SOC,charcoal content
+C     FLWR,XWFLVR,XWFLFR,TQR=litter water,evaporation-condensation,
+C        freeze-thaw,runoff flux from watsub.f
+C     DENSI=ice dnsity from starts.f
+C     TKS=surface litter temperature
+C     HFLWR,XHFLFR,XHFLVR,THQR=litter water,evaporation-condensation,
+C        freeze-thaw,runoff heat flux from watsub.f 
+C     HCBFX=heat released by litter combustion
+C     HEATIN=cumulative surface heat exchange
+C
       VHCPZ=VHCP(0,NY,NX)
-      VHCPY=4.19*VOLW(0,NY,NX)+1.9274*VOLI(0,NY,NX)
-     2+2.496E-06*ORGC(0,NY,NX)
+      VHCPY=2.496E-06*(ORGC(0,NY,NX)+ORGCC(0,NY,NX))
+     2+4.19*(VOLW(0,NY,NX)+VOLV(0,NY,NX))
+     2+1.9274*VOLI(0,NY,NX)
       VHCPO=VHCPY-VHCPZ
-      HFLXO=VHCPO*TKA(NY,NX)
-      VOLW(0,NY,NX)=VOLW(0,NY,NX)+FLWR(NY,NX)+THAWR(NY,NX)
-     2+TQR(NY,NX)
-      VOLI(0,NY,NX)=VOLI(0,NY,NX)-THAWR(NY,NX)/DENSI
+      HFLXO=VHCPO*TKS(0,NY,NX)
+      VOLW(0,NY,NX)=VOLW(0,NY,NX)+FLWR(NY,NX)+XWFLVR(NY,NX) 
+     2+XWFLFR(NY,NX)+TQR(NY,NX) 
+      VOLV(0,NY,NX)=VOLV(0,NY,NX)+FLVR(NY,NX)-XWFLVR(NY,NX)
+      VOLI(0,NY,NX)=VOLI(0,NY,NX)-XWFLFR(NY,NX)/DENSI
       ENGYZ=VHCPZ*TKS(0,NY,NX)
-      TKSX0=TKS(0,NY,NX)
-      VHCPXX=VHCP(0,NY,NX)
-      VHCP(0,NY,NX)=2.496E-06*ORGC(0,NY,NX)+4.19*VOLW(0,NY,NX)
+      VHCP(0,NY,NX)=2.496E-06*(ORGC(0,NY,NX)+ORGCC(0,NY,NX))
+     2+4.19*(VOLW(0,NY,NX)+VOLV(0,NY,NX))
      2+1.9274*VOLI(0,NY,NX)
       IF(VHCP(0,NY,NX).GT.VHCPRX(NY,NX))THEN
-      TKS(0,NY,NX)=(ENGYZ+HFLWR(NY,NX)+HTHAWR(NY,NX)+HFLXO
-     2+THQR(NY,NX))/VHCP(0,NY,NX)
-      if(abs(VHCP(0,NY,NX)/VHCPXX-1.)>0.025.or.
-     2abs(TKS(0,NY,NX)/TKSX0-1.)>0.025)then
-      TKS(0,NY,NX)=TKS(NUM(NY,NX),NY,NX)
-      endif
-C      IF(I>=150)THEN
-C      PRINT*,'TKS00',TKS(0,NY,NX),TKSX0,TKS(NUM(NY,NX),NY,NX)
-C     2,VHCP(0,NY,NX)/VHCPXX,TKS(0,NY,NX)/TKSX0
-C      print*,'enz',ENGYZ,HFLWR(NY,NX),HTHAWR(NY,NX),HFLXO
-C     2,THQR(NY,NX),TKA(NY,NX)
-C      ENDIF
-      HEATIN=HEATIN+HFLXO
+      TKS(0,NY,NX)=(ENGYZ+HFLWR(NY,NX)+XHFLFR(NY,NX)+XHFLVR(NY,NX) 
+     2+THQR(NY,NX)+HFLXO+HCBFX(0,NY,NX))/VHCP(0,NY,NX) 
+      HEATIN=HEATIN+HFLXO+HCBFX(0,NY,NX)
       ELSE
-      HEATIN=HEATIN+HFLXO
+      HEATIN=HEATIN+HFLXO+HCBFX(0,NY,NX)
      2+(TKS(NUM(NY,NX),NY,NX)-TKS(0,NY,NX))*VHCP(0,NY,NX)
       TKS(0,NY,NX)=TKS(NUM(NY,NX),NY,NX)
       ENDIF
-
-C      if(TKS(NUM(NY,NX),NY,NX)>400.or.(I>=200.and.I<=223))then
-C      print*,'tks1',I,TKS(NUM(NY,NX),NY,NX)
-C     2,TKS(NUM(NY,NX)+1,NY,NX),TKS(NUM(NY,NX),NY,NX)/tka(ny,nx)
-C      endif
-
       ENGYR=VHCP(0,NY,NX)*TKS(0,NY,NX)
       HEATSO=HEATSO+ENGYR
-      HEATIN=HEATIN+HTHAWR(NY,NX)
+      HEATIN=HEATIN+XHFLFR(NY,NX)+XHFLVR(NY,NX)  
       TCS(0,NY,NX)=TKS(0,NY,NX)-273.15
       TSMX(0,NY,NX)=AMAX1(TSMX(0,NY,NX),TCS(0,NY,NX))
       TSMN(0,NY,NX)=AMIN1(TSMN(0,NY,NX),TCS(0,NY,NX))
-C     UVOLW(NY,NX)=UVOLW(NY,NX)-VOLW(0,NY,NX)-VOLI(0,NY,NX)*DENSI
-C     IF(I.GT.350.AND.NX.EQ.1)THEN
-C     WRITE(*,6634)'VOLWR',I,J,NX,NY,VOLW(0,NY,NX),VOLI(0,NY,NX)
-C    2,ORGC(0,NY,NX),FLWR(NY,NX),TQR(NY,NX),THAWR(NY,NX)
-C    3,TKS(0,NY,NX),HFLWR(NY,NX),HFLXO,THQR(NY,NX)
-C    4,HTHAWR(NY,NX),VHCP(0,NY,NX),TKS(NUM(NY,NX),NY,NX)
-C    5,ENGYR,ENGYZ,VHCPZ,VHCPRX(NY,NX)
-6634  FORMAT(A8,4I4,30E14.6)
+C     IF(ICHKF.EQ.1)THEN
+C     WRITE(*,6634)'TKR',I,J,NFZ,NX,NY
+C    2,VOLW(0,NY,NX),VOLV(0,NY,NX)
+C    2,VOLI(0,NY,NX),VOLP(0,NY,NX),FLWR(NY,NX),FLVR(NY,NX)
+C    3,XWFLFR(NY,NX),XWFLVR(NY,NX),TQR(NY,NX)
+C    4,TVOLWC(NY,NX),TVOLWP(NY,NX) 
+C    3,TKS(0,NY,NX),ENGYZ,HFLWR(NY,NX),XHFLFR(NY,NX),XHFLVR(NY,NX)
+C    4,THQR(NY,NX),HCBFX(0,NY,NX),HFLXO,VHCPO,VHCP(0,NY,NX)
+C    5,ORGC(0,NY,NX),ORGCC(0,NY,NX) 
+C    5,TKS(NUM(NY,NX),NY,NX),VHCPRX(NY,NX)
+6634  FORMAT(A8,5I4,30E12.4)
 C     ENDIF
+C
+C     CALCULATE CANOPY AIR TEMPERATURE, VAPOR CONCENTRATION
+C
+C     TKQ=bulk canopy,ground air temperature
+C     TKQG=ground surface air temperature
+C     TKQT=bulk canopy air temperature
+C     VPQ=bulk canopy,ground vapor pressure
+C     VPQG=ground surface vapor pressure
+C     VPQT=bulk canopy vapor pressure 
+C     FRADG=fraction of radiation received at ground surface 
+C        from hour1.f
+C
+      TKQ(NY,NX)=TKQG(NY,NX)*FRADG(NY,NX)
+     2+TKQT(NY,NX)*(1.0-FRADG(NY,NX))
+      TCQ(NY,NX)=TKQ(NY,NX)-273.15
+      VPQ(NY,NX)=VPQG(NY,NX)*FRADG(NY,NX)
+     2+VPQT(NY,NX)*(1.0-FRADG(NY,NX))
+      IF(ICHKF.EQ.1)THEN
+      WRITE(*,3114)'TKQ',I,J,NFZ,NX,NY
+     2,TKQ(NY,NX),TKAM(NY,NX),VPQ(NY,NX),VPAM(NY,NX) 
+     3,TKQG(NY,NX),TKQT(NY,NX),(TKQC(NZ,NY,NX),NZ=1,NP(NY,NX)) 
+     4,(TKQD(NZ,NY,NX),NZ=1,NP(NY,NX))  
+     3,TKS(0,NY,NX),TKCT(NY,NX),(TKC(NZ,NY,NX),NZ=1,NP(NY,NX)) 
+     4,(TKD(NZ,NY,NX),NZ=1,NP(NY,NX))  
+     3,VPQG(NY,NX),VPQT(NY,NX),(VPQC(NZ,NY,NX),NZ=1,NP(NY,NX))
+     4,(VPQD(NZ,NY,NX),NZ=1,NP(NY,NX))  
+     4,TKS(NU(NY,NX),NY,NX),CO2Q(NY,NX),CH4Q(NY,NX),OXYQ(NY,NX)
+3114  FORMAT(A8,5I4,50E12.4)
+      ENDIF
 C
 C     SURFACE BOUNDARY WATER FLUXES
 C
-      WI=PRECQ(NY,NX)+PRECI(NY,NX)
+C     PRECQ,PRECI,PRECU=rain+snow,surface,subsurface irrigation 
+C     TEVAPG,TEVAPP=total evaporation,transpiration
+C     CRAIN,CEVAP=cumulative precipitation, evapotranspiration
+C     VOLWOU=cumulative water transfer through lateral and
+C        lower boundaries
+C     XVPFLG=aggregated convective+diffusive vapor flux 
+C        from trnsfr.f 
+C
+      WI=(PRECQ(NY,NX)+PRECI(NY,NX))*XNFH
       CRAIN=CRAIN+WI
       URAIN(NY,NX)=URAIN(NY,NX)+WI
-      WO=TEVAPG(NY,NX)+TEVAPP(NY,NX)
+      WO=TEVAPG(NY,NX)+TEVAPP(NY,NX)+XVPFLG(3,NU(NY,NX),NY,NX)
       CEVAP=CEVAP-WO
       UEVAP(NY,NX)=UEVAP(NY,NX)-WO
-      VOLWOU=VOLWOU-PRECU(NY,NX)
-      HVOLO(NY,NX)=HVOLO(NY,NX)-PRECU(NY,NX)
-      UVOLO(NY,NX)=UVOLO(NY,NX)-PRECU(NY,NX)
+      VOLWOU=VOLWOU-PRECU(NY,NX)*XNFH 
+      HVOLO(NY,NX)=HVOLO(NY,NX)-PRECU(NY,NX)*XNFH 
+      UVOLO(NY,NX)=UVOLO(NY,NX)-PRECU(NY,NX)*XNFH
       UDRAIN(NY,NX)=UDRAIN(NY,NX)+FLW(3,NK(NY,NX),NY,NX)
+      TEVPGH(NY,NX)=TEVPGH(NY,NX)+TEVAPG(NY,NX)
+     2+XVPFLG(3,NU(NY,NX),NY,NX)
+      TEVPPH(NY,NX)=TEVPPH(NY,NX)+TEVAPP(NY,NX)
 C
 C     SURFACE BOUNDARY HEAT FLUXES
 C
-      HEATIN=HEATIN+4.19*TKA(NY,NX)*PRECA(NY,NX)
-     2+2.095*TKA(NY,NX)*PRECW(NY,NX)
+C     HEATIN,HEATOU=cumulative net surface,subsurface heat transfer
+C     PRECA,PRECW=rain+irrigation,snowfall
+C     HEATH,THFLXC=net surface,canopy heat exchange 
+C     XTHAWW=latent snowpack heat flux 
+C     PRECU=subsurface irrigation
+C     TKA=air temperature
+C     XHFLF0,XHFLV0=snowpack latent heat flux from frezze-thaw,
+C        evaporation-consensation
+C
+      HEATIN=HEATIN+(4.19*TKAM(NY,NX)*PRECA(NY,NX)
+     2+2.095*TKAM(NY,NX)*PRECW(NY,NX))*XNFH
       HEATIN=HEATIN+HEATH(NY,NX)+THFLXC(NY,NX)
       DO 5150 L=1,JS
-      HEATIN=HEATIN+XTHAWW(L,NY,NX)
+      HEATIN=HEATIN+XHFLF0(L,NY,NX)+XHFLV0(L,NY,NX)
 5150  CONTINUE
-      HEATOU=HEATOU-4.19*TKA(NY,NX)*PRECU(NY,NX)
+      HEATOU=HEATOU-4.19*TKAM(NY,NX)*PRECU(NY,NX)*XNFH
 C
 C     SURFACE BOUNDARY CO2, CH4 AND DOC FLUXES
 C
+C     X*DFS=soil surface gas exchange from trnsfr.f
+C     X*FLG=soil surface convective+diffusive gas flux from trnsfr.f 
+C     FLQGQ,FLQGI=water flux to snowpack or soil surface from
+C        rain,irrigation
+C     FLQRQ,FLQRI=water flux to surface litter from rain,irrigation
+C     C*R,C*Q=precipitation,irrigation solute concentrations
+C     X*DFG=soil surface gas volatilization-dissolution from trnsfr.f 
+C     X*DFR=litter gas volatilization from trnsfr.f 
+C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
+C             :*ZN3*=NH3,*H2G*=H2
+C     H*G,U*G=current,cumulative gas exchange
+C     CO2GIN,TCOU=cumulative surface,subsurface gas C exchange
+C     XCNET,ZCNET=net,cumulative CO2 flux in canopy air from
+C        soil+plants
+C     XHNET,ZHNET=net,cumulative CH4 flux in canopy air from
+C        soil+plants
+C     XONET,ZONET=net O2,cumulative flux in canopy air from
+C        soil+plants
+C     
       CI=XCODFS(NY,NX)+XCOFLG(3,NU(NY,NX),NY,NX)+TCO2Z(NY,NX)
-     2+(FLQGQ(NY,NX)+FLQRQ(NY,NX))*CCOR(NY,NX)
-     3+(FLQGI(NY,NX)+FLQRI(NY,NX))*CCOQ(NY,NX)
-     4+XCODFG(0,NY,NX)+XCODFR(NY,NX)
+     2+XCOFLG(3,0,NY,NX)+XCODFR(NY,NX)
+     3+(FLQGQ(NY,NX)+FLQRQ(NY,NX))*CCOR(NY,NX)
+     4+(FLQGI(NY,NX)+FLQRI(NY,NX))*CCOQ(NY,NX)
       CH=XCHDFS(NY,NX)+XCHFLG(3,NU(NY,NX),NY,NX)+TCH4Z(NY,NX)
-     2+(FLQGQ(NY,NX)+FLQRQ(NY,NX))*CCHR(NY,NX)
-     3+(FLQGI(NY,NX)+FLQRI(NY,NX))*CCHQ(NY,NX)
-     4+XCHDFG(0,NY,NX)+XCHDFR(NY,NX)
-      CO=-PRECU(NY,NX)*CCOQ(NY,NX)
-      CX=-PRECU(NY,NX)*CCHQ(NY,NX)
+     2+XCHFLG(3,0,NY,NX)+XCHDFR(NY,NX) 
+     3+(FLQGQ(NY,NX)+FLQRQ(NY,NX))*CCHR(NY,NX)
+     4+(FLQGI(NY,NX)+FLQRI(NY,NX))*CCHQ(NY,NX)
+      CO=-PRECU(NY,NX)*CCOQ(NY,NX)*XNFH 
+      CX=-PRECU(NY,NX)*CCHQ(NY,NX)*XNFH
+      XCNET(NY,NX)=XCNET(NY,NX)+CI
+      XHNET(NY,NX)=XHNET(NY,NX)+CH
       UCO2G(NY,NX)=UCO2G(NY,NX)+CI
       HCO2G(NY,NX)=HCO2G(NY,NX)+CI
       UCH4G(NY,NX)=UCH4G(NY,NX)+CH
@@ -3578,58 +4182,85 @@ C
 C
 C     SURFACE BOUNDARY O2 FLUXES
 C
+C     OXYGIN,OXYGOU=cumulative surface,subsurface gas O2 exchange 
+C     H2GIN,H2GOU=cumulative surface,subsurface gas H2 exchange
+C     RUPOXO=microbial O2 uptake in litter from nitro.f
+C     ROGOX,RC4OX=O2-limited litter O2 uptake,O2 and CH4-limited 
+C        litter CH4 combustion  
+C
       OI=XOXDFS(NY,NX)+XOXFLG(3,NU(NY,NX),NY,NX)+TOXYZ(NY,NX)
-     2+(FLQGQ(NY,NX)+FLQRQ(NY,NX))*COXR(NY,NX)
-     3+(FLQGI(NY,NX)+FLQRI(NY,NX))*COXQ(NY,NX)
-     4+XOXDFG(0,NY,NX)+XOXDFR(NY,NX)
+     2+XOXFLG(3,0,NY,NX)+XOXDFR(NY,NX) 
+     3+(FLQGQ(NY,NX)+FLQRQ(NY,NX))*COXR(NY,NX)
+     4+(FLQGI(NY,NX)+FLQRI(NY,NX))*COXQ(NY,NX)
+      XONET(NY,NX)=XONET(NY,NX)+OI
       OXYGIN=OXYGIN+OI
-      OO=RUPOXO(0,NY,NX)-PRECU(NY,NX)*COXQ(NY,NX)
+      OO=RUPOXO(0,NY,NX)-PRECU(NY,NX)*COXQ(NY,NX)*XNFH 
+     2+ROGOX(0,NY,NX)+RC4OX(0,NY,NX)*2.667 
       OXYGOU=OXYGOU+OO
       UOXYG(NY,NX)=UOXYG(NY,NX)+OI
       HOXYG(NY,NX)=HOXYG(NY,NX)+OI
       HI=XHGDFS(NY,NX)+XHGFLG(3,NU(NY,NX),NY,NX)+TH2GZ(NY,NX)
-     2+XHGDFG(0,NY,NX)+XHGDFR(NY,NX)
+     2+XHGFLG(3,0,NY,NX)+XHGDFR(NY,NX)
       H2GIN=H2GIN+HI
       HO=RH2GO(0,NY,NX)
       H2GOU=H2GOU+HO
 C     IF(I.EQ.256)THEN
-C     WRITE(*,6646)'UCO2G',I,J,NX,NY,UCO2G(NY,NX),UOXYG(NY,NX),CI,OI
+C     WRITE(*,6646)'UCO2G',I,J,NFZ,NX,NY
+C    2,XCNET(NY,NX),XONET(NY,NX),XHNET(NY,NX)
+C    2,CI,OI,CH,HCO2G(NY,NX) 
 C    2,XCODFS(NY,NX),XCOFLG(3,NU(NY,NX),NY,NX),TCO2Z(NY,NX)
-C    2,(FLQGQ(NY,NX)+FLQRQ(NY,NX))*CCOR(NY,NX)
-C    3,(FLQGI(NY,NX)+FLQRI(NY,NX))*CCOQ(NY,NX)
-C    4,XCODFG(0,NY,NX),XCODFR(NY,NX)
-C    5,XOXDFS(NY,NX),XOXFLG(3,NU(NY,NX),NY,NX),TOXYZ(NY,NX)
+C    4,XCOFLG(3,0,NY,NX),XCODFR(NY,NX),XNFH
+C    2,FLQGQ(NY,NX),FLQRQ(NY,NX),CCOR(NY,NX)
+C    3,FLQGI(NY,NX),FLQRI(NY,NX),CCOQ(NY,NX)
+C    5,(TLCO2P(L,NY,NX),L=1,10)
+C     WRITE(*,6646)'UOXYG',I,J,NFZ,NX,NY
+C    5,HOXYG(NY,NX),OI
+C    6,XOXDFS(NY,NX),XOXFLG(3,NU(NY,NX),NY,NX)
+C    4,TOXYZ(NY,NX),XOXDFG(0,NY,NX),XOXDFR(NY,NX)
 C    2,(FLQGQ(NY,NX)+FLQRQ(NY,NX))*COXR(NY,NX)
 C    3,(FLQGI(NY,NX)+FLQRI(NY,NX))*COXQ(NY,NX)
-C    4,XOXDFG(0,NY,NX),XOXDFR(NY,NX)
-C    5,(TLCO2P(L,NY,NX),L=1,10)
-C    6,(TLOXYP(L,NY,NX),L=1,10)
-C     WRITE(*,6646)'UCH4G',I,J,NX,NY,UCH4G(NY,NX),CH
+C    6,(TLOXYP(L,NY,NX),L=1,10) 
+C     WRITE(*,6646)'UCH4G',I,J,NFZ,NX,NY,UCH4G(NY,NX),CH
 C    2,XCHDFS(NY,NX),XCHFLG(3,NU(NY,NX),NY,NX),TCH4Z(NY,NX)
 C    2,(FLQGQ(NY,NX)+FLQRQ(NY,NX))*CCHR(NY,NX)
 C    3,(FLQGI(NY,NX)+FLQRI(NY,NX))*CCHQ(NY,NX)
-C    4,XCHDFG(0,NY,NX),XCHDFR(NY,NX)
+C    4,XCHDFG(0,NY,NX),XCHDFR(NY,NX) 
 C    5,(TLCH4P(L,NY,NX),L=1,10)
-6646  FORMAT(A8,4I4,60E12.4)
+6646  FORMAT(A8,5I4,60E12.4)
 C     ENDIF
 C
 C     SURFACE BOUNDARY N2, N2O, NH3, NH4, NO3, AND DON FLUXES
 C
+C     X*DFS=soil surface gas exchange from trnsfr.f
+C     X*FLG=soil surface convective+diffusive gas flux from trnsfr.f 
+C     FLQGQ,FLQGI=water flux to snowpack or soil surface from
+C        rain,irrigation
+C     FLQRQ,FLQRI=water flux to surface litter from rain,irrigation
+C     C*R,C*Q=precipitation,irrigation solute concentrations
+C     X*DFG=soil surface gas volatilization-dissolution from trnsfr.f 
+C     X*DFR=litter gas volatilization from trnsfr.f 
+C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
+C             :*ZN3*=NH3,*H2G*=H2
+C     TZIN,TZOU=cumulative surface,subsurface aqueous NH4,NH3,NO3
+C        exchange
+C     ZN2GIN=cumulative surface gas N2,N2O,NH3 exchange
+C     ZNGGIN,ZN2OIN,ZNH3IN=cumulative surface gas N2,N2O,NH3 exchange 
+C
       ZSI=((FLQGQ(NY,NX)+FLQRQ(NY,NX))
      2*(CN4R(NY,NX)+CN3R(NY,NX)+CNOR(NY,NX))
      3+(FLQGI(NY,NX)+FLQRI(NY,NX))
-     4*(CN4Q(I,NY,NX)+CN3Q(I,NY,NX)+CNOQ(I,NY,NX)))*14.0
-      ZXB=-PRECU(NY,NX)*(CNNQ(NY,NX)+CN2Q(NY,NX))-PRECU(NY,NX)
-     2*(CN4Q(I,NY,NX)+CN3Q(I,NY,NX)+CNOQ(I,NY,NX))*14.0
+     4*(CN4Q(I,NY,NX)+CN3Q(I,NY,NX)+CNOQ(I,NY,NX)))*14.0 
+      ZXB=(-PRECU(NY,NX)*(CNNQ(NY,NX)+CN2Q(NY,NX))-PRECU(NY,NX)
+     2*(CN4Q(I,NY,NX)+CN3Q(I,NY,NX)+CNOQ(I,NY,NX))*14.0)*XNFH 
       TZIN=TZIN+ZSI
-      TZOU=TZOU+ZXB
+      TZOU=TZOU+ZXB 
       ZGI=(FLQGQ(NY,NX)+FLQRQ(NY,NX))*(CNNR(NY,NX)+CN2R(NY,NX))
      2+(FLQGI(NY,NX)+FLQRI(NY,NX))*(CNNQ(NY,NX)+CN2Q(NY,NX))
      3+XNGDFS(NY,NX)+XN2DFS(NY,NX)+XN3DFS(NY,NX)
      2+XNBDFS(NY,NX)+XNGFLG(3,NU(NY,NX),NY,NX)
      2+XN2FLG(3,NU(NY,NX),NY,NX)+XN3FLG(3,NU(NY,NX),NY,NX)
      3+TN2OZ(NY,NX)+TNH3Z(NY,NX)
-     6+XN2DFG(0,NY,NX)+XNGDFG(0,NY,NX)+XN3DFG(0,NY,NX)
+     6+XN2FLG(3,0,NY,NX)+XNGFLG(3,0,NY,NX)+XN3FLG(3,0,NY,NX)
      7+XNGDFR(NY,NX)+XN2DFR(NY,NX)+XN3DFR(NY,NX)
       ZN2GIN=ZN2GIN+ZGI
       ZDRAIN(NY,NX)=ZDRAIN(NY,NX)+XN4FLW(3,NK(NY,NX),NY,NX)
@@ -3648,12 +4279,13 @@ C     HN2GG(NY,NX)=HN2GG(NY,NX)+ZNGGIN
       UNH3G(NY,NX)=UNH3G(NY,NX)+ZNH3IN
       HNH3G(NY,NX)=HNH3G(NY,NX)+ZNH3IN
       UN2GS(NY,NX)=UN2GS(NY,NX)+XN2GS(0,NY,NX)
-      UH2GG(NY,NX)=UH2GG(NY,NX)+HI
-C     IF(I.EQ.168)THEN
-C     WRITE(*,6644)'HNH3G',I,J,NX,NY,NU(NY,NX),HNH3G(NY,NX),ZNH3IN
+      UH2GG(NY,NX)=UH2GG(NY,NX)+HI 
+C     IF((I/30)*30.EQ.I.AND.J.EQ.15)THEN
+C     WRITE(*,6644)'HNH3G',I,J,NFZ,NX,NY,NU(NY,NX),HNH3G(NY,NX),ZNH3IN
 C    2,XN3DFS(NY,NX),XNBDFS(NY,NX),XN3FLG(3,NU(NY,NX),NY,NX)
 C    2,XN3DFG(0,NY,NX)
-C     WRITE(*,6644)'ZN2GIN',I,J,NX,NY,NU(NY,NX),ZN2GIN,XNGDFS(NY,NX)
+C     WRITE(*,6644)'ZN2GIN',I,J,NFZ,NX,NY,NU(NY,NX)
+C    2,ZN2GIN,XNGDFS(NY,NX)
 C    3,XN2DFS(NY,NX),XN3DFS(NY,NX)
 C    2,XNBDFS(NY,NX),XNGFLG(3,NU(NY,NX),NY,NX)
 C    2,XN2FLG(3,NU(NY,NX),NY,NX)
@@ -3662,22 +4294,42 @@ C    4,(FLQGQ(NY,NX)+FLQRQ(NY,NX))*(CNNR(NY,NX)+CN2R(NY,NX))
 C    5,(FLQGI(NY,NX)+FLQRI(NY,NX))*(CNNQ(NY,NX)+CN2Q(NY,NX))
 C    6,XN2DFG(0,NY,NX)+XNGDFG(0,NY,NX),XN3DFG(0,NY,NX)
 C    7,XNGDFR(NY,NX)+XN2DFR(NY,NX),XN3DFR(NY,NX)
-C     ENDIF
+C     ENDIF 
 C
 C     SURFACE BOUNDARY PO4 AND DOP FLUXES
+C
+C     TPIN,TPOU=cumulative surface,subsurface aqueous H2PO4,HPO4
+C        exchange
 C
       PI=31.0*((FLQGQ(NY,NX)+FLQRQ(NY,NX))
      2*(CPOR(NY,NX)+CH1PR(NY,NX))
      3+(FLQGI(NY,NX)+FLQRI(NY,NX))
      4*(CPOQ(I,NY,NX)+CH1PQ(I,NY,NX)))
-      PXB=-31.0*PRECU(NY,NX)*(CPOQ(I,NY,NX)+CH1PQ(I,NY,NX))
+      PXB=-31.0*PRECU(NY,NX)*(CPOQ(I,NY,NX)+CH1PQ(I,NY,NX))*XNFH
       TPIN=TPIN+PI
-      TPOU=TPOU+PXB
+      TPOU=TPOU+PXB 
       PDRAIN(NY,NX)=PDRAIN(NY,NX)+XH2PFS(3,NK(NY,NX),NY,NX)
      2+XH2BFB(3,NK(NY,NX),NY,NX)+XH1PFS(3,NK(NY,NX),NY,NX)
-     2+XH1BFB(3,NK(NY,NX),NY,NX)
+     2+XH1BFB(3,NK(NY,NX),NY,NX) 
 C
 C     SURFACE BOUNDARY ION FLUXES
+C
+C     X*DFS=soil surface gas exchange from trnsfr.f
+C     X*FLG=soil surface convective+diffusive gas flux from trnsfr.f 
+C     FLQGQ,FLQGI=water flux to snowpack or soil surface from
+C        rain,irrigation
+C     FLQRQ,FLQRI=water flux to surface litter from rain,irrigation
+C     C*R,C*Q=precipitation,irrigation solute concentrations
+C     X*DFG=soil surface gas volatilization-dissolution from trnsfr.f 
+C     X*DFR=litter gas volatilization from trnsfr.f 
+C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
+C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
+C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
+C        :*FEO1*=FeOH2-,*FEOH2=F3OH2-,*FEOH3*=FeOH3,*FEOH4*=FeOH4+
+C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
+C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
+C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C
       SIN=((FLQGQ(NY,NX)+FLQRQ(NY,NX))
      2*(2.0*CN4R(NY,NX)+CN3R(NY,NX)+CNOR(NY,NX))
@@ -3695,14 +4347,17 @@ C
      2*(3.0*CPOR(NY,NX)+2.0*CH1PR(NY,NX))
      3+(FLQGI(NY,NX)+FLQRI(NY,NX))
      4*(3.0*CPOQ(I,NY,NX)+2.0*CH1PQ(I,NY,NX)))
-      SNB=-PRECU(NY,NX)*(CNNQ(NY,NX)+CN2Q(NY,NX))-PRECU(NY,NX)
-     2*(2.0*CN4Q(I,NY,NX)+CN3Q(I,NY,NX)+CNOQ(I,NY,NX))
-      SPB=-PRECU(NY,NX)*(3.0*CPOQ(I,NY,NX)+2.0*CH1PQ(I,NY,NX))
+      SNB=(-PRECU(NY,NX)*(CNNQ(NY,NX)+CN2Q(NY,NX))-PRECU(NY,NX)
+     2*(2.0*CN4Q(I,NY,NX)+CN3Q(I,NY,NX)+CNOQ(I,NY,NX)))*XNFH 
+      SPB=(-PRECU(NY,NX)*(3.0*CPOQ(I,NY,NX)+2.0*CH1PQ(I,NY,NX)))*XNFH
       SNM0=(2.0*XNH4S(0,NY,NX)+XNO3S(0,NY,NX)+XNO2S(0,NY,NX)
      2-2.0*XN2GS(0,NY,NX))/14.0
       SPM0=(2.0*XH1PS(0,NY,NX)+3.0*XH2PS(0,NY,NX))/31.0
 C
 C     ACCUMULATE PLANT LITTERFALL FLUXES
+C
+C     ZCSNC,ZZSNC,ZPSNC=total plant C,N,P litterfall from extract.f
+C     UXCSN,UXZFN,UXPSN=cumulative plant C,N,P litterfall
 C
       XCSN=XCSN+ZCSNC(NY,NX)
       XZSN=XZSN+ZZSNC(NY,NX)
@@ -3711,7 +4366,22 @@ C
       UXZSN(NY,NX)=UXZSN(NY,NX)+ZZSNC(NY,NX)
       UXPSN(NY,NX)=UXPSN(NY,NX)+ZPSNC(NY,NX)
 C
-C     SURFACE BOUNDARY SALT FLUXES FROM RAINFALL AND SURFACE IRRIGATION
+C     SURFACE BOUNDARY SALT FLUXES FROM RAINFALL AND SURFACE
+C     IRRIGATION
+C
+C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
+C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
+C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
+C        :*FEO1*=FeOH2-,*FEOH2=F3OH2-,*FEOH3*=FeOH3,*FEOH4*=FeOH4+
+C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
+C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
+C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
+C        :*M1P*=MgHPO4,*COO*=COOH-
+C        :*1=non-band,*B=band
+C     TIONIN=total salt surface flux
 C
       IF(ISALTG.NE.0)THEN
       SIR=PRECQ(NY,NX)*(CALR(NY,NX)+CFER(NY,NX)+CHYR(NY,NX)+CCAR(NY,NX)
@@ -3725,7 +4395,7 @@ C
      9+CF1PR(NY,NX)+CC1PR(NY,NX)+CM1PR(NY,NX))
      1+4.0*(CAL3R(NY,NX)+CFE3R(NY,NX)+CH3PR(NY,NX)+CF2PR(NY,NX)
      2+CC2PR(NY,NX))
-     3+5.0*(CAL4R(NY,NX)+CFE4R(NY,NX)))
+     3+5.0*(CAL4R(NY,NX)+CFE4R(NY,NX)))*XNFH
       SII=PRECI(NY,NX)*(CALQ(I,NY,NX)+CFEQ(I,NY,NX)+CHYQ(I,NY,NX)
      2+CCAQ(I,NY,NX)+CMGQ(I,NY,NX)+CNAQ(I,NY,NX)+CKAQ(I,NY,NX)
      3+COHQ(I,NY,NX)+CSOQ(I,NY,NX)+CCLQ(I,NY,NX)+CC3Q(I,NY,NX)
@@ -3738,9 +4408,9 @@ C
      9+CMGHQ(I,NY,NX)+CF1PQ(I,NY,NX)+CC1PQ(I,NY,NX)+CM1PQ(I,NY,NX))
      2+4.0*(CAL3Q(I,NY,NX)+CFE3Q(I,NY,NX)
      2+CH3PQ(I,NY,NX)+CF2PQ(I,NY,NX)+CC2PQ(I,NY,NX))
-     3+5.0*(CAL4Q(I,NY,NX)+CFE4Q(I,NY,NX)))
+     3+5.0*(CAL4Q(I,NY,NX)+CFE4Q(I,NY,NX)))*XNFH
       TIONIN=TIONIN+SIR+SII
-C     WRITE(*,3338)'SIR',I,J,SIR,PRECQ(NY,NX)
+C     WRITE(*,3338)'SIR',I,J,SIR,PRECQ(NY,NX)*XNFH
 C    2,CALR(NY,NX),CFER(NY,NX),CHYR(NY,NX),CCAR(NY,NX)
 C    2,CMGR(NY,NX),CNAR(NY,NX),CKAR(NY,NX),COHR(NY,NX),CSOR(NY,NX)
 C    3,CCLR(NY,NX),CC3R(NY,NX),CH0PR(NY,NX)
@@ -3755,6 +4425,8 @@ C    2,CC2PR(NY,NX),CAL4R(NY,NX),CFE4R(NY,NX)
 C
 C     SUBSURFACE BOUNDARY SALT FLUXES FROM SUBSURFACE IRRIGATION
 C
+C     TIONOU=total salt subsurface flux
+C
       SBU=-PRECU(NY,NX)*(CALQ(I,NY,NX)+CFEQ(I,NY,NX)+CHYQ(I,NY,NX)
      2+CCAQ(I,NY,NX)+CMGQ(I,NY,NX)+CNAQ(I,NY,NX)+CKAQ(I,NY,NX)
      3+COHQ(I,NY,NX)+CSOQ(I,NY,NX)+CCLQ(I,NY,NX)+CC3Q(I,NY,NX)
@@ -3767,18 +4439,55 @@ C
      9+CF1PQ(I,NY,NX)+CC1PQ(I,NY,NX)+CM1PQ(I,NY,NX))
      4+4.0*(CAL3Q(I,NY,NX)+CFE3Q(I,NY,NX)
      2+CH3PQ(I,NY,NX)+CF2PQ(I,NY,NX)+CC2PQ(I,NY,NX))
-     3+5.0*(CAL4Q(I,NY,NX)+CFE4Q(I,NY,NX)))
+     3+5.0*(CAL4Q(I,NY,NX)+CFE4Q(I,NY,NX)))*XNFH
       TIONOU=TIONOU+SBU
       ENDIF
 C
-C     GAS EXCHANGE FROM SURFACE VOLATILIZATION-DISSOLUTION
+C     GAS EXCHANGE FROM LITTER SURFACE VOLATILIZATION-DISSOLUTION
+C
+C     OQC,OQN,OQP,OQA=DOC,DON,DOP,acetate in litter
+C     CO2S,CH4S,OXYS,Z2GS,Z2OS,H2GS=aqueous CO2,CH4,O2,N2,N2O,H2 
+C        in litter
+C     X*FLS=convective + diffusive solute flux from trnsfr.f
+C     X*DFR=gas exchange between atmosphere and litter from trnsfr.f
+C     X*DFG=litter surface gas volatilization from trnsfr.f
+C     R*O=net gas transformation in surface litter from nitro.f 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
+C        :N4=NH4,N3=NH3,NO=NO3,NX=NO2,H1P=HPO4,H2P=H2PO4 in non-band
+C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,H1B=HPO4,H2B=H2PO4 in band
+C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
+C             :*ZN3*=NH3,*H2G*=H2
 C
       DO 9680 K=0,2
       OQC(K,0,NY,NX)=OQC(K,0,NY,NX)+XOCFLS(K,3,0,NY,NX)
       OQN(K,0,NY,NX)=OQN(K,0,NY,NX)+XONFLS(K,3,0,NY,NX)
       OQP(K,0,NY,NX)=OQP(K,0,NY,NX)+XOPFLS(K,3,0,NY,NX)
       OQA(K,0,NY,NX)=OQA(K,0,NY,NX)+XOAFLS(K,3,0,NY,NX)
+C     IF(NX.EQ.1.AND.NY.EQ.6)THEN
+C     WRITE(*,2626)'OQCR',I,J,NFZ,NX,NY,K,OQC(K,0,NY,NX)
+C    2,XOCFLS(K,3,0,NY,NX),OQN(K,0,NY,NX),TONQRS(K,NY,NX)
+2626  FORMAT(A8,6I4,20E12.4)
+C     ENDIF
 9680  CONTINUE
+      CO2G(0,NY,NX)=CO2G(0,NY,NX)+XCOFLG(3,0,NY,NX)
+     2-XCODFG(0,NY,NX)+RCGOX(0,NY,NX)+RC4OX(0,NY,NX)
+      CH4G(0,NY,NX)=CH4G(0,NY,NX)+XCHFLG(3,0,NY,NX)
+     2-XCHDFG(0,NY,NX)+RCHOX(0,NY,NX)-RC4OX(0,NY,NX) 
+      OXYG(0,NY,NX)=OXYG(0,NY,NX)+XOXFLG(3,0,NY,NX)
+     2-XOXDFG(0,NY,NX)-ROGOX(0,NY,NX)-RC4OX(0,NY,NX)*2.667 
+C     WRITE(*,1189)'CO2G0',I,J,NFZ,NX,NY
+C    2,CO2G(0,NY,NX),XCOFLG(3,0,NY,NX)
+C    2,XCODFG(0,NY,NX),RCGOX(0,NY,NX),RC4OX(0,NY,NX)
+1189  FORMAT(A8,5I4,30F16.8)
+      Z2GG(0,NY,NX)=Z2GG(0,NY,NX)+XNGFLG(3,0,NY,NX)
+     2-XNGDFG(0,NY,NX) 
+      Z2OG(0,NY,NX)=Z2OG(0,NY,NX)+XN2FLG(3,0,NY,NX)
+     2-XN2DFG(0,NY,NX) 
+      ZNH3G(0,NY,NX)=ZNH3G(0,NY,NX)+XN3FLG(3,0,NY,NX)
+     2-XN3DFG(0,NY,NX)
+      H2GG(0,NY,NX)=H2GG(0,NY,NX)+XHGFLG(3,0,NY,NX)
+     2-XHGDFG(0,NY,NX) 
       CO2S(0,NY,NX)=CO2S(0,NY,NX)+XCODFR(NY,NX)+XCOFLS(3,0,NY,NX)
      2+XCODFG(0,NY,NX)-RCO2O(0,NY,NX)
       CH4S(0,NY,NX)=CH4S(0,NY,NX)+XCHDFR(NY,NX)+XCHFLS(3,0,NY,NX)
@@ -3794,7 +4503,7 @@ C
       ZNH4S(0,NY,NX)=ZNH4S(0,NY,NX)+XN4FLW(3,0,NY,NX)
      2+XNH4S(0,NY,NX)+TRN4S(0,NY,NX)
       ZNH3S(0,NY,NX)=ZNH3S(0,NY,NX)+XN3DFR(NY,NX)+XN3FLW(3,0,NY,NX)
-     2+XN3DFG(0,NY,NX)+TRN3S(0,NY,NX)
+     2+XN3DFG(0,NY,NX)+TRN3S(0,NY,NX) 
       ZNO3S(0,NY,NX)=ZNO3S(0,NY,NX)+XNOFLW(3,0,NY,NX)
      2+XNO3S(0,NY,NX)+TRNO3(0,NY,NX)
       ZNO2S(0,NY,NX)=ZNO2S(0,NY,NX)+XNXFLS(3,0,NY,NX)
@@ -3803,6 +4512,19 @@ C
      2+XH1PS(0,NY,NX)
       H2PO4(0,NY,NX)=H2PO4(0,NY,NX)+TRH2P(0,NY,NX)+XH2PFS(3,0,NY,NX)
      2+XH2PS(0,NY,NX)
+C
+C     GAS EXCHANGE FROM VOLATILIZTION-DISSOLUTION AT SOIL SURFACE,
+C     SURFACE LITTER 
+C
+C     CO2S,CH4S,OXYS,Z2GS,Z2OS,H2GS
+C        =aqueous CO2,CH4,O2,N2,N2O,H2 in soil surface
+C     X*DFS= gas exchange between atmosphere and soil surface 
+C        from trnsfr.f
+C     R*O=net gas transformation in soil surface from nitro.f 
+C     R*L=total gas flux for use in next hour
+C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
+C             :*ZN3*=NH3,*H2G*=H2
+C
       CO2S(NU(NY,NX),NY,NX)=CO2S(NU(NY,NX),NY,NX)+XCODFS(NY,NX)
       CH4S(NU(NY,NX),NY,NX)=CH4S(NU(NY,NX),NY,NX)+XCHDFS(NY,NX)
       OXYS(NU(NY,NX),NY,NX)=OXYS(NU(NY,NX),NY,NX)+XOXDFS(NY,NX)
@@ -3814,21 +4536,28 @@ C
       THRE(NY,NX)=THRE(NY,NX)+RCO2O(0,NY,NX)+RCH4O(0,NY,NX)
       UN2GG(NY,NX)=UN2GG(NY,NX)+RN2G(0,NY,NX)
       HN2GG(NY,NX)=HN2GG(NY,NX)+RN2G(0,NY,NX)
-      ROXYF(0,NY,NX)=XOXDFG(0,NY,NX)
-      RCO2F(0,NY,NX)=XCODFG(0,NY,NX)
-      RCH4F(0,NY,NX)=XCHDFG(0,NY,NX)
-      ROXYL(0,NY,NX)=XOXDFR(NY,NX)+XOXFLS(3,0,NY,NX)
+C     ROXYF(0,NY,NX)=XOXDFG(0,NY,NX)
+C     RCO2F(0,NY,NX)=XCODFG(0,NY,NX)
+C     RCH4F(0,NY,NX)=XCHDFG(0,NY,NX)
+      ROXYL(0,NY,NX)=XOXDFR(NY,NX)+XOXFLS(3,0,NY,NX)+XOXDFG(0,NY,NX)
      2-(FLQRQ(NY,NX)*COXR(NY,NX)+FLQRI(NY,NX)*COXQ(NY,NX))
-      RCH4L(0,NY,NX)=XCHDFR(NY,NX)+XCHFLS(3,0,NY,NX)
-     2-(FLQRQ(NY,NX)*CCHR(NY,NX)+FLQRI(NY,NX)*CCHQ(NY,NX))
+      RCH4L(0,NY,NX)=XCHDFR(NY,NX)+XCHFLS(3,0,NY,NX)+XCHDFG(0,NY,NX)
+     2-(FLQRQ(NY,NX)*CCHR(NY,NX)+FLQRI(NY,NX)*CCHQ(NY,NX)) 
       ROXYL(NU(NY,NX),NY,NX)=ROXYL(NU(NY,NX),NY,NX)+XOXDFS(NY,NX)
       RCH4L(NU(NY,NX),NY,NX)=RCH4L(NU(NY,NX),NY,NX)+XCHDFS(NY,NX)
-C     IF((I/30)*30.EQ.I.AND.J.EQ.24)THEN
-C     WRITE(*,6644)'OXYS0',I,J,NX,NY,NU(NY,NX)
+C     IF((I/30)*30.EQ.I.AND.J.EQ.15)THEN
+C     WRITE(*,6644)'OXYS0',I,J,NFZ,NX,NY,NU(NY,NX)
 C    2,OXYS(0,NY,NX),XOXDFR(NY,NX),XOXFLS(3,0,NY,NX)
-C    2,XOXDFG(0,NY,NX),RUPOXO(0,NY,NX)
-C     WRITE(*,6644)'CO2',I,J,NX,NY,NU(NY,NX)
-C    2,CO2S(NU(NY,NX),NY,NX),HCO2G(NY,NX)
+C    3,OXYG(0,NY,NX),XOXFLG(3,0,NY,NX),XOXDFG(0,NY,NX)
+C    2,ROGOX(0,NY,NX),RCGSK(0,NY,NX)*2.667,COXYG(0,NY,NX)
+C    3,COXYE(NY,NX)
+C    3,RUPOXO(0,NY,NX),ROXYL(0,NY,NX)
+C    3,FLQRQ(NY,NX)*COXR(NY,NX)+FLQRI(NY,NX)*COXQ(NY,NX)
+C     WRITE(*,6644)'NH3S0',I,J,NFZ,NX,NY,NU(NY,NX)
+C    2,ZNH3S(0,NY,NX),XN3DFR(NY,NX),XN3FLW(3,0,NY,NX)
+C    2,XN3DFG(0,NY,NX),TRN3S(0,NY,NX)
+C     WRITE(*,6644)'CO2',I,J,NFZ,NX,NY,NU(NY,NX)
+C    2,CO2S(NU(NY,NX),NY,NX),HCO2G(NY,NX) 
 C    2,CI,XCODFS(NY,NX),XCOFLG(3,NU(NY,NX),NY,NX),TCO2Z(NY,NX)
 C    3,(FLQGQ(NY,NX)+FLQRQ(NY,NX))*CCOR(NY,NX)
 C    4,(FLQGI(NY,NX)+FLQRI(NY,NX))*CCOQ(NY,NX)
@@ -3836,20 +4565,29 @@ C    5,CO2S(0,NY,NX),XCODFR(NY,NX),XCOFLS(3,0,NY,NX)
 C    2,XCODFG(0,NY,NX),RCO2O(0,NY,NX)
 C    5,XCODFG(0,NY,NX),XCODFR(NY,NX),VOLP(0,NY,NX)
 C    6,VOLP(NU(NY,NX),NY,NX)
-C     WRITE(*,6644)'OXYS1',I,J,NX,NY,NU(NY,NX)
-C    2,OXYS(NU(NY,NX),NY,NX),HOXYG(NY,NX)
+C     WRITE(*,6644)'OXYS1',I,J,NFZ,NX,NY,NU(NY,NX)
+C    2,OXYS(NU(NY,NX),NY,NX),HOXYG(NY,NX) 
 C    2,XOXDFS(NY,NX),XOXFLG(3,NU(NY,NX),NY,NX),TOXYZ(NY,NX)
 C    5,XOXDFG(NU(NY,NX),NY,NX),VOLP(NU(NY,NX),NY,NX)
 C    3,(FLQGQ(NY,NX)+FLQRQ(NY,NX))*CCOR(NY,NX)
 C    4,(FLQGI(NY,NX)+FLQRI(NY,NX))*CCOQ(NY,NX)
-C     WRITE(*,6644)'CH4',I,J,NX,NY,NU(NY,NX),CH,XCHDFS(NY,NX)
+C     WRITE(*,6644)'CH4',I,J,NFZ,NX,NY,NU(NY,NX),CH,XCHDFS(NY,NX)
 C    2,XCHFLG(3,NU(NY,NX),NY,NX),TCH4Z(NY,NX),FLQGQ(NY,NX)
 C    3,FLQRQ(NY,NX),FLQGI(NY,NX),FLQRI(NY,NX),CCHR(NY,NX),CCHQ(NY,NX)
 C    4,XCHDFG(0,NY,NX),XCHDFR(NY,NX),CH4S(NU(NY,NX),NY,NX)
-6644  FORMAT(A8,5I4,30E12.4)
+C     WRITE(*,6644)'NH3',I,J,NFZ,NX,NY,NU(NY,NX)
+C    2,ZNH3S(0,NY,NX),XN3DFR(NY,NX),XN3FLW(3,0,NY,NX)
+C    2,XN3DFG(0,NY,NX),TRN3S(0,NY,NX)
+6644  FORMAT(A8,6I4,30E12.4)
 C     ENDIF
 C
 C     SURFACE LITTER ION EXCHANGE AND PRECIPITATION
+C
+C     TR*=total exchange+precipitation from solute.f
+C     XN4,XH1P,XH2P=exchangeable NH4,HPO4,H2PO4
+C     XOH0,XOH1,XOH2=adsorption sites R-,R-OH,R-OH2
+C     PALPO,PFEPO=precipitated AlPO4,FEPO4 
+C     PCAPM,PCAPD,PCAPH=precipitated CaH2PO4,CaHPO4,apatite
 C
       XN4(0,NY,NX)=XN4(0,NY,NX)+TRXN4(0,NY,NX)
       XOH0(0,NY,NX)=XOH0(0,NY,NX)+TRXH0(0,NY,NX)
@@ -3862,6 +4600,10 @@ C
       PCAPD(0,NY,NX)=PCAPD(0,NY,NX)+TRCAPD(0,NY,NX)
       PCAPH(0,NY,NX)=PCAPH(0,NY,NX)+TRCAPH(0,NY,NX)
       PCAPM(0,NY,NX)=PCAPM(0,NY,NX)+TRCAPM(0,NY,NX)
+C     IF(PCAPD(0,NY,NX).LT.ZEROS(NY,NX))THEN
+C     WRITE(*,6639)'PCAPD0',I,J,NFZ,PCAPD(0,NY,NX),TRCAPD(0,NY,NX)
+6639  FORMAT(A8,3I4,12E12.4)
+C     ENDIF
 C
 C     SURFACE LITTER OUTPUTS
 C
@@ -3872,7 +4614,7 @@ C    3,VOLT(0,NY,NX),CVRD(NY,NX)
 C     WRITE(*,1119)'CH4S0',I,J,NX,NY,CH4S(0,NY,NX),XCHDFS(NY,NX)
 C    2,XCHDFR(NY,NX),XCHFLS(3,0,NY,NX),XCHDFG(0,NY,NX),RCH4O(0,NY,NX)
 C    3,RCH4L(0,NY,NX)
-C     WRITE(*,1119)'OXYS0',I,J,NX,NY,OXYS(0,NY,NX),XOXDFR(NY,NX)
+C     WRITE(*,1119)'OXYS0',I,J,NX,NY,OXYS(0,NY,NX),XOXDFR(NY,NX) 
 C    2,XOXFLS(3,0,NY,NX),XOXDFG(0,NY,NX),RUPOXO(0,NY,NX)
 C    3,ROXYL(0,NY,NX),TOXQRS(NY,NX),COXYS(0,NY,NX)
 1119  FORMAT(A8,4I4,12E12.4)
@@ -3880,7 +4622,7 @@ C     ENDIF
 C     IF(NX.EQ.5)THEN
 C     WRITE(*,5533)'NH30',I,J,NX,NY,ZNH4S(0,NY,NX),XN4FLW(3,0,NY,NX)
 C    2,XNH4S(0,NY,NX),XN3FLW(3,0,NY,NX),TRN4S(0,NY,NX),TRXN4(0,NY,NX)
-C    3,ZNH3S(0,NY,NX),TRN3S(0,NY,NX),XN3DFG(0,NY,NX),XN3DFR(NY,NX)
+C    3,ZNH3S(0,NY,NX),TRN3S(0,NY,NX),XN3DFG(0,NY,NX),XN3DFR(NY,NX) 
 C    4,ZNHUFA(0,NY,NX),XNO2S(0,NY,NX),XN4(0,NY,NX)*14.0
 C     WRITE(*,5533)'ZNO3S0',I,J,NX,NY,ZNO3S(0,NY,NX),XNOFLW(3,0,NY,NX)
 C    2,XNO3S(0,NY,NX),TRNO3(0,NY,NX),ZNO2S(0,NY,NX),XNXFLS(3,0,NY,NX)
@@ -3889,7 +4631,7 @@ C     WRITE(*,5533)'H2PO40',I,J,NX,NY,H2PO4(0,NY,NX)
 C    2,XH2PFS(3,0,NY,NX),XH2PS(0,NY,NX),TRH2P(0,NY,NX)
 5533  FORMAT(A8,4I4,20F12.4)
 C     ENDIF
-C     WRITE(*,5544)'HP140',I,J,NX,NY,H1PO4(0,NY,NX)
+C     WRITE(*,5544)'HP140',I,J,NX,NY,H1PO4(0,NY,NX) 
 C    2,XH1P(0,NY,NX),TRH1P(0,NY,NX),XH1PFS(3,0,NY,NX)
 C    2,XH1PS(0,NY,NX),TP1QRS(NY,NX)
 C     WRITE(*,5544)'HP240',I,J,NX,NY,H2PO4(0,NY,NX)
@@ -3899,9 +4641,16 @@ C    2,XH2PS(0,NY,NX),TPOQRS(NY,NX)
 C
 C     OVERLAND FLOW
 C
-      IF(ABS(TQR(NY,NX)).GT.ZEROS(NY,NX))THEN
+C     TQR=net water runoff from watsub.f
 C
+      IF(ABS(TQR(NY,NX)).GT.ZEROS(NY,NX))THEN
 C     DOC, DON, DOP
+C
+C     OQC,OQN,OQP,OQA=DOC,DON,DOP,acetate
+C     T*QRS=net overland solute flux from runoff
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
+C        :N4=NH4,N3=NH3,NO=NO3,NX=NO2,H1P=HPO4,H2P=H2PO4 in non-band
 C
       DO 8570 K=0,2
       OQC(K,0,NY,NX)=OQC(K,0,NY,NX)+TOCQRS(K,NY,NX)
@@ -3909,13 +4658,13 @@ C
       OQP(K,0,NY,NX)=OQP(K,0,NY,NX)+TOPQRS(K,NY,NX)
       OQA(K,0,NY,NX)=OQA(K,0,NY,NX)+TOAQRS(K,NY,NX)
 C     IF(NX.EQ.1.AND.NY.EQ.6)THEN
-C     WRITE(*,2626)'OQCR',I,J,NX,NY,K,OQC(K,0,NY,NX)
+C     WRITE(*,2628)'OQCS',I,J,NFZ,NX,NY,K,OQC(K,0,NY,NX)
 C    2,TOCQRS(K,NY,NX),OQN(K,0,NY,NX),TONQRS(K,NY,NX)
-2626  FORMAT(A8,5I4,20E12.4)
+2628  FORMAT(A8,6I4,20E12.4)
 C     ENDIF
 8570  CONTINUE
 C
-C     SOLUTES
+C     LITTER SOLUTES
 C
       CO2S(0,NY,NX)=CO2S(0,NY,NX)+TCOQRS(NY,NX)
       CH4S(0,NY,NX)=CH4S(0,NY,NX)+TCHQRS(NY,NX)
@@ -3929,6 +4678,21 @@ C
       ZNO2S(0,NY,NX)=ZNO2S(0,NY,NX)+TNXQRS(NY,NX)
       H1PO4(0,NY,NX)=H1PO4(0,NY,NX)+TP1QRS(NY,NX)
       H2PO4(0,NY,NX)=H2PO4(0,NY,NX)+TPOQRS(NY,NX)
+C
+C     TQR*=net overland solute flux in runoff
+C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
+C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
+C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
+C        :*FEO1*=FeOH2-,*FEOH2=F3OH2-,*FEOH3*=FeOH3,*FEOH4*=FeOH4+
+C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
+C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
+C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
+C        :*M1P*=MgHPO4,*COO*=COOH-
+C        :*1=non-band,*B=band
+C
       IF(ISALTG.NE.0)THEN
       ZAL(0,NY,NX)=ZAL(0,NY,NX)+TQRAL(NY,NX)
       ZFE(0,NY,NX)=ZFE(0,NY,NX)+TQRFE(NY,NX)
@@ -3976,11 +4740,36 @@ C
 C
 C     INTERNAL SURFACE SEDIMENT TRANSPORT
 C
+C     IERSNG=erosion flag from site file
+C     T*ER=net sediment flux
+C     sediment code:SED=total sediment,SAN=sand,SIL=silt,CLA=clay
+C       :OMC,OMN,OMP=microbial C,N,P; ORC=microbial residue C,N,P
+C       :OHC,OHN,OHP=adsorbed C,N,P; OSC,OSN,OSP=humus C,N,P
+C       :NH4,NH3,NHU,NO3=fertilizer NH4,NH3,urea,NO3 in non-band
+C       :NH4B,NH3B,NHUB,NO3B=fertilizer NH4,NH3,urea,NO3 in band
+C       :XN4,XNB=adsorbed NH4 in non-band,band
+C       :XHY,XAL,XFE,XCA,XMG,XNA,XKA,XHC,AL2,FE2
+C        =adsorbed H,Al,Fe,Ca,Mg,Na,K,HCO3,AlOH2,FeOH2
+C       :XOH0,XOH1,XOH2=adsorbed R-,R-OH,R-OH2 in non-band
+C       :XOH0B,XOH1B,XOH2B=adsorption sites R-,R-OH,R-OH2 in band
+C       :XH1P,XH2P=adsorbed HPO4,H2PO4 in non-band
+C       :XH1PB,XP2PB=adsorbed HPO4,H2PO4 in band
+C       :PALO,PFEO=precip AlOH,FeOH 
+C       :PCAC,PCAS=precip CaCO3,CaSO4
+C       :PALP,PFEP=precip AlPO4,FEPO4 in non-band
+C       :PALPB,PFEPB=precip AlPO4,FEPO4 in band
+C       :PCPM,PCPD,PCPH=precip CaH2PO4,CaHPO4,apatite in non-band
+C       :PCPMB,PCPDB,PCPHB=precip CaH2PO4,CaHPO4,apatite in band
+C
       IF((IERSNG.EQ.1.OR.IERSNG.EQ.3)
      2.AND.ABS(TSEDER(NY,NX)).GT.ZEROS(NY,NX))THEN
       TSED(NY,NX)=TSED(NY,NX)+TSEDER(NY,NX)
 C
 C     SOIL MINERAL FRACTIONS
+C
+C     sediment code:XSED=total,XSAN=sand,XSIL=silt,XCLA=clay
+C                  :CEC=cation exchange capacity
+C                  :AEC=anion exchange capacity
 C
       SAND(NU(NY,NX),NY,NX)=SAND(NU(NY,NX),NY,NX)+TSANER(NY,NX)
       SILT(NU(NY,NX),NY,NX)=SILT(NU(NY,NX),NY,NX)+TSILER(NY,NX)
@@ -3989,6 +4778,9 @@ C
       XAEC(NU(NY,NX),NY,NX)=XAEC(NU(NY,NX),NY,NX)+TAECER(NY,NX)
 C
 C     FERTILIZER POOLS
+C
+C     sediment code:NH4,NH3,NHU,NO3=NH4,NH3,urea,NO3 in non-band
+C                  :NH4B,NH3B,NHUB,NO3B=NH4,NH3,urea,NO3 in band
 C
       ZNH4FA(NU(NY,NX),NY,NX)=ZNH4FA(NU(NY,NX),NY,NX)+TNH4ER(NY,NX)
       ZNH3FA(NU(NY,NX),NY,NX)=ZNH3FA(NU(NY,NX),NY,NX)+TNH3ER(NY,NX)
@@ -4000,6 +4792,15 @@ C
       ZNO3FB(NU(NY,NX),NY,NX)=ZNO3FB(NU(NY,NX),NY,NX)+TNO3EB(NY,NX)
 C
 C     EXCHANGEABLE CATIONS AND ANIONS
+C
+C     sediment code
+C       :XN4,XNB=adsorbed NH4 in non-band,band
+C       :XHY,XAL,XFE,XCA,XMG,XNA,XKA,XHC,AL2,FE2
+C           =adsorbed H,Al,Fe,Ca,Mg,Na,K,HCO3,AlOH2,FeOH2
+C       :XOH0,XOH1,XOH2=adsorbed R-,R-OH,R-OH2 in non-band
+C       :XOH0B,XOH1B,XOH2B=adsorption sites R-,R-OH,R-OH2 in band
+C       :XH1P,XH2P=adsorbed HPO4,H2PO4 in non-band
+C       :XH1PB,XP2PB=adsorbed HPO4,H2PO4 in band
 C
       XN4(NU(NY,NX),NY,NX)=XN4(NU(NY,NX),NY,NX)+TN4ER(NY,NX)
       XNB(NU(NY,NX),NY,NX)=XNB(NU(NY,NX),NY,NX)+TNBER(NY,NX)
@@ -4026,6 +4827,14 @@ C
 C
 C     PRECIPITATES
 C
+C     sediment code
+C       :PALO,PFEO=precip AlOH,FeOH 
+C       :PCAC,PCAS=precip CaCO3,CaSO4
+C       :PALP,PFEP=precip AlPO4,FEPO4 in non-band
+C       :PALPB,PFEPB=precip AlPO4,FEPO4 in band
+C       :PCPM,PCPD,PCPH=precip CaH2PO4,CaHPO4,apatite in non-band
+C       :PCPMB,PCPDB,PCPHB=precip CaH2PO4,CaHPO4,apatite in band
+C
       PALOH(NU(NY,NX),NY,NX)=PALOH(NU(NY,NX),NY,NX)+TALOER(NY,NX)
       PFEOH(NU(NY,NX),NY,NX)=PFEOH(NU(NY,NX),NY,NX)+TFEOER(NY,NX)
       PCACO(NU(NY,NX),NY,NX)=PCACO(NU(NY,NX),NY,NX)+TCACER(NY,NX)
@@ -4041,7 +4850,15 @@ C
       PCPHB(NU(NY,NX),NY,NX)=PCPHB(NU(NY,NX),NY,NX)+TCPHEB(NY,NX)
       PCPMB(NU(NY,NX),NY,NX)=PCPMB(NU(NY,NX),NY,NX)+TCPMEB(NY,NX)
 C
-C     ORGANIC CONSTITUENTS
+C     ORGANIC MATTER
+C
+C     sediment code
+C        :OMC,OMN,OMP=microbial C,N,P
+C        :ORC,ORN,ORP=microbial residue C,N,P
+C        :OHC,OHN,OHP,OHA=adsorbed C,N,P,acetate 
+C        :OSC,OSA,OSN,OSP=SOC,colonized SOC,SON,SOP 
+C           (K=0:woody litter, K=1:non-woody litter,
+C            K=2:manure, K=3:POC, K=4:humus)
 C
       DORGP=0.0
       DO 9280 K=0,5
@@ -4072,8 +4889,8 @@ C
       OHP(K,NU(NY,NX),NY,NX)=OHP(K,NU(NY,NX),NY,NX)+TOHPER(K,NY,NX)
       OHA(K,NU(NY,NX),NY,NX)=OHA(K,NU(NY,NX),NY,NX)+TOHAER(K,NY,NX)
       DORGE(NY,NX)=DORGE(NY,NX)+TOHCER(K,NY,NX)+TOHAER(K,NY,NX)
-      DORGP=DORGP+TOHPER(K,NY,NX)
-      DO 9265 M=1,4
+      DORGP=DORGP+TOHPER(K,NY,NX) 
+      DO 9265 M=1,5
       OSC(M,K,NU(NY,NX),NY,NX)=OSC(M,K,NU(NY,NX),NY,NX)
      2+TOSCER(M,K,NY,NX)
       OSA(M,K,NU(NY,NX),NY,NX)=OSA(M,K,NU(NY,NX),NY,NX)
@@ -4082,8 +4899,8 @@ C
      2+TOSNER(M,K,NY,NX)
       OSP(M,K,NU(NY,NX),NY,NX)=OSP(M,K,NU(NY,NX),NY,NX)
      2+TOSPER(M,K,NY,NX)
-      DORGE(NY,NX)=DORGE(NY,NX)+TOSCER(M,K,NY,NX)
-      DORGP=DORGP+TOSPER(M,K,NY,NX)
+      DORGE(NY,NX)=DORGE(NY,NX)+TOSCER(M,K,NY,NX) 
+      DORGP=DORGP+TOSPER(M,K,NY,NX) 
 9265  CONTINUE
 9275  CONTINUE
 C     WRITE(*,6637)'DORGP',I,J,NY,NX,DORGP,TSEDER(NY,NX)
@@ -4091,6 +4908,12 @@ C     WRITE(*,6637)'DORGP',I,J,NY,NX,DORGP,TSEDER(NY,NX)
       ENDIF
 C
 C     OVERLAND SNOW REDISTRIBUTION
+C
+C     *W=solute content of snowpack
+C     T*QSS=net overland solute flux from snowpack
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
+C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4
 C
       IF(TQS(NY,NX).NE.0.0)THEN
       CO2W(1,NY,NX)=CO2W(1,NY,NX)+TCOQSS(NY,NX)
@@ -4103,6 +4926,23 @@ C
       ZNOW(1,NY,NX)=ZNOW(1,NY,NX)+TNOQSS(NY,NX)
       Z1PW(1,NY,NX)=Z1PW(1,NY,NX)+TP1QSS(NY,NX)
       ZHPW(1,NY,NX)=ZHPW(1,NY,NX)+TPOQSS(NY,NX)
+C
+C     NET SALT FLUXES FROM SNOWPACK
+C
+C     TQS*=net overland solute flux in snow drift
+C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
+C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
+C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
+C        :*FEO1*=FeOH2-,*FEOH2=F3OH2-,*FEOH3*=FeOH3,*FEOH4*=FeOH4+
+C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
+C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
+C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
+C        :*M1P*=MgHPO4,*COO*=COOH-
+C        :*1=non-band,*B=band
+C
       IF(ISALTG.NE.0)THEN
       ZALW(1,NY,NX)=ZALW(1,NY,NX)+TQSAL(NY,NX)
       ZFEW(1,NY,NX)=ZFEW(1,NY,NX)+TQSFE(NY,NX)
@@ -4113,7 +4953,7 @@ C
       ZKAW(1,NY,NX)=ZKAW(1,NY,NX)+TQSKA(NY,NX)
       ZOHW(1,NY,NX)=ZOHW(1,NY,NX)+TQSOH(NY,NX)
       ZSO4W(1,NY,NX)=ZSO4W(1,NY,NX)+TQSSO(NY,NX)
-      ZCLW(1,NY,NX)=ZCLW(1,NY,NX)+TQSCL(NY,NX)
+      ZCLW(1,NY,NX)=ZCLW(1,NY,NX)+TQSCL(NY,NX) 
       ZCO3W(1,NY,NX)=ZCO3W(1,NY,NX)+TQSC3(NY,NX)
       ZHCO3W(1,NY,NX)=ZHCO3W(1,NY,NX)+TQSHC(NY,NX)
       ZALH1W(1,NY,NX)=ZALH1W(1,NY,NX)+TQSAL1(NY,NX)
@@ -4154,14 +4994,28 @@ C     IF(J.EQ.24)THEN
 C
 C     SNOWPACK VARIABLES NEEDED FOR WATER, C, N, P, O, SOLUTE AND
 C     ENERGY BALANCES INCLUDING SUM OF ALL CURRENT STATE VARIABLES,
-C     CUMULATIVE SUMS OF ALL ADDITIONS AND REMOVALS
+C     CUMULATIVE SUMS OF ALL ADDITIONS AND REMOVALS 
+C
+C     VOLSSL,VOLWSL,VOLVSL,VOLISL=snow water equivalent,water,
+C        vapor,ice volume in snowpack layer
+C     VOLWSO,UVOLW=total landscape, grid cell water content
+C     DENSI=ice density from starts.f
+C     HEATSO=total landscape heat content
+C     VHCPW=snowpack layer heat capacity
+C     TKW=snowpack layer temperature
+C     TLCO2G,UCO2S=total landscape, grid cell CO2 content
+C     OXYGSO=total landscape O2 content
+C     TLN2G,TLNH4,TLNO3,TLPO4=total landscape N2,NH4,NO3,PO4 content
+C     TION=total landscape ion content 
+C     *W=solute content of snowpack
 C
       DO 9785 L=1,JS
-      WS=VOLSSL(L,NY,NX)+VOLWSL(L,NY,NX)+VOLISL(L,NY,NX)*DENSI
+      WS=VOLSSL(L,NY,NX)+VOLWSL(L,NY,NX)+VOLVSL(L,NY,NX)
+     2+VOLISL(L,NY,NX)*DENSI
       VOLWSO=VOLWSO+WS
       UVOLW(NY,NX)=UVOLW(NY,NX)+WS
       ENGYW=VHCPW(L,NY,NX)*TKW(L,NY,NX)
-      HEATSO=HEATSO+ENGYW
+      HEATSO=HEATSO+ENGYW 
       TLCO2G=TLCO2G+CO2W(L,NY,NX)+CH4W(L,NY,NX)
       UCO2S(NY,NX)=UCO2S(NY,NX)+CO2W(L,NY,NX)+CH4W(L,NY,NX)
       OXYGSO=OXYGSO+OXYW(L,NY,NX)
@@ -4183,7 +5037,7 @@ C
      2+ZMG1PW(L,NY,NX))
      2+4.0*(ZALH3W(L,NY,NX)+ZFEH3W(L,NY,NX)+H3PO4W(L,NY,NX)
      3+ZFE2PW(L,NY,NX)+ZCA2PW(L,NY,NX))
-     5+5.0*(ZALH4W(L,NY,NX)+ZFEH4W(L,NY,NX))
+     5+5.0*(ZALH4W(L,NY,NX)+ZFEH4W(L,NY,NX)) 
       TION=TION+SSW
 C     WRITE(*,3335)'SSW',I,J,L,SSW
 C    2,ZALW(L,NY,NX),ZFEW(L,NY,NX),ZHYW(L,NY,NX),ZCAW(L,NY,NX)
@@ -4199,15 +5053,18 @@ C    1,ZMGHW(L,NY,NX),ZFE1PW(L,NY,NX),ZCA1PW(L,NY,NX)
 C    2,ZMG1PW(L,NY,NX)
 C    2,ZALH3W(L,NY,NX),ZFEH3W(L,NY,NX),H3PO4W(L,NY,NX)
 C    3,ZFE2PW(L,NY,NX),ZCA2PW(L,NY,NX)
-C    5,ZALH4W(L,NY,NX),ZFEH4W(L,NY,NX)
+C    5,ZALH4W(L,NY,NX),ZFEH4W(L,NY,NX) 
       ENDIF
 9785  CONTINUE
 C
-C     TOTAL C,N,P, SALTS IN SURFACE RESIDUE
+C     TOTAL C,N,P, SALTS IN SURFACE LITTER
 C
       DC=0.0
       DN=0.0
       DP=0.0
+      DCC=0.0
+      DNC=0.0
+      DPC=0.0
       DO 6975 K=0,5
       RC0(K,NY,NX)=0.0
 6975  CONTINUE
@@ -4217,6 +5074,10 @@ C
       IF(K.NE.3.AND.K.NE.4)THEN
 C
 C     TOTAL MICROBIAL C,N,P
+C
+C     RC0=surface litter C content
+C     TOMT,TONT,TOPT=total microbial C,N,P
+C     OMC,OMN,OMP=microbial C,N,P
 C
       DO 6960 N=1,7
       DO 6960 M=1,3
@@ -4235,6 +5096,8 @@ C
 C
 C     TOTAL MICROBIAL RESIDUE C,N,P
 C
+C     ORC,ORN,ORP=microbial residue C,N,P
+C
       DO 6900 K=0,2
       DO 6940 M=1,2
       DC=DC+ORC(M,K,0,NY,NX)
@@ -4245,7 +5108,11 @@ C
 C
 C     TOTAL DOC, DON, DOP
 C
-      DC=DC+OQC(K,0,NY,NX)+OQCH(K,0,NY,NX)+OHC(K,0,NY,NX)
+C     OQC,OQN,OQP,OQA=DOC,DON,DOP,acetate in micropores
+C     OQCH,OQNH,OQPH,OQAH=DOC,DON,DOP,acetate in macropores
+C     OHC,OHN,OHP,OHA=adsorbed C,N,P,acetate
+C
+      DC=DC+OQC(K,0,NY,NX)+OQCH(K,0,NY,NX)+OHC(K,0,NY,NX) 
      2+OQA(K,0,NY,NX)+OQAH(K,0,NY,NX)+OHA(K,0,NY,NX)
       DN=DN+OQN(K,0,NY,NX)+OQNH(K,0,NY,NX)+OHN(K,0,NY,NX)
       DP=DP+OQP(K,0,NY,NX)+OQPH(K,0,NY,NX)+OHP(K,0,NY,NX)
@@ -4254,49 +5121,91 @@ C
 C
 C     TOTAL PLANT RESIDUE C,N,P
 C
-      DO 6930 M=1,4
+C     OSC,OSN,OSP=SOC,SON,SOP
+C
+      DO 6930 M=1,5
+      IF(M.LE.4)THEN
       DC=DC+OSC(M,K,0,NY,NX)
       DN=DN+OSN(M,K,0,NY,NX)
       DP=DP+OSP(M,K,0,NY,NX)
+      ELSE
+      DCC=DCC+OSC(M,K,0,NY,NX)
+      DNC=DNC+OSN(M,K,0,NY,NX)
+      DPC=DPC+OSP(M,K,0,NY,NX)
+      ENDIF
       RC0(K,NY,NX)=RC0(K,NY,NX)+OSC(M,K,0,NY,NX)
 6930  CONTINUE
 6900  CONTINUE
+C
+C     TOTAL ORGANIC MATTER
+C
+C     ORGC,ORGN,ORGP=total organic C,N,P
+C     TLRSDC,TLRSDN,TLRSDP=total landscape litter C,N,P
+C     URSDC,URSDN,URSDP=total grid cell litter C,N,P
+C     TVOLWC,TVOLWP=canopy surface,internal water content 
+C        from uptake.f
+C     VOLW,VOLV,VOLI=litter water,vapor,ice content     
+C     VOLWSO,UVOLW=total landscape, grid cell water content
+C     HEATSO=total landscape heat content
+C     TLCO2G,UCO2S=total landscape, grid cell CO2 content
+C     OXYGSO=total landscape O2 content
+C     TLN2G,TLNH4,TLNO3,TLPO4=total landscape N2,NH4,NO3,PO4 content
+C     TION=total landscape ion content 
+C     CO2S,CH4S,OXYS,Z2GS,Z2OS,H2GS=aqueous CO2,CH4,O2,N2,N2O,H2 
+C        in litter
+C     ZNH4S,ZNH3S,ZNO3S,ZNO2S=NH4,NH3,NO3,NO2 litter content
+C     ZNH4FA,ZNHUFA,ZNH3FA,ZNO3FA=fertilizer NH4,urea,NH3,NO3 
+C        in litter
+C     H2PO4,H1PO4=H2PO4,HPO4 litter content
+C     XH2P,XH1P=exchangeable H2PO4,HPO4 in litter 
+C     PALPO,PFEPO=precip AlPO4,FEPO4 
+C     PCAPM,PCAPD,PCAPH=precip CaH2PO4,CaHPO4,apatite
+C
       ORGC(0,NY,NX)=DC
       ORGN(0,NY,NX)=DN
       ORGR(0,NY,NX)=DC
-      TLRSDC=TLRSDC+DC
-      URSDC(NY,NX)=URSDC(NY,NX)+DC
-      TLRSDN=TLRSDN+DN
-      URSDN(NY,NX)=URSDN(NY,NX)+DN
-      TLRSDP=TLRSDP+DP
-      URSDP(NY,NX)=URSDP(NY,NX)+DP
-      WS=TVOLWC(NY,NX)+TVOLWP(NY,NX)+VOLW(0,NY,NX)+VOLI(0,NY,NX)*DENSI
-      VOLWSO=VOLWSO+WS
-      UVOLW(NY,NX)=UVOLW(NY,NX)+WS
-      HEATSO=HEATSO+TENGYC(NY,NX)
-      CS=CO2S(0,NY,NX)+CH4S(0,NY,NX)
+      ORGCC(0,NY,NX)=DCC
+      ORGNC(0,NY,NX)=DNC
+      TLRSDC=TLRSDC+DC+DCC
+      URSDC(NY,NX)=URSDC(NY,NX)+DC+DCC
+      TLRSDN=TLRSDN+DN+DNC
+      URSDN(NY,NX)=URSDN(NY,NX)+DN+DNC
+      TLRSDP=TLRSDP+DP+DPC
+      URSDP(NY,NX)=URSDP(NY,NX)+DP+DPC
+      WSS=VOLW(0,NY,NX)+VOLV(0,NY,NX)+VOLI(0,NY,NX)*DENSI
+      WSP=TVOLWC(NY,NX)+TVOLWP(NY,NX) 
+      VOLWSO=VOLWSO+WSS+WSP
+      UVOLW(NY,NX)=UVOLW(NY,NX)+WSS+WSP
+      HEATSO=HEATSO+TENGYC(NY,NX) 
+      CS=CO2S(0,NY,NX)+CH4S(0,NY,NX)+CO2G(0,NY,NX)+CH4G(0,NY,NX)
       TLCO2G=TLCO2G+CS
       UCO2S(NY,NX)=UCO2S(NY,NX)+CS
-      HS=H2GS(0,NY,NX)
+      HS=H2GS(0,NY,NX)+H2GG(0,NY,NX)
       TLH2G=TLH2G+HS
-      OS=OXYS(0,NY,NX)
+      OS=OXYS(0,NY,NX)+OXYG(0,NY,NX)
       OXYGSO=OXYGSO+OS
-      ZG=Z2GS(0,NY,NX)+Z2OS(0,NY,NX)
-      TLN2G=TLN2G+ZG
-      Z4S=ZNH4S(0,NY,NX)+ZNH3S(0,NY,NX)
+      ZGS=Z2GS(0,NY,NX)+Z2OS(0,NY,NX)+Z2GG(0,NY,NX)+Z2OG(0,NY,NX)
+      TLN2G=TLN2G+ZGS
+      Z4S=ZNH4S(0,NY,NX)+ZNH3S(0,NY,NX)+ZNH3G(0,NY,NX)
       Z4X=14.0*XN4(0,NY,NX)
-      Z4F=14.0*(ZNH4FA(0,NY,NX)+ZNHUFA(0,NY,NX)+ZNH3FA(0,NY,NX))
+      Z4F=14.0*(ZNH4FA(0,NY,NX)+ZNHUFA(0,NY,NX)+ZNH3FA(0,NY,NX)) 
       TLNH4=TLNH4+Z4S+Z4X+Z4F
-      UNH4(NY,NX)=UNH4(NY,NX)+Z4S+Z4X
-C     IF(I.GT.190.AND.NX.EQ.1)THEN
-C     DO 4342 K=0,1
-C     WRITE(*,4341)'ORGC0',I,J,NX,NY,L,K,ORGC(0,NY,NX),DC
+      UNH4(NY,NX)=UNH4(NY,NX)+Z4S+Z4X 
+C     IF((I/30)*30.EQ.I.AND.J.EQ.24)THEN
+C     DO 4342 K=0,2
+C     WRITE(*,4341)'ORGC0',I,J,NFZ,NX,NY,K,ORGC(0,NY,NX),DN,DNC
 C    2,((OMC(M,N,K,0,NY,NX),M=1,3),N=1,7)
-C    3,(ORC(M,K,0,NY,NX),M=1,2),(OSC(M,K,0,NY,NX),M=1,4)
+C    3,(ORC(M,K,0,NY,NX),M=1,2) 
 C    4,OQC(K,0,NY,NX),OQCH(K,0,NY,NX),OHC(K,0,NY,NX)
 C    2,OQA(K,0,NY,NX),OQAH(K,0,NY,NX),OHA(K,0,NY,NX)
-C    5,(OSA(M,K,0,NY,NX),M=1,4)
-4341  FORMAT(A8,6I4,120E12.4)
+C    5,(OSC(M,K,0,NY,NX),M=1,4)
+C     WRITE(*,4341)'ORGN0',I,J,NFZ,NX,NY,K,DN,DNC,ON,ONC 
+C    2,ORGN(0,NY,NX),ORGNC(0,NY,NX)
+C    3,((OMN(M,N,K,0,NY,NX),M=1,3),N=1,7)
+C    3,(ORN(M,K,0,NY,NX),M=1,2) 
+C    4,(OSN(M,K,0,NY,NX),M=1,5)
+C    4,OQN(K,0,NY,NX),OQNH(K,0,NY,NX),OHN(K,0,NY,NX)
+4341  FORMAT(A8,6I4,120E14.6)
 4342  CONTINUE
 C     WRITE(*,5456)'TLCO2G0',I,J,NX,NY,TLCO2G
 C    2,CS,CO2S(0,NY,NX),CH4S(0,NY,NX)
@@ -4308,18 +5217,37 @@ C    2,ZNH4S(0,NY,NX),ZNH3S(0,NY,NX)
 5456  FORMAT(A8,4I4,30E16.6)
 C     ENDIF
       ZOS=ZNO3S(0,NY,NX)+ZNO2S(0,NY,NX)
-      ZOF=14.0*ZNO3FA(0,NY,NX)
+      ZOF=14.0*ZNO3FA(0,NY,NX) 
       TLNO3=TLNO3+ZOS+ZOF
       UNO3(NY,NX)=UNO3(NY,NX)+ZOS
-      POS=H1PO4(0,NY,NX)+H2PO4(0,NY,NX)
-      POX=31.0*(XH1P(0,NY,NX)+XH2P(0,NY,NX))
-      POP=31.0*(PALPO(0,NY,NX)+PFEPO(0,NY,NX)
+      P4S=H1PO4(0,NY,NX)+H2PO4(0,NY,NX)
+      P4X=31.0*(XH1P(0,NY,NX)+XH2P(0,NY,NX))
+      P4P=31.0*(PALPO(0,NY,NX)+PFEPO(0,NY,NX)
      2+PCAPD(0,NY,NX))
      3+62.0*PCAPM(0,NY,NX)
      4+93.0*PCAPH(0,NY,NX)
-      TLPO4=TLPO4+POS+POX+POP
-      UPO4(NY,NX)=UPO4(NY,NX)+POX
-      UPP4(NY,NX)=UPP4(NY,NX)+POP
+      TLPO4=TLPO4+P4S+P4X+P4P
+      UPO4(NY,NX)=UPO4(NY,NX)+P4S
+      UPX4(NY,NX)=UPX4(NY,NX)+P4X
+      UPP4(NY,NX)=UPP4(NY,NX)+P4P
+C
+C     SURFCE LITTER SALT CONTENT
+C
+C     Z*=litter salt content
+C     X*S=litter salt flux from trnsfrs.f
+C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
+C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
+C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
+C        :*FEO1*=FeOH2-,*FEOH2=F3OH2-,*FEOH3*=FeOH3,*FEOH4*=FeOH4+
+C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
+C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
+C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
+C        :*M1P*=MgHPO4,*COO*=COOH-
+C     TION,UION=total landscape, grid cell ion content 
+C
       IF(ISALTG.NE.0)THEN
       ZAL(0,NY,NX)=ZAL(0,NY,NX)+XALFLS(3,0,NY,NX)
       ZFE(0,NY,NX)=ZFE(0,NY,NX)+XFEFLS(3,0,NY,NX)
@@ -4333,7 +5261,7 @@ C     WRITE(20,3338)'ZHY0',I,J,ZHY(0,NY,NX),TQRHY(NY,NX)
 C    2,XHYFLS(3,0,NY,NX),ZOH(0,NY,NX),TQROH(NY,NX)
 C    4,XOHFLS(3,0,NY,NX)
       ZSO4(0,NY,NX)=ZSO4(0,NY,NX)+XSOFLS(3,0,NY,NX)
-      ZCL(0,NY,NX)=ZCL(0,NY,NX)+XCLFLS(3,0,NY,NX)
+      ZCL(0,NY,NX)=ZCL(0,NY,NX)+XCLFLS(3,0,NY,NX) 
       ZCO3(0,NY,NX)=ZCO3(0,NY,NX)+XC3FLS(3,0,NY,NX)
       ZHCO3(0,NY,NX)=ZHCO3(0,NY,NX)+XHCFLS(3,0,NY,NX)
       ZALOH1(0,NY,NX)=ZALOH1(0,NY,NX)+XAL1FS(3,0,NY,NX)
@@ -4384,21 +5312,21 @@ C    4,XOHFLS(3,0,NY,NX)
       TION=TION+SSS
       UION(NY,NX)=UION(NY,NX)+SSS
       ENDIF
-C     WRITE(20,3338)'SBN',I,J,TLNH4,TLNO3,TZIN,TZOU
+C     WRITE(20,3338)'SBN',I,J,TLNH4,TLNO3,TZIN,TZOU 
 C    2,Z4S,Z4X,Z4F,ZOS,ZOF,ZG
 C    2,ZSI,ZGI,ZGB,Z2B,ZHB
-C    3,ZXR,ZGR,ZOR,ZXB,TRN3S(0,NY,NX)
-C    3,ZN4W(NY,NX),ZN3W(NY,NX),ZNOW(NY,NX),ZNGW(NY,NX),ZN2W(NY,NX)
-C     WRITE(20,3338)'SBP',I,J,POS,POX,POP,PSS,PXR,PXB,POR
+C    3,ZXR,ZGR,ZOR,ZXB,TRN3S(0,NY,NX) 
+C    3,ZN4W(NY,NX),ZN3W(NY,NX),ZNOW(NY,NX),ZNGW(NY,NX),ZN2W(NY,NX) 
+C     WRITE(20,3338)'SBP',I,J,P4S,P4X,P4P,PSS,PXR,PXB,POR
 C    2,TLPO4,TPIN,TPOU
 C    2,XH1PS(0,NY,NX),XH2PS(0,NY,NX),H1PO4(0,NY,NX),H2PO4(0,NY,NX)
-C    3,XH1P(0,NY,NX),XH2P(0,NY,NX),PALPO(0,NY,NX),PFEPO(0,NY,NX)
+C    3,XH1P(0,NY,NX),XH2P(0,NY,NX),PALPO(0,NY,NX),PFEPO(0,NY,NX) 
 C    6,PCAPD(0,NY,NX),PCAPM(0,NY,NX),PCAPH(0,NY,NX),TRH1P(0,NY,NX)
 C    2,TRH2P(0,NY,NX),XH1PFS(3,0,NY,NX),XH2PFS(3,0,NY,NX)
 C    3,Z1PW(NY,NX),ZHPW(NY,NX),XH1PBS(NY,NX),XH2PBS(NY,NX)
 C    4,FLQGQ(NY,NX),FLQRQ(NY,NX)
 C     WRITE(20,3338)'SBS',I,J,TION,TIONIN,TIONOU
-C    2,SSW,SSS,SIR,SII,SSR,SQE,SBU
+C    2,SSW,SSS,SIR,SII,SSR,SQE,SBU 
 3338  FORMAT(A8,2I4,50F20.8)
 3335  FORMAT(A8,3I4,50F20.8)
 C     ENDIF
@@ -4408,39 +5336,61 @@ C
       TVHCP=0.0
       TVHCM=0.0
       TVOLW=0.0
+      TVOLV=0.0
       TVOLWH=0.0
       TVOLI=0.0
       TVOLIH=0.0
       TENGY=0.0
       DO 125 L=NU(NY,NX),NL(NY,NX)
 C
-C     WATER, ICE, HEAT, TEMPERATURE
+C     SOIL WATER, ICE, HEAT, TEMPERATURE
+C
+C     VOLW,VOLV,VOLI,VOLWH,VOLIH=water,vapor,ice content 
+C        in micropores,macropores
+C     TFLW,TFLV,TFLWH,TFLWH=net micropore,macropore water,vapor flux,
+C        heat flux
+C     TWFLFL,TWFLFH=net freeze-thaw in micropores,macropores
+C     TWFLVL=net evaporation-condensation 
+C     TVPFLG=net convective+diffusive vapor flux
+C     FINH=micropore-macropore flux
+C     TTHAW,TTHAWH=net freeze-thaw flux in micropores,macropores 
+C     TUPWTR=total root water uptake from extract.f
+C     FLU=subsurface water input
+C     DENSI=ice density from starts.f
+C     DVOLW,DVOLI=change in soil water,ice content
+C     VOLP=air-filled porosity
+C     VHCP=soil heat capacity
+C     TKS=soil temperature
+C     THFLW=net soil conductive, convective heat flux
+C     THFLFL=net freeze-thaw latent heat flux 
+C     THFLVL=net evaporation-condensation latent heat flux 
+C     TUPHT=total convective heat in root water uptake from extract.f
+C     HWFLU=subsurface convective heat flux
+C     HCBFX=heat released by soil combustion
 C
       TKSX=TKS(L,NY,NX)
       VHCPX=VHCP(L,NY,NX)
       VOLWXX=VOLW(L,NY,NX)
       VOLIXX=VOLI(L,NY,NX)
-      VOLW(L,NY,NX)=VOLW(L,NY,NX)+TFLW(L,NY,NX)+FINH(L,NY,NX)
-     2+TTHAW(L,NY,NX)+TUPWTR(L,NY,NX)+FLU(L,NY,NX)
-      if(VOLW(L,NY,NX)<0. .and. L==NU(NY,NX))then
-      write(*,*)VOLWXX,VOLW(L,NY,NX),TFLW(L,NY,NX),FINH(L,NY,NX)
-     2,TTHAW(L,NY,NX),TUPWTR(L,NY,NX),FLU(L,NY,NX)
-      endif
+      VOLW(L,NY,NX)=VOLW(L,NY,NX)+TFLW(L,NY,NX)+TWFLVL(L,NY,NX) 
+     2+TWFLFL(L,NY,NX)+FINH(L,NY,NX)+TUPWTR(L,NY,NX)+FLU(L,NY,NX) 
+      VOLV(L,NY,NX)=VOLV(L,NY,NX)+TFLV(L,NY,NX)-TWFLVL(L,NY,NX)
+     2+TVPFLG(L,NY,NX)
       VOLWX(L,NY,NX)=VOLWX(L,NY,NX)+TFLWX(L,NY,NX)+FINH(L,NY,NX)
-     2+TTHAW(L,NY,NX)+TUPWTR(L,NY,NX)+FLU(L,NY,NX)
+     2+TWFLVL(L,NY,NX)+TUPWTR(L,NY,NX)+FLU(L,NY,NX) 
       VOLWX(L,NY,NX)=AMIN1(VOLW(L,NY,NX)
      2,VOLWX(L,NY,NX)+0.01*(VOLW(L,NY,NX)-VOLWX(L,NY,NX)))
-      VOLI(L,NY,NX)=VOLI(L,NY,NX)-TTHAW(L,NY,NX)/DENSI
+      VOLI(L,NY,NX)=VOLI(L,NY,NX)-TWFLFL(L,NY,NX)/DENSI
       VOLWH(L,NY,NX)=VOLWH(L,NY,NX)+TFLWH(L,NY,NX)-FINH(L,NY,NX)
-     2+TTHAWH(L,NY,NX)
-      VOLIH(L,NY,NX)=VOLIH(L,NY,NX)-TTHAWH(L,NY,NX)/DENSI
+     2+TWFLFH(L,NY,NX)
+      VOLIH(L,NY,NX)=VOLIH(L,NY,NX)-TWFLFH(L,NY,NX)/DENSI
       DVOLW(L,NY,NX)=VOLW1(L,NY,NX)+VOLWH1(L,NY,NX)
      2-VOLW(L,NY,NX)-VOLWH(L,NY,NX)
       DVOLI(L,NY,NX)=VOLI1(L,NY,NX)+VOLIH1(L,NY,NX)
      2-VOLI(L,NY,NX)-VOLIH(L,NY,NX)
       IF(BKDS(L,NY,NX).GT.ZERO)THEN
-      VOLP(L,NY,NX)=AMAX1(0.0,VOLA(L,NY,NX)-VOLW(L,NY,NX)-VOLI(L,NY,NX)
-     2+VOLAH(L,NY,NX)-VOLWH(L,NY,NX)-VOLIH(L,NY,NX))
+      VOLP(L,NY,NX)=AMAX1(0.0,VOLA(L,NY,NX)-VOLW(L,NY,NX)
+     2-VOLI(L,NY,NX)+VOLAH(L,NY,NX)-VOLWH(L,NY,NX)-VOLIH(L,NY,NX))
       ELSE
       VOLP(L,NY,NX)=0.0
 C     VOLA(L,NY,NX)=VOLW(L,NY,NX)+VOLI(L,NY,NX)
@@ -4450,86 +5400,96 @@ C     VOLT(L,NY,NX)=VOLA(L,NY,NX)
       ENDIF
       ENGY=VHCPX*TKSX
       VHCP(L,NY,NX)=VHCM(L,NY,NX)
-     2+4.19*(VOLW(L,NY,NX)+VOLWH(L,NY,NX))
+     2+4.19*(VOLW(L,NY,NX)+VOLV(L,NY,NX)+VOLWH(L,NY,NX))
      3+1.9274*(VOLI(L,NY,NX)+VOLIH(L,NY,NX))
       TVHCP=TVHCP+VHCP(L,NY,NX)
       TVHCM=TVHCM+VHCM(L,NY,NX)
       TVOLW=TVOLW+VOLW(L,NY,NX)
+      TVOLV=TVOLV+VOLV(L,NY,NX)
       TVOLWH=TVOLWH+VOLWH(L,NY,NX)
       TVOLI=TVOLI+VOLI(L,NY,NX)
       TVOLIH=TVOLIH+VOLIH(L,NY,NX)
       TENGY=TENGY+ENGY
 C
-C     ARTIFICIAL SOIL WARMING
+C     ADD HEAT FLUX FOR ARTIFICIAL SOIL WARMING
 C
 C     IF(NX.EQ.3.AND.NY.EQ.2.AND.L.GT.NU(NY,NX)
 C    3.AND.L.LE.17.AND.I.GE.152.AND.I.LE.304)THEN
 C     THFLW(L,NY,NX)=THFLW(L,NY,NX)
-C    2+(TKSZ(I,J,L)-TKS(L,NY,NX))*VHCP(L,NY,NX)
-C     WRITE(*,3379)'TKSZ',I,J,NX,NY,L,TKSZ(I,J,L)
+C    2+(TKSZ(I,J,L)-TKS(L,NY,NX))*VHCP(L,NY,NX)*XNFH
+C     WRITE(*,3379)'REDIST',I,J,NX,NY,L,TKSZ(I,J,L)
 C    2,TKS(L,NY,NX),VHCP(L,NY,NX),THFLW(L,NY,NX)
 3379  FORMAT(A8,6I4,12E12.4)
 C     ENDIF
 C
 C     END ARTIFICIAL SOIL WARMING
 C
-      TKS10=TKS(L,NY,NX)
-      IF(VHCP(L,NY,NX).GT.ZEROS(NY,NX))THEN
-      TKS(L,NY,NX)=(ENGY+THFLW(L,NY,NX)+THTHAW(L,NY,NX)
-     2+TUPHT(L,NY,NX)+HWFLU(L,NY,NX))/VHCP(L,NY,NX)
-      if(L==1.and.abs(TKS(L,NY,NX)/TKS10-1.)>0.025)then
-      TKS(L,NY,NX)=TKS10
-      endif
+      IF(VHCP(L,NY,NX).GT.VHCPNX(NY,NX))THEN
+      TKS(L,NY,NX)=(ENGY+THFLW(L,NY,NX)+THFLFL(L,NY,NX)
+     2+THFLVL(L,NY,NX)+TUPHT(L,NY,NX)+HWFLU(L,NY,NX) 
+     2+HCBFX(L,NY,NX))/VHCP(L,NY,NX)
       ELSE
-      TKS(L,NY,NX)=TKS(NUM(NY,NX),NY,NX)
+      TKS(L,NY,NX)=TKS(L+1,NY,NX)
       ENDIF
-
+      HEATIN=HEATIN+HCBFX(L,NY,NX)
       TCS(L,NY,NX)=TKS(L,NY,NX)-273.15
       TSMX(L,NY,NX)=AMAX1(TSMX(L,NY,NX),TCS(L,NY,NX))
       TSMN(L,NY,NX)=AMIN1(TSMN(L,NY,NX),TCS(L,NY,NX))
-      UN2GS(NY,NX)=UN2GS(NY,NX)+XN2GS(L,NY,NX)
-C     IF(NX.EQ.1)THEN
-C     WRITE(*,6547)'VOLW',I,J,NX,NY,L,VOLW(L,NY,NX),VOLI(L,NY,NX)
-C    2,VOLW(L,NY,NX)+VOLI(L,NY,NX),VOLP(L,NY,NX),VOLA(L,NY,NX)
-C    3,VOLWH(L,NY,NX),VOLIH(L,NY,NX),VOLAH(L,NY,NX)
-C    4,DVOLI(L,NY,NX),TTHAW(L,NY,NX),TTHAWH(L,NY,NX)
-C    5,TFLW(L,NY,NX),FLW(3,L,NY,NX),FLW(3,L+1,NY,NX)
-C    2,FLW(2,L,NY+1,NX),FLW(1,L,NY,NX+1)
-C    3,FINH(L,NY,NX),TUPWTR(L,NY,NX),FLU(L,NY,NX),TQR(NY,NX)
-C    4,PSISM(L,NY,NX),PSISM(L+1,NY,NX),VOLX(L,NY,NX),VOLT(L,NY,NX)
-C     WRITE(*,6547)'VOLWH',I,J,NX,NY,L,VOLWH(L,NY,NX)
-C    5,FLWH(3,L,NY,NX),FLWH(3,L+1,NY,NX)
-C    2,TFLWH(L,NY,NX),FINH(L,NY,NX),TTHAWH(L,NY,NX)
-C    3,VOLIH(L,NY,NX),VOLAH(L,NY,NX)
-6547  FORMAT(A8,5I4,40E16.8)
-C     WRITE(*,6633)'TKS',I,J,NX,NY,L,TKS(L,NY,NX),ENGY,THFLW(L,NY,NX)
-C    2,THTHAW(L,NY,NX),TUPHT(L,NY,NX),HWFLU(L,NY,NX),VHCP(L,NY,NX)
+C     IF(L.EQ.9)THEN
+C     WRITE(*,6547)'VOLW',I,J,NFZ,NX,NY,L,VOLW(L,NY,NX),VOLI(L,NY,NX)
+C    2,VOLV(L,NY,NX),VOLP(L,NY,NX)
+C    3,VOLWH(L,NY,NX),VOLIH(L,NY,NX),VOLAH(L,NY,NX),DVOLI(L,NY,NX)
+C    4,TFLW(L,NY,NX),TWFLVL(L,NY,NX),TWFLFL(L,NY,NX)
+C    3,FINH(L,NY,NX),TUPWTR(L,NY,NX),FLU(L,NY,NX),TQR(NY,NX) 
+C    5,TFLV(L,NY,NX),TWFLVL(L,NY,NX),TVPFLG(L,NY,NX)
+C    6,XVPFLG(3,L,NY,NX),TEVAPG(NY,NX)
+C    5,XVPFLG(3,L,NY,NX),XVPFLG(3,L+1,NY,NX) 
+C    2,FLW(3,L,NY,NX),FLW(3,L+1,NY,NX+1) 
+C    5,FLV(3,L,NY,NX),FLV(3,L+1,NY,NX) 
+C     WRITE(*,6547)'VOLWH',I,J,NFZ,NX,NY,L,VOLWH(L,NY,NX) 
+C    5,FLWH(3,L,NY,NX),FLWH(3,L+1,NY,NX) 
+C    2,TFLWH(L,NY,NX),FINH(L,NY,NX),TWFLFH(L,NY,NX)
+C    3,VOLIH(L,NY,NX),VOLAH(L,NY,NX) 
+6547  FORMAT(A8,6I4,40E16.8)
+C     WRITE(*,6633)'TKS',I,J,NFZ,NX,NY,L
+C    2,TKS(L,NY,NX),ENGY,THFLW(L,NY,NX) 
+C    2,THFLFL(L,NY,NX),THFLVL(L,NY,NX),HWFLU(L,NY,NX),VHCP(L,NY,NX)
 C    3,TVHCP,TVHCM,TVOLW,TVOLWH,TVOLI,TVOLIH,TENGY,TKSX,VHCPX
-C    3,VOLWXX,VOLIXX,VOLW(L,NY,NX),VOLWH(L,NY,NX),VOLI(L,NY,NX)
-C    4,VOLIH(L,NY,NX),TFLW(L,NY,NX),FINH(L,NY,NX),TTHAW(L,NY,NX)
-C    5,TUPWTR(L,NY,NX),FLU(L,NY,NX),TQR(NY,NX)
+C    3,VOLWXX,VOLIXX,VOLW(L,NY,NX),VOLWH(L,NY,NX),VOLI(L,NY,NX) 
+C    4,VOLIH(L,NY,NX),TFLW(L,NY,NX),FINH(L,NY,NX),TWFLFL(L,NY,NX)
+C    5,TUPWTR(L,NY,NX),FLU(L,NY,NX),TQR(NY,NX) 
 C    6,HFLW(3,L,NY,NX),HFLW(3,L+1,NY,NX)
-C    7,ENGY+THFLW(L,NY,NX)+THTHAW(L,NY,NX)+TUPHT(L,NY,NX)+HWFLU(L,NY,NX)
-6633  FORMAT(A8,5I4,40E16.8)
+C    7,ENGY+THFLW(L,NY,NX)+THFLFL(L,NY,NX)+TUPHT(L,NY,NX)
+C    8+HWFLU(L,NY,NX)
+6633  FORMAT(A8,6I4,40E14.6)
 C     ENDIF
 C
-C     RESIDUE FROM PLANT LITTERFALL
+C     SOIL LITTER FROM PLANT ROOT LITTERFALL
+C
+C     OMC,OMN,OMP=microbial C,N,P
+C     CSNT,ZSNT,PSNT=total C,N,P litterfall from extract.f
 C
       DO 8565 K=0,1
-      DO 8565 M=1,4
+      DO 8565 M=1,5
       OSC(M,K,L,NY,NX)=OSC(M,K,L,NY,NX)+CSNT(M,K,L,NY,NX)
-      OSA(M,K,L,NY,NX)=OSA(M,K,L,NY,NX)+CSNT(M,K,L,NY,NX)*OMCI(1,K)
       OSN(M,K,L,NY,NX)=OSN(M,K,L,NY,NX)+ZSNT(M,K,L,NY,NX)
       OSP(M,K,L,NY,NX)=OSP(M,K,L,NY,NX)+PSNT(M,K,L,NY,NX)
-C     IF((I/30)*30.EQ.I.AND.J.EQ.15)THEN
-C     WRITE(*,8484)'OSC',I,J,L,K,M,OSC(M,K,L,NY,NX)
+C     IF(ZSNT(M,K,L,NY,NX).LT.0.0)THEN
+C     WRITE(*,8484)'CSNT',I,J,NFZ,NX,NY,L,K,M,OSC(M,K,L,NY,NX)
 C    2,OSN(M,K,L,NY,NX),OSP(M,K,L,NY,NX),CSNT(M,K,L,NY,NX)
 C    3,ZSNT(M,K,L,NY,NX),PSNT(M,K,L,NY,NX)
-8484  FORMAT(A8,5I4,12E12.4)
+8484  FORMAT(A8,8I4,12E14.6)
 C     ENDIF
 8565  CONTINUE
 C
-C     DOC, DON, DOP FROM AQUEOUS TRANSPORT
+C     DOC,DON,DOP FROM AQUEOUS TRANSPORT
+C
+C     OQC,OQN,OQP,OQA=DOC,DON,DOP,acetate in micropores
+C     OQCH,OQNH,OQPH,OQAH=DOC,DON,DOP,acetate in macropores
+C     T*FLS,T*FHS=net solute flux in micropores,macropores
+C     X*FXS=convective+diffusive solute flux between macropores 
+C        and micropores from trnsfr.f
+C     
 C
       DO 8560 K=0,4
       OQC(K,L,NY,NX)=OQC(K,L,NY,NX)+TOCFLS(K,L,NY,NX)
@@ -4549,18 +5509,22 @@ C
       OQAH(K,L,NY,NX)=OQAH(K,L,NY,NX)+TOAFHS(K,L,NY,NX)
      2-XOAFXS(K,L,NY,NX)
 C     IF(L.EQ.1)THEN
-C     WRITE(*,2627)'OQCL',I,J,NX,NY,L,K
+C     WRITE(*,2627)'OQCL',I,J,NFZ,NX,NY,L,K
 C    2,OQC(K,L,NY,NX),TOCFLS(K,L,NY,NX),XOCFXS(K,L,NY,NX)
 C    4,OQCH(K,L,NY,NX),TOCFHS(K,L,NY,NX),XOCFXS(K,L,NY,NX)
 C    3,OQN(K,L,NY,NX),TONFLS(K,L,NY,NX),XONFXS(K,L,NY,NX)
 C    4,OQNH(K,L,NY,NX),TONFHS(K,L,NY,NX),XONFXS(K,L,NY,NX)
 C    5,OQA(K,L,NY,NX),TOAFLS(K,L,NY,NX),XOAFXS(K,L,NY,NX)
 C    5,OQAH(K,L,NY,NX),TOAFHS(K,L,NY,NX),XOAFXS(K,L,NY,NX)
-2627  FORMAT(A8,6I4,20E12.4)
+2627  FORMAT(A8,7I4,20E12.4)
 C     ENDIF
 8560  CONTINUE
 C
-C     DOC, DON, DOP FROM PLANT EXUDATION
+C     SOIL DOC,DON,DOP FROM PLANT EXUDATION
+C
+C     OQC,OQN,OQP=DOC,DON,DOP in micropores
+C     TDFOMC,TDFOMN,TDFOMP=root-soil nonstructural C,N,P exchange 
+C        from extract.f
 C
       DO 195 K=0,4
       OQC(K,L,NY,NX)=OQC(K,L,NY,NX)+TDFOMC(K,L,NY,NX)
@@ -4570,7 +5534,22 @@ C
 C
 C     SOIL SOLUTES FROM AQUEOUS TRANSPORT, MICROBIAL AND ROOT
 C     EXCHANGE, EQUILIBRIUM REACTIONS, GAS EXCHANGE,
-C     MICROPORE-MACROPORE EXCHANGE,
+C     MICROPORE-MACROPORE EXCHANGE
+C
+C
+C     SOIL GAS SOLUTES
+C
+C     CO2S,CH4S,OXYS,Z2GS,Z2OS,H2GS=aqueous CO2,CH4,O2,N2,N2O,H2 
+C        in micropores
+C     T*FLS=net solute flux in micropores
+C     X*DFG=soil gas volatilization-dissolution from trnsfr.f 
+C     R*=net gas transformation in soil from nitro.f 
+C     TUP*S,TUP*B=total root-soil gas, solute exchange in 
+C        non-band,band from extract.f
+C     X*BBL=bubble flux from trnsfr.f
+C     TR*S=net solute transformation from solute.f
+C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
+C             :*ZN3*=NH3,*H2G*=H2
 C
       CO2S(L,NY,NX)=CO2S(L,NY,NX)+TCOFLS(L,NY,NX)+XCODFG(L,NY,NX)
      2-RCO2O(L,NY,NX)-TCO2S(L,NY,NX)+RCOFLU(L,NY,NX)+XCOFXS(L,NY,NX)
@@ -4579,54 +5558,81 @@ C
      2-RCH4O(L,NY,NX)-TUPCHS(L,NY,NX)+RCHFLU(L,NY,NX)
      3+XCHFXS(L,NY,NX)+XCHBBL(L,NY,NX)
       OXYS(L,NY,NX)=OXYS(L,NY,NX)+TOXFLS(L,NY,NX)+XOXDFG(L,NY,NX)
-     2-RUPOXO(L,NY,NX)-TUPOXS(L,NY,NX)+ROXFLU(L,NY,NX)
+     2-RUPOXO(L,NY,NX)-TUPOXS(L,NY,NX)+ROXFLU(L,NY,NX) 
      3+XOXFXS(L,NY,NX)+XOXBBL(L,NY,NX)
-C     IF(I.EQ.287)THEN
-C     WRITE(*,5432)'CO2SL',I,J,NX,NY,L,CO2S(L,NY,NX),TCOFLS(L,NY,NX)
-C    2,XCODFG(L,NY,NX),RCO2O(L,NY,NX),TCO2S(L,NY,NX)
-C    3,RCOFLU(L,NY,NX),XCOFXS(L,NY,NX),TRCO2(L,NY,NX)
-C    4,XCOBBL(L,NY,NX),CO2G(L,NY,NX),ORGC(L,NY,NX)
-C     WRITE(*,5432)'CH4SL',I,J,NX,NY,L,CH4S(L,NY,NX),CH4G(L,NY,NX)
-C    2,TCHFLS(L,NY,NX),XCHDFG(L,NY,NX),RCH4O(L,NY,NX),TUPCHS(L,NY,NX)
-C    3,RCHFLU(L,NY,NX),XCHFXS(L,NY,NX),XCHBBL(L,NY,NX)
-C    4,XCOBBL(L,NY,NX),XCHFLS(3,L,NY,NX),XCHFLS(3,L+1,NY,NX)
-C     WRITE(*,5432)'OXYSL',I,J,NX,NY,L,OXYS(L,NY,NX),OXYG(L,NY,NX)
-C    4,XOXFLS(3,L,NY,NX),XOXFLS(3,L+1,NY,NX),TOXFLS(L,NY,NX)
-C    2,XOXDFG(L,NY,NX),RUPOXO(L,NY,NX),TUPOXS(L,NY,NX)
-C    3,ROXFLU(L,NY,NX),XOXFXS(L,NY,NX),XOXBBL(L,NY,NX)
-C    5,XOXDFS(NY,NX),COXYS(L,NY,NX)
-5432  FORMAT(A8,5I4,20E12.4)
-C     ENDIF
       Z2GS(L,NY,NX)=Z2GS(L,NY,NX)+TNGFLS(L,NY,NX)+XNGDFG(L,NY,NX)
      2-RN2G(L,NY,NX)-TUPNF(L,NY,NX)+RNGFLU(L,NY,NX)+XNGFXS(L,NY,NX)
      3-XN2GS(L,NY,NX)+XNGBBL(L,NY,NX)
       Z2OS(L,NY,NX)=Z2OS(L,NY,NX)+TN2FLS(L,NY,NX)+XN2DFG(L,NY,NX)
      2-RN2O(L,NY,NX)-TUPN2S(L,NY,NX)+RN2FLU(L,NY,NX)+XN2FXS(L,NY,NX)
      3+XN2BBL(L,NY,NX)
-C     IF(NY.EQ.5.AND.L.EQ.1)THEN
-C     WRITE(*,4444)'Z2OS',I,J,NX,NY,L,Z2OS(L,NY,NX),TN2FLS(L,NY,NX)
+      H2GS(L,NY,NX)=H2GS(L,NY,NX)+THGFLS(L,NY,NX)+XHGDFG(L,NY,NX)
+     2-RH2GO(L,NY,NX)-TUPHGS(L,NY,NX)+RHGFLU(L,NY,NX)
+     3+XHGFXS(L,NY,NX)+XHGBBL(L,NY,NX)
+C     IF(L.EQ.5)THEN
+C     WRITE(*,5432)'CO2SL',I,J,NFZ,NX,NY,L
+C    2,CO2S(L,NY,NX),TCOFLS(L,NY,NX)
+C    2,XCODFG(L,NY,NX),RCO2O(L,NY,NX),TCO2S(L,NY,NX)
+C    3,RCOFLU(L,NY,NX),XCOFXS(L,NY,NX),TRCO2(L,NY,NX)
+C    4,XCOBBL(L,NY,NX),CO2G(L,NY,NX),ORGC(L,NY,NX)
+C     WRITE(*,5432)'CH4SL',I,J,NFZ,NX,NY,L,CH4S(L,NY,NX),CH4G(L,NY,NX)
+C    2,TCHFLS(L,NY,NX),XCHDFG(L,NY,NX),RCH4O(L,NY,NX),TUPCHS(L,NY,NX)
+C    3,RCHFLU(L,NY,NX),XCHFXS(L,NY,NX),XCHBBL(L,NY,NX)
+C    4,XCOBBL(L,NY,NX),XCHFLS(3,L,NY,NX),XCHFLS(3,L+1,NY,NX)
+C    5,CCH4S(L,NY,NX)
+C     WRITE(*,5432)'OXYSL',I,J,NFZ,NX,NY,L
+C    2,OXYS(L,NY,NX),OXYG(L,NY,NX) 
+C    4,XOXFLS(3,L,NY,NX),XOXFLS(3,L+1,NY,NX),TOXFLS(L,NY,NX) 
+C    2,XOXDFG(L,NY,NX),RUPOXO(L,NY,NX),TUPOXS(L,NY,NX)
+C    3,ROXFLU(L,NY,NX),XOXFXS(L,NY,NX),XOXBBL(L,NY,NX) 
+C    5,XOXDFS(NY,NX),COXYS(L,NY,NX)
+C     WRITE(*,5432)'Z2OS',I,J,NFZ,NX,NY,L
+C    2,Z2OS(L,NY,NX),TN2FLS(L,NY,NX)
 C    2,XN2DFG(L,NY,NX),RN2O(L,NY,NX),TUPN2S(L,NY,NX),RN2FLU(L,NY,NX)
 C    3,XN2FXS(L,NY,NX),XN2BBL(L,NY,NX),XN2FLS(3,L,NY,NX)
 C    4,XN2FLS(3,L+1,NY,NX),XN2DFS(NY,NX)
 C    3,Z2GS(L,NY,NX),TNGFLS(L,NY,NX),XNGDFG(L,NY,NX)
 C    4,RN2G(L,NY,NX),TUPNF(L,NY,NX),RNGFLU(L,NY,NX),XNGFXS(L,NY,NX)
 C    5,XN2GS(L,NY,NX),XNGBBL(L,NY,NX),XNGDFS(NY,NX)
+C     WRITE(*,5432)'H2GS',I,J,NFZ,NX,NY,L
+C    2,H2GS(L,NY,NX),THGFLS(L,NY,NX)
+C    2,XHGDFG(L,NY,NX),RH2GO(L,NY,NX),TUPHGS(L,NY,NX),RHGFLU(L,NY,NX)
+C    3,XHGFXS(L,NY,NX),XHGBBL(L,NY,NX),XHGDFS(NY,NX)
+5432  FORMAT(A8,6I4,20E12.4)
 C     ENDIF
-      H2GS(L,NY,NX)=H2GS(L,NY,NX)+THGFLS(L,NY,NX)+XHGDFG(L,NY,NX)
-     2-RH2GO(L,NY,NX)-TUPHGS(L,NY,NX)+RHGFLU(L,NY,NX)
-     3+XHGFXS(L,NY,NX)+XHGBBL(L,NY,NX)
+C
+C     SOIL MINERAL N,P SOLUTES NON-BAND
+C
+C     ZNH4S,ZNH3S,ZNO3S,ZNO2S=NH4,NH3,NO3,NO2 in non-band micropores
+C     ZNH4B,ZNH3B,ZNO3B,ZNO2B=NH4,NH3,NO3,NO2 in band micropores
+C     H1PO4,H2PO4=HPO4,H2PO4 in non-band micropores
+C     H1POB,H2POB=HPO4,H2PO4 in band micropores
+C     T*FLS=net solute flux in micropores
+C     TUP*S,TUP*B=total root-soil gas, solute exchange in 
+C        non-band,band from extract.f
+C     R*FLU,R*FBU=subsurface solute flux in non-band,band
+C     X*FXS,X*FXB=convective+diffusive solute flux between macropores
+C        and micropores in non-band,band from trnsfr.f
+C     TR*S=net solute transformation from solute.f
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
+C        :N4=NH4,N3=NH3,NO=NO3,NX=NO2,H1P=HPO4,H2P=H2PO4 in non-band
+C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,H1B=HPO4,H2B=H2PO4 in band
+C
       ZNH3S(L,NY,NX)=ZNH3S(L,NY,NX)+TN3FLS(L,NY,NX)+XN3DFG(L,NY,NX)
-     2+TRN3S(L,NY,NX)-TUPN3S(L,NY,NX)+RN3FLU(L,NY,NX)
+     2+TRN3S(L,NY,NX)-TUPN3S(L,NY,NX)+RN3FLU(L,NY,NX) 
      3+XN3FXW(L,NY,NX)+XN3BBL(L,NY,NX)
       ZNH4S(L,NY,NX)=ZNH4S(L,NY,NX)+TN4FLS(L,NY,NX)+XNH4S(L,NY,NX)
      2+TRN4S(L,NY,NX)-TUPNH4(L,NY,NX)+RN4FLU(L,NY,NX)
-     3+XN4FXW(L,NY,NX)
-C     IF(IYRC.EQ.2006.AND.I.EQ.361.AND.NX.EQ.1)THEN
-C     WRITE(*,4443)'H2GS',I,J,NX,NY,L,H2GS(L,NY,NX),THGFLS(L,NY,NX)
-C    2,XHGDFG(L,NY,NX),RH2GO(L,NY,NX),TUPHGS(L,NY,NX),RHGFLU(L,NY,NX)
-C    3,XHGFXS(L,NY,NX),XHGBBL(L,NY,NX),XHGDFS(NY,NX)
+     3+XN4FXW(L,NY,NX) 
+      ZNO3S(L,NY,NX)=ZNO3S(L,NY,NX)+TNOFLS(L,NY,NX)+XNO3S(L,NY,NX)
+     2+TRNO3(L,NY,NX)-TUPNO3(L,NY,NX)+RNOFLU(L,NY,NX)
+     3+XNOFXW(L,NY,NX)
+      ZNO2S(L,NY,NX)=ZNO2S(L,NY,NX)+TNXFLS(L,NY,NX)+XNO2S(L,NY,NX)
+     2+TRNO2(L,NY,NX)+XNXFXS(L,NY,NX)
+C     IF(L.EQ.NU(NY,NX))THEN
 C     WRITE(*,4444)'NH3',I,J,NX,NY,L,ZNH3S(L,NY,NX),TN3FLS(L,NY,NX)
-C    2,XN3DFG(L,NY,NX),TRN3S(L,NY,NX),TUPN3S(L,NY,NX)
+C    2,XN3DFG(L,NY,NX),TRN3S(L,NY,NX),TUPN3S(L,NY,NX) 
 C    3,RN3FLU(L,NY,NX),XN3FXW(L,NY,NX),XN3BBL(L,NY,NX),XN3DFS(NY,NX)
 C    4,ZNH4S(L,NY,NX)
 C    4,TN4FLS(L,NY,NX),XNH4S(L,NY,NX),TRN4S(L,NY,NX),TUPNH4(L,NY,NX)
@@ -4634,13 +5640,6 @@ C    5,RN4FLU(L,NY,NX),XN4FXW(L,NY,NX),TN4QRS(NY,NX),TN3QRS(NY,NX)
 C    6,ZNH3SH(L,NY,NX),ZNH4SH(L,NY,NX),14.0*XN4(L,NY,NX)
 4443  FORMAT(A8,5I4,30F16.8)
 4444  FORMAT(A8,5I4,30E12.4)
-C     ENDIF
-      ZNO3S(L,NY,NX)=ZNO3S(L,NY,NX)+TNOFLS(L,NY,NX)+XNO3S(L,NY,NX)
-     2+TRNO3(L,NY,NX)-TUPNO3(L,NY,NX)+RNOFLU(L,NY,NX)
-     3+XNOFXW(L,NY,NX)
-      ZNO2S(L,NY,NX)=ZNO2S(L,NY,NX)+TNXFLS(L,NY,NX)+XNO2S(L,NY,NX)
-     2+TRNO2(L,NY,NX)+XNXFXS(L,NY,NX)
-C     IF(L.EQ.NU(NY,NX))THEN
 C     WRITE(*,5545)'NO3',I,J,NX,NY,L,ZNO3S(L,NY,NX),TNOFLS(L,NY,NX)
 C    2,XNO3S(L,NY,NX),TRNO3(L,NY,NX),TUPNO3(L,NY,NX),RNOFLU(L,NY,NX)
 C    3,XNOFXW(L,NY,NX),ZNO2S(L,NY,NX),TNXFLS(L,NY,NX)
@@ -4651,12 +5650,15 @@ C     ENDIF
      2+TRH1P(L,NY,NX)-TUPH1P(L,NY,NX)+RH1PFU(L,NY,NX)+XH1PXS(L,NY,NX)
       H2PO4(L,NY,NX)=H2PO4(L,NY,NX)+TPOFLS(L,NY,NX)+XH2PS(L,NY,NX)
      2+TRH2P(L,NY,NX)-TUPH2P(L,NY,NX)+RH2PFU(L,NY,NX)+XH2PXS(L,NY,NX)
+C
+C     SOIL MINERAL N,P SOLUTES BAND
+C
       ZNH3B(L,NY,NX)=ZNH3B(L,NY,NX)+TN3FLB(L,NY,NX)+XNBDFG(L,NY,NX)
-     2+TRN3B(L,NY,NX)-TUPN3B(L,NY,NX)+RN3FBU(L,NY,NX)
+     2+TRN3B(L,NY,NX)-TUPN3B(L,NY,NX)+RN3FBU(L,NY,NX) 
      3+XN3FXB(L,NY,NX)+XNBBBL(L,NY,NX)
       ZNH4B(L,NY,NX)=ZNH4B(L,NY,NX)+TN4FLB(L,NY,NX)+XNH4B(L,NY,NX)
      2+TRN4B(L,NY,NX)-TUPNHB(L,NY,NX)+RN4FBU(L,NY,NX)
-     3+XN4FXB(L,NY,NX)
+     3+XN4FXB(L,NY,NX) 
       ZNO3B(L,NY,NX)=ZNO3B(L,NY,NX)+TNOFLB(L,NY,NX)+XNO3B(L,NY,NX)
      2+TRNOB(L,NY,NX)-TUPNOB(L,NY,NX)+RNOFBU(L,NY,NX)
      3+XNOFXB(L,NY,NX)
@@ -4666,13 +5668,20 @@ C     ENDIF
      2+TRH1B(L,NY,NX)-TUPH1B(L,NY,NX)+RH1BBU(L,NY,NX)
      3+XH1BXB(L,NY,NX)
       H2POB(L,NY,NX)=H2POB(L,NY,NX)+TH2BFB(L,NY,NX)+XH2BS(L,NY,NX)
-     2+TRH2B(L,NY,NX) -TUPH2B(L,NY,NX)+RH2BBU(L,NY,NX)
+     2+TRH2B(L,NY,NX)-TUPH2B(L,NY,NX)+RH2BBU(L,NY,NX)
      3+XH2BXB(L,NY,NX)
       THRE(NY,NX)=THRE(NY,NX)+RCO2O(L,NY,NX)+RCH4O(L,NY,NX)
+      UN2GS(NY,NX)=UN2GS(NY,NX)+XN2GS(L,NY,NX)
       UN2GG(NY,NX)=UN2GG(NY,NX)+RN2G(L,NY,NX)
       HN2GG(NY,NX)=HN2GG(NY,NX)+RN2G(L,NY,NX)
 C
-C     EXCHANGEABLE CATIONS AND ANIONS FROM EXCHANGE REACTIONS
+C     SOIL EXCHANGEABLE CATIONS AND ANIONS FROM EXCHANGE REACTIONS
+C
+C     TR*=total exchange+precipitation from solute.f
+C     XN4,XH1P,XH2P=exchangeable NH4,HPO4,H2PO4 in non-band
+C     XOH0,XOH1,XOH2=adsorption sites R-,R-OH,R-OH2 in non-band 
+C     XNB,XH1PB,XH2PB=exchangeable NH4,HPO4,H2PO4 in band
+C     XOH0B,XOH1B,XOH2B=adsorption sites R-,R-OH,R-OH2 in band 
 C
       XN4(L,NY,NX)=XN4(L,NY,NX)+TRXN4(L,NY,NX)
       XNB(L,NY,NX)=XNB(L,NY,NX)+TRXNB(L,NY,NX)
@@ -4688,16 +5697,24 @@ C
       XH2PB(L,NY,NX)=XH2PB(L,NY,NX)+TRB2P(L,NY,NX)
 C     IF(J.EQ.12.AND.L.LE.4)THEN
 C     WRITE(*,4445)'NHB',I,J,NX,NY,L,ZNH3B(L,NY,NX),TN3FLB(L,NY,NX)
-C    2,XNBDFG(L,NY,NX),TRN3B(L,NY,NX),TUPN3B(L,NY,NX)
+C    2,XNBDFG(L,NY,NX),TRN3B(L,NY,NX),TUPN3B(L,NY,NX) 
 C    3,RN3FBU(L,NY,NX),XN3FXB(L,NY,NX),XNBBBL(L,NY,NX),TUPNHB(L,NY,NX)
 C    4,ZNH4B(L,NY,NX),TN4FLB(L,NY,NX),XNH4B(L,NY,NX)
-C    5,TRN4B(L,NY,NX),TUPNHB(L,NY,NX),RN4FBU(L,NY,NX),XNB(L,NY,NX)*14.0
+C    5,TRN4B(L,NY,NX),TUPNHB(L,NY,NX),RN4FBU(L,NY,NX)
+C    6,XNB(L,NY,NX)*14.0
 C     WRITE(*,4445)'NOB',I,J,NX,NY,L,ZNO2B(L,NY,NX),TNXFLB(L,NY,NX)
 C    2,XNO2B(L,NY,NX),TRN2B(L,NY,NX),XNXFXB(L,NY,NX)
 4445  FORMAT(A8,5I4,20E12.4)
 C     ENDIF
 C
-C     PRECIPITATES FROM PRECIPITATION-DISSOLUTION REACTIONS
+C     SOIL PRECIPITATES FROM PRECIPITATION-DISSOLUTION REACTIONS
+C
+C     TR*=total exchange+precipitation from solute.f
+C     PALPO,PFEPO=precipitated AlPO4,FEPO4 in non-band 
+C     PCAPM,PCAPD,PCAPH=precipitated CaH2PO4,CaHPO4,apatite 
+C        in non-band
+C     PALPB,PFEPB=precipitated AlPO4,FEPO4 in band 
+C     PCPMB,PCPDB,PCPHB=precipitated CaH2PO4,CaHPO4,apatite in band
 C
       PALPO(L,NY,NX)=PALPO(L,NY,NX)+TRALPO(L,NY,NX)
       PFEPO(L,NY,NX)=PFEPO(L,NY,NX)+TRFEPO(L,NY,NX)
@@ -4709,8 +5726,23 @@ C
       PCPDB(L,NY,NX)=PCPDB(L,NY,NX)+TRCPDB(L,NY,NX)
       PCPHB(L,NY,NX)=PCPHB(L,NY,NX)+TRCPHB(L,NY,NX)
       PCPMB(L,NY,NX)=PCPMB(L,NY,NX)+TRCPMB(L,NY,NX)
+C     IF(PCAPD(L,NY,NX).LT.ZEROS(NY,NX))THEN
+C     WRITE(*,6638)'PCAPD',I,J,NFZ,L,PCAPD(L,NY,NX),TRCAPD(L,NY,NX)
+6638  FORMAT(A8,4I4,12E12.4)
+C     ENDIF
 C
 C     MACROPORE SOLUTES FROM MACROPORE-MICROPORE EXCHANGE
+C
+C     CO2SH,CH4SH,OXYSH,Z2GSH,Z2OSH,H2GSH=aqueous CO2,CH4,O2,N2,N2O,H2
+C        in macropores
+C     ZNH4SH,ZNH3SH,ZNO3SH,ZNO2SH=NH4,NH3,NO3,NO2 
+C        in non-band macropores
+C     ZNH4BH,ZNH3BH,ZNO3BH,ZNO2BH=NH4,NH3,NO3,NO2 in band macropores
+C     H1PO4H,H2PO4H=HPO4,H2PO4 in non-band macropores
+C     H1POBH,H2POBH=HPO4,H2PO4 in band macropores
+C     T*FHS=net solute flux in macropores
+C     X*FXS,X*FXB=convective+diffusive solute flux between macropores
+C        and micropores in non-band,band from trnsfr.f
 C
       CO2SH(L,NY,NX)=CO2SH(L,NY,NX)+TCOFHS(L,NY,NX)-XCOFXS(L,NY,NX)
       CH4SH(L,NY,NX)=CH4SH(L,NY,NX)+TCHFHS(L,NY,NX)-XCHFXS(L,NY,NX)
@@ -4745,22 +5777,35 @@ C    3,XH1PXS(L,NY,NX),XH1P(L,NY,NX),H1POB(L,NY,NX)
 C    4,TH1BFB(L,NY,NX),XH1BS(L,NY,NX),TRH1B(L,NY,NX),TUPH1B(L,NY,NX)
 C    2,RH1BBU(L,NY,NX),XH1BXB(L,NY,NX),XH1PB(L,NY,NX)
 C    2,H1PO4H(L,NY,NX),TP1FHS(L,NY,NX),XH1PXS(L,NY,NX)
-C    2,H1POBH(L,NY,NX),TH1BHB(L,NY,NX),XH1BXB(L,NY,NX)
+C    2,H1POBH(L,NY,NX),TH1BHB(L,NY,NX),XH1BXB(L,NY,NX) 
 C     WRITE(*,5545)'HP24',I,J,NX,NY,L,H2PO4(L,NY,NX),TPOFLS(L,NY,NX)
 C    2,XH2PS(L,NY,NX),TRH2P(L,NY,NX),TUPH2P(L,NY,NX),RH2PFU(L,NY,NX)
 C    3,XH2PXS(L,NY,NX),XH2P(L,NY,NX),H2POB(L,NY,NX)
 C    4,TH2BFB(L,NY,NX),XH2BS(L,NY,NX),TRH2B(L,NY,NX),TUPH2B(L,NY,NX)
 C    5,RH2BBU(L,NY,NX),XH2BXB(L,NY,NX),XH2PB(L,NY,NX)
 C    2,H2PO4H(L,NY,NX),TPOFHS(L,NY,NX),XH2PXS(L,NY,NX)
-C    2,H2POBH(L,NY,NX),TH2BHB(L,NY,NX),XH2BXB(L,NY,NX)
+C    2,H2POBH(L,NY,NX),TH2BHB(L,NY,NX),XH2BXB(L,NY,NX) 
 C     ENDIF
 C     ENDIF
 C
-C     GASES FROM VOLATILIZATION-DISSOLUTION AND GAS TRANSFER
+C     SOIL GASES FROM VOLATILIZATION-DISSOLUTION AND GAS TRANSFER
+C
+C     *G=soil gas content
+C     T*FLG=net convective+diffusive gas flux from trnsfr.f
+C     X*DFG=net water-air gas flux from trnsfr.f 
+C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
+C             :*ZN3*=NH3,*H2G*=H2
+C     TRN3G=NH3 dissolution from solute.f
+C     R*F=net gaseous flux for use in nitro.f, uptake.f
+C     R*L=net aqueous flux for use in nitro.f, uptake.f
+C     X*BBL=bubble flux from trnsfr.f
 C
       CO2G(L,NY,NX)=CO2G(L,NY,NX)+TCOFLG(L,NY,NX)-XCODFG(L,NY,NX)
+     2+RCGOX(L,NY,NX)+RC4OX(L,NY,NX)
       CH4G(L,NY,NX)=CH4G(L,NY,NX)+TCHFLG(L,NY,NX)-XCHDFG(L,NY,NX)
+     2+RCHOX(L,NY,NX)-RC4OX(L,NY,NX)
       OXYG(L,NY,NX)=OXYG(L,NY,NX)+TOXFLG(L,NY,NX)-XOXDFG(L,NY,NX)
+     2-ROGOX(L,NY,NX)-RC4OX(L,NY,NX)*2.667 
       Z2GG(L,NY,NX)=Z2GG(L,NY,NX)+TNGFLG(L,NY,NX)-XNGDFG(L,NY,NX)
       Z2OG(L,NY,NX)=Z2OG(L,NY,NX)+TN2FLG(L,NY,NX)-XN2DFG(L,NY,NX)
       ZNH3G(L,NY,NX)=ZNH3G(L,NY,NX)+TNHFLG(L,NY,NX)-XN3DFG(L,NY,NX)
@@ -4771,15 +5816,18 @@ C
       RCH4F(L,NY,NX)=TCHFLG(L,NY,NX)
       ROXYL(L,NY,NX)=TOXFLS(L,NY,NX)+ROXFLU(L,NY,NX)+XOXFXS(L,NY,NX)
      2+XOXBBL(L,NY,NX)
-      RCH4L(L,NY,NX)=TCHFLS(L,NY,NX)+RCHFLU(L,NY,NX)+XCHFXS(L,NY,NX)
+      RCH4L(L,NY,NX)=TCHFLS(L,NY,NX)+RCHFLU(L,NY,NX)+XCHFXS(L,NY,NX) 
      2+XCHBBL(L,NY,NX)
-C     IF(L.EQ.1)THEN
-C     WRITE(*,5432)'CO2GL',I,J,NX,NY,L,CO2G(L,NY,NX),TCOFLG(L,NY,NX)
-C    2,XCODFG(L,NY,NX),THETP(L,NY,NX)
-C     WRITE(*,5432)'OXYGL',I,J,NX,NY,L,OXYG(L,NY,NX),TOXFLG(L,NY,NX)
+C     IF((I/30)*30.EQ.I.AND.J.EQ.15.AND.L.EQ.1)THEN
+C     WRITE(*,5432)'CO2GL',I,J,NFZ,NX,NY,L
+C    2,CO2G(L,NY,NX),TCOFLG(L,NY,NX)
+C    2,XCODFG(L,NY,NX),THETP(L,NY,NX) 
+C     WRITE(*,5432)'OXYGL',I,J,NFZ,NX,NY,L
+C    2,OXYG(L,NY,NX),TOXFLG(L,NY,NX)
 C    2,XOXDFG(L,NY,NX),COXYG(L,NY,NX),XOXFLG(3,L,NY,NX)
 C    3,XOXFLG(3,L+1,NY,NX),XOXFLG(1,L,NY,NX+1)
-C     WRITE(*,5432)'CH4GL',I,J,NX,NY,L,CH4G(L,NY,NX),TCHFLG(L,NY,NX)
+C     WRITE(*,5432)'CH4GL',I,J,NFZ,NX,NY,L
+C    2,CH4G(L,NY,NX),TCHFLG(L,NY,NX)
 C    2,XCHDFG(L,NY,NX),CCH4G(L,NY,NX),XCHFLG(3,L,NY,NX)
 C    3,XCHFLG(3,L+1,NY,NX),XCHDFS(NY,NX),RCH4F(L,NY,NX)
 C    4,RCH4L(L,NY,NX),TCHFLS(L,NY,NX),RCHFLU(L,NY,NX)
@@ -4788,7 +5836,23 @@ C     ENDIF
 C
 C     GRID CELL BOUNDARY FLUXES FROM ROOT GAS TRANSFER
 C
-      HEATIN=HEATIN+THTHAW(L,NY,NX)+TUPHT(L,NY,NX)
+C     HEATIN=cumulative net surface heat transfer
+C     THTHAW=net freeze-thaw latent heat flux
+C     TUPHT=total convective heat in root water uptake from extract.f
+C     T*FLA=total root gaseous-atmosphere gas exchange from extract.f
+C     X*BBL=bubble flux from trnsfr.f
+C     *G=soil gas content
+C     gas code:CO=CO2,OX=O2,CH=CH4,N2=N2O,NH=NH3,H2=H2
+C     CO2GIN,TCOU=cumulative surface,subsurface gas C exchange
+C     OXYGIN,OXYGOU=cumulative surface,subsurface gas O2 exchange 
+C     H2GIN,H2GOU=cumulative surface,subsurface gas H2 exchange 
+C     TZIN,TZOU=cumulative surface,subsurface aqueous NH4,NH3,NO3
+C        exchange
+C     H*G,U*G=current,cumulative gas exchange
+C     T*S,T*P=total root gas exchange with soil, root
+C     TXCO2=CO2 net change from all solute equilibria
+C
+      HEATIN=HEATIN+THFLFL(L,NY,NX)+THFLVL(L,NY,NX)+TUPHT(L,NY,NX)
       CIB=TCOFLA(L,NY,NX)
       CHB=TCHFLA(L,NY,NX)
       OIB=TOXFLA(L,NY,NX)
@@ -4804,7 +5868,7 @@ C
       LL=0
       CIB=CIB+XCOBBL(L,NY,NX)
       CHB=CHB+XCHBBL(L,NY,NX)
-      OIB=OIB+XOXBBL(L,NY,NX)
+      OIB=OIB+XOXBBL(L,NY,NX) 
       ZGB=ZGB+XNGBBL(L,NY,NX)
       Z2B=Z2B+XN2BBL(L,NY,NX)
       ZHB=ZHB+XN3BBL(L,NY,NX)+XNBBBL(L,NY,NX)
@@ -4821,7 +5885,7 @@ C
       IF(LG.LT.L)THEN
       TLCO2G=TLCO2G-XCOBBL(L,NY,NX)-XCHBBL(L,NY,NX)
       UCO2S(NY,NX)=UCO2S(NY,NX)-XCOBBL(L,NY,NX)-XCHBBL(L,NY,NX)
-      OXYGSO=OXYGSO-XOXBBL(L,NY,NX)
+      OXYGSO=OXYGSO-XOXBBL(L,NY,NX) 
       TLN2G=TLN2G-XNGBBL(L,NY,NX)-XN2BBL(L,NY,NX)
      2-XN3BBL(L,NY,NX)-XNBBBL(L,NY,NX)
       TLH2G=TLH2G-XHGBBL(L,NY,NX)
@@ -4830,6 +5894,8 @@ C
       CO2GIN=CO2GIN+CIB+CHB
       COB=TCO2P(L,NY,NX)+TCO2S(L,NY,NX)-TRCO2(L,NY,NX)
       TCOU=TCOU+COB
+      XCNET(NY,NX)=XCNET(NY,NX)+CIB
+      XHNET(NY,NX)=XHNET(NY,NX)+CHB
       HCO2G(NY,NX)=HCO2G(NY,NX)+CIB
       UCO2G(NY,NX)=UCO2G(NY,NX)+CIB
       HCH4G(NY,NX)=HCH4G(NY,NX)+CHB
@@ -4837,14 +5903,16 @@ C
       UCOP(NY,NX)=UCOP(NY,NX)+TCO2P(L,NY,NX)+TCO2S(L,NY,NX)
       UDICD(NY,NX)=UDICD(NY,NX)-12.0*TBCO2(L,NY,NX)
       TXCO2(NY,NX)=TXCO2(NY,NX)+12.0*TBCO2(L,NY,NX)
+      XONET(NY,NX)=XONET(NY,NX)+OIB
       OXYGIN=OXYGIN+OIB
       OOB=RUPOXO(L,NY,NX)+TUPOXP(L,NY,NX)+TUPOXS(L,NY,NX)
+     2+ROGOX(L,NY,NX)+RC4OX(L,NY,NX)*2.667
       OXYGOU=OXYGOU+OOB
       UOXYG(NY,NX)=UOXYG(NY,NX)+OIB
       HOXYG(NY,NX)=HOXYG(NY,NX)+OIB
       H2GIN=H2GIN+HGB
       HOB=RH2GO(L,NY,NX)+TUPHGS(L,NY,NX)
-      H2GOU=H2GOU+HOB
+      H2GOU=H2GOU+HOB 
       ZN2GIN=ZN2GIN+ZGB+Z2B+ZHB
 C     UN2GG(NY,NX)=UN2GG(NY,NX)+ZGB
 C     HN2GG(NY,NX)=HN2GG(NY,NX)+ZGB
@@ -4852,10 +5920,11 @@ C     HN2GG(NY,NX)=HN2GG(NY,NX)+ZGB
       HN2OG(NY,NX)=HN2OG(NY,NX)+Z2B
       UNH3G(NY,NX)=UNH3G(NY,NX)+ZHB
       HNH3G(NY,NX)=HNH3G(NY,NX)+ZHB
-      UH2GG(NY,NX)=UH2GG(NY,NX)+HGB
-C     IF(NY.EQ.5)THEN
-C     WRITE(*,6645)'PLT',I,J,NX,NY,L,LG,LL
-C    2,TXCO2NY,NX),TBCO2(L,NY,NX)
+      UH2GG(NY,NX)=UH2GG(NY,NX)+HGB 
+C     IF(NY.EQ.5)THEN 
+C     WRITE(*,6645)'PLT',I,J,NFZ,NX,NY,L,LG,LL
+C    2,XCNET(NY,NX),XONET(NY,NX),XHNET(NY,NX)
+C    2,TXCO2(NY,NX),TBCO2(L,NY,NX)
 C    2,HCH4G(NY,NX),CHB,TCHFLA(L,NY,NX),XCHBBL(L,NY,NX)
 C    2,HOXYG(NY,NX),OIB
 C    3,XOXBBL(L,NY,NX),TUPOXP(L,NY,NX),TUPOXS(L,NY,NX)
@@ -4867,10 +5936,15 @@ C    5,TN2FLA(L,NY,NX),TNHFLA(L,NY,NX),THGFLA(L,NY,NX)
 C    2,UN2GG(NY,NX),ZGI,XNGBBL(L,NY,NX)
 C    5,TN2FLA(L,NY,NX),TNHFLA(L,NY,NX),THGFLA(L,NY,NX)
 C    6,CH4G(LL,NY,NX)
-6645  FORMAT(A8,7I4,30E12.4)
+6645  FORMAT(A8,8I4,30E12.4)
 C      ENDIF
 C
-C     GRID CELL BOUNDARY FLUXES FROM EQUILIBRIUM REACTIONS
+C     SOIL SOLUTE CHANGES FROM SOIL TRANSFORMATION, ROOT UPTAKE, 
+C     ION REACTIONS
+C
+C     X*S=soil solute exchange from nitro.f, solute.f
+C     TUP*=root solute uptake from uptake.f
+C     TIONOU=total solute salt subsurface change
 C
       SNM=(2.0*(XNH4S(L,NY,NX)+XNH4B(L,NY,NX)-TUPNH4(L,NY,NX)
      2-TUPNHB(L,NY,NX)-XN2GS(L,NY,NX))-TUPN3S(L,NY,NX)-TUPN3B(L,NY,NX)
@@ -4886,9 +5960,17 @@ C     UIONOU(NY,NX)=UIONOU(NY,NX)-SSB
 C     WRITE(20,3339)'SSB',I,J,L,SSB,TRH2O(L,NY,NX)
 C    2,TBCO2(L,NY,NX),XZHYS(L,NY,NX),TBION(L,NY,NX)
 C
-C     GAS AND SOLUTE EXCHANGE WITHIN GRID CELL ADDED TO ECOSYSTEM
+C     SOIL GAS AND SOLUTE EXCHANGE WITHIN GRID CELL ADDED TO ECOSYSTEM
 C     TOTALS FOR CALCULATING COMPETITION CONSTRAINTS ON MICROBIAL
 C     AND ROOT POPULATIONS
+C
+C     R*X=total substrate demand from all substrate unlimited by
+C        uptake calculated in nitro.f, uptake.f for use in next
+C        nitro.f, uptake.f
+C     substrate code: OXY=O2, NH4=NH4 non-band, NB4=NH4 band
+C        NO3=NO3 non-band, NB3=NO3 band, PO4=H2PO4 non-band
+C        POB=H2PO4 band,P14=HPO4 non-band, P1B=HPO4 band, OQC=DOC
+C        oxidation, OQA=acetate oxidation  
 C
       DO 7990 K=0,5
       DO 7980 N=1,7
@@ -4921,8 +6003,25 @@ C     GRID CELL VARIABLES NEEDED FOR WATER, C, N, P, O, SOLUTE AND
 C     ENERGY BALANCES INCLUDING SUM OF ALL CURRENT STATE VARIABLES,
 C     CUMULATIVE SUMS OF ALL ADDITIONS AND REMOVALS SINCE START OF RUN
 C
+C     VOLW,VOLI,VOLWH,VOLIH=water,ice content in micropores,macropores
+C     VOLWSO,UVOLW=total landscape, grid cell water content
+C     VHCP=soil heat capacity
+C     TKS=soil temperature
+C     HEATSO=total landscape heat content
+C     SAND,SILT,CLAY=soil sand, silt, clay content
+C     TSEDSO=total sediment content
+C     TL*,U*=total landscape, grid cell gas, solute content
+C     *G,*S,*SH=soil gaseous gas, soil aqueous gas in
+C        micropores,macropores
+C     T*P=total root gas content 
+C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
+C             :*ZN3*=NH3,*H2G*=H2
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
+C        :N4=NH4,N3=NH3,NO=NO3,NX=NO2,H1P=HPO4,H2P=H2PO4 in non-band
+C
 C     IF(J.EQ.24)THEN
-      WS=VOLW(L,NY,NX)+VOLWH(L,NY,NX)
+      WS=VOLW(L,NY,NX)+VOLV(L,NY,NX)+VOLWH(L,NY,NX)
      2+(VOLI(L,NY,NX)+VOLIH(L,NY,NX))*DENSI
       VOLWSO=VOLWSO+WS
       VOLISO=VOLISO+VOLI(L,NY,NX)+VOLIH(L,NY,NX)
@@ -4938,25 +6037,26 @@ C    2-WP(L,NY,NX)*VOLX(L,NY,NX)
       HS=H2GG(L,NY,NX)+H2GS(L,NY,NX)+H2GSH(L,NY,NX)+TLH2GP(L,NY,NX)
       TLH2G=TLH2G+HS
 C     IF(NX.EQ.1.AND.NY.EQ.1)THEN
-C     WRITE(*,8642)'TLCO2G',I,J,L,TLCO2G,CS,CO2G(L,NY,NX),CO2S(L,NY,NX)
+C     WRITE(*,8642)'TLCO2G',I,J,NFZ,L
+C    2,TLCO2G,CS,CO2G(L,NY,NX),CO2S(L,NY,NX)
 C    2,CO2SH(L,NY,NX),TLCO2P(L,NY,NX),CH4G(L,NY,NX),CH4S(L,NY,NX)
-C    3,CH4SH(L,NY,NX),TLCH4P(L,NY,NX)
-8642  FORMAT(A8,3I4,20F16.6)
+C    3,CH4SH(L,NY,NX),TLCH4P(L,NY,NX) 
+8642  FORMAT(A8,4I4,20F16.6)
 C     ENDIF
       OS=OXYG(L,NY,NX)+OXYS(L,NY,NX)+OXYSH(L,NY,NX)+TLOXYP(L,NY,NX)
       OXYGSO=OXYGSO+OS
-      ZG=Z2GG(L,NY,NX)+Z2GS(L,NY,NX)+Z2GSH(L,NY,NX)+TLN2OP(L,NY,NX)
+      ZGS=Z2GG(L,NY,NX)+Z2GS(L,NY,NX)+Z2GSH(L,NY,NX)+TLN2OP(L,NY,NX)
      2+Z2OG(L,NY,NX)+Z2OS(L,NY,NX)+Z2OSH(L,NY,NX)+TLNH3P(L,NY,NX)
      3+ZNH3G(L,NY,NX)
-      TLN2G=TLN2G+ZG
+      TLN2G=TLN2G+ZGS
       Z4S=ZNH4S(L,NY,NX)+ZNH4SH(L,NY,NX)+ZNH4B(L,NY,NX)
      2+ZNH4BH(L,NY,NX)+ZNH3S(L,NY,NX)+ZNH3SH(L,NY,NX)
      3+ZNH3B(L,NY,NX)+ZNH3BH(L,NY,NX)
       Z4X=14.0*(XN4(L,NY,NX)+XNB(L,NY,NX))
       Z4F=14.0*(ZNH4FA(L,NY,NX)+ZNHUFA(L,NY,NX)+ZNH3FA(L,NY,NX)
-     2+ZNH4FB(L,NY,NX)+ZNHUFB(L,NY,NX)+ZNH3FB(L,NY,NX))
+     2+ZNH4FB(L,NY,NX)+ZNHUFB(L,NY,NX)+ZNH3FB(L,NY,NX)) 
       TLNH4=TLNH4+Z4S+Z4X+Z4F
-      UNH4(NY,NX)=UNH4(NY,NX)+Z4S+Z4X
+      UNH4(NY,NX)=UNH4(NY,NX)+Z4S+Z4X 
 C     IF(I.EQ.168)THEN
 C     WRITE(*,5455)'TLN2GL',I,J,NX,NY,L,TLN2G
 C    2,ZG,Z2GG(L,NY,NX),Z2GS(L,NY,NX),Z2GSH(L,NY,NX),TLN2OP(L,NY,NX)
@@ -4966,42 +6066,54 @@ C     WRITE(*,5455)'TLNH4L',I,J,NX,NY,L,TLNH4,UNH4(NY,NX)
 C    2,Z4S,Z4X,Z4F,XN4(L,NY,NX)
 C    2,XNB(L,NY,NX),ZNH4S(L,NY,NX),ZNH4SH(L,NY,NX)
 C    3,ZNH4B(L,NY,NX),ZNH4BH(L,NY,NX),ZNH3S(L,NY,NX),ZNH3SH(L,NY,NX)
-C    4,ZNH3B(L,NY,NX),ZNH3BH(L,NY,NX),TN4FHB(L,NY,NX),XN4FXB(L,NY,NX)
+C    4,ZNH3B(L,NY,NX),ZNH3BH(L,NY,NX),TN4FHB(L,NY,NX),XN4FXB(L,NY,NX) 
 5455  FORMAT(A8,5I4,30E12.4)
 C     ENDIF
       ZOS=ZNO3S(L,NY,NX)+ZNO3SH(L,NY,NX)+ZNO3B(L,NY,NX)
      2+ZNO3BH(L,NY,NX)+ZNO2S(L,NY,NX)+ZNO2SH(L,NY,NX)
      3+ZNO2B(L,NY,NX)+ZNO2BH(L,NY,NX)
-      ZOF=14.0*(ZNO3FA(L,NY,NX)+ZNO3FA(L,NY,NX))
+      ZOF=14.0*(ZNO3FA(L,NY,NX)+ZNO3FA(L,NY,NX)) 
       TLNO3=TLNO3+ZOS+ZOF
       UNO3(NY,NX)=UNO3(NY,NX)+ZOS
-      POS=H2PO4(L,NY,NX)+H2PO4H(L,NY,NX)+H2POB(L,NY,NX)
+      P4S=H2PO4(L,NY,NX)+H2PO4H(L,NY,NX)+H2POB(L,NY,NX)
      2+H2POBH(L,NY,NX)+H1PO4(L,NY,NX)+H1PO4H(L,NY,NX)
      3+H1POB(L,NY,NX)+H1POBH(L,NY,NX)
-      POX=31.0*(XH1P(L,NY,NX)+XH2P(L,NY,NX)
+      P4X=31.0*(XH1P(L,NY,NX)+XH2P(L,NY,NX)
      4+XH1PB(L,NY,NX)+XH2PB(L,NY,NX))
-      POP=31.0*(PALPO(L,NY,NX)+PFEPO(L,NY,NX)+PCAPD(L,NY,NX)
+      P4P=31.0*(PALPO(L,NY,NX)+PFEPO(L,NY,NX)+PCAPD(L,NY,NX)
      6+PALPB(L,NY,NX)+PFEPB(L,NY,NX)+PCPDB(L,NY,NX))
      7+62.0*(PCAPM(L,NY,NX)+PCPMB(L,NY,NX))
      8+93.0*(PCAPH(L,NY,NX)+PCPHB(L,NY,NX))
-      TLPO4=TLPO4+POS+POX+POP
-      UPO4(NY,NX)=UPO4(NY,NX)+POX
-      UPP4(NY,NX)=UPP4(NY,NX)+POP
-C     IF(L.EQ.NU(NY,NX))THEN
-C     WRITE(*,2233)'TLPO4',I,J,NX,NY,L
-C    2,POS,POX,POP,TLPO4,TSEDER(NY,NX)
+      TLPO4=TLPO4+P4S+P4X+P4P
+      UPO4(NY,NX)=UPO4(NY,NX)+P4S
+      UPX4(NY,NX)=UPX4(NY,NX)+P4X
+      UPP4(NY,NX)=UPP4(NY,NX)+P4P
+C     IF((I/10)*10.EQ.I.AND.J.EQ.24.AND.NFZ.EQ.1)THEN
+C     WRITE(*,2233)'TLPO4',I,J,NFZ,L,UPP4(NY,NX)
+C    2,P4S,P4X,P4P,TLPO4,TSEDER(NY,NX)
+C    3,PALPO(L,NY,NX),PFEPO(L,NY,NX),PCAPD(L,NY,NX)
+C    6,PALPB(L,NY,NX),PFEPB(L,NY,NX),PCPDB(L,NY,NX)
+C    7,PCAPM(L,NY,NX),PCPMB(L,NY,NX)
+C    8,PCAPH(L,NY,NX),PCPHB(L,NY,NX)
 C    3,TH1PEB(NY,NX),TH2PEB(NY,NX),XH1PB(L,NY,NX),XH2PB(L,NY,NX)
-2233  FORMAT(A8,5I4,30F17.8)
+2233  FORMAT(A8,4I4,30E12.4)
+C     ENDIF
 C     ENDIF
 C
 C     TOTAL SOC,SON,SOP
-C
-C     OMC=microbial biomass, ORC=microbial residue
-C     OQC,OQCH=DOC in micropores,macropores
-C     OQA,OQAH=acetate in micropores,macropores
-C     OHC,OHA=adsorbed SOC,acetate
-C     OSC=SOC(K=0:woody litter, K=1:non-woody litter,
-C     K=2:manure, K=3:POC, K=4:humus)
+C    
+C     OMC,OMN,OMP=microbial C,N,P
+C     OQC,OQN,OPQ,OQCH,OQNH,OQPH=DOC,DON,DOP in micropores,macropores
+C     ORC,ORN,ORP=microbial residue C,N,P
+C     OHC,OHN,OHP,OHA=adsorbed C,N,P,acetate 
+C     OSC,OSA,OSN,OSP=SOC,colonized SOC,SON,SOP 
+C     TOMT,TONT,TOPT=total microbial C,N,P
+C     DORGC=change in total SOC
+C     ORGC,ORGCC,ORGN,ORGNC=total SOC,charcoal,SON,charcoal N
+C     TLRSDC,TLRSDN,TLRSDP=total landscape litter C,N,P
+C     TLORGC,TLORGN,TLORGP=total landscape humus C,N,P
+C     URSDC,URSDN,URSDP=total grid cell litter C,N,P
+C     UORGC,UORGN,UORGP=total grid cell humus C,N,P
 C
       DC=0.0
       DN=0.0
@@ -5009,6 +6121,12 @@ C
       OC=0.0
       ON=0.0
       OP=0.0
+      DCC=0.0
+      DNC=0.0
+      DPC=0.0
+      OCC=0.0
+      ONC=0.0
+      OPC=0.0
       OMCL(L,NY,NX)=0.0
       OMNL(L,NY,NX)=0.0
       DO 7970 K=0,5
@@ -5049,10 +6167,16 @@ C
      2+OQA(K,L,NY,NX)+OQAH(K,L,NY,NX)+OHA(K,L,NY,NX)
       DN=DN+OQN(K,L,NY,NX)+OQNH(K,L,NY,NX)+OHN(K,L,NY,NX)
       DP=DP+OQP(K,L,NY,NX)+OQPH(K,L,NY,NX)+OHP(K,L,NY,NX)
-      DO 7930 M=1,4
+      DO 7930 M=1,5
+      IF(M.LE.4)THEN
       DC=DC+OSC(M,K,L,NY,NX)
       DN=DN+OSN(M,K,L,NY,NX)
       DP=DP+OSP(M,K,L,NY,NX)
+      ELSE
+      DCC=DCC+OSC(M,K,L,NY,NX)
+      DNC=DNC+OSN(M,K,L,NY,NX)
+      DPC=DPC+OSP(M,K,L,NY,NX)
+      ENDIF
 7930  CONTINUE
       ELSE
       DO 7920 M=1,2
@@ -5064,67 +6188,104 @@ C
      2+OQA(K,L,NY,NX)+OQAH(K,L,NY,NX)+OHA(K,L,NY,NX)
       ON=ON+OQN(K,L,NY,NX)+OQNH(K,L,NY,NX)+OHN(K,L,NY,NX)
       OP=OP+OQP(K,L,NY,NX)+OQPH(K,L,NY,NX)+OHP(K,L,NY,NX)
-      DO 7910 M=1,4
+      DO 7910 M=1,5
+      IF(M.LE.4)THEN
       OC=OC+OSC(M,K,L,NY,NX)
       ON=ON+OSN(M,K,L,NY,NX)
       OP=OP+OSP(M,K,L,NY,NX)
+      ELSE
+      OCC=OCC+OSC(M,K,L,NY,NX)
+      ONC=ONC+OSN(M,K,L,NY,NX)
+      OPC=OPC+OSP(M,K,L,NY,NX)
+      ENDIF
 7910  CONTINUE
       ENDIF
 7900  CONTINUE
       ORGC(L,NY,NX)=DC+OC
       ORGN(L,NY,NX)=DN+ON
+      ORGCC(L,NY,NX)=DCC+OCC
+      ORGNC(L,NY,NX)=DNC+ONC
       ORGR(L,NY,NX)=DC
       IF(IERSNG.EQ.2.OR.IERSNG.EQ.3)THEN
-      DORGC(L,NY,NX)=ORGCX(L,NY,NX)-ORGC(L,NY,NX)
+      DORGC(L,NY,NX)=ORGCX(L,NY,NX)-ORGC(L,NY,NX)-ORGCC(L,NY,NX)
       IF(L.EQ.NU(NY,NX))THEN
       DORGC(L,NY,NX)=DORGC(L,NY,NX)+DORGE(NY,NX)
       ENDIF
       ELSE
       DORGC(L,NY,NX)=0.0
       ENDIF
-
-      IF(L.EQ.1)THEN
-C     DO 4344 K=0,5
-C     WRITE(*,4343)'ORGC',I,J,NX,NY,L,K,ORGC(L,NY,NX),ORGR(L,NY,NX)
-C    2,DC,OC,((OMC(M,N,K,L,NY,NX),M=1,3),N=1,7)
-C    3,(ORC(M,K,L,NY,NX),M=1,2),(OSC(M,K,L,NY,NX),M=1,4)
+C     IF((I/30)*30.EQ.I.AND.J.EQ.24)THEN
+C     DO 4344 K=0,4
+C     WRITE(*,4343)'ORGC',I,J,NFZ,NX,NY,L,K
+C    2,ORGC(L,NY,NX),ORGCC(L,NY,NX),DC,OC,DCC,OCC 
+C    2,((OMC(M,N,K,L,NY,NX),M=1,3),N=1,7)
+C    3,(ORC(M,K,L,NY,NX),M=1,2) 
 C    4,OQC(K,L,NY,NX),OQCH(K,L,NY,NX),OHC(K,L,NY,NX)
 C    2,OQA(K,L,NY,NX),OQAH(K,L,NY,NX),OHA(K,L,NY,NX)
-C    5,(OSA(M,K,L,NY,NX),M=1,4)
-C     WRITE(*,4343)'ORGN',I,J,NX,NY,L,K,ORGN(L,NY,NX),DN,ON
+C    5,(OSC(M,K,L,NY,NX),M=1,5)
+C     WRITE(*,4343)'ORGN',I,J,NFZ,NX,NY,L,K,DN,DNC,ON,ONC 
+C    2,ORGN(L,NY,NX),ORGNC(L,NY,NX) 
 C    2,((OMN(M,N,K,L,NY,NX),M=1,3),N=1,7)
-C    3,(ORN(M,K,L,NY,NX),M=1,2),(OSN(M,K,L,NY,NX),M=1,4)
+C    3,(ORN(M,K,L,NY,NX),M=1,2)
+C    4,(OSN(M,K,L,NY,NX),M=1,5)
 C    4,OQN(K,L,NY,NX),OQNH(K,L,NY,NX),OHN(K,L,NY,NX)
-4343  FORMAT(A8,6I4,120E12.4)
+4343  FORMAT(A8,7I4,120E14.6)
 4344  CONTINUE
-      ENDIF
-      TLRSDC=TLRSDC+DC
-      URSDC(NY,NX)=URSDC(NY,NX)+DC
-      TLRSDN=TLRSDN+DN
-      URSDN(NY,NX)=URSDN(NY,NX)+DN
-      TLRSDP=TLRSDP+DP
-      URSDP(NY,NX)=URSDP(NY,NX)+DP
-      TLORGC=TLORGC+OC
-      UORGC(NY,NX)=UORGC(NY,NX)+OC
-      TLORGN=TLORGN+ON
-      UORGN(NY,NX)=UORGN(NY,NX)+ON
-      TLORGP=TLORGP+OP
-      UORGP(NY,NX)=UORGP(NY,NX)+OP
+C     ENDIF
+      TLRSDC=TLRSDC+DC+DCC
+      URSDC(NY,NX)=URSDC(NY,NX)+DC+DCC
+      TLRSDN=TLRSDN+DN+DNC
+      URSDN(NY,NX)=URSDN(NY,NX)+DN+DNC
+      TLRSDP=TLRSDP+DP+DPC
+      URSDP(NY,NX)=URSDP(NY,NX)+DP+DPC
+      TLORGC=TLORGC+OC+OCC
+      UORGC(NY,NX)=UORGC(NY,NX)+OC+OCC
+      TLORGN=TLORGN+ON+ONC
+      UORGN(NY,NX)=UORGN(NY,NX)+ON+ONC
+      TLORGP=TLORGP+OP+OPC
+      UORGP(NY,NX)=UORGP(NY,NX)+OP+OPC
       TSEDSO=TSEDSO+(DC+OC)*1.0E-06
-C     IF(L.EQ.NU(NY,NX))THEN
-C     WRITE(*,2234)'TLORGP',I,J,NX,NY,L,TLRSDP,TLORGP,DP,OP
+C     IF(L.EQ.NU(NY,NX))THEN 
+C     WRITE(*,2234)'TLORGP',I,J,NX,NY,L,TLRSDC,TLORGC,DC,OC 
 2234  FORMAT(A8,5I4,20F16.6)
 C     ENDIF
 C
 C     TOTAL SALT IONS
 C
+C     Z*,Z*H=soil salt contents in micropores,macrpores
+C     TR*=total solute transformation from solute.f
+C     T*FLS,T*FHS=net convective+diffusive solute flux through
+C        micropores
+C       ,macropores in non-band from trnsfrs.f
+C     T*FLB,T*FHB=net convective+diffusive solute flux through
+C        micropores,macropores in band from trnsfrs.f
+C     R*FLU,R*FBU=subsurface solute flux in non-band,band
+C     X*FXS,X*FXB=convective+diffusive solute flux between macropores
+C        and micropores in non-band,band from trnsfr.f
+C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
+C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
+C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
+C        :*FEO1*=FeOH2-,*FEOH2=F3OH2-,*FEOH3*=FeOH3,*FEOH4*=FeOH4+
+C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
+C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
+C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
+C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
+C        :*M1P*=MgHPO4,*COO*=COOH-
+C        :*1=non-band,*B=band
+C     TION=total landscape ion content 
+C
       IF(ISALTG.NE.0)THEN
+C
+C     MICROPORES
+C
       ZAL(L,NY,NX)=ZAL(L,NY,NX)+TRAL(L,NY,NX)+TALFLS(L,NY,NX)
      2+RALFLU(L,NY,NX)+XALFXS(L,NY,NX)
       ZFE(L,NY,NX)=ZFE(L,NY,NX)+TRFE(L,NY,NX)+TFEFLS(L,NY,NX)
      2+RFEFLU(L,NY,NX)+XFEFXS(L,NY,NX)
       ZHY(L,NY,NX)=ZHY(L,NY,NX)+TRHY(L,NY,NX)+THYFLS(L,NY,NX)
-     2+RHYFLU(L,NY,NX)+XHYFXS(L,NY,NX)+XZHYS(L,NY,NX)
+     2+RHYFLU(L,NY,NX)+XHYFXS(L,NY,NX)+XZHYS(L,NY,NX) 
       ZCA(L,NY,NX)=ZCA(L,NY,NX)+TRCA(L,NY,NX)+TCAFLS(L,NY,NX)
      2+RCAFLU(L,NY,NX)+XCAFXS(L,NY,NX)
       ZMG(L,NY,NX)=ZMG(L,NY,NX)+TRMG(L,NY,NX)+TMGFLS(L,NY,NX)
@@ -5135,14 +6296,14 @@ C
      2+RKAFLU(L,NY,NX)+XKAFXS(L,NY,NX)
       ZOH(L,NY,NX)=ZOH(L,NY,NX)+TROH(L,NY,NX)+TOHFLS(L,NY,NX)
      2+ROHFLU(L,NY,NX)+XOHFXS(L,NY,NX)
-C     IF(L.EQ.1)THEN
+C     IF(L.EQ.1)THEN 
 C     WRITE(*,5545)'ZOH',I,J,NX,NY,L
 C    2,ZOH(L,NY,NX),TROH(L,NY,NX)
 C    2,TOHFLS(L,NY,NX),ROHFLU(L,NY,NX),XOHFXS(L,NY,NX)
 C    2,ZHY(L,NY,NX),TRHY(L,NY,NX),THYFLS(L,NY,NX)
-C    2,RHYFLU(L,NY,NX),XHYFXS(L,NY,NX),XZHYS(L,NY,NX)
+C    2,RHYFLU(L,NY,NX),XHYFXS(L,NY,NX),XZHYS(L,NY,NX) 
 C    3,XHY(L,NY,NX),TRXHY(L,NY,NX)
-C    4,ZOH(L,NY,NX)/VOLW(L,NY,NX),ZHY(L,NY,NX)/VOLW(L,NY,NX)
+C    4,ZOH(L,NY,NX)/VOLW(L,NY,NX),ZHY(L,NY,NX)/VOLW(L,NY,NX) 
 C     WRITE(*,5545)'ZAL',I,J,NX,NY,L,ZAL(L,NY,NX),TRAL(L,NY,NX)
 C    2,TALFLS(L,NY,NX),RALFLU(L,NY,NX),XALFXS(L,NY,NX)
 C     ENDIF
@@ -5228,6 +6389,9 @@ C     ENDIF
      2+XC2BXB(L,NY,NX)
       ZMG1PB(L,NY,NX)=ZMG1PB(L,NY,NX)+TRM1B(L,NY,NX)+TM1BFB(L,NY,NX)
      2+XM1BXB(L,NY,NX)
+C
+C     MACROPORES
+C
       ZALH(L,NY,NX)=ZALH(L,NY,NX)+TALFHS(L,NY,NX)-XALFXS(L,NY,NX)
       ZFEH(L,NY,NX)=ZFEH(L,NY,NX)+TFEFHS(L,NY,NX)-XFEFXS(L,NY,NX)
       ZHYH(L,NY,NX)=ZHYH(L,NY,NX)+THYFHS(L,NY,NX)-XHYFXS(L,NY,NX)
@@ -5331,8 +6495,8 @@ C     ENDIF
      9+3.0*(ZALO2H(L,NY,NX)+ZFEO2H(L,NY,NX)+ZCAHH(L,NY,NX)
      1+ZMGHH(L,NY,NX)+ZFE1PH(L,NY,NX)+ZCA1PH(L,NY,NX)+ZMG1PH(L,NY,NX)
      2+ZFE1BH(L,NY,NX)+ZCA1BH(L,NY,NX)+ZMG1BH(L,NY,NX))
-     3+4.0*(ZALO3H(L,NY,NX)+ZFEO3H(L,NY,NX)+H3PO4H(L,NY,NX)
-     4+ZFE2PH(L,NY,NX)+ZCA2PH(L,NY,NX)+H3POBH(L,NY,NX)
+     3+4.0*(ZALO3H(L,NY,NX)+ZFEO3H(L,NY,NX)+H3PO4H(L,NY,NX) 
+     4+ZFE2PH(L,NY,NX)+ZCA2PH(L,NY,NX)+H3POBH(L,NY,NX) 
      5+ZFE2BH(L,NY,NX)+ZCA2BH(L,NY,NX))
      6+5.0*(ZALO4H(L,NY,NX)+ZFEO4H(L,NY,NX))
 C
@@ -5342,7 +6506,7 @@ C
      5+ZNH3FB(L,NY,NX)+ZNHUFB(L,NY,NX)+ZNO3FB(L,NY,NX)
      2+2.0*(ZNH4FA(L,NY,NX)+ZNH4FB(L,NY,NX))
       SSX=XHY(L,NY,NX)+XAL(L,NY,NX)
-     2+XFE(L,NY,NX)+XCA(L,NY,NX)+XMG(L,NY,NX)
+     2+XFE(L,NY,NX)+XCA(L,NY,NX)+XMG(L,NY,NX) 
      3+XNA(L,NY,NX)+XKA(L,NY,NX)+XHC(L,NY,NX)
      4+XOH0(L,NY,NX)+XOH0B(L,NY,NX)
      5+2.0*(XN4(L,NY,NX)+XNB(L,NY,NX)
@@ -5352,17 +6516,17 @@ C
      9+XH1P(L,NY,NX)+XH1PB(L,NY,NX))
      1+4.0*(XH2P(L,NY,NX)+XH2PB(L,NY,NX))
       SSP=2.0*(PCACO(L,NY,NX)+PCASO(L,NY,NX)
-     2+PALPO(L,NY,NX)+PFEPO(L,NY,NX)
-     3+PALPB(L,NY,NX)+PFEPB(L,NY,NX))
-     4+3.0*(PCAPD(L,NY,NX)+PCPDB(L,NY,NX))
+     2+PALPO(L,NY,NX)+PFEPO(L,NY,NX) 
+     3+PALPB(L,NY,NX)+PFEPB(L,NY,NX)) 
+     4+3.0*(PCAPD(L,NY,NX)+PCPDB(L,NY,NX)) 
      5+4.0*(PALOH(L,NY,NX)+PFEOH(L,NY,NX))
      6+7.0*(PCAPM(L,NY,NX)+PCPMB(L,NY,NX))
      7+9.0*(PCAPH(L,NY,NX)+PCPHB(L,NY,NX))
-      SST=SSS+SSH+SSF+SSX+SSP
-      TION=TION+SST
+      SST=SSS+SSH+SSF+SSX+SSP 
+      TION=TION+SST 
       UION(NY,NX)=UION(NY,NX)+SST
 C     IF(I.EQ.180.AND.J.EQ.12)THEN
-C     WRITE(*,3341)'SSS',I,J,NX,NY,L,SST,SSS,SSH,SSF,SSX,SSP,TION
+C     WRITE(*,3341)'SSS',I,J,NX,NY,L,SST,SSS,SSH,SSF,SSX,SSP,TION 
 C    2 ZHY(L,NY,NX),ZAL(L,NY,NX),ZFE(L,NY,NX),ZCA(L,NY,NX)
 C    2,ZMG(L,NY,NX),ZNA(L,NY,NX),ZKA(L, NY,NX),ZOH(L,NY,NX)
 C    3,ZSO4(L,NY,NX),ZCL(L,NY,NX),ZCO3(L,NY,NX),H0PO4(L,NY,NX)
@@ -5384,18 +6548,24 @@ C    2,XFE(L,NY,NX),XCA(L,NY,NX),XMG(L,NY,NX),XNA(L,NY,NX)
 C    3,XKA(L,NY,NX),XHC(L,NY,NX),XALO2(L,NY,NX),XFEO2(L,NY,NX)
 C    4,PCACO(L,NY,NX),PCASO(L,NY,NX),PALOH(L,NY,NX),PFEOH(L,NY,NX)
 3341  FORMAT(A8,5I4,20F14.6)
-C     ENDIF
+C     ENDIF 
+C   
+C     SOIL ELECTRICAL CONDUCTIVITY 
 C
-C     SOIL ELECTRICAL CONDUCTIVITY
+C     VOLW=soil water content
+C     E*=electrical conductivity of each solute
+C     ECND=total electrical conductivity of water flux
+C     solute code:HY=H+,OH=OH-,AL=Al3+,FE=Fe3+,CA=Ca2+,MG=Mg2+,NA=Na+
+C            :KA=K+,CO3=CO32-,HCO3=HCO3-,SO4=SO42-,CL=Cl-,NO3S=NO3-     
 C
       IF(VOLW(L,NY,NX).GT.ZEROS2(NY,NX))THEN
       ECHY=0.337*AMAX1(0.0,ZHY(L,NY,NX)/VOLW(L,NY,NX))
       ECOH=0.192*AMAX1(0.0,ZOH(L,NY,NX)/VOLW(L,NY,NX))
       ECAL=0.056*AMAX1(0.0,ZAL(L,NY,NX)*3.0/VOLW(L,NY,NX))
       ECFE=0.051*AMAX1(0.0,ZFE(L,NY,NX)*3.0/VOLW(L,NY,NX))
-      ECCA=0.060*AMAX1(0.0,ZCA(L,NY,NX)*2.0/VOLW(L,NY,NX))
-      ECMG=0.053*AMAX1(0.0,ZMG(L,NY,NX)*2.0/VOLW(L,NY,NX))
-      ECNA=0.050*AMAX1(0.0,ZNA(L,NY,NX)/VOLW(L,NY,NX))
+      ECCA=0.060*AMAX1(0.0,ZCA(L,NY,NX)*2.0/VOLW(L,NY,NX)) 
+      ECMG=0.053*AMAX1(0.0,ZMG(L,NY,NX)*2.0/VOLW(L,NY,NX)) 
+      ECNA=0.050*AMAX1(0.0,ZNA(L,NY,NX)/VOLW(L,NY,NX)) 
       ECKA=0.070*AMAX1(0.0,ZKA(L,NY,NX)/VOLW(L,NY,NX))
       ECCO=0.072*AMAX1(0.0,ZCO3(L,NY,NX)*2.0/VOLW(L,NY,NX))
       ECHC=0.044*AMAX1(0.0,ZHCO3(L,NY,NX)/VOLW(L,NY,NX))
@@ -5406,33 +6576,44 @@ C
      2+ECCO+ECHC+ECSO+ECCL+ECNO
 C     IF(I.EQ.180.AND.J.EQ.12)THEN
 C     WRITE(*,5656)'ECND',I,J,L
-C    2,ECND(L,NY,NX),VOLW(L,NY,NX),ECHY,ECOH,ECAL,ECFE,ECCA
+C    2,ECND(L,NY,NX),VOLW(L,NY,NX),ECHY,ECOH,ECAL,ECFE,ECCA 
 C    3,ECMG,ECNA,ECKA,ECCO,ECHC,ECSO,ECCL,ECNO
 5656  FORMAT(A8,3I4,30E12.4)
 C     ENDIF
       ELSE
       ECND(L,NY,NX)=0.0
       ENDIF
-      ENDIF
+      ENDIF 
 C     ENDIF
-C     WRITE(20,3339)'LBN',I,J,L,TLNH4,TLNO3,TZIN,TZOU
+C     WRITE(20,3339)'LBN',I,J,L,TLNH4,TLNO3,TZIN,TZOU 
 C    2,Z4S,Z4X,Z4F,ZOS,ZOF,ZG
 C    2,ZOD,ZXD,ZGD
 C    3,ZGB,Z2B,ZHB
 C    3,XNH4S(L,NY,NX),ZNH4S(L,NY,NX)
 C    3,ZNH4SH(L,NY,NX),ZNH4B(L,NY,NX),ZNH4BH(L,NY,NX)
-C    2,ZNH3S(L,NY,NX),ZNH3SH(L,NY,NX),ZNH3B(L,NY,NX),ZNH3BH(L,NY,NX)
-C     WRITE(20,3339)'LBP',I,J,L,TLPO4,TPIN,TPOU,POD,PXD,PQD,PHD
-C    2,POS,POX,POP,PSS
+C    2,ZNH3S(L,NY,NX),ZNH3SH(L,NY,NX),ZNH3B(L,NY,NX),ZNH3BH(L,NY,NX) 
+C     WRITE(20,3339)'LBP',I,J,L,TLPO4,TPIN,TPOU,POD,PXD,PQD,PHD 
+C    2,P4S,P4X,P4P,PSS
 C    2,XH1PS(L,NY,NX),XH2PS(L,NY,NX),H1PO4(L,NY,NX),H2PO4(L,NY,NX)
-C    3,XH1P(L,NY,NX),XH2P(L,NY,NX),PALPO(L,NY,NX),PFEPO(L,NY,NX)
+C    3,XH1P(L,NY,NX),XH2P(L,NY,NX),PALPO(L,NY,NX),PFEPO(L,NY,NX) 
 C    6,PCAPD(L,NY,NX),PCAPM(L,NY,NX),PCAPH(L,NY,NX)
 C     WRITE(*,3339)'LBS',I,J,L,TION,TIONIN,TIONOU
 C    2,SSS,SSH,SSX,SSP,SSD,SHD,SSB
 3339  FORMAT(A8,3I4,80E16.8)
 125   CONTINUE
 C
-C     SNOWPACK LAYERING
+C     SNOWPACK RELAYERING WITH CHANGES IN SNOWPACK CONTENT
+C
+C     VHCPW,VHCPWX=snowpack layer,minimum heat capacity
+C     VOLSI=snowpack layer volume set in starts.f 
+C     VOLSL=current snowpack layer volume
+C     VOLSSL,VOLWSL,VOLVSL,VOLISL=snow water equivalent,water,vapor, 
+C        ice volume in snowpack layer
+C     DLYRS=snowpack layer depth
+C     DENSS=snow density in snowpack layer
+C     DDLYRS=change in DLYRS to maintain snowpack layer depth set 
+C        in starts.f
+C     AREA=grid cell surface area
 C
       IF(VHCPW(1,NY,NX).GT.VHCPWX(NY,NX))THEN
       DO 325 L=1,JS-1
@@ -5457,10 +6638,21 @@ C
 C
 C     RESET SNOW LAYER DEPTHS
 C
+C     CDPTHS=cumulative depth to bottom of snowpack layer
+C     DDLYRS=change in DLYRS to maintain snowpack layer depth 
+C        set in starts.f
+C     DLYRS=snowpack layer depth
+C
       CDPTHS(L,NY,NX)=CDPTHS(L,NY,NX)+DDLYRS
       DLYRS(L,NY,NX)=CDPTHS(L,NY,NX)-CDPTHS(L-1,NY,NX)
 C
-C     TRANSFER STATE VARIABLES BETWEEN LAYERS
+C     TRANSFER STATE VARIABLES BETWEEN SNOWPACK LAYERS
+C
+C     L0,L1=snowpack layer from, to which snowpack contents are
+C        redistributed
+C     FX=fraction of snowpack contents redistributed from L0 to L1 
+C     VOLSI=snowpack layer volume set in starts.f 
+C     VOLSL=current snowpack layer volume
 C
       IF(ABS(DDLYRS).GT.ZERO)THEN
 C     WRITE(*,1113)'DDLYRS',I,J,NX,NY,L,IFLGLS,DDLYRS,DDLYXS
@@ -5484,42 +6676,54 @@ C    3,VOLSLX,DDLYXX,CDPTHS(L+1,NY,NX),DLYRS(L+1,NY,NX)
       FX=AMIN1(1.0,-DDLYRS*AREA(3,L0,NY,NX)/VOLSL(L0,NY,NX))
       ENDIF
       ENDIF
+C
+C     REDISTRIBUTE SNOWPACK CONTENTS
+C
+C     FX=fraction of snowpack contents redistributed from L0 to L1 
+C
       IF(FX.GT.0.0)THEN
       FY=1.0-FX
 C     IF(IYRC.EQ.2006.AND.I.EQ.361.AND.NX.EQ.1)THEN
-C     WRITE(*,5596)'SNOW1',I,J,NX,NY,L,NU(NY,NX),L1,L0,FX,FY
+C     WRITE(*,5596)'SNOW1',I,J,NX,NY,L,NU(NY,NX),L1,L0,FX,FY 
 C    3,DDLYRS,VOLSI(L0,NY,NX),VOLSL(L0,NY,NX),VOLSSL(L0,NY,NX)
 C    3,VOLWSL(L0,NY,NX),VOLISL(L0,NY,NX),VOLSI(L1,NY,NX)
-C    4,VOLSL(L1,NY,NX),VOLSSL(L1,NY,NX),VOLWSL(L1,NY,NX)
+C    4,VOLSL(L1,NY,NX),VOLSSL(L1,NY,NX),VOLWSL(L1,NY,NX) 
 C    4,VOLISL(L1,NY,NX),CDPTHS(L0,NY,NX),CDPTHS(L1,NY,NX)
 C    5,DENSS(L1,NY,NX),DENSS(L0,NY,NX)
 C    5,TKW(L0,NY,NX),TKW(L1,NY,NX)
 C    5,VHCPW(L0,NY,NX),VHCPW(L1,NY,NX)
 C    5,TKW(L0,NY,NX)*VHCPW(L0,NY,NX)
-C    5,VHCPW(L1,NY,NX)*TKW(L1,NY,NX)
+C    5,VHCPW(L1,NY,NX)*TKW(L1,NY,NX) 
 C    5,TKW(L0,NY,NX)*VHCPW(L0,NY,NX)
-C    5+VHCPW(L1,NY,NX)*TKW(L1,NY,NX)
+C    5+VHCPW(L1,NY,NX)*TKW(L1,NY,NX) 
 5596  FORMAT(A8,8I4,100E14.6)
 C     ENDIF
 C
-C     TARGET SNOW LAYER
+C     REDISTRIBUTE SNOWPACK CONTENTS TO DESTINATION LAYER
 C
-      VOLSSL(L1,NY,NX)=VOLSSL(L1,NY,NX)+FX*VOLSSL(L0,NY,NX)
+C     SNOWPACK SNOW, WATER, VAPOR, ICE, HEAT
+C
+      VOLSSL(L1,NY,NX)=VOLSSL(L1,NY,NX)+FX*VOLSSL(L0,NY,NX) 
       VOLWSL(L1,NY,NX)=VOLWSL(L1,NY,NX)+FX*VOLWSL(L0,NY,NX)
+      VOLVSL(L1,NY,NX)=VOLVSL(L1,NY,NX)+FX*VOLVSL(L0,NY,NX)
       VOLISL(L1,NY,NX)=VOLISL(L1,NY,NX)+FX*VOLISL(L0,NY,NX)
-      VOLSL(L1,NY,NX)=VOLSSL(L1,NY,NX)/DENSS(L1,NY,NX)
+      VOLSL(L1,NY,NX)=VOLSSL(L1,NY,NX)/DENSS(L1,NY,NX) 
      2+VOLWSL(L1,NY,NX)+VOLISL(L1,NY,NX)
-      ENGY1X=VHCPW(L1,NY,NX)*TKW(L1,NY,NX)
+      ENGY1X=VHCPW(L1,NY,NX)*TKW(L1,NY,NX) 
       ENGY0X=VHCPW(L0,NY,NX)*TKW(L0,NY,NX)
       ENGY1=ENGY1X+FX*ENGY0X
-      VHCPW(L1,NY,NX)=2.095*VOLSSL(L1,NY,NX)+4.19*VOLWSL(L1,NY,NX)
+      VHCPW(L1,NY,NX)=2.095*VOLSSL(L1,NY,NX)
+     2+4.19*(VOLWSL(L1,NY,NX)+VOLVSL(L1,NY,NX))
      2+1.9274*VOLISL(L1,NY,NX)
-      IF(VHCPW(L1,NY,NX).GT.ZEROS(NY,NX))THEN
+      IF(VHCPW(L1,NY,NX).GT.VHCPWX(NY,NX))THEN 
       TKW(L1,NY,NX)=ENGY1/VHCPW(L1,NY,NX)
       ELSE
       TKW(L1,NY,NX)=TKW(L0,NY,NX)
       ENDIF
       TCW(L1,NY,NX)=TKW(L1,NY,NX)-273.15
+C
+C     SNOWPACK SOLUTES
+C
       CO2W(L1,NY,NX)=CO2W(L1,NY,NX)+FX*CO2W(L0,NY,NX)
       CH4W(L1,NY,NX)=CH4W(L1,NY,NX)+FX*CH4W(L0,NY,NX)
       OXYW(L1,NY,NX)=OXYW(L1,NY,NX)+FX*OXYW(L0,NY,NX)
@@ -5530,6 +6734,9 @@ C
       ZNOW(L1,NY,NX)=ZNOW(L1,NY,NX)+FX*ZNOW(L0,NY,NX)
       Z1PW(L1,NY,NX)=Z1PW(L1,NY,NX)+FX*Z1PW(L0,NY,NX)
       ZHPW(L1,NY,NX)=ZHPW(L1,NY,NX)+FX*ZHPW(L0,NY,NX)
+C
+C     SNOWPACK SALTS
+C
       IF(ISALTG.NE.0)THEN
       ZALW(L1,NY,NX)=ZALW(L1,NY,NX)+FX*ZALW(L0,NY,NX)
       ZFEW(L1,NY,NX)=ZFEW(L1,NY,NX)+FX*ZFEW(L0,NY,NX)
@@ -5539,8 +6746,8 @@ C
       ZNAW(L1,NY,NX)=ZNAW(L1,NY,NX)+FX*ZNAW(L0,NY,NX)
       ZKAW(L1,NY,NX)=ZKAW(L1,NY,NX)+FX*ZKAW(L0,NY,NX)
       ZOHW(L1,NY,NX)=ZOHW(L1,NY,NX)+FX*ZOHW(L0,NY,NX)
-      ZSO4W(L1,NY,NX)=ZSO4W(L1,NY,NX)+FX*ZSO4W(L0,NY,NX)
-      ZCLW(L1,NY,NX)=ZCLW(L1,NY,NX)+FX*ZCLW(L0,NY,NX)
+      ZSO4W(L1,NY,NX)=ZSO4W(L1,NY,NX)+FX*ZSO4W(L0,NY,NX) 
+      ZCLW(L1,NY,NX)=ZCLW(L1,NY,NX)+FX*ZCLW(L0,NY,NX) 
       ZCO3W(L1,NY,NX)=ZCO3W(L1,NY,NX)+FX*ZCO3W(L0,NY,NX)
       ZHCO3W(L1,NY,NX)=ZHCO3W(L1,NY,NX)+FX*ZHCO3W(L0,NY,NX)
       ZALH1W(L1,NY,NX)=ZALH1W(L1,NY,NX)+FX*ZALH1W(L0,NY,NX)
@@ -5574,22 +6781,29 @@ C
       ZMG1PW(L1,NY,NX)=ZMG1PW(L1,NY,NX)+FX*ZMG1PW(L0,NY,NX)
       ENDIF
 C
-C     SOURCE SNOW LAYER
+C     REDISTRIBUTE ALL SNOWPACK CONTENTS FROM SOURCE LAYER
 C
-      VOLSSL(L0,NY,NX)=FY*VOLSSL(L0,NY,NX)
+C     SNOWPACK SNOW,WATER,ICE,HEAT
+C
+      VOLSSL(L0,NY,NX)=FY*VOLSSL(L0,NY,NX) 
       VOLWSL(L0,NY,NX)=FY*VOLWSL(L0,NY,NX)
+      VOLVSL(L0,NY,NX)=FY*VOLVSL(L0,NY,NX)
       VOLISL(L0,NY,NX)=FY*VOLISL(L0,NY,NX)
-      VOLSL(L0,NY,NX)=VOLSSL(L0,NY,NX)/DENSS(L0,NY,NX)
+      VOLSL(L0,NY,NX)=VOLSSL(L0,NY,NX)/DENSS(L0,NY,NX) 
      2+VOLWSL(L0,NY,NX)+VOLISL(L0,NY,NX)
       ENGY0=FY*ENGY0X
-      VHCPW(L0,NY,NX)=2.095*VOLSSL(L0,NY,NX)+4.19*VOLWSL(L0,NY,NX)
+      VHCPW(L0,NY,NX)=2.095*VOLSSL(L0,NY,NX)
+     2+4.19*(VOLWSL(L0,NY,NX)+VOLVSL(L0,NY,NX))
      2+1.9274*VOLISL(L0,NY,NX)
-      IF(VHCPW(L0,NY,NX).GT.ZEROS(NY,NX))THEN
+      IF(VHCPW(L0,NY,NX).GT.VHCPWX(NY,NX))THEN 
       TKW(L0,NY,NX)=ENGY0/VHCPW(L0,NY,NX)
       ELSE
       TKW(L0,NY,NX)=TKW(L1,NY,NX)
       ENDIF
       TCW(L0,NY,NX)=TKW(L0,NY,NX)-273.15
+C
+C     SNOWPACK SOLUTES
+C
       CO2W(L0,NY,NX)=FY*CO2W(L0,NY,NX)
       CH4W(L0,NY,NX)=FY*CH4W(L0,NY,NX)
       OXYW(L0,NY,NX)=FY*OXYW(L0,NY,NX)
@@ -5600,6 +6814,9 @@ C
       ZNOW(L0,NY,NX)=FY*ZNOW(L0,NY,NX)
       Z1PW(L0,NY,NX)=FY*Z1PW(L0,NY,NX)
       ZHPW(L0,NY,NX)=FY*ZHPW(L0,NY,NX)
+C
+C     SNOWPACK SALTS
+C
       IF(ISALTG.NE.0)THEN
       ZALW(L0,NY,NX)=FY*ZALW(L0,NY,NX)
       ZFEW(L0,NY,NX)=FY*ZFEW(L0,NY,NX)
@@ -5609,8 +6826,8 @@ C
       ZNAW(L0,NY,NX)=FY*ZNAW(L0,NY,NX)
       ZKAW(L0,NY,NX)=FY*ZKAW(L0,NY,NX)
       ZOHW(L0,NY,NX)=FY*ZOHW(L0,NY,NX)
-      ZSO4W(L0,NY,NX)=FY*ZSO4W(L0,NY,NX)
-      ZCLW(L0,NY,NX)=FY*ZCLW(L0,NY,NX)
+      ZSO4W(L0,NY,NX)=FY*ZSO4W(L0,NY,NX) 
+      ZCLW(L0,NY,NX)=FY*ZCLW(L0,NY,NX) 
       ZCO3W(L0,NY,NX)=FY*ZCO3W(L0,NY,NX)
       ZHCO3W(L0,NY,NX)=FY*ZHCO3W(L0,NY,NX)
       ZALH1W(L0,NY,NX)=FY*ZALH1W(L0,NY,NX)
@@ -5643,30 +6860,31 @@ C
       ZCA2PW(L0,NY,NX)=FY*ZCA2PW(L0,NY,NX)
       ZMG1PW(L0,NY,NX)=FY*ZMG1PW(L0,NY,NX)
       ENDIF
-C     IF(VOLWSL(L0,NY,NX)+VOLISL(L0,NY,NX)
-C    2+VOLSSL(L0,NY,NX).LE.ZEROS(NY,NX))THEN
-C     CDPTHS(L1,NY,NX)=CDPTHS(L0,NY,NX)
-C     ENDIF
 C     IF(IYRC.EQ.2006.AND.I.EQ.361.AND.NX.EQ.1)THEN
-C     WRITE(*,5596)'SNOW2',I,J,NX,NY,L,NU(NY,NX),L1,L0,FX,FY
+C     WRITE(*,5596)'SNOW2',I,J,NX,NY,L,NU(NY,NX),L1,L0,FX,FY 
 C    3,DDLYRS,VOLSI(L0,NY,NX),VOLSL(L0,NY,NX),VOLSSL(L0,NY,NX)
 C    3,VOLWSL(L0,NY,NX),VOLISL(L0,NY,NX),VOLSI(L1,NY,NX)
-C    4,VOLSL(L1,NY,NX),VOLSSL(L1,NY,NX),VOLWSL(L1,NY,NX)
+C    4,VOLSL(L1,NY,NX),VOLSSL(L1,NY,NX),VOLWSL(L1,NY,NX) 
 C    4,VOLISL(L1,NY,NX),CDPTHS(L0,NY,NX),CDPTHS(L1,NY,NX)
 C    5,DENSS(L1,NY,NX),DENSS(L0,NY,NX)
 C    5,TKW(L0,NY,NX),TKW(L1,NY,NX)
 C    5,VHCPW(L0,NY,NX),VHCPW(L1,NY,NX)
 C    5,TKW(L0,NY,NX)*VHCPW(L0,NY,NX)
-C    5,VHCPW(L1,NY,NX)*TKW(L1,NY,NX)
+C    5,VHCPW(L1,NY,NX)*TKW(L1,NY,NX) 
 C    5,TKW(L0,NY,NX)*VHCPW(L0,NY,NX)
-C    5+VHCPW(L1,NY,NX)*TKW(L1,NY,NX)
+C    5+VHCPW(L1,NY,NX)*TKW(L1,NY,NX) 
 C     ENDIF
       ENDIF
       ENDIF
 325   CONTINUE
-      ENDIF
+      ENDIF 
 C
-C     SOIL SUBSIDENCE
+C     PROFILE RELAYERING WITH EVAPORATION, FREEZE-THAW, EROSION, SOC
+C
+C     IERSNG=erosion flag from site file
+C     BKDS=bulk density (0=water,>0=soil)
+C     CDPTH=cumulative depth to bottom of soil layer
+C     CDPTHY=CDPTH excluding freeze-thaw effects 
 C
       IF(IERSNG.GE.0)THEN
       IF(BKDS(NU(NY,NX),NY,NX).LE.ZERO)THEN
@@ -5678,7 +6896,15 @@ C
       CDPTHX(LX,NY,NX)=CDPTH(LX,NY,NX)
       CDPTHY(LX,NY,NX)=CDPTH(LX,NY,NX)
 C
-C     POND
+C     IF LAYER IS IN A POND
+C
+C     DLYR=layer depth
+C     DDLYXP=change in DLYR to maintain pond layer depth 
+C        set in soil file
+C     DDLYX,DDLYR=cumulative DDLYXP from bottom to top of profile
+C     VOLW,VOLI=pond water,ice content
+C     AREA=grid cell surface area
+C     IFLGL=pond boundary flag:layer underneath is 1:pond, 2:soil 
 C
       IF(BKDS(LX,NY,NX).LE.ZERO)THEN
       IF(BKDS(LX+1,NY,NX).GT.ZERO.OR.ICHKLX.EQ.1)THEN
@@ -5709,7 +6935,7 @@ C
       ENDIF
       IF(LX.EQ.NU(NY,NX).OR.BKDS(LX-1,NY,NX).GT.ZERO)THEN
       DDLYX(LX-1,1)=DDLYX(LX,1)
-      DDLYR(LX-1,1)=DDLYX(LX,1)
+      DDLYR(LX-1,1)=DDLYX(LX,1) 
       IFLGL(LX-1,1)=1
       ENDIF
       DDLYX(LX,4)=0.0
@@ -5729,14 +6955,21 @@ C    4,CDPTH(LX-1,NY,NX),CDPTH(LX,NY,NX)
 C    4,CDPTH(LX,NY,NX)-CDPTH(LX-1,NY,NX)
 C    5,VOLW(LX,NY,NX)+VOLI(LX,NY,NX),DLYR(3,LX,NY,NX)
 C    6-(VOLW(LX,NY,NX)+VOLI(LX,NY,NX))/AREA(3,LX,NY,NX)
-C    7,DVOLI(LX,NY,NX)
+C    7,DVOLI(LX,NY,NX) 
 1123  FORMAT(A8,7I4,20E16.8)
 C
-C     SOIL
+C     IF LAYER IS IN SOIL
 C
-      ELSE
+      ELSE 
 C
-C     FREEZE-THAW
+C     CHANGE IN LAYER DEPTH WITH FREEZE-THAW 
+C
+C     DVOLI=change in soil ice content
+C     DDLYXF=change in DLYR to maintain soil layer depth 
+C        set in soil file
+C     DENSJ=1.0-DENSI:ice density
+C     AREA=grid cell surface area
+C     DDLYX,DDLYR=cumulative DDLYXF from bottom to top of profile
 C
       IF(ABS(DVOLI(LX,NY,NX)).GT.ZEROS(NY,NX))THEN
       DDLYXF=DVOLI(LX,NY,NX)*DENSJ/AREA(3,LX,NY,NX)
@@ -5751,7 +6984,7 @@ C    2+DLYRI(3,LX,NY,NX)-DLYR(3,LX,NY,NX)
       IFLGL(LX,4)=0
       IF(LX.EQ.NU(NY,NX).OR.BKDS(LX-1,NY,NX).LE.ZERO)THEN
       DDLYX(LX-1,4)=DDLYX(LX,4)
-      DDLYR(LX-1,4)=DDLYX(LX,4)
+      DDLYR(LX-1,4)=DDLYX(LX,4) 
 C    2+DLYRI(3,LX,NY,NX)-DLYR(3,LX,NY,NX)
       IFLGL(LX-1,4)=0
       ENDIF
@@ -5768,73 +7001,97 @@ C    2+DLYRI(3,LX,NY,NX)-DLYR(3,LX,NY,NX)
       IFLGL(LX,4)=0
       IF(LX.EQ.NU(NY,NX))THEN
       DDLYX(LX-1,4)=DDLYX(LX,4)
-      DDLYR(LX-1,4)=DDLYX(LX,4)
+      DDLYR(LX-1,4)=DDLYX(LX,4) 
       IFLGL(LX-1,4)=0
       ENDIF
       ENDIF
       ENDIF
-C     IF(LX.EQ.5)THEN
-C     WRITE(*,1126)'FREEZ',I,J,NX,NY,LX
-C    2,DDLYX(LX,4),DDLYR(LX,4),DDLYXF
+      IF((I/30)*30.EQ.I.AND.J.EQ.15)THEN
+C     WRITE(*,1126)'FREEZ',I,J,NFZ,NX,NY,LX
+C    2,DDLYX(LX,4),DDLYR(LX,4),DDLYXF 
 C    2,VOLP(LX,NY,NX),VOLT(LX,NY,NX),DVOLI(LX,NY,NX),DVOLW(LX,NY,NX)
 C    5,TFLW(LX,NY,NX),FINH(LX,NY,NX)
-C    2,TTHAW(LX,NY,NX),TUPWTR(LX,NY,NX),FLU(LX,NY,NX)
-C    2,VOLA(LX,NY,NX)-VOLI(LX,NY,NX)-VOLW(LX,NY,NX)
+C    2,TWFLFL(LX,NY,NX),TUPWTR(LX,NY,NX),FLU(LX,NY,NX)
+C    2,VOLA(LX,NY,NX)-VOLI(LX,NY,NX)-VOLW(LX,NY,NX) 
 C    4+VOLAH(LX,NY,NX)-VOLIH(LX,NY,NX)-VOLWH(LX,NY,NX)
-C    3,BKDSI(LX,NY,NX),BKDS(LX,NY,NX)
+C    3,BKDSI(LX,NY,NX),BKDS(LX,NY,NX) 
 C    4,DLYR(3,LX,NY,NX),CDPTH(LX,NY,NX)
 C     IF(LX.EQ.NU(NY,NX))THEN
-C     WRITE(*,1111)'FREEZ0',I,J,NX,NY,LX
+C     WRITE(*,1126)'FREEZ0',I,J,NFZ,NX,NY,LX
 C    2,DDLYX(LX-1,4),DDLYR(LX-1,4)
-C    2,DDLYX(LX,4),DDLYR(LX,4),DDLYXF,DDLYX0,DVOLI(LX,NY,NX)*DENSJ
-C    2,BKDS(LX,NY,NX),BKDSI(LX,NY,NX)
+C    2,DDLYX(LX,4),DDLYR(LX,4),DDLYXF,DDLYX0,DVOLI(LX,NY,NX)*DENSJ 
+C    2,BKDS(LX,NY,NX),BKDSI(LX,NY,NX) 
 C    4,DLYR(3,LX,NY,NX),CDPTH(LX-1,NY,NX),CDPTH(LX,NY,NX)
 C    5,DVOLI(LX,NY,NX),DVOLW(LX,NY,NX),VOLI(LX,NY,NX),VOLW(LX,NY,NX)
-1126  FORMAT(A8,5I4,30E14.6)
+1126  FORMAT(A8,6I4,30E14.6)
 C     ENDIF
-C     ENDIF
-      TDVOLI=TDVOLI+DVOLI(L,NY,NX)
-      TDLYXF=TDLYXF+DDLYXF
+      ENDIF 
       UDVOLI=UDVOLI+DVOLI(L,NY,NX)
-      UDLYXF=UDLYXF+DDLYXF
+      UDLYXF=UDLYXF+DDLYXF 
 C     IF(I.EQ.365.AND.J.EQ.24.AND.LX.EQ.NU(NY,NX))THEN
 C     WRITE(*,1111)'VOLISO',I,J,NX,NY,LX,IFLGL(LX,NN)
-C    5,VOLISO,TDVOLI,TDLYXF,UDVOLI,UDLYXF
-C     ENDIF
+C    5,VOLISO,UDVOLI,UDLYXF
+C     ENDIF 
 C
-C     EROSION
+C     CHANGE IN LAYER DEPTH WITH EROSION
+C
+C     IERSNG=erosion flag from site file
+C     TSEDER=net sediment flux
+C     DDLYXE=change in DLYR to maintain soil layer depth 
+C        set in soil file
+C     BKVLNU,VOLX=bulk density,volume of soil surface layer
+C     DDLYX,DDLYR=DDLYXE from bottom to top of profile
 C
       IF((IERSNG.EQ.1.OR.IERSNG.EQ.3)
-     2.AND.ABS(TSEDER(NY,NX)).GT.ZEROS(NY,NX))THEN
+     2.AND.(ABS(TSEDER(NY,NX)).GT.ZEROS(NY,NX)
+     3.OR.TSEDSK(NY,NX).GT.ZEROS(NY,NX)))THEN
       IF(LX.EQ.NL(NY,NX))THEN
-      DDLYXE=-TSEDER(NY,NX)/(BKVLNU(NY,NX)/VOLX(NU(NY,NX),NY,NX))
+      IF(BKDS(NU(NY,NX),NY,NX).GT.ZERO)THEN
+      DDLYXE=-TSEDER(NY,NX)/(AREA(3,LX,NY,NX)
+     2*BKVLNU(NY,NX)/VOLX(NU(NY,NX),NY,NX))
+      ELSEIF(TSEDSK(NY,NX).GT.ZEROS(NY,NX))THEN
+      DDLYXE=-TSEDSK(NY,NX)/(AREA(3,LX,NY,NX)
+     2*BKDSI(NUL(NY,NX),NY,NX))
+      ELSE
+      DDLYXE=0.0
       ENDIF
-      DDLYX(LX,5)=DDLYXE
-      DDLYR(LX,5)=DDLYXE
+      ENDIF
+      DDLYX(LX,5)=DDLYXE 
+      DDLYR(LX,5)=DDLYXE 
       IFLGL(LX,5)=1
       ELSE
       DDLYX(LX,5)=0.0
       DDLYR(LX,5)=0.0
       IFLGL(LX,5)=0
       ENDIF
-C     IF(LX.EQ.NU(NY,NX))THEN
-C     WRITE(*,1121)'SED',I,J,NX,NY,LX,DDLYXE,DDLYX(LX,5)
-C    2,TSEDER(NY,NX),BKDS(NU(NY,NX),NY,NX),DLYR(3,LX,NY,NX)
+C     IF(NX.EQ.1)THEN
+C     WRITE(*,1121)'SED',I,J,NFZ,NX,NY,LX,NUL(NY,NX)
+C    2,DDLYXE,DDLYX(LX,5),TSEDER(NY,NX),TSEDSK(NY,NX)
+C    3,BKDS(NU(NY,NX),NY,NX),DLYR(3,LX,NY,NX)
 C    3,BKVLNU(NY,NX),VOLX(NU(NY,NX),NY,NX)
-C    4,BKVLNU(NY,NX)/VOLX(NU(NY,NX),NY,NX)
-1121  FORMAT(A8,5I4,20E14.6)
+C    4,BKVL(NUL(NY,NX),NY,NX),VOLX(NUL(NY,NX),NY,NX)
+C    4,SAND(NUL(NY,NX),NY,NX),SILT(NUL(NY,NX),NY,NX)
+C    4,CLAY(NUL(NY,NX),NY,NX),ORGC(NUL(NY,NX),NY,NX)
+1121  FORMAT(A8,7I4,20E14.6) 
 C     ENDIF
 C
-C     SOC GAIN OR LOSS
+C     CHANGE IN LAYER DEPTH WITH SOC GAIN OR LOSS
+C
+C     IERSNG=erosion flag from site file
+C     DORGC=change in total SOC
+C     DDLYXC=change in DLYR to maintain soil layer depth 
+C        set in soil file
+C     FHOL=macropore fraction
+C     BKDSI=bulk density as read from soil file
+C     AREA=grid cell surface area
+C     DDLYX,DDLYR=cumulative DDLYXC from bottom to top of profile
+C     DLYRI,DLYR=initial layer depth from soil file, 
+C        current layer depth
 C
       IF((IERSNG.EQ.2.OR.IERSNG.EQ.3)
      2.AND.ABS(DORGC(LX,NY,NX)).GT.ZEROS(NY,NX))THEN
-      DDLYXC=1.82E-06*DORGC(LX,NY,NX)
-     2/((1.0-FHOL(LX,NY,NX))*BKDSI(LX,NY,NX))/AREA(3,LX,NY,NX)
-      IF(NX.EQ.1)THEN
-      TDORGC=TDORGC+DORGC(LX,NY,NX)
-      TDYLXC=TDYLXC+DDLYXC
-      ENDIF
+      DDLYXC=1.82E-06*DORGC(LX,NY,NX)/AREA(3,LX,NY,NX)
+     2/((1.0-FHOL(LX,NY,NX))*BKDSI(LX,NY,NX)) 
       IF(LX.EQ.NL(NY,NX).OR.BKDS(LX+1,NY,NX).LE.ZERO)THEN
       DDLYX(LX,6)=DDLYXC
       DDLYR(LX,6)=0.0
@@ -5846,7 +7103,7 @@ C
       IFLGL(LX,6)=1
       IF(LX.EQ.NU(NY,NX).OR.BKDS(LX-1,NY,NX).LE.ZERO)THEN
       DDLYX(LX-1,6)=DDLYX(LX,6)
-      DDLYR(LX-1,6)=DDLYX(LX,6)
+      DDLYR(LX-1,6)=DDLYX(LX,6) 
 C    2+DLYRI(3,LX,NY,NX)-DLYR(3,LX,NY,NX)
       IFLGL(LX-1,6)=1
       ENDIF
@@ -5865,30 +7122,37 @@ C    2+DLYRI(3,LX,NY,NX)-DLYR(3,LX,NY,NX)
       DDLYX(LX,1)=0.0
       DDLYR(LX,1)=0.0
       IFLGL(LX,1)=0
-C     IF(LX.LE.4)THEN
-C     WRITE(*,1111)'SOC',I,J,NX,NY,LX,IFLGL(LX,6),DDLYX(LX,6)
+C     IF((I/30)*30.EQ.I.AND.J.EQ.15)THEN
+C     WRITE(*,1111)'SOC',I,J,NFZ,NX,NY,LX,IFLGL(LX,6),DDLYX(LX,6)
 C    2,DDLYR(LX,6),DDLYXC,DORGC(LX,NY,NX),BKDS(LX,NY,NX)
 C    3,DLYRI(3,LX,NY,NX),DLYR(3,LX,NY,NX)
 C    4,DLYRI(3,LX,NY,NX)-DLYR(3,LX,NY,NX)
-C    5,TDORGC,TDYLXC,CDPTH(0,NY,NX)
-1111  FORMAT(A8,6I4,40E16.8)
+C    5,CDPTH(0,NY,NX)
+C    6,ORGCX(LX,NY,NX),ORGC(LX,NY,NX),ORGCC(LX,NY,NX)
+1111  FORMAT(A8,7I4,40E14.6)
 C     IF(LX.EQ.NU(NY,NX).OR.BKDS(LX-1,NY,NX).LE.ZERO)THEN
-C     WRITE(*,1111)'SOC0',I,J,NX,NY,LX,IFLGL(LX-1,6),DDLYX(LX-1,6)
+C     WRITE(*,1111)'SOC0',I,J,NFZ,NX,NY,LX,IFLGL(LX-1,6),DDLYX(LX-1,6) 
 C    2,DDLYR(LX-1,6),DDLYXC,DORGC(LX,NY,NX),BKDS(LX,NY,NX)
 C    3,DLYRI(3,LX,NY,NX),DLYR(3,LX,NY,NX)
 C    4,DLYRI(3,LX,NY,NX)-DLYR(3,LX,NY,NX)
-C    5,TDORGC,TDYLXC,CDPTH(0,NY,NX)
+C    5,CDPTH(0,NY,NX)
 C     ENDIF
 C     ENDIF
       ENDIF
 C
-C     RESET SOIL LAYER DEPTHS
+C     RESET LAYER DEPTHS
 C
       DO 200 NN=1,6
 C     IF(ABS(DDLYX(LX,NN)).GT.ZERO)IFLGS(NY,NX)=1
       IF(NN.NE.2.AND.NN.NE.3)THEN
 C
-C     POND
+C     POND LAYER DEPTHS
+C
+C     BKDS=bulk density (0=water,>0=soil)
+C     CDPTH=cumulative depth to bottom of soil layer
+C     DDLYX,DDLYR=cumulative change in layer depth from bottom 
+C        to top of profile
+C     IFLGL=pond boundary flag:layer underneath is 1:pond, 2:soil 
 C
       IF(BKDS(LX,NY,NX).LE.ZERO)THEN
       IF(IFLGL(LX,NN).NE.0)THEN
@@ -5901,7 +7165,7 @@ C
 C     WRITE(*,1116)'DDLYRZ',I,J,NX,NY,LX,LL,IFLGL(LX,1),IFLGL(LX-1,1)
 C    2,DDLYX(LX,NN),CDPTH(LL,NY,NX),DLYR(3,LX,NY,NX)
 C    2,VOLW(LX,NY,NX),DVOLW(LX,NY,NX),AREA(3,LX,NY,NX)
-1116  FORMAT(A8,8I4,40E16.8)
+1116  FORMAT(A8,8I4,40E16.8) 
 201   CONTINUE
       DDLYX(LX,NN)=0.0
       ENDIF
@@ -5912,7 +7176,7 @@ C    2,DDLYXP,DDLYX(LX,NN),DDLYR(LX,NN),DLYR(3,LX,NY,NX)
 C    3,VOLW(LX,NY,NX),VOLI(LX,NY,NX)
 C    4,CDPTH(LX-1,NY,NX),CDPTH(LX,NY,NX)
 C    4,CDPTH(LX,NY,NX)-CDPTH(LX-1,NY,NX)
-C    5,VOLW(LX,NY,NX)+VOLI(LX,NY,NX)
+C    5,VOLW(LX,NY,NX)+VOLI(LX,NY,NX) 
 1117  FORMAT(A8,8I4,12E16.8)
 C     ENDIF
       IF(LX.EQ.NU(NY,NX))THEN
@@ -5921,23 +7185,27 @@ C     ENDIF
       CDPTHY(LX-1,NY,NX)=CDPTHY(LX,NY,NX)
      2-(VOLW(LX,NY,NX)+VOLI(LX,NY,NX))/AREA(3,LX,NY,NX)
 C     WRITE(*,1128)'POND0',I,J,NX,NY,LX,NN,IFLGL(LX-1,NN)
-C    2,DDLYR(LX-1,NN),DDLYR(LX,NN),CDPTH(LX-1,NY,NX),CDPTH(LX,NY,NX)
-C    4,DLYR(3,LX,NY,NX)
+C    2,DDLYR(LX-1,NN),DDLYR(LX,NN),CDPTH(LX-1,NY,NX),CDPTH(LX,NY,NX) 
+C    4,DLYR(3,LX,NY,NX) 
       ENDIF
       ENDIF
 C
-C     SOIL
+C     SOIL LAYER DEPTHS 
 C
       ELSE
 C     IF(DDLYR(L,NN).NE.0.OR.DDLYR(LX,NN).NE.0)THEN
 C
+C     CDPTH=cumulative depth to bottom of soil layer
+C     DDLYX,DDLYR=cumulative change in layer depth from bottom 
+C        to top of profile
+C
 C     FREEZE-THAW
 C
-      IF(NN.EQ.4)THEN
+      IF(NN.EQ.4)THEN 
       CDPTH(LX,NY,NX)=CDPTH(LX,NY,NX)+DDLYR(LX,NN)
 C     CDPTHY(LX,NY,NX)=CDPTHY(LX,NY,NX)+DDLYR(LX,NN)
 C     WRITE(*,1127)'DFREEZ',I,J,NX,NY,LX,IFLGL(LX,NN)
-C    2,DDLYR(LX,NN),CDPTH(LX,NY,NX),DLYR(3,LX,NY,NX),DDLYXF
+C    2,DDLYR(LX,NN),CDPTH(LX,NY,NX),DLYR(3,LX,NY,NX),DDLYXF 
 C    5,CDPTH(LX,NY,NX)-CDPTH(LX-1,NY,NX)
       IF(LX.EQ.NU(NY,NX))THEN
       CDPTH(LX-1,NY,NX)=CDPTH(LX-1,NY,NX)+DDLYR(LX-1,NN)
@@ -5950,7 +7218,7 @@ C    5,CDPTH(LX,NY,NX)-CDPTH(LX-1,NY,NX)
       ENDIF
       ENDIF
 C
-C     SET SURFACE ELEVATION FOR SOIL EROSION
+C     RESET SURFACE ELEVATION FOR SOIL EROSION
 C
       IF(NN.EQ.5.AND.IFLGL(LX,NN).EQ.1)THEN
       CDPTH(LX,NY,NX)=CDPTH(LX,NY,NX)+DDLYR(LX,NN)
@@ -5959,8 +7227,8 @@ C     WRITE(*,1122)'CDSED',I,J,NX,NY,LX,IFLGL(LX,5),DDLYR(LX,5)
 C    2,CDPTH(LX,NY,NX),DLYR(3,LX,NY,NX)
 1122  FORMAT(A8,6I4,12E16.8)
       IF(LX.EQ.NU(NY,NX))THEN
-      CDPTH(LX-1,NY,NX)=CDPTH(LX-1,NY,NX)+DDLYR(LX,NN)
-      CDPTHY(LX-1,NY,NX)=CDPTHY(LX-1,NY,NX)+DDLYR(LX,NN)
+      CDPTH(LX-1,NY,NX)=CDPTH(LX-1,NY,NX)+DDLYR(LX,NN) 
+      CDPTHY(LX-1,NY,NX)=CDPTHY(LX-1,NY,NX)+DDLYR(LX,NN) 
 C     WRITE(*,1122)'CDSED0',I,J,NX,NY,LX,IFLGL(LX,5),DDLYR(LX,5)
 C    2,CDPTH(LX-1,NY,NX),CDPTH(LX,NY,NX),DLYR(3,LX,NY,NX)
       ENDIF
@@ -5972,17 +7240,17 @@ C
       CDPTH(LX,NY,NX)=CDPTH(LX,NY,NX)+DDLYR(LX,NN)
       CDPTHY(LX,NY,NX)=CDPTHY(LX,NY,NX)+DDLYR(LX,NN)
 C     IF(NX.EQ.1)THEN
-C     WRITE(*,1128)'DSOC',I,J,NX,NY,LX,NN,IFLGL(LX,NN)
+C     WRITE(*,1128)'DSOC',I,J,NX,NY,LX,NN,IFLGL(LX,NN) 
 C    2,DDLYR(LX,NN),DDLYXC,CDPTH(LX,NY,NX),DLYR(3,LX,NY,NX)
 C    3,CDPTH(0,NY,NX)
-1128  FORMAT(A8,7I4,30E16.8)
+1128  FORMAT(A8,7I4,30E16.8) 
 C     ENDIF
       IF(LX.EQ.NU(NY,NX).OR.BKDS(LX-1,NY,NX).LE.ZERO)THEN
       CDPTH(LX-1,NY,NX)=CDPTH(LX-1,NY,NX)+DDLYR(LX-1,NN)
       CDPTHY(LX-1,NY,NX)=CDPTHY(LX-1,NY,NX)+DDLYR(LX-1,NN)
 C     IF(NX.EQ.1)THEN
-C     WRITE(*,1128)'DSOC0',I,J,NX,NY,LX,NN,IFLGL(LX-1,NN)
-C    2,DDLYR(LX-1,NN),DDLYXC,CDPTH(LX-1,NY,NX)
+C     WRITE(*,1128)'DSOC0',I,J,NX,NY,LX,NN,IFLGL(LX-1,NN) 
+C    2,DDLYR(LX-1,NN),DDLYXC,CDPTH(LX-1,NY,NX) 
 C    3,DLYR(3,LX-1,NY,NX),CDPTH(0,NY,NX)
 C     ENDIF
       IF(BKDS(LX-1,NY,NX).LE.ZERO)THEN
@@ -6005,11 +7273,30 @@ C     ENDIF
 200   CONTINUE
       VOLY(LX,NY,NX)=VOLX(LX,NY,NX)
 225   CONTINUE
+      IF(BKDS(NU(NY,NX),NY,NX).LE.ZERO)THEN
       VOLY(0,NY,NX)=VOLW(0,NY,NX)+VOLI(0,NY,NX)
+      ELSE 
+      VOLY(0,NY,NX)=VOLX(0,NY,NX)
+      ENDIF
 C
 C     RECALCULATE SOIL LAYER THICKNESS
 C
+C     DLYR=layer depth
+C     CDPTH=cumulative depth to bottom of soil layer
+C     IFLGL=pond boundary flag:layer underneath is 1:pond, 2:soil 
+C     BKDS=bulk density (0=water,>0=soil)
+C     DDLYRX=total change in DLYR from all disturbances used to 
+C        calculate redistribution of soil material
+C     DLYRI=initial layer depth from soil file
+C     DDLYRY=change in DLYR to restore DLYRI
+C     DPTH=depth to midpoint of soil layer
+C     CDPTHY=CDPTH used to calculate DDLYRX excluding 
+C        freeze-thaw effects 
+C     CDPTHZ=cumulative depth to bottom of soil layer from current 
+C        soil surface depth
+C
       ICHKL=0
+      TDVOLI=0.0
       DO 245 L=NU(NY,NX),NL(NY,NX)-1
       DO 230 NN=1,3
       IF(NN.EQ.1)THEN
@@ -6024,13 +7311,13 @@ C
       ENDIF
       ICHKL=1
       ELSEIF(IFLGL(L,1).EQ.2.AND.(IFLGL(L+1,1).EQ.0
-     3.OR.DLYR(3,L,NY,NX).LE.DLYRI(3,L,NY,NX)))THEN
+     3.OR.DLYR(3,L,NY,NX).LE.DLYRI(3,L,NY,NX)))THEN 
       DDLYRX(NN)=0.0
       IF(L.EQ.NU(NY,NX).OR.ICHKL.EQ.0)THEN
       DDLYRY(L)=0.0
       ELSE
       DDLYRY(L)=DDLYRY(L-1)
-      ENDIF
+      ENDIF 
       IF(IFLGL(L,1).EQ.2.AND.IFLGL(L+1,1).EQ.0)ICHKL=0
       ELSE
       IF(ICHKL.EQ.0)THEN
@@ -6039,10 +7326,10 @@ C
       ELSE
       DDLYRX(NN)=0.0
       DDLYRY(L)=DDLYRY(L-1)
-      ENDIF
+      ENDIF 
       ENDIF
       CDPTH(L,NY,NX)=CDPTH(L,NY,NX)+DDLYRY(L)
-C     CDPTHY(L,NY,NX)=CDPTHY(L,NY,NX)+DDLYRY(L)
+      CDPTHY(L,NY,NX)=CDPTHY(L,NY,NX)+DDLYRY(L) 
       DLYR(3,L,NY,NX)=DLYR(3,L,NY,NX)+DDLYRY(L)
       DPTH(L,NY,NX)=0.5*(CDPTH(L,NY,NX)+CDPTH(L-1,NY,NX))
       CDPTHZ(L,NY,NX)=CDPTH(L,NY,NX)-CDPTH(NU(NY,NX)-1,NY,NX)
@@ -6053,34 +7340,47 @@ C     CDPTHY(L,NY,NX)=CDPTHY(L,NY,NX)+DDLYRY(L)
       ENDIF
       IF(L.EQ.NU(NY,NX))THEN
       DPTHZ(L,NY,NX)=0.5*CDPTHZ(L,NY,NX)
-C     DDLYRX(NN)=DDLYRX(NN)+DDLYR(L,5)
       ELSE
       DPTHZ(L,NY,NX)=0.5*(CDPTHZ(L,NY,NX)+CDPTHZ(L-1,NY,NX))
       ENDIF
       IF(BKDS(L,NY,NX).GT.ZERO)THEN
-C     DDLYRX(NN)=CDPTH(L,NY,NX)-CDPTHX(L,NY,NX)
       DDLYRX(NN)=CDPTHY(L,NY,NX)-CDPTHX(L,NY,NX)
+      TDVOLI=TDVOLI+DVOLI(L,NY,NX)
+      DDLYRX(NN)=DDLYRX(NN)-TDVOLI*DENSJ/AREA(3,L,NY,NX)
+C     IF(L.EQ.NU(NY,NX))THEN
+C     DDLYRX(NN)=DDLYRX(NN)-DDLYR(L-1,6)
+C     ENDIF
       ENDIF
-C     IF(NX.EQ.1)THEN
-C     WRITE(*,1114)'DDLYR',I,J,NX,NY,L,NN,IFLGL(L,1),IFLGL(L+1,1)
+C     IF((I/30)*30.EQ.I.AND.J.EQ.15)THEN
+C     WRITE(*,1114)'DDLYR',I,J,NFZ,NX,NY,L,NN,IFLGL(L,1),IFLGL(L+1,1)
 C    2,ICHKL,DDLYRX(NN),DDLYRY(L),(DDLYR(L,NM),NM=1,6)
-C    2,DVOLI(L,NY,NX),TSEDER(NY,NX),DORGC(L,NY,NX),DORGE(NY,NX)
+C    3,TSEDSK(NY,NX),DVOLI(L,NY,NX),TDVOLI
+C    2,TSEDER(NY,NX),DORGC(L,NY,NX),DORGE(NY,NX)
 C    4,VOLTI(L,NY,NX),VOLT(L,NY,NX),VOLA(L,NY,NX),VOLW(L,NY,NX)
 C    4,VOLI(L,NY,NX),VOLP(L,NY,NX),DVOLW(L,NY,NX),DVOLI(L,NY,NX)
-C    5,DLYRI(3,L,NY,NX),DLYR(3,L,NY,NX),DLYRI(3,L+1,NY,NX)
-C    5,DLYR(3,L+1,NY,NX),CDPTH(L-1,NY,NX),CDPTH(L,NY,NX)
-C    4,VOLI(L,NY,NX),VOLP(L,NY,NX),DVOLW(L,NY,NX)
-C    5,VOLW(L,NY,NX)+VOLI(L,NY,NX)
-C    5,BKDS(L,NY,NX),BKDSI(L,NY,NX)
+C    5,DLYR(3,L,NY,NX),CDPTHY(L,NY,NX),CDPTHX(L,NY,NX)
+C    4,VOLI(L,NY,NX),VOLP(L,NY,NX),DVOLW(L,NY,NX) 
+C    5,VOLW(L,NY,NX)+VOLI(L,NY,NX) 
+C    5,BKDS(L,NY,NX),BKDSI(L,NY,NX) 
 C    6,DTBLZ(NY,NX),DTBLX(NY,NX)
-C    7,VOLAH(L,NY,NX),VOLWH(L,NY,NX),VOLIH(L,NY,NX)
+C    7,VOLAH(L,NY,NX),VOLWH(L,NY,NX),VOLIH(L,NY,NX) 
 C    8,ORGCX(L,NY,NX),ORGC(L,NY,NX)
-1114  FORMAT(A8,9I4,40E16.8)
+1114  FORMAT(A8,10I4,40E16.8) 
 C     ENDIF
 C
-C     RESET POND SURFACE LAYER NUMBER IF LOST TO EVAPORATION
+C     RESET POND SURFACE LAYER NUMBER IF SURFACE LAYER 
+C     LOST TO EVAPORATION
 C
-      ELSEIF(NN.EQ.2)THEN
+C     VHCP,VHCPNX=current, minimum soil heat capacity
+C     VOLT,VOLX=total, micropore soil volume
+C     DDLYRX=total change in DLYR from all disturbances used to 
+C        calculate redistribution of soil material
+C     IFLGL=pond boundary flag:layer underneath is 1:pond, 2:soil 
+C     DLYR=layer depth
+C     BKDS=bulk density (0=water,>0=soil)
+C     FMPR=1.0-(coarse fragment+macropore) fraction
+C
+      ELSEIF(NN.EQ.2)THEN 
       IF((L.EQ.NU(NY,NX).AND.BKDS(NU(NY,NX),NY,NX).LE.ZERO)
      2.AND.(VHCP(NU(NY,NX),NY,NX).LE.VHCPNX(NY,NX)
      3.OR.NUM(NY,NX).GT.NU(NY,NX)))THEN
@@ -6095,20 +7395,36 @@ C
       VOLT(NUX,NY,NX)=AREA(3,NUX,NY,NX)*DLYR(3,NUX,NY,NX)
       VOLX(NUX,NY,NX)=VOLT(NUX,NY,NX)*FMPR(NUX,NY,NX)
       ENDIF
-C     WRITE(*,5598)'SURFX',I,J,NX,NY,L,LL,NUX,NU(NY,NX),NUM(NY,NX)
+C     WRITE(*,5598)'SURFX',I,J,NX,NY,L,LL,NUX,NU(NY,NX),NUM(NY,NX) 
 C    2,DDLYRX(NN),VOLX(LL,NY,NX),VOLW(LL,NY,NX),VOLI(LL,NY,NX)
-C    2,VHCP(LL,NY,NX),VHCPNX(NY,NX)
+C    2,VHCP(LL,NY,NX),VHCPNX(NY,NX) 
 5598  FORMAT(A8,9I4,12E16.8)
       GO TO 9971
       ENDIF
 9970  CONTINUE
       ELSE
-      DDLYRX(NN)=0.0
+      DDLYRX(NN)=0.0 
       IFLGL(L,NN)=0
       ENDIF
 9971  CONTINUE
 C
-C     RESET POND SURFACE LAYER NUMBER IF GAIN FROM PRECIPITATION
+C     RESET POND SURFACE LAYER NUMBER IF SURFACE LAYER 
+C     RESTORED BY PRECIPITATION
+C
+C     VOLW,VOLI=soil surface layer water,ice content
+C     VOLWD=soil surface water ponding capacity
+C     BKDS=bulk density (0=water,>0=soil)
+C     DDLYRX=total change in DLYR from all disturbances used to 
+C        calculate redistribution of soil material
+C     IFLGL=pond boundary flag:layer underneath is 1:pond, 2:soil 
+C     DLYR=layer depth: 0=pond, NU=soil surface layer
+C     VOLR=dry litter volume
+C     VOLWRX=litter water holding capacity
+C     CDPTH=cumulative depth to bottom of soil layer
+C     CDPTHY=CDPTH excluding freeze-thaw effects 
+C     CDPTHZ=cumulative depth to bottom of soil layer from current
+C        soil surface depth
+C     DPTH=depth to midpoint of soil layer
 C
       ELSEIF(NN.EQ.3)THEN
       XVOLWP=AMAX1(0.0,VOLW(0,NY,NX)-VOLWD(NY,NX))
@@ -6138,28 +7454,38 @@ C    2.OR.(BKDS(L,NY,NX).LE.ZERO))THEN
       CDPTHZ(NU(NY,NX),NY,NX)=DLYR(3,NU(NY,NX),NY,NX)
       DPTHZ(NU(NY,NX),NY,NX)=0.5*CDPTHZ(NU(NY,NX),NY,NX)
 C     WRITE(*,5597)'SURFY',I,J,NX,NY,L,NUI(NY,NX),NU(NY,NX)
-C    2,NUM(NY,NX),IFLGL(L,NN),VOLWD(NY,NX),XVOLWP,DDLYRX(NN)
+C    2,NUM(NY,NX),IFLGL(L,NN),VOLWD(NY,NX),XVOLWP,DDLYRX(NN) 
 C    2,DLYR0,DLYR(3,0,NY,NX),DLYR(3,NU(NY,NX),NY,NX),ORGC(0,NY,NX)
-C    2,VOLW(0,NY,NX),VOLX(0,NY,NX),VOLW(NU(NY,NX),NY,NX)
+C    2,VOLW(0,NY,NX),VOLX(0,NY,NX),VOLW(NU(NY,NX),NY,NX) 
 C    3,CDPTH(0,NY,NX),CDPTH(NU(NY,NX),NY,NX),VOLR(NY,NX)
 5597  FORMAT(A8,9I4,20E16.8)
       ELSE
-      DDLYRX(NN)=0.0
+      DDLYRX(NN)=0.0 
       IFLGL(L,NN)=0
       ENDIF
       ELSE
-      DDLYRX(NN)=0.0
+      DDLYRX(NN)=0.0 
       IFLGL(L,NN)=0
       ENDIF
       ENDIF
 C
 C     TRANSFER STATE VARIABLES BETWEEN LAYERS
 C
+C     IFLGL=pond boundary flag:layer underneath is 1:pond, 2:soil 
+C     BKDS=bulk density (0=water,>0=soil)
+C     DDLYRX=total change in DLYR from all disturbances used to 
+C        calculate redistribution of soil material
+C     L0,L1=soil layer from, to which soil contents are redistributed
+C     FX=fraction of soil contents redistributed from L0 to L1 
+C     VOLW,VOLI=soil water,ice content
+C     AREA=grid cell surface area
+C     DLYR=layer depth
+C
 C     IF(IFLGL(L,NN).EQ.1)THEN
       IF(ABS(DDLYRX(NN)).GT.ZERO)THEN
       IF(DDLYRX(NN).GT.ZERO)THEN
 C
-C     LAYERS MOVE DOWN
+C     IF LAYER GETS DEEPER, MATERIALS IN LAYER MOVE UP
 C
       IF(IFLGL(L,2).EQ.0)THEN
       L1=L
@@ -6169,32 +7495,27 @@ C
       L0=NUX
       ENDIF
       IF((BKDS(L,NY,NX).LE.ZERO.AND.IFLGL(L,1).EQ.2)
-     2.OR.(DLYR(3,L0,NY,NX).LE.ZEROC.AND.IFLGL(L,6).EQ.1))THEN
+     2.OR.(DLYR(3,L0,NY,NX).LE.ZERO2.AND.IFLGL(L,6).EQ.1))THEN
       FX=1.0
-      FO=1.0
       ELSE
       IF(BKDS(L0,NY,NX).LE.ZERO)THEN
       DPTWI=(VOLW(L0,NY,NX)+VOLI(L0,NY,NX))/AREA(3,L0,NY,NX)
       IF(DPTWI.GT.ZERO)THEN
       FX=AMIN1(1.0,DDLYRX(NN)/DPTWI)
-      FO=FX
       ELSE
-      FX=0.0
-      FO=0.0
+      FX=1.0
       ENDIF
       ELSE
-      IF(DLYR(3,L,NY,NX).GT.ZERO.AND.DLYR(3,L0,NY,NX).GT.ZERO)THEN
-      FX=AMIN1(1.0,DDLYRX(NN)/DLYR(3,L,NY,NX))
-      FO=AMIN1(1.0,DDLYRX(NN)/DLYR(3,L0,NY,NX))
+      IF(DLYR(3,L0,NY,NX).GT.ZERO)THEN
+      FX=AMIN1(1.0,DDLYRX(NN)/DLYR(3,L0,NY,NX))
       ELSE
-      FX=0.0
-      FO=0.0
+      FX=1.0
       ENDIF
       ENDIF
       ENDIF
       ELSE
 C
-C     LAYERS MOVE UP
+C     IF LAYER GETS SHALLOWER, MATERIALS IN LAYER MOVE DOWN
 C
       IF(IFLGL(L,3).EQ.0)THEN
       L1=L+1
@@ -6207,36 +7528,46 @@ C
       DPTWI=(VOLW(L0,NY,NX)+VOLI(L0,NY,NX))/AREA(3,L0,NY,NX)
       IF(DPTWI.GT.ZERO)THEN
       FX=AMIN1(1.0,-DDLYRX(NN)/DPTWI)
-      FO=FX
       ELSE
-      FX=0.0
-      FO=0.0
+      FX=1.0
       ENDIF
       ELSE
-      IF(DLYR(3,L,NY,NX).GT.ZERO.AND.DLYR(3,L0,NY,NX).GT.ZERO)THEN
-      FX=AMIN1(1.0,-DDLYRX(NN)/DLYR(3,L,NY,NX))
-      FO=AMIN1(1.0,-DDLYRX(NN)/DLYR(3,L0,NY,NX))
+      IF(DLYR(3,L0,NY,NX).GT.ZERO)THEN
+      FX=AMIN1(1.0,-DDLYRX(NN)/DLYR(3,L0,NY,NX))
       ELSE
-      FX=0.0
-      FO=0.0
+      FX=1.0
       ENDIF
       ENDIF
       ENDIF
+C     IF(NX.EQ.1)THEN
 C     WRITE(*,5601)'FX',I,J,NX,NY,L,L0,L1,NN,FO,FX
 C    2,DDLYRX(NN),VOLW(L0,NY,NX),BKDS(L0,NY,NX),DPTWI
-C    3,DLYR(3,L1,NY,NX),DLYR(3,L0,NY,NX)
+C    3,DLYR(3,L1,NY,NX),DLYR(3,L0,NY,NX) 
 5601  FORMAT(A8,8I4,20E12.4)
+C     ENDIF
+C
+C     REDISTRIBUTE POND, SOIL MATERIAL
+C
+C     FX=fraction of pond or soil contents redistributed from L0 to L1 
+C     IFLGS=disturbance flag
+C     BKDS=bulk density (0=water,>0=soil)
+C
       IF(FX.GT.ZERO)THEN
       IFLGS(NY,NX)=1
       FY=1.0-FX
-      IF(FY.LE.ZERO2)FY=0.0
+C     IF(FY.LE.ZERO2)FY=0.0
+C
+C     REDISTRIBUTE POND MATERIAL 
+C
       IF(BKDS(L0,NY,NX).LE.ZERO)THEN
-C     IF(NX.EQ.1)THEN
-C     WRITE(*,5599)'POND1',I,J,NX,NY,L,L0,L1,NU(NY,NX),NN,FX,FY
+C     IF(I.EQ.178)THEN
+C     WRITE(*,5599)'POND1',I,J,NFZ,NX,NY,L,L0,L1,NU(NY,NX),NN,FX,FY 
 C    2,DDLYRX(NN),VOLY(L0,NY,NX),VOLX(L0,NY,NX),VOLW(L0,NY,NX)
-C    3,VOLI(L0,NY,NX),VOLY(L1,NY,NX),VOLX(L1,NY,NX),VOLW(L1,NY,NX)
+C    3,VOLI(L0,NY,NX),VOLY(L1,NY,NX),VOLX(L1,NY,NX),VOLW(L1,NY,NX) 
 C    4,VOLI(L1,NY,NX),CDPTH(L0,NY,NX),CDPTH(L1,NY,NX)
-C    5,(OSC(M,1,L0,NY,NX),M=1,4),(OSC(M,1,L1,NY,NX),M=1,4)
+C    5,VOLW(L0,NY,NX)+VOLW(L1,NY,NX)
+C    5,(OSC(M,4,L0,NY,NX),M=1,5),(OSC(M,4,L1,NY,NX),M=1,5)
+C    5,(OQC(K,L0,NY,NX),K=0,4),(OQC(K,L1,NY,NX),K=0,4)
 C    6,DLYR(3,L0,NY,NX),DLYR(3,L1,NY,NX)
 C    5,TKS(L0,NY,NX),TKS(L1,NY,NX)
 C    5,VHCP(L0,NY,NX),VHCP(L1,NY,NX)
@@ -6246,35 +7577,19 @@ C    6,(WTRT1(1,L1,NR,1,NY,NX),NR=1,NRT(1,NY,NX))
 C    6,(WTRT2(1,L1,NR,1,NY,NX),NR=1,NRT(1,NY,NX))
 C    6,WTRTL(1,L1,1,NY,NX),WTNDL(L1,1,NY,NX)
 C    6,CPOOLR(1,L1,1,NY,NX),ZPOOLR(1,L1,1,NY,NX)
-C    6,OXYA(1,L1,1,NY,NX),OXYP(1,L1,1,NY,NX)
+C    6,OXYA(1,L1,1,NY,NX),OXYP(1,L1,1,NY,NX) 
 C    6,(WTRT1(1,L0,NR,1,NY,NX),NR=1,NRT(1,NY,NX))
 C    6,(WTRT2(1,L0,NR,1,NY,NX),NR=1,NRT(1,NY,NX))
 C    6,WTRTL(1,L0,1,NY,NX),WTNDL(L0,1,NY,NX)
 C    6,CPOOLR(1,L0,1,NY,NX),ZPOOLR(1,L0,1,NY,NX)
-C    6,OXYA(1,L0,1,NY,NX),OXYP(1,L0,1,NY,NX)
-5599  FORMAT(A8,9I4,60E16.8)
+C    6,OXYA(1,L0,1,NY,NX),OXYP(1,L0,1,NY,NX) 
+5599  FORMAT(A8,10I4,60E16.8)
 C     ENDIF
 C
-C     TARGET POND LAYER
+C     REDISTRIBUTE POND CONTENTS TO DESTINATION LAYER
 C
-      IF(L0.NE.0)THEN
-      SAND(L1,NY,NX)=SAND(L1,NY,NX)
-     2+FX*SAND(L0,NY,NX)
-      SILT(L1,NY,NX)=SILT(L1,NY,NX)
-     2+FX*SILT(L0,NY,NX)
-      CLAY(L1,NY,NX)=CLAY(L1,NY,NX)
-     2+FX*CLAY(L0,NY,NX)
-      XCEC(L1,NY,NX)=XCEC(L1,NY,NX)
-     2+FX*XCEC(L0,NY,NX)
-      XAEC(L1,NY,NX)=XAEC(L1,NY,NX)
-     2+FX*XAEC(L0,NY,NX)
-      ENDIF
-C     IF(BKDS(L1,NY,NX).LE.ZERO)THEN
-C     VOLT(L1,NY,NX)=VOLT(L1,NY,NX)
-C    2+FX*VOLT(L0,NY,NX)
-C     VOLX(L1,NY,NX)=VOLX(L1,NY,NX)
-C    2+FX*VOLX(L0,NY,NX)
-C     ENDIF
+C     POND WATER, ICE, HEAT
+C
       VOLW(L1,NY,NX)=VOLW(L1,NY,NX)
      2+FX*VOLW(L0,NY,NX)
       VOLI(L1,NY,NX)=VOLI(L1,NY,NX)
@@ -6286,7 +7601,7 @@ C     ENDIF
       VOLY(L1,NY,NX)=VOLY(L1,NY,NX)
      2+FX*VOLY(L0,NY,NX)
       VOLWX(L1,NY,NX)=VOLW(L1,NY,NX)
-      ENGY1=VHCP(L1,NY,NX)*TKS(L1,NY,NX)
+      ENGY1=VHCP(L1,NY,NX)*TKS(L1,NY,NX) 
       ENGY0=VHCP(L0,NY,NX)*TKS(L0,NY,NX)
       ENGY1=ENGY1+FX*ENGY0
       VHCM(L1,NY,NX)=VHCM(L1,NY,NX)
@@ -6294,28 +7609,15 @@ C     ENDIF
       VHCP(L1,NY,NX)=VHCM(L1,NY,NX)
      2+4.19*(VOLW(L1,NY,NX)+VOLWH(L1,NY,NX))
      3+1.9274*(VOLI(L1,NY,NX)+VOLIH(L1,NY,NX))
-      IF(VHCP(L1,NY,NX).GT.ZEROS(NY,NX))THEN
+      IF(VHCP(L1,NY,NX).GT.VHCPNX(NY,NX))THEN
       TKS(L1,NY,NX)=ENGY1/VHCP(L1,NY,NX)
       ELSE
       TKS(L1,NY,NX)=TKS(L0,NY,NX)
       ENDIF
       TCS(L1,NY,NX)=TKS(L1,NY,NX)-273.15
-      ZNH4FA(L1,NY,NX)=ZNH4FA(L1,NY,NX)
-     2+FX*ZNH4FA(L0,NY,NX)
-      ZNH3FA(L1,NY,NX)=ZNH3FA(L1,NY,NX)
-     2+FX*ZNH3FA(L0,NY,NX)
-      ZNHUFA(L1,NY,NX)=ZNHUFA(L1,NY,NX)
-     2+FX*ZNHUFA(L0,NY,NX)
-      ZNO3FA(L1,NY,NX)=ZNO3FA(L1,NY,NX)
-     2+FX*ZNO3FA(L0,NY,NX)
-      ZNH4FB(L1,NY,NX)=ZNH4FB(L1,NY,NX)
-     2+FX*ZNH4FB(L0,NY,NX)
-      ZNH3FB(L1,NY,NX)=ZNH3FB(L1,NY,NX)
-     2+FX*ZNH3FB(L0,NY,NX)
-      ZNHUFB(L1,NY,NX)=ZNHUFB(L1,NY,NX)
-     2+FX*ZNHUFB(L0,NY,NX)
-      ZNO3FB(L1,NY,NX)=ZNO3FB(L1,NY,NX)
-     2+FX*ZNO3FB(L0,NY,NX)
+C
+C     POND N,P SOLUTES IN BAND
+C
       ZNH4S(L1,NY,NX)=ZNH4S(L1,NY,NX)
      2+FX*ZNH4S(L0,NY,NX)
       ZNH4B(L1,NY,NX)=ZNH4B(L1,NY,NX)
@@ -6336,6 +7638,9 @@ C     ENDIF
      2+FX*H1PO4(L0,NY,NX)
       H2PO4(L1,NY,NX)=H2PO4(L1,NY,NX)
      2+FX*H2PO4(L0,NY,NX)
+C
+C     POND SALTS IN NON-BAND
+C
       IF(ISALTG.NE.0)THEN
       ZAL(L1,NY,NX)=ZAL(L1,NY,NX)
      2+FX*ZAL(L0,NY,NX)
@@ -6420,6 +7725,9 @@ C     ENDIF
       ZMG1P(L1,NY,NX)=ZMG1P(L1,NY,NX)
      2+FX*ZMG1P(L0,NY,NX)
       ENDIF
+C
+C     POND SALTS IN BAND
+C
       IF(L0.NE.0)THEN
       H1POB(L1,NY,NX)=H1POB(L1,NY,NX)
      2+FX*H1POB(L0,NY,NX)
@@ -6443,78 +7751,9 @@ C     ENDIF
       ZMG1PB(L1,NY,NX)=ZMG1PB(L1,NY,NX)
      2+FX*ZMG1PB(L0,NY,NX)
       ENDIF
-      XN4(L1,NY,NX)=XN4(L1,NY,NX)
-     2+FX*XN4(L0,NY,NX)
-      XNB(L1,NY,NX)=XNB(L1,NY,NX)
-     2+FX*XNB(L0,NY,NX)
-      XHY(L1,NY,NX)=XHY(L1,NY,NX)
-     2+FX*XHY(L0,NY,NX)
-      XAL(L1,NY,NX)=XAL(L1,NY,NX)
-     2+FX*XAL(L0,NY,NX)
-      XFE(L1,NY,NX)=XFE(L1,NY,NX)
-     2+FX*XFE(L0,NY,NX)
-      XCA(L1,NY,NX)=XCA(L1,NY,NX)
-     2+FX*XCA(L0,NY,NX)
-      XMG(L1,NY,NX)=XMG(L1,NY,NX)
-     2+FX*XMG(L0,NY,NX)
-      XNA(L1,NY,NX)=XNA(L1,NY,NX)
-     2+FX*XNA(L0,NY,NX)
-      XKA(L1,NY,NX)=XKA(L1,NY,NX)
-     2+FX*XKA(L0,NY,NX)
-      XHC(L1,NY,NX)=XHC(L1,NY,NX)
-     2+FX*XHC(L0,NY,NX)
-      XALO2(L1,NY,NX)=XALO2(L1,NY,NX)
-     2+FX*XALO2(L0,NY,NX)
-      XFEO2(L1,NY,NX)=XFEO2(L1,NY,NX)
-     2+FX*XFEO2(L0,NY,NX)
-      XOH0(L1,NY,NX)=XOH0(L1,NY,NX)
-     2+FX*XOH0(L0,NY,NX)
-      XOH1(L1,NY,NX)=XOH1(L1,NY,NX)
-     2+FX*XOH1(L0,NY,NX)
-      XOH2(L1,NY,NX)=XOH2(L1,NY,NX)
-     2+FX*XOH2(L0,NY,NX)
-      XH1P(L1,NY,NX)=XH1P(L1,NY,NX)
-     2+FX*XH1P(L0,NY,NX)
-      XH2P(L1,NY,NX)=XH2P(L1,NY,NX)
-     2+FX*XH2P(L0,NY,NX)
-      XOH0B(L1,NY,NX)=XOH0B(L1,NY,NX)
-     2+FX*XOH0B(L0,NY,NX)
-      XOH1B(L1,NY,NX)=XOH1B(L1,NY,NX)
-     2+FX*XOH1B(L0,NY,NX)
-      XOH2B(L1,NY,NX)=XOH2B(L1,NY,NX)
-     2+FX*XOH2B(L0,NY,NX)
-      XH1PB(L1,NY,NX)=XH1PB(L1,NY,NX)
-     2+FX*XH1PB(L0,NY,NX)
-      XH2PB(L1,NY,NX)=XH2PB(L1,NY,NX)
-     2+FX*XH2PB(L0,NY,NX)
-      PALOH(L1,NY,NX)=PALOH(L1,NY,NX)
-     2+FX*PALOH(L0,NY,NX)
-      PFEOH(L1,NY,NX)=PFEOH(L1,NY,NX)
-     2+FX*PFEOH(L0,NY,NX)
-      PCACO(L1,NY,NX)=PCACO(L1,NY,NX)
-     2+FX*PCACO(L0,NY,NX)
-      PCASO(L1,NY,NX)=PCASO(L1,NY,NX)
-     2+FX*PCASO(L0,NY,NX)
-      PALPO(L1,NY,NX)=PALPO(L1,NY,NX)
-     2+FX*PALPO(L0,NY,NX)
-      PFEPO(L1,NY,NX)=PFEPO(L1,NY,NX)
-     2+FX*PFEPO(L0,NY,NX)
-      PCAPD(L1,NY,NX)=PCAPD(L1,NY,NX)
-     2+FX*PCAPD(L0,NY,NX)
-      PCAPH(L1,NY,NX)=PCAPH(L1,NY,NX)
-     2+FX*PCAPH(L0,NY,NX)
-      PCAPM(L1,NY,NX)=PCAPM(L1,NY,NX)
-     2+FX*PCAPM(L0,NY,NX)
-      PALPB(L1,NY,NX)=PALPB(L1,NY,NX)
-     2+FX*PALPB(L0,NY,NX)
-      PFEPB(L1,NY,NX)=PFEPB(L1,NY,NX)
-     2+FX*PFEPB(L0,NY,NX)
-      PCPDB(L1,NY,NX)=PCPDB(L1,NY,NX)
-     2+FX*PCPDB(L0,NY,NX)
-      PCPHB(L1,NY,NX)=PCPHB(L1,NY,NX)
-     2+FX*PCPHB(L0,NY,NX)
-      PCPMB(L1,NY,NX)=PCPMB(L1,NY,NX)
-     2+FX*PCPMB(L0,NY,NX)
+C
+C     POND GASEOUS GASES
+C
       CO2G(L1,NY,NX)=CO2G(L1,NY,NX)
      2+FX*CO2G(L0,NY,NX)
       CH4G(L1,NY,NX)=CH4G(L1,NY,NX)
@@ -6530,6 +7769,9 @@ C     ENDIF
       H2GG(L1,NY,NX)=H2GG(L1,NY,NX)
      2+FX*H2GG(L0,NY,NX)
       ENDIF
+C
+C     POND AQUEOUS GASES
+C
       CO2S(L1,NY,NX)=CO2S(L1,NY,NX)
      2+FX*CO2S(L0,NY,NX)
       CH4S(L1,NY,NX)=CH4S(L1,NY,NX)
@@ -6542,26 +7784,11 @@ C     ENDIF
      2+FX*Z2OS(L0,NY,NX)
       H2GS(L1,NY,NX)=H2GS(L1,NY,NX)
      2+FX*H2GS(L0,NY,NX)
+C
+C     POND ORGANIC MATTER
+C
       IF(IFLGL(L,3).EQ.0)THEN
-      DO 7965 K=0,5
-      DO 7965 N=1,7
-      DO 7965 M=1,3
-      OMC(M,N,K,L1,NY,NX)=OMC(M,N,K,L1,NY,NX)
-     2+FX*OMC(M,N,K,L0,NY,NX)
-      OMN(M,N,K,L1,NY,NX)=OMN(M,N,K,L1,NY,NX)
-     2+FX*OMN(M,N,K,L0,NY,NX)
-      OMP(M,N,K,L1,NY,NX)=OMP(M,N,K,L1,NY,NX)
-     2+FX*OMP(M,N,K,L0,NY,NX)
-7965  CONTINUE
       DO 7780 K=0,4
-      DO 7775 M=1,2
-      ORC(M,K,L1,NY,NX)=ORC(M,K,L1,NY,NX)
-     2+FX*ORC(M,K,L0,NY,NX)
-      ORN(M,K,L1,NY,NX)=ORN(M,K,L1,NY,NX)
-     2+FX*ORN(M,K,L0,NY,NX)
-      ORP(M,K,L1,NY,NX)=ORP(M,K,L1,NY,NX)
-     2+FX*ORP(M,K,L0,NY,NX)
-7775  CONTINUE
       OQC(K,L1,NY,NX)=OQC(K,L1,NY,NX)
      2+FX*OQC(K,L0,NY,NX)
       OQN(K,L1,NY,NX)=OQN(K,L1,NY,NX)
@@ -6578,34 +7805,19 @@ C     ENDIF
      2+FX*OQPH(K,L0,NY,NX)
       OQAH(K,L1,NY,NX)=OQAH(K,L1,NY,NX)
      2+FX*OQAH(K,L0,NY,NX)
-      OHC(K,L1,NY,NX)=OHC(K,L1,NY,NX)
-     2+FX*OHC(K,L0,NY,NX)
-      OHN(K,L1,NY,NX)=OHN(K,L1,NY,NX)
-     2+FX*OHN(K,L0,NY,NX)
-      OHP(K,L1,NY,NX)=OHP(K,L1,NY,NX)
-     2+FX*OHP(K,L0,NY,NX)
-      OHA(K,L1,NY,NX)=OHA(K,L1,NY,NX)
-     2+FX*OHA(K,L0,NY,NX)
-      DO 7770 M=1,4
-      OSC(M,K,L1,NY,NX)=OSC(M,K,L1,NY,NX)
-     2+FX*OSC(M,K,L0,NY,NX)
-      OSA(M,K,L1,NY,NX)=OSA(M,K,L1,NY,NX)
-     2+FX*OSA(M,K,L0,NY,NX)
-      OSN(M,K,L1,NY,NX)=OSN(M,K,L1,NY,NX)
-     2+FX*OSN(M,K,L0,NY,NX)
-      OSP(M,K,L1,NY,NX)=OSP(M,K,L1,NY,NX)
-     2+FX*OSP(M,K,L0,NY,NX)
-7770  CONTINUE
 7780  CONTINUE
       ENDIF
 C
-C     TARGET ROOT LAYER
+C     POND PLANT MATTER
 C
       IF(L0.NE.0)THEN
       DO 8900 NZ=1,NP(NY,NX)
       IF(WTRTL(1,L0,NZ,NY,NX).GT.ZEROP(NZ,NY,NX)
      2.AND.WTRTL(1,L1,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
       DO 8895 N=1,MY(NZ,NY,NX)
+C
+C     POND ROOT GASES
+C
       CO2A(N,L1,NZ,NY,NX)=CO2A(N,L1,NZ,NY,NX)
      2+FX*CO2A(N,L0,NZ,NY,NX)
       OXYA(N,L1,NZ,NY,NX)=OXYA(N,L1,NZ,NY,NX)
@@ -6630,14 +7842,17 @@ C
      2+FX*ZH3P(N,L0,NZ,NY,NX)
       H2GP(N,L1,NZ,NY,NX)=H2GP(N,L1,NZ,NY,NX)
      2+FX*H2GP(N,L0,NZ,NY,NX)
+C
+C     POND ROOTS
+C
       DO 8870 NR=1,NRT(NZ,NY,NX)
-      WTRT1(N,L1,NR,NZ,NY,NX)=WTRT1(N,L1,NR,NZ,NY,NX)
+      WTRT1(N,L1,NR,NZ,NY,NX)=WTRT1(N,L1,NR,NZ,NY,NX) 
      2+FX*WTRT1(N,L0,NR,NZ,NY,NX)
-      WTRT1N(N,L1,NR,NZ,NY,NX)=WTRT1N(N,L1,NR,NZ,NY,NX)
+      WTRT1N(N,L1,NR,NZ,NY,NX)=WTRT1N(N,L1,NR,NZ,NY,NX) 
      2+FX*WTRT1N(N,L0,NR,NZ,NY,NX)
-      WTRT1P(N,L1,NR,NZ,NY,NX)=WTRT1P(N,L1,NR,NZ,NY,NX)
+      WTRT1P(N,L1,NR,NZ,NY,NX)=WTRT1P(N,L1,NR,NZ,NY,NX) 
      2+FX*WTRT1P(N,L0,NR,NZ,NY,NX)
-      WTRT2(N,L1,NR,NZ,NY,NX)=WTRT2(N,L1,NR,NZ,NY,NX)
+      WTRT2(N,L1,NR,NZ,NY,NX)=WTRT2(N,L1,NR,NZ,NY,NX) 
      2+FX*WTRT2(N,L0,NR,NZ,NY,NX)
       WTRT2N(N,L1,NR,NZ,NY,NX)=WTRT2N(N,L1,NR,NZ,NY,NX)
      2+FX*WTRT2N(N,L0,NR,NZ,NY,NX)
@@ -6674,15 +7889,18 @@ C
      2+FX*RTVLP(N,L0,NZ,NY,NX)
       RTVLW(N,L1,NZ,NY,NX)=RTVLW(N,L1,NZ,NY,NX)
      2+FX*RTVLW(N,L0,NZ,NY,NX)
-      RRAD1(N,L1,NZ,NY,NX)=RRAD1(N,L1,NZ,NY,NX)
+      RRAD1(N,L1,NZ,NY,NX)=RRAD1(N,L1,NZ,NY,NX) 
      2+FX*RRAD1(N,L0,NZ,NY,NX)
-      RRAD2(N,L1,NZ,NY,NX)=RRAD2(N,L1,NZ,NY,NX)
+      RRAD2(N,L1,NZ,NY,NX)=RRAD2(N,L1,NZ,NY,NX) 
      2+FX*RRAD2(N,L0,NZ,NY,NX)
       RTARP(N,L1,NZ,NY,NX)=RTARP(N,L1,NZ,NY,NX)
      2+FX*RTARP(N,L0,NZ,NY,NX)
-      RTLGA(N,L1,NZ,NY,NX)=RTLGA(N,L1,NZ,NY,NX)
+      RTLGA(N,L1,NZ,NY,NX)=RTLGA(N,L1,NZ,NY,NX) 
      2+FX*RTLGA(N,L0,NZ,NY,NX)
 8895  CONTINUE
+C
+C     POND ROOT NODULES
+C
       WTNDL(L1,NZ,NY,NX)=WTNDL(L1,NZ,NY,NX)
      2+FX*WTNDL(L0,NZ,NY,NX)
       WTNDLN(L1,NZ,NY,NX)=WTNDLN(L1,NZ,NY,NX)
@@ -6693,25 +7911,177 @@ C
      2+FX*CPOOLN(L0,NZ,NY,NX)
       ZPOOLN(L1,NZ,NY,NX)=ZPOOLN(L1,NZ,NY,NX)
      2+FX*ZPOOLN(L0,NZ,NY,NX)
-      PPOOLN(L1,NZ,NY,NX)=PPOOLN(L1,NZ,NY,NX)
+      PPOOLN(L1,NZ,NY,NX)=PPOOLN(L1,NZ,NY,NX) 
      2+FX*PPOOLN(L0,NZ,NY,NX)
       ENDIF
 8900  CONTINUE
       ENDIF
 C
-C     SOURCE POND LAYER
+C     POND SEDIMENT
 C
+      IF(FX.EQ.1.0)THEN
       IF(L0.NE.0)THEN
-      SAND(L0,NY,NX)=FY*SAND(L0,NY,NX)
-      SILT(L0,NY,NX)=FY*SILT(L0,NY,NX)
-      CLAY(L0,NY,NX)=FY*CLAY(L0,NY,NX)
-      XCEC(L0,NY,NX)=FY*XCEC(L0,NY,NX)
-      XAEC(L0,NY,NX)=FY*XAEC(L0,NY,NX)
+      SAND(L1,NY,NX)=SAND(L1,NY,NX)
+     2+FX*SAND(L0,NY,NX)
+      SILT(L1,NY,NX)=SILT(L1,NY,NX)
+     2+FX*SILT(L0,NY,NX)
+      CLAY(L1,NY,NX)=CLAY(L1,NY,NX)
+     2+FX*CLAY(L0,NY,NX)
+      XCEC(L1,NY,NX)=XCEC(L1,NY,NX)
+     2+FX*XCEC(L0,NY,NX)
+      XAEC(L1,NY,NX)=XAEC(L1,NY,NX)
+     2+FX*XAEC(L0,NY,NX)
       ENDIF
-C     IF(BKDS(L0,NY,NX).LE.ZERO)THEN
-C     VOLT(L0,NY,NX)=FY*VOLT(L0,NY,NX)
-C     VOLX(L0,NY,NX)=FY*VOLX(L0,NY,NX)
-C     ENDIF
+C
+C     POND FERTILIZER IN BAND, NON-BAND
+C
+      ZNH4FA(L1,NY,NX)=ZNH4FA(L1,NY,NX)
+     2+FX*ZNH4FA(L0,NY,NX)
+      ZNH3FA(L1,NY,NX)=ZNH3FA(L1,NY,NX)
+     2+FX*ZNH3FA(L0,NY,NX)
+      ZNHUFA(L1,NY,NX)=ZNHUFA(L1,NY,NX)
+     2+FX*ZNHUFA(L0,NY,NX)
+      ZNO3FA(L1,NY,NX)=ZNO3FA(L1,NY,NX)
+     2+FX*ZNO3FA(L0,NY,NX)
+      ZNH4FB(L1,NY,NX)=ZNH4FB(L1,NY,NX)
+     2+FX*ZNH4FB(L0,NY,NX)
+      ZNH3FB(L1,NY,NX)=ZNH3FB(L1,NY,NX)
+     2+FX*ZNH3FB(L0,NY,NX)
+      ZNHUFB(L1,NY,NX)=ZNHUFB(L1,NY,NX)
+     2+FX*ZNHUFB(L0,NY,NX)
+      ZNO3FB(L1,NY,NX)=ZNO3FB(L1,NY,NX)
+     2+FX*ZNO3FB(L0,NY,NX)
+C
+C     POND ADSORBED CATIONS IN BAND, NON-BAND
+C
+      XN4(L1,NY,NX)=XN4(L1,NY,NX)
+     2+FX*XN4(L0,NY,NX)
+      XNB(L1,NY,NX)=XNB(L1,NY,NX)
+     2+FX*XNB(L0,NY,NX)
+      XHY(L1,NY,NX)=XHY(L1,NY,NX)
+     2+FX*XHY(L0,NY,NX)
+      XAL(L1,NY,NX)=XAL(L1,NY,NX)
+     2+FX*XAL(L0,NY,NX)
+      XFE(L1,NY,NX)=XFE(L1,NY,NX)
+     2+FX*XFE(L0,NY,NX)
+      XCA(L1,NY,NX)=XCA(L1,NY,NX)
+     2+FX*XCA(L0,NY,NX)
+      XMG(L1,NY,NX)=XMG(L1,NY,NX)
+     2+FX*XMG(L0,NY,NX)
+      XNA(L1,NY,NX)=XNA(L1,NY,NX)
+     2+FX*XNA(L0,NY,NX)
+      XKA(L1,NY,NX)=XKA(L1,NY,NX)
+     2+FX*XKA(L0,NY,NX)
+      XHC(L1,NY,NX)=XHC(L1,NY,NX)
+     2+FX*XHC(L0,NY,NX)
+      XALO2(L1,NY,NX)=XALO2(L1,NY,NX)
+     2+FX*XALO2(L0,NY,NX)
+      XFEO2(L1,NY,NX)=XFEO2(L1,NY,NX)
+     2+FX*XFEO2(L0,NY,NX)
+C
+C     POND ADSORBED ANIONS IN BAND, NON-BAND
+C
+      XOH0(L1,NY,NX)=XOH0(L1,NY,NX)
+     2+FX*XOH0(L0,NY,NX)
+      XOH1(L1,NY,NX)=XOH1(L1,NY,NX)
+     2+FX*XOH1(L0,NY,NX)
+      XOH2(L1,NY,NX)=XOH2(L1,NY,NX)
+     2+FX*XOH2(L0,NY,NX)
+      XH1P(L1,NY,NX)=XH1P(L1,NY,NX)
+     2+FX*XH1P(L0,NY,NX)
+      XH2P(L1,NY,NX)=XH2P(L1,NY,NX)
+     2+FX*XH2P(L0,NY,NX)
+      XOH0B(L1,NY,NX)=XOH0B(L1,NY,NX)
+     2+FX*XOH0B(L0,NY,NX)
+      XOH1B(L1,NY,NX)=XOH1B(L1,NY,NX)
+     2+FX*XOH1B(L0,NY,NX)
+      XOH2B(L1,NY,NX)=XOH2B(L1,NY,NX)
+     2+FX*XOH2B(L0,NY,NX)
+      XH1PB(L1,NY,NX)=XH1PB(L1,NY,NX)
+     2+FX*XH1PB(L0,NY,NX)
+      XH2PB(L1,NY,NX)=XH2PB(L1,NY,NX)
+     2+FX*XH2PB(L0,NY,NX)
+C
+C     POND PRECIPITATES IN BAND, NON-BAND
+C
+      PALOH(L1,NY,NX)=PALOH(L1,NY,NX)
+     2+FX*PALOH(L0,NY,NX)
+      PFEOH(L1,NY,NX)=PFEOH(L1,NY,NX)
+     2+FX*PFEOH(L0,NY,NX)
+      PCACO(L1,NY,NX)=PCACO(L1,NY,NX)
+     2+FX*PCACO(L0,NY,NX)
+      PCASO(L1,NY,NX)=PCASO(L1,NY,NX)
+     2+FX*PCASO(L0,NY,NX)
+      PALPO(L1,NY,NX)=PALPO(L1,NY,NX)
+     2+FX*PALPO(L0,NY,NX)
+      PFEPO(L1,NY,NX)=PFEPO(L1,NY,NX)
+     2+FX*PFEPO(L0,NY,NX)
+      PCAPD(L1,NY,NX)=PCAPD(L1,NY,NX)
+     2+FX*PCAPD(L0,NY,NX)
+      PCAPH(L1,NY,NX)=PCAPH(L1,NY,NX)
+     2+FX*PCAPH(L0,NY,NX)
+      PCAPM(L1,NY,NX)=PCAPM(L1,NY,NX)
+     2+FX*PCAPM(L0,NY,NX)
+      PALPB(L1,NY,NX)=PALPB(L1,NY,NX)
+     2+FX*PALPB(L0,NY,NX)
+      PFEPB(L1,NY,NX)=PFEPB(L1,NY,NX)
+     2+FX*PFEPB(L0,NY,NX)
+      PCPDB(L1,NY,NX)=PCPDB(L1,NY,NX)
+     2+FX*PCPDB(L0,NY,NX)
+      PCPHB(L1,NY,NX)=PCPHB(L1,NY,NX)
+     2+FX*PCPHB(L0,NY,NX)
+      PCPMB(L1,NY,NX)=PCPMB(L1,NY,NX)
+     2+FX*PCPMB(L0,NY,NX)
+C
+C     POND ORGANIC MATTER
+C
+      IF(IFLGL(L,3).EQ.0)THEN
+      ORGC(L1,NY,NX)=ORGC(L1,NY,NX)+FX*ORGC(L0,NY,NX)
+      DO 7965 K=0,5
+      DO 7965 N=1,7
+      DO 7965 M=1,3
+      OMC(M,N,K,L1,NY,NX)=OMC(M,N,K,L1,NY,NX)
+     2+FX*OMC(M,N,K,L0,NY,NX)
+      OMN(M,N,K,L1,NY,NX)=OMN(M,N,K,L1,NY,NX)
+     2+FX*OMN(M,N,K,L0,NY,NX)
+      OMP(M,N,K,L1,NY,NX)=OMP(M,N,K,L1,NY,NX)
+     2+FX*OMP(M,N,K,L0,NY,NX)
+7965  CONTINUE
+      DO 7785 K=0,4
+      DO 7775 M=1,2
+      ORC(M,K,L1,NY,NX)=ORC(M,K,L1,NY,NX)
+     2+FX*ORC(M,K,L0,NY,NX)
+      ORN(M,K,L1,NY,NX)=ORN(M,K,L1,NY,NX)
+     2+FX*ORN(M,K,L0,NY,NX)
+      ORP(M,K,L1,NY,NX)=ORP(M,K,L1,NY,NX)
+     2+FX*ORP(M,K,L0,NY,NX)
+7775  CONTINUE
+      OHC(K,L1,NY,NX)=OHC(K,L1,NY,NX)
+     2+FX*OHC(K,L0,NY,NX)
+      OHN(K,L1,NY,NX)=OHN(K,L1,NY,NX)
+     2+FX*OHN(K,L0,NY,NX)
+      OHP(K,L1,NY,NX)=OHP(K,L1,NY,NX)
+     2+FX*OHP(K,L0,NY,NX)
+      OHA(K,L1,NY,NX)=OHA(K,L1,NY,NX)
+     2+FX*OHA(K,L0,NY,NX)
+      DO 7770 M=1,5
+      OSC(M,K,L1,NY,NX)=OSC(M,K,L1,NY,NX)
+     2+FX*OSC(M,K,L0,NY,NX)
+      OSA(M,K,L1,NY,NX)=OSA(M,K,L1,NY,NX)
+     2+FX*OSA(M,K,L0,NY,NX)
+      OSN(M,K,L1,NY,NX)=OSN(M,K,L1,NY,NX)
+     2+FX*OSN(M,K,L0,NY,NX)
+      OSP(M,K,L1,NY,NX)=OSP(M,K,L1,NY,NX)
+     2+FX*OSP(M,K,L0,NY,NX)
+7770  CONTINUE
+7785  CONTINUE
+      ENDIF
+      ENDIF
+C
+C     REDISTRIBUTE POND CONTENTS FROM SOURCE LAYER
+C
+C     POND WATER, ICE, HEAT
+C
       VOLW(L0,NY,NX)=FY*VOLW(L0,NY,NX)
       VOLI(L0,NY,NX)=FY*VOLI(L0,NY,NX)
       VOLP(L0,NY,NX)=FY*VOLP(L0,NY,NX)
@@ -6728,20 +8098,15 @@ C     ENDIF
       VHCP(L0,NY,NX)=VHCM(L0,NY,NX)
      2+4.19*VOLW(L0,NY,NX)+1.9274*VOLI(L0,NY,NX)
       ENDIF
-      IF(VHCP(L0,NY,NX).GT.ZEROS(NY,NX))THEN
+      IF(VHCP(L0,NY,NX).GT.VHCPNX(NY,NX))THEN
       TKS(L0,NY,NX)=ENGY0/VHCP(L0,NY,NX)
       ELSE
       TKS(L0,NY,NX)=TKS(L1,NY,NX)
       ENDIF
       TCS(L0,NY,NX)=TKS(L0,NY,NX)-273.15
-      ZNH4FA(L0,NY,NX)=FY*ZNH4FA(L0,NY,NX)
-      ZNH3FA(L0,NY,NX)=FY*ZNH3FA(L0,NY,NX)
-      ZNHUFA(L0,NY,NX)=FY*ZNHUFA(L0,NY,NX)
-      ZNO3FA(L0,NY,NX)=FY*ZNO3FA(L0,NY,NX)
-      ZNH4FB(L0,NY,NX)=FY*ZNH4FB(L0,NY,NX)
-      ZNH3FB(L0,NY,NX)=FY*ZNH3FB(L0,NY,NX)
-      ZNHUFB(L0,NY,NX)=FY*ZNHUFB(L0,NY,NX)
-      ZNO3FB(L0,NY,NX)=FY*ZNO3FB(L0,NY,NX)
+C
+C     POND N,P SOLUTES IN BAND, NON-BAND
+C
       ZNH4S(L0,NY,NX)=FY*ZNH4S(L0,NY,NX)
       ZNH4B(L0,NY,NX)=FY*ZNH4B(L0,NY,NX)
       ZNH3S(L0,NY,NX)=FY*ZNH3S(L0,NY,NX)
@@ -6752,6 +8117,9 @@ C     ENDIF
       ZNO2B(L0,NY,NX)=FY*ZNO2B(L0,NY,NX)
       H1PO4(L0,NY,NX)=FY*H1PO4(L0,NY,NX)
       H2PO4(L0,NY,NX)=FY*H2PO4(L0,NY,NX)
+C
+C     POND SALTS IN NON-BAND
+C
       IF(ISALTG.NE.0)THEN
       ZAL(L0,NY,NX)=FY*ZAL(L0,NY,NX)
       ZFE(L0,NY,NX)=FY*ZFE(L0,NY,NX)
@@ -6795,6 +8163,9 @@ C     ENDIF
       ZCA2P(L0,NY,NX)=FY*ZCA2P(L0,NY,NX)
       ZMG1P(L0,NY,NX)=FY*ZMG1P(L0,NY,NX)
       ENDIF
+C
+C     POND SALTS IN BAND
+C
       IF(L0.NE.0)THEN
       H1POB(L0,NY,NX)=FY*H1POB(L0,NY,NX)
       H2POB(L0,NY,NX)=FY*H2POB(L0,NY,NX)
@@ -6808,42 +8179,9 @@ C     ENDIF
       ZCA2PB(L0,NY,NX)=FY*ZCA2PB(L0,NY,NX)
       ZMG1PB(L0,NY,NX)=FY*ZMG1PB(L0,NY,NX)
       ENDIF
-      XN4(L0,NY,NX)=FY*XN4(L0,NY,NX)
-      XNB(L0,NY,NX)=FY*XNB(L0,NY,NX)
-      XHY(L0,NY,NX)=FY*XHY(L0,NY,NX)
-      XAL(L0,NY,NX)=FY*XAL(L0,NY,NX)
-      XFE(L0,NY,NX)=FY*XFE(L0,NY,NX)
-      XCA(L0,NY,NX)=FY*XCA(L0,NY,NX)
-      XMG(L0,NY,NX)=FY*XMG(L0,NY,NX)
-      XNA(L0,NY,NX)=FY*XNA(L0,NY,NX)
-      XKA(L0,NY,NX)=FY*XKA(L0,NY,NX)
-      XHC(L0,NY,NX)=FY*XHC(L0,NY,NX)
-      XALO2(L0,NY,NX)=FY*XALO2(L0,NY,NX)
-      XFEO2(L0,NY,NX)=FY*XFEO2(L0,NY,NX)
-      XOH0(L0,NY,NX)=FY*XOH0(L0,NY,NX)
-      XOH1(L0,NY,NX)=FY*XOH1(L0,NY,NX)
-      XOH2(L0,NY,NX)=FY*XOH2(L0,NY,NX)
-      XH1P(L0,NY,NX)=FY*XH1P(L0,NY,NX)
-      XH2P(L0,NY,NX)=FY*XH2P(L0,NY,NX)
-      XOH0B(L0,NY,NX)=FY*XOH0B(L0,NY,NX)
-      XOH1B(L0,NY,NX)=FY*XOH1B(L0,NY,NX)
-      XOH2B(L0,NY,NX)=FY*XOH2B(L0,NY,NX)
-      XH1PB(L0,NY,NX)=FY*XH1PB(L0,NY,NX)
-      XH2PB(L0,NY,NX)=FY*XH2PB(L0,NY,NX)
-      PALOH(L0,NY,NX)=FY*PALOH(L0,NY,NX)
-      PFEOH(L0,NY,NX)=FY*PFEOH(L0,NY,NX)
-      PCACO(L0,NY,NX)=FY*PCACO(L0,NY,NX)
-      PCASO(L0,NY,NX)=FY*PCASO(L0,NY,NX)
-      PALPO(L0,NY,NX)=FY*PALPO(L0,NY,NX)
-      PFEPO(L0,NY,NX)=FY*PFEPO(L0,NY,NX)
-      PCAPD(L0,NY,NX)=FY*PCAPD(L0,NY,NX)
-      PCAPH(L0,NY,NX)=FY*PCAPH(L0,NY,NX)
-      PCAPM(L0,NY,NX)=FY*PCAPM(L0,NY,NX)
-      PALPB(L0,NY,NX)=FY*PALPB(L0,NY,NX)
-      PFEPB(L0,NY,NX)=FY*PFEPB(L0,NY,NX)
-      PCPDB(L0,NY,NX)=FY*PCPDB(L0,NY,NX)
-      PCPHB(L0,NY,NX)=FY*PCPHB(L0,NY,NX)
-      PCPMB(L0,NY,NX)=FY*PCPMB(L0,NY,NX)
+C
+C     POND GASEOUS GASES
+C
       CO2G(L0,NY,NX)=FY*CO2G(L0,NY,NX)
       CH4G(L0,NY,NX)=FY*CH4G(L0,NY,NX)
       OXYG(L0,NY,NX)=FY*OXYG(L0,NY,NX)
@@ -6852,26 +8190,20 @@ C     ENDIF
       ZNH3G(L0,NY,NX)=FY*ZNH3G(L0,NY,NX)
       H2GG(L0,NY,NX)=FY*H2GG(L0,NY,NX)
       ENDIF
+C
+C     POND AQUEOUS GASES
+C
       CO2S(L0,NY,NX)=FY*CO2S(L0,NY,NX)
       CH4S(L0,NY,NX)=FY*CH4S(L0,NY,NX)
       OXYS(L0,NY,NX)=FY*OXYS(L0,NY,NX)
       Z2GS(L0,NY,NX)=FY*Z2GS(L0,NY,NX)
       Z2OS(L0,NY,NX)=FY*Z2OS(L0,NY,NX)
       H2GS(L0,NY,NX)=FY*H2GS(L0,NY,NX)
+C
+C     POND ORGANIC MATTER
+C
       IF(IFLGL(L,3).EQ.0)THEN
-      DO 7865 K=0,5
-      DO 7865 N=1,7
-      DO 7865 M=1,3
-      OMC(M,N,K,L0,NY,NX)=FY*OMC(M,N,K,L0,NY,NX)
-      OMN(M,N,K,L0,NY,NX)=FY*OMN(M,N,K,L0,NY,NX)
-      OMP(M,N,K,L0,NY,NX)=FY*OMP(M,N,K,L0,NY,NX)
-7865  CONTINUE
       DO 7880 K=0,4
-      DO 7875 M=1,2
-      ORC(M,K,L0,NY,NX)=FY*ORC(M,K,L0,NY,NX)
-      ORN(M,K,L0,NY,NX)=FY*ORN(M,K,L0,NY,NX)
-      ORP(M,K,L0,NY,NX)=FY*ORP(M,K,L0,NY,NX)
-7875  CONTINUE
       OQC(K,L0,NY,NX)=FY*OQC(K,L0,NY,NX)
       OQN(K,L0,NY,NX)=FY*OQN(K,L0,NY,NX)
       OQP(K,L0,NY,NX)=FY*OQP(K,L0,NY,NX)
@@ -6880,26 +8212,19 @@ C     ENDIF
       OQNH(K,L0,NY,NX)=FY*OQNH(K,L0,NY,NX)
       OQPH(K,L0,NY,NX)=FY*OQPH(K,L0,NY,NX)
       OQAH(K,L0,NY,NX)=FY*OQAH(K,L0,NY,NX)
-      OHC(K,L0,NY,NX)=FY*OHC(K,L0,NY,NX)
-      OHN(K,L0,NY,NX)=FY*OHN(K,L0,NY,NX)
-      OHP(K,L0,NY,NX)=FY*OHP(K,L0,NY,NX)
-      OHA(K,L0,NY,NX)=FY*OHA(K,L0,NY,NX)
-      DO 7870 M=1,4
-      OSC(M,K,L0,NY,NX)=FY*OSC(M,K,L0,NY,NX)
-      OSA(M,K,L0,NY,NX)=FY*OSA(M,K,L0,NY,NX)
-      OSN(M,K,L0,NY,NX)=FY*OSN(M,K,L0,NY,NX)
-      OSP(M,K,L0,NY,NX)=FY*OSP(M,K,L0,NY,NX)
-7870  CONTINUE
 7880  CONTINUE
       ENDIF
 C
-C     SOURCE ROOT LAYER
+C     POND PLANT MATTER
 C
       IF(L0.NE.0)THEN
       DO 8910 NZ=1,NP(NY,NX)
       IF(WTRTL(1,L0,NZ,NY,NX).GT.ZEROP(NZ,NY,NX)
      2.AND.WTRTL(1,L1,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
       DO 8905 N=1,MY(NZ,NY,NX)
+C
+C     POND ROOT GASES
+C
       CO2A(N,L0,NZ,NY,NX)=FY*CO2A(N,L0,NZ,NY,NX)
       OXYA(N,L0,NZ,NY,NX)=FY*OXYA(N,L0,NZ,NY,NX)
       CH4A(N,L0,NZ,NY,NX)=FY*CH4A(N,L0,NZ,NY,NX)
@@ -6912,11 +8237,14 @@ C
       Z2OP(N,L0,NZ,NY,NX)=FY*Z2OP(N,L0,NZ,NY,NX)
       ZH3P(N,L0,NZ,NY,NX)=FY*ZH3P(N,L0,NZ,NY,NX)
       H2GP(N,L0,NZ,NY,NX)=FY*H2GP(N,L0,NZ,NY,NX)
+C
+C     POND ROOTS
+C
       DO 8970 NR=1,NRT(NZ,NY,NX)
-      WTRT1(N,L0,NR,NZ,NY,NX)=FY*WTRT1(N,L0,NR,NZ,NY,NX)
-      WTRT1N(N,L0,NR,NZ,NY,NX)=FY*WTRT1N(N,L0,NR,NZ,NY,NX)
-      WTRT1P(N,L0,NR,NZ,NY,NX)=FY*WTRT1P(N,L0,NR,NZ,NY,NX)
-      WTRT2(N,L0,NR,NZ,NY,NX)=FY*WTRT2(N,L0,NR,NZ,NY,NX)
+      WTRT1(N,L0,NR,NZ,NY,NX)=FY*WTRT1(N,L0,NR,NZ,NY,NX) 
+      WTRT1N(N,L0,NR,NZ,NY,NX)=FY*WTRT1N(N,L0,NR,NZ,NY,NX) 
+      WTRT1P(N,L0,NR,NZ,NY,NX)=FY*WTRT1P(N,L0,NR,NZ,NY,NX) 
+      WTRT2(N,L0,NR,NZ,NY,NX)=FY*WTRT2(N,L0,NR,NZ,NY,NX) 
       WTRT2N(N,L0,NR,NZ,NY,NX)=FY*WTRT2N(N,L0,NR,NZ,NY,NX)
       WTRT2P(N,L0,NR,NZ,NY,NX)=FY*WTRT2P(N,L0,NR,NZ,NY,NX)
       RTLG1(N,L0,NR,NZ,NY,NX)=FY*RTLG1(N,L0,NR,NZ,NY,NX)
@@ -6935,20 +8263,124 @@ C
       RTDNP(N,L0,NZ,NY,NX)=FY*RTDNP(N,L0,NZ,NY,NX)
       RTVLP(N,L0,NZ,NY,NX)=FY*RTVLP(N,L0,NZ,NY,NX)
       RTVLW(N,L0,NZ,NY,NX)=FY*RTVLW(N,L0,NZ,NY,NX)
-      RRAD1(N,L0,NZ,NY,NX)=FY*RRAD1(N,L0,NZ,NY,NX)
-      RRAD2(N,L0,NZ,NY,NX)=FY*RRAD2(N,L0,NZ,NY,NX)
+      RRAD1(N,L0,NZ,NY,NX)=FY*RRAD1(N,L0,NZ,NY,NX) 
+      RRAD2(N,L0,NZ,NY,NX)=FY*RRAD2(N,L0,NZ,NY,NX) 
       RTARP(N,L0,NZ,NY,NX)=FY*RTARP(N,L0,NZ,NY,NX)
-      RTLGA(N,L0,NZ,NY,NX)=FY*RTLGA(N,L0,NZ,NY,NX)
+      RTLGA(N,L0,NZ,NY,NX)=FY*RTLGA(N,L0,NZ,NY,NX) 
 8905  CONTINUE
+C
+C     POND ROOT NODULES
+C
       WTNDL(L0,NZ,NY,NX)=FY*WTNDL(L0,NZ,NY,NX)
       WTNDLN(L0,NZ,NY,NX)=FY*WTNDLN(L0,NZ,NY,NX)
       WTNDLP(L0,NZ,NY,NX)=FY*WTNDLP(L0,NZ,NY,NX)
       CPOOLN(L0,NZ,NY,NX)=FY*CPOOLN(L0,NZ,NY,NX)
       ZPOOLN(L0,NZ,NY,NX)=FY*ZPOOLN(L0,NZ,NY,NX)
       PPOOLN(L0,NZ,NY,NX)=FY*PPOOLN(L0,NZ,NY,NX)
-      ENDIF
+      ENDIF 
 8910  CONTINUE
       ENDIF
+C
+C     POND SEDIMENT
+C
+      IF(FX.EQ.1.0)THEN
+      IF(L0.NE.0)THEN
+      SAND(L0,NY,NX)=FY*SAND(L0,NY,NX)
+      SILT(L0,NY,NX)=FY*SILT(L0,NY,NX)
+      CLAY(L0,NY,NX)=FY*CLAY(L0,NY,NX)
+      XCEC(L0,NY,NX)=FY*XCEC(L0,NY,NX)
+      XAEC(L0,NY,NX)=FY*XAEC(L0,NY,NX)
+      ENDIF
+C
+C     POND FERTILIZER IN BAND, NON-BAND
+C
+      ZNH4FA(L0,NY,NX)=FY*ZNH4FA(L0,NY,NX)
+      ZNH3FA(L0,NY,NX)=FY*ZNH3FA(L0,NY,NX)
+      ZNHUFA(L0,NY,NX)=FY*ZNHUFA(L0,NY,NX)
+      ZNO3FA(L0,NY,NX)=FY*ZNO3FA(L0,NY,NX)
+      ZNH4FB(L0,NY,NX)=FY*ZNH4FB(L0,NY,NX)
+      ZNH3FB(L0,NY,NX)=FY*ZNH3FB(L0,NY,NX)
+      ZNHUFB(L0,NY,NX)=FY*ZNHUFB(L0,NY,NX)
+      ZNO3FB(L0,NY,NX)=FY*ZNO3FB(L0,NY,NX)
+C
+C     POND ADSORBED CATIONS IN BAND, NON-BAND
+C
+      XN4(L0,NY,NX)=FY*XN4(L0,NY,NX)
+      XNB(L0,NY,NX)=FY*XNB(L0,NY,NX)
+      XHY(L0,NY,NX)=FY*XHY(L0,NY,NX)
+      XAL(L0,NY,NX)=FY*XAL(L0,NY,NX)
+      XFE(L0,NY,NX)=FY*XFE(L0,NY,NX)
+      XCA(L0,NY,NX)=FY*XCA(L0,NY,NX)
+      XMG(L0,NY,NX)=FY*XMG(L0,NY,NX)
+      XNA(L0,NY,NX)=FY*XNA(L0,NY,NX)
+      XKA(L0,NY,NX)=FY*XKA(L0,NY,NX)
+      XHC(L0,NY,NX)=FY*XHC(L0,NY,NX)
+      XALO2(L0,NY,NX)=FY*XALO2(L0,NY,NX)
+      XFEO2(L0,NY,NX)=FY*XFEO2(L0,NY,NX)
+C
+C     POND ADSORBED ANIONS IN BAND, NON-BAND
+C
+      XOH0(L0,NY,NX)=FY*XOH0(L0,NY,NX)
+      XOH1(L0,NY,NX)=FY*XOH1(L0,NY,NX)
+      XOH2(L0,NY,NX)=FY*XOH2(L0,NY,NX)
+      XH1P(L0,NY,NX)=FY*XH1P(L0,NY,NX)
+      XH2P(L0,NY,NX)=FY*XH2P(L0,NY,NX)
+      XOH0B(L0,NY,NX)=FY*XOH0B(L0,NY,NX)
+      XOH1B(L0,NY,NX)=FY*XOH1B(L0,NY,NX)
+      XOH2B(L0,NY,NX)=FY*XOH2B(L0,NY,NX)
+      XH1PB(L0,NY,NX)=FY*XH1PB(L0,NY,NX)
+      XH2PB(L0,NY,NX)=FY*XH2PB(L0,NY,NX)
+C
+C     POND PRECIPITATES IN BAND, NON-BAND
+C
+      PALOH(L0,NY,NX)=FY*PALOH(L0,NY,NX)
+      PFEOH(L0,NY,NX)=FY*PFEOH(L0,NY,NX)
+      PCACO(L0,NY,NX)=FY*PCACO(L0,NY,NX)
+      PCASO(L0,NY,NX)=FY*PCASO(L0,NY,NX)
+      PALPO(L0,NY,NX)=FY*PALPO(L0,NY,NX)
+      PFEPO(L0,NY,NX)=FY*PFEPO(L0,NY,NX)
+      PCAPD(L0,NY,NX)=FY*PCAPD(L0,NY,NX)
+      PCAPH(L0,NY,NX)=FY*PCAPH(L0,NY,NX)
+      PCAPM(L0,NY,NX)=FY*PCAPM(L0,NY,NX)
+      PALPB(L0,NY,NX)=FY*PALPB(L0,NY,NX)
+      PFEPB(L0,NY,NX)=FY*PFEPB(L0,NY,NX)
+      PCPDB(L0,NY,NX)=FY*PCPDB(L0,NY,NX)
+      PCPHB(L0,NY,NX)=FY*PCPHB(L0,NY,NX)
+      PCPMB(L0,NY,NX)=FY*PCPMB(L0,NY,NX)
+C
+C     POND ORGANIC MATTER
+C
+      IF(IFLGL(L,3).EQ.0)THEN
+      ORGC(L0,NY,NX)=FY*ORGC(L0,NY,NX) 
+      DO 7865 K=0,5
+      DO 7865 N=1,7
+      DO 7865 M=1,3
+      OMC(M,N,K,L0,NY,NX)=FY*OMC(M,N,K,L0,NY,NX)
+      OMN(M,N,K,L0,NY,NX)=FY*OMN(M,N,K,L0,NY,NX)
+      OMP(M,N,K,L0,NY,NX)=FY*OMP(M,N,K,L0,NY,NX)
+7865  CONTINUE
+      DO 7885 K=0,4
+      DO 7875 M=1,2
+      ORC(M,K,L0,NY,NX)=FY*ORC(M,K,L0,NY,NX)
+      ORN(M,K,L0,NY,NX)=FY*ORN(M,K,L0,NY,NX)
+      ORP(M,K,L0,NY,NX)=FY*ORP(M,K,L0,NY,NX)
+7875  CONTINUE
+      OHC(K,L0,NY,NX)=FY*OHC(K,L0,NY,NX)
+      OHN(K,L0,NY,NX)=FY*OHN(K,L0,NY,NX)
+      OHP(K,L0,NY,NX)=FY*OHP(K,L0,NY,NX)
+      OHA(K,L0,NY,NX)=FY*OHA(K,L0,NY,NX)
+      DO 7870 M=1,5
+      OSC(M,K,L0,NY,NX)=FY*OSC(M,K,L0,NY,NX)
+      OSA(M,K,L0,NY,NX)=FY*OSA(M,K,L0,NY,NX)
+      OSN(M,K,L0,NY,NX)=FY*OSN(M,K,L0,NY,NX)
+      OSP(M,K,L0,NY,NX)=FY*OSP(M,K,L0,NY,NX)
+7870  CONTINUE
+7885  CONTINUE
+      ENDIF
+      ENDIF
+C
+C     CLOSE OUT EMPTY LAYERS
+C
       IF(NN.EQ.1)THEN
       IF(BKDS(L0,NY,NX).LE.ZERO.AND.BKDS(L1,NY,NX).LE.ZERO
      3.AND.VOLW(L0,NY,NX)+VOLI(L0,NY,NX).LE.ZEROS(NY,NX))THEN
@@ -6956,12 +8388,14 @@ C
       CDPTHY(L1,NY,NX)=CDPTHY(L0,NY,NX)
       ENDIF
       ENDIF
-C     IF(NX.EQ.1)THEN
-C     WRITE(*,5599)'POND2',I,J,NX,NY,L,L0,L1,NU(NY,NX),NN,FX,FY
+C     IF(I.EQ.178)THEN
+C     WRITE(*,5599)'POND2',I,J,NFZ,NX,NY,L,L0,L1,NU(NY,NX),NN,FX,FY 
 C    2,DDLYRX(NN),VOLY(L0,NY,NX),VOLX(L0,NY,NX),VOLW(L0,NY,NX)
-C    3,VOLI(L0,NY,NX),VOLY(L1,NY,NX),VOLX(L1,NY,NX),VOLW(L1,NY,NX)
+C    3,VOLI(L0,NY,NX),VOLY(L1,NY,NX),VOLX(L1,NY,NX),VOLW(L1,NY,NX) 
 C    4,VOLI(L1,NY,NX),CDPTH(L0,NY,NX),CDPTH(L1,NY,NX)
-C    5,(OSC(M,1,L0,NY,NX),M=1,4),(OSC(M,1,L1,NY,NX),M=1,4)
+C    5,VOLW(L0,NY,NX)+VOLW(L1,NY,NX)
+C    5,(OSC(M,4,L0,NY,NX),M=1,5),(OSC(M,4,L1,NY,NX),M=1,5)
+C    5,(OQC(K,L0,NY,NX),K=0,4),(OQC(K,L1,NY,NX),K=0,4)
 C    6,DLYR(3,L0,NY,NX),DLYR(3,L1,NY,NX)
 C    5,TKS(L0,NY,NX),TKS(L1,NY,NX)
 C    5,VHCP(L0,NY,NX),VHCP(L1,NY,NX)
@@ -6971,19 +8405,23 @@ C    6,(WTRT1(1,L1,NR,1,NY,NX),NR=1,NRT(1,NY,NX))
 C    6,(WTRT2(1,L1,NR,1,NY,NX),NR=1,NRT(1,NY,NX))
 C    6,WTRTL(1,L1,1,NY,NX),WTNDL(L1,1,NY,NX)
 C    6,CPOOLR(1,L1,1,NY,NX),ZPOOLR(1,L1,1,NY,NX)
-C    6,OXYA(1,L1,1,NY,NX),OXYP(1,L1,1,NY,NX)
+C    6,OXYA(1,L1,1,NY,NX),OXYP(1,L1,1,NY,NX) 
 C    6,(WTRT1(1,L0,NR,1,NY,NX),NR=1,NRT(1,NY,NX))
 C    6,(WTRT2(1,L0,NR,1,NY,NX),NR=1,NRT(1,NY,NX))
 C    6,WTRTL(1,L0,1,NY,NX),WTNDL(L0,1,NY,NX)
 C    6,CPOOLR(1,L0,1,NY,NX),ZPOOLR(1,L0,1,NY,NX)
-C    6,OXYA(1,L0,1,NY,NX),OXYP(1,L0,1,NY,NX)
+C    6,OXYA(1,L0,1,NY,NX),OXYP(1,L0,1,NY,NX) 
 C     ENDIF
+C
+C     REDISTRIBUTE SOIL MATERIAL 
+C
       ELSE
-C     IF(NX.EQ.1)THEN
-C     WRITE(*,5591)'SOIL1',I,J,NX,NY,L,L0,L1,NN,DDLYRX(NN),FX,FO
+C     IF((I/30)*30.EQ.I.AND.J.EQ.15)THEN
+C     WRITE(*,5591)'SOIL1',I,J,NFZ,NX,NY,L,L0,L1,NN,DDLYRX(NN),FX,FO
 C    1,ZNH4SH(L0,NY,NX),ZNH4SH(L1,NY,NX)
 C    1,BKDS(L0,NY,NX),BKDS(L1,NY,NX),FXBKDS,FXVOLW
 C    5,ORGC(L0,NY,NX),ORGC(L1,NY,NX),CORGCI(L0,NY,NX),CORGCI(L1,NY,NX)
+C    5,VHCM(L0,NY,NX),VHCM(L1,NY,NX),VHCP(L0,NY,NX),VHCP(L1,NY,NX)
 C    5,CLAY(L0,NY,NX),CLAY(L1,NY,NX),SILT(L0,NY,NX),SILT(L1,NY,NX)
 C    5,SAND(L0,NY,NX),SAND(L1,NY,NX),ORGC(L0,NY,NX),ORGC(L1,NY,NX)
 C    2,VOLA(L0,NY,NX),VOLW(L0,NY,NX),VOLI(L0,NY,NX),VOLP(L0,NY,NX)
@@ -6993,38 +8431,42 @@ C    6,DLYR(3,L0,NY,NX),DLYR(3,L1,NY,NX)
 C    4,VOLA(L0,NY,NX)+VOLA(L1,NY,NX),VOLW(L0,NY,NX)+VOLW(L1,NY,NX)
 C    4,VOLI(L0,NY,NX)+VOLI(L1,NY,NX),VOLP(L0,NY,NX)+VOLP(L1,NY,NX)
 C    4,CDPTH(L0,NY,NX),CDPTH(L1,NY,NX)
+C    5,PCAPD(L0,NY,NX),PCAPM(L1,NY,NX),FXPCAPD
+C    5,((OMC(M,N,1,L0,NY,NX),M=1,3),N=1,7)
+C    6,((OMC(M,N,1,L1,NY,NX),M=1,3),N=1,7)
 C    5,(OSC(M,4,L0,NY,NX),M=1,2),(OSC(M,4,L1,NY,NX),M=1,2)
+C    5,(ORC(M,4,L0,NY,NX),M=1,2),(ORC(M,4,L1,NY,NX),M=1,2)
 C    6,((OSC(M,4,L0,NY,NX)+OSC(M,4,L1,NY,NX)),M=1,2)
 C    5,(OQC(K,L0,NY,NX),K=0,4),(OQC(K,L1,NY,NX),K=0,4)
 C    6,DLYR(3,L0,NY,NX),DLYR(3,L1,NY,NX)
 C    5,TKS(L0,NY,NX),TKS(L1,NY,NX),VHCP(L0,NY,NX),VHCP(L1,NY,NX)
 C    6,TKS(L0,NY,NX)*VHCP(L0,NY,NX)+TKS(L1,NY,NX)*VHCP(L1,NY,NX)
-C    7,VHCM(L0,NY,NX),VHCM(L1,NY,NX)
+C    7,VHCM(L0,NY,NX),VHCM(L1,NY,NX) 
 C    6,ZNH4S(L0,NY,NX),ZNH4B(L0,NY,NX),ZNH3S(L0,NY,NX),ZNH3B(L0,NY,NX)
 C    6,ZNH4S(L1,NY,NX),ZNH4B(L1,NY,NX),ZNH3S(L1,NY,NX),ZNH3B(L1,NY,NX)
-C    6,OQAH(K,L,NY,NX),OQAH(K,L0,NY,NX),OQAH(K,L1,NY,NX),FXOQAH
+C    6,OQAH(K,L,NY,NX),OQAH(K,L0,NY,NX),OQAH(K,L1,NY,NX),FXOQAH 
 C    7,CH4G(L0,NY,NX),CH4G(L1,NY,NX),FXCH4G
 C    6,(WTRT1(1,L1,NR,2,NY,NX),NR=1,NRT(1,NY,NX))
 C    6,(WTRT2(1,L1,NR,2,NY,NX),NR=1,NRT(1,NY,NX))
 C    6,WTRTL(1,L1,2,NY,NX),WTNDL(L1,2,NY,NX)
 C    6,CPOOLR(1,L1,2,NY,NX),ZPOOLR(1,L1,2,NY,NX)
-C    6,OXYA(1,L1,2,NY,NX),OXYP(1,L1,2,NY,NX)
+C    6,OXYA(1,L1,2,NY,NX),OXYP(1,L1,2,NY,NX) 
 C    6,(WTRT1(1,L0,NR,2,NY,NX),NR=1,NRT(1,NY,NX))
 C    6,(WTRT2(1,L0,NR,2,NY,NX),NR=1,NRT(1,NY,NX))
 C    6,WTRTL(1,L0,2,NY,NX),WTNDL(L0,2,NY,NX)
 C    6,CPOOLR(1,L0,2,NY,NX),ZPOOLR(1,L0,2,NY,NX)
-C    6,OXYG(L0,NY,NX),OXYS(L0,NY,NX)
-C    6,OXYG(L1,NY,NX),OXYS(L1,NY,NX)
-5591  FORMAT(A8,8I4,60E16.8)
+C    6,OXYG(L0,NY,NX),OXYS(L0,NY,NX) 
+C    6,OXYG(L1,NY,NX),OXYS(L1,NY,NX) 
+5591  FORMAT(A8,9I4,60E18.10)
 C     ENDIF
 C
-C     MOVE ALL MATTER WITH CHANGES IN LAYER DEPTHS
+C     REDISTRIBUTE SOIL CONTENTS FROM SOURCE TO DESTINATION LAYER
 C
       IF(L0.NE.0)THEN
       IF(DLYR(3,L1,NY,NX).GT.ZERO
      2.AND.DLYR(3,L0,NY,NX).GT.ZERO)THEN
 C
-C     SOIL FERTILIZER BANDS
+C     RESET SOIL FERTILIZER NH4, NO3, PO4 BAND DIMNSIONS
 C
       IF(IFNHB(NY,NX).EQ.1.AND.ROWN(NY,NX).GT.0.0)THEN
       IF(L.EQ.NU(NY,NX).OR.CDPTH(L-1,NY,NX).LT.DPNH4(NY,NX))THEN
@@ -7032,26 +8474,29 @@ C
       WDNHBD0=WDNHB(L0,NY,NX)*DLYR(3,L0,NY,NX)
       WDNHBD1=WDNHB(L1,NY,NX)*DLYR(3,L1,NY,NX)
       FXWDNHB=AMIN1(FX*WDNHBDL,WDNHBD0)
-      WDNHBD1=WDNHBD1+FXWDNHB
+      WDNHBD1=WDNHBD1+FXWDNHB 
       WDNHBD0=WDNHBD0-FXWDNHB
       WDNHB(L1,NY,NX)=WDNHBD1/DLYR(3,L1,NY,NX)
       WDNHB(L0,NY,NX)=WDNHBD0/DLYR(3,L0,NY,NX)
       IF(CDPTH(L,NY,NX).GE.DPNH4(NY,NX))THEN
       FXDPNHB=AMIN1(FX*DPNHB(L,NY,NX),DPNHB(L0,NY,NX))
-      DPNHB(L1,NY,NX)=DPNHB(L1,NY,NX)+FXDPNHB
+      DPNHB(L1,NY,NX)=DPNHB(L1,NY,NX)+FXDPNHB 
       DPNHB(L0,NY,NX)=DPNHB(L0,NY,NX)-FXDPNHB
       ENDIF
-      VLNHB(L1,NY,NX)=AMAX1(0.0,AMIN1(0.999,WDNHB(L1,NY,NX)
+      VLNHB(L1,NY,NX)=AMAX1(0.0,AMIN1(0.999,WDNHB(L1,NY,NX) 
      2/ROWN(NY,NX)*DPNHB(L1,NY,NX)/DLYR(3,L1,NY,NX)))
-      VLNHB(L0,NY,NX)=AMAX1(0.0,AMIN1(0.999,WDNHB(L0,NY,NX)
+      VLNHB(L0,NY,NX)=AMAX1(0.0,AMIN1(0.999,WDNHB(L0,NY,NX) 
      2/ROWN(NY,NX)*DPNHB(L0,NY,NX)/DLYR(3,L0,NY,NX)))
       VLNH4(L1,NY,NX)=1.0-VLNHB(L1,NY,NX)
       VLNH4(L0,NY,NX)=1.0-VLNHB(L0,NY,NX)
 C     WRITE(*,6601)'VLNHB',I,J,NX,NY,L,L0,L1,FX
-C    2,WDNHB(L0,NY,NX),WDNHB(L1,NY,NX),DPNHB(L0,NY,NX),DPNHB(L1,NY,NX)
-C    2,VLNHB(L0,NY,NX),DLYR(3,L0,NY,NX),VLNHB(L1,NY,NX),DLYR(3,L1,NY,NX)
-C    2,VLNHB(L0,NY,NX)*DLYR(3,L0,NY,NX)+VLNHB(L1,NY,NX)*DLYR(3,L1,NY,NX)
-C    3,WDNHBDL,WDNHBD0,WDNHBD1,FXWDNHB,FXDPNHB,DPNH4(NY,NX)
+C    2,WDNHB(L0,NY,NX),WDNHB(L1,NY,NX)
+C    3,DPNHB(L0,NY,NX),DPNHB(L1,NY,NX)
+C    2,VLNHB(L0,NY,NX),DLYR(3,L0,NY,NX)
+C    3,VLNHB(L1,NY,NX),DLYR(3,L1,NY,NX)
+C    2,VLNHB(L0,NY,NX)*DLYR(3,L0,NY,NX)
+C    3+VLNHB(L1,NY,NX)*DLYR(3,L1,NY,NX)
+C    3,WDNHBDL,WDNHBD0,WDNHBD1,FXWDNHB,FXDPNHB,DPNH4(NY,NX) 
 6601  FORMAT(A8,7I4,30E16.8)
       ENDIF
       ENDIF
@@ -7061,26 +8506,29 @@ C    3,WDNHBDL,WDNHBD0,WDNHBD1,FXWDNHB,FXDPNHB,DPNH4(NY,NX)
       WDNOBD0=WDNOB(L0,NY,NX)*DLYR(3,L0,NY,NX)
       WDNOBD1=WDNOB(L1,NY,NX)*DLYR(3,L1,NY,NX)
       FXWDNOB=AMIN1(FX*WDNOBDL,WDNOBD0)
-      WDNOBD1=WDNOBD1+FXWDNOB
+      WDNOBD1=WDNOBD1+FXWDNOB 
       WDNOBD0=WDNOBD0-FXWDNOB
       WDNOB(L1,NY,NX)=WDNOBD1/DLYR(3,L1,NY,NX)
       WDNOB(L0,NY,NX)=WDNOBD0/DLYR(3,L0,NY,NX)
       IF(CDPTH(L,NY,NX).GE.DPNO3(NY,NX))THEN
       FXDPNOB=AMIN1(FX*DPNOB(L,NY,NX),DPNOB(L0,NY,NX))
-      DPNOB(L1,NY,NX)=DPNOB(L1,NY,NX)+FXDPNOB
+      DPNOB(L1,NY,NX)=DPNOB(L1,NY,NX)+FXDPNOB 
       DPNOB(L0,NY,NX)=DPNOB(L0,NY,NX)-FXDPNOB
       ENDIF
-      VLNOB(L1,NY,NX)=AMAX1(0.0,AMIN1(0.999,WDNOB(L1,NY,NX)
+      VLNOB(L1,NY,NX)=AMAX1(0.0,AMIN1(0.999,WDNOB(L1,NY,NX) 
      2/ROWO(NY,NX)*DPNOB(L1,NY,NX)/DLYR(3,L1,NY,NX)))
-      VLNOB(L0,NY,NX)=AMAX1(0.0,AMIN1(0.999,WDNOB(L0,NY,NX)
+      VLNOB(L0,NY,NX)=AMAX1(0.0,AMIN1(0.999,WDNOB(L0,NY,NX) 
      2/ROWO(NY,NX)*DPNOB(L0,NY,NX)/DLYR(3,L0,NY,NX)))
       VLNO3(L1,NY,NX)=1.0-VLNOB(L1,NY,NX)
       VLNO3(L0,NY,NX)=1.0-VLNOB(L0,NY,NX)
 C     WRITE(*,6601)'VLNOB',I,J,NX,NY,L,L0,L1,FX
-C    2,WDNOB(L0,NY,NX),WDNOB(L1,NY,NX),DPNOB(L0,NY,NX),DPNOB(L1,NY,NX)
-C    2,VLNOB(L0,NY,NX),DLYR(3,L0,NY,NX),VLNOB(L1,NY,NX),DLYR(3,L1,NY,NX)
-C    2,VLNOB(L0,NY,NX)*DLYR(3,L0,NY,NX)+VLNOB(L1,NY,NX)*DLYR(3,L1,NY,NX)
-C    3,WDNOBDL,WDNOBD0,WDNOBD1,FXWDNOB,FXDPNOB,DPNO3(NY,NX)
+C    2,WDNOB(L0,NY,NX),WDNOB(L1,NY,NX)
+C    2,DPNOB(L0,NY,NX),DPNOB(L1,NY,NX)
+C    2,VLNOB(L0,NY,NX),DLYR(3,L0,NY,NX)
+C    3,VLNOB(L1,NY,NX),DLYR(3,L1,NY,NX)
+C    2,VLNOB(L0,NY,NX)*DLYR(3,L0,NY,NX)
+C    3+VLNOB(L1,NY,NX)*DLYR(3,L1,NY,NX)
+C    3,WDNOBDL,WDNOBD0,WDNOBD1,FXWDNOB,FXDPNOB,DPNO3(NY,NX) 
       ENDIF
       ENDIF
       IF(IFPOB(NY,NX).EQ.1.AND.ROWP(NY,NX).GT.0.0)THEN
@@ -7089,39 +8537,42 @@ C    3,WDNOBDL,WDNOBD0,WDNOBD1,FXWDNOB,FXDPNOB,DPNO3(NY,NX)
       WDPOBD0=WDPOB(L0,NY,NX)*DLYR(3,L0,NY,NX)
       WDPOBD1=WDPOB(L1,NY,NX)*DLYR(3,L1,NY,NX)
       FXWDPOB=AMIN1(FX*WDPOBDL,WDPOBD0)
-      WDPOBD1=WDPOBD1+FXWDPOB
+      WDPOBD1=WDPOBD1+FXWDPOB 
       WDPOBD0=WDPOBD0-FXWDPOB
       WDPOB(L1,NY,NX)=WDPOBD1/DLYR(3,L1,NY,NX)
       WDPOB(L0,NY,NX)=WDPOBD0/DLYR(3,L0,NY,NX)
       IF(CDPTH(L,NY,NX).GE.DPPO4(NY,NX))THEN
       FXDPPOB=AMIN1(FX*DPPOB(L,NY,NX),DPPOB(L0,NY,NX))
-      DPPOB(L1,NY,NX)=DPPOB(L1,NY,NX)+FXDPPOB
+      DPPOB(L1,NY,NX)=DPPOB(L1,NY,NX)+FXDPPOB 
       DPPOB(L0,NY,NX)=DPPOB(L0,NY,NX)-FXDPPOB
       ENDIF
-      VLPOB(L1,NY,NX)=AMAX1(0.0,AMIN1(0.999,WDPOB(L1,NY,NX)
+      VLPOB(L1,NY,NX)=AMAX1(0.0,AMIN1(0.999,WDPOB(L1,NY,NX) 
      2/ROWP(NY,NX)*DPPOB(L1,NY,NX)/DLYR(3,L1,NY,NX)))
-      VLPOB(L0,NY,NX)=AMAX1(0.0,AMIN1(0.999,WDPOB(L0,NY,NX)
+      VLPOB(L0,NY,NX)=AMAX1(0.0,AMIN1(0.999,WDPOB(L0,NY,NX) 
      2/ROWP(NY,NX)*DPPOB(L0,NY,NX)/DLYR(3,L0,NY,NX)))
       VLPO4(L1,NY,NX)=1.0-VLPOB(L1,NY,NX)
       VLPO4(L0,NY,NX)=1.0-VLPOB(L0,NY,NX)
 C     WRITE(*,6601)'VLPOB',I,J,NX,NY,L,L0,L1,FX
-C    2,WDPOB(L0,NY,NX),WDPOB(L1,NY,NX),DPPOB(L0,NY,NX),DPPOB(L1,NY,NX)
-C    2,VLPOB(L0,NY,NX),DLYR(3,L0,NY,NX),VLPOB(L1,NY,NX),DLYR(3,L1,NY,NX)
-C    2,VLPOB(L0,NY,NX)*DLYR(3,L0,NY,NX)+VLPOB(L1,NY,NX)*DLYR(3,L1,NY,NX)
-C    3,WDPOBDL,WDPOBD0,WDPOBD1,FXWDPOB,FXDPPOB,DPPO4(NY,NX)
+C    2,WDPOB(L0,NY,NX),WDPOB(L1,NY,NX)
+C    3,DPPOB(L0,NY,NX),DPPOB(L1,NY,NX)
+C    2,VLPOB(L0,NY,NX),DLYR(3,L0,NY,NX)
+C    3,VLPOB(L1,NY,NX),DLYR(3,L1,NY,NX)
+C    2,VLPOB(L0,NY,NX)*DLYR(3,L0,NY,NX)
+C    3+VLPOB(L1,NY,NX)*DLYR(3,L1,NY,NX)
+C    3,WDPOBDL,WDPOBD0,WDPOBD1,FXWDPOB,FXDPPOB,DPPO4(NY,NX) 
       ENDIF
       ENDIF
       ENDIF
 C
-C     SOIL MINERALS
+C     SOIL SEDIMENT
 C
-      IF(L0.EQ.L.OR.BKDSI(L0,NY,NX).LE.ZERO)THEN
+C     IF(L0.EQ.L.OR.BKDSI(L0,NY,NX).LE.ZERO)THEN
       FBO=FX
-      ELSE
-      FBO=AMIN1(0.1,FX*BKDSI(L1,NY,NX)/BKDSI(L0,NY,NX))
-      ENDIF
-C     BKDS(L1,NY,NX)=(1.0-FO)*BKDS(L1,NY,NX)+FO*BKDSI(L0,NY,NX)
-      PH(L1,NY,NX)=(1.0-FO)*PH(L1,NY,NX)+FO*PH(L0,NY,NX)
+C     ELSE
+C     FBO=AMIN1(1.0,FX*BKDSI(L1,NY,NX)/BKDSI(L0,NY,NX))
+C     ENDIF
+C     BKDS(L1,NY,NX)=(1.0-FX)*BKDS(L1,NY,NX)+FX*BKDSI(L0,NY,NX)
+      PH(L1,NY,NX)=(1.0-FX)*PH(L1,NY,NX)+FX*PH(L0,NY,NX)
       FXSAND=FBO*SAND(L0,NY,NX)
       SAND(L1,NY,NX)=SAND(L1,NY,NX)+FXSAND
       SAND(L0,NY,NX)=SAND(L0,NY,NX)-FXSAND
@@ -7135,15 +8586,15 @@ C     BKDS(L1,NY,NX)=(1.0-FO)*BKDS(L1,NY,NX)+FO*BKDSI(L0,NY,NX)
       ROCK(L1,NY,NX)=ROCK(L1,NY,NX)+FXROCK
       ROCK(L0,NY,NX)=ROCK(L0,NY,NX)-FXROCK
 C
-C     SOIL WATER AND HEAT
+C     SOIL WATER, VAPOR, ICE AND HEAT
 C
       IF(FHOL(L1,NY,NX).GT.ZERO.AND.FHOL(L0,NY,NX).GT.ZERO)THEN
-      IF(L0.EQ.L.OR.FHOLI(L0,NY,NX).LE.ZERO)THEN
-      FHO=FO
-      ELSE
-      FHO=AMIN1(0.5,FO*FHOLI(L1,NY,NX)/FHOLI(L0,NY,NX))
-      ENDIF
-      FHOL(L1,NY,NX)=(1.0-FO)*FHOL(L1,NY,NX)+FO*FHOL(L0,NY,NX)
+C     IF(L0.EQ.L.OR.FHOLI(L0,NY,NX).LE.ZERO)THEN
+      FHO=FX
+C     ELSE
+C     FHO=AMIN1(1.0,FX*FHOLI(L1,NY,NX)/FHOLI(L0,NY,NX))
+C     ENDIF
+      FHOL(L1,NY,NX)=(1.0-FX)*FHOL(L1,NY,NX)+FX*FHOL(L0,NY,NX)
       FXVOLWH=FHO*VOLWH(L0,NY,NX)
       VOLWH(L1,NY,NX)=VOLWH(L1,NY,NX)+FXVOLWH
       VOLWH(L0,NY,NX)=VOLWH(L0,NY,NX)-FXVOLWH
@@ -7155,36 +8606,25 @@ C
       VOLAH(L0,NY,NX)=VOLAH(L0,NY,NX)-FXVOLAH
       ENDIF
       ENDIF
-      IF(L0.EQ.L.OR.POROSI(L0,NY,NX).LE.ZERO)THEN
-      FWO=FO
-      ELSE
-      FWO=AMIN1(0.5,FO*POROSI(L1,NY,NX)/POROSI(L0,NY,NX))
-      ENDIF
-C     FXSCNV=FWO*SCNV(L0,NY,NX)
-C     SCNV(L1,NY,NX)=SCNV(L1,NY,NX)+FXSCNV
-C     SCNV(L0,NY,NX)=SCNV(L0,NY,NX)-FXSCNV
-C     FXSCNH=FWO*SCNH(L0,NY,NX)
-C     SCNH(L1,NY,NX)=SCNH(L1,NY,NX)+FXSCNH
-C     SCNH(L0,NY,NX)=SCNH(L0,NY,NX)-FXSCNH
+C     IF(L0.EQ.L.OR.POROSI(L0,NY,NX).LE.ZERO)THEN
+      FWO=FX
+C     ELSE
+C     FWO=AMIN1(1.0,FX*POROSI(L1,NY,NX)/POROSI(L0,NY,NX))
+C     ENDIF
       IF(L0.EQ.0)THEN
       FXVOLW=FX*AMAX1(0.0,XVOLWP-VOLWD(NY,NX))
+      FXVOLV=0.0
       ELSE
       FXVOLW=FWO*VOLW(L0,NY,NX)
+      FXVOLV=FWO*VOLV(L0,NY,NX)
       ENDIF
       VOLW(L1,NY,NX)=VOLW(L1,NY,NX)+FXVOLW
       VOLW(L0,NY,NX)=VOLW(L0,NY,NX)-FXVOLW
-C     IF(VOLI(L1,NY,NX).GT.ZEROS(NY,NX))THEN
+      VOLV(L1,NY,NX)=VOLV(L1,NY,NX)+FXVOLV
+      VOLV(L0,NY,NX)=VOLV(L0,NY,NX)-FXVOLV
       FXVOLI=FWO*VOLI(L0,NY,NX)
       VOLI(L1,NY,NX)=VOLI(L1,NY,NX)+FXVOLI
       VOLI(L0,NY,NX)=VOLI(L0,NY,NX)-FXVOLI
-C     ENDIF
-C     FXVOLA=FWO*VOLA(L0,NY,NX)
-C     IF(L1.NE.NU(NY,NX))THEN
-C     VOLA(L1,NY,NX)=VOLA(L1,NY,NX)+FXVOLA
-C     ENDIF
-C     IF(L0.NE.NU(NY,NX))THEN
-C     VOLA(L0,NY,NX)=VOLA(L0,NY,NX)-FXVOLA
-C     ENDIF
       FXVOLY=FWO*VOLY(L0,NY,NX)
       VOLY(L1,NY,NX)=VOLY(L1,NY,NX)+FXVOLY
       VOLY(L0,NY,NX)=VOLY(L0,NY,NX)-FXVOLY
@@ -7194,79 +8634,79 @@ C     ENDIF
       FXVHCM=FWO*VHCM(L0,NY,NX)
       VHCM(L1,NY,NX)=VHCM(L1,NY,NX)+FXVHCM
       VHCM(L0,NY,NX)=VHCM(L0,NY,NX)-FXVHCM
-      FXENGY=TKS(L0,NY,NX)*(FXVHCM+4.19*FXVOLW+1.9274*FXVOLI)
+      FXENGY=TKS(L0,NY,NX)*(FXVHCM+4.19*FXVOLW+1.9274*FXVOLI) 
       ENGY1=VHCP(L1,NY,NX)*TKS(L1,NY,NX)+FXENGY
       ENGY0=VHCP(L0,NY,NX)*TKS(L0,NY,NX)-FXENGY
       VHCP(L1,NY,NX)=VHCP(L1,NY,NX)
-     2+FXVHCM+4.19*FXVOLW+1.9274*FXVOLI
+     2+FXVHCM+4.19*(FXVOLW+FXVOLV)+1.9274*FXVOLI 
       VHCP(L0,NY,NX)=VHCP(L0,NY,NX)
-     2-FXVHCM-4.19*FXVOLW-1.9274*FXVOLI
-      IF(VHCP(L1,NY,NX).GT.ZEROS(NY,NX))THEN
+     2-FXVHCM-4.19*(FXVOLW+FXVOLV)-1.9274*FXVOLI 
+      IF(VHCP(L1,NY,NX).GT.VHCPNX(NY,NX))THEN
       TKS(L1,NY,NX)=ENGY1/VHCP(L1,NY,NX)
       ELSE
       TKS(L1,NY,NX)=TKS(L,NY,NX)
       ENDIF
       TCS(L1,NY,NX)=TKS(L1,NY,NX)-273.15
-      IF(VHCP(L0,NY,NX).GT.ZEROS(NY,NX))THEN
+      IF(VHCP(L0,NY,NX).GT.VHCPNX(NY,NX))THEN
       TKS(L0,NY,NX)=ENGY0/VHCP(L0,NY,NX)
       ELSE
       TKS(L0,NY,NX)=TKS(L,NY,NX)
       ENDIF
       TCS(L0,NY,NX)=TKS(L0,NY,NX)-273.15
 C
-C     SOIL FERTILIZER
+C     SOIL FERTILIZER IN BAND, NON-BAND
 C
       FXZNH4FA=AMIN1(FX*ZNH4FA(L,NY,NX),ZNH4FA(L0,NY,NX))
-      ZNH4FA(L1,NY,NX)=ZNH4FA(L1,NY,NX)+FXZNH4FA
+      ZNH4FA(L1,NY,NX)=ZNH4FA(L1,NY,NX)+FXZNH4FA 
       ZNH4FA(L0,NY,NX)=ZNH4FA(L0,NY,NX)-FXZNH4FA
       FXZNH3FA=AMIN1(FX*ZNH3FA(L,NY,NX),ZNH3FA(L0,NY,NX))
-      ZNH3FA(L1,NY,NX)=ZNH3FA(L1,NY,NX)+FXZNH3FA
+      ZNH3FA(L1,NY,NX)=ZNH3FA(L1,NY,NX)+FXZNH3FA 
       ZNH3FA(L0,NY,NX)=ZNH3FA(L0,NY,NX)-FXZNH3FA
       FXZNHUFA=AMIN1(FX*ZNHUFA(L,NY,NX),ZNHUFA(L0,NY,NX))
-      ZNHUFA(L1,NY,NX)=ZNHUFA(L1,NY,NX)+FXZNHUFA
+      ZNHUFA(L1,NY,NX)=ZNHUFA(L1,NY,NX)+FXZNHUFA 
       ZNHUFA(L0,NY,NX)=ZNHUFA(L0,NY,NX)-FXZNHUFA
-      FXZNO3FA=AMIN1(FX*ZNO3FA(L,NY,NX),ZNO3FA(L0,NY,NX))
-      ZNO3FA(L1,NY,NX)=ZNO3FA(L1,NY,NX)+FXZNO3FA
+      FXZNO3FA=AMIN1(FX*ZNO3FA(L,NY,NX),ZNO3FA(L0,NY,NX)) 
+      ZNO3FA(L1,NY,NX)=ZNO3FA(L1,NY,NX)+FXZNO3FA 
       ZNO3FA(L0,NY,NX)=ZNO3FA(L0,NY,NX)-FXZNO3FA
       FXZNH4FB=AMIN1(FX*ZNH4FB(L,NY,NX),ZNH4FB(L0,NY,NX))
-      ZNH4FB(L1,NY,NX)=ZNH4FB(L1,NY,NX)+FXZNH4FB
+      ZNH4FB(L1,NY,NX)=ZNH4FB(L1,NY,NX)+FXZNH4FB 
       ZNH4FB(L0,NY,NX)=ZNH4FB(L0,NY,NX)-FXZNH4FB
-      FXZNH3FB=AMIN1(FX*ZNH3FB(L,NY,NX),ZNH3FB(L0,NY,NX))
-      ZNH3FB(L1,NY,NX)=ZNH3FB(L1,NY,NX)+FXZNH3FB
+      FXZNH3FB=AMIN1(FX*ZNH3FB(L,NY,NX),ZNH3FB(L0,NY,NX)) 
+      ZNH3FB(L1,NY,NX)=ZNH3FB(L1,NY,NX)+FXZNH3FB 
       ZNH3FB(L0,NY,NX)=ZNH3FB(L0,NY,NX)-FXZNH3FB
       FXZNHUFB=AMIN1(FX*ZNHUFB(L,NY,NX),ZNHUFB(L0,NY,NX))
-      ZNHUFB(L1,NY,NX)=ZNHUFB(L1,NY,NX)+FXZNHUFB
+      ZNHUFB(L1,NY,NX)=ZNHUFB(L1,NY,NX)+FXZNHUFB 
       ZNHUFB(L0,NY,NX)=ZNHUFB(L0,NY,NX)-FXZNHUFB
       FXZNO3FB=AMIN1(FX*ZNO3FB(L,NY,NX),ZNO3FB(L0,NY,NX))
-      ZNO3FB(L1,NY,NX)=ZNO3FB(L1,NY,NX)+FXZNO3FB
+      ZNO3FB(L1,NY,NX)=ZNO3FB(L1,NY,NX)+FXZNO3FB 
       ZNO3FB(L0,NY,NX)=ZNO3FB(L0,NY,NX)-FXZNO3FB
 C
 C     SOIL N,P SOLUTES IN BAND, NON-BAND
-C
+C 
       FXZNH4S=FWO*ZNH4S(L0,NY,NX)
-      ZNH4S(L1,NY,NX)=ZNH4S(L1,NY,NX)+FXZNH4S
+      ZNH4S(L1,NY,NX)=ZNH4S(L1,NY,NX)+FXZNH4S 
       ZNH4S(L0,NY,NX)=ZNH4S(L0,NY,NX)-FXZNH4S
       FXZNH4B=FWO*ZNH4B(L0,NY,NX)
-      ZNH4B(L1,NY,NX)=ZNH4B(L1,NY,NX)+FXZNH4B
+      ZNH4B(L1,NY,NX)=ZNH4B(L1,NY,NX)+FXZNH4B 
       ZNH4B(L0,NY,NX)=ZNH4B(L0,NY,NX)-FXZNH4B
       FXZNH3S=FWO*ZNH3S(L0,NY,NX)
-      ZNH3S(L1,NY,NX)=ZNH3S(L1,NY,NX)+FXZNH3S
+      ZNH3S(L1,NY,NX)=ZNH3S(L1,NY,NX)+FXZNH3S 
       ZNH3S(L0,NY,NX)=ZNH3S(L0,NY,NX)-FXZNH3S
       FXZNH3B=FWO*ZNH3B(L0,NY,NX)
-      ZNH3B(L1,NY,NX)=ZNH3B(L1,NY,NX)+FXZNH3B
-      ZNH3B(L0,NY,NX)=ZNH3B(L0,NY,NX)-FXZNH3B
+      ZNH3B(L1,NY,NX)=ZNH3B(L1,NY,NX)+FXZNH3B 
+      ZNH3B(L0,NY,NX)=ZNH3B(L0,NY,NX)-FXZNH3B 
       FXZNO3S=FWO*ZNO3S(L0,NY,NX)
-      ZNO3S(L1,NY,NX)=ZNO3S(L1,NY,NX)+FXZNO3S
-      ZNO3S(L0,NY,NX)=ZNO3S(L0,NY,NX)-FXZNO3S
+      ZNO3S(L1,NY,NX)=ZNO3S(L1,NY,NX)+FXZNO3S 
+      ZNO3S(L0,NY,NX)=ZNO3S(L0,NY,NX)-FXZNO3S 
       FXZNO3B=FWO*ZNO3B(L0,NY,NX)
-      ZNO3B(L1,NY,NX)=ZNO3B(L1,NY,NX)+FXZNO3B
-      ZNO3B(L0,NY,NX)=ZNO3B(L0,NY,NX)-FXZNO3B
+      ZNO3B(L1,NY,NX)=ZNO3B(L1,NY,NX)+FXZNO3B 
+      ZNO3B(L0,NY,NX)=ZNO3B(L0,NY,NX)-FXZNO3B 
       FXZNO2S=FWO*ZNO2S(L0,NY,NX)
-      ZNO2S(L1,NY,NX)=ZNO2S(L1,NY,NX)+FXZNO2S
-      ZNO2S(L0,NY,NX)=ZNO2S(L0,NY,NX)-FXZNO2S
+      ZNO2S(L1,NY,NX)=ZNO2S(L1,NY,NX)+FXZNO2S 
+      ZNO2S(L0,NY,NX)=ZNO2S(L0,NY,NX)-FXZNO2S 
       FXZNO2B=FWO*ZNO2B(L0,NY,NX)
-      ZNO2B(L1,NY,NX)=ZNO2B(L1,NY,NX)+FXZNO2B
-      ZNO2B(L0,NY,NX)=ZNO2B(L0,NY,NX)-FXZNO2B
+      ZNO2B(L1,NY,NX)=ZNO2B(L1,NY,NX)+FXZNO2B 
+      ZNO2B(L0,NY,NX)=ZNO2B(L0,NY,NX)-FXZNO2B 
       FXH1PO4=FWO*H1PO4(L0,NY,NX)
       H1PO4(L1,NY,NX)=H1PO4(L1,NY,NX)+FXH1PO4
       H1PO4(L0,NY,NX)=H1PO4(L0,NY,NX)-FXH1PO4
@@ -7274,39 +8714,39 @@ C
       H2PO4(L1,NY,NX)=H2PO4(L1,NY,NX)+FXH2PO4
       H2PO4(L0,NY,NX)=H2PO4(L0,NY,NX)-FXH2PO4
 C
-C     SOIL SALT SOLUTES
+C     SOIL SALTS IN NON-BAND
 C
       IF(ISALTG.NE.0)THEN
       FXZAL=FWO*ZAL(L0,NY,NX)
-      ZAL(L1,NY,NX)=ZAL(L1,NY,NX)+FXZAL
+      ZAL(L1,NY,NX)=ZAL(L1,NY,NX)+FXZAL 
       ZAL(L0,NY,NX)=ZAL(L0,NY,NX)-FXZAL
       FXZFE=FWO*ZFE(L0,NY,NX)
-      ZFE(L1,NY,NX)=ZFE(L1,NY,NX)+FXZFE
-      ZFE(L0,NY,NX)=ZFE(L0,NY,NX)-FXZFE
+      ZFE(L1,NY,NX)=ZFE(L1,NY,NX)+FXZFE 
+      ZFE(L0,NY,NX)=ZFE(L0,NY,NX)-FXZFE 
       FXZHY=FWO*ZHY(L0,NY,NX)
-      ZHY(L1,NY,NX)=ZHY(L1,NY,NX)+FXZHY
+      ZHY(L1,NY,NX)=ZHY(L1,NY,NX)+FXZHY 
       ZHY(L0,NY,NX)=ZHY(L0,NY,NX)-FXZHY
       FXZCA=FWO*ZCA(L0,NY,NX)
-      ZCA(L1,NY,NX)=ZCA(L1,NY,NX)+FXZCA
-      ZCA(L0,NY,NX)=ZCA(L0,NY,NX)-FXZCA
+      ZCA(L1,NY,NX)=ZCA(L1,NY,NX)+FXZCA 
+      ZCA(L0,NY,NX)=ZCA(L0,NY,NX)-FXZCA 
       FXZMG=FWO*ZMG(L0,NY,NX)
-      ZMG(L1,NY,NX)=ZMG(L1,NY,NX)+FXZMG
-      ZMG(L0,NY,NX)=ZMG(L0,NY,NX)-FXZMG
+      ZMG(L1,NY,NX)=ZMG(L1,NY,NX)+FXZMG 
+      ZMG(L0,NY,NX)=ZMG(L0,NY,NX)-FXZMG 
       FXZNA=FWO*ZNA(L0,NY,NX)
-      ZNA(L1,NY,NX)=ZNA(L1,NY,NX)+FXZNA
+      ZNA(L1,NY,NX)=ZNA(L1,NY,NX)+FXZNA 
       ZNA(L0,NY,NX)=ZNA(L0,NY,NX)-FXZNA
       FXZKA=FWO*ZKA(L0,NY,NX)
-      ZKA(L1,NY,NX)=ZKA(L1,NY,NX)+FXZKA
+      ZKA(L1,NY,NX)=ZKA(L1,NY,NX)+FXZKA 
       ZKA(L0,NY,NX)=ZKA(L0,NY,NX)-FXZKA
       FXZOH=FWO*ZOH(L0,NY,NX)
-      ZOH(L1,NY,NX)=ZOH(L1,NY,NX)+FXZOH
+      ZOH(L1,NY,NX)=ZOH(L1,NY,NX)+FXZOH 
       ZOH(L0,NY,NX)=ZOH(L0,NY,NX)-FXZOH
       FXZSO4=FWO*ZSO4(L0,NY,NX)
       ZSO4(L1,NY,NX)=ZSO4(L1,NY,NX)+FXZSO4
       ZSO4(L0,NY,NX)=ZSO4(L0,NY,NX)-FXZSO4
       FXZCL=FWO*ZCL(L0,NY,NX)
-      ZCL(L1,NY,NX)=ZCL(L1,NY,NX)+FXZCL
-      ZCL(L0,NY,NX)=ZCL(L0,NY,NX)-FXZCL
+      ZCL(L1,NY,NX)=ZCL(L1,NY,NX)+FXZCL 
+      ZCL(L0,NY,NX)=ZCL(L0,NY,NX)-FXZCL 
       FXZCO3=FWO*ZCO3(L0,NY,NX)
       ZCO3(L1,NY,NX)=ZCO3(L1,NY,NX)+FXZCO3
       ZCO3(L0,NY,NX)=ZCO3(L0,NY,NX)-FXZCO3
@@ -7326,7 +8766,7 @@ C
       ZALOH4(L1,NY,NX)=ZALOH4(L1,NY,NX)+FXZALOH4
       ZALOH4(L0,NY,NX)=ZALOH4(L0,NY,NX)-FXZALOH4
       FXZALS=FWO*ZALS(L0,NY,NX)
-      ZALS(L1,NY,NX)=ZALS(L1,NY,NX)+FXZALS
+      ZALS(L1,NY,NX)=ZALS(L1,NY,NX)+FXZALS 
       ZALS(L0,NY,NX)=ZALS(L0,NY,NX)-FXZALS
       FXZFEOH1=FWO*ZFEOH1(L0,NY,NX)
       ZFEOH1(L1,NY,NX)=ZFEOH1(L1,NY,NX)+FXZFEOH1
@@ -7341,40 +8781,40 @@ C
       ZFEOH4(L1,NY,NX)=ZFEOH4(L1,NY,NX)+FXZFEOH4
       ZFEOH4(L0,NY,NX)=ZFEOH4(L0,NY,NX)-FXZFEOH4
       FXZFES=FWO*ZFES(L0,NY,NX)
-      ZFES(L1,NY,NX)=ZFES(L1,NY,NX)+FXZFES
-      ZFES(L0,NY,NX)=ZFES(L0,NY,NX)-FXZFES
+      ZFES(L1,NY,NX)=ZFES(L1,NY,NX)+FXZFES 
+      ZFES(L0,NY,NX)=ZFES(L0,NY,NX)-FXZFES 
       FXZCAO=FWO*ZCAO(L0,NY,NX)
-      ZCAO(L1,NY,NX)=ZCAO(L1,NY,NX)+FXZCAO
+      ZCAO(L1,NY,NX)=ZCAO(L1,NY,NX)+FXZCAO 
       ZCAO(L0,NY,NX)=ZCAO(L0,NY,NX)-FXZCAO
       FXZCAC=FWO*ZCAC(L0,NY,NX)
-      ZCAC(L1,NY,NX)=ZCAC(L1,NY,NX)+FXZCAC
-      ZCAC(L0,NY,NX)=ZCAC(L0,NY,NX)-FXZCAC
+      ZCAC(L1,NY,NX)=ZCAC(L1,NY,NX)+FXZCAC 
+      ZCAC(L0,NY,NX)=ZCAC(L0,NY,NX)-FXZCAC 
       FXZCAH=FWO*ZCAH(L0,NY,NX)
-      ZCAH(L1,NY,NX)=ZCAH(L1,NY,NX)+FXZCAH
-      ZCAH(L0,NY,NX)=ZCAH(L0,NY,NX)-FXZCAH
+      ZCAH(L1,NY,NX)=ZCAH(L1,NY,NX)+FXZCAH 
+      ZCAH(L0,NY,NX)=ZCAH(L0,NY,NX)-FXZCAH 
       FXZCAS=FWO*ZCAS(L0,NY,NX)
-      ZCAS(L1,NY,NX)=ZCAS(L1,NY,NX)+FXZCAS
-      ZCAS(L0,NY,NX)=ZCAS(L0,NY,NX)-FXZCAS
+      ZCAS(L1,NY,NX)=ZCAS(L1,NY,NX)+FXZCAS 
+      ZCAS(L0,NY,NX)=ZCAS(L0,NY,NX)-FXZCAS 
       FXZMGO=FWO*ZMGO(L0,NY,NX)
-      ZMGO(L1,NY,NX)=ZMGO(L1,NY,NX)+FXZMGO
+      ZMGO(L1,NY,NX)=ZMGO(L1,NY,NX)+FXZMGO 
       ZMGO(L0,NY,NX)=ZMGO(L0,NY,NX)-FXZMGO
       FXZMGC=FWO*ZMGC(L0,NY,NX)
-      ZMGC(L1,NY,NX)=ZMGC(L1,NY,NX)+FXZMGC
+      ZMGC(L1,NY,NX)=ZMGC(L1,NY,NX)+FXZMGC 
       ZMGC(L0,NY,NX)=ZMGC(L0,NY,NX)-FXZMGC
       FXZMGH=FWO*ZMGH(L0,NY,NX)
-      ZMGH(L1,NY,NX)=ZMGH(L1,NY,NX)+FXZMGH
+      ZMGH(L1,NY,NX)=ZMGH(L1,NY,NX)+FXZMGH 
       ZMGH(L0,NY,NX)=ZMGH(L0,NY,NX)-FXZMGH
-      FXZMGS=FWO*ZMGS(L0,NY,NX)
-      ZMGS(L1,NY,NX)=ZMGS(L1,NY,NX)+FXZMGS
-      ZMGS(L0,NY,NX)=ZMGS(L0,NY,NX)-FXZMGS
+      FXZMGS=FWO*ZMGS(L0,NY,NX) 
+      ZMGS(L1,NY,NX)=ZMGS(L1,NY,NX)+FXZMGS 
+      ZMGS(L0,NY,NX)=ZMGS(L0,NY,NX)-FXZMGS 
       FXZNAC=FWO*ZNAC(L0,NY,NX)
-      ZNAC(L1,NY,NX)=ZNAC(L1,NY,NX)+FXZNAC
+      ZNAC(L1,NY,NX)=ZNAC(L1,NY,NX)+FXZNAC 
       ZNAC(L0,NY,NX)=ZNAC(L0,NY,NX)-FXZNAC
       FXZNAS=FWO*ZNAS(L0,NY,NX)
-      ZNAS(L1,NY,NX)=ZNAS(L1,NY,NX)+FXZNAS
+      ZNAS(L1,NY,NX)=ZNAS(L1,NY,NX)+FXZNAS 
       ZNAS(L0,NY,NX)=ZNAS(L0,NY,NX)-FXZNAS
       FXZKAS=FWO*ZKAS(L0,NY,NX)
-      ZKAS(L1,NY,NX)=ZKAS(L1,NY,NX)+FXZKAS
+      ZKAS(L1,NY,NX)=ZKAS(L1,NY,NX)+FXZKAS 
       ZKAS(L0,NY,NX)=ZKAS(L0,NY,NX)-FXZKAS
       FXH0PO4=FWO*H0PO4(L0,NY,NX)
       H0PO4(L1,NY,NX)=H0PO4(L1,NY,NX)+FXH0PO4
@@ -7383,68 +8823,68 @@ C
       H3PO4(L1,NY,NX)=H3PO4(L1,NY,NX)+FXH3PO4
       H3PO4(L0,NY,NX)=H3PO4(L0,NY,NX)-FXH3PO4
       FXZFE1P=FWO*ZFE1P(L0,NY,NX)
-      ZFE1P(L1,NY,NX)=ZFE1P(L1,NY,NX)+FXZFE1P
+      ZFE1P(L1,NY,NX)=ZFE1P(L1,NY,NX)+FXZFE1P 
       ZFE1P(L0,NY,NX)=ZFE1P(L0,NY,NX)-FXZFE1P
       FXZFE2P=FWO*ZFE2P(L0,NY,NX)
-      ZFE2P(L1,NY,NX)=ZFE2P(L1,NY,NX)+FXZFE2P
+      ZFE2P(L1,NY,NX)=ZFE2P(L1,NY,NX)+FXZFE2P 
       ZFE2P(L0,NY,NX)=ZFE2P(L0,NY,NX)-FXZFE2P
       FXZCA0P=FWO*ZCA0P(L0,NY,NX)
-      ZCA0P(L1,NY,NX)=ZCA0P(L1,NY,NX)+FXZCA0P
+      ZCA0P(L1,NY,NX)=ZCA0P(L1,NY,NX)+FXZCA0P 
       ZCA0P(L0,NY,NX)=ZCA0P(L0,NY,NX)-FXZCA0P
       FXZCA1P=FWO*ZCA1P(L0,NY,NX)
-      ZCA1P(L1,NY,NX)=ZCA1P(L1,NY,NX)+FXZCA1P
+      ZCA1P(L1,NY,NX)=ZCA1P(L1,NY,NX)+FXZCA1P 
       ZCA1P(L0,NY,NX)=ZCA1P(L0,NY,NX)-FXZCA1P
       FXZCA2P=FWO*ZCA2P(L0,NY,NX)
-      ZCA2P(L1,NY,NX)=ZCA2P(L1,NY,NX)+FXZCA2P
-      ZCA2P(L0,NY,NX)=ZCA2P(L0,NY,NX)-FXZCA2P
+      ZCA2P(L1,NY,NX)=ZCA2P(L1,NY,NX)+FXZCA2P 
+      ZCA2P(L0,NY,NX)=ZCA2P(L0,NY,NX)-FXZCA2P 
       FXZMG1P=FWO*ZMG1P(L0,NY,NX)
-      ZMG1P(L1,NY,NX)=ZMG1P(L1,NY,NX)+FXZMG1P
-      ZMG1P(L0,NY,NX)=ZMG1P(L0,NY,NX)-FXZMG1P
+      ZMG1P(L1,NY,NX)=ZMG1P(L1,NY,NX)+FXZMG1P 
+      ZMG1P(L0,NY,NX)=ZMG1P(L0,NY,NX)-FXZMG1P 
       ENDIF
 C
 C     SOIL SOLUTES IN BAND
 C
       IF(L0.NE.0)THEN
       FXH1POB=FWO*H1POB(L0,NY,NX)
-      H1POB(L1,NY,NX)=H1POB(L1,NY,NX)+FXH1POB
+      H1POB(L1,NY,NX)=H1POB(L1,NY,NX)+FXH1POB 
       H1POB(L0,NY,NX)=H1POB(L0,NY,NX)-FXH1POB
       FXH2POB=FWO*H2POB(L0,NY,NX)
-      H2POB(L1,NY,NX)=H2POB(L1,NY,NX)+FXH2POB
-      H2POB(L0,NY,NX)=H2POB(L0,NY,NX)-FXH2POB
+      H2POB(L1,NY,NX)=H2POB(L1,NY,NX)+FXH2POB 
+      H2POB(L0,NY,NX)=H2POB(L0,NY,NX)-FXH2POB 
       IF(ISALTG.NE.0)THEN
       FXH0POB=FWO*H0POB(L0,NY,NX)
-      H0POB(L1,NY,NX)=H0POB(L1,NY,NX)+FXH0POB
-      H0POB(L0,NY,NX)=H0POB(L0,NY,NX)-FXH0POB
+      H0POB(L1,NY,NX)=H0POB(L1,NY,NX)+FXH0POB 
+      H0POB(L0,NY,NX)=H0POB(L0,NY,NX)-FXH0POB 
       FXH3POB=FWO*H3POB(L0,NY,NX)
-      H3POB(L1,NY,NX)=H3POB(L1,NY,NX)+FXH3POB
-      H3POB(L0,NY,NX)=H3POB(L0,NY,NX)-FXH3POB
+      H3POB(L1,NY,NX)=H3POB(L1,NY,NX)+FXH3POB 
+      H3POB(L0,NY,NX)=H3POB(L0,NY,NX)-FXH3POB 
       FXZFE1PB=FWO*ZFE1PB(L0,NY,NX)
-      ZFE1PB(L1,NY,NX)=ZFE1PB(L1,NY,NX)+FXZFE1PB
+      ZFE1PB(L1,NY,NX)=ZFE1PB(L1,NY,NX)+FXZFE1PB 
       ZFE1PB(L0,NY,NX)=ZFE1PB(L0,NY,NX)-FXZFE1PB
       FXZFE2PB=FWO*ZFE2PB(L0,NY,NX)
-      ZFE2PB(L1,NY,NX)=ZFE2PB(L1,NY,NX)+FXZFE2PB
+      ZFE2PB(L1,NY,NX)=ZFE2PB(L1,NY,NX)+FXZFE2PB 
       ZFE2PB(L0,NY,NX)=ZFE2PB(L0,NY,NX)-FXZFE2PB
       FXZCA0PB=FWO*ZCA0PB(L0,NY,NX)
-      ZCA0PB(L1,NY,NX)=ZCA0PB(L1,NY,NX)+FXZCA0PB
-      ZCA0PB(L0,NY,NX)=ZCA0PB(L0,NY,NX)-FXZCA0PB
+      ZCA0PB(L1,NY,NX)=ZCA0PB(L1,NY,NX)+FXZCA0PB 
+      ZCA0PB(L0,NY,NX)=ZCA0PB(L0,NY,NX)-FXZCA0PB 
       FXZCA1PB=FWO*ZCA1PB(L0,NY,NX)
-      ZCA1PB(L1,NY,NX)=ZCA1PB(L1,NY,NX)+FXZCA1PB
+      ZCA1PB(L1,NY,NX)=ZCA1PB(L1,NY,NX)+FXZCA1PB 
       ZCA1PB(L0,NY,NX)=ZCA1PB(L0,NY,NX)-FXZCA1PB
       FXZCA2PB=FWO*ZCA2PB(L0,NY,NX)
-      ZCA2PB(L1,NY,NX)=ZCA2PB(L1,NY,NX)+FXZCA2PB
+      ZCA2PB(L1,NY,NX)=ZCA2PB(L1,NY,NX)+FXZCA2PB 
       ZCA2PB(L0,NY,NX)=ZCA2PB(L0,NY,NX)-FXZCA2PB
-      FXZMG1PB=FWO*ZMG1PB(L0,NY,NX)
-      ZMG1PB(L1,NY,NX)=ZMG1PB(L1,NY,NX)+FXZMG1PB
-      ZMG1PB(L0,NY,NX)=ZMG1PB(L0,NY,NX)-FXZMG1PB
+      FXZMG1PB=FWO*ZMG1PB(L0,NY,NX) 
+      ZMG1PB(L1,NY,NX)=ZMG1PB(L1,NY,NX)+FXZMG1PB 
+      ZMG1PB(L0,NY,NX)=ZMG1PB(L0,NY,NX)-FXZMG1PB 
       ENDIF
 C
 C     SOIL ADSORBED CATIONS IN BAND, NON-BAND
 C
-      IF(L0.EQ.L.OR.CEC(L0,NY,NX).LE.ZERO)THEN
-      FCO=FO
-      ELSE
-      FCO=AMIN1(0.5,FO*CEC(L1,NY,NX)/CEC(L0,NY,NX))
-      ENDIF
+C     IF(L0.EQ.L.OR.CEC(L0,NY,NX).LE.ZERO)THEN
+      FCO=FX
+C     ELSE
+C     FCO=AMIN1(1.0,FX*CEC(L1,NY,NX)/CEC(L0,NY,NX))
+C     ENDIF
       FXXCEC=FCO*XCEC(L0,NY,NX)
       XCEC(L1,NY,NX)=XCEC(L1,NY,NX)+FXXCEC
       XCEC(L0,NY,NX)=XCEC(L0,NY,NX)-FXXCEC
@@ -7452,32 +8892,32 @@ C
       XN4(L1,NY,NX)=XN4(L1,NY,NX)+FXXN4
       XN4(L0,NY,NX)=XN4(L0,NY,NX)-FXXN4
       FXXNB=FCO*XNB(L0,NY,NX)
-      XNB(L1,NY,NX)=XNB(L1,NY,NX)+FXXNB
+      XNB(L1,NY,NX)=XNB(L1,NY,NX)+FXXNB 
       XNB(L0,NY,NX)=XNB(L0,NY,NX)-FXXNB
       FXXHY=FCO*XHY(L0,NY,NX)
-      XHY(L1,NY,NX)=XHY(L1,NY,NX)+FXXHY
+      XHY(L1,NY,NX)=XHY(L1,NY,NX)+FXXHY 
       XHY(L0,NY,NX)=XHY(L0,NY,NX)-FXXHY
       FXXAL=FCO*XAL(L0,NY,NX)
-      XAL(L1,NY,NX)=XAL(L1,NY,NX)+FXXAL
+      XAL(L1,NY,NX)=XAL(L1,NY,NX)+FXXAL 
       XAL(L0,NY,NX)=XAL(L0,NY,NX)-FXXAL
       FXXFE=FCO*XFE(L0,NY,NX)
-      XFE(L1,NY,NX)=XFE(L1,NY,NX)+FXXFE
-      XFE(L0,NY,NX)=XFE(L0,NY,NX)-FXXFE
+      XFE(L1,NY,NX)=XFE(L1,NY,NX)+FXXFE 
+      XFE(L0,NY,NX)=XFE(L0,NY,NX)-FXXFE 
       FXXCA=FCO*XCA(L0,NY,NX)
-      XCA(L1,NY,NX)=XCA(L1,NY,NX)+FXXCA
-      XCA(L0,NY,NX)=XCA(L0,NY,NX)-FXXCA
+      XCA(L1,NY,NX)=XCA(L1,NY,NX)+FXXCA 
+      XCA(L0,NY,NX)=XCA(L0,NY,NX)-FXXCA 
       FXXMG=FCO*XMG(L0,NY,NX)
-      XMG(L1,NY,NX)=XMG(L1,NY,NX)+FXXMG
-      XMG(L0,NY,NX)=XMG(L0,NY,NX)-FXXMG
+      XMG(L1,NY,NX)=XMG(L1,NY,NX)+FXXMG 
+      XMG(L0,NY,NX)=XMG(L0,NY,NX)-FXXMG 
       FXXNA=FCO*XNA(L0,NY,NX)
       XNA(L1,NY,NX)=XNA(L1,NY,NX)+FXXNA
       XNA(L0,NY,NX)=XNA(L0,NY,NX)-FXXNA
       FXXKA=FCO*XKA(L0,NY,NX)
-      XKA(L1,NY,NX)=XKA(L1,NY,NX)+FXXKA
-      XKA(L0,NY,NX)=XKA(L0,NY,NX)-FXXKA
+      XKA(L1,NY,NX)=XKA(L1,NY,NX)+FXXKA 
+      XKA(L0,NY,NX)=XKA(L0,NY,NX)-FXXKA 
       FXXHC=FCO*XHC(L0,NY,NX)
-      XHC(L1,NY,NX)=XHC(L1,NY,NX)+FXXHC
-      XHC(L0,NY,NX)=XHC(L0,NY,NX)-FXXHC
+      XHC(L1,NY,NX)=XHC(L1,NY,NX)+FXXHC 
+      XHC(L0,NY,NX)=XHC(L0,NY,NX)-FXXHC 
       FXXALO2=FCO*XALO2(L0,NY,NX)
       XALO2(L1,NY,NX)=XALO2(L1,NY,NX)+FXXALO2
       XALO2(L0,NY,NX)=XALO2(L0,NY,NX)-FXXALO2
@@ -7487,11 +8927,11 @@ C
 C
 C     SOIL ADSORBED ANIONS IN BAND, NON-BAND
 C
-      IF(L0.EQ.L.OR.AEC(L0,NY,NX).LE.ZERO)THEN
-      FAO=FO
-      ELSE
-      FAO=AMIN1(0.5,FO*AEC(L1,NY,NX)/AEC(L0,NY,NX))
-      ENDIF
+C     IF(L0.EQ.L.OR.AEC(L0,NY,NX).LE.ZERO)THEN
+      FAO=FX
+C     ELSE
+C     FAO=AMIN1(1.0,FX*AEC(L1,NY,NX)/AEC(L0,NY,NX))
+C     ENDIF
       FXXAEC=FAO*XAEC(L0,NY,NX)
       XAEC(L1,NY,NX)=XAEC(L1,NY,NX)+FXXAEC
       XAEC(L0,NY,NX)=XAEC(L0,NY,NX)-FXXAEC
@@ -7505,121 +8945,121 @@ C
       XOH2(L1,NY,NX)=XOH2(L1,NY,NX)+FXXOH2
       XOH2(L0,NY,NX)=XOH2(L0,NY,NX)-FXXOH2
       FXXH1P=FAO*XH1P(L0,NY,NX)
-      XH1P(L1,NY,NX)=XH1P(L1,NY,NX)+FXXH1P
-      XH1P(L0,NY,NX)=XH1P(L0,NY,NX)-FXXH1P
+      XH1P(L1,NY,NX)=XH1P(L1,NY,NX)+FXXH1P 
+      XH1P(L0,NY,NX)=XH1P(L0,NY,NX)-FXXH1P 
       FXXH2P=FAO*XH2P(L0,NY,NX)
-      XH2P(L1,NY,NX)=XH2P(L1,NY,NX)+FXXH2P
+      XH2P(L1,NY,NX)=XH2P(L1,NY,NX)+FXXH2P 
       XH2P(L0,NY,NX)=XH2P(L0,NY,NX)-FXXH2P
-      FXXOH0B=FAO*XOH0B(L0,NY,NX)
-      XOH0B(L1,NY,NX)=XOH0B(L1,NY,NX)+FXXOH0B
+      FXXOH0B=FAO*XOH0B(L0,NY,NX) 
+      XOH0B(L1,NY,NX)=XOH0B(L1,NY,NX)+FXXOH0B 
       XOH0B(L0,NY,NX)=XOH0B(L0,NY,NX)-FXXOH0B
       FXXOH1B=FAO*XOH1B(L0,NY,NX)
-      XOH1B(L1,NY,NX)=XOH1B(L1,NY,NX)+FXXOH1B
+      XOH1B(L1,NY,NX)=XOH1B(L1,NY,NX)+FXXOH1B 
       XOH1B(L0,NY,NX)=XOH1B(L0,NY,NX)-FXXOH1B
       FXXOH2B=FAO*XOH2B(L0,NY,NX)
-      XOH2B(L1,NY,NX)=XOH2B(L1,NY,NX)+FXXOH2B
+      XOH2B(L1,NY,NX)=XOH2B(L1,NY,NX)+FXXOH2B 
       XOH2B(L0,NY,NX)=XOH2B(L0,NY,NX)-FXXOH2B
       FXXH1PB=FAO*XH1PB(L0,NY,NX)
-      XH1PB(L1,NY,NX)=XH1PB(L1,NY,NX)+FXXH1PB
-      XH1PB(L0,NY,NX)=XH1PB(L0,NY,NX)-FXXH1PB
+      XH1PB(L1,NY,NX)=XH1PB(L1,NY,NX)+FXXH1PB 
+      XH1PB(L0,NY,NX)=XH1PB(L0,NY,NX)-FXXH1PB 
       FXXH2PB=FAO*XH2PB(L0,NY,NX)
-      XH2PB(L1,NY,NX)=XH2PB(L1,NY,NX)+FXXH2PB
-      XH2PB(L0,NY,NX)=XH2PB(L0,NY,NX)-FXXH2PB
+      XH2PB(L1,NY,NX)=XH2PB(L1,NY,NX)+FXXH2PB 
+      XH2PB(L0,NY,NX)=XH2PB(L0,NY,NX)-FXXH2PB 
 C
 C     SOIL PRECIPITATES IN BAND, NON-BAND
 C
       FXPALOH=AMIN1(FX*PALOH(L,NY,NX),PALOH(L0,NY,NX))
-      PALOH(L1,NY,NX)=PALOH(L1,NY,NX)+FXPALOH
+      PALOH(L1,NY,NX)=PALOH(L1,NY,NX)+FXPALOH 
       PALOH(L0,NY,NX)=PALOH(L0,NY,NX)-FXPALOH
       FXPFEOH=AMIN1(FX*PFEOH(L,NY,NX),PFEOH(L0,NY,NX))
-      PFEOH(L1,NY,NX)=PFEOH(L1,NY,NX)+FXPFEOH
-      PFEOH(L0,NY,NX)=PFEOH(L0,NY,NX)-FXPFEOH
+      PFEOH(L1,NY,NX)=PFEOH(L1,NY,NX)+FXPFEOH 
+      PFEOH(L0,NY,NX)=PFEOH(L0,NY,NX)-FXPFEOH 
       FXPCACO=AMIN1(FX*PCACO(L,NY,NX),PCACO(L0,NY,NX))
-      PCACO(L1,NY,NX)=PCACO(L1,NY,NX)+FXPCACO
+      PCACO(L1,NY,NX)=PCACO(L1,NY,NX)+FXPCACO 
       PCACO(L0,NY,NX)=PCACO(L0,NY,NX)-FXPCACO
       FXPCASO=AMIN1(FX*PCASO(L,NY,NX),PCASO(L0,NY,NX))
-      PCASO(L1,NY,NX)=PCASO(L1,NY,NX)+FXPCASO
-      PCASO(L0,NY,NX)=PCASO(L0,NY,NX)-FXPCASO
+      PCASO(L1,NY,NX)=PCASO(L1,NY,NX)+FXPCASO 
+      PCASO(L0,NY,NX)=PCASO(L0,NY,NX)-FXPCASO 
       FXPALPO=AMIN1(FX*PALPO(L,NY,NX),PALPO(L0,NY,NX))
-      PALPO(L1,NY,NX)=PALPO(L1,NY,NX)+FXPALPO
+      PALPO(L1,NY,NX)=PALPO(L1,NY,NX)+FXPALPO 
       PALPO(L0,NY,NX)=PALPO(L0,NY,NX)-FXPALPO
       FXPFEPO=AMIN1(FX*PFEPO(L,NY,NX),PFEPO(L0,NY,NX))
-      PFEPO(L1,NY,NX)=PFEPO(L1,NY,NX)+FXPFEPO
+      PFEPO(L1,NY,NX)=PFEPO(L1,NY,NX)+FXPFEPO 
       PFEPO(L0,NY,NX)=PFEPO(L0,NY,NX)-FXPFEPO
       FXPCAPD=AMIN1(FX*PCAPD(L,NY,NX),PCAPD(L0,NY,NX))
-      PCAPD(L1,NY,NX)=PCAPD(L1,NY,NX)+FXPCAPD
+      PCAPD(L1,NY,NX)=PCAPD(L1,NY,NX)+FXPCAPD 
       PCAPD(L0,NY,NX)=PCAPD(L0,NY,NX)-FXPCAPD
       FXPCAPH=AMIN1(FX*PCAPH(L,NY,NX),PCAPH(L0,NY,NX))
-      PCAPH(L1,NY,NX)=PCAPH(L1,NY,NX)+FXPCAPH
+      PCAPH(L1,NY,NX)=PCAPH(L1,NY,NX)+FXPCAPH 
       PCAPH(L0,NY,NX)=PCAPH(L0,NY,NX)-FXPCAPH
       FXPCAPM=AMIN1(FX*PCAPM(L,NY,NX),PCAPM(L0,NY,NX))
-      PCAPM(L1,NY,NX)=PCAPM(L1,NY,NX)+FXPCAPM
-      PCAPM(L0,NY,NX)=PCAPM(L0,NY,NX)-FXPCAPM
+      PCAPM(L1,NY,NX)=PCAPM(L1,NY,NX)+FXPCAPM 
+      PCAPM(L0,NY,NX)=PCAPM(L0,NY,NX)-FXPCAPM 
       FXPALPB=AMIN1(FX*PALPB(L,NY,NX),PALPB(L0,NY,NX))
-      PALPB(L1,NY,NX)=PALPB(L1,NY,NX)+FXPALPB
+      PALPB(L1,NY,NX)=PALPB(L1,NY,NX)+FXPALPB 
       PALPB(L0,NY,NX)=PALPB(L0,NY,NX)-FXPALPB
-      FXPFEPB=AMIN1(FX*PFEPB(L,NY,NX),PFEPB(L0,NY,NX))
-      PFEPB(L1,NY,NX)=PFEPB(L1,NY,NX)+FXPFEPB
-      PFEPB(L0,NY,NX)=PFEPB(L0,NY,NX)-FXPFEPB
+      FXPFEPB=AMIN1(FX*PFEPB(L,NY,NX),PFEPB(L0,NY,NX)) 
+      PFEPB(L1,NY,NX)=PFEPB(L1,NY,NX)+FXPFEPB 
+      PFEPB(L0,NY,NX)=PFEPB(L0,NY,NX)-FXPFEPB 
       FXPCPDB=AMIN1(FX*PCPDB(L,NY,NX),PCPDB(L0,NY,NX))
-      PCPDB(L1,NY,NX)=PCPDB(L1,NY,NX)+FXPCPDB
+      PCPDB(L1,NY,NX)=PCPDB(L1,NY,NX)+FXPCPDB 
       PCPDB(L0,NY,NX)=PCPDB(L0,NY,NX)-FXPCPDB
       FXPCPHB=AMIN1(FX*PCPHB(L,NY,NX),PCPHB(L0,NY,NX))
-      PCPHB(L1,NY,NX)=PCPHB(L1,NY,NX)+FXPCPHB
+      PCPHB(L1,NY,NX)=PCPHB(L1,NY,NX)+FXPCPHB 
       PCPHB(L0,NY,NX)=PCPHB(L0,NY,NX)-FXPCPHB
       FXPCPMB=AMIN1(FX*PCPMB(L,NY,NX),PCPMB(L0,NY,NX))
-      PCPMB(L1,NY,NX)=PCPMB(L1,NY,NX)+FXPCPMB
+      PCPMB(L1,NY,NX)=PCPMB(L1,NY,NX)+FXPCPMB 
       PCPMB(L0,NY,NX)=PCPMB(L0,NY,NX)-FXPCPMB
 C
-C     SOIL GASEOUS GASES
+C     SOIL GASEOUS GASES 
 C
       FXCO2G=FWO*CO2G(L0,NY,NX)
-      CO2G(L1,NY,NX)=CO2G(L1,NY,NX)+FXCO2G
-      CO2G(L0,NY,NX)=CO2G(L0,NY,NX)-FXCO2G
+      CO2G(L1,NY,NX)=CO2G(L1,NY,NX)+FXCO2G 
+      CO2G(L0,NY,NX)=CO2G(L0,NY,NX)-FXCO2G 
       FXCH4G=FWO*CH4G(L0,NY,NX)
-      CH4G(L1,NY,NX)=CH4G(L1,NY,NX)+FXCH4G
+      CH4G(L1,NY,NX)=CH4G(L1,NY,NX)+FXCH4G 
       CH4G(L0,NY,NX)=CH4G(L0,NY,NX)-FXCH4G
       FXOXYG=FWO*OXYG(L0,NY,NX)
-      OXYG(L1,NY,NX)=OXYG(L1,NY,NX)+FXOXYG
+      OXYG(L1,NY,NX)=OXYG(L1,NY,NX)+FXOXYG 
       OXYG(L0,NY,NX)=OXYG(L0,NY,NX)-FXOXYG
       FXZ2GG=FWO*Z2GG(L0,NY,NX)
-      Z2GG(L1,NY,NX)=Z2GG(L1,NY,NX)+FXZ2GG
+      Z2GG(L1,NY,NX)=Z2GG(L1,NY,NX)+FXZ2GG 
       Z2GG(L0,NY,NX)=Z2GG(L0,NY,NX)-FXZ2GG
       FXZ2OG=FWO*Z2OG(L0,NY,NX)
-      Z2OG(L1,NY,NX)=Z2OG(L1,NY,NX)+FXZ2OG
+      Z2OG(L1,NY,NX)=Z2OG(L1,NY,NX)+FXZ2OG 
       Z2OG(L0,NY,NX)=Z2OG(L0,NY,NX)-FXZ2OG
       FXZNH3G=FWO*ZNH3G(L0,NY,NX)
-      ZNH3G(L1,NY,NX)=ZNH3G(L1,NY,NX)+FXZNH3G
+      ZNH3G(L1,NY,NX)=ZNH3G(L1,NY,NX)+FXZNH3G 
       ZNH3G(L0,NY,NX)=ZNH3G(L0,NY,NX)-FXZNH3G
       FXH2GG=FWO*H2GG(L0,NY,NX)
-      H2GG(L1,NY,NX)=H2GG(L1,NY,NX)+FXH2GG
-      H2GG(L0,NY,NX)=H2GG(L0,NY,NX)-FXH2GG
+      H2GG(L1,NY,NX)=H2GG(L1,NY,NX)+FXH2GG 
+      H2GG(L0,NY,NX)=H2GG(L0,NY,NX)-FXH2GG 
       ENDIF
 C
 C     SOIL AQUEOUS GASES
 C
       IF(L0.NE.0)THEN
       FXCO2S=FWO*CO2S(L0,NY,NX)
-      CO2S(L1,NY,NX)=CO2S(L1,NY,NX)+FXCO2S
-      CO2S(L0,NY,NX)=CO2S(L0,NY,NX)-FXCO2S
+      CO2S(L1,NY,NX)=CO2S(L1,NY,NX)+FXCO2S 
+      CO2S(L0,NY,NX)=CO2S(L0,NY,NX)-FXCO2S 
       FXCH4S=FWO*CH4S(L0,NY,NX)
-      CH4S(L1,NY,NX)=CH4S(L1,NY,NX)+FXCH4S
+      CH4S(L1,NY,NX)=CH4S(L1,NY,NX)+FXCH4S 
       CH4S(L0,NY,NX)=CH4S(L0,NY,NX)-FXCH4S
       FXOXYS=FWO*OXYS(L0,NY,NX)
-      OXYS(L1,NY,NX)=OXYS(L1,NY,NX)+FXOXYS
-      OXYS(L0,NY,NX)=OXYS(L0,NY,NX)-FXOXYS
+      OXYS(L1,NY,NX)=OXYS(L1,NY,NX)+FXOXYS 
+      OXYS(L0,NY,NX)=OXYS(L0,NY,NX)-FXOXYS 
       FXZ2GS=FWO*Z2GS(L0,NY,NX)
-      Z2GS(L1,NY,NX)=Z2GS(L1,NY,NX)+FXZ2GS
-      Z2GS(L0,NY,NX)=Z2GS(L0,NY,NX)-FXZ2GS
+      Z2GS(L1,NY,NX)=Z2GS(L1,NY,NX)+FXZ2GS 
+      Z2GS(L0,NY,NX)=Z2GS(L0,NY,NX)-FXZ2GS 
       FXZ2OS=FWO*Z2OS(L0,NY,NX)
-      Z2OS(L1,NY,NX)=Z2OS(L1,NY,NX)+FXZ2OS
+      Z2OS(L1,NY,NX)=Z2OS(L1,NY,NX)+FXZ2OS 
       Z2OS(L0,NY,NX)=Z2OS(L0,NY,NX)-FXZ2OS
       FXH2GS=FWO*H2GS(L0,NY,NX)
-      H2GS(L1,NY,NX)=H2GS(L1,NY,NX)+FXH2GS
+      H2GS(L1,NY,NX)=H2GS(L1,NY,NX)+FXH2GS 
       H2GS(L0,NY,NX)=H2GS(L0,NY,NX)-FXH2GS
 C
 C     SOIL MACROPORE N,P SOLUTES
-C
+C 
       IF(FHOL(L1,NY,NX).GT.ZERO.AND.FHOL(L0,NY,NX).GT.ZERO)THEN
       FXZNH4SH=FHO*ZNH4SH(L0,NY,NX)
       ZNH4SH(L1,NY,NX)=ZNH4SH(L1,NY,NX)+FXZNH4SH
@@ -7659,175 +9099,175 @@ C
       H2POBH(L0,NY,NX)=H2POBH(L0,NY,NX)-FXH2POBH
 C
 C     SOIL MACROPORE SOLUBLE SALTS
-C
+C 
       IF(ISALTG.NE.0)THEN
       FXZALH=FHO*ZALH(L0,NY,NX)
-      ZALH(L1,NY,NX)=ZALH(L1,NY,NX)+FXZALH
-      ZALH(L0,NY,NX)=ZALH(L0,NY,NX)-FXZALH
+      ZALH(L1,NY,NX)=ZALH(L1,NY,NX)+FXZALH 
+      ZALH(L0,NY,NX)=ZALH(L0,NY,NX)-FXZALH 
       FXZFEH=FHO*ZFEH(L0,NY,NX)
-      ZFEH(L1,NY,NX)=ZFEH(L1,NY,NX)+FXZFEH
-      ZFEH(L0,NY,NX)=ZFEH(L0,NY,NX)-FXZFEH
+      ZFEH(L1,NY,NX)=ZFEH(L1,NY,NX)+FXZFEH 
+      ZFEH(L0,NY,NX)=ZFEH(L0,NY,NX)-FXZFEH 
       FXZHYH=FHO*ZHYH(L0,NY,NX)
-      ZHYH(L1,NY,NX)=ZHYH(L1,NY,NX)+FXZHYH
-      ZHYH(L0,NY,NX)=ZHYH(L0,NY,NX)-FXZHYH
+      ZHYH(L1,NY,NX)=ZHYH(L1,NY,NX)+FXZHYH 
+      ZHYH(L0,NY,NX)=ZHYH(L0,NY,NX)-FXZHYH 
       FXZCCH=FHO*ZCCH(L0,NY,NX)
-      ZCCH(L1,NY,NX)=ZCCH(L1,NY,NX)+FXZCCH
+      ZCCH(L1,NY,NX)=ZCCH(L1,NY,NX)+FXZCCH 
       ZCCH(L0,NY,NX)=ZCCH(L0,NY,NX)-FXZCCH
       FXZMAH=FHO*ZMAH(L0,NY,NX)
-      ZMAH(L1,NY,NX)=ZMAH(L1,NY,NX)+FXZMAH
-      ZMAH(L0,NY,NX)=ZMAH(L0,NY,NX)-FXZMAH
+      ZMAH(L1,NY,NX)=ZMAH(L1,NY,NX)+FXZMAH 
+      ZMAH(L0,NY,NX)=ZMAH(L0,NY,NX)-FXZMAH 
       FXZNAH=FHO*ZNAH(L0,NY,NX)
-      ZNAH(L1,NY,NX)=ZNAH(L1,NY,NX)+FXZNAH
+      ZNAH(L1,NY,NX)=ZNAH(L1,NY,NX)+FXZNAH 
       ZNAH(L0,NY,NX)=ZNAH(L0,NY,NX)-FXZNAH
       FXZKAH=FHO*ZKAH(L0,NY,NX)
-      ZKAH(L1,NY,NX)=ZKAH(L1,NY,NX)+FXZKAH
+      ZKAH(L1,NY,NX)=ZKAH(L1,NY,NX)+FXZKAH 
       ZKAH(L0,NY,NX)=ZKAH(L0,NY,NX)-FXZKAH
       FXZOHH=FHO*ZOHH(L0,NY,NX)
-      ZOHH(L1,NY,NX)=ZOHH(L1,NY,NX)+FXZOHH
+      ZOHH(L1,NY,NX)=ZOHH(L1,NY,NX)+FXZOHH 
       ZOHH(L0,NY,NX)=ZOHH(L0,NY,NX)-FXZOHH
       FXZSO4H=FHO*ZSO4H(L0,NY,NX)
-      ZSO4H(L1,NY,NX)=ZSO4H(L1,NY,NX)+FXZSO4H
+      ZSO4H(L1,NY,NX)=ZSO4H(L1,NY,NX)+FXZSO4H 
       ZSO4H(L0,NY,NX)=ZSO4H(L0,NY,NX)-FXZSO4H
       FXZCLH=FHO*ZCLH(L0,NY,NX)
-      ZCLH(L1,NY,NX)=ZCLH(L1,NY,NX)+FXZCLH
-      ZCLH(L0,NY,NX)=ZCLH(L0,NY,NX)-FXZCLH
+      ZCLH(L1,NY,NX)=ZCLH(L1,NY,NX)+FXZCLH 
+      ZCLH(L0,NY,NX)=ZCLH(L0,NY,NX)-FXZCLH 
       FXZCO3H=FHO*ZCO3H(L0,NY,NX)
-      ZCO3H(L1,NY,NX)=ZCO3H(L1,NY,NX)+FXZCO3H
-      ZCO3H(L0,NY,NX)=ZCO3H(L0,NY,NX)-FXZCO3H
+      ZCO3H(L1,NY,NX)=ZCO3H(L1,NY,NX)+FXZCO3H 
+      ZCO3H(L0,NY,NX)=ZCO3H(L0,NY,NX)-FXZCO3H 
       FXZHCO3H=FHO*ZHCO3H(L0,NY,NX)
-      ZHCO3H(L1,NY,NX)=ZHCO3H(L1,NY,NX)+FXZHCO3H
-      ZHCO3H(L0,NY,NX)=ZHCO3H(L0,NY,NX)-FXZHCO3H
+      ZHCO3H(L1,NY,NX)=ZHCO3H(L1,NY,NX)+FXZHCO3H 
+      ZHCO3H(L0,NY,NX)=ZHCO3H(L0,NY,NX)-FXZHCO3H 
       FXZALO1H=FHO*ZALO1H(L0,NY,NX)
-      ZALO1H(L1,NY,NX)=ZALO1H(L1,NY,NX)+FXZALO1H
-      ZALO1H(L0,NY,NX)=ZALO1H(L0,NY,NX)-FXZALO1H
+      ZALO1H(L1,NY,NX)=ZALO1H(L1,NY,NX)+FXZALO1H 
+      ZALO1H(L0,NY,NX)=ZALO1H(L0,NY,NX)-FXZALO1H 
       FXZALO2H=FHO*ZALO2H(L0,NY,NX)
-      ZALO2H(L1,NY,NX)=ZALO2H(L1,NY,NX)+FXZALO2H
+      ZALO2H(L1,NY,NX)=ZALO2H(L1,NY,NX)+FXZALO2H 
       ZALO2H(L0,NY,NX)=ZALO2H(L0,NY,NX)-FXZALO2H
       FXZALO3H=FHO*ZALO3H(L0,NY,NX)
-      ZALO3H(L1,NY,NX)=ZALO3H(L1,NY,NX)+FXZALO3H
-      ZALO3H(L0,NY,NX)=ZALO3H(L0,NY,NX)-FXZALO3H
+      ZALO3H(L1,NY,NX)=ZALO3H(L1,NY,NX)+FXZALO3H 
+      ZALO3H(L0,NY,NX)=ZALO3H(L0,NY,NX)-FXZALO3H 
       FXZALO4H=FHO*ZALO4H(L0,NY,NX)
-      ZALO4H(L1,NY,NX)=ZALO4H(L1,NY,NX)+FXZALO4H
-      ZALO4H(L0,NY,NX)=ZALO4H(L0,NY,NX)-FXZALO4H
+      ZALO4H(L1,NY,NX)=ZALO4H(L1,NY,NX)+FXZALO4H 
+      ZALO4H(L0,NY,NX)=ZALO4H(L0,NY,NX)-FXZALO4H 
       FXZALSH=FHO*ZALSH(L0,NY,NX)
-      ZALSH(L1,NY,NX)=ZALSH(L1,NY,NX)+FXZALSH
+      ZALSH(L1,NY,NX)=ZALSH(L1,NY,NX)+FXZALSH 
       ZALSH(L0,NY,NX)=ZALSH(L0,NY,NX)-FXZALSH
       FXZFEO1H=FHO*ZFEO1H(L0,NY,NX)
-      ZFEO1H(L1,NY,NX)=ZFEO1H(L1,NY,NX)+FXZFEO1H
+      ZFEO1H(L1,NY,NX)=ZFEO1H(L1,NY,NX)+FXZFEO1H 
       ZFEO1H(L0,NY,NX)=ZFEO1H(L0,NY,NX)-FXZFEO1H
       FXZFEO2H=FHO*ZFEO2H(L0,NY,NX)
-      ZFEO2H(L1,NY,NX)=ZFEO2H(L1,NY,NX)+FXZFEO2H
-      ZFEO2H(L0,NY,NX)=ZFEO2H(L0,NY,NX)-FXZFEO2H
+      ZFEO2H(L1,NY,NX)=ZFEO2H(L1,NY,NX)+FXZFEO2H 
+      ZFEO2H(L0,NY,NX)=ZFEO2H(L0,NY,NX)-FXZFEO2H 
       FXZFEO3H=FHO*ZFEO3H(L0,NY,NX)
-      ZFEO3H(L1,NY,NX)=ZFEO3H(L1,NY,NX)+FXZFEO3H
+      ZFEO3H(L1,NY,NX)=ZFEO3H(L1,NY,NX)+FXZFEO3H 
       ZFEO3H(L0,NY,NX)=ZFEO3H(L0,NY,NX)-FXZFEO3H
       FXZFEO4H=FHO*ZFEO4H(L0,NY,NX)
-      ZFEO4H(L1,NY,NX)=ZFEO4H(L1,NY,NX)+FXZFEO4H
-      ZFEO4H(L0,NY,NX)=ZFEO4H(L0,NY,NX)-FXZFEO4H
+      ZFEO4H(L1,NY,NX)=ZFEO4H(L1,NY,NX)+FXZFEO4H 
+      ZFEO4H(L0,NY,NX)=ZFEO4H(L0,NY,NX)-FXZFEO4H 
       FXZFESH=FHO*ZFESH(L0,NY,NX)
-      ZFESH(L1,NY,NX)=ZFESH(L1,NY,NX)+FXZFESH
-      ZFESH(L0,NY,NX)=ZFESH(L0,NY,NX)-FXZFESH
+      ZFESH(L1,NY,NX)=ZFESH(L1,NY,NX)+FXZFESH 
+      ZFESH(L0,NY,NX)=ZFESH(L0,NY,NX)-FXZFESH 
       FXZCAOH=FHO*ZCAOH(L0,NY,NX)
-      ZCAOH(L1,NY,NX)=ZCAOH(L1,NY,NX)+FXZCAOH
-      ZCAOH(L0,NY,NX)=ZCAOH(L0,NY,NX)-FXZCAOH
+      ZCAOH(L1,NY,NX)=ZCAOH(L1,NY,NX)+FXZCAOH 
+      ZCAOH(L0,NY,NX)=ZCAOH(L0,NY,NX)-FXZCAOH 
       FXZCACH=FHO*ZCACH(L0,NY,NX)
-      ZCACH(L1,NY,NX)=ZCACH(L1,NY,NX)+FXZCACH
-      ZCACH(L0,NY,NX)=ZCACH(L0,NY,NX)-FXZCACH
+      ZCACH(L1,NY,NX)=ZCACH(L1,NY,NX)+FXZCACH 
+      ZCACH(L0,NY,NX)=ZCACH(L0,NY,NX)-FXZCACH 
       FXZCAHH=FHO*ZCAHH(L0,NY,NX)
-      ZCAHH(L1,NY,NX)=ZCAHH(L1,NY,NX)+FXZCAHH
+      ZCAHH(L1,NY,NX)=ZCAHH(L1,NY,NX)+FXZCAHH 
       ZCAHH(L0,NY,NX)=ZCAHH(L0,NY,NX)-FXZCAHH
       FXZCASH=FHO*ZCASH(L0,NY,NX)
-      ZCASH(L1,NY,NX)=ZCASH(L1,NY,NX)+FXZCASH
+      ZCASH(L1,NY,NX)=ZCASH(L1,NY,NX)+FXZCASH 
       ZCASH(L0,NY,NX)=ZCASH(L0,NY,NX)-FXZCASH
-      FXZMGOH=FHO*ZMGOH(L0,NY,NX)
-      ZMGOH(L1,NY,NX)=ZMGOH(L1,NY,NX)+FXZMGOH
+      FXZMGOH=FHO*ZMGOH(L0,NY,NX) 
+      ZMGOH(L1,NY,NX)=ZMGOH(L1,NY,NX)+FXZMGOH 
       ZMGOH(L0,NY,NX)=ZMGOH(L0,NY,NX)-FXZMGOH
       FXZMGCH=FHO*ZMGCH(L0,NY,NX)
-      ZMGCH(L1,NY,NX)=ZMGCH(L1,NY,NX)+FXZMGCH
+      ZMGCH(L1,NY,NX)=ZMGCH(L1,NY,NX)+FXZMGCH 
       ZMGCH(L0,NY,NX)=ZMGCH(L0,NY,NX)-FXZMGCH
       FXZMGHH=FHO*ZMGHH(L0,NY,NX)
-      ZMGHH(L1,NY,NX)=ZMGHH(L1,NY,NX)+FXZMGHH
-      ZMGHH(L0,NY,NX)=ZMGHH(L0,NY,NX)-FXZMGHH
+      ZMGHH(L1,NY,NX)=ZMGHH(L1,NY,NX)+FXZMGHH 
+      ZMGHH(L0,NY,NX)=ZMGHH(L0,NY,NX)-FXZMGHH 
       FXZMGSH=FHO*ZMGSH(L0,NY,NX)
-      ZMGSH(L1,NY,NX)=ZMGSH(L1,NY,NX)+FXZMGSH
+      ZMGSH(L1,NY,NX)=ZMGSH(L1,NY,NX)+FXZMGSH 
       ZMGSH(L0,NY,NX)=ZMGSH(L0,NY,NX)-FXZMGSH
       FXZNACH=FHO*ZNACH(L0,NY,NX)
-      ZNACH(L1,NY,NX)=ZNACH(L1,NY,NX)+FXZNACH
+      ZNACH(L1,NY,NX)=ZNACH(L1,NY,NX)+FXZNACH 
       ZNACH(L0,NY,NX)=ZNACH(L0,NY,NX)-FXZNACH
       FXZNASH=FHO*ZNASH(L0,NY,NX)
-      ZNASH(L1,NY,NX)=ZNASH(L1,NY,NX)+FXZNASH
-      ZNASH(L0,NY,NX)=ZNASH(L0,NY,NX)-FXZNASH
+      ZNASH(L1,NY,NX)=ZNASH(L1,NY,NX)+FXZNASH 
+      ZNASH(L0,NY,NX)=ZNASH(L0,NY,NX)-FXZNASH 
       FXZKASH=FHO*ZKASH(L0,NY,NX)
-      ZKASH(L1,NY,NX)=ZKASH(L1,NY,NX)+FXZKASH
+      ZKASH(L1,NY,NX)=ZKASH(L1,NY,NX)+FXZKASH 
       ZKASH(L0,NY,NX)=ZKASH(L0,NY,NX)-FXZKASH
       FXH0PO4H=FHO*H0PO4H(L0,NY,NX)
-      H0PO4H(L1,NY,NX)=H0PO4H(L1,NY,NX)+FXH0PO4H
-      H0PO4H(L0,NY,NX)=H0PO4H(L0,NY,NX)-FXH0PO4H
+      H0PO4H(L1,NY,NX)=H0PO4H(L1,NY,NX)+FXH0PO4H 
+      H0PO4H(L0,NY,NX)=H0PO4H(L0,NY,NX)-FXH0PO4H 
       FXH3PO4H=FHO*H3PO4H(L0,NY,NX)
-      H3PO4H(L1,NY,NX)=H3PO4H(L1,NY,NX)+FXH3PO4H
+      H3PO4H(L1,NY,NX)=H3PO4H(L1,NY,NX)+FXH3PO4H 
       H3PO4H(L0,NY,NX)=H3PO4H(L0,NY,NX)-FXH3PO4H
       FXZFE1PH=FHO*ZFE1PH(L0,NY,NX)
-      ZFE1PH(L1,NY,NX)=ZFE1PH(L1,NY,NX)+FXZFE1PH
+      ZFE1PH(L1,NY,NX)=ZFE1PH(L1,NY,NX)+FXZFE1PH 
       ZFE1PH(L0,NY,NX)=ZFE1PH(L0,NY,NX)-FXZFE1PH
       FXZFE2PH=FHO*ZFE2PH(L0,NY,NX)
-      ZFE2PH(L1,NY,NX)=ZFE2PH(L1,NY,NX)+FXZFE2PH
-      ZFE2PH(L0,NY,NX)=ZFE2PH(L0,NY,NX)-FXZFE2PH
+      ZFE2PH(L1,NY,NX)=ZFE2PH(L1,NY,NX)+FXZFE2PH 
+      ZFE2PH(L0,NY,NX)=ZFE2PH(L0,NY,NX)-FXZFE2PH 
       FXZCA0PH=FHO*ZCA0PH(L0,NY,NX)
-      ZCA0PH(L1,NY,NX)=ZCA0PH(L1,NY,NX)+FXZCA0PH
+      ZCA0PH(L1,NY,NX)=ZCA0PH(L1,NY,NX)+FXZCA0PH 
       ZCA0PH(L0,NY,NX)=ZCA0PH(L0,NY,NX)-FXZCA0PH
       FXZCA1PH=FHO*ZCA1PH(L0,NY,NX)
-      ZCA1PH(L1,NY,NX)=ZCA1PH(L1,NY,NX)+FXZCA1PH
-      ZCA1PH(L0,NY,NX)=ZCA1PH(L0,NY,NX)-FXZCA1PH
+      ZCA1PH(L1,NY,NX)=ZCA1PH(L1,NY,NX)+FXZCA1PH 
+      ZCA1PH(L0,NY,NX)=ZCA1PH(L0,NY,NX)-FXZCA1PH 
       FXZCA2PH=FHO*ZCA2PH(L0,NY,NX)
-      ZCA2PH(L1,NY,NX)=ZCA2PH(L1,NY,NX)+FXZCA2PH
-      ZCA2PH(L0,NY,NX)=ZCA2PH(L0,NY,NX)-FXZCA2PH
+      ZCA2PH(L1,NY,NX)=ZCA2PH(L1,NY,NX)+FXZCA2PH 
+      ZCA2PH(L0,NY,NX)=ZCA2PH(L0,NY,NX)-FXZCA2PH 
       FXZMG1PH=FHO*ZMG1PH(L0,NY,NX)
-      ZMG1PH(L1,NY,NX)=ZMG1PH(L1,NY,NX)+FXZMG1PH
+      ZMG1PH(L1,NY,NX)=ZMG1PH(L1,NY,NX)+FXZMG1PH 
       ZMG1PH(L0,NY,NX)=ZMG1PH(L0,NY,NX)-FXZMG1PH
       FXH0POBH=FHO*H0POBH(L0,NY,NX)
-      H0POBH(L1,NY,NX)=H0POBH(L1,NY,NX)+FXH0POBH
+      H0POBH(L1,NY,NX)=H0POBH(L1,NY,NX)+FXH0POBH 
       H0POBH(L0,NY,NX)=H0POBH(L0,NY,NX)-FXH0POBH
       FXH3POBH=FHO*H3POBH(L0,NY,NX)
-      H3POBH(L1,NY,NX)=H3POBH(L1,NY,NX)+FXH3POBH
-      H3POBH(L0,NY,NX)=H3POBH(L0,NY,NX)-FXH3POBH
+      H3POBH(L1,NY,NX)=H3POBH(L1,NY,NX)+FXH3POBH 
+      H3POBH(L0,NY,NX)=H3POBH(L0,NY,NX)-FXH3POBH 
       FXZFE1BH=FHO*ZFE1BH(L0,NY,NX)
-      ZFE1BH(L1,NY,NX)=ZFE1BH(L1,NY,NX)+FXZFE1BH
-      ZFE1BH(L0,NY,NX)=ZFE1BH(L0,NY,NX)-FXZFE1BH
+      ZFE1BH(L1,NY,NX)=ZFE1BH(L1,NY,NX)+FXZFE1BH 
+      ZFE1BH(L0,NY,NX)=ZFE1BH(L0,NY,NX)-FXZFE1BH 
       FXZFE2BH=FHO*ZFE2BH(L0,NY,NX)
-      ZFE2BH(L1,NY,NX)=ZFE2BH(L1,NY,NX)+FXZFE2BH
-      ZFE2BH(L0,NY,NX)=ZFE2BH(L0,NY,NX)-FXZFE2BH
+      ZFE2BH(L1,NY,NX)=ZFE2BH(L1,NY,NX)+FXZFE2BH 
+      ZFE2BH(L0,NY,NX)=ZFE2BH(L0,NY,NX)-FXZFE2BH 
       FXZCA0BH=FHO*ZCA0BH(L0,NY,NX)
-      ZCA0BH(L1,NY,NX)=ZCA0BH(L1,NY,NX)+FXZCA0BH
-      ZCA0BH(L0,NY,NX)=ZCA0BH(L0,NY,NX)-FXZCA0BH
+      ZCA0BH(L1,NY,NX)=ZCA0BH(L1,NY,NX)+FXZCA0BH 
+      ZCA0BH(L0,NY,NX)=ZCA0BH(L0,NY,NX)-FXZCA0BH 
       FXZCA1BH=FHO*ZCA1BH(L0,NY,NX)
-      ZCA1BH(L1,NY,NX)=ZCA1BH(L1,NY,NX)+FXZCA1BH
+      ZCA1BH(L1,NY,NX)=ZCA1BH(L1,NY,NX)+FXZCA1BH 
       ZCA1BH(L0,NY,NX)=ZCA1BH(L0,NY,NX)-FXZCA1BH
       FXZCA2BH=FHO*ZCA2BH(L0,NY,NX)
-      ZCA2BH(L1,NY,NX)=ZCA2BH(L1,NY,NX)+FXZCA2BH
+      ZCA2BH(L1,NY,NX)=ZCA2BH(L1,NY,NX)+FXZCA2BH 
       ZCA2BH(L0,NY,NX)=ZCA2BH(L0,NY,NX)-FXZCA2BH
       FXZMG1BH=FHO*ZMG1BH(L0,NY,NX)
-      ZMG1BH(L1,NY,NX)=ZMG1BH(L1,NY,NX)+FXZMG1BH
-      ZMG1BH(L0,NY,NX)=ZMG1BH(L0,NY,NX)-FXZMG1BH
+      ZMG1BH(L1,NY,NX)=ZMG1BH(L1,NY,NX)+FXZMG1BH 
+      ZMG1BH(L0,NY,NX)=ZMG1BH(L0,NY,NX)-FXZMG1BH 
       ENDIF
 C
 C     SOIL MACROPORE AQUEOUS GASES
 C
       FXCO2SH=FHO*CO2SH(L0,NY,NX)
-      CO2SH(L1,NY,NX)=CO2SH(L1,NY,NX)+FXCO2SH
+      CO2SH(L1,NY,NX)=CO2SH(L1,NY,NX)+FXCO2SH 
       CO2SH(L0,NY,NX)=CO2SH(L0,NY,NX)-FXCO2SH
       FXCH4SH=FHO*CH4SH(L0,NY,NX)
-      CH4SH(L1,NY,NX)=CH4SH(L1,NY,NX)+FXCH4SH
+      CH4SH(L1,NY,NX)=CH4SH(L1,NY,NX)+FXCH4SH 
       CH4SH(L0,NY,NX)=CH4SH(L0,NY,NX)-FXCH4SH
       FXOXYSH=FHO*OXYSH(L0,NY,NX)
-      OXYSH(L1,NY,NX)=OXYSH(L1,NY,NX)+FXOXYSH
-      OXYSH(L0,NY,NX)=OXYSH(L0,NY,NX)-FXOXYSH
+      OXYSH(L1,NY,NX)=OXYSH(L1,NY,NX)+FXOXYSH 
+      OXYSH(L0,NY,NX)=OXYSH(L0,NY,NX)-FXOXYSH 
       FXZ2GSH=FHO*Z2GSH(L0,NY,NX)
-      Z2GSH(L1,NY,NX)=Z2GSH(L1,NY,NX)+FXZ2GSH
-      Z2GSH(L0,NY,NX)=Z2GSH(L0,NY,NX)-FXZ2GSH
+      Z2GSH(L1,NY,NX)=Z2GSH(L1,NY,NX)+FXZ2GSH 
+      Z2GSH(L0,NY,NX)=Z2GSH(L0,NY,NX)-FXZ2GSH 
       FXZ2OSH=FHO*Z2OSH(L0,NY,NX)
-      Z2OSH(L1,NY,NX)=Z2OSH(L1,NY,NX)+FXZ2OSH
+      Z2OSH(L1,NY,NX)=Z2OSH(L1,NY,NX)+FXZ2OSH 
       Z2OSH(L0,NY,NX)=Z2OSH(L0,NY,NX)-FXZ2OSH
-      ENDIF
+      ENDIF 
       ENDIF
 C
 C     SOIL ORGANIC MATTER
@@ -7835,12 +9275,12 @@ C
       IF(IFLGL(L,3).EQ.0.AND.L0.NE.0
      2.AND.VOLX(L0,NY,NX).GT.ZEROS(NY,NX)
      3.AND.VOLX(L1,NY,NX).GT.ZEROS(NY,NX))THEN
-      IF(L0.EQ.L.OR.CORGCI(L0,NY,NX).LE.ZERO)THEN
-      FXO=FO
-      ELSE
-      FXO=AMIN1(0.5,FO*AMIN1(10.0,CORGCI(L1,NY,NX)
-     2/CORGCI(L0,NY,NX)))
-      ENDIF
+C     IF(L0.EQ.L.OR.CORGCI(L0,NY,NX).LE.ZERO)THEN
+      FXO=FX
+C     ELSE
+C     FXO=AMIN1(1.0,FX*AMIN1(10.0,CORGCI(L1,NY,NX)
+C    2/CORGCI(L0,NY,NX)))
+C     ENDIF
       DO 7966 K=0,5
       DO 7966 N=1,7
       DO 7966 M=1,3
@@ -7904,7 +9344,7 @@ C
       FXOHA=FXO*OHA(K,L0,NY,NX)
       OHA(K,L1,NY,NX)=OHA(K,L1,NY,NX)+FXOHA
       OHA(K,L0,NY,NX)=OHA(K,L0,NY,NX)-FXOHA
-      DO 7771 M=1,4
+      DO 7771 M=1,5
       FXOSC=FXO*OSC(M,K,L0,NY,NX)
       OSC(M,K,L1,NY,NX)=OSC(M,K,L1,NY,NX)+FXOSC
       OSC(M,K,L0,NY,NX)=OSC(M,K,L0,NY,NX)-FXOSC
@@ -7920,153 +9360,159 @@ C
 7771  CONTINUE
 7781  CONTINUE
 C
-C     ROOTS
+C     SOIL PLANT MATTER
 C
       GO TO 6005
       DO 8901 NZ=1,NP(NY,NX)
       IF(WTRTL(1,L0,NZ,NY,NX).GT.ZEROP(NZ,NY,NX)
      2.AND.WTRTL(1,L1,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
       IF(L0.EQ.L.OR.DPTHZ(L1,NY,NX).LE.ZERO)THEN
-      FRO=FO
+      FRO=FX
       ELSE
-      FRO=AMIN1(0.5,FO*DPTHZ(L0,NY,NX)/DPTHZ(L1,NY,NX))
+      FRO=AMIN1(1.0,FX*DPTHZ(L0,NY,NX)/DPTHZ(L1,NY,NX))
       ENDIF
       DO 8896 N=1,MY(NZ,NY,NX)
-      FXCO2A=FRO*CO2A(N,L0,NZ,NY,NX)
-      CO2A(N,L1,NZ,NY,NX)=CO2A(N,L1,NZ,NY,NX)+FXCO2A
+C
+C     SOIL ROOT GASES
+C
+      FXCO2A=FRO*CO2A(N,L0,NZ,NY,NX) 
+      CO2A(N,L1,NZ,NY,NX)=CO2A(N,L1,NZ,NY,NX)+FXCO2A 
       CO2A(N,L0,NZ,NY,NX)=CO2A(N,L0,NZ,NY,NX)-FXCO2A
       FXOXYA=FRO*OXYA(N,L0,NZ,NY,NX)
-      OXYA(N,L1,NZ,NY,NX)=OXYA(N,L1,NZ,NY,NX)+FXOXYA
-      OXYA(N,L0,NZ,NY,NX)=OXYA(N,L0,NZ,NY,NX)-FXOXYA
+      OXYA(N,L1,NZ,NY,NX)=OXYA(N,L1,NZ,NY,NX)+FXOXYA 
+      OXYA(N,L0,NZ,NY,NX)=OXYA(N,L0,NZ,NY,NX)-FXOXYA 
       FXCH4A=FRO*CH4A(N,L0,NZ,NY,NX)
-      CH4A(N,L1,NZ,NY,NX)=CH4A(N,L1,NZ,NY,NX)+FXCH4A
+      CH4A(N,L1,NZ,NY,NX)=CH4A(N,L1,NZ,NY,NX)+FXCH4A 
       CH4A(N,L0,NZ,NY,NX)=CH4A(N,L0,NZ,NY,NX)-FXCH4A
-      FXZ2OA=FRO*Z2OA(N,L0,NZ,NY,NX)
-      Z2OA(N,L1,NZ,NY,NX)=Z2OA(N,L1,NZ,NY,NX)+FXZ2OA
-      Z2OA(N,L0,NZ,NY,NX)=Z2OA(N,L0,NZ,NY,NX)-FXZ2OA
-      FXZH3A=FRO*ZH3A(N,L0,NZ,NY,NX)
-      ZH3A(N,L1,NZ,NY,NX)=ZH3A(N,L1,NZ,NY,NX)+FXZH3A
-      ZH3A(N,L0,NZ,NY,NX)=ZH3A(N,L0,NZ,NY,NX)-FXZH3A
+      FXZ2OA=FRO*Z2OA(N,L0,NZ,NY,NX) 
+      Z2OA(N,L1,NZ,NY,NX)=Z2OA(N,L1,NZ,NY,NX)+FXZ2OA 
+      Z2OA(N,L0,NZ,NY,NX)=Z2OA(N,L0,NZ,NY,NX)-FXZ2OA 
+      FXZH3A=FRO*ZH3A(N,L0,NZ,NY,NX) 
+      ZH3A(N,L1,NZ,NY,NX)=ZH3A(N,L1,NZ,NY,NX)+FXZH3A 
+      ZH3A(N,L0,NZ,NY,NX)=ZH3A(N,L0,NZ,NY,NX)-FXZH3A 
       FXH2GA=FRO*H2GA(N,L0,NZ,NY,NX)
-      H2GA(N,L1,NZ,NY,NX)=H2GA(N,L1,NZ,NY,NX)+FXH2GA
-      H2GA(N,L0,NZ,NY,NX)=H2GA(N,L0,NZ,NY,NX)-FXH2GA
-      FXCO2P=FRO*CO2P(N,L0,NZ,NY,NX)
-      CO2P(N,L1,NZ,NY,NX)=CO2P(N,L1,NZ,NY,NX)+FXCO2P
-      CO2P(N,L0,NZ,NY,NX)=CO2P(N,L0,NZ,NY,NX)-FXCO2P
-      FXOXYP=FRO*OXYP(N,L0,NZ,NY,NX)
-      OXYP(N,L1,NZ,NY,NX)=OXYP(N,L1,NZ,NY,NX)+FXOXYP
+      H2GA(N,L1,NZ,NY,NX)=H2GA(N,L1,NZ,NY,NX)+FXH2GA 
+      H2GA(N,L0,NZ,NY,NX)=H2GA(N,L0,NZ,NY,NX)-FXH2GA 
+      FXCO2P=FRO*CO2P(N,L0,NZ,NY,NX) 
+      CO2P(N,L1,NZ,NY,NX)=CO2P(N,L1,NZ,NY,NX)+FXCO2P 
+      CO2P(N,L0,NZ,NY,NX)=CO2P(N,L0,NZ,NY,NX)-FXCO2P 
+      FXOXYP=FRO*OXYP(N,L0,NZ,NY,NX) 
+      OXYP(N,L1,NZ,NY,NX)=OXYP(N,L1,NZ,NY,NX)+FXOXYP 
       OXYP(N,L0,NZ,NY,NX)=OXYP(N,L0,NZ,NY,NX)-FXOXYP
-      FXCH4P=FRO*CH4P(N,L0,NZ,NY,NX)
-      CH4P(N,L1,NZ,NY,NX)=CH4P(N,L1,NZ,NY,NX)+FXCH4P
-      CH4P(N,L0,NZ,NY,NX)=CH4P(N,L0,NZ,NY,NX)-FXCH4P
-      FXZ2OP=FRO*Z2OP(N,L0,NZ,NY,NX)
-      Z2OP(N,L1,NZ,NY,NX)=Z2OP(N,L1,NZ,NY,NX)+FXZ2OP
+      FXCH4P=FRO*CH4P(N,L0,NZ,NY,NX) 
+      CH4P(N,L1,NZ,NY,NX)=CH4P(N,L1,NZ,NY,NX)+FXCH4P 
+      CH4P(N,L0,NZ,NY,NX)=CH4P(N,L0,NZ,NY,NX)-FXCH4P 
+      FXZ2OP=FRO*Z2OP(N,L0,NZ,NY,NX) 
+      Z2OP(N,L1,NZ,NY,NX)=Z2OP(N,L1,NZ,NY,NX)+FXZ2OP 
       Z2OP(N,L0,NZ,NY,NX)=Z2OP(N,L0,NZ,NY,NX)-FXZ2OP
-      FXZH3P=FRO*ZH3P(N,L0,NZ,NY,NX)
-      ZH3P(N,L1,NZ,NY,NX)=ZH3P(N,L1,NZ,NY,NX)+FXZH3P
+      FXZH3P=FRO*ZH3P(N,L0,NZ,NY,NX) 
+      ZH3P(N,L1,NZ,NY,NX)=ZH3P(N,L1,NZ,NY,NX)+FXZH3P 
       ZH3P(N,L0,NZ,NY,NX)=ZH3P(N,L0,NZ,NY,NX)-FXZH3P
-      FXH2GP=FRO*H2GP(N,L0,NZ,NY,NX)
-      H2GP(N,L1,NZ,NY,NX)=H2GP(N,L1,NZ,NY,NX)+FXH2GP
-      H2GP(N,L0,NZ,NY,NX)=H2GP(N,L0,NZ,NY,NX)-FXH2GP
+      FXH2GP=FRO*H2GP(N,L0,NZ,NY,NX) 
+      H2GP(N,L1,NZ,NY,NX)=H2GP(N,L1,NZ,NY,NX)+FXH2GP 
+      H2GP(N,L0,NZ,NY,NX)=H2GP(N,L0,NZ,NY,NX)-FXH2GP 
+C
+C     SOIL ROOTS
+C
       DO 8871 NR=1,NRT(NZ,NY,NX)
-      FXWTRT1=FRO*WTRT1(N,L0,NR,NZ,NY,NX)
-      WTRT1(N,L1,NR,NZ,NY,NX)=WTRT1(N,L1,NR,NZ,NY,NX)+FXWTRT1
+      FXWTRT1=FRO*WTRT1(N,L0,NR,NZ,NY,NX) 
+      WTRT1(N,L1,NR,NZ,NY,NX)=WTRT1(N,L1,NR,NZ,NY,NX)+FXWTRT1 
       WTRT1(N,L0,NR,NZ,NY,NX)=WTRT1(N,L0,NR,NZ,NY,NX)-FXWTRT1
       FXWTR1N=FRO*WTRT1N(N,L0,NR,NZ,NY,NX)
-      WTRT1N(N,L1,NR,NZ,NY,NX)=WTRT1N(N,L1,NR,NZ,NY,NX)+FXWTR1N
-      WTRT1N(N,L0,NR,NZ,NY,NX)=WTRT1N(N,L0,NR,NZ,NY,NX)-FXWTR1N
+      WTRT1N(N,L1,NR,NZ,NY,NX)=WTRT1N(N,L1,NR,NZ,NY,NX)+FXWTR1N 
+      WTRT1N(N,L0,NR,NZ,NY,NX)=WTRT1N(N,L0,NR,NZ,NY,NX)-FXWTR1N 
       FXWTR1P=FRO*WTRT1P(N,L0,NR,NZ,NY,NX)
-      WTRT1P(N,L1,NR,NZ,NY,NX)=WTRT1P(N,L1,NR,NZ,NY,NX)+FXWTR1P
+      WTRT1P(N,L1,NR,NZ,NY,NX)=WTRT1P(N,L1,NR,NZ,NY,NX)+FXWTR1P 
       WTRT1P(N,L0,NR,NZ,NY,NX)=WTRT1P(N,L0,NR,NZ,NY,NX)-FXWTR1P
       FXWTRT2=FRO*WTRT2(N,L0,NR,NZ,NY,NX)
-      WTRT2(N,L1,NR,NZ,NY,NX)=WTRT2(N,L1,NR,NZ,NY,NX)+FXWTRT2
+      WTRT2(N,L1,NR,NZ,NY,NX)=WTRT2(N,L1,NR,NZ,NY,NX)+FXWTRT2 
       WTRT2(N,L0,NR,NZ,NY,NX)=WTRT2(N,L0,NR,NZ,NY,NX)-FXWTRT2
-      FXWTR2N=FRO*WTRT2N(N,L0,NR,NZ,NY,NX)
-      WTRT2N(N,L1,NR,NZ,NY,NX)=WTRT2N(N,L1,NR,NZ,NY,NX)+FXWTR2N
-      WTRT2N(N,L0,NR,NZ,NY,NX)=WTRT2N(N,L0,NR,NZ,NY,NX)-FXWTR2N
+      FXWTR2N=FRO*WTRT2N(N,L0,NR,NZ,NY,NX) 
+      WTRT2N(N,L1,NR,NZ,NY,NX)=WTRT2N(N,L1,NR,NZ,NY,NX)+FXWTR2N 
+      WTRT2N(N,L0,NR,NZ,NY,NX)=WTRT2N(N,L0,NR,NZ,NY,NX)-FXWTR2N 
       FXWTR2P=FRO*WTRT2P(N,L0,NR,NZ,NY,NX)
-      WTRT2P(N,L1,NR,NZ,NY,NX)=WTRT2P(N,L1,NR,NZ,NY,NX)+FXWTR2P
+      WTRT2P(N,L1,NR,NZ,NY,NX)=WTRT2P(N,L1,NR,NZ,NY,NX)+FXWTR2P 
       WTRT2P(N,L0,NR,NZ,NY,NX)=WTRT2P(N,L0,NR,NZ,NY,NX)-FXWTR2P
-      FXRTLG1=FRO*RTLG1(N,L0,NR,NZ,NY,NX)
+      FXRTLG1=FRO*RTLG1(N,L0,NR,NZ,NY,NX) 
       RTLG1(N,L1,NR,NZ,NY,NX)=RTLG1(N,L1,NR,NZ,NY,NX)+FXRTLG1
       RTLG1(N,L0,NR,NZ,NY,NX)=RTLG1(N,L0,NR,NZ,NY,NX)-FXRTLG1
       FXRTLG2=FRO*RTLG2(N,L0,NR,NZ,NY,NX)
       RTLG2(N,L1,NR,NZ,NY,NX)=RTLG2(N,L1,NR,NZ,NY,NX)+FXRTLG2
       RTLG2(N,L0,NR,NZ,NY,NX)=RTLG2(N,L0,NR,NZ,NY,NX)-FXRTLG2
-      FXRTN2=FRO*RTN2(N,L0,NR,NZ,NY,NX)
+      FXRTN2=FRO*RTN2(N,L0,NR,NZ,NY,NX) 
       RTN2(N,L1,NR,NZ,NY,NX)=RTN2(N,L1,NR,NZ,NY,NX)+FXRTN2
       RTN2(N,L0,NR,NZ,NY,NX)=RTN2(N,L0,NR,NZ,NY,NX)-FXRTN2
 8871  CONTINUE
       FXCPOOLR=FRO*CPOOLR(N,L0,NZ,NY,NX)
-      CPOOLR(N,L1,NZ,NY,NX)=CPOOLR(N,L1,NZ,NY,NX)+FXCPOOLR
+      CPOOLR(N,L1,NZ,NY,NX)=CPOOLR(N,L1,NZ,NY,NX)+FXCPOOLR 
       CPOOLR(N,L0,NZ,NY,NX)=CPOOLR(N,L0,NZ,NY,NX)-FXCPOOLR
-      FXZPOOLR=FRO*ZPOOLR(N,L0,NZ,NY,NX)
-      ZPOOLR(N,L1,NZ,NY,NX)=ZPOOLR(N,L1,NZ,NY,NX)+FXZPOOLR
+      FXZPOOLR=FRO*ZPOOLR(N,L0,NZ,NY,NX) 
+      ZPOOLR(N,L1,NZ,NY,NX)=ZPOOLR(N,L1,NZ,NY,NX)+FXZPOOLR 
       ZPOOLR(N,L0,NZ,NY,NX)=ZPOOLR(N,L0,NZ,NY,NX)-FXZPOOLR
-      FXPPOOLR=FRO*PPOOLR(N,L0,NZ,NY,NX)
-      PPOOLR(N,L1,NZ,NY,NX)=PPOOLR(N,L1,NZ,NY,NX)+FXPPOOLR
+      FXPPOOLR=FRO*PPOOLR(N,L0,NZ,NY,NX) 
+      PPOOLR(N,L1,NZ,NY,NX)=PPOOLR(N,L1,NZ,NY,NX)+FXPPOOLR 
       PPOOLR(N,L0,NZ,NY,NX)=PPOOLR(N,L0,NZ,NY,NX)-FXPPOOLR
-      FXWTRTL=FRO*WTRTL(N,L0,NZ,NY,NX)
+      FXWTRTL=FRO*WTRTL(N,L0,NZ,NY,NX) 
       WTRTL(N,L1,NZ,NY,NX)=WTRTL(N,L1,NZ,NY,NX)+FXWTRTL
       WTRTL(N,L0,NZ,NY,NX)=WTRTL(N,L0,NZ,NY,NX)-FXWTRTL
       FXWTRTD=FRO*WTRTD(N,L0,NZ,NY,NX)
-      WTRTD(N,L1,NZ,NY,NX)=WTRTD(N,L1,NZ,NY,NX)+FXWTRTD
-      WTRTD(N,L0,NZ,NY,NX)=WTRTD(N,L0,NZ,NY,NX)-FXWTRTD
+      WTRTD(N,L1,NZ,NY,NX)=WTRTD(N,L1,NZ,NY,NX)+FXWTRTD 
+      WTRTD(N,L0,NZ,NY,NX)=WTRTD(N,L0,NZ,NY,NX)-FXWTRTD 
       FXWSRTL=FRO*WSRTL(N,L0,NZ,NY,NX)
-      WSRTL(N,L1,NZ,NY,NX)=WSRTL(N,L1,NZ,NY,NX)+FXWSRTL
+      WSRTL(N,L1,NZ,NY,NX)=WSRTL(N,L1,NZ,NY,NX)+FXWSRTL 
       WSRTL(N,L0,NZ,NY,NX)=WSRTL(N,L0,NZ,NY,NX)-FXWSRTL
-      FXRTN1=FRO*RTN1(N,L0,NZ,NY,NX)
+      FXRTN1=FRO*RTN1(N,L0,NZ,NY,NX) 
       RTN1(N,L1,NZ,NY,NX)=RTN1(N,L1,NZ,NY,NX)+FXRTN1
       RTN1(N,L0,NZ,NY,NX)=RTN1(N,L0,NZ,NY,NX)-FXRTN1
-      FXRTNL=FRO*RTNL(N,L0,NZ,NY,NX)
-      RTNL(N,L1,NZ,NY,NX)=RTNL(N,L1,NZ,NY,NX)+FXRTNL
+      FXRTNL=FRO*RTNL(N,L0,NZ,NY,NX) 
+      RTNL(N,L1,NZ,NY,NX)=RTNL(N,L1,NZ,NY,NX)+FXRTNL 
       RTNL(N,L0,NZ,NY,NX)=RTNL(N,L0,NZ,NY,NX)-FXRTNL
-      FXRTLGP=FRO*RTLGP(N,L0,NZ,NY,NX)
-      RTLGP(N,L1,NZ,NY,NX)=RTLGP(N,L1,NZ,NY,NX)+FXRTLGP
+      FXRTLGP=FRO*RTLGP(N,L0,NZ,NY,NX) 
+      RTLGP(N,L1,NZ,NY,NX)=RTLGP(N,L1,NZ,NY,NX)+FXRTLGP 
       RTLGP(N,L0,NZ,NY,NX)=RTLGP(N,L0,NZ,NY,NX)-FXRTLGP
-      FXRTDNP=FRO*RTDNP(N,L0,NZ,NY,NX)
-      RTDNP(N,L1,NZ,NY,NX)=RTDNP(N,L1,NZ,NY,NX)+FXRTDNP
-      RTDNP(N,L0,NZ,NY,NX)=RTDNP(N,L0,NZ,NY,NX)-FXRTDNP
-      FXRTVLP=FRO*RTVLP(N,L0,NZ,NY,NX)
-      RTVLP(N,L1,NZ,NY,NX)=RTVLP(N,L1,NZ,NY,NX)+FXRTVLP
+      FXRTDNP=FRO*RTDNP(N,L0,NZ,NY,NX) 
+      RTDNP(N,L1,NZ,NY,NX)=RTDNP(N,L1,NZ,NY,NX)+FXRTDNP 
+      RTDNP(N,L0,NZ,NY,NX)=RTDNP(N,L0,NZ,NY,NX)-FXRTDNP 
+      FXRTVLP=FRO*RTVLP(N,L0,NZ,NY,NX) 
+      RTVLP(N,L1,NZ,NY,NX)=RTVLP(N,L1,NZ,NY,NX)+FXRTVLP 
       RTVLP(N,L0,NZ,NY,NX)=RTVLP(N,L0,NZ,NY,NX)-FXRTVLP
       FXRTVLW=FRO*RTVLW(N,L0,NZ,NY,NX)
-      RTVLW(N,L1,NZ,NY,NX)=RTVLW(N,L1,NZ,NY,NX)+FXRTVLW
+      RTVLW(N,L1,NZ,NY,NX)=RTVLW(N,L1,NZ,NY,NX)+FXRTVLW 
       RTVLW(N,L0,NZ,NY,NX)=RTVLW(N,L0,NZ,NY,NX)-FXRTVLW
-      FXRRAD1=FRO*RRAD1(N,L0,NZ,NY,NX)
-      RRAD1(N,L1,NZ,NY,NX)=RRAD1(N,L1,NZ,NY,NX)+FXRRAD1
+      FXRRAD1=FRO*RRAD1(N,L0,NZ,NY,NX) 
+      RRAD1(N,L1,NZ,NY,NX)=RRAD1(N,L1,NZ,NY,NX)+FXRRAD1 
       RRAD1(N,L0,NZ,NY,NX)=RRAD1(N,L0,NZ,NY,NX)-FXRRAD1
-      FXRRAD2=FRO*RRAD2(N,L0,NZ,NY,NX)
-      RRAD2(N,L1,NZ,NY,NX)=RRAD2(N,L1,NZ,NY,NX)+FXRRAD2
-      RRAD2(N,L0,NZ,NY,NX)=RRAD2(N,L0,NZ,NY,NX)-FXRRAD2
-      FXRTARP=FRO*RTARP(N,L0,NZ,NY,NX)
-      RTARP(N,L1,NZ,NY,NX)=RTARP(N,L1,NZ,NY,NX)+FXRTARP
+      FXRRAD2=FRO*RRAD2(N,L0,NZ,NY,NX) 
+      RRAD2(N,L1,NZ,NY,NX)=RRAD2(N,L1,NZ,NY,NX)+FXRRAD2 
+      RRAD2(N,L0,NZ,NY,NX)=RRAD2(N,L0,NZ,NY,NX)-FXRRAD2 
+      FXRTARP=FRO*RTARP(N,L0,NZ,NY,NX) 
+      RTARP(N,L1,NZ,NY,NX)=RTARP(N,L1,NZ,NY,NX)+FXRTARP 
       RTARP(N,L0,NZ,NY,NX)=RTARP(N,L0,NZ,NY,NX)-FXRTARP
-      FXRTLGA=FRO*RTLGA(N,L0,NZ,NY,NX)
-      RTLGA(N,L1,NZ,NY,NX)=RTLGA(N,L1,NZ,NY,NX)+FXRTLGA
-      RTLGA(N,L0,NZ,NY,NX)=RTLGA(N,L0,NZ,NY,NX)-FXRTLGA
+      FXRTLGA=FRO*RTLGA(N,L0,NZ,NY,NX) 
+      RTLGA(N,L1,NZ,NY,NX)=RTLGA(N,L1,NZ,NY,NX)+FXRTLGA 
+      RTLGA(N,L0,NZ,NY,NX)=RTLGA(N,L0,NZ,NY,NX)-FXRTLGA 
 8896  CONTINUE
 C
-C     ROOT NODULES
+C     SOIL ROOT NODULES
 C
-      FXWTNDL=FRO*WTNDL(L0,NZ,NY,NX)
-      WTNDL(L1,NZ,NY,NX)=WTNDL(L1,NZ,NY,NX)+FXWTNDL
-      WTNDL(L0,NZ,NY,NX)=WTNDL(L0,NZ,NY,NX)-FXWTNDL
-      FXWTNDLN=FRO*WTNDLN(L0,NZ,NY,NX)
-      WTNDLN(L1,NZ,NY,NX)=WTNDLN(L1,NZ,NY,NX)+FXWTNDLN
+      FXWTNDL=FRO*WTNDL(L0,NZ,NY,NX) 
+      WTNDL(L1,NZ,NY,NX)=WTNDL(L1,NZ,NY,NX)+FXWTNDL 
+      WTNDL(L0,NZ,NY,NX)=WTNDL(L0,NZ,NY,NX)-FXWTNDL 
+      FXWTNDLN=FRO*WTNDLN(L0,NZ,NY,NX) 
+      WTNDLN(L1,NZ,NY,NX)=WTNDLN(L1,NZ,NY,NX)+FXWTNDLN 
       WTNDLN(L0,NZ,NY,NX)=WTNDLN(L0,NZ,NY,NX)-FXWTNDLN
       FXWTNDLP=FRO*WTNDLP(L0,NZ,NY,NX)
-      WTNDLP(L1,NZ,NY,NX)=WTNDLP(L1,NZ,NY,NX)+FXWTNDLP
+      WTNDLP(L1,NZ,NY,NX)=WTNDLP(L1,NZ,NY,NX)+FXWTNDLP 
       WTNDLP(L0,NZ,NY,NX)=WTNDLP(L0,NZ,NY,NX)-FXWTNDLP
       FXCPOOLN=FRO*CPOOLN(L0,NZ,NY,NX)
-      CPOOLN(L1,NZ,NY,NX)=CPOOLN(L1,NZ,NY,NX)+FXCPOOLN
+      CPOOLN(L1,NZ,NY,NX)=CPOOLN(L1,NZ,NY,NX)+FXCPOOLN 
       CPOOLN(L0,NZ,NY,NX)=CPOOLN(L0,NZ,NY,NX)-FXCPOOLN
-      FXZPOOLN=FRO*ZPOOLN(L0,NZ,NY,NX)
-      ZPOOLN(L1,NZ,NY,NX)=ZPOOLN(L1,NZ,NY,NX)+FXZPOOLN
+      FXZPOOLN=FRO*ZPOOLN(L0,NZ,NY,NX) 
+      ZPOOLN(L1,NZ,NY,NX)=ZPOOLN(L1,NZ,NY,NX)+FXZPOOLN 
       ZPOOLN(L0,NZ,NY,NX)=ZPOOLN(L0,NZ,NY,NX)-FXZPOOLN
       FXPPOOLN=FRO*PPOOLN(L0,NZ,NY,NX)
-      PPOOLN(L1,NZ,NY,NX)=PPOOLN(L1,NZ,NY,NX)+FXPPOOLN
-      PPOOLN(L0,NZ,NY,NX)=PPOOLN(L0,NZ,NY,NX)-FXPPOOLN
+      PPOOLN(L1,NZ,NY,NX)=PPOOLN(L1,NZ,NY,NX)+FXPPOOLN 
+      PPOOLN(L0,NZ,NY,NX)=PPOOLN(L0,NZ,NY,NX)-FXPPOOLN 
       ENDIF
 8901  CONTINUE
       ENDIF
@@ -8078,11 +9524,12 @@ C
       CDPTHY(L1,NY,NX)=CDPTHY(L0,NY,NX)
       ENDIF
       ENDIF
-C     IF(NX.EQ.1)THEN
-C     WRITE(*,5591)'SOIL2',I,J,NX,NY,L,L0,L1,NN,DDLYRX(NN),FX,FO
-C    1,ZNH4SH(L0,NY,NX),ZNH4SH(L1,NY,NX),FXZNH4SH
+C     IF((I/30)*30.EQ.I.AND.J.EQ.15)THEN
+C     WRITE(*,5591)'SOIL2',I,J,NFZ,NX,NY,L,L0,L1,NN,DDLYRX(NN),FX,FO 
+C    1,ZNH4SH(L0,NY,NX),ZNH4SH(L1,NY,NX),FXZNH4SH 
 C    1,BKDS(L0,NY,NX),BKDS(L1,NY,NX),FXBKDS,FXVOLW
 C    5,ORGC(L0,NY,NX),ORGC(L1,NY,NX),CORGCI(L0,NY,NX),CORGCI(L1,NY,NX)
+C    5,VHCM(L0,NY,NX),VHCM(L1,NY,NX),VHCP(L0,NY,NX),VHCP(L1,NY,NX)
 C    5,CLAY(L0,NY,NX),CLAY(L1,NY,NX),SILT(L0,NY,NX),SILT(L1,NY,NX)
 C    5,SAND(L0,NY,NX),SAND(L1,NY,NX),ORGC(L0,NY,NX),ORGC(L1,NY,NX)
 C    2,VOLA(L0,NY,NX),VOLW(L0,NY,NX),VOLI(L0,NY,NX),VOLP(L0,NY,NX)
@@ -8092,32 +9539,43 @@ C    6,DLYR(3,L0,NY,NX),DLYR(3,L1,NY,NX)
 C    4,VOLA(L0,NY,NX)+VOLA(L1,NY,NX),VOLW(L0,NY,NX)+VOLW(L1,NY,NX)
 C    4,VOLI(L0,NY,NX)+VOLI(L1,NY,NX),VOLP(L0,NY,NX)+VOLP(L1,NY,NX)
 C    4,CDPTH(L0,NY,NX),CDPTH(L1,NY,NX)
+C    5,PCAPD(L0,NY,NX),PCAPM(L1,NY,NX),FXPCAPD
+C    5,((OMC(M,N,1,L0,NY,NX),M=1,3),N=1,7)
+C    6,((OMC(M,N,1,L1,NY,NX),M=1,3),N=1,7)
 C    5,(OSC(M,4,L0,NY,NX),M=1,2),(OSC(M,4,L1,NY,NX),M=1,2)
+C    5,(FXO*OSC(M,4,L0,NY,NX),M=1,2),(FXO*OSC(M,4,L1,NY,NX),M=1,2)
+C    5,(ORC(M,4,L0,NY,NX),M=1,2),(ORC(M,4,L1,NY,NX),M=1,2)
 C    6,((OSC(M,4,L0,NY,NX)+OSC(M,4,L1,NY,NX)),M=1,2)
 C    5,(OQC(K,L0,NY,NX),K=0,4),(OQC(K,L1,NY,NX),K=0,4)
 C    6,DLYR(3,L0,NY,NX),DLYR(3,L1,NY,NX)
 C    5,TKS(L0,NY,NX),TKS(L1,NY,NX),VHCP(L0,NY,NX),VHCP(L1,NY,NX)
 C    6,TKS(L0,NY,NX)*VHCP(L0,NY,NX)+TKS(L1,NY,NX)*VHCP(L1,NY,NX)
-C    7,VHCM(L0,NY,NX),VHCM(L1,NY,NX),ENGY0,ENGY1,FXENGY
+C    7,VHCM(L0,NY,NX),VHCM(L1,NY,NX),ENGY0,ENGY1,FXENGY 
 C    6,ZNH4S(L0,NY,NX),ZNH4B(L0,NY,NX),ZNH3S(L0,NY,NX),ZNH3B(L0,NY,NX)
-C    6,ZNH4S(L1,NY,NX),ZNH4B(L1,NY,NX),ZNH3S(L1,NY,NX),ZNH3B(L1,NY,NX)
+C    6,ZNH4S(L1,NY,NX),ZNH4B(L1,NY,NX),ZNH3S(L1,NY,NX),ZNH3B(L1,NY,NX)    
 C    6,OQAH(K,L,NY,NX),OQAH(K,L0,NY,NX),OQAH(K,L1,NY,NX),FXOQAH
 C    7,CH4G(L0,NY,NX),CH4G(L1,NY,NX),FXCH4G
 C    6,(WTRT1(1,L1,NR,2,NY,NX),NR=1,NRT(1,NY,NX))
 C    6,(WTRT2(1,L1,NR,2,NY,NX),NR=1,NRT(1,NY,NX))
 C    6,WTRTL(1,L1,2,NY,NX),WTNDL(L1,2,NY,NX)
 C    6,CPOOLR(1,L1,2,NY,NX),ZPOOLR(1,L1,2,NY,NX)
-C    6,OXYA(1,L1,2,NY,NX),OXYP(1,L1,2,NY,NX)
+C    6,OXYA(1,L1,2,NY,NX),OXYP(1,L1,2,NY,NX) 
 C    6,(WTRT1(1,L0,NR,2,NY,NX),NR=1,NRT(1,NY,NX))
 C    6,(WTRT2(1,L0,NR,2,NY,NX),NR=1,NRT(1,NY,NX))
 C    6,WTRTL(1,L0,2,NY,NX),WTNDL(L0,2,NY,NX)
 C    6,CPOOLR(1,L0,2,NY,NX),ZPOOLR(1,L0,2,NY,NX)
-C    6,OXYG(L0,NY,NX),OXYS(L0,NY,NX)
-C    6,OXYG(L1,NY,NX),OXYS(L1,NY,NX)
+C    6,OXYG(L0,NY,NX),OXYS(L0,NY,NX) 
+C    6,OXYG(L1,NY,NX),OXYS(L1,NY,NX) 
 C     ENDIF
       ENDIF
 C
 C     RESET LOWER LAYER NUMBER WITH EROSION
+C
+C     IERSNG=erosion flag from site file
+C     DLYR,DLYRI=layer depth,initial value set in soil file
+C     CDPTH=cumulative depth to bottom of soil layer
+C     CDPTHY=CDPTH used to calculate DDLYRX excluding 
+C        freeze-thaw effects 
 C
       IF(IERSNG.EQ.1.OR.IERSNG.EQ.3)THEN
       IF(L.EQ.NL(NY,NX).AND.DLYR(3,L,NY,NX)
@@ -8125,7 +9583,7 @@ C
       NL(NY,NX)=MIN(NLI(NY,NX),NL(NY,NX)+1)
       ENDIF
       IF(L.EQ.NL(NY,NX)-1.AND.CDPTH(NL(NY,NX),NY,NX)
-     2-CDPTH(L,NY,NX).LE.ZEROC)THEN
+     2-CDPTH(L,NY,NX).LE.ZERO2)THEN
       CDPTH(L,NY,NX)=CDPTH(L,NY,NX)+DLYR(3,NL(NY,NX),NY,NX)
       CDPTHY(L,NY,NX)=CDPTHY(L,NY,NX)+DLYR(3,NL(NY,NX),NY,NX)
       CDPTH(NL(NY,NX),NY,NX)=CDPTH(L,NY,NX)
@@ -8134,7 +9592,7 @@ C
       NL(NY,NX)=L
 C     WRITE(*,5595)'ERSNX2',I,J,NX,NY,L,NLI(NY,NX),NL(NY,NX)
 C    2,DLYR(3,NL(NY,NX)+1,NY,NX),CDPTH(NL(NY,NX),NY,NX)
-C    2,CDPTH(NL(NY,NX)+1,NY,NX)
+C    2,CDPTH(NL(NY,NX)+1,NY,NX) 
 5595  FORMAT(A8,7I4,12E14.6)
       ENDIF
       ENDIF
@@ -8143,24 +9601,106 @@ C    2,CDPTH(NL(NY,NX)+1,NY,NX)
 230   CONTINUE
 245   CONTINUE
       ENDIF
+C
+C     ECOSYSTEM ENERGY, CO2 FLUXES
+C
+C     TRN=total net SW+LW radiation absorbed by ecosystem
+C     HEATI=net SW+LW radiation absorbed by snowpack+litter+soil
+C        surface
+C     TLE=total ecosystem latent heat flux
+C     HEATE=latent heat flux at snowpack+litter+soil surface 
+C     TSH=total ecosystem sensible heat flux
+C     SFLXC=sensible heat flux at snowpack+litter+soil surface 
+C     TGH=total ecosystem storage heat flux
+C     HFLXC=storage heat flux at snowpack+litter+soil surface 
+C     TCAN=total ecosystem net CO2 flux
+C     TCCAN=total PFT net CO2 fixation
+C     TNBP=ecosystem net biome productivity
+C     UCO2G,UCH4G=cumulative CO2,CH4 exchange by snowpack+litter+soil 
+C     UDOCQ,UDICQ=dissolved organic,inorganic C loss through lateral
+C        and lower boundaries  
+C     UDOCD,UDICD=dissolved organic,inorganic C loss through
+C        subsurface boundaries  
+C     TXCO2=CO2 net change from all solute equilibria
+C
       TRN(NY,NX)=TRN(NY,NX)+HEATI(NY,NX)
       TLE(NY,NX)=TLE(NY,NX)+HEATE(NY,NX)
       TSH(NY,NX)=TSH(NY,NX)+HEATS(NY,NX)
       TGH(NY,NX)=TGH(NY,NX)-(HEATH(NY,NX)-HEATV(NY,NX))
-      TLEC(NY,NX)=TLEC(NY,NX)+HEATE(NY,NX)*RAC(NY,NX)
-      TSHC(NY,NX)=TSHC(NY,NX)+HEATS(NY,NX)*RAC(NY,NX)
+      TRNS(NY,NX)=TRNS(NY,NX)+HEATI(NY,NX)
+      TLES(NY,NX)=TLES(NY,NX)+HEATE(NY,NX)
+      TSHS(NY,NX)=TSHS(NY,NX)+HEATS(NY,NX)
+      TGHS(NY,NX)=TGHS(NY,NX)-(HEATH(NY,NX)-HEATV(NY,NX))
+      TNPP(NY,NX)=TGPP(NY,NX)+TRAU(NY,NX)
+C
+C     CANOPY CO2 CONCENTRATION FROM CO2 INFLUXES AND EFFLUXES
+C
+C     CO2Q,CO2E=CO2 concentrations in canopy air,atmosphere
+C     CH4Q,CH4E=CH4 concentrations in canopy air,atmosphere
+C     RAB=aerodynamic boundary layer resistance from watsub.f
+C     OXYQ,OXYE=O2 concentrations in canopy air,atmosphere
+C     CNETX=net CO2 flux in canopy air from soil+plants
+C     HNETX=net CH4 flux in canopy air from soil+plants
+C     ONETX=net O2 flux in canopy air from soil+plants
+C     OXYC=canopy air O2 content
+C
+      CNETX=XCNET(NY,NX)/AREA(3,NU(NY,NX),NY,NX)
+      HNETX=XHNET(NY,NX)/AREA(3,NU(NY,NX),NY,NX)
+      ONETX=XONET(NY,NX)/AREA(3,NU(NY,NX),NY,NX)
+      FMOLQ=1.2194E+04/TKQ(NY,NX)
+      CO2Q(NY,NX)=CO2E(NY,NX)-8.333E+04*CNETX/FMOLQ*RAB(NY,NX)/XNFH
+      CH4Q(NY,NX)=CH4E(NY,NX)-8.333E+04*HNETX/FMOLQ*RAB(NY,NX)/XNFH
+      OXYQ(NY,NX)=OXYE(NY,NX)-3.125E+04*ONETX/FMOLQ*RAB(NY,NX)/XNFH
+      OXYC(NY,NX)=OXYQ(NY,NX)*1.429E-03*273.15/TKQ(NY,NX)
+     2*ZT(NY,NX)*AREA(3,NU(NY,NX),NY,NX)
+      ZCNET(NY,NX)=ZCNET(NY,NX)+XCNET(NY,NX)
+      ZHNET(NY,NX)=ZHNET(NY,NX)+XHNET(NY,NX)
+      ZONET(NY,NX)=ZONET(NY,NX)+XONET(NY,NX)
+C     IF(ICHKF.EQ.1)THEN
+C     WRITE(*,6647)'CO2Q',I,J,NFZ,NX,NY
+C    2,CO2Q(NY,NX),CO2E(NY,NX),CNETX 
+C    2,OXYQ(NY,NX),OXYE(NY,NX),ONETX
+C    2,CH4Q(NY,NX),CH4E(NY,NX),HNETX
+C    2,OXYC(NY,NX),ZT(NY,NX) 
+C    3,RAB(NY,NX),FMOLQ,TKQ(NY,NX),TKAM(NY,NX)
+C    4,ROGOX(0,NY,NX),RCGOX(0,NY,NX),RCHOX(0,NY,NX),RC4OX(0,NY,NX)
+C    4,XOXDFS(NY,NX),XOXFLG(3,NU(NY,NX),NY,NX),TOXYZ(NY,NX)
+C    2,XOXFLG(3,0,NY,NX),XOXDFR(NY,NX) 
+C    3,(FLQGQ(NY,NX)+FLQRQ(NY,NX))*COXR(NY,NX)
+C    4,(FLQGI(NY,NX)+FLQRI(NY,NX))*COXQ(NY,NX)
+C     ENDIF
+C
+C     ECOSYSTEM C FLUXES
+C
+C     TCNET=cumulative ecosystem ne CO2 exchange
+C     TCCAN,TCAN=total,cumulative net CO2 fixation
+C     RECO=ecosystem respiration
+C     HCO2G=ground surface CO2 exchange
+C     TNBP=cumulative ecosystem net biome productivity
+C     UCO2G,UCH4G=cumulative CO2,CH4 exchange by snowpack+litter+soil 
+C     UDOCQ,UDICQ=dissolved organic,inorganic C loss through lateral
+C        and lower boundaries  
+C     UDOCD,UDICD=dissolved organic,inorganic C loss through
+C        subsurface boundaries  
+C     TXCO2=CO2 net change from all solute equilibria
+C
+      IF(NFZ.EQ.NFH)THEN
       TCNET(NY,NX)=TCCAN(NY,NX)+HCO2G(NY,NX)
       RECO(NY,NX)=RECO(NY,NX)+HCO2G(NY,NX)
       TCAN(NY,NX)=TCAN(NY,NX)+TCCAN(NY,NX)
-      TNPP(NY,NX)=TGPP(NY,NX)+TRAU(NY,NX)
       TNBP(NY,NX)=TCAN(NY,NX)+UCO2G(NY,NX)+UCH4G(NY,NX)
      2-UDOCQ(NY,NX)-UDICQ(NY,NX)-UDOCD(NY,NX)-UDICD(NY,NX)
      3+TXCO2(NY,NX)
-C     WRITE(*,6646)'TNBP',I,J,NX,NY,TNBP(NY,NX)
-C    2,TCAN(NY,NX),TCCAN(NY,NX),TCNET(NY,NX)
+C     IF(J.EQ.15.AND.NFZ.EQ.NFH)THEN
+C     WRITE(*,6647)'TNBP',I,J,NFZ,NX,NY
+C    2,HEATE(NY,NX),RAC(NY,NX)
+C    2,TNBP(NY,NX),TCAN(NY,NX),TCCAN(NY,NX),TCNET(NY,NX)
 C    2,TNPP(NY,NX),THRE(NY,NX),UCO2G(NY,NX),UCH4G(NY,NX)
 C    2,UDOCQ(NY,NX),UDICQ(NY,NX),UDOCD(NY,NX),UDICD(NY,NX)
 C    3,TXCO2(NY,NX)
+6647  FORMAT(A8,5I4,30E12.4)
+C     ENDIF
+      ENDIF
       IF(NU(NY,NX).GT.NUI(NY,NX))THEN
       DO 235 L=NUI(NY,NX),NU(NY,NX)-1
       IF(VOLX(L,NY,NX).LE.ZEROS2(NY,NX))THEN
@@ -8170,13 +9710,543 @@ C    3,TXCO2(NY,NX)
 235   CONTINUE
       ENDIF
 C
-C     MIX ALL SOIL STATE VARIABLES AND INCORPORATE ALL SURFACE
+C     FIRE
+C
+C     ICHKF=fire flag
+C
+      IF(ICHKF.EQ.1)THEN
+C
+C     RCGSK=total soil combustion from nitro.f
+C     FCBOX,FCBCH=fraction of C combusted aerobically,anaerobically
+C     RCGOX=O2-limited soil CO2 emission from trnsfr.f
+C     RCHOX=O2,CH4-unlimited soil CH4 combustion from trnsfr.f 
+C     RC4OX=O2,CH4-limited soil CH4 combustion from trnsfr.f 
+C     FCHMC,FCHGC=fraction of anaerobic C combustion to charcoal,CO2
+C     FCHMN,FCHGN=fraction of anaerobic N combustion to NH4,
+C        gaseous NOX
+C     FCHMP,FCHGP=fraction of anaerobic P combustion to H2PO4,
+C        gaseous POX
+C     FCOMC,FCOGC=fraction of aerobic C combustion to charcoal,CO2
+C     FCOMN,FGOMN=fraction of aerobic N combustion to NH4,
+C        gaseous NOX
+C     FCOMP,FCOGP=fraction of aerobic P combustion to H2PO4,
+C        gaseous POX
+C     HCBFL=heat released by soil combustion 
+C     GCBCO,GCBCH,GCBC4=combustion energy of organic C (aerobic,
+C        anaerobic), and CH4 from starts.f
+C
+      ZOX=0.0
+      POX=0.0
+      COM=0.0
+      Z4M=0.0
+      P4M=0.0
+      DO 2850 L=0,NL(NY,NX)
+      IF(RCGSK(L,NY,NX).GT.ZEROS(NY,NX))THEN
+      FCBOX=AMIN1(1.0,RCGOX(L,NY,NX)/RCGSK(L,NY,NX))
+      FCBCH=AMIN1(1.0,RCHOX(L,NY,NX)/(RCGSK(L,NY,NX)*FCHGC))
+      HCBFL(L,NY,NX)=HCBFL(L,NY,NX)+RCGOX(L,NY,NX)*GCBCO
+     2+RCHOX(L,NY,NX)/FCHGC*GCBCH+RC4OX(L,NY,NX)*GCBC4 
+C
+C     COMBUST MICROBIAL BIOMASS
+C
+C     RCBOMC,RCBOMN,RCBOMP=combustion rate of OMC,OMN,OMP from nitro.f
+C     CO2G,CH4G=soil gaseous CO2,CH4
+C     ZNH4S,H2PO4=soil NH4,H2PO4
+C     OSC(5,OSA(5=soil charcoal C,N
+C     COX,CHX,ZOX,POX=gaseous CO2,CH4,NOX,POX emissions to atmosphere
+C     COM,Z4M,P4M=C organic,N,P mineral additions to litter
+C
+      DO 2870 K=0,5
+      DO 2860 N=1,7
+      DO 2860 M=1,3
+C     CO2G(L,NY,NX)=CO2G(L,NY,NX)+RCBOMC(M,N,K,L,NY,NX)
+C    2*FCBOX*FCOGC
+      ZNH4S(L,NY,NX)=ZNH4S(L,NY,NX)+RCBOMN(M,N,K,L,NY,NX)
+     2*FCBOX*FCOMN     
+      H2PO4(L,NY,NX)=H2PO4(L,NY,NX)+RCBOMP(M,N,K,L,NY,NX)
+     2*FCBOX*FCOMP
+C     CH4G(L,NY,NX)=CH4G(L,NY,NX)+RCBOMC(M,N,K,L,NY,NX)
+C    2*FCBCH*FCHGC
+      IF(K.LE.4)THEN
+      KK=K
+      ELSE
+      KK=1
+      ENDIF
+      OSC(5,KK,L,NY,NX)=OSC(5,KK,L,NY,NX)+RCBOMC(M,N,K,L,NY,NX)
+     2*FCBCH*FCHMC 
+      OSA(5,KK,L,NY,NX)=OSA(5,KK,L,NY,NX)+RCBOMC(M,N,K,L,NY,NX)
+     2*FCBCH*FCHMC 
+      ZNH4S(L,NY,NX)=ZNH4S(L,NY,NX)+RCBOMN(M,N,K,L,NY,NX)
+     2*FCBCH*FCHMN 
+      H2PO4(L,NY,NX)=H2PO4(L,NY,NX)+RCBOMP(M,N,K,L,NY,NX)
+     2*FCBCH*FCHMP 
+      ZOX=ZOX+RCBOMN(M,N,K,L,NY,NX)*FCBOX*FCOGN     
+      POX=POX+RCBOMP(M,N,K,L,NY,NX)*FCBOX*FCOGP
+      ZOX=ZOX+RCBOMN(M,N,K,L,NY,NX)*FCBCH*FCHGN
+      POX=POX+RCBOMP(M,N,K,L,NY,NX)*FCBCH*FCHGP
+      Z4M=Z4M+RCBOMN(M,N,K,L,NY,NX)*FCBOX*FCOMN
+      P4M=P4M+RCBOMP(M,N,K,L,NY,NX)*FCBOX*FCOMP
+      COM=COM+RCBOMC(M,N,K,L,NY,NX)*FCBCH*FCHMC
+      Z4M=Z4M+RCBOMN(M,N,K,L,NY,NX)*FCBCH*FCHMN 
+      P4M=P4M+RCBOMP(M,N,K,L,NY,NX)*FCBCH*FCHMP 
+2860  CONTINUE
+2870  CONTINUE
+C
+C     COMBUST MICROBIAL RESIDUE
+C
+C     RCBORC,RCBORN,RCBORP=combustion rate of ORC,ORN,ORP from nitro.f
+C     CO2G,CH4G=soil gaseous CO2,CH4
+C     ZNH4S,H2PO4=soil NH4,H2PO4
+C     OSC(5,OSA(5=soil charcoal C,N
+C     COX,CHX,ZOX,POX=gaseous CO2,CH4,NOX,POX emissions to atmosphere
+C     COM,Z4M,P4M=C organic,N,P mineral additions to litter
+C
+      DO 2800 K=0,4
+      DO 2840 M=1,2
+C     CO2G(L,NY,NX)=CO2G(L,NY,NX)+RCBORC(M,K,L,NY,NX)
+C    2*FCBOX*FCOGC
+      ZNH4S(L,NY,NX)=ZNH4S(L,NY,NX)+RCBORN(M,K,L,NY,NX)
+     2*FCBOX*FCOMN     
+      H2PO4(L,NY,NX)=H2PO4(L,NY,NX)+RCBORP(M,K,L,NY,NX)
+     2*FCBOX*FCOMP
+C     CH4G(L,NY,NX)=CH4G(L,NY,NX)+RCBORC(M,K,L,NY,NX)
+C    2*FCBCH*FCHGC
+      OSC(5,K,L,NY,NX)=OSC(5,K,L,NY,NX)+RCBORC(M,K,L,NY,NX)
+     2*FCBCH*FCHMC 
+      OSA(5,K,L,NY,NX)=OSA(5,K,L,NY,NX)+RCBORC(M,K,L,NY,NX)
+     2*FCBCH*FCHMC 
+      ZNH4S(L,NY,NX)=ZNH4S(L,NY,NX)+RCBORN(M,K,L,NY,NX)
+     2*FCBCH*FCHMN 
+      H2PO4(L,NY,NX)=H2PO4(L,NY,NX)+RCBORP(M,K,L,NY,NX)
+     2*FCBCH*FCHMP 
+      ZOX=ZOX+RCBORN(M,K,L,NY,NX)*FCBOX*FCOGN     
+      POX=POX+RCBORP(M,K,L,NY,NX)*FCBOX*FCOGP
+      ZOX=ZOX+RCBORN(M,K,L,NY,NX)*FCBCH*FCHGN
+      POX=POX+RCBORP(M,K,L,NY,NX)*FCBCH*FCHGP
+      Z4M=Z4M+RCBORN(M,K,L,NY,NX)*FCBOX*FCOMN
+      P4M=P4M+RCBORP(M,K,L,NY,NX)*FCBOX*FCOMP
+      COM=COM+RCBORC(M,K,L,NY,NX)*FCBCH*FCHMC
+      Z4M=Z4M+RCBORN(M,K,L,NY,NX)*FCBCH*FCHMN 
+      P4M=P4M+RCBORP(M,K,L,NY,NX)*FCBCH*FCHMP 
+2840  CONTINUE
+C
+C     COMBUST DOC, DOA, DON, DOP
+C
+C     RCBOQC,RCBOQA,RCBOQN,RCBOQP=combustion rate of OQC,OQA,OQN,OQP
+C        from nitro.f
+C     CO2G,CH4G=soil gaseous CO2,CH4
+C     ZNH4S,H2PO4=soil NH4,H2PO4
+C     OSC(5,OSA(5=soil charcoal C,N
+C     COX,CHX,ZOX,POX=gaseous CO2,CH4,NOX,POX emissions to atmosphere
+C     COM,Z4M,P4M=C organic,N,P mineral additions to litter
+C
+C     CO2G(L,NY,NX)=CO2G(L,NY,NX)+(RCBOQC(K,L,NY,NX)
+C    2+RCBOQA(K,L,NY,NX))*FCBOX*FCOGC
+      ZNH4S(L,NY,NX)=ZNH4S(L,NY,NX)+RCBOQN(K,L,NY,NX)
+     2*FCBOX*FCOMN     
+      H2PO4(L,NY,NX)=H2PO4(L,NY,NX)+RCBOQP(K,L,NY,NX)
+     2*FCBOX*FCOMP
+C     CH4G(L,NY,NX)=CH4G(L,NY,NX)+(RCBOQC(K,L,NY,NX)
+C    2+RCBOQA(K,L,NY,NX))*FCBCH*FCHGC
+      OSC(5,K,L,NY,NX)=OSC(5,K,L,NY,NX)+(RCBOQC(K,L,NY,NX)
+     2+RCBOQA(K,L,NY,NX))*FCBCH*FCHMC 
+      OSA(5,K,L,NY,NX)=OSA(5,K,L,NY,NX)+(RCBOQC(K,L,NY,NX)
+     2+RCBOQA(K,L,NY,NX))*FCBCH*FCHMC
+      ZNH4S(L,NY,NX)=ZNH4S(L,NY,NX)+RCBOQN(K,L,NY,NX)
+     2*FCBCH*FCHMN 
+      H2PO4(L,NY,NX)=H2PO4(L,NY,NX)+RCBOQP(K,L,NY,NX)
+     2*FCBCH*FCHMP 
+      ZOX=ZOX+RCBOQN(K,L,NY,NX)*FCBOX*FCOGN     
+      POX=POX+RCBOQP(K,L,NY,NX)*FCBOX*FCOGP
+      ZOX=ZOX+RCBOQN(K,L,NY,NX)*FCBCH*FCHGN
+      POX=POX+RCBOQP(K,L,NY,NX)*FCBCH*FCHGP
+      Z4M=Z4M+RCBOQN(K,L,NY,NX)*FCBOX*FCOMN
+      P4M=P4M+RCBOQP(K,L,NY,NX)*FCBOX*FCOMP
+      COM=COM+(RCBOQC(K,L,NY,NX)+RCBOQA(K,L,NY,NX))*FCBCH*FCHMC
+      Z4M=Z4M+RCBOQN(K,L,NY,NX)*FCBCH*FCHMN
+      P4M=P4M+RCBOQP(K,L,NY,NX)*FCBCH*FCHMP 
+C
+C     COMBUST ADSORBED OM 
+C
+C     RCBOHC,RCBOHA,RCBOHN,RCBOHP=combustion rate of OHC,OHA,OHN,OHP
+C        from nitro.f
+C     CO2G,CH4G=soil gaseous CO2,CH4
+C     ZNH4S,H2PO4=soil NH4,H2PO4
+C     OSC(5,OSA(5=soil charcoal C,N
+C     COX,CHX,ZOX,POX=gaseous CO2,CH4,NOX,POX emissions to atmosphere
+C     COM,Z4M,P4M=C organic,N,P mineral additions to litter
+C
+C     CO2G(L,NY,NX)=CO2G(L,NY,NX)+(RCBOHC(K,L,NY,NX)
+C    2+RCBOHA(K,L,NY,NX))*FCBOX*FCOGC
+      ZNH4S(L,NY,NX)=ZNH4S(L,NY,NX)+RCBOHN(K,L,NY,NX)
+     2*FCBOX*FCOMN     
+      H2PO4(L,NY,NX)=H2PO4(L,NY,NX)+RCBOHP(K,L,NY,NX)
+     2*FCBOX*FCOMP
+C     CH4G(L,NY,NX)=CH4G(L,NY,NX)+(RCBOHC(K,L,NY,NX)
+C    2+RCBOHA(K,L,NY,NX))*FCBCH*FCHGC
+      OSC(5,K,L,NY,NX)=OSC(5,K,L,NY,NX)+(RCBOHC(K,L,NY,NX)
+     2+RCBOHA(K,L,NY,NX))*FCBCH*FCHMC 
+      OSA(5,K,L,NY,NX)=OSA(5,K,L,NY,NX)+(RCBOHC(K,L,NY,NX)
+     2+RCBOHA(K,L,NY,NX))*FCBCH*FCHMC 
+      ZNH4S(L,NY,NX)=ZNH4S(L,NY,NX)+RCBOHN(K,L,NY,NX)
+     2*FCBCH*FCHMN 
+      H2PO4(L,NY,NX)=H2PO4(L,NY,NX)+RCBOHP(K,L,NY,NX)
+     2*FCBCH*FCHMP 
+      ZOX=ZOX+RCBOHN(K,L,NY,NX)*FCBOX*FCOGN     
+      POX=POX+RCBOHP(K,L,NY,NX)*FCBOX*FCOGP
+      ZOX=ZOX+RCBOHN(K,L,NY,NX)*FCBCH*FCHGN
+      POX=POX+RCBOHP(K,L,NY,NX)*FCBCH*FCHGP
+      Z4M=Z4M+RCBOHN(K,L,NY,NX)*FCBOX*FCOMN
+      P4M=P4M+RCBOHP(K,L,NY,NX)*FCBOX*FCOMP
+      COM=COM+(RCBOHC(K,L,NY,NX)+RCBOHA(K,L,NY,NX))*FCBCH*FCHMC 
+      Z4M=Z4M+RCBOHN(K,L,NY,NX)*FCBCH*FCHMN
+      P4M=P4M+RCBOHP(K,L,NY,NX)*FCBCH*FCHMP 
+C
+C     COMBUST SOM
+C
+C     RCBOSC,RCBOSN,RCBOSP=combustion rate of OSC,OSN,OSP from nitro.f
+C     CO2G,CH4G=soil gaseous CO2,CH4
+C     ZNH4S,H2PO4=soil NH4,H2PO4
+C     OSC(5,OSA(5=soil charcoal C,N
+C     COX,CHX,ZOX,POX=gaseous CO2,CH4,NOX,POX emissions to atmosphere
+C     COM,Z4M,P4M=C organic,N,P mineral additions to litter
+C
+      DO 2830 M=1,4
+C     CO2G(L,NY,NX)=CO2G(L,NY,NX)+RCBOSC(M,K,L,NY,NX)
+C    2*FCBOX*FCOGC
+      ZNH4S(L,NY,NX)=ZNH4S(L,NY,NX)+RCBOSN(M,K,L,NY,NX)
+     2*FCBOX*FCOMN     
+      H2PO4(L,NY,NX)=H2PO4(L,NY,NX)+RCBOSP(M,K,L,NY,NX)
+     2*FCBOX*FCOMP
+C     CH4G(L,NY,NX)=CH4G(L,NY,NX)+RCBOSC(M,K,L,NY,NX)
+C    2*FCBCH*FCHGC
+      OSC(5,K,L,NY,NX)=OSC(5,K,L,NY,NX)+RCBOSC(M,K,L,NY,NX)
+     2*FCBCH*FCHMC
+      OSA(5,K,L,NY,NX)=OSA(5,K,L,NY,NX)+RCBOSA(M,K,L,NY,NX)
+     2*FCBCH*FCHMC 
+      ZNH4S(L,NY,NX)=ZNH4S(L,NY,NX)+RCBOSN(M,K,L,NY,NX)
+     2*FCBCH*FCHMN 
+      H2PO4(L,NY,NX)=H2PO4(L,NY,NX)+RCBOSP(M,K,L,NY,NX)
+     2*FCBCH*FCHMP 
+      ZOX=ZOX+RCBOSN(M,K,L,NY,NX)*FCBOX*FCOGN     
+      POX=POX+RCBOSP(M,K,L,NY,NX)*FCBOX*FCOGP
+      ZOX=ZOX+RCBOSN(M,K,L,NY,NX)*FCBCH*FCHGN
+      POX=POX+RCBOSP(M,K,L,NY,NX)*FCBCH*FCHGP
+      Z4M=Z4M+RCBOSN(M,K,L,NY,NX)*FCBOX*FCOMN
+      P4M=P4M+RCBOSP(M,K,L,NY,NX)*FCBOX*FCOMP
+      COM=COM+RCBOSC(M,K,L,NY,NX)*FCBCH*FCHMC
+      Z4M=Z4M+RCBOSN(M,K,L,NY,NX)*FCBCH*FCHMN
+      P4M=P4M+RCBOSP(M,K,L,NY,NX)*FCBCH*FCHMP 
+2830  CONTINUE
+C
+C     COMBUST CHAR
+C
+C     RCBOSC(5,RCBOSN(5,RCBOSP(5=combustion rate of OSC(5,OSN(5,OSP(5
+C        from nitro.f
+C     CO2G,CH4G=soil gaseous CO2,CH4
+C     ZNH4S,H2PO4=soil NH4,H2PO4
+C     OSC(5,OSA(5=soil charcoal C,N
+C     COX,CHX,ZOX,POX=gaseous CO2,CH4,NOX,POX emissions to atmosphere
+C     COM,Z4M,P4M=C organic,N,P mineral additions to litter
+C
+C     CO2G(L,NY,NX)=CO2G(L,NY,NX)+RCBOSC(5,K,L,NY,NX)*FCBOX
+      ZNH4S(L,NY,NX)=ZNH4S(L,NY,NX)+RCBOSN(5,K,L,NY,NX)
+     2*FCBOX*FCOMN     
+      H2PO4(L,NY,NX)=H2PO4(L,NY,NX)+RCBOSP(5,K,L,NY,NX)
+     2*FCBOX*FCOMP
+      CH4G(L,NY,NX)=CH4G(L,NY,NX)+RCBOSC(5,K,L,NY,NX)*FCBCH*FCHMC
+      ZNH4S(L,NY,NX)=ZNH4S(L,NY,NX)+RCBOSN(5,K,L,NY,NX)
+     2*FCBCH*FCHMN 
+      H2PO4(L,NY,NX)=H2PO4(L,NY,NX)+RCBOSP(5,K,L,NY,NX)
+     2*FCBCH*FCHMP
+      ZOX=ZOX+RCBOSN(5,K,L,NY,NX)*FCBOX*FCOGN     
+      POX=POX+RCBOSP(5,K,L,NY,NX)*FCBOX*FCOGP
+      ZOX=ZOX+RCBOSN(5,K,L,NY,NX)*FCBCH*FCHGN
+      POX=POX+RCBOSP(5,K,L,NY,NX)*FCBCH*FCHGP
+      Z4M=Z4M+RCBOSN(5,K,L,NY,NX)*FCBOX*FCOMN
+      P4M=P4M+RCBOSP(5,K,L,NY,NX)*FCBOX*FCOMP
+      Z4M=Z4M+RCBOSN(5,K,L,NY,NX)*FCBCH*FCHMN
+      P4M=P4M+RCBOSP(5,K,L,NY,NX)*FCBCH*FCHMP 
+      RCHOX(L,NY,NX)=RCHOX(L,NY,NX)+RCBOSC(5,K,L,NY,NX)*FCBCH*FCHMC
+      TLCO2G=TLCO2G+RCBOSC(5,K,L,NY,NX)*FCBCH*FCHMC 
+C     WRITE(*,1188)'RCGSKL',I,J,NFZ,NX,NY,L,K,RCGSK(L,NY,NX)
+C    2,RCGSK(L,NY,NX)*2.667,ROGOX(L,NY,NX),FCBOX,FCBCH,FCBOX+FCBCH 
+C    3,HCBFL(L,NY,NX),(RCBOSC(M,K,L,NY,NX),M=1,4),RCBOSC(5,K,L,NY,NX)
+C    4,OSC(5,K,L,NY,NX),RCBOSN(5,K,L,NY,NX),OSN(5,K,L,NY,NX)
+C    5,RCGOX(L,NY,NX),RCHOX(L,NY,NX),COM,ZOX,Z4M
+C    6,ROGOX(L,NY,NX)/2.667+RCHOX(L,NY,NX)/FCHGC
+C    4,VNOXG(NY,NX),VNOXR(NY,NX)
+1188  FORMAT(A8,7I4,30F16.8)
+2800  CONTINUE
+C
+C     FIRE BOUNDARY FLUXES
+C
+C     VCO2G,VCH4G=fire CO2,CH4 emission
+C     RCGOX=O2-limited soil CO2 emission from trnsfr.f
+C     RCHOX=O2,CH4-unlimited soil CH4 combustion from trnsfr.f 
+C     ZN2GIN=cumulative surface gas N2,N2O,NH3 exchange
+C     TPIN=cumulative surface H2PO4,HPO4 exchange
+C     TLRSDC=total landscape litter C
+C     TLNH4=total landscape NH4
+C     TLPO4=total landscape PO4
+C     VCOXFS=fire SOC loss
+C     VNOXG,VPOXG=fire NOX,POX emission
+C
+      VCO2G(NY,NX)=VCO2G(NY,NX)-RCGOX(L,NY,NX)
+      VCH4G(NY,NX)=VCH4G(NY,NX)-RCHOX(L,NY,NX)
+      ENDIF
+2850  CONTINUE
+      ZN2GIN=ZN2GIN-ZOX
+      TPIN=TPIN-POX
+      TLRSDC=TLRSDC+COM
+      TLNH4=TLNH4+Z4M
+      TLPO4=TLPO4+P4M
+      VCOXFS(NY,NX)=VCOXFS(NY,NX)+COM
+      VNOXG(NY,NX)=VNOXG(NY,NX)-ZOX
+      VPOXG(NY,NX)=VPOXG(NY,NX)-POX
+      ENDIF
+C
+C     END FIRE
+C
+C     OTHER DISTURBANCES
+C
+      IF(NFZ.EQ.1.AND.J.EQ.INT(ZNOON(NY,NX)))THEN
+C
+C     CHANGE EXTERNAL WATER TABLE DEPTH 
+C
+C     ZNOON=hour of solar noon from weather file
+C     ITILL=23 or 24:natural or artificial drainage from site 
+C        or soil management file
+C     DCORP=reset external water table depth from site 
+C        or soil management file 
+C     CDPTH(NU(NY,NX)-1=soil surface elevation
+C     DTBLI,DTBLDI=depth of natural,artificial water table 
+C        from site file
+C     DTBLX,DTBLZ=current,initial natural water table depth
+C     DTBLY,DTBLD=current,initial artificial water table depth
+C     IDTBL=water table flag from site file
+C        :0=none
+C        :1,2=natural stationary,mobile
+C        :3,4=artificial stationary,mobile
+C     HVOLO=water loss through lateral and lower boundaries 
+C
+C     CHANGE NATURAL DRAINAGE
+C
+      IF(ITILL(I,NY,NX).EQ.23)THEN
+      DCORPW=DCORP(I,NY,NX)+CDPTH(NU(NY,NX)-1,NY,NX)
+      DTBLI(NY,NX)=DCORPW
+      DTBLZ(NY,NX)=DTBLI(NY,NX)-(ALTZ(NY,NX)-ALT(NY,NX))
+     2*(1.0-DTBLG(NY,NX))
+      DTBLX(NY,NX)=DTBLZ(NY,NX)+CDPTH(NU(NY,NX)-1,NY,NX)
+      ENDIF
+C
+C     CHANGE OR ADD ARTIFICIAL DRAINAGE
+C
+      IF(ITILL(I,NY,NX).EQ.24)THEN
+      DCORPW=DCORP(I,NY,NX)+CDPTH(NU(NY,NX)-1,NY,NX)
+      IF(IDTBL(NY,NX).EQ.1)THEN
+      IDTBL(NY,NX)=3
+      ELSEIF(IDTBL(NY,NX).EQ.2)THEN
+      IDTBL(NY,NX)=4
+      ENDIF
+      DTBLDI(NY,NX)=DCORPW
+      DTBLD(NY,NX)=AMAX1(0.0,DTBLDI(NY,NX)-(ALTZ(NY,NX)-ALT(NY,NX))
+     2*(1.0-DTBLG(NY,NX)))
+      DTBLY(NY,NX)=DTBLD(NY,NX)
+      ENDIF
+C
+C     SET DEPTH OF MOBILE EXTERNAL WATER TABLE
+C
+      IF(IDTBL(NY,NX).EQ.2.OR.IDTBL(NY,NX).EQ.4)THEN
+      DTBLX(NY,NX)=DTBLX(NY,NX)
+     2-HVOLO(NY,NX)/AREA(3,NU(NY,NX),NY,NX)
+     2-0.00167*(DTBLX(NY,NX)-DTBLZ(NY,NX)-CDPTH(NU(NY,NX)-1,NY,NX))
+      DTBLX(NY,NX)=DTBLZ(NY,NX)+CDPTH(NU(NY,NX)-1,NY,NX)
+      ENDIF
+      IF(IDTBL(NY,NX).EQ.4)THEN
+      DTBLY(NY,NX)=DTBLY(NY,NX)
+     2-HVOLO(NY,NX)/AREA(3,NU(NY,NX),NY,NX)
+     3-0.00167*(DTBLY(NY,NX)-DTBLD(NY,NX))
+      ENDIF
+C
+C     IF LITTER REMOVAL EVENT IS ENTERED IN DISTURBANCE FILE
+C
+C     ITILL=21:litter removal
+C     DCORP=fraction of surface litter removed
+C
+      IF(ITILL(I,NY,NX).EQ.21)THEN
+      DCORPC=AMIN1(0.999,DCORP(I,NY,NX))
+      DC=0.0
+      DN=0.0
+      DP=0.0
+      OC=0.0
+      ON=0.0
+      OP=0.0
+      DCC=0.0
+      DNC=0.0
+      DPC=0.0
+      OCC=0.0
+      ONC=0.0
+      OPC=0.0
+      DO 2970 K=0,2
+C
+C     REMOVE LITTER MICROBIAL BIOMASS
+C
+      DO 2960 N=1,7
+      DO 2960 M=1,3
+      OCH=DCORPC*OMC(M,N,K,L,NY,NX)
+      ONH=DCORPC*OMN(M,N,K,L,NY,NX)
+      OPH=DCORPC*OMP(M,N,K,L,NY,NX)
+      OMC(M,N,K,L,NY,NX)=OMC(M,N,K,L,NY,NX)-OCH
+      OMN(M,N,K,L,NY,NX)=OMN(M,N,K,L,NY,NX)-ONH
+      OMP(M,N,K,L,NY,NX)=OMP(M,N,K,L,NY,NX)-OPH
+      DC=DC+OMC(M,N,K,L,NY,NX)
+      DN=DN+OMN(M,N,K,L,NY,NX)
+      DP=DP+OMP(M,N,K,L,NY,NX)
+      OC=OC+OCH
+      ON=ON+ONH
+      OP=OP+OPH
+2960  CONTINUE
+2970  CONTINUE
+C
+C     REMOVE LITTER MICROBIAL RESIDUE
+C
+      DO 2900 K=0,2
+      DO 2940 M=1,2
+      OCH=DCORPC*ORC(M,K,L,NY,NX)
+      ONH=DCORPC*ORN(M,K,L,NY,NX)
+      OPH=DCORPC*ORP(M,K,L,NY,NX)
+      ORC(M,K,L,NY,NX)=ORC(M,K,L,NY,NX)-OCH
+      ORN(M,K,L,NY,NX)=ORN(M,K,L,NY,NX)-ONH
+      ORP(M,K,L,NY,NX)=ORP(M,K,L,NY,NX)-OPH
+      DC=DC+ORC(M,K,L,NY,NX)
+      DN=DN+ORN(M,K,L,NY,NX)
+      DP=DP+ORP(M,K,L,NY,NX)
+      OC=OC+OCH
+      ON=ON+ONH
+      OP=OP+OPH
+2940  CONTINUE
+C
+C     REMOVE LITTER DISSOLVED DOC, DOA, DON, DOP
+C
+      OCH=DCORPC*OQC(K,L,NY,NX)
+      OAH=DCORPC*OQA(K,L,NY,NX)
+      ONH=DCORPC*OQN(K,L,NY,NX)
+      OPH=DCORPC*OQP(K,L,NY,NX)
+      OQC(K,L,NY,NX)=OQC(K,L,NY,NX)-OCH
+      OQA(K,L,NY,NX)=OQA(K,L,NY,NX)-OAH
+      OQN(K,L,NY,NX)=OQN(K,L,NY,NX)-ONH
+      OQP(K,L,NY,NX)=OQP(K,L,NY,NX)-OPH
+      OC=OC+OCH+OAH
+      ON=ON+ONH
+      OP=OP+OPH
+      OCH=DCORPC*OQCH(K,L,NY,NX)
+      OAH=DCORPC*OQAH(K,L,NY,NX)
+      ONH=DCORPC*OQNH(K,L,NY,NX)
+      OPH=DCORPC*OQPH(K,L,NY,NX)
+      OQCH(K,L,NY,NX)=OQCH(K,L,NY,NX)-OCH
+      OQAH(K,L,NY,NX)=OQAH(K,L,NY,NX)-OAH
+      OQNH(K,L,NY,NX)=OQNH(K,L,NY,NX)-ONH
+      OQPH(K,L,NY,NX)=OQPH(K,L,NY,NX)-OPH
+      OC=OC+OCH+OAH
+      ON=ON+ONH
+      OP=OP+OPH
+C
+C     REMOVE LITTER ADSORBED OHC, OHA, OHN, OHP 
+C
+      OCH=DCORPC*OHC(K,L,NY,NX)
+      OAH=DCORPC*OHA(K,L,NY,NX)
+      ONH=DCORPC*OHN(K,L,NY,NX)
+      OPH=DCORPC*OHP(K,L,NY,NX)
+      OHC(K,L,NY,NX)=OHC(K,L,NY,NX)-OCH
+      OHA(K,L,NY,NX)=OHA(K,L,NY,NX)-OAH
+      OHN(K,L,NY,NX)=OHN(K,L,NY,NX)-ONH
+      OHP(K,L,NY,NX)=OHP(K,L,NY,NX)-OPH
+      DC=DC+OQC(K,L,NY,NX)+OQCH(K,L,NY,NX)+OHC(K,L,NY,NX)
+     2+OQA(K,L,NY,NX)+OQAH(K,L,NY,NX)+OHA(K,L,NY,NX)
+      DN=DN+OQN(K,L,NY,NX)+OQNH(K,L,NY,NX)+OHN(K,L,NY,NX)
+      DP=DP+OQP(K,L,NY,NX)+OQPH(K,L,NY,NX)+OHP(K,L,NY,NX)
+      OC=OC+OCH
+      ON=ON+ONH
+      OP=OP+OPH
+C
+C     REMOVE LITTER SOC, colonized SOC, SON, SOP
+C
+      DO 2930 M=1,5
+      OCH=DCORPC*OSC(M,K,L,NY,NX)
+      OCA=DCORPC*OSA(M,K,L,NY,NX)
+      ONH=DCORPC*OSN(M,K,L,NY,NX)
+      OPH=DCORPC*OSP(M,K,L,NY,NX)
+      OSC(M,K,L,NY,NX)=OSC(M,K,L,NY,NX)-OCH
+      OSA(M,K,L,NY,NX)=OSA(M,K,L,NY,NX)-OCA
+      OSN(M,K,L,NY,NX)=OSN(M,K,L,NY,NX)-ONH
+      OSP(M,K,L,NY,NX)=OSP(M,K,L,NY,NX)-OPH
+      IF(M.LE.4)THEN
+      DC=DC+OSC(M,K,L,NY,NX)
+      DN=DN+OSN(M,K,L,NY,NX)
+      DP=DP+OSP(M,K,L,NY,NX)
+      ELSE
+      DCC=DCC+OSC(M,K,L,NY,NX)
+      DNC=DNC+OSN(M,K,L,NY,NX)
+      DPC=DPC+OSP(M,K,L,NY,NX)
+      ENDIF
+      OC=OC+OCH
+      ON=ON+ONH
+      OP=OP+OPH
+2930  CONTINUE
+2900  CONTINUE
+C
+C     REMOVE FERTILIZER IN LITTER
+C
+      ON=ON+DCORPC*(ZNH4S(0,NY,NX)+ZNH3S(0,NY,NX)
+     2+ZNO3S(0,NY,NX)+ZNO2S(0,NY,NX))
+      OP=OP+DCORPC*(H1PO4(0,NY,NX)+H2PO4(0,NY,NX))
+      ZNH4S(0,NY,NX)=(1.0-DCORPC)*ZNH4S(0,NY,NX)
+      ZNH3S(0,NY,NX)=(1.0-DCORPC)*ZNH3S(0,NY,NX)
+      ZNO3S(0,NY,NX)=(1.0-DCORPC)*ZNO3S(0,NY,NX)
+      ZNO2S(0,NY,NX)=(1.0-DCORPC)*ZNO2S(0,NY,NX)
+      H1PO4(0,NY,NX)=(1.0-DCORPC)*H1PO4(0,NY,NX)
+      H2PO4(0,NY,NX)=(1.0-DCORPC)*H2PO4(0,NY,NX)
+      XN4(0,NY,NX)=(1.0-DCORPC)*XN4(0,NY,NX)
+      PALPO(0,NY,NX)=(1.0-DCORPC)*PALPO(0,NY,NX)
+      PFEPO(0,NY,NX)=(1.0-DCORPC)*PFEPO(0,NY,NX)
+      PCAPD(0,NY,NX)=(1.0-DCORPC)*PCAPD(0,NY,NX)
+      PCAPH(0,NY,NX)=(1.0-DCORPC)*PCAPH(0,NY,NX)
+      PCAPM(0,NY,NX)=(1.0-DCORPC)*PCAPM(0,NY,NX)
+      ZNH4FA(0,NY,NX)=(1.0-DCORPC)*ZNH4FA(0,NY,NX)
+      ZNH3FA(0,NY,NX)=(1.0-DCORPC)*ZNH3FA(0,NY,NX)
+      ZNHUFA(0,NY,NX)=(1.0-DCORPC)*ZNHUFA(0,NY,NX)
+      ZNO3FA(0,NY,NX)=(1.0-DCORPC)*ZNO3FA(0,NY,NX)
+      ORGC(0,NY,NX)=DC
+      ORGN(0,NY,NX)=DN
+      ORGCC(0,NY,NX)=DCC
+      ORGNC(0,NY,NX)=DNC
+      HFLXD=2.496E-06*(ORGCX(0,NY,NX)-ORGC(0,NY,NX)
+     2-ORGCC(0,NY,NX))*TKS(0,NY,NX)
+      HEATOU=HEATOU+HFLXD
+C     VHCP(0,NY,NX)=2.496E-06*(ORGC(0,NY,NX)+ORGCC(0,NY,NX))
+C    2+4.19*(VOLW(0,NY,NX)+VOLV(0,NY,NX))
+C    3+1.9274*VOLI(0,NY,NX)
+      TCOU=TCOU+OC
+      TZOU=TZOU+ON
+      TPOU=TPOU+OP
+      UDOCQ(NY,NX)=UDOCQ(NY,NX)+OC
+      UDONQ(NY,NX)=UDONQ(NY,NX)+ON
+      UDOPQ(NY,NX)=UDOPQ(NY,NX)+OP
+      TNBP(NY,NX)=TNBP(NY,NX)-OC
+      ENDIF
+C
+C     TILLAGE: MIX ALL SOIL MATERIAL AND INCORPORATE ALL SURFACE
 C     RESIDUE STATE VARIABLES WITHIN THE TILLAGE ZONE TO THE EXTENT
 C     ASSOCIATED IN 'DAY' WITH EACH TILLAGE EVENT ENTERED IN THE
 C     TILLAGE FILE
 C
-      IF(J.EQ.INT(ZNOON(NY,NX)).AND.XCORP(NY,NX).LT.1.0
-     2.AND.DCORP(I,NY,NX).GT.0.0)THEN
+C     IFLGS=disturbance flag
+C     ITILL=1 - 20:tillage options from soil management file
+C     XCORP=soil mixing fraction from day.f
+C     DCORP=tillage depth from soil management file
+C
+      IF(ITILL(I,NY,NX).GE.1.AND.ITILL(I,NY,NX).LE.20)THEN
 C
 C     EXTENT OF MIXING
 C
@@ -8184,7 +10254,7 @@ C
       CORP=1.0-XCORP(NY,NX)
       ENGYP(NY,NX)=0.0
 C
-C     TEMPORARY ACCUMULATORS
+C     TEMPORARY ACCUMULATORS FOR CALCULATING SOIL MATERIAL MIXING 
 C
       TBKDX=0.0
       TFC=0.0
@@ -8202,6 +10272,7 @@ C
       TGKCN=0.0
       TGKCK=0.0
       TVOLW=0.0
+      TVOLV=0.0
       TVOLI=0.0
 C     TVOLP=0.0
 C     TVOLA=0.0
@@ -8347,7 +10418,7 @@ C     TVOLA=0.0
       TOHN(K)=0.0
       TOHP(K)=0.0
       TOHA(K)=0.0
-      DO 3970 M=1,4
+      DO 3970 M=1,5
       TOSC(M,K)=0.0
       TOSA(M,K)=0.0
       TOSN(M,K)=0.0
@@ -8360,30 +10431,27 @@ C     TVOLA=0.0
       ZNHUXI=0.0
       ZNFNX0=0.0
 C
-C     ACCUMULATE STATE VARIABLES IN SURFACE RESIDUE FOR ADDITION
-C     TO SOIL IN TILLAGE MIXING ZONE
+C     ACCUMULATE STATE VARIABLES IN SURFACE LITTER FOR ADDITION
+C     TO SOIL TO TILLAGE MIXING DEPTH
 C
-C     IF(ORGC(0,NY,NX).GT.ZEROS(NY,NX))THEN
-C     XCORP0=AMAX1(XCORP(NY,NX),AMIN1(1.0,
-C    2(VHCPRX(NY,NX)/2.496E-06)/ORGC(0,NY,NX)))
       XCORP0=AMAX1(0.001,XCORP(NY,NX))
-C     ELSE
-C     XCORP0=1.0
-C     ENDIF
       CORP0=1.0-XCORP0
       DC=0.0
       DN=0.0
       DP=0.0
+      DCC=0.0
+      DNC=0.0
+      DPC=0.0
       DO 3950 K=0,5
       IF(K.NE.3.AND.K.NE.4)THEN
       DO 3945 N=1,7
       DO 3945 M=1,3
-      TOMGC(M,N,K)=OMC(M,N,K,0,NY,NX)*CORP0
-      TOMGN(M,N,K)=OMN(M,N,K,0,NY,NX)*CORP0
-      TOMGP(M,N,K)=OMP(M,N,K,0,NY,NX)*CORP0
-      OMC(M,N,K,0,NY,NX)=OMC(M,N,K,0,NY,NX)*XCORP0
-      OMN(M,N,K,0,NY,NX)=OMN(M,N,K,0,NY,NX)*XCORP0
-      OMP(M,N,K,0,NY,NX)=OMP(M,N,K,0,NY,NX)*XCORP0
+      TOMGC(M,N,K)=OMC(M,N,K,0,NY,NX)*CORP0 
+      TOMGN(M,N,K)=OMN(M,N,K,0,NY,NX)*CORP0 
+      TOMGP(M,N,K)=OMP(M,N,K,0,NY,NX)*CORP0 
+      OMC(M,N,K,0,NY,NX)=OMC(M,N,K,0,NY,NX)*XCORP0 
+      OMN(M,N,K,0,NY,NX)=OMN(M,N,K,0,NY,NX)*XCORP0 
+      OMP(M,N,K,0,NY,NX)=OMP(M,N,K,0,NY,NX)*XCORP0 
       DC=DC+OMC(M,N,K,0,NY,NX)
       DN=DN+OMN(M,N,K,0,NY,NX)
       DP=DP+OMP(M,N,K,0,NY,NX)
@@ -8392,147 +10460,173 @@ C     ENDIF
 3950  CONTINUE
       DO 3940 K=0,2
       DO 3935 M=1,2
-      TORXC(M,K)=ORC(M,K,0,NY,NX)*CORP0
-      TORXN(M,K)=ORN(M,K,0,NY,NX)*CORP0
-      TORXP(M,K)=ORP(M,K,0,NY,NX)*CORP0
-      ORC(M,K,0,NY,NX)=ORC(M,K,0,NY,NX)*XCORP0
-      ORN(M,K,0,NY,NX)=ORN(M,K,0,NY,NX)*XCORP0
-      ORP(M,K,0,NY,NX)=ORP(M,K,0,NY,NX)*XCORP0
+      TORXC(M,K)=ORC(M,K,0,NY,NX)*CORP0 
+      TORXN(M,K)=ORN(M,K,0,NY,NX)*CORP0 
+      TORXP(M,K)=ORP(M,K,0,NY,NX)*CORP0 
+      ORC(M,K,0,NY,NX)=ORC(M,K,0,NY,NX)*XCORP0 
+      ORN(M,K,0,NY,NX)=ORN(M,K,0,NY,NX)*XCORP0 
+      ORP(M,K,0,NY,NX)=ORP(M,K,0,NY,NX)*XCORP0 
       DC=DC+ORC(M,K,0,NY,NX)
       DN=DN+ORN(M,K,0,NY,NX)
       DP=DP+ORP(M,K,0,NY,NX)
 3935  CONTINUE
-      TOQGC(K)=OQC(K,0,NY,NX)*CORP0
-      TOQGN(K)=OQN(K,0,NY,NX)*CORP0
-      TOQGP(K)=OQP(K,0,NY,NX)*CORP0
-      TOQGA(K)=OQA(K,0,NY,NX)*CORP0
-      TOQHC(K)=OQCH(K,0,NY,NX)*CORP0
-      TOQHN(K)=OQNH(K,0,NY,NX)*CORP0
-      TOQHP(K)=OQPH(K,0,NY,NX)*CORP0
-      TOQHA(K)=OQAH(K,0,NY,NX)*CORP0
-      TOHGC(K)=OHC(K,0,NY,NX)*CORP0
-      TOHGN(K)=OHN(K,0,NY,NX)*CORP0
-      TOHGP(K)=OHP(K,0,NY,NX)*CORP0
-      TOHGA(K)=OHA(K,0,NY,NX)*CORP0
+      TOQGC(K)=OQC(K,0,NY,NX)*CORP0 
+      TOQGN(K)=OQN(K,0,NY,NX)*CORP0 
+      TOQGP(K)=OQP(K,0,NY,NX)*CORP0 
+      TOQGA(K)=OQA(K,0,NY,NX)*CORP0 
+      TOQHC(K)=OQCH(K,0,NY,NX)*CORP0 
+      TOQHN(K)=OQNH(K,0,NY,NX)*CORP0 
+      TOQHP(K)=OQPH(K,0,NY,NX)*CORP0 
+      TOQHA(K)=OQAH(K,0,NY,NX)*CORP0 
+      TOHGC(K)=OHC(K,0,NY,NX)*CORP0 
+      TOHGN(K)=OHN(K,0,NY,NX)*CORP0 
+      TOHGP(K)=OHP(K,0,NY,NX)*CORP0 
+      TOHGA(K)=OHA(K,0,NY,NX)*CORP0 
 C
 C     REDUCE SURFACE RESIDUE STATE VARIABLES FOR INCORPORATION
 C
-      OQC(K,0,NY,NX)=OQC(K,0,NY,NX)*XCORP0
-      OQN(K,0,NY,NX)=OQN(K,0,NY,NX)*XCORP0
-      OQP(K,0,NY,NX)=OQP(K,0,NY,NX)*XCORP0
-      OQA(K,0,NY,NX)=OQA(K,0,NY,NX)*XCORP0
-      OQCH(K,0,NY,NX)=OQCH(K,0,NY,NX)*XCORP0
-      OQNH(K,0,NY,NX)=OQNH(K,0,NY,NX)*XCORP0
-      OQPH(K,0,NY,NX)=OQPH(K,0,NY,NX)*XCORP0
-      OQAH(K,0,NY,NX)=OQAH(K,0,NY,NX)*XCORP0
-      OHC(K,0,NY,NX)=OHC(K,0,NY,NX)*XCORP0
-      OHN(K,0,NY,NX)=OHN(K,0,NY,NX)*XCORP0
-      OHP(K,0,NY,NX)=OHP(K,0,NY,NX)*XCORP0
-      OHA(K,0,NY,NX)=OHA(K,0,NY,NX)*XCORP0
+      OQC(K,0,NY,NX)=OQC(K,0,NY,NX)*XCORP0 
+      OQN(K,0,NY,NX)=OQN(K,0,NY,NX)*XCORP0 
+      OQP(K,0,NY,NX)=OQP(K,0,NY,NX)*XCORP0 
+      OQA(K,0,NY,NX)=OQA(K,0,NY,NX)*XCORP0 
+      OQCH(K,0,NY,NX)=OQCH(K,0,NY,NX)*XCORP0 
+      OQNH(K,0,NY,NX)=OQNH(K,0,NY,NX)*XCORP0 
+      OQPH(K,0,NY,NX)=OQPH(K,0,NY,NX)*XCORP0 
+      OQAH(K,0,NY,NX)=OQAH(K,0,NY,NX)*XCORP0 
+      OHC(K,0,NY,NX)=OHC(K,0,NY,NX)*XCORP0 
+      OHN(K,0,NY,NX)=OHN(K,0,NY,NX)*XCORP0 
+      OHP(K,0,NY,NX)=OHP(K,0,NY,NX)*XCORP0 
+      OHA(K,0,NY,NX)=OHA(K,0,NY,NX)*XCORP0 
       DC=DC+OQC(K,0,NY,NX)+OQCH(K,0,NY,NX)+OHC(K,0,NY,NX)
      2+OQA(K,0,NY,NX)+OQAH(K,0,NY,NX)+OHA(K,0,NY,NX)
       DN=DN+OQN(K,0,NY,NX)+OQNH(K,0,NY,NX)+OHN(K,0,NY,NX)
       DP=DP+OQP(K,0,NY,NX)+OQPH(K,0,NY,NX)+OHP(K,0,NY,NX)
-      DO 3965 M=1,4
-      TOSGC(M,K)=OSC(M,K,0,NY,NX)*CORP0
-      TOSGA(M,K)=OSA(M,K,0,NY,NX)*CORP0
-      TOSGN(M,K)=OSN(M,K,0,NY,NX)*CORP0
+      DO 3965 M=1,5
+      TOSGC(M,K)=OSC(M,K,0,NY,NX)*CORP0 
+      TOSGA(M,K)=OSA(M,K,0,NY,NX)*CORP0 
+      TOSGN(M,K)=OSN(M,K,0,NY,NX)*CORP0 
       TOSGP(M,K)=OSP(M,K,0,NY,NX)*CORP0
-      OSC(M,K,0,NY,NX)=OSC(M,K,0,NY,NX)*XCORP0
-      OSA(M,K,0,NY,NX)=OSA(M,K,0,NY,NX)*XCORP0
-      OSN(M,K,0,NY,NX)=OSN(M,K,0,NY,NX)*XCORP0
-      OSP(M,K,0,NY,NX)=OSP(M,K,0,NY,NX)*XCORP0
+      OSC(M,K,0,NY,NX)=OSC(M,K,0,NY,NX)*XCORP0 
+      OSA(M,K,0,NY,NX)=OSA(M,K,0,NY,NX)*XCORP0 
+      OSN(M,K,0,NY,NX)=OSN(M,K,0,NY,NX)*XCORP0 
+      OSP(M,K,0,NY,NX)=OSP(M,K,0,NY,NX)*XCORP0 
+      IF(M.LE.4)THEN 
       DC=DC+OSC(M,K,0,NY,NX)
       DN=DN+OSN(M,K,0,NY,NX)
       DP=DP+OSP(M,K,0,NY,NX)
+      ELSE
+      DCC=DCC+OSC(M,K,0,NY,NX)
+      DNC=DNC+OSN(M,K,0,NY,NX)
+      DPC=DPC+OSP(M,K,0,NY,NX)
+      ENDIF
 3965  CONTINUE
 3940  CONTINUE
-      TCO2GS=CO2S(0,NY,NX)*CORP0
-      TCH4GS=CH4S(0,NY,NX)*CORP0
-      TOXYGS=OXYS(0,NY,NX)*CORP0
-      TZ2GSG=Z2GS(0,NY,NX)*CORP0
-      TZ2OGS=Z2OS(0,NY,NX)*CORP0
-      TH2GGS=H2GS(0,NY,NX)*CORP0
-      TNH4GS=ZNH4S(0,NY,NX)*CORP0
-      TNH3GS=ZNH3S(0,NY,NX)*CORP0
-      TNO3GS=ZNO3S(0,NY,NX)*CORP0
-      TNO2GS=ZNO2S(0,NY,NX)*CORP0
-      TP14GS=H1PO4(0,NY,NX)*CORP0
-      TPO4GS=H2PO4(0,NY,NX)*CORP0
-      TXN4G=XN4(0,NY,NX)*CORP0
-      TXOH0G=XOH0(0,NY,NX)*CORP0
-      TXOH1G=XOH1(0,NY,NX)*CORP0
-      TXOH2G=XOH2(0,NY,NX)*CORP0
-      TXH1PG=XH1P(0,NY,NX)*CORP0
-      TXH2PG=XH2P(0,NY,NX)*CORP0
-      TALPOG=PALPO(0,NY,NX)*CORP0
-      TFEPOG=PFEPO(0,NY,NX)*CORP0
-      TCAPDG=PCAPD(0,NY,NX)*CORP0
-      TCAPHG=PCAPH(0,NY,NX)*CORP0
-      TCAPMG=PCAPM(0,NY,NX)*CORP0
-      TNH4FG=ZNH4FA(0,NY,NX)*CORP0
-      TNH3FG=ZNH3FA(0,NY,NX)*CORP0
-      TNHUFG=ZNHUFA(0,NY,NX)*CORP0
-      TNO3FG=ZNO3FA(0,NY,NX)*CORP0
-      TZNFNG=ZNFNI(0,NY,NX)*CORP0
-      TVOLWR=VOLW(0,NY,NX)*CORP0
+      TCO2GS=CO2S(0,NY,NX)*CORP0 
+      TCH4GS=CH4S(0,NY,NX)*CORP0 
+      TOXYGS=OXYS(0,NY,NX)*CORP0 
+      TZ2GSG=Z2GS(0,NY,NX)*CORP0 
+      TZ2OGS=Z2OS(0,NY,NX)*CORP0 
+      TH2GGS=H2GS(0,NY,NX)*CORP0 
+      TNH4GS=ZNH4S(0,NY,NX)*CORP0 
+      TNH3GS=ZNH3S(0,NY,NX)*CORP0 
+      TNO3GS=ZNO3S(0,NY,NX)*CORP0 
+      TNO2GS=ZNO2S(0,NY,NX)*CORP0 
+      TP14GS=H1PO4(0,NY,NX)*CORP0 
+      TPO4GS=H2PO4(0,NY,NX)*CORP0 
+      TXN4G=XN4(0,NY,NX)*CORP0 
+      TXOH0G=XOH0(0,NY,NX)*CORP0 
+      TXOH1G=XOH1(0,NY,NX)*CORP0 
+      TXOH2G=XOH2(0,NY,NX)*CORP0 
+      TXH1PG=XH1P(0,NY,NX)*CORP0 
+      TXH2PG=XH2P(0,NY,NX)*CORP0 
+      TALPOG=PALPO(0,NY,NX)*CORP0 
+      TFEPOG=PFEPO(0,NY,NX)*CORP0 
+      TCAPDG=PCAPD(0,NY,NX)*CORP0 
+      TCAPHG=PCAPH(0,NY,NX)*CORP0 
+      TCAPMG=PCAPM(0,NY,NX)*CORP0 
+      TNH4FG=ZNH4FA(0,NY,NX)*CORP0 
+      TNH3FG=ZNH3FA(0,NY,NX)*CORP0 
+      TNHUFG=ZNHUFA(0,NY,NX)*CORP0 
+      TNO3FG=ZNO3FA(0,NY,NX)*CORP0 
+      TZNFNG=ZNFNI(0,NY,NX)*CORP0 
+      TVOLWR=VOLW(0,NY,NX)*CORP0 
       HFLXD=2.496E-06*ORGC(0,NY,NX)*CORP0*TKS(0,NY,NX)
-      HEATIN=HEATIN-HFLXD
-      HEATSO=HEATSO-HFLXD
+      HEATIN=HEATIN-HFLXD 
+      HEATSO=HEATSO-HFLXD 
       TENGYR=4.19*TVOLWR*TKS(0,NY,NX)
       ORGC(0,NY,NX)=DC
       ORGN(0,NY,NX)=DN
+      ORGCC(0,NY,NX)=DCC
+      ORGNC(0,NY,NX)=DNC
       ORGR(0,NY,NX)=DC
-      CO2S(0,NY,NX)=CO2S(0,NY,NX)*XCORP0
-      CH4S(0,NY,NX)=CH4S(0,NY,NX)*XCORP0
-      OXYS(0,NY,NX)=OXYS(0,NY,NX)*XCORP0
-      Z2GS(0,NY,NX)=Z2GS(0,NY,NX)*XCORP0
-      Z2OS(0,NY,NX)=Z2OS(0,NY,NX)*XCORP0
-      H2GS(0,NY,NX)=H2GS(0,NY,NX)*XCORP0
-      ZNH4S(0,NY,NX)=ZNH4S(0,NY,NX)*XCORP0
-      ZNH3S(0,NY,NX)=ZNH3S(0,NY,NX)*XCORP0
-      ZNO3S(0,NY,NX)=ZNO3S(0,NY,NX)*XCORP0
-      ZNO2S(0,NY,NX)=ZNO2S(0,NY,NX)*XCORP0
-      H1PO4(0,NY,NX)=H1PO4(0,NY,NX)*XCORP0
-      H2PO4(0,NY,NX)=H2PO4(0,NY,NX)*XCORP0
-      XN4(0,NY,NX)=XN4(0,NY,NX)*XCORP0
-      XOH0(0,NY,NX)=XOH0(0,NY,NX)*XCORP0
-      XOH1(0,NY,NX)=XOH1(0,NY,NX)*XCORP0
-      XOH2(0,NY,NX)=XOH2(0,NY,NX)*XCORP0
-      XH1P(0,NY,NX)=XH1P(0,NY,NX)*XCORP0
-      XH2P(0,NY,NX)=XH2P(0,NY,NX)*XCORP0
-      PALPO(0,NY,NX)=PALPO(0,NY,NX)*XCORP0
-      PFEPO(0,NY,NX)=PFEPO(0,NY,NX)*XCORP0
-      PCAPD(0,NY,NX)=PCAPD(0,NY,NX)*XCORP0
-      PCAPH(0,NY,NX)=PCAPH(0,NY,NX)*XCORP0
-      PCAPM(0,NY,NX)=PCAPM(0,NY,NX)*XCORP0
-      ZNH4FA(0,NY,NX)=ZNH4FA(0,NY,NX)*XCORP0
-      ZNH3FA(0,NY,NX)=ZNH3FA(0,NY,NX)*XCORP0
-      ZNHUFA(0,NY,NX)=ZNHUFA(0,NY,NX)*XCORP0
-      ZNO3FA(0,NY,NX)=ZNO3FA(0,NY,NX)*XCORP0
-      VOLW(0,NY,NX)=VOLW(0,NY,NX)*XCORP0
-      VHCP(0,NY,NX)=2.496E-06*ORGC(0,NY,NX)+4.19*VOLW(0,NY,NX)
+      CO2S(0,NY,NX)=CO2S(0,NY,NX)*XCORP0 
+      CH4S(0,NY,NX)=CH4S(0,NY,NX)*XCORP0 
+      OXYS(0,NY,NX)=OXYS(0,NY,NX)*XCORP0 
+      Z2GS(0,NY,NX)=Z2GS(0,NY,NX)*XCORP0 
+      Z2OS(0,NY,NX)=Z2OS(0,NY,NX)*XCORP0 
+      H2GS(0,NY,NX)=H2GS(0,NY,NX)*XCORP0 
+      ZNH4S(0,NY,NX)=ZNH4S(0,NY,NX)*XCORP0 
+      ZNH3S(0,NY,NX)=ZNH3S(0,NY,NX)*XCORP0 
+      ZNO3S(0,NY,NX)=ZNO3S(0,NY,NX)*XCORP0 
+      ZNO2S(0,NY,NX)=ZNO2S(0,NY,NX)*XCORP0 
+      H1PO4(0,NY,NX)=H1PO4(0,NY,NX)*XCORP0 
+      H2PO4(0,NY,NX)=H2PO4(0,NY,NX)*XCORP0 
+      XN4(0,NY,NX)=XN4(0,NY,NX)*XCORP0 
+      XOH0(0,NY,NX)=XOH0(0,NY,NX)*XCORP0 
+      XOH1(0,NY,NX)=XOH1(0,NY,NX)*XCORP0 
+      XOH2(0,NY,NX)=XOH2(0,NY,NX)*XCORP0 
+      XH1P(0,NY,NX)=XH1P(0,NY,NX)*XCORP0 
+      XH2P(0,NY,NX)=XH2P(0,NY,NX)*XCORP0 
+      PALPO(0,NY,NX)=PALPO(0,NY,NX)*XCORP0 
+      PFEPO(0,NY,NX)=PFEPO(0,NY,NX)*XCORP0 
+      PCAPD(0,NY,NX)=PCAPD(0,NY,NX)*XCORP0 
+      PCAPH(0,NY,NX)=PCAPH(0,NY,NX)*XCORP0 
+      PCAPM(0,NY,NX)=PCAPM(0,NY,NX)*XCORP0 
+      ZNH4FA(0,NY,NX)=ZNH4FA(0,NY,NX)*XCORP0 
+      ZNH3FA(0,NY,NX)=ZNH3FA(0,NY,NX)*XCORP0 
+      ZNHUFA(0,NY,NX)=ZNHUFA(0,NY,NX)*XCORP0 
+      ZNO3FA(0,NY,NX)=ZNO3FA(0,NY,NX)*XCORP0 
+      VOLW(0,NY,NX)=VOLW(0,NY,NX)*XCORP0 
+      VOLV(0,NY,NX)=VOLV(0,NY,NX)*XCORP0 
+      VHCP(0,NY,NX)=2.496E-06*(ORGC(0,NY,NX)+ORGCC(0,NY,NX))
+     2+4.19*(VOLW(0,NY,NX)+VOLV(0,NY,NX))
      2+1.9274*VOLI(0,NY,NX)
-      VOLR(NY,NX)=VOLR(NY,NX)*XCORP0
-      VOLT(0,NY,NX)=VOLT(0,NY,NX)*XCORP0
+      VOLR(NY,NX)=VOLR(NY,NX)*XCORP0 
+      VOLT(0,NY,NX)=VOLT(0,NY,NX)*XCORP0 
       ZNHUX0=AMAX1(ZNHUX0,ZNHU0(0,NY,NX))
       ZNHUXI=AMAX1(ZNHUXI,ZNHUI(0,NY,NX))
       ZNFNX0=AMAX1(ZNFNX0,ZNFN0(0,NY,NX))
       LL=NU(NY,NX)
 C
-C     REDISTRIBUTE SOIL STATE VARIABLES DURING TILLAGE
+C     REDISTRIBUTE SOIL MATERIAL DURING TILLAGE
 C
       DCORPZ=AMIN1(DCORP(I,NY,NX),CDPTHZ(NL(NY,NX),NY,NX))
+C 
+C     ACCUMULATE STATE VARIABLES FOR EACH SOIL LAYER WITHIN MIXING
+C     ZONE
 C
-C     ACCUMULATE SOIL STATE VARIABLES WITHIN TILLAGE MIXING ZONE
+C     CDPTHZ=cumulative depth to bottom of soil layer from current 
+C        soil surface depth
+C     DLYR=layer depth
 C
       DO 1000 L=NU(NY,NX),NL(NY,NX)
       IF(CDPTHZ(L,NY,NX)-DLYR(3,L,NY,NX).LT.DCORPZ
      2.AND.DLYR(3,L,NY,NX).GT.ZERO)THEN
+C
+C     TL=soil layer depth within tillage mixing zone
+C     FI=fraction of TL within tillage mixing zone 
+C     TI=fraction of TL within soil layer 
+C
       TL=AMIN1(DLYR(3,L,NY,NX),DCORPZ-(CDPTHZ(L,NY,NX)
      2-DLYR(3,L,NY,NX)))
       FI=TL/DCORPZ
       TI=TL/DLYR(3,L,NY,NX)
+C
+C     ACCUMULATE SOIL MATERIAL IN EACH SOIL LATER OF TILLAGE MIXING
+C     ZONE
+C
+C     SEDIMENT, WATER, ICE, HEAT, GAPON COEFFICIENTS
+C
       TBKDX=TBKDX+FI*BKDSI(L,NY,NX)
       TFC=TFC+FI*FC(L,NY,NX)
       TWP=TWP+FI*WP(L,NY,NX)
@@ -8549,11 +10643,15 @@ C
       TGKCN=TGKCN+FI*GKCN(L,NY,NX)
       TGKCK=TGKCK+FI*GKCK(L,NY,NX)
       TVOLW=TVOLW+TI*VOLW(L,NY,NX)
+      TVOLV=TVOLV+TI*VOLV(L,NY,NX)
       TVOLI=TVOLI+TI*VOLI(L,NY,NX)
 C     TVOLP=TVOLP+TI*VOLP(L,NY,NX)
 C     TVOLA=TVOLA+TI*VOLA(L,NY,NX)
       TENGY=TENGY+TI*(4.19*(VOLW(L,NY,NX)+VOLWH(L,NY,NX))
      2+1.9274*(VOLI(L,NY,NX)+VOLIH(L,NY,NX)))*TKS(L,NY,NX)
+C
+C     FERTILIZER IN BAND, NON-BAND
+C
       TNH4FA=TNH4FA+TI*ZNH4FA(L,NY,NX)
       TNH3FA=TNH3FA+TI*ZNH3FA(L,NY,NX)
       TNHUFA=TNHUFA+TI*ZNHUFA(L,NY,NX)
@@ -8562,6 +10660,9 @@ C     TVOLA=TVOLA+TI*VOLA(L,NY,NX)
       TNH3FB=TNH3FB+TI*ZNH3FB(L,NY,NX)
       TNHUFB=TNHUFB+TI*ZNHUFB(L,NY,NX)
       TNO3FB=TNO3FB+TI*ZNO3FB(L,NY,NX)
+C
+C     C,N SOLUTES IN BAND, NON-BAND
+C
       TNH4S=TNH4S+TI*ZNH4S(L,NY,NX)
       TNH4B=TNH4B+TI*ZNH4B(L,NY,NX)
       TNH3S=TNH3S+TI*ZNH3S(L,NY,NX)
@@ -8570,6 +10671,9 @@ C     TVOLA=TVOLA+TI*VOLA(L,NY,NX)
       TNO3B=TNO3B+TI*ZNO3B(L,NY,NX)
       TNO2S=TNO2S+TI*ZNO2S(L,NY,NX)
       TNO2B=TNO2B+TI*ZNO2B(L,NY,NX)
+C
+C     SALTS IN NON-BAND
+C
       TZAL=TZAL+TI*ZAL(L,NY,NX)
       TZFE=TZFE+TI*ZFE(L,NY,NX)
       TZHY=TZHY+TI*ZHY(L,NY,NX)
@@ -8613,6 +10717,9 @@ C     TVOLA=TVOLA+TI*VOLA(L,NY,NX)
       TZCA1P=TZCA1P+TI*ZCA1P(L,NY,NX)
       TZCA2P=TZCA2P+TI*ZCA2P(L,NY,NX)
       TZMG1P=TZMG1P+TI*ZMG1P(L,NY,NX)
+C
+C     SALTS IN BAND
+C
       TH0POB=TH0POB+TI*H0POB(L,NY,NX)
       TH1POB=TH1POB+TI*H1POB(L,NY,NX)
       TH2POB=TH2POB+TI*H2POB(L,NY,NX)
@@ -8623,6 +10730,9 @@ C     TVOLA=TVOLA+TI*VOLA(L,NY,NX)
       TCA1PB=TCA1PB+TI*ZCA1PB(L,NY,NX)
       TCA2PB=TCA2PB+TI*ZCA2PB(L,NY,NX)
       TMG1PB=TMG1PB+TI*ZMG1PB(L,NY,NX)
+C
+C     ADSORBED CATIONS AND ANIONS IN BAND, NON-BAND
+C
       TXNH4=TXNH4+TI*XN4(L,NY,NX)
       TXNHB=TXNHB+TI*XNB(L,NY,NX)
       TXHY=TXHY+TI*XHY(L,NY,NX)
@@ -8645,6 +10755,9 @@ C     TVOLA=TVOLA+TI*VOLA(L,NY,NX)
       TXOH2B=TXOH2B+TI*XOH2B(L,NY,NX)
       TXH1PB=TXH1PB+TI*XH1PB(L,NY,NX)
       TXH2PB=TXH2PB+TI*XH2PB(L,NY,NX)
+C
+C     PRECIPITATED CATIONS AND ANIONS IN BAND, NON-BAND
+C
       TPALOH=TPALOH+TI*PALOH(L,NY,NX)
       TPFEOH=TPFEOH+TI*PFEOH(L,NY,NX)
       TPCACO=TPCACO+TI*PCACO(L,NY,NX)
@@ -8659,6 +10772,9 @@ C     TVOLA=TVOLA+TI*VOLA(L,NY,NX)
       TPCPDB=TPCPDB+TI*PCPDB(L,NY,NX)
       TPCPHB=TPCPHB+TI*PCPHB(L,NY,NX)
       TPCPMB=TPCPMB+TI*PCPMB(L,NY,NX)
+C
+C     GASEOUS AND AQUEOUS GASES
+C
       TCO2G=TCO2G+TI*CO2G(L,NY,NX)
       TCH4G=TCH4G+TI*CH4G(L,NY,NX)
       TCOZS=TCOZS+TI*CO2S(L,NY,NX)
@@ -8672,6 +10788,9 @@ C     TVOLA=TVOLA+TI*VOLA(L,NY,NX)
       TZNH3G=TZNH3G+TI*ZNH3G(L,NY,NX)
       TH2GG=TH2GG+TI*H2GG(L,NY,NX)
       TH2GS=TH2GS+TI*H2GS(L,NY,NX)
+C
+C     ORGANIC MATTER
+C
       DO 4985 K=0,5
       DO 4985 N=1,7
       DO 4985 M=1,3
@@ -8693,7 +10812,7 @@ C     TVOLA=TVOLA+TI*VOLA(L,NY,NX)
       TOHN(K)=TOHN(K)+TI*OHN(K,L,NY,NX)
       TOHP(K)=TOHP(K)+TI*OHP(K,L,NY,NX)
       TOHA(K)=TOHA(K)+TI*OHA(K,L,NY,NX)
-      DO 4970 M=1,4
+      DO 4970 M=1,5
       TOSC(M,K)=TOSC(M,K)+TI*OSC(M,K,L,NY,NX)
       TOSA(M,K)=TOSA(M,K)+TI*OSA(M,K,L,NY,NX)
       TOSN(M,K)=TOSN(M,K)+TI*OSN(M,K,L,NY,NX)
@@ -8711,6 +10830,12 @@ C
 C     CHANGE SOIL STATE VARIABLES IN TILLAGE MIXING ZONE
 C     TO ACCOUNT FOR REDISTRIBUTION FROM MIXING
 C
+C     DLYR=layer depth
+C     TL=soil layer depth within tillage mixing zone
+C     FI=fraction of TL within tillage mixing zone 
+C     TI=fraction of TL within soil layer 
+C     CORP=1.0-mixing fraction 
+C
       DO 2000 L=NU(NY,NX),LL
       IF(DLYR(3,L,NY,NX).GT.ZERO)THEN
       TL=AMIN1(DLYR(3,L,NY,NX),DCORPZ-(CDPTHZ(L,NY,NX)
@@ -8718,6 +10843,9 @@ C
       FI=TL/DCORPZ
       TI=TL/DLYR(3,L,NY,NX)
       TX=1.0-TI
+C
+C     SEDIMENT, WATER, ICE, HEAT, GAPON COEFFICIENTS
+C
       BKDSI(L,NY,NX)=TI*(BKDSI(L,NY,NX)+CORP*(TBKDX-BKDSI(L,NY,NX)))
      2+TX*BKDSI(L,NY,NX)
       FC(L,NY,NX)=TI*(FC(L,NY,NX)+CORP*(TFC-FC(L,NY,NX)))
@@ -8752,9 +10880,11 @@ C
       ENGYV=(4.19*(VOLW(L,NY,NX)+VOLWH(L,NY,NX))
      2+1.9274*(VOLI(L,NY,NX)+VOLIH(L,NY,NX)))*TKS(L,NY,NX)
       VOLW(L,NY,NX)=TI*VOLW(L,NY,NX)+CORP*(FI*TVOLW-TI*VOLW(L,NY,NX))
-     2+TX*VOLW(L,NY,NX)+FI*TVOLWR
+     2+TX*VOLW(L,NY,NX)+FI*TVOLWR 
+      VOLV(L,NY,NX)=TI*VOLV(L,NY,NX)+CORP*(FI*TVOLV-TI*VOLV(L,NY,NX))
+     2+TX*VOLV(L,NY,NX) 
       VOLI(L,NY,NX)=TI*VOLI(L,NY,NX)+CORP*(FI*TVOLI-TI*VOLI(L,NY,NX))
-     2+TX*VOLI(L,NY,NX)
+     2+TX*VOLI(L,NY,NX) 
 C     VOLP(L,NY,NX)=TI*VOLP(L,NY,NX)+CORP*(FI*TVOLP-TI*VOLP(L,NY,NX))
 C    2+TX*VOLP(L,NY,NX)
 C     VOLA(L,NY,NX)=TI*VOLA(L,NY,NX)+CORP*(FI*TVOLA-TI*VOLA(L,NY,NX))
@@ -8768,10 +10898,14 @@ C     VOLIH(L,NY,NX)=XCORP(NY,NX)*VOLIH(L,NY,NX)
 C     VOLAH(L,NY,NX)=XCORP(NY,NX)*VOLAH(L,NY,NX)
 C     FHOL(L,NY,NX)=XCORP(NY,NX)*FHOL(L,NY,NX)
       ENGYL=TI*ENGYV+CORP*(FI*TENGY-TI*ENGYV)+TX*ENGYV+FI*TENGYR
-      VHCP(L,NY,NX)=VHCM(L,NY,NX)+4.19*(VOLW(L,NY,NX)+VOLWH(L,NY,NX))
-     2+1.9274*(VOLI(L,NY,NX)+VOLIH(L,NY,NX))
+      VHCP(L,NY,NX)=VHCM(L,NY,NX)
+     2+4.19*(VOLW(L,NY,NX)+VOLV(L,NY,NX)+VOLWH(L,NY,NX))
+     2+1.9274*(VOLI(L,NY,NX)+VOLIH(L,NY,NX)) 
       TKS(L,NY,NX)=(ENGYM+ENGYL)/VHCP(L,NY,NX)
       TCS(L,NY,NX)=TKS(L,NY,NX)-273.15
+C
+C     FERTILIZER IN BAND, NON-BAND
+C
       ZNH4FA(L,NY,NX)=TI*ZNH4FA(L,NY,NX)+CORP*(FI*TNH4FA
      2-TI*ZNH4FA(L,NY,NX))+TX*ZNH4FA(L,NY,NX)
       ZNH3FA(L,NY,NX)=TI*ZNH3FA(L,NY,NX)+CORP*(FI*TNH3FA
@@ -8788,6 +10922,9 @@ C     FHOL(L,NY,NX)=XCORP(NY,NX)*FHOL(L,NY,NX)
      2-TI*ZNHUFB(L,NY,NX))+TX*ZNHUFB(L,NY,NX)
       ZNO3FB(L,NY,NX)=TI*ZNO3FB(L,NY,NX)+CORP*(FI*TNO3FB
      2-TI*ZNO3FB(L,NY,NX))+TX*ZNO3FB(L,NY,NX)
+C
+C     C,N SOLUTES IN BAND, NON-BAND
+C
       ZNH4S(L,NY,NX)=TI*ZNH4S(L,NY,NX)+CORP*(FI*TNH4S-TI*ZNH4S(L,NY,NX))
      2+TX*ZNH4S(L,NY,NX)+CORP*ZNH4SH(L,NY,NX)
       ZNH4B(L,NY,NX)=TI*ZNH4B(L,NY,NX)+CORP*(FI*TNH4B-TI*ZNH4B(L,NY,NX))
@@ -8804,6 +10941,9 @@ C     FHOL(L,NY,NX)=XCORP(NY,NX)*FHOL(L,NY,NX)
      2+TX*ZNO2S(L,NY,NX)+CORP*ZNO2SH(L,NY,NX)
       ZNO2B(L,NY,NX)=TI*ZNO2B(L,NY,NX)+CORP*(FI*TNO2B-TI*ZNO2B(L,NY,NX))
      2+TX*ZNO2B(L,NY,NX)+CORP*ZNO2BH(L,NY,NX)
+C
+C     SALTS IN NON-BAND
+C
       ZAL(L,NY,NX)=TI*ZAL(L,NY,NX)+CORP*(FI*TZAL-TI*ZAL(L,NY,NX))
      2+TX*ZAL(L,NY,NX)+CORP*ZALH(L,NY,NX)
       ZFE(L,NY,NX)=TI*ZFE(L,NY,NX)+CORP*(FI*TZFE-TI*ZFE(L,NY,NX))
@@ -8890,6 +11030,9 @@ C     FHOL(L,NY,NX)=XCORP(NY,NX)*FHOL(L,NY,NX)
      2-TI*ZCA2P(L,NY,NX))+TX*ZCA2P(L,NY,NX)+CORP*ZCA2PH(L,NY,NX)
       ZMG1P(L,NY,NX)=TI*ZMG1P(L,NY,NX)+CORP*(FI*TZMG1P
      2-TI*ZMG1P(L,NY,NX))+TX*ZMG1P(L,NY,NX)+CORP*ZMG1PH(L,NY,NX)
+C
+C     SALTS IN BAND
+C
       H0POB(L,NY,NX)=TI*H0POB(L,NY,NX)+CORP*(FI*TH0POB
      2-TI*H0POB(L,NY,NX))+TX*H0POB(L,NY,NX)+CORP*H0POBH(L,NY,NX)
       H1POB(L,NY,NX)=TI*H1POB(L,NY,NX)+CORP*(FI*TH1POB
@@ -8910,6 +11053,9 @@ C     FHOL(L,NY,NX)=XCORP(NY,NX)*FHOL(L,NY,NX)
      2-TI*ZCA2PB(L,NY,NX))+TX*ZCA2PB(L,NY,NX)+CORP*ZCA2BH(L,NY,NX)
       ZMG1PB(L,NY,NX)=TI*ZMG1PB(L,NY,NX)+CORP*(FI*TMG1PB
      2-TI*ZMG1PB(L,NY,NX))+TX*ZMG1PB(L,NY,NX)+CORP*ZMG1BH(L,NY,NX)
+C
+C     ADSORBED CATIONS AND ANIONS IN BAND, NON-BAND
+C
       XN4(L,NY,NX)=TI*XN4(L,NY,NX)+CORP*(FI*TXNH4-TI*XN4(L,NY,NX))
      2+TX*XN4(L,NY,NX)
       XNB(L,NY,NX)=TI*XNB(L,NY,NX)+CORP*(FI*TXNHB-TI*XNB(L,NY,NX))
@@ -8954,6 +11100,9 @@ C     FHOL(L,NY,NX)=XCORP(NY,NX)*FHOL(L,NY,NX)
      2-TI*XH1PB(L,NY,NX))+TX*XH1PB(L,NY,NX)
       XH2PB(L,NY,NX)=TI*XH2PB(L,NY,NX)+CORP*(FI*TXH2PB
      2-TI*XH2PB(L,NY,NX))+TX*XH2PB(L,NY,NX)
+C
+C     PRECIPITATED CATIONS AND ANIONS IN BAND, NON-BAND
+C
       PALOH(L,NY,NX)=TI*PALOH(L,NY,NX)+CORP*(FI*TPALOH
      2-TI*PALOH(L,NY,NX))+TX*PALOH(L,NY,NX)
       PFEOH(L,NY,NX)=TI*PFEOH(L,NY,NX)+CORP*(FI*TPFEOH
@@ -8982,6 +11131,9 @@ C     FHOL(L,NY,NX)=XCORP(NY,NX)*FHOL(L,NY,NX)
      2-TI*PCPHB(L,NY,NX))+TX*PCPHB(L,NY,NX)
       PCPMB(L,NY,NX)=TI*PCPMB(L,NY,NX)+CORP*(FI*TPCPMB
      2-TI*PCPMB(L,NY,NX))+TX*PCPMB(L,NY,NX)
+C
+C     GASEOUS AND AQUEOUS GASES
+C
       CO2G(L,NY,NX)=TI*CO2G(L,NY,NX)+CORP*(FI*TCO2G-TI*CO2G(L,NY,NX))
      2+TX*CO2G(L,NY,NX)
       CH4G(L,NY,NX)=TI*CH4G(L,NY,NX)+CORP*(FI*TCH4G-TI*CH4G(L,NY,NX))
@@ -9008,6 +11160,9 @@ C     FHOL(L,NY,NX)=XCORP(NY,NX)*FHOL(L,NY,NX)
      2+TX*H2GG(L,NY,NX)
       H2GS(L,NY,NX)=TI*H2GS(L,NY,NX)+CORP*(FI*TH2GS-TI*H2GS(L,NY,NX))
      2+TX*H2GS(L,NY,NX)+CORP*H2GSH(L,NY,NX)
+C
+C     SOLUTES IN MACROPORES
+C
       ZNH4SH(L,NY,NX)=XCORP(NY,NX)*ZNH4SH(L,NY,NX)
       ZNH3SH(L,NY,NX)=XCORP(NY,NX)*ZNH3SH(L,NY,NX)
       ZNO3SH(L,NY,NX)=XCORP(NY,NX)*ZNO3SH(L,NY,NX)
@@ -9076,6 +11231,9 @@ C     FHOL(L,NY,NX)=XCORP(NY,NX)*FHOL(L,NY,NX)
       Z2GSH(L,NY,NX)=XCORP(NY,NX)*Z2GSH(L,NY,NX)
       Z2OSH(L,NY,NX)=XCORP(NY,NX)*Z2OSH(L,NY,NX)
       H2GSH(L,NY,NX)=XCORP(NY,NX)*H2GSH(L,NY,NX)
+C
+C     ORGANIC MATTER
+C
       DO 5965 K=0,5
       DO 5965 N=1,7
       DO 5965 M=1,3
@@ -9115,7 +11273,7 @@ C     FHOL(L,NY,NX)=XCORP(NY,NX)*FHOL(L,NY,NX)
      2-TI*OHP(K,L,NY,NX))+TX*OHP(K,L,NY,NX)
       OHA(K,L,NY,NX)=TI*OHA(K,L,NY,NX)+CORP*(FI*TOHA(K)
      2-TI*OHA(K,L,NY,NX))+TX*OHA(K,L,NY,NX)
-      DO 5970 M=1,4
+      DO 5970 M=1,5
       OSC(M,K,L,NY,NX)=TI*OSC(M,K,L,NY,NX)+CORP*(FI*TOSC(M,K)
      2-TI*OSC(M,K,L,NY,NX))+TX*OSC(M,K,L,NY,NX)
       OSA(M,K,L,NY,NX)=TI*OSA(M,K,L,NY,NX)+CORP*(FI*TOSA(M,K)
@@ -9158,19 +11316,28 @@ C
       OHN(K,L,NY,NX)=OHN(K,L,NY,NX)+FI*TOHGN(K)
       OHP(K,L,NY,NX)=OHP(K,L,NY,NX)+FI*TOHGP(K)
       OHA(K,L,NY,NX)=OHA(K,L,NY,NX)+FI*TOHGA(K)
-      DO 5930 M=1,4
+      DO 5930 M=1,5
       OSC(M,K,L,NY,NX)=OSC(M,K,L,NY,NX)+FI*TOSGC(M,K)
       OSA(M,K,L,NY,NX)=OSA(M,K,L,NY,NX)+FI*TOSGA(M,K)
       OSN(M,K,L,NY,NX)=OSN(M,K,L,NY,NX)+FI*TOSGN(M,K)
       OSP(M,K,L,NY,NX)=OSP(M,K,L,NY,NX)+FI*TOSGP(M,K)
 5930  CONTINUE
 5920  CONTINUE
-      OC=0.0
-      ON=0.0
-      OP=0.0
+C
+C     RECALCULATE SOIL ORGANIC MATTER IN SOIL LAYERS WITHIN THE MIXING ZONE
+C
       DC=0.0
       DN=0.0
       DP=0.0
+      OC=0.0
+      ON=0.0
+      OP=0.0
+      DCC=0.0
+      DNC=0.0
+      DPC=0.0
+      OCC=0.0
+      ONC=0.0
+      OPC=0.0
       DO 5985 K=0,5
       DO 5985 N=1,7
       DO 5985 M=1,3
@@ -9204,19 +11371,34 @@ C
       DN=DN+OQN(K,L,NY,NX)+OQNH(K,L,NY,NX)+OHN(K,L,NY,NX)
       DC=DC+OQC(K,L,NY,NX)+OQCH(K,L,NY,NX)+OHC(K,L,NY,NX)
       ENDIF
-      DO 6980 M=1,4
-      OC=OC+OSC(M,K,L,NY,NX)
-      ON=ON+OSN(M,K,L,NY,NX)
-      OP=OP+OSP(M,K,L,NY,NX)
+      DO 6980 M=1,5
       IF(K.LE.2)THEN
+      IF(M.LE.4)THEN
       DC=DC+OSC(M,K,L,NY,NX)
       DN=DN+OSN(M,K,L,NY,NX)
       DP=DP+OSP(M,K,L,NY,NX)
+      ELSE
+      DCC=DCC+OSC(M,K,L,NY,NX)
+      DNC=DNC+OSN(M,K,L,NY,NX)
+      DPC=DP+OSP(M,K,L,NY,NX)
+      ENDIF
+      ELSE
+      IF(M.LE.4)THEN
+      OC=OC+OSC(M,K,L,NY,NX)
+      ON=ON+OSN(M,K,L,NY,NX)
+      OP=OP+OSP(M,K,L,NY,NX)
+      ELSE
+      OCC=OCC+OSC(M,K,L,NY,NX)
+      ONC=ONC+OSN(M,K,L,NY,NX)
+      OPC=OPC+OSP(M,K,L,NY,NX)
+      ENDIF
       ENDIF
 6980  CONTINUE
 6995  CONTINUE
-      ORGC(L,NY,NX)=OC
-      ORGN(L,NY,NX)=ON
+      ORGC(L,NY,NX)=DC+OC
+      ORGN(L,NY,NX)=DN+ON
+      ORGCC(L,NY,NX)=DCC+OCC
+      ORGNC(L,NY,NX)=DNC+ONC
       ORGR(L,NY,NX)=DC
       CO2S(L,NY,NX)=CO2S(L,NY,NX)+FI*TCO2GS
       CH4S(L,NY,NX)=CH4S(L,NY,NX)+FI*TCH4GS
@@ -9254,7 +11436,7 @@ C
       ENDIF
 2000  CONTINUE
       ZNFN0(0,NY,NX)=ZNFNX0
-      ZNFNI(0,NY,NX)=ZNFNI(0,NY,NX)*XCORP0
+      ZNFNI(0,NY,NX)=ZNFNI(0,NY,NX)*XCORP0 
       TZNFN2=TZNFN2+TZNFNG
       TZNFNI=TZNFNI+TZNFNG
       DO 2001 L=NU(NY,NX),LL
@@ -9265,36 +11447,12 @@ C
       ENDIF
 2001  CONTINUE
       ENDIF
+      ENDIF
 C
-C     OUTPUT FOR SOIL WATER, ICE CONTENTS
+C     CHECK MATERIAL BALANCES FROM TOTAL ECOSYSTEM CONTENTS
+C     LESS CUMULATIVE INPUTS PLUS CUMULATIVE OUTPUTS
 C
-      THETWZ(0,NY,NX)=AMAX1(0.0,(VOLW(0,NY,NX)-VOLWRX(NY,NX))
-     2/AREA(3,0,NY,NX))
-      THETIZ(0,NY,NX)=AMAX1(0.0,(VOLI(0,NY,NX)-VOLWRX(NY,NX))
-     2/AREA(3,0,NY,NX))
-C     THETWZ(0,NY,NX)=AMAX1(0.0,AMIN1(1.0
-C    2,VOLW(0,NY,NX)/VOLR(NY,NX)))
-C     THETIZ(0,NY,NX)=AMAX1(0.0,AMIN1(1.0
-C    2,VOLI(0,NY,NX)/VOLR(NY,NX)))
-      DO 9945 L=NUI(NY,NX),NL(NY,NX)
-      VOLXX=AREA(3,L,NY,NX)*DLYR(3,L,NY,NX)*FMPR(L,NY,NX)
-      VOLTX=VOLXX+VOLAH(L,NY,NX)
-      THETWZ(L,NY,NX)=(VOLW(L,NY,NX)+AMIN1(VOLAH(L,NY,NX)
-     2,VOLWH(L,NY,NX)))/VOLTX
-      THETIZ(L,NY,NX)=(VOLI(L,NY,NX)+AMIN1(VOLAH(L,NY,NX)
-     2,VOLIH(L,NY,NX)))/VOLTX
-C     IF(NX.EQ.1)THEN
-C     WRITE(*,1189)'THETWZ',I,J,NX,NY,L
-C    2,THETWZ(L,NY,NX),THETIZ(L,NY,NX),VOLW(L,NY,NX)
-C    2,VOLWH(L,NY,NX),VOLI(L,NY,NX),VOLIH(L,NY,NX)
-C    2,VOLTX,VOLXX,DLYR(3,L,NY,NX)
-1189  FORMAT(A8,5I4,20E12.4)
-C     ENDIF
-9945  CONTINUE
-C
-C     CHECK MATERIAL BALANCES
-C
-      IF(I.EQ.365.AND.J.EQ.24)THEN
+      IF(I.EQ.365.AND.J.EQ.24.AND.NFZ.EQ.NFH)THEN
       WRITE(19,2221)'ORGC',I,J,IYRC,NX,NY
      2,(ORGC(L,NY,NX)/AREA(3,L,NY,NX),L=0,NL(NY,NX))
       WRITE(20,2221)'ORGN',I,J,IYRC,NX,NY
@@ -9306,95 +11464,157 @@ C     WRITE(20,2221)'OMCL',I,J,IYRC,NX,NY
 C    2,(OMCL(L,NY,NX),L=0,NL(NY,NX))
 C     WRITE(20,2221)'OMNL',I,J,IYRC,NX,NY
 C    2,(OMNL(L,NY,NX),L=0,NL(NY,NX))
-C     WRITE(20,2222)'TLC',I,J,IYRC,NX,NY,TLRSDC+TLORGC+TLCO2G-CO2GIN
-C    2+TCOU-TORGF-XCSN,TLRSDC,TLORGC,TLCO2G,CO2GIN,TCOU,TORGF,XCSN
-C    3,(ORGR(L,NY,NX),L=0,NL(NY,NX))
+C
+C     CHECK C BALANCE
+C
+C     WRITE(20,2222)'TLC',I,J,NFZ,NX,NY
+C    2,TLRSDC+TLORGC+TLCO2G-CO2GIN+TCOU-TORGF-XCSN 
+C    2,TLRSDC,TLORGC,TLCO2G,CO2GIN,TCOU,TORGF,XCSN
+C    5,XCNET(NY,NX),XHNET(NY,NX)
+C    3,(RCGOX(L,NY,NX),L=0,NL(NY,NX))
+C    3,(RCHOX(L,NY,NX),L=0,NL(NY,NX))
+C    3,(RC4OX(L,NY,NX),L=0,NL(NY,NX))
+C    3,(ORGC(L,NY,NX),L=0,NL(NY,NX))
+C    3,(ORGCC(L,NY,NX),L=0,NL(NY,NX))
 C    5,XCODFS(NY,NX),XCOFLG(3,NU(NY,NX),NY,NX),TCO2Z(NY,NX)
-C    2,FLQGQ(NY,NX)*CCOR(NY,NX),FLQGI(NY,NX)*CCOQ(NY,NX),XCODFG(0,NY,NX)
-C    3,XCODFR(NY,NX),XCHDFS(NY,NX),XCHFLG(3,NU(NY,NX),NY,NX)
-C    2,FLQGQ(NY,NX)*CCHR(NY,NX),FLQGI(NY,NX)*CCHQ(NY,NX),XCHDFG(0,NY,NX)
-C    3,XCHDFR(NY,NX),PRECU(NY,NX)*CCOQ(NY,NX),PRECU(NY,NX)*CCHQ(NY,NX)
+C    3,XCODFG(0,NY,NX)
+C    2,FLQGQ(NY,NX)*CCOR(NY,NX),FLQGI(NY,NX)*CCOQ(NY,NX)
+C    3,XCODFR(NY,NX),XCHDFS(NY,NX),XCHFLG(3,NU(NY,NX),NY,NX) 
+C    3,XCHDFG(0,NY,NX)
+C    2,FLQGQ(NY,NX)*CCHR(NY,NX),FLQGI(NY,NX)*CCHQ(NY,NX)
+C    3,XCHDFR(NY,NX),PRECU(NY,NX)*CCOQ(NY,NX)*XNFH
+C    4,PRECU(NY,NX)*CCHQ(NY,NX)*XNFH
 C    6,TCOQRS(NY,NX),TCHQRS(NY,NX),XCOFLS(1,0,NY,NX+1)
 C    7,XCOFLS(2,0,NY+1,NX)
 C    3,UCOP(NY,NX),UDOCQ(NY,NX),UDICQ(NY,NX),UDOCD(NY,NX),UDICD(NY,NX)
 C    2,(((CSNT(M,K,L,NY,NX),M=1,4),K=0,1),L=0,NJ(NY,NX))
 C    3,(TCO2P(L,NY,NX),L=1,NJ(NY,NX)),(TCO2S(L,NY,NX),L=1,NJ(NY,NX))
 C    4,CQ,ZCSNC(NY,NX)
-C     WRITE(20,2222)'TLW',I,J,IYRC,NX,NY,VOLWSO-CRAIN+CRUN+CEVAP+VOLWOU
+C
+C     CHECK WATER BALANCE
+C
+C     WRITE(20,2222)'TLW',I,J,NFZ,NX,NY
+C    2,VOLWSO-CRAIN+CRUN+CEVAP+VOLWOU
 C    2,VOLWSO,CRAIN,CRUN,CEVAP,VOLWOU
-C    3,TVOLWC(NY,NX),TVOLWP(NY,NX),VOLW(0,NY,NX),VOLI(0,NY,NX)*DENSI
-C    4,TFLWC(NY,NX),TEVAPC(NY,NX),TEVAPG(NY,NX),TEVAPP(NY,NX)
+C    3,TVOLWC(NY,NX),TVOLWP(NY,NX),UVOLO(NY,NX)
+C    3,UVOLW(NY,NX),UEVAP(NY,NX),URUN(NY,NX),FLWR(NY,NX),TFLWC(NY,NX)
+C    4,(VOLWC(NZ,NY,NX),NZ=1,3)
+C    4,(VOLWP(NZ,NY,NX),NZ=1,3)
+C    4,(VOLWQ(NZ,NY,NX),NZ=1,3)
+C    4,VOLW(0,NY,NX),VOLV(0,NY,NX),VOLI(0,NY,NX)*DENSI
+C    4,TEVAPG(NY,NX),TEVAPC(NY,NX),TEVAPP(NY,NX)
+C    4,TEVAPP(NY,NX)-TEVAPC(NY,NX),XVPFLG(3,NU(NY,NX),NY,NX)
 C    5,VOLSS(NY,NX),VOLWS(NY,NX),VOLIS(NY,NX)*DENSI
 C    6,(VOLW(L,NY,NX),L=0,NL(NY,NX))
+C    6,(VOLV(L,NY,NX),L=0,NL(NY,NX))
+C    6,(VOLWH(L,NY,NX),L=NU(NY,NX),NL(NY,NX))
 C    6,(VOLI(L,NY,NX)*DENSI,L=0,NL(NY,NX))
-C    6,TQS(NY,NX),TQW(NY,NX),TQI(NY,NX),TVOLWC(NY,NX)
-C    7,TVOLWP(NY,NX),(TUPWTR(L,NY,NX),L=1,JZ)
-C     WRITE(20,2222)'TLH',I,J,IYRC,NX,NY,HEATSO-HEATIN+HEATOU
-C    2,HEATSO,HEATIN,HEATOU,HEATH(NY,NX),HRAINR
-C    I,HTHAWR(NY,NX),HFLXD,HFLXO,4.19*TKA(NY,NX)*PRECA(NY,NX)
-C    I,2.095*TKA(NY,NX)*PRECW(NY,NX),HEATH(NY,NX),THFLXC(NY,NX)
-C    I,(XTHAWW(L,NY,NX),L=1,JS)
-C    I,(THTHAW(L,NY,NX),L=NU(NY,NX),NL(NY,NX))
+C    6,(VOLIH(L,NY,NX)*DENSI,L=NU(NY,NX),NL(NY,NX))
+C    6,TQS(NY,NX),TQW(NY,NX),TQI(NY,NX)
+C    8,(TUPWTR(L,NY,NX),L=1,NL(NY,NX))
+C
+C     CHECK HEAT BALANCE
+C
+C     WRITE(20,2222)'TLH',I,J,NFZ,NX,NY
+C    2,HEATSO-HEATIN+HEATOU
+C    2,HEATSO,HEATIN,HEATOU
+C    I,(HCBFX(L,2,NX),L=0,NL(NY,NX))
+C    I,HFLXD,HFLXO,HFLWR(NY,NX)
+C    I,4.19*TKAM(NY,NX)*PRECA(NY,NX)*XNFH
+C    I,2.095*TKAM(NY,NX)*PRECW(NY,NX)*XNFH
+C    I,XHFLVR(NY,NX),XHFLFR(NY,NX)
+C    I,HEATH(NY,NX),THFLXC(NY,NX)
+C    I,(XHFLF0(L,NY,NX),L=1,JS) 
+C    I,(XHFLV0(L,NY,NX),L=1,JS) 
+C    I,(THFLVL(L,NY,NX),L=NU(NY,NX),NL(NY,NX))
+C    I,(THFLFL(L,NY,NX),L=NU(NY,NX),NL(NY,NX))
 C    I,(TUPHT(L,NY,NX),L=NU(NY,NX),NL(NY,NX))
-C    O,4.19*TKA(NY,NX)*PRECU(NY,NX),THQS(NY,NX)
+C    O,4.19*TKAM(NY,NX)*PRECU(NY,NX)*XNFH,THQS(NY,NX)
 C    S,((VHCP(L,NY,NX)*TKS(L,NY,NX)),L=0,NL(NY,NX))
+C    S,TENGYC(NY,NX) 
 C    S,((VHCPW(L,NY,NX)*TKW(L,NY,NX)),L=1,JS)
-C    S,VHCP(0,NY,NX),VHCPRX(NY,NX)
-C     WRITE(19,2224)'TLO',I,J,IYRC,NX,NY,OXYGSO-OXYGIN+OXYGOU
+C    S,VHCP(0,NY,NX),VHCPRX(NY,NX),ORGC(0,NY,NX),ORGCC(0,NY,NX)
+C    S,VOLW(0,NY,NX),VOLV(0,NY,NX),VOLI(0,NY,NX)
+C
+C     CHECK O2 BALANCE
+C 
+C     WRITE(19,2222)'TLO',I,J,NFZ,NX,NY
+C    2,OXYGSO-OXYGIN+OXYGOU 
 C    2,OXYGSO,OXYGIN,OXYGOU
-C    3,XOXDFS(NY,NX),XOXFLG(3,NU(NY,NX),NY,NX)
-C    3,XOXDFG(0,NY,NX),TOXYZ(NY,NX),FLQGQ(NY,NX)*COXR(NY,NX)
-C    4,FLQGI(NY,NX)*COXQ,PRECU(NY,NX)*COXQ
-C    3,(OXYG(L,NY,NX),L=1,JZ)
-C    4,(OXYS(L,NY,NX),L=0,JZ)
+C    3,XOXDFS(NY,NX),XOXDFR(NY,NX),XOXFLG(3,NU(NY,NX),NY,NX)
+C    3,XOXFLG(3,0,NY,NX),TOXYZ(NY,NX)
+C    3,FLQGQ(NY,NX)*COXR(NY,NX)
+C    4,FLQGI(NY,NX)*COXQ,PRECU(NY,NX)*COXQ*XNFH
+C    3,(ROGOX(L,NY,NX),L=0,NL(NY,NX))
+C    3,(RC4OX(L,NY,NX),L=0,NL(NY,NX))
+C    3,(OXYG(L,NY,NX),L=0,NL(NY,NX))
+C    4,(OXYS(L,NY,NX),L=0,NL(NY,NX))
 C    4,(OXYSH(L,NY,NX),L=1,JZ)
 C    2,(RUPOXO(L,NY,NX),L=1,NJ(NY,NX))
 C    3,(TUPOXP(L,NY,NX),L=1,NJ(NY,NX)),(TOXFLA(L,NY,NX),L=1,NJ(NY,NX))
-C     WRITE(20,2222)'TLN',I,J,IYRC,NX,NY,TLRSDN+TLORGN+TLN2G+TLNH4
-C    2+TLNO3-ZN2GIN-TZIN+TZOU-TORGN-XZSN,TLRSDN,TLORGN,TLN2G,TLNH4
-C    3,TLNO3,ZN2GIN,TZIN,TZOU,TORGN,XZSN
+C
+C     CHECK N BALANCE
+C
+C     WRITE(20,2222)'TLN',I,J,NFZ,NX,NY
+C    2,TLRSDN+TLORGN+TLN2G+TLNH4+TLNO3-ZN2GIN-TZIN+TZOU-TORGN-XZSN 
+C    2,TLRSDN,TLORGN,TLN2G,TLNH4,TLNO3,ZN2GIN,TZIN,TZOU,TORGN,XZSN
 C    5,(XN4(L,NY,NX),L=0,NL(NY,NX))
-C    4,(((ZSNT(M,K,L,NY,NX),M=1,4),K=0,1),L=0,JZ)
+C    4,(((ZSNT(M,K,L,NY,NX),M=1,5),K=0,1),L=0,JZ)
 C    5,(TUPNH4(L,NY,NX),L=1,JZ)
-C    6,(TUPNO3(L,NY,NX),L=1,JZ),(TNHFLA(L,NY,NX),L=1,JZ)
+C    6,(TUPNO3(L,NY,NX),L=1,JZ)
+C    7,(TNHFLA(L,NY,NX),L=1,JZ)
 C    7,XN3DFS(NY,NX),XNBDFS(NY,NX)
 C    8,XN3FLG(3,NU(NY,NX),NY,NX),TNH3Z(NY,NX),UN2GS(NY,NX)
 C    9,(XN2GS(L,NY,NX),L=0,JZ)
-C    4,PRECQ(NY,NX),PRECR(NY,NX)
-C    4,PRECW(NY,NX),PRECI(NY,NX),FLQGM(NY,NX),FLQRM(NY,NX)
-C     WRITE(20,2222)'TLP',I,J,IYRC,NX,NY,TLRSDP+TLORGP
-C    2+TLPO4-TPIN+TPOU-TORGP-XPSN,TLRSDP,TLORGP
-C    2,TLPO4,TPIN,TPOU,TORGP,XPSN
+C    4,PRECQ(NY,NX)*XNFH,PRECA(NY,NX)*XNFH
+C    4,PRECW(NY,NX)*XNFH,PRECI(NY,NX)*XNFH,FLQGM(NY,NX),FLQRM(NY,NX)
+C
+C     CHECK P BALANCE
+C
+C     WRITE(20,2222)'TLP',I,J,NFZ,NX,NY
+C    2,TLRSDP+TLORGP+TLPO4-TPIN+TPOU-TORGP-XPSN 
+C    2,TLRSDP,TLORGP,TLPO4,TPIN,TPOU,TORGP,XPSN
 C    2,(Z1PW(L,NY,NX),L=1,JS),(ZHPW(L,NY,NX),L=1,JS)
 C    3,(H1PO4(L,NY,NX),L=0,JZ),(H2PO4(L,NY,NX),L=0,JZ)
-C    4,(H1PO4H(L,NY,NX),L=1,JZ),(H2PO4H(L,NY,NX),L=1,JZ)
+C    4,(H1PO4H(L,NY,NX),L=1,JZ),(H2PO4H(L,NY,NX),L=1,JZ) 
 C    6,FLQGQ(NY,NX),FLQRQ(NY,NX),CPOR(NY,NX),CH1PR(NY,NX)
 C    7,FLQGI(NY,NX),FLQRI(NY,NX),CPOQ(I,NY,NX),CH1PQ(I,NY,NX)
-C     WRITE(20,2222)'TLI',I,J,IYRC,NX,NY,TION-TIONIN+TIONOU
-C    2,TION,TIONIN,TIONOU
-C    3,PRECQ(NY,NX),XHGDFS(NY,NX),XHGFLG(3,NU(NY,NX),NY,NX)
-C    4,TH2GZ(NY,NX)
+C
+C     CHECK SALT BALANCE
+C 
+C     WRITE(20,2222)'TLI',I,J,NFZ,NX,NY
+C    2,TION-TIONIN+TIONOU
+C    2,TION,TIONIN,TIONOU 
+C    3,PRECQ(NY,NX)*XNFH,XHGDFS(NY,NX),XHGFLG(3,NU(NY,NX),NY,NX)
+C    4,TH2GZ(NY,NX) 
 C    4,(XHGQRS(N,NY,NX),N=1,2),(RH2GO(L,NY,NX),L=1,JZ)
 C    5,(THGFLA(L,NY,NX),L=1,JZ)
 C    6,(H2GG(L,NY,NX),L=1,JZ),(TLH2GP(L,NY,NX),L=1,JZ)
-C     WRITE(20,2224)'TLG',I,J,IYRC,NX,NY,TLH2G-H2GIN+H2GOU,TLH2G
-C    2,H2GIN,H2GOU,(H2GG(L,NY,NX),L=0,NJ(NY,NX))
-C    3,(H2GS(L,NY,NX),L=0,NJ(NY,NX))
+C
+C     CHECK H2 BALANCE
+C
+C     WRITE(20,2222)'TLG',I,J,NFZ,NX,NY
+C    2,TLH2G-H2GIN+H2GOU
+C    3,TLH2G,H2GIN,H2GOU
+C    4,(H2GG(L,NY,NX),L=0,NJ(NY,NX)),(H2GS(L,NY,NX),L=0,NJ(NY,NX))
 C    3,(H2GSH(L,NY,NX),L=1,NJ(NY,NX)),(TLH2GP(L,NY,NX),L=1,NJ(NY,NX))
 C    4,XHGDFS(NY,NX),TH2GZ(NY,NX),(THGFLA(L,NY,NX),L=1,NJ(NY,NX))
 C    2,XHGDFG(0,NY,NX),XHGDFR(NY,NX),(XHGBBL(L,NY,NX),L=1,NJ(NY,NX))
 C    3,(RH2GO(L,NY,NX),L=0,NJ(NY,NX)),(TUPHGS(L,NY,NX),L=1,NJ(NY,NX))
-C    4,(XHGQRS(N,NY,NX),N=1,2),((XHGFLS(N,L,NY,NX),N=1,3),L=0,NJ(NY,NX))
+C    4,(XHGQRS(N,NY,NX),N=1,2)
+C    5,((XHGFLS(N,L,NY,NX),N=1,3),L=0,NJ(NY,NX))
 C    5,((XHGFHS(N,L,NY,NX),N=1,3),L=0,NJ(NY,NX))
 C    6,((XHGFLG(N,L,NY,NX),N=1,3),L=0,NJ(NY,NX))
-C     WRITE(*,2223)'TLS',I,J,IYRC,NX,NY,NU(NY,NX),TSEDSO+TSEDOU
+C
+C     CHECK SEDIMENT BALANCE
+C 
+C     WRITE(*,2222)'TLS',I,J,NFZ,NX,NY
+C    2,TSEDSO+TSEDOU
 C    2,TSEDSO,TSEDOU,USEDOU(NY,NX),DLYR(3,NU(NY,NX),NY,NX)
 C    3,BKVL(NU(NY,NX),NY,NX),SAND(NU(NY,NX),NY,NX)
 C    4,SILT(NU(NY,NX),NY,NX),CLAY(NU(NY,NX),NY,NX)
 C    5,ORGC(NU(NY,NX),NY,NX)
-2222  FORMAT(A8,5I6,240F18.6)
-2223  FORMAT(A8,6I6,160F16.6)
-2224  FORMAT(A8,5I6,160F16.6)
+2222  FORMAT(A8,5I4,360F20.6)
 C     ENDIF
 9990  CONTINUE
 9995  CONTINUE

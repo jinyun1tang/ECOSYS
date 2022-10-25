@@ -35,6 +35,12 @@ C
 C
 C     OPEN AND NAME OUTPUT FILES
 C
+C     DATAC(21-30)=output file names from runscript read in �main.f�
+C     PREFIX=path for files in current or higher level directory
+C        from �main.f�
+C     IYRC=current year
+C     OUTFILS=output file name for grid cell, year
+C
       DO 1010 N=21,30
       IF(DATAC(N,NE,NEX).NE.'NO')THEN
       WRITE(CHARR,'(I4)')IYRC
@@ -65,6 +71,8 @@ C
 C
 C     WRITE HEADINGS TO OUTPUT FILES
 C
+C     HOURLY C
+C
       M=0
       IF(N.EQ.21)THEN
       DO 1021 L=51,100
@@ -82,6 +90,9 @@ C
 1021  CONTINUE
       NOUTP(N-20)=M
       ENDIF
+C
+C     HOURLY WATER
+C
       IF(N.EQ.22)THEN
       DO 1022 L=51,100
       IF(CHOICE(L,N-20).EQ.'YES')THEN
@@ -111,6 +122,9 @@ C
 1022  CONTINUE
       NOUTP(N-20)=M
       ENDIF
+C
+C     HOURLY N
+C
       IF(N.EQ.23)THEN
       DO 1023 L=51,100
       IF(CHOICE(L,N-20).EQ.'YES')THEN
@@ -154,6 +168,9 @@ C
 1023  CONTINUE
       NOUTP(N-20)=M
       ENDIF
+C
+C     HOURLY P
+C
       IF(N.EQ.24)THEN
       DO 1024 L=51,100
       IF(CHOICE(L,N-20).EQ.'YES')THEN
@@ -179,6 +196,9 @@ C
 1024  CONTINUE
       NOUTP(N-20)=M
       ENDIF
+C
+C     HOURLY ENERGY FLUX, TEMPERATURE
+C
       IF(N.EQ.25)THEN
       DO 1025 L=51,100
       IF(CHOICE(L,N-20).EQ.'YES')THEN
@@ -189,10 +209,14 @@ C
       IF(L.EQ.54)HEAD(M)='CAN_G'
       IF(L.EQ.55)HEAD(M)='CAN_TEMP'
       IF(L.EQ.56)HEAD(M)='TEMP_FN'
+      IF(L.EQ.57)HEAD(M)='STG_TEMP'
       ENDIF
 1025  CONTINUE
       NOUTP(N-20)=M
       ENDIF
+C
+C     DAILY C
+C
       IF(N.EQ.26)THEN
       DO 1026 L=51,100
       IF(CHOICE(L,N-20).EQ.'YES')THEN
@@ -234,8 +258,8 @@ C
       IF(L.EQ.85)HEAD(M)='DNS_RT_15'
       IF(L.EQ.86)HEAD(M)='C_BALANCE'
       IF(L.EQ.87)HEAD(M)='STG_DEAD_C'
-      IF(L.EQ.88)HEAD(M)='FIRE_CO2'
-      IF(L.EQ.89)HEAD(M)='FIRE_CH4'
+      IF(L.EQ.88)HEAD(M)='FIRE_C_LOSS'
+      IF(L.EQ.89)HEAD(M)='BLANK'
       IF(L.EQ.90)HEAD(M)='NPP'
       IF(L.EQ.91)HEAD(M)='CAN_HT'
       IF(L.EQ.92)HEAD(M)='POPN'
@@ -243,6 +267,9 @@ C
 1026  CONTINUE
       NOUTP(N-20)=M
       ENDIF
+C
+C     DAILY WATER
+C
       IF(N.EQ.27)THEN
       DO 1027 L=51,100
       IF(CHOICE(L,N-20).EQ.'YES')THEN
@@ -250,10 +277,14 @@ C
       IF(L.EQ.51)HEAD(M)='TRANSPN'
       IF(L.EQ.52)HEAD(M)='WTR_STRESS'
       IF(L.EQ.53)HEAD(M)='OXY_STRESS'
+      IF(L.EQ.54)HEAD(M)='PLT_WATER'
       ENDIF
 1027  CONTINUE
       NOUTP(N-20)=M
       ENDIF
+C
+C     DAILY N
+C
       IF(N.EQ.28)THEN
       DO 1028 L=51,100
       IF(CHOICE(L,N-20).EQ.'YES')THEN
@@ -279,12 +310,15 @@ C
       IF(L.EQ.69)HEAD(M)='HVST_N'
       IF(L.EQ.70)HEAD(M)='N_BALANCE'
       IF(L.EQ.71)HEAD(M)='STG_DEAD_N'
-      IF(L.EQ.72)HEAD(M)='FIRE_N'
+      IF(L.EQ.72)HEAD(M)='FIRE_N_BURN'
       IF(L.EQ.73)HEAD(M)='SF_LIT_N'
       ENDIF
 1028  CONTINUE
       NOUTP(N-20)=M
       ENDIF
+C
+C     DAILY P
+C
       IF(N.EQ.29)THEN
       DO 1029 L=51,100
       IF(CHOICE(L,N-20).EQ.'YES')THEN
@@ -306,13 +340,16 @@ C
       IF(L.EQ.65)HEAD(M)='HVST_P'
       IF(L.EQ.66)HEAD(M)='P_BALANCE'
       IF(L.EQ.67)HEAD(M)='STG_DEAD_P'
-      IF(L.EQ.68)HEAD(M)='FIRE_P'
+      IF(L.EQ.68)HEAD(M)='FIRE_P_BURN'
       IF(L.EQ.69)HEAD(M)='SF_LIT_P'
       ENDIF
 1029  CONTINUE
       NOUTP(N-20)=M
       ENDIF
       IF(N.EQ.30)THEN
+C
+C     DAILY PHENOLOGY,N, P, WATER, O2, TEMPERATURE STRESS
+C
       DO 1030 L=51,100
       IF(CHOICE(L,N-20).EQ.'YES')THEN
       M=M+1
@@ -320,8 +357,8 @@ C
       IF(L.EQ.52)HEAD(M)='BRANCH_NO.'
       IF(L.EQ.53)HEAD(M)='NODE_NO.'
       IF(L.EQ.54)HEAD(M)='RUB_ACTVN'
-      IF(L.EQ.55)HEAD(M)='LEAF_rNC'
-      IF(L.EQ.56)HEAD(M)='LEAF_rPC'
+      IF(L.EQ.55)HEAD(M)='LEAF_N/C'
+      IF(L.EQ.56)HEAD(M)='LEAF_P/C'
       IF(L.EQ.57)HEAD(M)='MIN_LWP'
       IF(L.EQ.58)HEAD(M)='O2_STRESS'
       IF(L.EQ.59)HEAD(M)='TEMP_STRESS'

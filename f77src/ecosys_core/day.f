@@ -37,7 +37,7 @@ C
       CHARACTER*4 CHARN3
       PARAMETER (TWILGT=0.06976)
 C
-C     WRITE DATE
+C     WRITE DATE FOR USE IN OUTPUT FILES
 C
 C     CDATE=DDMMYYYY
 C
@@ -61,6 +61,7 @@ C
 500   CONTINUE
 C
 C     WRITE DAILY MAX MIN ACCUMULATORS FOR WEATHER VARIABLES
+C     FOR USE IN OUTPUT FILES
 C
 501   DO 955 NX=NHW,NHE
       DO 950 NY=NVN,NVS
@@ -81,6 +82,12 @@ C     ALAT=latitude +ve=N,-ve=S
 C
       IF((ALAT(NY,NX).GE.0.0.AND.I.EQ.1)
      2.OR.(ALAT(NY,NX).LT.0.0.AND.I.EQ.1))THEN
+C
+C     FOR EACH GRID CELL
+C
+      ZCNET(NY,NX)=0.0
+      ZHNET(NY,NX)=0.0
+      ZONET(NY,NX)=0.0
       UORGF(NY,NX)=0.0
       UXCSN(NY,NX)=0.0
       UCOP(NY,NX)=0.0
@@ -94,6 +101,7 @@ C
       URUN(NY,NX)=0.0
       USEDOU(NY,NX)=0.0
       UVOLO(NY,NX)=0.0
+      UVOLY(NY,NX)=0.0
       UIONOU(NY,NX)=0.0
       UFERTN(NY,NX)=0.0
       UXZSN(NY,NX)=0.0
@@ -115,12 +123,6 @@ C
       UNH3G(NY,NX)=0.0
       UN2GS(NY,NX)=0.0
       UH2GG(NY,NX)=0.0
-      UCO2F(NY,NX)=0.0
-      UCH4F(NY,NX)=0.0
-      UOXYF(NY,NX)=0.0
-      UN2OF(NY,NX)=0.0
-      UNH3F(NY,NX)=0.0
-      UPO4F(NY,NX)=0.0
       THRE(NY,NX)=0.0
       TGPP(NY,NX)=0.0
       TNPP(NY,NX)=0.0
@@ -131,13 +133,27 @@ C
       XHVSTP(NY,NX)=0.0
       TRINH4(NY,NX)=0.0
       TRIPO4(NY,NX)=0.0
+      VCO2G(NY,NX)=0.0
+      VCH4G(NY,NX)=0.0
+      VNOXG(NY,NX)=0.0
+      VPOXG(NY,NX)=0.0
+      VCO2R(NY,NX)=0.0
+      VCH4R(NY,NX)=0.0
+      VNOXR(NY,NX)=0.0
+      VPOXR(NY,NX)=0.0
+      VCOXFS(NY,NX)=0.0
+      VNOXFS(NY,NX)=0.0
+      VPOXFS(NY,NX)=0.0
+C
+C     FOR EACH PLANT SPECIES IN EACH GRID CELL
+C
       DO 960 NZ=1,NP0(NY,NX)
       RSETC(NZ,NY,NX)=RSETC(NZ,NY,NX)+CARBN(NZ,NY,NX)+TCUPTK(NZ,NY,NX)
-     2-TCSNC(NZ,NY,NX)+TCO2T(NZ,NY,NX)-VCO2F(NZ,NY,NX)-VCH4F(NZ,NY,NX)
+     2-TCSNC(NZ,NY,NX)+TCO2T(NZ,NY,NX)+VCOXF(NZ,NY,NX) 
       RSETN(NZ,NY,NX)=RSETN(NZ,NY,NX)+TZUPTK(NZ,NY,NX)+TNH3C(NZ,NY,NX)
-     2-TZSNC(NZ,NY,NX)-VNH3F(NZ,NY,NX)-VN2OF(NZ,NY,NX)+TZUPFX(NZ,NY,NX)
+     2-TZSNC(NZ,NY,NX)+VNOXF(NZ,NY,NX)+TZUPFX(NZ,NY,NX)
       RSETP(NZ,NY,NX)=RSETP(NZ,NY,NX)+TPUPTK(NZ,NY,NX) 
-     2-TPSNC(NZ,NY,NX)-VPO4F(NZ,NY,NX)
+     2-TPSNC(NZ,NY,NX)+VPOXF(NZ,NY,NX)
       CARBN(NZ,NY,NX)=0.0
       TCUPTK(NZ,NY,NX)=0.0
       TCO2T(NZ,NY,NX)=0.0
@@ -147,12 +163,9 @@ C
       TZUPFX(NZ,NY,NX)=0.0
       TNH3C(NZ,NY,NX)=0.0
       TPUPTK(NZ,NY,NX)=0.0
-      VCO2F(NZ,NY,NX)=0.0
-      VCH4F(NZ,NY,NX)=0.0
-      VOXYF(NZ,NY,NX)=0.0
-      VNH3F(NZ,NY,NX)=0.0
-      VN2OF(NZ,NY,NX)=0.0
-      VPO4F(NZ,NY,NX)=0.0
+      VCOXF(NZ,NY,NX)=0.0
+      VNOXF(NZ,NY,NX)=0.0
+      VPOXF(NZ,NY,NX)=0.0
       THVSTC(NZ,NY,NX)=THVSTC(NZ,NY,NX)+HVSTC(NZ,NY,NX)
       THVSTN(NZ,NY,NX)=THVSTN(NZ,NY,NX)+HVSTN(NZ,NY,NX)
       THVSTP(NZ,NY,NX)=THVSTP(NZ,NY,NX)+HVSTP(NZ,NY,NX)
@@ -191,8 +204,10 @@ C
       DYLN(NY,NX)=12.0*(1.0+2.0/3.1416*ASIN(TWILGT+AZI/DEC))
       ENDIF
 C
-C     TIME STEP OF WEARHER DATA
-C     ITYPE 1=daily,2=hourly
+C     TIME STEP OF WEATHER DATA
+C     IWTHR=weather data type:1=daily,2=hourly for first (1) 
+C        or second (2) scene in current year
+C     ITYPE=weather data type:1=daily,2=hourly
 C
       IF(IGO.EQ.0.OR.I.LE.ILAST)THEN
       ITYPE=IWTHR(1)
@@ -201,7 +216,7 @@ C
       ENDIF
 C
 C     PARAMETERS FOR CALCULATING HOURLY RADIATION, TEMPERATURE
-C     AND VAPOR PRESSURE FROM DAILY VALUES
+C     AND VAPOR PRESSURE FROM DAILY VALUES READ IN WEATHER FILE
 C
 C     DLYN=daylength
 C     SRAD=daily radiation from weather file
@@ -209,7 +224,9 @@ C     RMAX=maximum hourly radiation
 C     I2,I,I3=previous,current,next day
 C     TMPX,TMPN=maximum,minimum daily temperature from weather file
 C     DWPT=daily vapor pressure from weather file
-C     TAVG*,AMP*,VAVG*,VMP*=daily avgs, amps to calc hourly values in wthr.f 
+C     TAVG*,AMP*,VAVG*,VMP*=daily averages, amplitudes of
+C        temperatures, vapor pressures to calculate hourly
+C        values in wthr.f 
 C
       IF(ITYPE.EQ.1)THEN
       IF(IETYP(NY,NX).GE.-1)THEN
@@ -240,15 +257,17 @@ C
       VMP3=VAVG3-DWPT(2,I3)
       ENDIF
 C
-C     MODIFIERS TO TEMPERATURE, RADIATION, WIND, HUMIDITY, PRECIPITATION,
-C     IRRIGATION AND CO2 INPUTS FROM CLIMATE CHANGES ENTERED IN OPTION 
-C     FILE IN 'READS'
+C     MODIFIERS TO TEMPERATURE, RADIATION, WIND, HUMIDITY,
+C     PRECIPITATION, IRRIGATION, CO2 AND N INPUTS FROM CLIMATE CHANGES 
+C     ENTERED IN OPTION FILE IN 'READS.F'
 C
 C     ICLM=type of climate change 1=step,2=incremental
-C     TDTPX,TDTPN=change in max,min temperature
+C     TDTPX,TDTPN=change in maximum,minimum temperature
 C     TDRAD,TDWND,TDHUM=change in radiation,windspeed,vapor pressure
 C     TDPRC,TDIRRI=change in precipitation,irrigation
-C     TDCO2,TDCN4,TDCNO=change in atm CO2,NH4,NO3 concn in precipitation      
+C     TDCO2,TDCN4,TDCNO=change in CO2,NH4,NO3 concentration 
+C        in precipitation
+C     LYRC=number of days in current year      
 C
       DO 600 N=1,12
 C
@@ -266,7 +285,7 @@ C
       TDCN4(NY,NX,N)=DCN4R(N)
       TDCNO(NY,NX,N)=DCNOR(N)
 C
-C     INCRENENTAL CHANGES
+C     INCREMENTAL CHANGES
 C
       ELSEIF(ICLM.EQ.2)THEN
       TDTPX(NY,NX,N)=TDTPX(NY,NX,N)+DTMPX(N)/LYRC
@@ -283,21 +302,31 @@ C
 600   CONTINUE
 950   CONTINUE
 955   CONTINUE
+C
+C     DISTURBANCES
+C
       DO 9995 NX=NHW,NHE
       DO 9990 NY=NVN,NVS
 C
-C     ATTRIBUTE MIXING COEFFICIENTS AND SURFACE ROUGHNESS PARAMETERS
-C     TO TILLAGE EVENTS FROM SOIL MANAGEMENT FILE IN 'READS'
+C     ATTRIBUTE MIXING COEFFICIENTS TO TILLAGE EVENTS 
+C     FROM SOIL MANAGEMENT FILE IN 'READS'
 C
-C     ITILL=soil disturbance type 1-20:tillage,21=litter removal,22=fire,23-24=drainage
-C     CORP=soil mixing fraction used in redist.f
+C     ITILL=soil disturbance type 1-20:tillage,21=litter removal,
+C        22=fire,23-24=drainage
+C     XCORP=soil mixing fraction used in redist.f
+C
+C     IF ALL PLANT SPECIES ARE TILLED
 C
       IF(ITILL(I,NY,NX).LE.10)THEN
       CORP=AMIN1(1.0,AMAX1(0.0,ITILL(I,NY,NX)/10.0))
+      XCORP(NY,NX)=1.0-CORP
+C
+C     IF ALL PLANT SPECIES ARE TILLED EXCEPT NZ=1 (EG CROP)
+C
       ELSEIF(ITILL(I,NY,NX).LE.20)THEN      
       CORP=AMIN1(1.0,AMAX1(0.0,(ITILL(I,NY,NX)-10.0)/10.0))
-      ENDIF
       XCORP(NY,NX)=1.0-CORP
+      ENDIF
 C     WRITE(*,2227)'TILL',I,ITILL(I,NY,NX),CORP,XCORP(NY,NX)
 2227  FORMAT(A8,2I4,12E12.4)
 C
@@ -305,16 +334,21 @@ C     AUTOMATIC IRRIGATION IF SELECTED
 C
 C     DATA(6)=irrigation file name
 C     IIRRA=start,finish dates(1,2),hours(3,4) of automated irrigation
-C     DIRRX=depth to which water depletion and rewatering is calculated(1)
-C     DIRRA=depth to,at which irrigation is applied(1,2) 
-C     POROS,FC,WP=water content at saturation,field capacity,wilting point
+C     DIRRX=depth to which water depletion and rewatering is
+C        calculated(1)
+C     DIRRA=depth to,at which irrigation is applied(1,2)
+C     CDPTH(NU(NY,NX)-1,NY,NX)=surface elevation 
+C     POROS,FC,WP=water content at saturation,field capacity,
+C        wilting point
 C     CIRRA= fraction of FC to which irrigation will raise SWC
 C     FW=fraction of soil layer in irrigation zone
-C     FZ=SWC at which irrigation is triggered 
+C     FZ=SWC below which irrigation is triggered 
 C     VOLX,VOLW,VOLI=total,water,ice volume
-C     IFLGV=flag for irrigation criterion,0=SWC,1=canopy water potential 
-C     FIRRA=depletion of SWC from CIRRA to WP(IFLGV=0),or minimum canopy 
-C     water potential(IFLGV=1), to trigger irrigation
+C     IFLGV=flag for irrigation criterion,0=SWC,1=canopy water
+C        potential 
+C     FIRRA=remaining SWC calculated from CIRRA above WP (IFLGV=0),
+C        or minimum canopy water potential(IFLGV=1), 
+C        to trigger irrigation
 C     RR=total irrigation requirement
 C     RRIG=hourly irrigation amount applied in wthr.f
 C
@@ -344,11 +378,12 @@ C
       RRIG(J,I,NY,NX)=RR/(IIRRA(4,NY,NX)-IIRRA(3,NY,NX)+1)
 170   CONTINUE
       WDPTH(I,NY,NX)=DIRRA(2,NY,NX)
-      WRITE(*,2222)'auto',IYRC,I,IIRRA(3,NY,NX),IIRRA(4,NY,NX)
-     2,IFLGV(NY,NX),RR,TFZ,TVW,TWP,FIRRA(NY,NX),PSILZ(1,NY,NX)
+      WRITE(*,2222)'auto',IYRC,I,IIRRA(1,NY,NX),IIRRA(2,NY,NX)
+     3,IIRRA(3,NY,NX),IIRRA(4,NY,NX),IFLGV(NY,NX)
+     2,RR,TFZ,TVW,TWP,FIRRA(NY,NX),PSILZ(1,NY,NX)
      2,CIRRA(NY,NX),DIRRA1,WDPTH(I,NY,NX)
 C    3,(RRIG(J,I,NY,NX),J=1,24)
-2222  FORMAT(A8,5I6,40E12.4)
+2222  FORMAT(A8,7I6,40E12.4)
       ENDIF
       ENDIF
       ENDIF

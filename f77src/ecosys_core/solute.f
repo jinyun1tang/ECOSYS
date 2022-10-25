@@ -1,4 +1,4 @@
-      SUBROUTINE solute(I,J,NHW,NHE,NVN,NVS)
+      SUBROUTINE solute(I,J,NFZ,NHW,NHE,NVN,NVS)
 C
 C     THIS SUBROUTINE CALCULATES ALL SOLUTE TRANSFORMATIONS
 C     FROM THERMODYNAMIC EQUILIBRIA
@@ -36,17 +36,20 @@ C
 C     DPH20=water,SPALO=AlOH3s,SPFEO=FeOH3s,SPCAC=CaCO3s,SPCAS=CaSO4s
 C     SPALP=AlPO4s,SPFEP=FePO4s,SPCAM=Ca(H2PO4)2s,SPCAD=CAHPO4s
 C     SPCAH=hydroxyapatite,SXOX2=R-OH2,SXOX1=R-OH,SXH2P=R-H2PO4
-C     SXH1P=R-HPO4,DPCO2=CO2,DPHCO=HCO3,DPN4=NH4,DPAL1=ALOH,DPAL2=ALOH2
-C     DPAL3=AlOH3,DPAL4=ALOH4,DPALS=AlSO4,DPFE1=FeOH,DPFE2=FeOH2,DPFE3=FeOH3
-C     DPFE4=FeOH4,DPFES=FeSO4,DPCAO=CaOH,DPCAC=CaCO3,DPCAH=CaHCO3
-C     DPCAS=CaSO4,DPMGO=MgOH,DPMGC=MgCO3,DPMGH=MgHCO3,DPMGS=MgSO4
-C     DPNAC=NaCO3,DPNAS=NaSO4,DPKAS=KSO4,DPH1P=HPO4,DPH2P=H2PO4,DPH3P=H3PO4
-C     DPF1P=FeHPO4,DPF2P=FeH2PO4,DPC0P=CaPO4,DPC1P=CaHPO4,DPC2P=CaH2PO4
+C     SXH1P=R-HPO4,DPCO2=CO2,DPHCO=HCO3,DPN4=NH4,DPAL1=ALOH
+C     DPAL2=ALOH2,DPAL3=AlOH3,DPAL4=ALOH4,DPALS=AlSO4,DPFE1=FeOH
+C     DPFE2=FeOH2,DPFE3=FeOH3,DPFE4=FeOH4,DPFES=FeSO4
+C     DPCAO=CaOH,DPCAC=CaCO3,DPCAH=CaHCO3,DPCAS=CaSO4
+C     DPMGO=MgOH,DPMGC=MgCO3,DPMGH=MgHCO3,DPMGS=MgSO4
+C     DPNAC=NaCO3,DPNAS=NaSO4,DPKAS=KSO4,DPH1P=HPO4
+C     DPH2P=H2PO4,DPH3P=H3PO4,DPF1P=FeHPO4,DPF2P=FeH2PO4
+C     DPC0P=CaPO4,DPC1P=CaHPO4,DPC2P=CaH2PO4
 C     DPM1P=MgHPO4,DPCOH=R-COO,DPALO=R-AlOH2,DPFEO=R-FeOH2
+C     COOH=COOH
 C
-      PARAMETER (DPH2O=6.5E-09,SPALO=6.5E-22,SPFEO=6.5E-27
-     2,SPCAC=3.8E-03,SPCAS=1.4E+01,SPALP=1.0E-15,SPFEP=1.0E-20
-     3,SPCAM=7.0E+07,SPCAD=1.0E-01,SPCAH=2.3E-31,SXOH2=4.5E-05
+      PARAMETER (DPH2O=1.0E-08,SPALO=1.9E-21,SPFEO=2.8E-27
+     2,SPCAC=3.3E-03,SPCAS=1.4E+01,SPALP=8.7E-17,SPFEP=2.5E-22
+     3,SPCAM=7.0E+07,SPCAD=1.0E-01,SPCAH=9.5E-30,SXOH2=4.5E-05
      4,SXOH1=1.1E-06,SXH2P=2.0E+07,SXH1P=2.0E+07
      5,DPCO2=4.2E-04,DPHCO=5.6E-08,DPN4=5.7E-07
      6,DPAL1=4.6E-07,DPAL2=7.3E-07,DPAL3=1.8E-05
@@ -54,9 +57,13 @@ C
      8,DPFE3=1.8E-05,DPFE4=1.2E-05,DPFES=7.1E-02,DPCAO=12.5
      9,DPCAC=4.2E-02,DPCAH=13.5,DPCAS=1.2,DPMGO=0.7,DPMGC=0.3
      1,DPMGH=67.0,DPMGS=2.1,DPNAC=0.45,DPNAS=3.3E+02,DPKAS=5.0E+01
-     2,DPH1P=4.5E-10,DPH2P=6.3E-05,DPH3P=7.1,DPF1P=4.5E-02
+     2,DPH1P=2.1E-10,DPH2P=6.2E-05,DPH3P=7.5,DPF1P=4.5E-02
      3,DPF2P=3.7E-03,DPC0P=3.5E-04,DPC1P=1.82,DPC2P=40.0
-     4,DPM1P=1.23,DPCOH=1.0E-02,DPALO=6.3E+04,DPFEO=6.3E+04)
+     4,DPM1P=1.23,DPCOH=1.0E-02,DPALO=6.3E+04,DPFEO=6.3E+04
+     5,COOH=2.5E-02)
+C
+C     DISSOCIATION CONSTANTS CALCULATED FROM OTHER CONSTANTS
+C
       PARAMETER (DPCO3=DPCO2*DPHCO,SHALO=SPALO/DPH2O**3
      2,SYAL1=SPALO/DPAL1,SHAL1=SYAL1/DPH2O**2,SYAL2=SYAL1/DPAL2
      3,SHAL2=SYAL2/DPH2O,SPAL3=SYAL2/DPAL3,SYAL4=SPAL3/DPAL4
@@ -83,36 +90,61 @@ C
      9,SHCAH2=SHCAH1/DPH2P**3,SYCAH2=SHCAH2*DPH2O**7)
 C
 C     MRXN=number of cycles for solving reaction equilibria
-C     TPD,TADA,TADC,TSL=rate constants for dissoln,adsorpn,solute equilibria
+C     TPD,TADA,TADC,TSL=rate constants for dissolution,adsorption,
+C        solute equilibria
+C     SPNH4,SPNH3,SPNHU,SPNO3,SPPO4=specific rate constants for 
+C        NH4,NH3,urea,NO3,H2PO4 fertilizer dissolution
 C
-      PARAMETER (MRXN=1,TPD=2.5E-03,TPDX=TPD/MRXN,TADA=5.0E-02
-     2,TADAX=TADA/MRXN,TADC=5.0E-02,TADCX=TADC/MRXN
-     3,TADC0=TADC*1.0E-02,TSL=5.0E-01,TSLX=TSL/MRXN)
+      PARAMETER (MRXN=1,TPDH=2.5E-03,TPDXH=TPDH/MRXN,TADAH=5.0E-02
+     2,TADAXH=TADAH/MRXN,TADCH=5.0E-02,TADCXH=TADCH/MRXN
+     3,TADC0H=TADCH*1.0E-01,TSLH=5.0E-01,TSLXH=TSLH/MRXN)
+      PARAMETER (SPNH4H=1.0E-00,SPNH3H=1.0E-00,SPNHUH=1.0E-01
+     2,SPNO3H=1.0E-00,SPPO4H=5.0E-02)
 C
 C     DUKM,DUKI=Km,Ki for urea hydrolysis (SOIL SCI 136:56)
 C     COOH=CEC of SOC
 C     CCAMX=maximum Ca concentration
-C     SPNH4,SPNH3,SPNHU,SPNO3,SPPO4=specific rate constants for 
-C     NH4,NH3,urea,NO3,H2PO4 fertilizer dissolution
 C     RNHUI=rate constants for decline in urea hydrolysis inhibition
 C 
-      PARAMETER (DUKM=1.0,DUKI=2.5,A0=1.0,COOH=2.5E-04
-     2,CCAMX=10.0)
-      PARAMETER (SPNH4=1.0E-00,SPNH3=1.0E-00,SPNHU=1.0E-01
-     2,SPNO3=1.0E-00,SPPO4=5.0E-02)
+      PARAMETER (DUKM=0.1,DUKI=2.5,A0=1.0,CCAMX=10.0)
       DATA RNHUI/10.0E-02,1.0E-02,0.5E-02/
+C
+C     INITIALIZE RATE CONSTANTS FOR SOLUTE TRANSFORMATIONS
+C
+C     XNFH=time step from ‘wthr.f’
+C
       NPI=INT(NPH/2)
+      TPD=TPDH*XNFH
+      TPDX=TPDXH*XNFH
+      TADA=TADAH*XNFH
+      TADAX=TADAXH*XNFH
+      TADC=TADCH*XNFH
+      TADCX=TADCXH*XNFH
+      TADC0=TADC0H*XNFH
+      TSL=TSLH*XNFH
+      TSLX=TSLXH*XNFH
+      SPNH4=SPNH4H*XNFH
+      SPNH3=SPNH3H*XNFH
+      SPNHU=SPNHUH*XNFH
+      SPNO3=SPNO3H*XNFH
+      SPPO4=SPPO4H*XNFH
       DO 9995 NX=NHW,NHE
       DO 9990 NY=NVN,NVS
+C
+C     RNHUI=rate constant for decline in urea hydrolysis inhibition
+C     IUTYP=urea hydrolysis inhibitor type (0=fast release (urine),
+C        1=normal release,2=slow release)
+C
+      RNHUX=RNHUI(IUTYP(NY,NX))*XNFH
       DO 9985 L=NU(NY,NX),NL(NY,NX)
       IF(VOLX(L,NY,NX).GT.ZEROS2(NY,NX)
      2.AND.VOLWM(NPH,L,NY,NX).GT.ZEROS2(NY,NX))THEN
 C
 C     WATER VOLUME IN NON-BAND AND BAND SOIL ZONES
 C
-C     VOLWM=soil water volume
+C     VOLX,VOLWM=soil layer,water volume
 C     VLNH4,VLNHB=fractions of soil volume in NH4 non-band,band
-C     VLNO3,VLNOB=fractions of soil volume in N03 non-band,band
+C     VLNO3,VLNOB=fractions of soil volume in NO3 non-band,band
 C     VLPO4,VLPOB=fractions of soil volume in H2PO4 non-band,band
 C     BKVL=soil mass
 C
@@ -139,13 +171,15 @@ C
       BKVLPO=VOLWPO
       BKVLPB=VOLWPB
       ENDIF
+      BKVLW=BKVLX/VOLWM(NPH,L,NY,NX)
 C
 C     UREA HYDROLYSIS IN BAND AND NON-BAND SOIL ZONES
 C
-C     VOLQ=biologically active soil water volume from nitro.f
+C     VOLQ=biologically active soil water volume from ‘nitro.f’
 C     COMA=concentration of active biomass
-C     TOQCK=total microbial activity from nitro.f
-C     DUKD=Km for urea hydrolysis
+C     TOQCK=total microbial activity from ‘nitro.f’
+C     DUKD=effective Km for urea hydrolysis 
+C     DUKM,DUKI=Km,Ki for urea hydrolysis 
 C
       IF(VOLQ(L,NY,NX).GT.ZEROS2(NY,NX))THEN
       COMA=AMIN1(0.1E+06,TOQCK(L,NY,NX)/VOLQ(L,NY,NX))
@@ -156,14 +190,14 @@ C
 C
 C     UREA HYDROLYSIS INHIBITION
 C
-C     ZNHU0,ZNHUI=initial,current inhibition activity
+C     ZNHU0,ZNHUI=initial,current inhibition activity from ‘hour1.f’
 C     RNHUI=rate constants for decline in urea hydrolysis inhibition
 C
       IF(ZNHU0(L,NY,NX).GT.ZEROS(NY,NX)
      2.AND.ZNHUI(L,NY,NX).GT.ZEROS(NY,NX))THEN
       ZNHUI(L,NY,NX)=ZNHUI(L,NY,NX)
-     2-RNHUI(IUTYP(NY,NX))*ZNHUI(L,NY,NX) 
-     3*AMAX1(RNHUI(IUTYP(NY,NX)),1.0-ZNHUI(L,NY,NX)/ZNHU0(L,NY,NX))
+     2-RNHUX*ZNHUI(L,NY,NX) 
+     3*AMAX1(RNHUX,1.0-ZNHUI(L,NY,NX)/ZNHU0(L,NY,NX))
       ELSE
       ZNHUI(L,NY,NX)=0.0
       ENDIF
@@ -172,7 +206,9 @@ C     UREA CONCENTRATION AND HYDROLYSIS IN NON-BAND
 C
 C     ZNHUFA=urea fertilizer in non-band
 C     CNHUA=concentration of urea fertilizer in non-band
-C     DFNSA=effect of microbial concentration on urea hydrolysis in non-band
+C     DFNSA=effect of microbial concentration on urea hydrolysis in
+C        non-band
+C     DUKD=effective Km for urea hydrolysis 
 C     RSNUA=rate of urea hydrolysis in non-band
 C     SPNHU=specific rate constant for urea hydrolysis
 C     TFNQ=temperature effect on microbial activity from nitro.f
@@ -188,13 +224,15 @@ C
       ENDIF
       DFNSA=CNHUA/(CNHUA+DUKD)
       RSNUA=AMIN1(ZNHUFA(L,NY,NX)
-     2,SPNHU*TOQCK(L,NY,NX)*DFNSA*TFNQ(L,NY,NX))*(1.0-ZNHUI(L,NY,NX))
+     2,SPNHU*TOQCK(L,NY,NX)*DFNSA*TFNQ(L,NY,NX)*(1.0-ZNHUI(L,NY,NX)))
 C
 C     UREA CONCENTRATION AND HYDROLYSIS IN BAND
 C
 C     ZNHUFB=urea fertilizer in band
 C     CNHUB=concentration of urea fertilizer in band
-C     DFNSB=effect of microbial concentration on urea hydrolysis in band
+C     DFNSB=effect of microbial concentration on urea hydrolysis 
+C        in band
+C     DUKD=effective Km for urea hydrolysis 
 C     RSNUB=rate of urea hydrolysis in non-band
 C     SPNHU=specific rate constant for urea hydrolysis
 C     TFNQ=temperature effect on microbial activity from nitro.f
@@ -209,13 +247,13 @@ C
       ENDIF 
       DFNSB=CNHUB/(CNHUB+DUKD)
       RSNUB=AMIN1(ZNHUFB(L,NY,NX)
-     2,SPNHU*TOQCK(L,NY,NX)*DFNSB*TFNQ(L,NY,NX))*(1.0-ZNHUI(L,NY,NX))
+     2,SPNHU*TOQCK(L,NY,NX)*DFNSB*TFNQ(L,NY,NX)*(1.0-ZNHUI(L,NY,NX)))
 C     IF(ZNHUFA(L,NY,NX).GT.ZEROS(NY,NX))THEN
 C     WRITE(*,8888)'UREA',I,J,L,IUTYP(NY,NX)
 C    2,ZNHUFA(L,NY,NX),ZNHUFB(L,NY,NX),RSNUA,RSNUB
 C    2,DFNSA,DFNSB,TFNQ(L,NY,NX),CNHUA,DUKD,DUKM,DUKI,TOQCK(L,NY,NX)
 C    3,BKVL(L,NY,NX),SPNHU,ZNHU0(L,NY,NX),ZNHUI(L,NY,NX)
-C    4,RNHUI(IUTYP(NY,NX)),VLNH4(L,NY,NX),VLNHB(L,NY,NX)
+C    4,RNHUX,VLNH4(L,NY,NX),VLNHB(L,NY,NX)
 C    5,THETW(L,NY,NX)
 8888  FORMAT(A8,4I4,40E12.4)
 C     ENDIF
@@ -226,15 +264,20 @@ C     FERTILIZER (NOTE: SUPERPHOSPHATE AND ROCK PHOSPHATE
 C     ARE REPRESENTED AS MONOCALCIUM PHOSPHATE AND HYDROXYAPATITE
 C     MODELLED IN PHOSPHORUS REACTIONS BELOW)
 C
-C     RSN4AA,RSN4BA=rate of broadcast NH4 fertilizer dissoln in non-band,band
-C     RSN3AA,RSN3BA=rate of broadcast NH3 fertilizer dissoln in non-band,band
-C     RSNUAA,RSNUBA=rate of broadcast urea fertr dissoln in non-band,band
-C     RSNOAA,RSNOBA=rate of broadcast NO3 fertilizer dissoln in non-band,band
+C     RSN4AA,RSN4BA=rate of broadcast NH4 fertilizer dissolution 
+C        in non-band,band
+C     RSN3AA,RSN3BA=rate of broadcast NH3 fertilizer dissolution 
+C        in non-band,band
+C     RSNUAA,RSNUBA=rate of broadcast urea fertr dissolution 
+C        in non-band,band
+C     RSNOAA,RSNOBA=rate of broadcast NO3 fertilizer dissolution 
+C        in non-band,band
 C     RSN4BB= rate of banded NH4 fertilizer dissolution in band
 C     RSN3BB= rate of banded NH3 fertilizer dissolution in band
 C     RSNUBB= rate of banded urea fertilizer dissolution in band
 C     RSNOBB= rate of banded NO3 fertilizer dissolution in band
-C     ZNH4FA,ZNH3FA,ZNHUFA,ZNO3FA=broadcast NH4,NH3,urea,NO3 fertilizer
+C     ZNH4FA,ZNH3FA,ZNHUFA,ZNO3FA=broadcast NH4,NH3,urea,NO3
+C        fertilizer
 C     ZNH4FB,ZNH3FB,ZNHUFB,ZNO3FB=banded NH4,NH3,urea,NO3 fertilizer
 C     VLNH4,VLNHB=fractions of soil volume in NH4 non-band,band
 C     VLNO3,VLNOB=fractions of soil volume in N03 non-band,band
@@ -262,11 +305,15 @@ C     SOLUBLE AND EXCHANGEABLE NH4 CONCENTRATIONS
 C     IN NON-BAND AND BAND SOIL ZONES
 C
 C     VOLWNH,VOLWNB=water volume in NH4 non-band,band
-C     RN4X,RN3X=NH4,NH3 input from uptake, mineraln, dissoln in non-band 
-C     RNBX,R3BX=NH4,NH3 input from uptake, mineraln, dissoln in band 
-C     TUPNH4,TUPNH3=soil-root exchange of NH4,NH3 in non-band from uptake.f
-C     TUPNHB,TUPN3B=soil-root exchange of NH4,NH3 in band from uptake.f
-C     XNH4S,XNH4B=net change in NH4 in band,non-band from nitro.f
+C     RN4X,RN3X=NH4,NH3 input from uptake,mineralization,dissolution
+C        in non-band 
+C     RNBX,R3BX=NH4,NH3 input from uptake,mineralization,dissolution
+C        in band 
+C     TUPNH4,TUPNH3=soil-root exchange of NH4,NH3 in non-band 
+C        from ‘uptake.f’
+C     TUPNHB,TUPN3B=soil-root exchange of NH4,NH3 in band 
+C        from ‘uptake.f’
+C     XNH4S,XNH4B=net change in NH4 in band,non-band from ‘nitro.f’
 C     CN41,CN31,CN4B,CN3B=total NH4,NH3 concentration in non-band,band
 C     XN41,XN4B=adsorbed NH4 concentration in non-band,band
 C
@@ -314,21 +361,30 @@ C     SOLUBLE, EXCHANGEABLE AND PRECIPITATED PO4 CONCENTRATIONS IN
 C     NON-BAND AND BAND SOIL ZONES
 C
 C     VOLWPO,VOLWPB=water volume in H2PO4 non-band,band
-C     RH1PX,RH2PX=HPO4,H2PO4 inputs from mineraln, uptake in non-band
-C     RH1BX,RH2BX=HPO4,H2PO4 inputs from mineraln, uptake in band
-C     XH1PS,XH1BS=net change in HPO4 in band,non-band from nitro.f 
-C     TUPH1P,TUPH2P=soil-root exch of HPO4,H2PO4 in non-band from uptake.f
-C     TUPH1B,TUPH2B=soil-root exch of HPO4,H2PO4 in band from uptake.f
+C     RH1PX,RH2PX=HPO4,H2PO4 inputs from mineralization,uptake 
+C        in non-band
+C     RH1BX,RH2BX=HPO4,H2PO4 inputs from mineralization,uptake 
+C        in band
+C     XH1PS,XH1BS=net change in HPO4 in band,non-band from ‘nitro.f’ 
+C     TUPH1P,TUPH2P=soil-root exchange of HPO4,H2PO4 in non-band 
+C        from ‘uptake.f’
+C     TUPH1B,TUPH2B=soil-root exchange of HPO4,H2PO4 in band 
+C        from ‘uptake.f’
 C     CH1P1,CH2P1=HPO4,H2PO4 concentrations in non-band
 C     CH1PB,CH2PB=HPO4,H2PO4 concentrations in band
-C     XOH11,XOH11,XOH21=concn of adsorption sites R-,R-OH,R-OH2 in non-band
-C     XOH1B,XH11B,XH21B=concn of adsorption sites R-,R-OH,R-OH2 in band
+C     XOH01,XOH11,XOH21=concentration of adsorption sites R-,R-OH,
+C        R-OH2 in non-band
+C     XOH1B,XH11B,XH21B= concentration of adsorption sites R-,R-OH,
+C        R-OH2 in band
 C     XH1P1,XH2P1=concentration of adsorbed HPO4,H2PO4 in non-band
 C     XH11B,X2P1B=concentration of adsorbed HPO4,H2PO4 in band
-C     PALPO1,PFEPO1=concn of precip AlPO4,FEPO4 in non-band
-C     PALPOB,PFEPOB=concn of precip AlPO4,FEPO4 in band
-C     PCAPM1,PCAPD1,PCAPH1=concn of precip CaH2PO4,CaHPO4,apatite in non-band
-C     PCAPMB,PCAPDB,PCAPHB=concn of precip CaH2PO4,CaHPO4,apatite in band
+C     PALPO1,PFEPO1=concentration of precipitated AlPO4,FEPO4 
+C        in non-band
+C     PALPOB,PFEPOB=concentration of precipitated AlPO4,FEPO4 in band
+C     PCAPM1,PCAPD1,PCAPH1=concentration of precipitated CaH2PO4,
+C        CaHPO4,apatite in non-band
+C     PCAPMB,PCAPDB,PCAPHB=concentration of precipitated CaH2PO4,
+C        CaHPO4,apatite in band
 C
       IF(VOLWPO.GT.ZEROS2(NY,NX))THEN
       VOLWPX=31.0*VOLWPO
@@ -405,17 +461,20 @@ C     ISALTG=salt flag from site file
 C
       IF(ISALTG.NE.0)THEN
 C
-C     salt code: *HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+,*MG*=Mg2+
-C          :*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C     C*,X*,Z*=soluble,exchangeable concentration, mass
+C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+
+C          :*CA*=Ca2+,*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-
+C          :*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
 C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
 C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
 C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
-C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3
-C          :*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
-C     phosphorus code: *H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-,*F2P*=F1H2PO4-
-C          :*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+,*M1P*=MgHPO4,*COO*=COOH-
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH
+C          :*MGC*=MgCO3,*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-
+C          :*NAS*=NaSO4-,*KAS*=KSO4-
+C     anion code:OH=OH,*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C          :*F2P*=F1H2PO4-,*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+
+C          :*M1P*=MgHPO4,*COO*=COOH-
 C          :*1=non-band,*B=band
-C     C*,X*,Z*=soluble,exchangeable concentration, mass
 C
 C     SOLUBLE NO3 CONCENTRATIONS
 C     IN NON-BAND AND BAND SOIL ZONES
@@ -437,7 +496,7 @@ C
 C
 C     H CONCENTRATION
 C
-C     XZHYS=total H+ production from nitro.f
+C     XZHYS=total H+ production from ‘nitro.f’
 C
       CHY1=AMAX1(0.0,ZHY(L,NY,NX)+XZHYS(L,NY,NX))
      2/VOLWM(NPH,L,NY,NX)
@@ -673,7 +732,8 @@ C
 C
 C     IONIC STRENGTH FROM SUMS OF ION CONCENTRATIONS
 C
-C     CC3,CA3,CC2,CA2,CC1,CA1=total tri-,di-,univalent cations C,anions A
+C     CC3,CA3,CC2,CA2,CC1,CA1=total tri-,di-,univalent cations C,
+C        anions A
 C     CSTR1=ion strength
 C
       CC3=CAL1+CFE1
@@ -703,14 +763,14 @@ C     CALCULATED FROM ACTIVITIES OF REACTANTS AND PRODUCTS THROUGH
 C     CONVERGENCE SOLUTIONS FOR THEIR EQUILIBRIUM CONCENTRATIONS USING 
 C     SOLUTE FORMS CURRENTLY AT HIGHEST CONCENTRATIONS
 C
-C     for all reactions:
-C     A*=ion activity
-C     PX,PY=solute forms with greatest activity
-C     R*,P*=reactant,product
-C     NR*,NP*=reactant,product stoichiometry
-C     SP=solubility product of PX from parameters above
-C     SPX=equilibrium product concentration
-C     R*X=precipitation-dissolution rate
+C     for all precipitation-dissolution reactions:
+C        A*=ion activity
+C        PX,PY=solute forms with greatest activity
+C        R*,P*=reactant,product
+C        NR*,NP*=reactant,product stoichiometry
+C        SP=solubility product of PX from parameters above
+C        SPX=equilibrium product concentration
+C        R*X=precipitation-dissolution rate
 C
       AHY1=CHY1*A1
       AOH1=COH1*A1
@@ -818,7 +878,7 @@ C     R1=AMAX1(ZERO,R1)
 C     P1=AMAX1(ZERO,P1)
 C     P2=AMAX1(ZERO,P2)
       SPX=SP*R1**NR1/P2**NP2
-      RPALOX=AMAX1(-PALOH1,TPDX*(P1-SPX))
+      RPALOX=AMAX1(-PALOH1*BKVLW,TPDX*(P1-SPX))
       IF(PX.EQ.AAL1)THEN
       RHAL1=RPALOX
       ELSEIF(PX.EQ.AALO1)THEN
@@ -884,7 +944,7 @@ C
       P1=AMAX1(ZERO,P1)
       P2=AMAX1(ZERO,P2)
       SPX=SP*R1**NR1/P2**NP2
-      RPFEOX=AMAX1(-PFEOH1,TPDX*(P1-SPX))
+      RPFEOX=AMAX1(-PFEOH1*BKVLW,TPDX*(P1-SPX))
       IF(PX.EQ.AFE1)THEN
       RHFE1=RPFEOX
       ELSEIF(PX.EQ.AFEO1)THEN
@@ -929,7 +989,7 @@ C
       SPX=SP*R1**NR1 
       S0=P1+P2
       S1=AMAX1(0.0,S0**2-4.0*(P1*P2-SPX))
-      RPCACX=AMAX1(-PCACO1,TPDX*(S0-SQRT(S1)))
+      RPCACX=AMAX1(-PCACO1*BKVLW,TPDX*(S0-SQRT(S1)))
       IF(PX.EQ.ACO31)THEN
       RHCAC3=RPCACX
       ELSEIF(PX.EQ.AHCO31)THEN
@@ -947,7 +1007,7 @@ C
       SPX=SPCAS 
       S0=P1+P2
       S1=AMAX1(0.0,S0**2-4.0*(P1*P2-SPX))
-      RPCASO=AMAX1(-PCASO1,TPDX*(S0-SQRT(S1)))
+      RPCASO=AMAX1(-PCASO1*BKVLW,TPDX*(S0-SQRT(S1)))
 C     IF((M/10)*10.EQ.M)THEN
 C     WRITE(*,1112)'CALC',I,J,L,M,PCASO1,ACO31,AHCO31,ACO21,CHY1
 C    2,COH1,R1,P1,P2,P3,SP,Z,TX,RPCACX,RHCAC3,RHCACH,RHCACO
@@ -1038,7 +1098,7 @@ C
       SPX=SP*R1**NR1/P3**NP3
       S0=P1+P2
       S1=AMAX1(0.0,S0**2-4.0*(P1*P2-SPX))
-      RPALPX=AMAX1(-PALPO1,TPDX*(S0-SQRT(S1)))
+      RPALPX=AMAX1(-PALPO1*BKVLW,TPDX*(S0-SQRT(S1)))
       IF(PY.EQ.AH1P1)THEN
       IF(PX.EQ.AAL1)THEN
       RHA0P1=RPALPX
@@ -1153,7 +1213,7 @@ C
       SPX=SP*R1**NR1/P3**NP3
       S0=P1+P2
       S1=AMAX1(0.0,S0**2-4.0*(P1*P2-SPX))
-      RPFEPX=AMAX1(-PFEPO1,TPDX*(S0-SQRT(S1)))
+      RPFEPX=AMAX1(-PFEPO1*BKVLW,TPDX*(S0-SQRT(S1)))
       IF(PY.EQ.AH1P1)THEN
       IF(PX.EQ.AFE1)THEN
       RHF0P1=RPFEPX
@@ -1208,7 +1268,7 @@ C
       SPX=SP*R1**NR1 
       S0=P1+P2
       S1=AMAX1(0.0,S0**2-4.0*(P1*P2-SPX))
-      RPCADX=AMAX1(-PCAPD1,TPDX*(S0-SQRT(S1)))
+      RPCADX=AMAX1(-PCAPD1*BKVLW,TPDX*(S0-SQRT(S1)))
       IF(PX.EQ.AH1P1)THEN
       RPCAD1=RPCADX
       ELSEIF(PX.EQ.AH2P1)THEN
@@ -1240,7 +1300,7 @@ C
       P1=AMAX1(ZERO,P1)
       P2=AMAX1(ZERO,P2)
       SPX=(SP*R1**NR1/P1**5)**0.333
-      RPCAHX=AMAX1(-PCAPH1,TPDX*(P2-SPX))
+      RPCAHX=AMAX1(-PCAPH1*BKVLW,TPDX*(P2-SPX))
       IF(PX.EQ.AH1P1)THEN
       RHCAH1=RPCAHX
       ELSEIF(PX.EQ.AH2P1)THEN
@@ -1272,7 +1332,7 @@ C
       SPX=SPCAM 
       S0=P1+P2
       S1=AMAX1(0.0,S0**2-4.0*(P1*P2-SPX))
-      RPCAMX=AMAX1(-PCAPM1,TPDX*(S0-SQRT(S1)))
+      RPCAMX=AMAX1(-PCAPM1*BKVLW,TPDX*(S0-SQRT(S1)))
       ELSE
       RPALPX=0.0
       RPFEPX=0.0
@@ -1389,7 +1449,7 @@ C
       SPX=SP*R1**NR1/P3**NP3
       S0=P1+P2
       S1=AMAX1(0.0,S0**2-4.0*(P1*P2-SPX))
-      RPALBX=AMAX1(-PALPOB,TPDX*(S0-SQRT(S1)))
+      RPALBX=AMAX1(-PALPOB*BKVLW,TPDX*(S0-SQRT(S1)))
       IF(PY.EQ.AH1PB)THEN
       IF(PX.EQ.AAL1)THEN
       RHA0B1=RPALBX
@@ -1496,7 +1556,7 @@ C
       SPX=SP*R1**NR1/P3**NP3
       S0=P1+P2
       S1=AMAX1(0.0,S0**2-4.0*(P1*P2-SPX))
-      RPFEBX=AMAX1(-PFEPOB,TPDX*(S0-SQRT(S1)))
+      RPFEBX=AMAX1(-PFEPOB*BKVLW,TPDX*(S0-SQRT(S1)))
       IF(PY.EQ.AH1PB)THEN
       IF(PX.EQ.AFE1)THEN
       RHF0B1=RPFEBX
@@ -1545,7 +1605,7 @@ C
       SPX=SP*R1**NR1 
       S0=P1+P2
       S1=AMAX1(0.0,S0**2-4.0*(P1*P2-SPX))
-      RPCDBX=AMAX1(-PCAPDB,TPDX*(S0-SQRT(S1)))
+      RPCDBX=AMAX1(-PCAPDB*BKVLW,TPDX*(S0-SQRT(S1)))
       IF(PX.EQ.AH1PB)THEN
       RPCDB1=RPCDBX
       ELSEIF(PX.EQ.AH2PB)THEN
@@ -1572,7 +1632,7 @@ C
       P1=AMAX1(ZERO,P1)
       P2=AMAX1(ZERO,P2)
       SPX=(SP*R1**NR1/P1**5)**0.333
-      RPCHBX=AMAX1(-PCAPHB,TPDX*(P2-SPX))
+      RPCHBX=AMAX1(-PCAPHB*BKVLW,TPDX*(P2-SPX))
       IF(PX.EQ.AH1PB)THEN
       RHCHB1=RPCHBX
       ELSEIF(PX.EQ.AH2PB)THEN
@@ -1588,7 +1648,7 @@ C
       SPX=SPCAM 
       S0=P1+P2
       S1=AMAX1(0.0,S0**2-4.0*(P1*P2-SPX))
-      RPCMBX=AMAX1(-PCAPMB,TPDX*(S0-SQRT(S1)))
+      RPCMBX=AMAX1(-PCAPMB*BKVLW,TPDX*(S0-SQRT(S1)))
       ELSE
       RPALBX=0.0
       RPFEBX=0.0
@@ -1632,7 +1692,11 @@ C     XAEC=anion exchange capacity
 C     VOLWPO=soil water volume in non-band
 C     TADAX=adsorption rate constant
 C     RXOH2,RXOH1=OH2,OH exchange with R-OH2,R-OH in non-band
-C     SXOH2,SXOH1=equilibrium constant for OH2,OH exchange with R-OH2,R-OH
+C     AHY1=H+ activity in non-band
+C     SXOH2,SXOH1=equilibrium constant for OH2,OH exchange with 
+C        R-OH2,R-OH
+C     XOH01,XOH11,XOH21=concentration of adsorption sites R-,R-OH,
+C        R-OH2 in non-band
 C
       IF(VOLWM(NPH,L,NY,NX).GT.ZEROS2(NY,NX))THEN
       VOLWBK=AMIN1(1.0,BKVL(L,NY,NX)/VOLWM(NPH,L,NY,NX))
@@ -1644,23 +1708,30 @@ C
       RXOH2=TADAX*(XOH11*AHY1-SXOH2*XOH21)/(XOH11+SXOH2)*VOLWBK
       RXOH1=TADAX*(XOH01*AHY1-SXOH1*XOH11)/(XOH01+SXOH1)*VOLWBK 
 C
-C     H2PO4 EXCHANGE IN NON-BAND SOIL ZONE FROM CONVERGENCE
-C     SOLUTION FOR EQUILIBRIUM AMONG H2PO4-, H+, OH-, X-OH
-C     AND X-H2PO4
+C     H2PO4 EXCHANGE IN NON-BAND SOIL ZONE FROM EQUILIBRIUM
+C     AMONG H2PO4-, H+, OH-, X-OH AND X-H2PO4
 C
-C     SPH2P,SXH2P=equilibrium constant for H2PO4 exchange with R-OH2,R-OH
+C     SPH2P,SXH2P=equilibrium constant for H2PO4 exchange with 
+C        R-OH2,R-OH
 C     RXH2P,RYH2P=H2PO4 exchange with R-OH2,R-OH in non-band
+C     AH2P1=H2PO4 activity in non-band
+C     XH2P1=exchangeable H2PO4 concentration in non-band
+C     XOH11,XOH21=concentration of adsorption sites R-OH,
+C        R-OH2 in non-band
 C
       SPH2P=SXH2P*DPH2O 
       RXH2P=TADAX*(XOH21*AH2P1-SPH2P*XH2P1)/(XOH21+SPH2P)*VOLWBK 
       RYH2P=TADAX*(XOH11*AH2P1-SXH2P*XH2P1*AOH1)/(XOH11+SXH2P)*VOLWBK 
 C
-C     HPO4 EXCHANGE IN NON-BAND SOIL ZONE FROM CONVERGENCE
-C     SOLUTION FOR EQUILIBRIUM AMONG HPO4--, H+, OH-, X-OH
-C     AND X-HPO4
+C     HPO4 EXCHANGE IN NON-BAND SOIL ZONE FROM EQUILIBRIUM
+C     AMONG HPO4--, H+, OH-, X-OH AND X-HPO4
 C
 C     SPH1P=equilibrium constant for HPO4 exchange with R-OH
 C     RXH1P=HPO4 exchange with R-OH in non-band
+C     AH1P1=HPO4 activity in non-band
+C     XH1P1=exchangeable HPO4 concentration in non-band
+C     XOH11=concentration of adsorption sites R-OH
+C        in non-band
 C
       SPH1P=SXH1P*DPH2O/DPH2P
       RXH1P=TADAX*(XOH11*AH1P1-SPH1P*XH1P1)/(XOH11+SPH1P)*VOLWBK 
@@ -1681,7 +1752,11 @@ C
      2.AND.XAEC(L,NY,NX).GT.ZEROS(NY,NX))THEN
 C
 C     RXO2B,RXO1B=OH2,OH exchange with R-OH2,R-OH in band
-C     SXOH2,SXOH1=equilibrium constant for OH2,OH exchange with R-OH2,R-OH
+C     XOH1B,XH11B,XH21B=concentration of adsorption sites R-,R-OH,
+C        R-OH2 in band
+C     AHY1=H+ activity
+C     SXOH2,SXOH1=equilibrium constant for OH2,OH exchange with 
+C        R-OH2,R-OH
 C
       RXO2B=TADAX*(XH11B*AHY1-SXOH2*XH21B)/(XH11B+SXOH2)*VOLWBK 
       RXO1B=TADAX*(XH01B*AHY1-SXOH1*XH11B)/(XH01B+SXOH1)*VOLWBK 
@@ -1690,8 +1765,14 @@ C     H2PO4 EXCHANGE IN BAND SOIL ZONE FROM CONVERGENCE
 C     SOLUTION FOR EQUILIBRIUM AMONG H2PO4-, H+, OH-, X-OH
 C     AND X-H2PO4
 C
-C     SPH2P,SXH2P=equilibrium constant for H2PO4 exchange with R-OH2,R-OH
+C     SPH2P,SXH2P=equilibrium constant for H2PO4 exchange with 
+C        R-OH2,R-OH
 C     RXH2B,RYH2B=H2PO4 exchange with R-OH2,R-OH in band
+C     XH11B,XH21B=concentration of adsorption sites R-OH,
+C        R-OH2 in band
+C     AH2PB=H2PO4 activity in band
+C     X2P1B=exchangeable H2PO4 concentration in band
+C     AOH1=OH activity
 C
       SPH2P=SXH2P*DPH2O 
       RXH2B=TADAX*(XH21B*AH2PB-SPH2P*X2P1B)/(XH21B+SPH2P)*VOLWBK 
@@ -1703,6 +1784,10 @@ C     AND X-HPO4
 C
 C     SPH1P=equilibrium constant for HPO4 exchange with R-OH
 C     RXH1B=HPO4 exchange with R-OH in band
+C     XH11B=concentration of adsorption sites R-OH,
+C        in band
+C     AH1PB=HPO4 activity in band
+C     X1P1B=exchangeable HPO4 concentration in band
 C
       SPH1P=SXH1P*DPH2O/DPH2P
       RXH1B=TADAX*(XH11B*AH1PB-SPH1P*X1P1B)/(XH11B+SPH1P)*VOLWBK 
@@ -1730,8 +1815,10 @@ C
 C     CCEC,XCEC=cation exchange concentration,capacity
 C     XCAX=equilibrium R-Ca concentration
 C     GKC4,GKCH,GKCA,GKCM,GKCN,GKCK=Gapon selectivity coefficients for
-C     Ca-NH4,Ca-H,Ca-Al,Ca-Mg,Ca-Na,Ca-K
+C        Ca-NH4,Ca-H,Ca-Al,Ca-Mg,Ca-Na,Ca-K
 C     X*Q=equilibrium exchangeable concentrations
+C        cation code:AL=Al,FE=Fe,CA=Ca,MG=Mg,NA=Na,KA=K
+C                   :N4=NH4 non-band,NB=NH4 band,HY=H
 C     XTLQ=total equilibrium exchangeable concentration 
 C
       AALX=AAL1**0.333
@@ -1773,6 +1860,12 @@ C     NH4 EXCHANGE IN NON-BAND AND BAND SOIL ZONES
 C
 C     RXN4,RXNB=NH4 adsorption in non-band,band
 C     TADCX=adsorption rate constant
+C     XN4Q,XN41=equilibrium,current exchangeable NH4 concentration
+C        non-band
+C     CN41,AN41=aqueous NH4 concentration,activity non-band
+C     XNBQ,XN4B=equilibrium,current exchangeable NH4 concentration
+C        band
+C     CN4B,AN4B=aqueous NH4 concentration,activity band
 C
       RXN4=TADCX*AMAX1(AMIN1((XN4Q-XN41)*AN41/XN4Q,CN41),-XN41) 
       RXNB=TADCX*AMAX1(AMIN1((XNBQ-XN4B)*AN4B/XNBQ,CN4B),-XN4B)
@@ -1780,6 +1873,9 @@ C
 C     H,AL,FE,CA,MG,NA,K EXCHANGE
 C
 C     RX*=ion adsorption
+C     X*Q,X*1=equilibrium,current exchangeable cation concentration
+C     C*1,A*1=aqueous cation concentration,activity 
+C        cation code:AL=Al,FE=Fe,CA=Ca,MG=Mg,NA=Na,KA=K
 C
       RXHY=TADCX*AMIN1((XHYQ-XHY1)*AHY1/XHYQ,CHY1) 
       RXAL=TADCX*AMIN1((XALQ-XAL1)*AALX/XALQ,CAL1) 
@@ -1807,7 +1903,10 @@ C
 C     SOLUTE DISSOCIATION REACTIONS
 C
 C     for all reactions:
-C     S0,S1=equilibrium constant,equilibrium solute concentration**2
+C        S0,S1=equilibrium constant,equilibrium solute
+C        concentration**2
+C        DP*=dissociation constant
+C        A*1=ion activity
 C     TSLX=dissociation rate constant
 C
 C     DISSOCIATION OF CARBOXYL RADICALS
@@ -1815,6 +1914,7 @@ C     AND ADSORPTION OF AL AND FE OH2
 C
 C     RXHC=COOH-COO+H dissociation
 C     RXALO2,RXFLO2=Al(OH2)2+,FeOH2+ adsorption
+C     X*1=exchangeable cation concentration
 C
       S0=AHY1+XCOO+DPCOH 
       S1=AMAX1(0.0,S0**2-4.0*(AHY1*XCOO-DPCOH*XHC1))
@@ -1828,6 +1928,8 @@ C
 C
 C     RNH4,RNHB-NH4-NH3+H dissociation in non-band,band
 C     DPN4=NH4 dissociation constant
+C     AN41,AN31,AHY1=NH4,NH3,H activity in non-band
+C     AN4B,AN3B,AHY1=NH4,NH3,H activity in band
 C
       IF(VOLWNH.GT.ZEROS2(NY,NX))THEN
       RNH4=TSLX*(AHY1*AN31-DPN4*AN41)/(DPN4+AHY1)
@@ -2091,19 +2193,24 @@ C
       ENDIF
       
 C
-C     TOTAL ION FLUXES FOR CURRENT ITERATION
+C     TOTAL ION TRANSFORMATIONS FOR CURRENT ITERATION
 C     FROM ALL REACTIONS ABOVE
 C
-C     RN4S,RN4B=net NH4 flux in non-band,band
-C     RN3S,RN3B=net NH3 flux in non-band,band
-C     RAL,RFE,RHY,RCA,RMG,RNA,RKA,ROH=net Al,Fe,H,Ca,Mg,Na,K,OH flux
-C     RSO4,RCO3,RHCO,RCO2=net SO4,CO3,HCO3,CO2 flux
+C     RN4S,RN4B=net NH4 transformation in non-band,band
+C     RN3S,RN3B=net NH3 transformation in non-band,band
+C     RAL,RFE,RHY,RCA,RMG,RNA,RKA,ROH=net Al,Fe,H,Ca,Mg,Na,K,OH
+C        transformation
+C     RSO4,RCO3,RHCO,RCO2=net SO4,CO3,HCO3,CO2 transformation
 C     RAL1,RAL2,RAL3,RAL4,RALS=net AlOH,AlOH2,AlOH3,AlOH4,AlSO4
 C     RFE1,RFE2,RFE3,RFE4,RFES=net FeOH,FeOH2,FeOH3,FeOH4,FeSO4
-C     RHP0,RHP1,RHP2,RHP3=net PO4,HPO4,H2PO4,H3PO4 flux in non-band
-C     RXH0,RXH1,RXH2,RX1P,RX2P=net R-O,R-OH,R-OH2,R-HPO4,R-H2PO4 in non-band
-C     RHB0,RHB1,RHB2,RHB3=net PO4,HPO4,H2PO4,H3PO4 flux in band
-C     RBH0,RBH1,RBH2,RB1P,RB2P=net R-O,R-OH,R-OH2,R-HPO4,R-H2PO4 in band
+C     RHP0,RHP1,RHP2,RHP3=net PO4,HPO4,H2PO4,H3PO4 transformation 
+C        in non-band
+C     RXH0,RXH1,RXH2,RX1P,RX2P=net R-O,R-OH,R-OH2,R-HPO4,R-H2PO4 
+C        in non-band
+C     RHB0,RHB1,RHB2,RHB3=net PO4,HPO4,H2PO4,H3PO4 transformation 
+C        in band
+C     RBH0,RBH1,RBH2,RB1P,RB2P=net R-O,R-OH,R-OH2,R-HPO4,R-H2PO4 
+C        in band
 C
       RN4S=RNH4-RXN4
       RN4B=RNHB-RXNB
@@ -2212,7 +2319,24 @@ C    4,RHCAH2,RPCAMX,RXH2P,RYH2P,RH2P,RH3P,RF2P,RC2P
 C     ENDIF
 C
 C     UPDATE ION CONCENTRATIONS FOR CURRENT ITERATION
-C     FROM TOTAL ION FLUXES
+C     FROM TOTAL ION TRANSFORMATIONS
+C
+C     C*1=ion concentration
+C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+
+C          :*CA*=Ca2+,*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-
+C          :*CL*=Cl-,*CO3*=CO32-,*HCO3*=HCO3-
+C          :*CO2*=CO2,*ALO1*=AlOH2-,*ALOH2=AlOH2-,*ALOH3*=AlOH3
+C          :*ALOH4*=AlOH4+,*ALS*=AlSO4+,*FEO1*=FeOH2-,*FEOH2=F3OH2-
+C          :*FEOH3*=FeOH3,*FEOH4*=FeOH4+,*FES*=FeSO4+,*CAO*=CaOH
+C          :*CAC*=CaCO3,*CAH*=CaHCO3-,*CAS*=CaSO4,*MGO*=MgOH
+C          :*MGC*=MgCO3,*MHG*=MgHCO3-,*MGS*=MgSO4,*NAC*=NaCO3-
+C          :*NAS*=NaSO4-,*KAS*=KSO4-
+C     cation code:AL=Al,FE=Fe,CA=Ca,MG=Mg,NA=Na,KA=K
+C          :N4=NH4 non-band,NB=NH4 band,HY=H
+C     anion code:OH=OH,*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C          :*F2P*=F1H2PO4-,*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+
+C          :*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
 C
       CN41=CN41+RN4S
       CN4B=CN4B+RN4B
@@ -2274,6 +2398,8 @@ C
 C
 C     RHHY,RHOH=H2O-H+OH equilibration
 C
+C     PH=soil pH from soil file
+C
       CHY2=10.0**(-PH(L,NY,NX))*1.0E+03
       COH2=DPH2O/CHY2
       RHHY=CHY2-CHY1
@@ -2319,7 +2445,15 @@ C    2,RPCAHX,RALO1,RALO2,RALO3,RALO4,RFEO1,RFEO2,RFEO3,RFEO4
 C     ENDIF
 C
 C     UPDATE EXCHANGEABLE ION CONCENTRATIONS IN CURRENT
-C     ITERATION FROM TOTAL ION FLUXES
+C     ITERATION FROM TOTAL ION TRANSFORMATIONS
+C
+C     X*1=exchangeable ion concentrations
+C        cation code:AL=Al,FE=Fe,CA=Ca,MG=Mg,NA=Na,KA=K
+C                   :N4=NH4 non-band,NB=NH4 band,HY=H
+C     anion code:OH=OH,*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C          :*F2P*=F1H2PO4-,*C0P*=CaPO4-,*C1P*=CaHPO4,*C2P*=CaH2PO4+
+C          :*M1P*=MgHPO4,*COO*=COOH-
+C          :*1=non-band,*B=band
 C
       XN41=XN41+RXN4
       XN4B=XN4B+RXNB
@@ -2345,7 +2479,15 @@ C
       X2P1B=X2P1B+RB2P
 C
 C     UPDATE PRECIPITATE CONCENTRATIONS IN CURRENT
-C     ITERATION FROM TOTAL ION FLUXES
+C     ITERATION FROM TOTAL ION TRANSFORMATIONS
+C
+C     PALPO1,PFEPO1=concentration of precipitated AlPO4,FEPO4 
+C        in non-band
+C     PALPOB,PFEPOB=concentration of precipitated AlPO4,FEPO4 in band
+C     PCAPM1,PCAPD1,PCAPH1=concentration of precipitated CaH2PO4,
+C        CaHPO4,apatite in non-band
+C     PCAPMB,PCAPDB,PCAPHB=concentration of precipitated CaH2PO4,
+C        CaHPO4,apatite in band
 C
       PALOH1=PALOH1+RPALOX
       PFEOH1=PFEOH1+RPFEOX
@@ -2362,35 +2504,44 @@ C
       PCAPHB=PCAPHB+RPCHBX
       PCAPMB=PCAPMB+RPCMBX
 C
-C     ACCUMULATE TOTAL ION FLUXES FOR ALL ITERATIONS
+C     ACCUMULATE TOTAL ION TRANSFORMATIONS FOR ALL ITERATIONS
 C
-C     TRN4S,TRN4B=total NH4 flux in non-band,band
-C     TRN3S,TRN3B=total NH3 flux in non-band,band
-C     TRAL,TRFE,TRHY,TRCA,TRMG,TRNA,TRKA,TROH=totalAl,Fe,H,Ca,Mg,Na,K,OH flux
-C     TRSO4,TRCO3,TRHCO,TRCO2=total SO4,CO3,HCO3,CO2 flux
+C     TRN4S,TRN4B=total NH4 transformation in non-band,band
+C     TRN3S,TRN3B=total NH3 transformation in non-band,band
+C     TRAL,TRFE,TRHY,TRCA,TRMG,TRNA,TRKA,TROH=totalAl,Fe,H,Ca,Mg,
+C        Na,K,OH transformation
+C     TRSO4,TRCO3,TRHCO,TRCO2=total SO4,CO3,HCO3,CO2 transformation
 C     TRAL1,TRAL2,TRAL3,TRAL4,TRALS=total AlOH,AlOH2,AlOH3,AlOH4,AlSO4
 C     TRFE1,TRFE2,TRFE3,TRFE4,TRFES=total FeOH,FeOH2,FeOH3,FeOH4,FeSO4
-C     TRCAO,TRCAC,TRCAH,TRCAS=total CaOH,CaCO3,CaHCO3,CaSO4 flux
-C     TRMGO,TRMGC,TRMGH,TRMGS=total MgOH,MgCO3,MgHCO3,MgSO4 flux
-C     TRNAC,TRNAS,TRKAS=total NaCO3,NaSO4,KSO4 flux
-C     TRH0P,TRH1P,TRH2P,TRH3P=net PO4,HPO4,H2PO4,H3PO4 flux in non-band
+C     TRCAO,TRCAC,TRCAH,TRCAS=total CaOH,CaCO3,CaHCO3,CaSO4
+C        transformation
+C     TRMGO,TRMGC,TRMGH,TRMGS=total MgOH,MgCO3,MgHCO3,MgSO4
+C        transformation
+C     TRNAC,TRNAS,TRKAS=total NaCO3,NaSO4,KSO4 transformation
+C     TRH0P,TRH1P,TRH2P,TRH3P=net PO4,HPO4,H2PO4,H3PO4 transformation
+C        in non-band
 C     TRF1P,TRF2P,TRC0P,TRC1P,TRC2P,TRM1P
-C     =total FeHPO4,FeH2PO4,CaPO4,CaHPO4,CaH2PO4,MgHPO4 in non-band
-C     TRH0B,TRH1B,TRH2B,TRH3B=net PO4,HPO4,H2PO4,H3PO4 flux in band
+C        =total FeHPO4,FeH2PO4,CaPO4,CaHPO4,CaH2PO4,MgHPO4 in non-band
+C     TRH0B,TRH1B,TRH2B,TRH3B=net PO4,HPO4,H2PO4,H3PO4 transformation
+C        in band
 C     TRF1B,TRF2B,TRC0B,TRC1B,TRC2B,TRM1B
 C     =total FeHPO4,FeH2PO4,CaPO4,CaHPO4,CaH2PO4,MgHPO4 in band
 C     TRNX4,TRNXB=total NH4 adsorption in non-band,band
-C     TRXHY,TRXAL,TRXFE,TRXCA,TRXMG,TRXNA,TRXKA=total H,Al,Fe,Ca,Mg,Na,K adsorpn
+C     TRXHY,TRXAL,TRXFE,TRXCA,TRXMG,TRXNA,TRXKA=total
+C        H,Al,Fe,Ca,Mg,Na,K adsorpn
 C     TRXHC,TRXAL2,TRXFE2=total HCO3,AlOH2,FeOH2 adsorption
 C     TRXH0,TRXH1,TRXH2,TRX1P,TRX2P
-C     =total R-O,R-OH,R-OH2,R-HPO4,R-H2PO4 adsorption in non-band
+C        =total R-O,R-OH,R-OH2,R-HPO4,R-H2PO4 adsorption in non-band
 C     TRBH0,TRBH1,TRBH2,TRB1P,TRB2P
-C     =total R-O,R-OH,R-OH2,R-HPO4,R-H2PO4 adsorption in band
-C     TRALOH,TRFEOH,TRCACO,TRCASO=total AlOH3,FeOH3,CaCO3,CaSO4 precipitation
+C        =total R-O,R-OH,R-OH2,R-HPO4,R-H2PO4 adsorption in band
+C     TRALOH,TRFEOH,TRCACO,TRCASO=total AlOH3,FeOH3,CaCO3,CaSO4
+C        precipitation
 C     TRALPO,TRFEPO,TRCAPD,TRCAPH,TRCAPM
-C     =total AlPO4,FePO4,CaHPO4,apatite,Ca(H2PO4)2 precipitation in non-band
+C        =total AlPO4,FePO4,CaHPO4,apatite,Ca(H2PO4)2 precipitation 
+C         in non-band
 C     TRALPB,TRFEPB,TRCPDB,TRCPHB,TRCPMB
-C     =total AlPO4,FePO4,CaHPO4,apatite,Ca(H2PO4)2 precipitation in band
+C        =total AlPO4,FePO4,CaHPO4,apatite,Ca(H2PO4)2 precipitation 
+C         in band
 C
       TRN4S(L,NY,NX)=TRN4S(L,NY,NX)+RN4S
       TRN4B(L,NY,NX)=TRN4B(L,NY,NX)+RN4B
@@ -2500,8 +2651,10 @@ C    7,SPH2P,XOH21*CH2P1*A1/XH2P1,SXH2P,XOH11*CH2P1/(XH2P1*COH1)
 C    8,SPH1P,XOH11*CH1P1*A2/(XH1P1*COH1*A1)
 C    9,COH1*A1,CHY1*A1
 1119  FORMAT(A8,4I4,24E11.3)
-C     WRITE(*,1119)'CATION',I,J,L,M,CCEC,XN41+XHY1+3*XAL1+2*(XCA1+XMG1)
-C    2+XNA1+XKA1,XN41,XHY1,XAL1,XCA1,XMG1,XNA1,XKA1,CN41,CHY1,CAL1,CCA1
+C     WRITE(*,1119)'CATION',I,J,L,M,CCEC,XN41
+C    2+XHY1+3*XAL1+2*(XCA1+XMG1)
+C    2+XNA1+XKA1,XN41,XHY1,XAL1,XCA1,XMG1,XNA1
+C    2,XKA1,CN41,CHY1,CAL1,CCA1
 C    2,CMG1,CNA1,CKA1,(CCA1*A2)**0.5*XN41/(CN41*A1*XCA1*2)
 C    3,(CCA1*A2)**0.5*XHY1/(CHY1*A1*XCA1*2)
 C    2,(CCA1*A2)**0.5*XAL1*3/((CAL1*A3)**0.333*XCA1*2)
@@ -2511,7 +2664,7 @@ C    5,(CCA1*A2)**0.5*XKA1/(CKA1*A1*XCA1*2)
 C    6,CHY1*A1*XCOO/XHC1,CALO2*A1*XCOO/XALO21
 C     ENDIF
 C
-C     CONVERT TOTAL ION FLUXES FROM CHANGES IN CONCENTRATION
+C     CONVERT TOTAL ION TRANSFORMATIONS FROM CHANGES IN CONCENTRATION
 C     TO CHANGES IN MASS PER UNIT AREA FOR USE IN 'REDIST'
 C
       TRN4S(L,NY,NX)=TRN4S(L,NY,NX)*VOLWNH
@@ -2608,7 +2761,7 @@ C
       TRCPHB(L,NY,NX)=TRCPHB(L,NY,NX)*VOLWPB
       TRCPMB(L,NY,NX)=TRCPMB(L,NY,NX)*VOLWPB
 C
-C     BOUNDARY SALT FLUXES FOR C, H, OH, P, AL+FE, CA, OH
+C     BOUNDARY SALT TRANSFORMATIONS FOR C, H, OH, P, AL+FE, CA, OH
 C     USED TO CHECK MATERIAL BALANCES IN REDIST.F
 C
 C     TBCO2=CO2 net change from all solute equilibria
@@ -2646,7 +2799,7 @@ C    3,RHCO,RHCACH,RCO2Q,RCAH,RMGH,RHCO3,AHY1,AHCO31,ACO21,DPCO2
 C     WRITE(*,1111)'TBION',I,J,L,M,TBION(L,NY,NX)
 C     ENDIF
 C
-C     IF NO SALTS IS SELECTED IN SITE FILE THEN A SUBSET
+C     IF NO SALT IS SELECTED IN SITE FILE THEN A SUBSET
 C     OF THE EQUILIBRIA REACTIONS ARE SOLVED: MOSTLY THOSE
 C     FOR PHOSPHORUS AND CO-REACTANTS
 C
@@ -2659,10 +2812,13 @@ C     ION CONCENTRATION
 C
 C     CCEC,XCEC=cation exchange concentration,capacity
 C     BLVLX=soil mass
-C     C*,Z*=solute concentration, mass
+C     C*1,Z*=cation solute concentration, mass
+C        cation code:AL=Al,FE=Fe,CA=Ca,MG=Mg,NA=Na,KA=K
+C                   :N4=NH4 non-band,NB=NH4 band,HY=H
 C     DP*=dissociation constant from PARAMETER above
 C     SP*=solubility product from PARAMETER above
-C     C*<0.0=solve for C* from equilibrium with other solutes
+C     PH=soil pH from soil file
+C     VOLWM=soil water volume
 C
       IF(BKVLX.GT.ZEROS(NY,NX))THEN
       CCEC=AMAX1(ZERO,XCEC(L,NY,NX)/BKVLX)
@@ -2687,6 +2843,8 @@ C
 C
 C     CA CONCENTRATION FROM CURRENT CO2 CONCENTRATION
 C
+C     IF C*<0.0=solve for C*1 from equilibrium with other solutes
+C
       CCO21=AMAX1(ZERO,CCO2S(L,NY,NX)/12.0)
       CCO31=AMAX1(ZERO,CCO21*DPCO3/CHY1**2)
       IF(CCA(L,NY,NX).LT.0.0)THEN
@@ -2702,66 +2860,74 @@ C
 C     ALUMINUM PHOSPHATE (VARISCITE)
 C
 C     CH2PA,CH2P1=equilibrium,current H2PO4 concentration in non-band
+C     CAL1,COH1=Al,OH solute concentration
 C     SYA0P2=solubility product derived from SPALO
 C     RPALPX=H2PO4 dissolution from AlPO4 in non-band
 C
       CH2PA=SYA0P2/(CAL1*COH1**2)
-      RPALPX=AMAX1(-PALPO1,TPD*(CH2P1-CH2PA))
-C     IF((I/30)*30.EQ.I.AND.J.EQ.12)THEN
-C     WRITE(*,1117)'RPALPX',I,J,L,CH2P1,CH2PA,SYA0P2,CAL1,COH1,PALPO1
-C    2,RPALPX,CAL1*CH2P1*COH1**2
+      RPALPX=AMAX1(-PALPO1*BKVLW,TPD*(CH2P1-CH2PA))
+C     IF((I/10)*10.EQ.I.AND.J.EQ.24)THEN
+C     WRITE(*,1117)'RPALPX',I,J,NFZ,L,RPALPX
+C    2,CH2P1,CH2PA,SYA0P2,CAL1,COH1 
+C    2,PALPO1,CAL1*CH2P1*COH1**2
 C     ENDIF
 C
 C     IRON PHOSPHATE (STRENGITE)
 C
 C     CH2PF,CH2P1=equilibrium,current H2PO4 concentration in non-band
+C     CFE1,COH1=Fe,OH solute concentration
 C     SYF0P2=solubility product derived from SPALO
 C     RPFEPX=H2PO4 dissolution from FePO4 in non-band
 C
       CH2PF=SYF0P2/(CFE1*COH1**2)
-      RPFEPX=AMAX1(-PFEPO1,TPD*(CH2P1-CH2PF))
+      RPFEPX=AMAX1(-PFEPO1*BKVLW,TPD*(CH2P1-CH2PF))
 C     IF((I/30)*30.EQ.I.AND.J.EQ.12)THEN
-C     WRITE(*,1117)'RPFEPX',I,J,L,CH2P1,CH2PF,SYF0P2,CFE1,COH1,PFEPO1
-C    3,RPFEPX,CFE1*CH2P1*COH1**2
+C     WRITE(*,1117)'RPFEPX',I,J,NFZ,L,CH2P1,CH2PF,SYF0P2,CFE1,COH1 
+C    3,PFEPO1,RPFEPX,CFE1*CH2P1*COH1**2
 C     ENDIF
 C
 C     DICALCIUM PHOSPHATE
 C
 C     CH2PD,CH2P1=equilibrium,current H2PO4 concentration in non-band
+C     CCA1,COH1=Ca,OH solute concentration
 C     SYCAD2=solubility product derived from SPALO
 C     RPCADX=H2PO4 dissolution from CaHPO4 in non-band
 C
       CH2PD=SYCAD2/(CCA1*COH1)
-      RPCADX=AMAX1(-PCAPD1,TPD*(CH2P1-CH2PD))
+      RPCADX=AMAX1(-PCAPD1*BKVLW,TPD*(CH2P1-CH2PD))
 C
 C     HYDROXYAPATITE
 C
 C     CH2PH,CH2P1=equilibrium,current H2PO4 concentration in non-band
+C     CCA1,COH1=Ca,OH solute concentration
 C     SYCAH2=solubility product derived from SPALO
 C     RPCAHX=H2PO4 dissolution from apatite in non-band
 C
       CH2PH=(SYCAH2/(CCA1**5*COH1**7))**0.333
-      RPCAHX=AMAX1(-PCAPH1,TPD*(CH2P1-CH2PH))
+      RPCAHX=AMAX1(-PCAPH1*BKVLW,TPD*(CH2P1-CH2PH))
 C     IF((I/30)*30.EQ.i.AND.J.EQ.12)THEN
-C     WRITE(*,1117)'RPCAHX',I,J,L,CH2P1,CH2PH,SYCAH2,CCA1,COH1,SPCAC
-C    2,DPCO3,CCO31,CCO21,CHY1,PH(L,NY,NX),PCAPH1,RPCAHX
+C     WRITE(*,1117)'RPCADX',I,J,NFZ,L,CH2P1,CH2PD,SYCAD2,CCA1,COH1 
+C    2,SPCAC,DPCO3,CCO31,CCO21,CHY1,PH(L,NY,NX),PCAPD1,RPCADX,BKVLW
+C     WRITE(*,1117)'RPCAHX',I,J,NFZ,L,CH2P1,CH2PH,SYCAH2,CCA1,COH1 
+C    2,SPCAC,DPCO3,CCO31,CCO21,CHY1,PH(L,NY,NX),PCAPH1,RPCAHX,TPD
 C    3,CCA1**5*CH2P1**3*COH1**7
 C     ENDIF
 C
 C     MONOCALCIUM PHOSPHATE
 C
 C     CH2PM,CH2P1=equilibrium,current H2PO4 concentration in non-band
+C     CCA1=Ca solute concentration
 C     SPCAM=solubility product for Ca(H2PO4)2 
 C     RPCAMX=H2PO4 dissolution from Ca(H2PO4)2 in non-band
 C
       CH2PM=SQRT(SPCAM/CCA1)
-      RPCAMX=AMAX1(-PCAPM1*SPPO4,TPD*(CH2P1-CH2PM))
+      RPCAMX=AMAX1(-PCAPM1*BKVLW*SPPO4,TPD*(CH2P1-CH2PM))
 C     IF(I.GT.315)THEN
-C     WRITE(*,1117)'RPPO4',I,J,L,RPCADX,CH2P1,CH2PD,PCAPD1,RPCAHX 
+C     WRITE(*,1117)'RPCADX',I,J,NFZ,L,RPCADX,CH2P1,CH2PD,PCAPD1,RPCAHX 
 C    2,CH2PA,CH2PH,SYA0P2,CAL1,COH1,SYCAH2,CCA1,CCO21,CCO31,PCAPH1 
-C    3,VOLWPO,SPCAC/CCO31,CCA(L,NY,NX),H2PO4(L,NY,NX)
+C    3,VOLWPO,SPCAC/CCO31,CCA(L,NY,NX),H2PO4(L,NY,X)
 C    4,VOLWM(NPH,L,NY,NX),ZCA(L,NY,NX),CCO2S(L,NY,NX)
-1117  FORMAT(A8,3I4,30E12.4)
+1117  FORMAT(A8,4I4,30E12.4)
 C     ENDIF
 C
 C     PHOSPHORUS ANION EXCHANGE IN NON-BAND SOIL ZONE
@@ -2780,8 +2946,13 @@ C     H2PO4 EXCHANGE IN NON-BAND SOIL ZONE FROM CONVERGENCE
 C     SOLUTION FOR EQUILIBRIUM AMONG H2PO4-, H+, OH-, X-OH
 C     AND X-H2PO4
 C
-C     SPH2P,SXH2P=equilibrium constant for H2PO4 exchange with R-OH2,R-OH
+C     SPH2P,SXH2P=equilibrium constant for H2PO4 exchange with 
+C        R-OH2,R-OH
 C     RXH2P,RYH2P=H2PO4 exchange with R-OH2,R-OH in non-band
+C     CH2P1=H2PO4 concentration in non-band
+C     XH2P1=exchangeable H2PO4 concentration in non-band
+C     XOH11,XOH21=concentration of adsorption sites R-OH,
+C        R-OH2 in non-band
 C
       SPH2P=SXH2P*DPH2O
       RXH2P=TADA*(XOH21*CH2P1-SPH2P*XH2P1)/(XOH21+SPH2P)*VOLWBK 
@@ -2793,6 +2964,10 @@ C     AND X-HPO4
 C
 C     SPH1P=equilibrium constant for HPO4 exchange with R-OH
 C     RXH1P=HPO4 exchange with R-OH in non-band
+C     AH1P1=HPO4 activity in non-band
+C     XH1P1=exchangeable HPO4 concentration in non-band
+C     XOH11=concentration of adsorption sites R-OH
+C        in non-band
 C
       SPH1P=SXH1P*DPH2O/DPH2P
       RXH1P=TADA*(XOH11*CH1P1-SPH1P*XH1P1)/(XOH11+SPH1P)*VOLWBK 
@@ -2801,18 +2976,14 @@ C
       RYH2P=0.0
       RXH1P=0.0
       ENDIF
-C     IF((I/120)*120.EQ.I.AND.J.EQ.24.AND.L.LE.6)THEN
-C     WRITE(*,1116)'RXH2P',I,J,NX,NY,L,RXH2P
-C    2,XOH21,CH2P1,XH2P1,XOH21*(CH2P1-RXH2P)/(XH2P1+RXH2P),SPH2P
-C    3,H2PO4(L,NY,NX),RH2PX,VOLWPO
-C     WRITE(*,1116)'RYH2P',I,J,NX,NY,L,RYH2P
-C    2,XOH11,CH2P1,XH2P1,COH1,(XOH11*(CH2P1-RYH2P))
-C    3/((XH2P1+RYH2P)*COH1),SXH2P
-C     WRITE(*,1116)'RXH1P',I,J,NX,NY,L,RXH1P 
-C    2,XOH11,CH1P1,XH1P1,XOH11*(CH1P1-RXH1P)/(XH1P1+RXH1P),SPH1P
-C    3,SYH1P,DPH2O,DPH2P,XOH1(L,NY,NX),VLPO4(L,NY,NX),VLPOB(L,NY,NX)
-C    4,TKS(L,NY,NX),XOH21,XOH01
-1116  FORMAT(A8,5I4,40E12.4)
+C     IF(I.GT.130.AND.L.EQ.3)THEN
+C     WRITE(*,1116)'RXH2P',I,J,NFZ,NX,NY,L,RXH2P,TADA
+C     2,XOH21,CH2P1,SPH2P,XH2P1,VOLWBK,VOLWPO,XH2P(L,NY,NX)
+C     WRITE(*,1116)'RYH2P',I,J,NFZ,NX,NY,L,RYH2P,TADA
+C     2,XOH11,CH2P1,SXH2P,XH2P1,COH1,VOLWBK,VOLWPO 
+C     WRITE(*,1116)'RXH1P',I,J,NFZ,NX,NY,L,RXH1P,TADA 
+C    2,XOH11,CH1P1,SPH1P,XH1P1,VOLWBK,VOLWPO,XH1P(L,NY,NX) 
+1116  FORMAT(A8,6I4,40E12.4)
 C     ENDIF
 C
 C     H2PO4-H+HPO4
@@ -2837,11 +3008,12 @@ C
       RH2P=0.0
       ENDIF
 C     IF(J.EQ.1)THEN
-C     WRITE(*,2222)'PO4',I,J,L,CH2P1,PALPO1,PFEPO1,PCAPD1,PCAPH1,PCAPM1
-C    2,CH2PA,CH2PF,CH2PD,CH2PH,CH2PM,RPALPX,RPFEPX,RPCADX,RPCAHX,RPCAMX
+C     WRITE(*,2222)'PO4',I,J,NFZ,L,CH2P1,PALPO1
+C    2,PFEPO1,PCAPD1,PCAPH1,PCAPM1,CH2PA,CH2PF,CH2PD,CH2PH 
+C    2,CH2PM,RPALPX,RPFEPX,RPCADX,RPCAHX,RPCAMX
 C    3,XH2P1,RXH2P,RYH2P
 C    3,CAL1,CFE1,CCA1,CHY1,COH1
-2222  FORMAT(A8,3I4,40E12.4)
+2222  FORMAT(A8,4I4,50E12.4)
 C     ENDIF
 C
 C     PHOSPHORUS PRECIPITATION-DISSOLUTION IN BAND SOIL ZONE
@@ -2852,48 +3024,53 @@ C     ALUMINUM PHOSPHATE (VARISCITE)
 C
 C     CH2PA,CH2PB=equilibrium,current H2PO4 concentration in band
 C     SYA0P2=solubility product derived from SPALO
+C     CAL1,COH1=Al,OH concentrations
 C     RPALBX=H2PO4 dissolution from AlPO4 in band
 C
       CH2PA=SYA0P2/(CAL1*COH1**2)
-      RPALBX=AMAX1(-PALPOB,TPD*(CH2PB-CH2PA))
+      RPALBX=AMAX1(-PALPOB*BKVLW,TPD*(CH2PB-CH2PA))
 C
 C     IRON PHOSPHATE (STRENGITE)
 C
 C     CH2PF,CH2PB=equilibrium,current H2PO4 concentration in band
 C     SYF0P2=solubility product derived from SPALO
+C     CFE1,COH1=Fe,OH concentrations
 C     RPFEBX=H2PO4 dissolution from FePO4 in band
 C
       CH2PF=SYF0P2/(CFE1*COH1**2)
-      RPFEBX=AMAX1(-PFEPOB,TPD*(CH2PB-CH2PF))
+      RPFEBX=AMAX1(-PFEPOB*BKVLW,TPD*(CH2PB-CH2PF))
 C
 C     DICALCIUM PHOSPHATE
 C
 C     CH2PD,CH2PB=equilibrium,current H2PO4 concentration in band
 C     SYCAD2=solubility product derived from SPALO
+C     CCA1,COH1=Ca,OH concentrations
 C     RPCDBX=H2PO4 dissolution from CaHPO4 in band
 C
       CH2PD=SYCAD2/(CCA1*COH1)
-      RPCDBX=AMAX1(-PCAPDB,TPD*(CH2PB-CH2PD))
+      RPCDBX=AMAX1(-PCAPDB*BKVLW,TPD*(CH2PB-CH2PD))
 C
 C     HYDROXYAPATITE
 C
 C     CH2PH,CH2PB=equilibrium,current H2PO4 concentration in band
 C     SYCAH2=solubility product derived from SPALO
+C     CCA1,COH1=Ca,OH concentrations
 C     RPCHBX=H2PO4 dissolution from apatite in band
 C
       CH2PH=(SYCAH2/(CCA1**5*COH1**7))**0.333
-      RPCHBX=AMAX1(-PCAPHB,TPD*(CH2PB-CH2PH))
+      RPCHBX=AMAX1(-PCAPHB*BKVLW,TPD*(CH2PB-CH2PH))
 C
 C     MONOCALCIUM PHOSPHATE
 C
 C     CH2PM,CH2PB=equilibrium,current H2PO4 concentration in band
 C     SPCAM=solubility product for Ca(H2PO4)2 
+C     CCA1=Ca concentration
 C     RPCMBX=H2PO4 dissolution from Ca(H2PO4)2 in band
 C
       CH2PM=SQRT(SPCAM/CCA1)
-      RPCMBX=AMAX1(-PCAPMB*SPPO4,TPD*(CH2PB-CH2PM))
+      RPCMBX=AMAX1(-PCAPMB*BKVLW*SPPO4,TPD*(CH2PB-CH2PM))
 C     IF(I.GT.315)THEN
-C     WRITE(*,1117)'RPPOB',I,J,L,RPCMBX,CH2PM,CH2PB,SPCAM,CCA1
+C     WRITE(*,1117)'RPPOB',I,J,NFZ,L,RPCMBX,CH2PM,CH2PB,SPCAM,CCA1
 C    2,PCAPMB,SPPO4,TPD,PCPMB(L,NY,NX),BKVLPB
 C     ENDIF
 C
@@ -2904,12 +3081,16 @@ C     EXCHANGE SITES
 C
       IF(XAEC(L,NY,NX).GT.ZEROS(NY,NX))THEN
 C
-C     H2PO4 EXCHANGE IN BAND SOIL ZONE FROM CONVERGENCE
-C     SOLUTION FOR EQUILIBRIUM AMONG H2PO4-, H+, OH-, X-OH
-C     AND X-H2PO4
+C     H2PO4 EXCHANGE IN BAND SOIL ZONE FROM EQUILIBRIUM
+C     AMONG H2PO4-, H+, OH-, X-OH AND X-H2PO4
 C
-C     SPH2P,SXH2P=equilibrium constant for H2PO4 exchange with R-OH2,R-OH
+C     SPH2P,SXH2P=equilibrium constant for H2PO4 exchange with 
+C        R-OH2,R-OH
 C     RXH2B,RYH2B=H2PO4 exchange with R-OH2,R-OH in band
+C     XH11B,XH21B=concentration of adsorption sites R-OH,
+C        R-OH2 in band
+C     X2P1B=exchangeable H2PO4 concentration in band
+C     COH1=OH concentration
 C
       SPH2P=SXH2P*DPH2O
       RXH2B=TADA*(XH21B*CH2PB-SPH2P*X2P1B)/(XH21B+SPH2P)*VOLWBK 
@@ -2921,6 +3102,9 @@ C     AND X-HPO4
 C
 C     SPH1P=equilibrium constant for HPO4 exchange with R-OH
 C     RXH1B=HPO4 exchange with R-OH in band
+C     XH11B=concentration of adsorption sites R-OH,
+C        in band
+C     X1P1B=exchangeable HPO4 concentration in band
 C
       SPH1P=SXH1P*DPH2O/DPH2P
       RXH1B=TADA*(XH11B*CH1PB-SPH1P*X1P1B)/(XH11B+SPH1P)*VOLWBK 
@@ -2929,8 +3113,15 @@ C
       RYH2B=0.0
       RXH1B=0.0
       ENDIF
-C     WRITE(*,2224)'RXH1B',I,J,L,RXH1B,XH11B,CH1PB,SPH1P,X1P1B
-2224  FORMAT(A8,3I4,40E12.4)
+C     IF(I.GT.130.AND.L.EQ.3)THEN
+C     WRITE(*,1114)'RXH2B',I,J,NFZ,NX,NY,L,RXH2B,TADA
+C    2,XH21B,CH2PB,SPH2P,X2P1B,VOLWBK,VOLWPB,XH2PB(L,NY,NX)
+C     WRITE(*,1114)'RYH2B',I,J,NFZ,NX,NY,L,RYH2B,TADA
+C    2,XH11B,CH2PB,SXH2P,X2P1B,COH1,VOLWBK,VOLWPB 
+C     WRITE(*,1114)'RXH1B',I,J,NFZ,NX,NY,L,RXH1B,TADA 
+C    2,XH11B,CH1PB,SPH1P,X1P1B,VOLWBK,VOLWPB,XH1PB(L,NY,NX) 
+1114  FORMAT(A8,6I4,40E12.4)
+C     ENDIF
 C
 C     H2PO4-H+HPO4
 C
@@ -2965,11 +3156,9 @@ C     EQUILIBRIUM X-CA CONCENTRATION FROM CEC, GAPON COEFFICIENTS
 C     AND CATION CONCENTRATIONS
 C
 C     CCEC,XCEC=cation exchange concentration,capacity
-C     XCAX=equilibrium R-Ca concentration
-C     GKC4,GKCH,GKCA,GKCM,GKCN,GKCK=Gapon selectivity coefficients for
-C     CA-NH4,CA-H,CA-AL,CA-MG,CA-NA,CA-K
-C     X*Q=equilibrium exchangeable concentrations
-C     XTLQ=total equilibrium exchangeable concentration 
+C     C*1=cation solute concentrations
+C        cation code:AL=Al,FE=Fe,CA=Ca,MG=Mg,NA=Na,KA=K
+C                   :N4=NH4 non-band,NB=NH4 band,HY=H
 C
       CN41=AMAX1(ZERO,CN41)
       CN4B=AMAX1(ZERO,CN4B)
@@ -2983,6 +3172,14 @@ C
 C     EQUILIBRIUM X-CA CONCENTRATION FROM CEC AND CATION
 C     CONCENTRATIONS
 C
+C     XCAX=equilibrium R-Ca concentration
+C     GKC4,GKCH,GKCA,GKCM,GKCN,GKCK=Gapon selectivity coefficients for
+C        CA-NH4,CA-H,CA-AL,CA-MG,CA-NA,CA-K
+C     X*Q=equilibrium exchangeable concentrations
+C        cation code:AL=Al,FE=Fe,CA=Ca,MG=Mg,NA=Na,KA=K
+C                   :N4=NH4 non-band,NB=NH4 band,HY=H
+C     XTLQ=total equilibrium exchangeable concentration
+C 
       XCAX=CCEC/(1.0+GKC4(L,NY,NX)*CN41/CCAX*VLNH4(L,NY,NX)
      2+GKC4(L,NY,NX)*CN4B/CCAX*VLNHB(L,NY,NX)
      3+GKCH(L,NY,NX)*CHY1/CCAX+GKCA(L,NY,NX)*CALX/CCAX 
@@ -3010,6 +3207,13 @@ C
 C     NH4 EXCHANGE IN NON-BAND AND BAND SOIL ZONES
 C
 C     RXN4,RXNB=NH4 adsorption in non-band,band
+C     XN4Q,XN41=equilibrium,current exchangeable NH4 concentration
+C        non-band
+C     CN41=aqueous NH4 concentration non-band
+C     XNBQ,XN4B=equilibrium,current exchangeable NH4 concentration
+C        band
+C     CN4B=aqueous NH4 concentration band
+C     
 C     TADC=adsorption rate constant
 C
       RXN4=TADC*AMAX1(AMIN1((XN4Q-XN41)*CN41/XN4Q,CN41),-XN41) 
@@ -3019,7 +3223,7 @@ C
       RXNB=0.0
       ENDIF
 C     IF(J.EQ.12.AND.L.EQ.0)THEN
-C     WRITE(*,2222)'RXN4',I,J,L,RXN4,CN41,XN41,CCAX,CCA1,XCAQ 
+C     WRITE(*,2222)'RXN4',I,J,NFZ,L,RXN4,CN41,XN41,CCAX,CCA1,XCAQ 
 C    2,CCEC,XCAX,FN4X,FCAQ,GKC4(L,NY,NX),PH(L,NY,NX),VOLWBK
 C    3,XN4Q,XTLQ,FX
 C    3,(CCA1)**0.5*XN41/(CN41*XCAQ),ZCA(L,NY,NX),BKVLX
@@ -3030,33 +3234,40 @@ C     NH4-NH3+H IN NON-BAND AND BAND SOIL ZONES
 C
 C     RNH4,RNHB=NH4-NH3+H dissociation in non-band,band
 C     DPN4=NH4 dissociation constant
+C     CN41,CN31,CN4B,CN3B=total NH4,NH3 concentration in non-band,band
+C     CHY1=H concentration
 C
       IF(VOLWNH.GT.ZEROS2(NY,NX))THEN
-      RNH4=(CHY1*CN31-DPN4*CN41)/(DPN4+CHY1)
+      RNH4=TSL*(CHY1*CN31-DPN4*CN41)/(DPN4+CHY1)
       ELSE
       RNH4=0.0
       ENDIF
       IF(VOLWNB.GT.ZEROS2(NY,NX))THEN
-      RNHB=(CHY1*CN3B-DPN4*CN4B)/(DPN4+CHY1)
+      RNHB=TSL*(CHY1*CN3B-DPN4*CN4B)/(DPN4+CHY1)
       ELSE
       RNHB=0.0
       ENDIF
-C     IF(IYRC.EQ.2012.AND.I.EQ.151.AND.NX.EQ.1)THEN
-C     WRITE(*,2222)'RNH4',I,J,L,RNH4,CHY1,CN31,DPN4,CN41
+C     IF(I.EQ.227)THEN
+C     WRITE(*,2222)'RNH4',I,J,NFZ,L,RNH4,CHY1,CN31,DPN4,CN41
 C    2,RXN4,XN41,VOLWNH,RNHB,CN3B,CN4B,VOLWNB,RXNB,XN4B,FN4X
 C    2,CN41*VOLWNH,XN41*VOLWNH,CN4B*VOLWNB,XN4B*VOLWNB 
 C    3,(CCA1)**0.5*XN41/(CN41*XCAQ),(CCA1)**0.5*XN4B/(CN4B*XCAQ)
 C    4,RN4X,RN3X,RNBX,R3BX,ZEROS2(NY,NX)
+C    5,ZNH4S(L,NY,NX),ZNH3S(L,NY,NX),VOLWNX,RN4X,RN3X
+C    5,TUPNH4(L,NY,NX),XNH4S(L,NY,NX),RSN4AA
+C    6,TUPN3S(L,NY,NX),RSNUAA,ZNH4FA(L,NY,NX),VLNH4(L,NY,NX)
+C    2,THETW(L,NY,NX),RSNUA
 C     ENDIF
 C
-C     TOTAL ION FLUXES FOR ALL REACTIONS ABOVE
+C     TOTAL ION TRANSFORMATIONS FOR ALL REACTIONS ABOVE
 C
-C     RN4S,RN4B=net NH4 flux in non-band,band
-C     RN3S,RN3B=net NH3 flux in non-band,band
-C     RAL,RFE,RHY,RCA,RMG,RNA,RKA,ROH=net Al,Fe,H,Ca,Mg,Na,K,OH flux
-C     RHP1,RHP2=net HPO4,H2PO4 flux in non-band
+C     RN4S,RN4B=net NH4 transformation in non-band,band
+C     RN3S,RN3B=net NH3 transformation in non-band,band
+C     RAL,RFE,RHY,RCA,RMG,RNA,RKA,ROH=net Al,Fe,H,Ca,Mg,Na,K,OH
+C        transformation
+C     RHP1,RHP2=net HPO4,H2PO4 transformation in non-band
 C     RXH1,RXH2,RX1P,RX2P=net R-OH,R-OH2,R-HPO4,R-H2PO4 in non-band
-C     RHB1,RHB2=net HPO4,H2PO4 flux in band
+C     RHB1,RHB2=net HPO4,H2PO4 transformation in band
 C     RBH1,RBH2,RB1P,RB2P=net R-OH,R-OH2,R-HPO4,R-H2PO4 in band
 C
       RN4S=RNH4-RXN4
@@ -3078,22 +3289,24 @@ C
       RB1P=RXH1B
       RB2P=RXH2B+RYH2B
 C
-C     CONVERT TOTAL ION FLUXES FROM CHANGES IN CONCENTRATION
+C     CONVERT TOTAL ION TRANSFORMATIONS FROM CHANGES IN CONCENTRATION
 C     TO CHANGES IN MASS PER UNIT AREA FOR USE IN 'REDIST'
 C
-C     TRN4S,TRN4B=total NH4 flux in non-band,band
-C     TRN3S,TRN3B=total NH3 flux in non-band,band
-C     TRH1P,TRH2P=net HPO4,H2PO4 flux in non-band
-C     TRH1B,TRH2B=net HPO4,H2PO4 flux in band
+C     TRN4S,TRN4B=total NH4 transformation in non-band,band
+C     TRN3S,TRN3B=total NH3 transformation in non-band,band
+C     TRH1P,TRH2P=net HPO4,H2PO4 transformation in non-band
+C     TRH1B,TRH2B=net HPO4,H2PO4 transformation in band
 C     TRNX4,TRNXB=total NH4 adsorption in non-band,band
 C     TRXH1,TRXH2,TRX1P,TRX2P
-C     =total R-OH,R-OH2,R-HPO4,R-H2PO4 adsorption in non-band
+C        =total R-OH,R-OH2,R-HPO4,R-H2PO4 adsorption in non-band
 C     TRBH1,TRBH2,TRB1P,TRB2P
-C     =total R-OH,R-OH2,R-HPO4,R-H2PO4 adsorption in band
+C        =total R-OH,R-OH2,R-HPO4,R-H2PO4 adsorption in band
 C     TRALPO,TRFEPO,TRCAPD,TRCAPH,TRCAPM
-C     =total AlPO4,FePO4,CaHPO4,apatite,Ca(H2PO4)2 precipitation in non-band
+C        =total AlPO4,FePO4,CaHPO4,apatite,Ca(H2PO4)2 precipitation 
+C         in non-band
 C     TRALPB,TRFEPB,TRCPDB,TRCPHB,TRCPMB
-C     =total AlPO4,FePO4,CaHPO4,apatite,Ca(H2PO4)2 precipitation in band
+C        =total AlPO4,FePO4,CaHPO4,apatite,Ca(H2PO4)2 precipitation 
+C         in band
 C
       TRN4S(L,NY,NX)=TRN4S(L,NY,NX)+RN4S*VOLWNH
       TRN4B(L,NY,NX)=TRN4B(L,NY,NX)+RN4B*VOLWNB
@@ -3123,14 +3336,14 @@ C
       TRCPDB(L,NY,NX)=TRCPDB(L,NY,NX)+RPCDBX*VOLWPB
       TRCPHB(L,NY,NX)=TRCPHB(L,NY,NX)+RPCHBX*VOLWPB
       TRCPMB(L,NY,NX)=TRCPMB(L,NY,NX)+RPCMBX*VOLWPB
-C     IF(IYRC.EQ.2012.AND.I.EQ.151.AND.NX.EQ.1)THEN
-C     WRITE(*,24)'RN4S',I,J,L,RN4S,RN3S,RNH4,RXN4,VOLWNH 
-C     WRITE(*,24)'RHP1',I,J,L,RHP1,RH2P,RXH1P
+C     IF(I.EQ.227)THEN
+C     WRITE(*,24)'RN4S',I,J,NFZ,L,RN4S,RN3S,RNH4,RXN4,VOLWNH 
+C     WRITE(*,24)'RHP1',I,J,NFZ,L,RHP1,RH2P,RXH1P
 C    2,TRX1P(L,NY,NX),TRH2P(L,NY,NX)
-C     WRITE(*,24)'RHP2',I,J,L,RHP2,RH2P,RXH2P,RYH2P
+C     WRITE(*,24)'RHP2',I,J,NFZ,L,RHP2,RH2P,RXH2P,RYH2P
 C    2,RPALPX,RPFEPX,RPCADX,2.0*RPCAMX,3.0*RPCAHX 
 C    3,TRX2P(L,NY,NX)
-24    FORMAT(A8,3I4,60E12.4)
+24    FORMAT(A8,4I4,60E12.4)
 C     ENDIF
       ENDIF
 C
@@ -3147,7 +3360,8 @@ C
 C     NH4 FERTILIZER BAND
 C
 C     IFNHB=banded NH4 fertilizer flag
-C     ROWN=NH4 fertilizer band row width
+C     ROWN=NH4 fertilizer band row width from fertilizer file
+C     CDPTH=depth to bottom of soil layer
 C     DPNH4=NH4 fertilizer band depth 
 C
       IF(IFNHB(NY,NX).EQ.1.AND.ROWN(NY,NX).GT.0.0)THEN
@@ -3160,21 +3374,22 @@ C     WDNHB=layer NH4 fertilizer band width
 C     ZNSGL=NH4 diffusivity
 C     TORT=tortuosity
 C
-      DWNH4=0.5*SQRT(ZNSGL(L,NY,NX))*TORT(NPH,L,NY,NX)
-      WDNHB(L,NY,NX)=AMIN1(ROWN(NY,NX)
-     2,AMAX1(0.025,WDNHB(L,NY,NX))+DWNH4)
+      DWNH4=0.5*SQRT(ZNSGL(L,NY,NX))*TORT(NPH,L,NY,NX)*XNFH
+      WDNHB(L,NY,NX)=AMIN1(ROWN(NY,NX),WDNHB(L,NY,NX)+DWNH4)
 C
 C     NH4 BAND DEPTH
 C
+C     CDPTH=depth to bottom of soil layer
 C     DPFLW=change in NH4 fertilizer band depth
-C     DPNH4,DPNHB=total,layer NH4 fertilizer band depth
+C     DPNH4,DPNHB,WDNHB=total,layer NH4 fertilizer band depth,width
 C
       IF(CDPTH(L,NY,NX).GE.DPNH4(NY,NX))THEN
       DPFLW=FLWD+DWNH4
       DPNH4(NY,NX)=DPNH4(NY,NX)+DPFLW
       DPNHB(L,NY,NX)=DPNHB(L,NY,NX)+DPFLW
       IF(DPNHB(L,NY,NX).GT.DLYR(3,L,NY,NX))THEN
-      DPNHB(L+1,NY,NX)=DPNHB(L+1,NY,NX)+(DPNHB(L,NY,NX)-DLYR(3,L,NY,NX))
+      DPNHB(L+1,NY,NX)=DPNHB(L+1,NY,NX)+(DPNHB(L,NY,NX)
+     2-DLYR(3,L,NY,NX))
       WDNHB(L+1,NY,NX)=WDNHB(L,NY,NX)
       DPNHB(L,NY,NX)=DLYR(3,L,NY,NX)
       ELSEIF(DPNHB(L,NY,NX).LT.0.0)THEN
@@ -3190,6 +3405,8 @@ C
 C     VLNH4,VLNHB=fraction of soil volume in NH4 non-band,band
 C     DLYR=soil layer thickness
 C     FVLNH4=relative change in VLNH4
+C     DPNHB,WDNHB=NH4 fertilizer band depth,width
+C     ROWN=NH4 fertilizer band row width from fertilizer file
 C
       XVLNH4=VLNH4(L,NY,NX)
       IF(DLYR(3,L,NY,NX).GT.ZERO)THEN
@@ -3204,7 +3421,8 @@ C
 C     TRANSFER NH4, NH3 FROM NON-BAND TO BAND
 C     DURING BAND GROWTH
 C
-C     DNH4S,DNH3S,DXNH4=transfer of NH4,NH3,exchangeable NH4
+C     DNH4S,DNH3S,DXNH4=transfer fraction of NH4,NH3,exchangeable NH4
+C     FVLNH4=relative change in VLNH4
 C
       DNH4S=FVLNH4*ZNH4S(L,NY,NX)/14.0
       DNH3S=FVLNH4*ZNH3S(L,NY,NX)/14.0
@@ -3235,7 +3453,8 @@ C
 C     NO3 FERTILIZER BAND
 C
 C     IFNOB=banded NO3 fertilizer flag
-C     ROWO=NO3 fertilizer band row width
+C     ROWO=NO3 fertilizer band row width from fertilizer file
+C     CDPTH=depth to bottom of soil layer
 C     DPNO3=NO3 fertilizer band depth 
 C
       IF(IFNOB(NY,NX).EQ.1.AND.ROWO(NY,NX).GT.0.0)THEN
@@ -3248,11 +3467,12 @@ C     WDNOB=layer NO3 fertilizer band width
 C     ZOSGL=NO3 diffusivity
 C     TORT=tortuosity
 C
-      DWNO3=0.5*SQRT(ZOSGL(L,NY,NX))*TORT(NPH,L,NY,NX)
+      DWNO3=0.5*SQRT(ZOSGL(L,NY,NX))*TORT(NPH,L,NY,NX)*XNFH
       WDNOB(L,NY,NX)=AMIN1(ROWO(NY,NX),WDNOB(L,NY,NX)+DWNO3)
 C
 C     NO3 BAND DEPTH
 C
+C     CDPTH=depth to bottom of soil layer
 C     DPFLW=change in NO3 fertilizer band depth
 C     DPNO3,DPNOB=total,layer NO3 fertilizer band depth
 C
@@ -3261,7 +3481,8 @@ C
       DPNO3(NY,NX)=DPNO3(NY,NX)+DPFLW
       DPNOB(L,NY,NX)=DPNOB(L,NY,NX)+DPFLW
       IF(DPNOB(L,NY,NX).GT.DLYR(3,L,NY,NX))THEN
-      DPNOB(L+1,NY,NX)=DPNOB(L+1,NY,NX)+(DPNOB(L,NY,NX)-DLYR(3,L,NY,NX))
+      DPNOB(L+1,NY,NX)=DPNOB(L+1,NY,NX)+(DPNOB(L,NY,NX)
+     2-DLYR(3,L,NY,NX))
       WDNOB(L+1,NY,NX)=WDNOB(L,NY,NX)
       DPNOB(L,NY,NX)=DLYR(3,L,NY,NX)
       ELSE IF(DPNOB(L,NY,NX).LT.0.0)THEN
@@ -3277,6 +3498,8 @@ C
 C     VLNO3,VLNOB=fraction of soil volume in NO3 non-band,band
 C     DLYR=soil layer thickness
 C     FVLNO3=relative change in VLNO3
+C     DPNOB,WDNOB=NO3 fertilizer band depth,width
+C     ROWO=NO3 fertilizer band row width from fertilizer file
 C
       XVLNO3=VLNO3(L,NY,NX)
       IF(DLYR(3,L,NY,NX).GT.ZERO)THEN
@@ -3292,6 +3515,7 @@ C     TRANSFER NO3 FROM NON-BAND TO BAND
 C     DURING BAND GROWTH
 C
 C     DNO3S,DNO2S=transfer of NO3,NO2
+C     FVLNO3=relative change in VLNO3
 C
       DNO3S=FVLNO3*ZNO3S(L,NY,NX)/14.0
       DNO2S=FVLNO3*ZNO2S(L,NY,NX)/14.0
@@ -3317,7 +3541,8 @@ C
 C     PO4 FERTILIZER BAND
 C
 C     IFPOB=banded H2PO4 fertilizer flag
-C     ROWP=H2PO4 fertilizer band row width
+C     ROWP=H2PO4 fertilizer band row width from fertilizer file
+C     CDPTH=depth to bottom of soil layer
 C     DPPO4=H2PO4 fertilizer band depth 
 C
       IF(IFPOB(NY,NX).EQ.1.AND.ROWP(NY,NX).GT.0.0)THEN
@@ -3330,11 +3555,12 @@ C     WDPO4=layer H2PO4 fertilizer band width
 C     POSGL=H2PO4 diffusivity
 C     TORT=tortuosity
 C
-      DWPO4=0.5*SQRT(POSGL(L,NY,NX))*TORT(NPH,L,NY,NX)
+      DWPO4=0.5*SQRT(POSGL(L,NY,NX))*TORT(NPH,L,NY,NX)*XNFH
       WDPOB(L,NY,NX)=AMIN1(ROWP(NY,NX),WDPOB(L,NY,NX)+DWPO4)
 C
 C     PO4 BAND DEPTH
 C
+C     CDPTH=depth to bottom of soil layer
 C     DPFLW=change in H2PO4 fertilizer band depth
 C     DPPO4,DPPOB=total,layer H2PO4 fertilizer band depth
 C
@@ -3343,7 +3569,8 @@ C
       DPPO4(NY,NX)=DPPO4(NY,NX)+DPFLW
       DPPOB(L,NY,NX)=DPPOB(L,NY,NX)+DPFLW
       IF(DPPOB(L,NY,NX).GT.DLYR(3,L,NY,NX))THEN
-      DPPOB(L+1,NY,NX)=DPPOB(L+1,NY,NX)+(DPPOB(L,NY,NX)-DLYR(3,L,NY,NX))
+      DPPOB(L+1,NY,NX)=DPPOB(L+1,NY,NX)+(DPPOB(L,NY,NX)
+     2-DLYR(3,L,NY,NX))
       WDPOB(L+1,NY,NX)=WDPOB(L,NY,NX)
       DPPOB(L,NY,NX)=DLYR(3,L,NY,NX)
       ELSEIF(DPPOB(L,NY,NX).LT.0.0)THEN
@@ -3359,6 +3586,8 @@ C
 C     VLPO43,VLPOB=fraction of soil volume in H2PO4 non-band,band
 C     DLYR=soil layer thickness
 C     FVLPO4=relative change in VLPO4
+C     DPPOB,WDPOB=PO4 fertilizer band depth,width
+C     ROWP=PO4 fertilizer band row width from fertilizer file
 C
       XVLPO4=VLPO4(L,NY,NX)
       IF(DLYR(3,L,NY,NX).GT.ZERO)THEN
@@ -3375,6 +3604,7 @@ C     DURING BAND GROWTH DEPENDING ON SALT
 C     VS. NON-SALT OPTION
 C
 C     DZ*,DX*,DP*=transfer of solute,adsorbed,precipitated HPO4,H2PO4
+C     FVLPO4=relative change in VLPO4
 C
       IF(ISALTG.NE.0)THEN
       DZH0P=FVLPO4*H0PO4(L,NY,NX)
@@ -3523,12 +3753,18 @@ C     ENDIF
 C
 C     SUBTRACT FERTILIZER DISSOLUTION FROM FERTILIZER POOLS
 C
-C     ZNH4FA,ZNH3FA,ZNHUFA,ZNO3FA=broadcast NH4,NH3,urea,NO3 fertilizer
-C     ZNH4FB,ZNH3FB,ZNHUFB,ZNO3FB=banded NH4,NH3,urea,NO3 fertilizer
-C     RSN4AA,RSN4BA=rate of broadcast NH4 fertilizer dissoln in non-band,band
-C     RSN3AA,RSN3BA=rate of broadcast NH3 fertilizer dissoln in non-band,band
-C     RSNUAA,RSNUBA=rate of broadcast urea fertr dissoln in non-band,band
-C     RSNOAA,RSNOBA=rate of broadcast NO3 fertilizer dissoln in non-band,band
+C     ZNH4FA,ZNH3FA,ZNHUFA,ZNO3FA=broadcast NH4,NH3,urea,NO3
+C        fertilizer
+C     ZNH4FB,ZNH3FB,ZNHUFB,ZNO3FB=banded NH4,NH3,urea,NO3 
+C        fertilizer
+C     RSN4AA,RSN4BA=rate of broadcast NH4 fertilizer dissolution 
+C        in non-band,band
+C     RSN3AA,RSN3BA=rate of broadcast NH3 fertilizer dissolution 
+C        in non-band,band
+C     RSNUAA,RSNUBA=rate of broadcast urea fertilizer dissolution 
+C        in non-band,band
+C     RSNOAA,RSNOBA=rate of broadcast NO3 fertilizer dissolution 
+C        in non-band,band
 C     RSN4BB=rate of banded NH4 fertilizer dissolution in band
 C     RSN3BB=rate of banded NH3 fertilizer dissolution in band
 C     RSNUBB=rate of banded urea fertilizer dissolution in band
@@ -3542,10 +3778,12 @@ C
       ZNH3FB(L,NY,NX)=ZNH3FB(L,NY,NX)-RSN3BB
       ZNHUFB(L,NY,NX)=ZNHUFB(L,NY,NX)-RSNUBB
       ZNO3FB(L,NY,NX)=ZNO3FB(L,NY,NX)-RSNOBB
+
 C
-C     ADD FERTILIZER DISSOLUTION TO ION FLUXES AND CONVERT TO MASS
+C     ADD FERTILIZER DISSOLUTION TO ION TRANSFORMATIONS 
+C     AND CONVERT TO MASS
 C
-C     TRN3G=NH3 dissolution from NH3 
+C     TRN3G=NH3 dissolution
 C     TRN4S,TRN4B=NH4 dissolution in non-band,band
 C     TRN3S,TRN3B=NH3 dissolution from urea in non-band,band
 C     TRNO3,TRNOB=NO3 dissolution in non-band,band
@@ -3583,14 +3821,19 @@ C
 C     BKVL=litter mass
 C
       IF(VOLWM(NPH,0,NY,NX).GT.ZEROS2(NY,NX))THEN
+C
+C     BKVL=litter BD
+C     VOLWM=litter water volume
+C
       BKVLX=BKVL(0,NY,NX)
+      BKVLW=BKVLX/VOLWM(NPH,0,NY,NX)
 C
 C     UREA HYDROLYSIS IN SURFACE RESIDUE
 C
 C     VOLQ=biologically active litter water volume from nitro.f
 C     COMA=concentration of active biomass
-C     TOQCK=total microbial activity from nitro.f
-C     DUKD=Km for urea hydrolysis
+C     TOQCK=total microbial activity from ‘nitro.f’
+C     DUKD,DUKI=Km,Ki for urea hydrolysis
 C
       IF(VOLQ(0,NY,NX).GT.ZEROS2(NY,NX))THEN
       COMA=AMIN1(0.1E+06,TOQCK(0,NY,NX)/VOLQ(0,NY,NX))
@@ -3601,14 +3844,14 @@ C
 C
 C     UREA HYDROLYSIS INHIBITION
 C
-C     ZNHU0,ZNHUI=initial,current inhibition activity
+C     ZNHU0,ZNHUI=initial,current inhibition activity from ‘hour1.f’
 C     RNHUI=rate constant for decline in urea hydrolysis inhibition
 C
       IF(ZNHU0(0,NY,NX).GT.ZEROS(NY,NX)
      2.AND.ZNHUI(0,NY,NX).GT.ZEROS(NY,NX))THEN
-      ZNHUI(0,NY,NX)=ZNHUI(0,NY,NX)-TFNQ(0,NY,NX)**0.25 
-     2*RNHUI(IUTYP(NY,NX))*ZNHUI(0,NY,NX)
-     3*AMAX1(RNHUI(IUTYP(NY,NX)),1.0-ZNHUI(0,NY,NX)/ZNHU0(0,NY,NX))
+      ZNHUI(0,NY,NX)=ZNHUI(0,NY,NX)
+     2-RNHUX*ZNHUI(0,NY,NX)
+     3*AMAX1(RNHUX,1.0-ZNHUI(0,NY,NX)/ZNHU0(0,NY,NX))
       ELSE
       ZNHUI(0,NY,NX)=0.0
       ENDIF
@@ -3618,16 +3861,18 @@ C
 C     ZNHUFA=urea fertilizer 
 C     CNHUA=concentration of urea fertilizer 
 C     DFNSA=effect of microbial concentration on urea hydrolysis 
+C     DUKD=effective Km for urea hydrolysis 
 C     RSNUA=rate of urea hydrolysis 
 C     SPNHU=specific rate constant for urea hydrolysis
 C     TFNQ=temperature effect on microbial activity from nitro.f
+C     ZNHUI=current inhibition activity
 C
       IF(ZNHUFA(0,NY,NX).GT.ZEROS(NY,NX)
      2.AND.BKVL(0,NY,NX).GT.ZEROS(NY,NX))THEN
       CNHUA=ZNHUFA(0,NY,NX)/BKVL(0,NY,NX)
       DFNSA=CNHUA/(CNHUA+DUKD)
       RSNUA=AMIN1(ZNHUFA(0,NY,NX)
-     2,SPNHU*TOQCK(0,NY,NX)*DFNSA*TFNQ(0,NY,NX))*(1.0-ZNHUI(0,NY,NX))
+     2,SPNHU*TOQCK(0,NY,NX)*DFNSA*TFNQ(0,NY,NX)*(1.0-ZNHUI(0,NY,NX)))
       ELSE
       RSNUA=0.0
       ENDIF
@@ -3636,7 +3881,7 @@ C     WRITE(*,8778)'UREA0',I,J,IUTYP(NY,NX)
 C    2,ZNHUFA(0,NY,NX),RSNUA
 C    2,DFNSA,TFNQ(0,NY,NX),CNHUA,DUKD,DUKM,DUKI,TOQCK(0,NY,NX)
 C    3,BKVL(0,NY,NX),TFNQ(0,NY,NX),SPNHU,ZNHU0(0,NY,NX),ZNHUI(0,NY,NX)
-C    4,RNHUI(IUTYP(NY,NX))
+C    4,RNHUX 
 8778  FORMAT(A8,3I4,40E12.4)
 C     ENDIF
 C
@@ -3646,10 +3891,12 @@ C     FERTILIZER (NOTE: SUPERPHOSPHATE AND ROCK PHOSPHATE
 C     ARE REPRESENTED AS MONOCALCIUM PHOSPHATE AND HYDROXYAPATITE
 C     MODELLED IN PHOSPHORUS REACTIONS BELOW)
 C
-C     RSN4AA=rate of broadcast NH4 fertilizer dissoln 
-C     RSN3AA=rate of broadcast NH3 fertilizer dissoln 
-C     RSNUAA=rate of broadcast urea fertr dissoln 
-C     RSNOAA=rate of broadcast NO3 fertilizer dissoln 
+C     RSN4AA=rate of broadcast NH4 fertilizer dissolution 
+C     RSN3AA=rate of broadcast NH3 fertilizer dissolution 
+C     RSNUAA=rate of broadcast urea fertilizer dissolution 
+C     RSNOAA=rate of broadcast NO3 fertilizer dissolution 
+C     ZNH4FA,ZNH3FA,ZNHUFA,ZNO3FA=broadcast NH4,NH3,urea,NO3
+C        fertilizer
 C
       IF(VOLWRX(NY,NX).GT.ZEROS(NY,NX))THEN
       THETWR=AMIN1(1.0,VOLW(0,NY,NX)/VOLWRX(NY,NX))
@@ -3664,8 +3911,8 @@ C
 C     SOLUBLE AND EXCHANGEABLE NH4 CONCENTRATIONS
 C
 C     VOLWNH=water volume 
-C     RN4X,RN3X=NH4,NH3 input from uptake, mineraln, dissoln 
-C     XNH4S=net change in NH4 from nitro.f
+C     RN4X,RN3X=NH4,NH3 input from uptake,mineralization,dissolution 
+C     XNH4S=net change in NH4 from ‘nitro.f’
 C     CN41,CN31=total NH4,NH3 concentration 
 C     XN41=adsorbed NH4 concentration 
 C
@@ -3707,8 +3954,9 @@ C
 C
 C     PHOSPHORUS TRANSFORMATIONS IN SURFACE RESIDUE
 C
-C     PALPO1,PFEPO1=concn of precip AlPO4,FEPO4 
-C     PCAPM1,PCAPD1,PCAPH1=concn of precip CaH2PO4,CaHPO4,apatite 
+C     PALPO1,PFEPO1=concentration of precipitated AlPO4,FEPO4 
+C     PCAPM1,PCAPD1,PCAPH1=concentration of precipitated
+C        CaH2PO4,CaHPO4,apatite 
 C
       IF(BKVLX.GT.ZEROS(NY,NX))THEN
       PALPO1=AMAX1(0.0,PALPO(0,NY,NX)/BKVLX)
@@ -3726,6 +3974,10 @@ C
 C
 C     CALCULATE H2PO4 COPRECIPITATES FRPM LITTER PH
 C
+C     C*1=ion concentration
+C        ion code:HY=H,OH=OH,AL=Al,FE=Fe,CO2=CO2,CO3=CO3,CA=Ca
+C     DP*,SP*=dissociation,solubility products from PARAMETERS above
+C
       CHY1=AMAX1(ZERO,10.0**(-(PH(0,NY,NX)-3.0)))
       COH1=AMAX1(ZERO,DPH2O/CHY1)
       CAL1=AMAX1(ZERO,SPALO/COH1**3)
@@ -3737,54 +3989,62 @@ C
 C     ALUMINUM PHOSPHATE (VARISCITE)
 C
 C     CH2PA,CH2P1=equilibrium,current H2PO4 concentration in litter 
+C     CAL1,COH1=Al,OH solute concentration
 C     SYA0P2=solubility product derived from SPALO
 C     RPALPX=H2PO4 dissolution from AlPO4 in litter
 C
       CH2PA=SYA0P2/(CAL1*COH1**2)
-      RPALPX=AMIN1(AMAX1(0.0,4.0E-08*ORGC(0,NY,NX)-PALPO1)
-     2,AMAX1(-PALPO1,TPD*(CH2P1-CH2PA)))
+      RPALPX=AMAX1(-PALPO1*BKVLW,TPD*(CH2P1-CH2PA))
+C     RPALPX=AMIN1(AMAX1(0.0,4.0E-08*ORGC(0,NY,NX)-PALPO1)
+C    2,AMAX1(-PALPO1*BKVLW,TPD*(CH2P1-CH2PA)))
 C
 C     IRON PHOSPHATE (STRENGITE)
 C
 C     CH2PF,CH2P1=equilibrium,current H2PO4 concentration in litter 
+C     CFE1,COH1=Fe,OH solute concentration
 C     SYF0P2=solubility product derived from SPALO
 C     RPFEPX=H2PO4 dissolution from FePO4 in litter
 C
       CH2PF=SYF0P2/(CFE1*COH1**2)
-      RPFEPX=AMIN1(AMAX1(0.0,2.0E-06*ORGC(0,NY,NX)-PFEPO1)
-     2,AMAX1(-PFEPO1,TPD*(CH2P1-CH2PF)))
+      RPFEPX=AMAX1(-PFEPO1*BKVLW,TPD*(CH2P1-CH2PF))
+C     RPFEPX=AMIN1(AMAX1(0.0,2.0E-06*ORGC(0,NY,NX)-PFEPO1)
+C    2,AMAX1(-PFEPO1*BKVLW,TPD*(CH2P1-CH2PF)))
 C
 C     DICALCIUM PHOSPHATE
 C
 C     CH2PD,CH2P1=equilibrium,current H2PO4 concentration in litter
+C     CCA1,COH1=Ca,OH solute concentration
 C     SYCAD2=solubility product derived from SPALO
 C     RPCADX=H2PO4 dissolution from CaHPO4 in litter
 C
       CH2PD=SYCAD2/(CCA1*COH1)
-      RPCADX=AMIN1(AMAX1(0-.0,5.0E-05*ORGC(0,NY,NX)-PCAPD1)
-     2,AMAX1(-PCAPD1,TPD*(CH2P1-CH2PD)))
+      RPCADX=AMAX1(-PCAPD1*BKVLW,TPD*(CH2P1-CH2PD))
 C
 C     HYDROXYAPATITE
 C
 C     CH2PH,CH2P1=equilibrium,current H2PO4 concentration in litter
+C     CCA1,COH1=Ca,OH solute concentration
 C     SYCAH2=solubility product derived from SPALO
 C     RPCAHX=H2PO4 dissolution from apatite in litter
 C
       CH2PH=(SYCAH2/(CCA1**5*COH1**7))**0.333
-      RPCAHX=AMIN1(AMAX1(0.0,5.0E-05*ORGC(0,NY,NX)-PCAPH1)
-     2,AMAX1(-PCAPH1,TPD*(CH2P1-CH2PH)))
+      RPCAHX=AMAX1(-PCAPH1*BKVLW,TPD*(CH2P1-CH2PH))
 C
 C     MONOCALCIUM PHOSPHATE
 C
 C     CH2PM,CH2P1=equilibrium,current H2PO4 concentration in litter
+C     CCA1=Ca solute concentration
 C     SPCAM=solubility product for Ca(H2PO4)2 
 C     RPCAMX=H2PO4 dissolution from Ca(H2PO4)2 in litter
 C
       CH2PM=SQRT(SPCAM/CCA1)
-      RPCAMX=AMIN1(AMAX1(0.0,5.0E-05*ORGC(0,NY,NX)-PCAPM1)
-     2,AMAX1(-PCAPM1*SPPO4,TPD*(CH2P1-CH2PM)))
+      RPCAMX=AMAX1(-PCAPM1*BKVLW*SPPO4,TPD*(CH2P1-CH2PM))
 C     IF(I.GT.315)THEN
-C     WRITE(*,2227)'RPPO4',I,J,L,RPCAHX,CH2P1,CH2PA,CH2PH
+C     WRITE(*,2227)'RPCADX0',I,J,NFZ,RPCADX,CH2P1,CH2PD
+C    2,SYCAD2,CCA1,COH1,CCA1,CCO21,CCO31,PCAPD1
+C    3,ORGC(0,NY,NX),SPCAC/CCO31,H2PO4(0,NY,NX)
+C    4,PCAPD(0,NY,NX),VOLWM(NPH,0,NY,NX),BKVLX,BKVLW
+C     WRITE(*,2227)'RPCAHX0',I,J,NFZ,RPCAHX,CH2P1,CH2PA,CH2PH
 C    2,SYA0P2,CAL1,COH1,SYCAH2,CCA1,CCO21,CCO31,PCAPH1
 C    3,VOLWM(NPH,0,NY,NX),SPCAC/CCO31,H2PO4(0,NY,NX)
 C    4,CCO20,DPCO3,CHY1,CCO2S(0,NY,NX)
@@ -3813,7 +4073,7 @@ C
 C     CCEC,XCEC=cation exchange concentration,capacity
 C     XCAX=equilibrium R-Ca concentration
 C     GKC4,GKCH,GKCA,GKCM,GKCN,GKCK=Gapon selectivity coefficients for
-C     CA-NH4,CA-H,CA-AL,CA-MG,CA-NA,CA-K
+C        CA-NH4,CA-H,CA-AL,CA-MG,CA-NA,CA-K
 C     X*Q=equilibrium exchangeable concentrations
 C     XTLQ=total equilibrium exchangeable concentration 
 C
@@ -3828,6 +4088,14 @@ C
 C
 C     EQUILIBRIUM X-CA CONCENTRATION FROM CEC AND CATION
 C     CONCENTRATIONS
+C
+C     XCAX=equilibrium R-Ca concentration
+C     GKC4,GKCH,GKCA,GKCM,GKCN,GKCK=Gapon selectivity coefficients for
+C        CA-NH4,CA-H,CA-AL,CA-MG,CA-NA,CA-K
+C     X*Q=equilibrium exchangeable concentrations
+C        cation code:AL=Al,FE=Fe,CA=Ca,MG=Mg,NA=Na,KA=K
+C                   :N4=NH4 non-band,NB=NH4 band,HY=H
+C     XTLQ=total equilibrium exchangeable concentration
 C
       XCAX=CCEC0/(1.0+GKC4(NU(NY,NX),NY,NX)*CN41/CCAX
      2+GKCH(NU(NY,NX),NY,NX)*CHY1/CCAX
@@ -3846,15 +4114,18 @@ C
       ENDIF
       XN4Q=FX*XN4Q
 C
-C     NH4 AND NH3 EXCHANGE IN SURFACE RESIDUE
+C     NH4 AND NH3 EXCHANGE IN SURFACE LITTER
 C
 C     RXN4=NH4 adsorption in litter
 C     TADC0=adsorption rate constant
+C     XN4Q,XN41=equilibrium,current exchangeable NH4 concentration
+C        non-band
+C     CN41,CHY1=aqueous NH4,H concentration 
 C     RNH4=NH4-NH3+H dissociation in litter
 C     DPN4=NH4 dissociation constant
 C
       RXN4=TADC0*(XN4Q-XN41) 
-      RNH4=(CHY1*CN31-DPN4*CN41)/(DPN4+CHY1)
+      RNH4=TSL*(CHY1*CN31-DPN4*CN41)/(DPN4+CHY1)
 C     IF(J.EQ.12)THEN
 C     WRITE(*,2223)'RXN4',I,J,RXN4,CN41,XN41,TADC0,XN4Q
 C    2,CCAX,CCA1,CCO20,CCO31 
@@ -3884,26 +4155,32 @@ C     ENDIF
       RPCAHX=0.0 
       ENDIF
 C
-C     TOTAL ION FLUXES FOR ALL REACTIONS ABOVE
+C     TOTAL ION TRANSFORMATIONS FOR ALL REACTIONS ABOVE
 C
-C     RN4S=net NH4 flux in litter
-C     RN3S=net NH3 flux in litter
-C     RHP1,RHP2=net HPO4,H2PO4 flux in litter
+C     RN4S=net NH4 transformation in litter
+C     RN3S=net NH3 transformation in litter
+C     RHP1,RHP2=net HPO4,H2PO4 transformation in litter
 C
       RN4S=RNH4-RXN4
       RN3S=-RNH4
       RHP1=-RH2P
       RHP2=RH2P-RPALPX-RPFEPX-RPCADX-2.0*RPCAMX-3.0*RPCAHX
 C
-C     CONVERT TOTAL ION FLUXES FROM CHANGES IN CONCENTRATION
+C     CONVERT TOTAL ION TRANSFORMATIONS FROM CHANGES IN CONCENTRATION
 C     TO CHANGES IN MASS PER UNIT AREA FOR USE IN 'REDIST'
 C
-C     TRN4S=total NH4 flux 
-C     TRN3S=total NH3 flux 
-C     TRH1P,TRH2P=net HPO4,H2PO4 flux 
+C     TRN4S=total NH4 transformation 
+C     TRN3S=total NH3 transformation 
+C     TRH1P,TRH2P=net HPO4,H2PO4 transformation 
 C     TRNX4=total NH4 adsorption 
 C     TRALPO,TRFEPO,TRCAPD,TRCAPH,TRCAPM
-C     =total AlPO4,FePO4,CaHPO4,apatite,Ca(H2PO4)2 precipitation 
+C        =total AlPO4,FePO4,CaHPO4,apatite,Ca(H2PO4)2 precipitation 
+C     ZNH4FA,ZNH3FA,ZNHUFA,ZNO3FA=broadcast NH4,NH3,urea,NO3
+C        fertilizer
+C     RSN4AA=rate of broadcast NH4 fertilizer dissolution 
+C     RSN3AA=rate of broadcast NH3 fertilizer dissolution 
+C     RSNUAA=rate of broadcast urea fertilizer dissolution 
+C     RSNOAA=rate of broadcast NO3 fertilizer dissolution 
 C
       TRN4S(0,NY,NX)=TRN4S(0,NY,NX)+RN4S*VOLWM(NPH,0,NY,NX)
       TRN3S(0,NY,NX)=TRN3S(0,NY,NX)+RN3S*VOLWM(NPH,0,NY,NX)
@@ -3927,10 +4204,14 @@ C
       TRNO3(0,NY,NX)=TRNO3(0,NY,NX)*14.0
       TRH1P(0,NY,NX)=TRH1P(0,NY,NX)*31.0
       TRH2P(0,NY,NX)=TRH2P(0,NY,NX)*31.0
-C     WRITE(*,9989)'TRN4S',I,J,TRN4S(0,NY,NX)
+C     IF((I/30)*30.EQ.I.AND.J.EQ.15)THEN
+C     WRITE(*,9989)'TRN3S',I,J,NFZ,TRN3S(0,NY,NX)
+C    2,RN3S,VOLWM(NPH,0,NY,NX),RSN3AA,RSNUAA 
+C     WRITE(*,9989)'TRN4S',I,J,NFZ,TRN4S(0,NY,NX)
 C    2,RN4S,RNH4,RXN4,RSN4AA,VOLWM(NPH,0,NY,NX)
 C    3,SPNH4,ZNH4FA(0,NY,NX),THETWR
-9989  FORMAT(A8,2I4,12E12.4)
+9989  FORMAT(A8,3I4,12E12.4)
+C     ENDIF
 9990  CONTINUE
 9995  CONTINUE
       RETURN

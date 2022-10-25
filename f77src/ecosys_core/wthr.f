@@ -1,6 +1,6 @@
       SUBROUTINE wthr(I,J,NHW,NHE,NVN,NVS)
 C
-C     THIS SUBROUTINE REINITIALIZES WEATHER VARIABLES USED IN OTHER
+C     THIS SUBROUTINE INITIALIZES WEATHER VARIABLES USED IN OTHER
 C     SUBROUTINES
 C
       include "parameters.h"
@@ -40,15 +40,17 @@ C
       include "blk20f.h"
       include "blk21a.h"
       include "blk21b.h"
-      DIMENSION PRECRI(JY,JX),PRECWI(JY,JX),PRECII(JY,JX),PRECUI(JY,JX)
-     2,RADN(JY,JX),VPS(JY,JX)
+      DIMENSION PRECRI(JY,JX),PRECWI(JY,JX),PRECII(JY,JX) 
+     2,PRECUI(JY,JX),RADN(JY,JX),VPS(JY,JX)
 C
 C     CDIR,CDIF=fraction of solar SW,sky diffuse radiation in visible
+C        band
 C     PDIR,PDIF=PAR:SW ratio (umol s-1/(MJ h-1)) 
 C     TSNOW=temperature below which precipitation is snow (oC)
+C     TCMBF=minimum temperature used to identify fire event (K)
 C
       PARAMETER (CDIR=0.42,CDIF=0.58,PDIR=1269.4,PDIF=1269.4)
-      PARAMETER (TSNOW=-0.25,TWILGT=0.06976)
+      PARAMETER (TSNOW=-0.25,TWILGT=0.06976,TCMBF=348.15)
       XJ=J
       DOY=I-1+XJ/24
 C
@@ -65,15 +67,23 @@ C
       ITYPE=IWTHR(2)
       ENDIF
 C
-C     CALCULATE HOURLY TEMPERATURE, RADIATION, WINDSPEED, VAPOR PRESSURE
-C     AND PRECIPITATION FROM DAILY WEATHER ARRAYS LOADED IN 'READS'
+C     CALCULATE HOURLY TEMPERATURE, RADIATION, WINDSPEED, VAPOR
+C     PRESSURE AND PRECIPITATION FROM DAILY WEATHER ARRAYS 
+C     LOADED IN 'READS'
 C
       IF(ITYPE.EQ.1)THEN
       DO 9915 NX=NHW,NHE
       DO 9910 NY=NVN,NVS
+      IF(I.EQ.ISTART.AND.J.EQ.1)THEN
+      TKAX(NY,NX)=0.0
+      VPAX(NY,NX)=0.0
+      ELSE
+      TKAX(NY,NX)=TKA(NY,NX)
+      VPAX(NY,NX)=VPA(NY,NX)
+      ENDIF
 C
 C     IETYP=Koppen climate zone:-2=phytotron
-C     RADN=hourky SW radiation 
+C     RADN=hourly SW radiation 
 C     RMAX=maximum hourly radiation
 C     ZNOON=time of solar noon
 C     DYLN=daylength
@@ -104,7 +114,7 @@ C
       ENDIF
       TKA(NY,NX)=TCA(NY,NX)+273.15
 C
-C     VPK,VPS=ambient,saturated vapor pressure
+C     VPK,VPS=ambient,saturated vapor pressure (kPa)
 C     VAVG*,VAMP*=daily averages, amplitudes from day.f
 C     ALTI=altitude
 C
@@ -136,7 +146,7 @@ C
       ELSE
       PRECRI(NY,NX)=0.0
       PRECWI(NY,NX)=RAIN(I)/12.0
-C     IF(PRECWI(NY,NX).LT.0.25E-03)PRECWI(NY,NX)=0.0
+      IF(PRECWI(NY,NX).LT.0.1E-03)PRECWI(NY,NX)=0.0
       ENDIF
       ELSE
       PRECRI(NY,NX)=0.0
@@ -145,12 +155,20 @@ C     IF(PRECWI(NY,NX).LT.0.25E-03)PRECWI(NY,NX)=0.0
 9910  CONTINUE
 9915  CONTINUE
 C
-C     CALCULATE HOURLY TEMPERATURE, RADIATION, WINDSPEED, VAPOR PRESSURE
-C     AND PRECIPITATION FROM HOURLY WEATHER ARRAYS LOADED IN 'READS'
+C     CALCULATE HOURLY TEMPERATURE, RADIATION, WINDSPEED, VAPOR
+C     PRESSURE AND PRECIPITATION FROM HOURLY WEATHER ARRAYS 
+C     LOADED IN 'READS'
 C
       ELSE
       DO 9935 NX=NHW,NHE
       DO 9930 NY=NVN,NVS
+      IF(I.EQ.ISTART.AND.J.EQ.1)THEN
+      TKAX(NY,NX)=0.0
+      VPAX(NY,NX)=0.0
+      ELSE
+      TKAX(NY,NX)=TKA(NY,NX)
+      VPAX(NY,NX)=VPA(NY,NX)
+      ENDIF
 C
 C     RADN=SW radiation at horizontal surface
 C     TCA,TKA=air temperature (oC,K)
@@ -162,6 +180,7 @@ C
       RADN(NY,NX)=SRADH(J,I)
       TCA(NY,NX)=TMPH(J,I)
       TKA(NY,NX)=TCA(NY,NX)+273.15
+C     TKQ(NY,NX)=TKA(NY,NX)
       VPS(NY,NX)=0.61*EXP(5360.0*(3.661E-03-1.0/TKA(NY,NX)))
      2*EXP(-ALTI(NY,NX)/7272.0)
       VPK(NY,NX)=AMIN1(DWPTH(J,I),VPS(NY,NX))
@@ -172,6 +191,7 @@ C
       ELSE
       PRECRI(NY,NX)=0.0
       PRECWI(NY,NX)=RAINH(J,I)
+      IF(PRECWI(NY,NX).LT.0.1E-03)PRECWI(NY,NX)=0.0
       ENDIF
 9930  CONTINUE
 9935  CONTINUE
@@ -187,27 +207,28 @@ C
 C     IF OUTDOORS
 C
 C     SSIN,SSINN=sine solar angle of current,next hour
-C     RADX=solar constant at horizontal surface
+C     RADZ=solar constant at horizontal surface
 C     RADN=SW radiation at horizontal surface
 C
       IF(IETYP(NY,NX).GE.-1)THEN
-      SSIN(NY,NX)=AMAX1(0.0,AZI+DEC*COS(.2618*(ZNOON(NY,NX)-(J-0.5))))
-      SSINN(NY,NX)=AMAX1(0.0,AZI+DEC*COS(.2618*(ZNOON(NY,NX)-(J+0.5))))
-C     IF(SSIN(NY,NX).GT.0.0.AND.SSIN(NY,NX).LT.TWILGT)SSIN(NY,NX)=TWILGT
+      SSIN(NY,NX)=AMAX1(0.0,AZI
+     2+DEC*COS(.2618*(ZNOON(NY,NX)-(J-0.5))))
+      SSINN(NY,NX)=AMAX1(0.0,AZI
+     2+DEC*COS(.2618*(ZNOON(NY,NX)-(J+0.5))))
       IF(RADN(NY,NX).LE.0.0)SSIN(NY,NX)=0.0
       IF(SSIN(NY,NX).LE.-TWILGT)RADN(NY,NX)=0.0
-      RADX=4.896*AMAX1(0.0,SSIN(NY,NX))
-      RADN(NY,NX)=AMIN1(RADX,RADN(NY,NX))
+      RADZ=4.896*AMAX1(0.0,SSIN(NY,NX))
+      RADN(NY,NX)=AMIN1(RADZ,RADN(NY,NX))
 C
 C     DIRECT VS DIFFUSE RADIATION IN SOLAR OR SKY BEAMS
 C
-C     RADZ=diffuse radiation at horizontal surface
+C     RADF=diffuse radiation at horizontal surface
 C     RADS,RADY,RAPS,RAPY=direct,diffuse SW,PAR in solar beam 
 C
-      RADZ=AMIN1(RADN(NY,NX),0.5*(RADX-RADN(NY,NX)))
-      RADS(NY,NX)=(RADN(NY,NX)-RADZ)/SSIN(NY,NX)
+      RADF=AMIN1(RADN(NY,NX),0.5*(RADZ-RADN(NY,NX)))
+      RADS(NY,NX)=(RADN(NY,NX)-RADF)/SSIN(NY,NX)
       RADS(NY,NX)=AMIN1(4.167,RADS(NY,NX))
-      RADY(NY,NX)=RADZ/TYSIN
+      RADY(NY,NX)=RADF/TYSIN
       RAPS(NY,NX)=RADS(NY,NX)*CDIR*PDIR
       RAPY(NY,NX)=RADY(NY,NX)*CDIF*PDIF
 C
@@ -217,8 +238,8 @@ C     CLD=cloudiness factor for EMM
 C     EMM=sky emissivity
 C     VPK,TKA=vapor pressure,temperature     
 C
-      IF(RADX.GT.ZERO)THEN
-      CLD=AMIN1(1.0,AMAX1(0.2,2.33-3.33*RADN(NY,NX)/RADX))
+      IF(RADZ.GT.ZERO)THEN
+      CLD=AMIN1(1.0,AMAX1(0.2,2.33-3.33*RADN(NY,NX)/RADZ))
       ELSE
       CLD=0.2
       ENDIF
@@ -235,14 +256,14 @@ C
       ENDIF
       SSINN(NY,NX)=1.0
       CLD=0.0
-      EMM=0.96
+      EMM=0.97
       ENDIF
 C
 C     LONGWAVE RADIATION
 C
-C     XRADH=longwave radiation
-C     THSX=longwave radiation from weather file or calculated from
-C     atmospheric properties  
+C     XRADH=longwave radiation from weather file 
+C     THSX=if XRADH>0: longwave radiation from weather file 
+C         =if XRADH=0: longwave radiation from atmospheric properties 
 C
       IF(XRADH(J,I).GT.0.0)THEN
 C     THSX(NY,NX)=EMM*(2.04E-10*TKA(NY,NX)**4)
@@ -274,8 +295,10 @@ C     ADD IRRIGATION
 C
 C     PRECII,PRECUI=surface,subsurface irrigation
 C     RRIG=irrigation from soil management file in reads.f
+C     WDPTHI=depth at which irrigation is applied (0=surface)
+C     CDPTH(NU(NY,NX)-1,NY,NX)=surface elevation (m) 
 C
-      WDPTHD=WDPTH(I,NY,NX)+CDPTH(NU(NY,NX)-1,NY,NX)
+C     WDPTHD=WDPTH(I,NY,NX)+CDPTH(NU(NY,NX)-1,NY,NX)
 C     IF(WDPTHD.LE.CDPTH(NU(NY,NX),NY,NX))THEN
       PRECII(NY,NX)=RRIG(J,I,NY,NX)
       PRECUI(NY,NX)=0.0
@@ -291,6 +314,7 @@ C     RADIATION, WINDSPEED,VAPOR PRESSURE, PRECIPITATION, IRRIGATION
 C     AND CO2
 C
 C     ICLM=changes to weather data (0=none,1=step,2=transient)
+C        from option file
 C     N=season or month
 C
       IF(ICLM.EQ.1.OR.ICLM.EQ.2)THEN
@@ -307,7 +331,7 @@ C
       N=4
       ENDIF
 C
-C     MONTHLY CHANGES
+C     MONTHLY CHANGES (REQUIRES 12 SETS OF VALUES IN OPTION FILE)
 C
 C     IF(I.GT.0.AND.I.LE.31)THEN
 C     N=1
@@ -334,16 +358,27 @@ C     N=11
 C     ELSE
 C     N=12
 C     ENDIF
+C
+C     ALLOCATE CLIMATE CHANGES TO GRID CELLS
+C
       DO 9925 NX=NHW,NHE
       DO 9920 NY=NVN,NVS
 C
 C     TEMPERATURE CHANGE
 C
-C     TDTPX,TDTPN=change in max,min temperature
+C     TDTPX,TDTPN=change in maximum,minimum temperature
 C     DTA,AMP,DHR=change in daily average,amplitude of air temperature
-C     DHR=diurnal effect on AMP         
+C     DHR=diurnal effect on AMP
+C     TCA,TKA=air temperature (oC,K)         
 C
       IF(TDTPX(NY,NX,N).NE.0.0.OR.TDTPN(NY,NX,N).NE.0.0)THEN
+      IF(I.EQ.ISTART.AND.J.EQ.1)THEN
+      TKAX(NY,NX)=ATKA(NY,NX)
+      VPAX(NY,NX)=0.0
+      ELSE
+      TKAX(NY,NX)=TKA(NY,NX)
+      VPAX(NY,NX)=VPA(NY,NX)
+      ENDIF
       DTA=0.5*(TDTPX(NY,NX,N)+TDTPN(NY,NX,N))
       AMP=0.5*(TDTPX(NY,NX,N)-TDTPN(NY,NX,N))
       DHR=SIN(0.2618*(J-(ZNOON(NY,NX)+3.0))+1.5708)
@@ -352,13 +387,15 @@ C
 C
 C     ACCLIMATION TO GRADUAL CLIMATE CHANGE
 C
+C     DTA=change in daily average air temperature
 C     DTS=change in daily average soil temperature
 C     ATCA,ATCS=mean annual air,soil temperature
 C     OFFSET=shift in Arrhenius curve for MFT activity in nitro.f 
 C     OFFST=shift in Arrhenius curve for PFT activity in uptake.f
-C     ZTYP=PFT thermal adaptation zone
+C     ZTYP=PFT thermal adaptation zone from plant file
 C     HTC=high temperature threshold for grain number loss (oC)
-C     GROUPI,XTLI=node number at floral initiation,planting (maturity group) 
+C     GROUPI,XTLI=node number at floral initiation,planting 
+C        (maturity group) 
 C
       IF(ICLM.EQ.2.AND.J.EQ.1)THEN
       DTS=0.5*DTA
@@ -381,7 +418,8 @@ C     TCX(NZ,NY,NX)=AMIN1(15.0,TCZ(NZ,NY,NX)+TCXD)
       ENDIF
       GROUPI(NZ,NY,NX)=GROUPI(NZ,NY,NX)-XTLI(NZ,NY,NX)
 C     IF(I.EQ.180)THEN
-C     WRITE(*,1111)'OFFSET',IYRC,I,J,NZ,N,OFFSET(NY,NX),OFFST(NZ,NY,NX)
+C     WRITE(*,1111)'OFFSET',IYRC,I,J,NZ,N
+C    2,OFFSET(NY,NX),OFFST(NZ,NY,NX)
 C    2,DTA,DTS,ATCA(NY,NX),ATCS(NY,NX),ZTYP(NZ,NY,NX)
 C    3,GROUPI(NZ,NY,NX),TDTPX(NY,NX,N),TDTPN(NY,NX,N) 
 1111  FORMAT(A8,5I4,12E12.4)
@@ -389,7 +427,9 @@ C     ENDIF
 9900  CONTINUE
       ENDIF
 C
-C     ADJUST VAPOR PRESSURE FOR TEMPERATURE CHANGE
+C     ADJUST VAPOR PRESSURE TO MAINTAIN RH WITH TEMPERATURE CHANGE
+C
+C     VPK,VPS=ambient,saturated vapor pressure (kPa)
 C
       IF(DHUM(N).EQ.1.0)THEN
       VPX=VPS(NY,NX)
@@ -400,11 +440,12 @@ C
       ENDIF
 C
 C     CHANGES IN VAPOR PRESSURE,RADIATION,WIND SPEED,PRECIPITATION
-C     IRRIGATION ,CO2,NH4,NO3
+C     IRRIGATION,CO2,NH4,NO3 WITH CLIMATE CHANGE
 C
 C     TDRAD,TDWND,TDHUM=change in radiation,windspeed,vapor pressure
 C     TDPRC,TDIRRI=change in precipitation,irrigation
-C     TDCO2,TDCN4,TDCNO=change in atm CO2,NH4,NO3 concn in precipitation
+C     TDCO2,TDCN4,TDCNO=change in CO2,NH4,NO3 concentration 
+C        in precipitation
 C
       RADS(NY,NX)=RADS(NY,NX)*TDRAD(NY,NX,N)
       RADY(NY,NX)=RADY(NY,NX)*TDRAD(NY,NX,N)
@@ -424,7 +465,16 @@ C
       ENDIF
 C
 C     DAILY WEATHER TOTALS, MAXIMA AND MINIMA FOR DAILY OUTPUT
-C     CHECK AGAINST INPUTS FROM WEATHER FILE
+C     TO CHECK AGAINST INPUTS FROM WEATHER FILE
+C
+C     SSIN=sine solar angle of current hour
+C     TRAD=total solar radiation (MJ m-2)
+C     TAMX,TAMN=maximum, minimum daily air temperature (oC)
+C     HUDX,HUDN=maximum, minimum daily vapor pressure (kPa)
+C     VPA=vapor concentration (m3 m-3)
+C     TWIND=total wind travel (m)
+C     TRAI=total precipitation (mm)
+C     DTKA,DVPA=hourly change in TKA,VPA    
 C
       DO 9945 NX=NHW,NHE
       DO 9940 NY=NVN,NVS
@@ -434,10 +484,17 @@ C
       TAMN(NY,NX)=AMIN1(TAMN(NY,NX),TCA(NY,NX))
       HUDX(NY,NX)=AMAX1(HUDX(NY,NX),VPK(NY,NX))
       HUDN(NY,NX)=AMIN1(HUDN(NY,NX),VPK(NY,NX))
-      TWIND(NY,NX)=TWIND(NY,NX)+UA(NY,NX)
       VPA(NY,NX)=VPK(NY,NX)*2.173E-03/TKA(NY,NX)
+      TWIND(NY,NX)=TWIND(NY,NX)+UA(NY,NX)
       TRAI(NY,NX)=TRAI(NY,NX)+(PRECRI(NY,NX)+PRECWI(NY,NX)
      2+PRECII(NY,NX)+PRECUI(NY,NX))*1000.0
+      IF(I.EQ.ISTART.AND.J.EQ.1)THEN
+      DTKA(NY,NX)=0.0
+      DVPA(NY,NX)=0.0
+      ELSE
+      DTKA(NY,NX)=TKA(NY,NX)-TKAX(NY,NX)
+      DVPA(NY,NX)=VPA(NY,NX)-VPAX(NY,NX)
+      ENDIF
 C
 C     WATER AND HEAT INPUTS TO GRID CELLS
 C
@@ -455,7 +512,70 @@ C
       PRECA(NY,NX)=PRECR(NY,NX)+PRECI(NY,NX)
       PRECQ(NY,NX)=PRECR(NY,NX)+PRECW(NY,NX)
       THS(NY,NX)=THSX(NY,NX)*AREA(3,NU(NY,NX),NY,NX)
+C
+C     SET FIRE FLAG
+C
+C     ICHKF:0=no fire,1=fire
+C     TKS,TKQ=soil,canopy air temperature
+C     TCMBF=minimum temperature used to identify fire event (K)
+C     ITILL=if 22:fire
+C
+      ICHKL=0
+      DO 9840 L=0,NL(NY,NX)
+      IF(TKS(L,NY,NX).GT.TCMBF)ICHKL=1
+9840  CONTINUE     
+      IF(TKQ(NY,NX).GT.TCMBF)ICHKL=1
+      IF((ITILL(I,NY,NX).EQ.22.AND.J.EQ.INT(ZNOON(NY,NX)))
+     2.OR.ICHKL.EQ.1)THEN
+      ICHKF=1
+      ELSE
+      ICHKF=0
+      ENDIF
+      IF(ICHKF.EQ.1)THEN
+      WRITE(*,1112)'ICHKF',I,J,ICHKF,ICHKL
+     2,TKQ(NY,NX),(TKS(L,NY,NX),L=0,NL(NY,NX)) 
+1112  FORMAT(A8,4I4,20E12.4)
+      ENDIF
 9940  CONTINUE
 9945  CONTINUE
+C
+C     ICHKF=fire flag:0=no fire,1=fire
+C     NFH=number of cycles h-1 for all flux calculations
+C     NPH=no. of cycles NFH-1 for water, heat and solute flux
+C        calculations from NPX in options file (max 30)
+C     NPT=number of cycles NPH-1 for gas flux calculations
+C        from NPY in options file
+C     NPG=number of cycles NPH-1 for gas flux calculations
+C     NPR,NPS=number of cycles NPH-1 for litter,snowpack flux
+C        calculations
+C
+      IF(ICHKF.EQ.1)THEN
+      NFH=360
+      NPH=NPX
+      ELSE
+      NFH=4
+      NPH=NPX
+      ENDIF
+      NPT=NPY
+      NPG=NPH*NPT
+      NPR=10
+      NPS=10
+      XNFH=1.0/NFH
+      XNPH=1.0/NPH
+      XNPT=1.0/NPT 
+      XNPG=1.0/NPG 
+      XNPR=1.0/NPR 
+      XNPS=1.0/NPS
+      XNHR=XNPH*XNPR     
+      XNPHX=XNPH*XNFH
+      XNPGX=XNPG*XNFH 
+      XNPYX=XNPHX*XNPS 
+      XNPZX=XNPHX*XNPR 
+      XNPQX=XNPZX*XNPS 
+      XNPDX=120.0*XNPGX
+      XNPXX=XNPH 
+      XNPAX=XNPXX*XNPS 
+      XNPBX=XNPXX*XNPR 
+      XNPCX=XNPXX*XNPR*XNPS 
       RETURN
       END

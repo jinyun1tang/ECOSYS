@@ -3,6 +3,7 @@
      2,NTZX,NHW,NHE,NVN,NVS)
 C
 C     THIS SUBROUTINE READS ALL SOIL AND TOPOGRAPHIC INPUT FILES
+C     ONCE AT THE BEGINNING OF A RUN
 C
       include "parameters.h"
       include "filec.h"
@@ -26,7 +27,7 @@ C
       CHARACTER*1 TTYPE,CTYPE,IVAR(20),VAR(50),TYP(50)
       CHARACTER*80 PREFIX
       DIMENSION IDAT(20),DAT(50),DATK(50)
-	  dimension datav(40)
+      dimension datav(40)
       PARAMETER (TWILGT=0.06976)
 C
 C     OPEN OUTPUT LOGFILES,AND SITE,TOPOGRAPHY FILES FROM
@@ -37,7 +38,7 @@ C
       OPEN(20,FILE='logfile3',STATUS='UNKNOWN')
       OPEN(1,FILE=TRIM(PREFIX)//DATA(1),STATUS='OLD')
       OPEN(7,FILE=TRIM(PREFIX)//DATA(2),STATUS='OLD')
-      WRITE(18,5000)' 08 JUL 2021'
+      WRITE(18,5000)' 21 OCT 2022'
 5000  FORMAT(A16)
       NF=1
       NFX=1
@@ -45,41 +46,108 @@ C
 C
 C     READ SITE DATA
 C
-C     ALATG,ALTIG,ATCAG=latitude,altitude,MAT(oC)
+C     ALATG,ALTIG,ATCAG=latitude(N=+ve,S=-ve),altitude (m),MAT(oC)
 C     IDTBLG=water table flag
 C        :0=none
 C        :1,2=natural stationary,mobile
 C        :3,4=artificial stationary,mobile
-C     OXYEG,Z2GEG,CO2EIG,CH4EG,Z2OEG,ZNH3EG=atm O2,N2,CO2,CH4,N2O,NH3 (ppm)
-C     IETYPG,ISALTG,IERSNG=Koppen climate zone,salt,erosion options
-C     NCNG=1:lateral connections between grid cells,3:no connections
-C     DTBLIG,DTBLDIG=depth of natural,artificial water table (IDTBLG)
-C     DTBLGG=slope of natural water table relative to landscape surface
-C     RCHQNG,RCHQEG,RCHQSG,RCHQWG=boundary condns for N,E,S,W surface runoff
-C     RCHGNUG,RCHGEUG,RCHGSUG,RCHGWUG=bound condns for N,E,S,W subsurf flow
-C     RCHGNTG,RCHGETG,RCHGSTG,RCHGWTG=N,E,S,W distance to water table (m)
+C     OXYEG,Z2GEG,CO2EIG,CH4EG,Z2OEG,ZNH3EG=atmospheric
+C        O2,N2,CO2,CH4,N2O,NH3 concentrations(ppm)
+C     IETYPG=Koppen climate zone, appended to all plant species files:
+C            :11 ... Af
+C            :12 ... Am
+C            :13 ... As
+C            :14 ... Aw
+C            :21 ... BWk
+C            :22 ... BWh
+C            :26 ... BSk
+C            :27 ... BSh
+C            :31 ... Cfa
+C            :32 ... Cfb
+C            :33 ... Cfc
+C            :34 ... Csa
+C            :35 ... Csb
+C            :36 ... Csc
+C            :37 ... Cwa
+C            :38 ... Cwb
+C            :39 ... Cwc
+C            :41 ... Dfa
+C            :42 ... Dfb
+C            :43 ... Dfc
+C            :44 ... Dfd
+C            :45 ... Dsa
+C            :46 ... Dsb
+C            :47 ... Dsc
+C            :48 ... Dsd
+C            :49 ... Dwa
+C            :50 ... Dwb
+C            :51 ... Dwc
+C            :52 ... Dwd
+C            :61 ... EF
+C            :62 ... ET
+C     ISALTG:0=no salt,1=salt: calls more complex set of solute
+C        equilibria in �solute.f�
+C     IERSNG=options for disturbance effects on soil profile:
+C           :-1=no effects
+C           :0=freeze-thaw
+C           :1=freeze-thaw+erosion
+C           :2=freeze-thaw+SOM gain or loss
+C           :3=freeze-thaw+erosion+SOM gain or loss
+C     NCNG=1:lateral connections between grid cells (required for all
+C        water table simulations),3:no connections (used in dryland
+C        runs with 1 grid cell
+C     DTBLIG,DTBLDIG=depth of natural,artificial external water table
+C        as identified by IDTBLG in line 1
+C     DTBLGG=slope of natural water table relative to landscape
+C        surface :0=no slope, :1=surface slope
+C     RCHQNG,RCHQEG,RCHQSG,RCHQWG=boundary conditions for
+C        N,E,S,W surface runoff:0=no runoff, 1=unimpeded runoff
+C     RCHGNUG,RCHGEUG,RCHGSUG,RCHGWUG=distance to N,E,S,W external
+C        natural water table (m)
+C     RCHGNTG,RCHGETG,RCHGSTG,RCHGWTG=boundary conditions for
+C        N,E,S,W subsurface exchange with external natural water
+C        table :0=no flow, 1=unimpeded flow
 C     RCHGDG=lower boundary conditions for water flow
+C        :0=no flow, 1=unimpeded flow
+C     RCHGNAG,RCHGEAG,RCHGSAG,RCHGWAG=distance to N,E,S,W external
+C        artificial water table (m)
+C     RCHGNBG,RCHGEBG,RCHGSBG,RCHGWBG=boundary conditions for
+C        N,E,S,W subsurface exchange with external artificial water
+C        table :0=no flow, 1=unimpeded flow
 C     DHI=width of each W-E landscape column
 C     DVI=width of each N-S landscape row
-C  IERSNG=erosion options
-C       :=0 means allowing  freeze- thaw to change elevation
-C       :=1 means allowing freeze-thaw plus erosion to change elevation
-C       :=2 means allowing freeze-thaw plus SOC accumulation to change elevation
-C       :=3 means allowing freeze-thaw plus SOC accumulation, plus erosion to change elevation
-C       :=-1 means no change in elevation.
-      READ(1,*)(datav(jj),jj=1,4)
-	  ALATG=datav(1)
-	  ALTIG=datav(2)
-	  ATCAG=datav(3)
-	  IDTBLG=int(datav(4))
+C
+      READ(1,*)(datav(K),K=1,4)
+	ALATG=datav(1)
+	ALTIG=datav(2)
+	ATCAG=datav(3)
+	IDTBLG=int(datav(4))
 C      READ(1,*)ALATG,ALTIG,ATCAG,IDTBLG
       READ(1,*)OXYEG,Z2GEG,CO2EIG,CH4EG,Z2OEG,ZNH3EG
       READ(1,*)IETYPG,ISALTG,IERSNG,NCNG,DTBLIG,DTBLDIG,DTBLGG
       READ(1,*)RCHQNG,RCHQEG,RCHQSG,RCHQWG,RCHGNUG,RCHGEUG,RCHGSUG
      2,RCHGWUG,RCHGNTG,RCHGETG,RCHGSTG,RCHGWTG,RCHGDG
+      IF(IDTBLG.GE.3)THEN
+      READ(1,*)RCHGNAG,RCHGEAG,RCHGSAG,RCHGWAG
+     2,RCHGNBG,RCHGEBG,RCHGSBG,RCHGWBG
+      ELSE
+      RCHGNAG=0.0
+      RCHGEAG=0.0
+      RCHGSAG=0.0
+      RCHGWAG=0.0
+      RCHGNBG=0.0
+      RCHGEBG=0.0
+      RCHGSBG=0.0
+      RCHGWBG=0.0
+      ENDIF
       READ(1,*)(DHI(NX),NX=1,NHE)
       READ(1,*)(DVI(NY),NY=1,NVS)
       CLOSE(1)
+      H2GEG=1.0E-03
+C
+C     INITIALIZE GRID CELL CONTENTS FOR VARIABLES READ IN
+C     THE SITE FILE
+C
       DO 9895 NX=NHW,NHE
       DO 9890 NY=NVN,NVS
       ALAT(NY,NX)=ALATG
@@ -110,13 +178,22 @@ C      READ(1,*)ALATG,ALTIG,ATCAG,IDTBLG
       RCHGST(NY,NX)=RCHGSTG
       RCHGWT(NY,NX)=RCHGWTG
       RCHGD(NY,NX)=RCHGDG
+      RCHGNA(NY,NX)=RCHGNAG
+      RCHGEA(NY,NX)=RCHGEAG
+      RCHGSA(NY,NX)=RCHGSAG
+      RCHGWA(NY,NX)=RCHGWAG
+      RCHGNB(NY,NX)=RCHGNBG
+      RCHGEB(NY,NX)=RCHGEBG
+      RCHGSB(NY,NX)=RCHGSBG
+      RCHGWB(NY,NX)=RCHGWBG
       DH(NY,NX)=DHI(NX)
       DV(NY,NX)=DVI(NY)
       CO2E(NY,NX)=CO2EI(NY,NX)
-      H2GE(NY,NX)=1.0E-03
+      H2GE(NY,NX)=H2GEG
 C
 C     CALCULATE MAXIMUM DAYLENTH FOR PLANT PHENOLOGY
 C
+C     ALAT=latitude
 C     DYLM=maximum daylength (h)
 C
       IF(ALAT(NY,NX).GT.0.0)THEN
@@ -141,10 +218,12 @@ C
 C     READ TOPOGRAPHY DATA AND SOIL FILE NAME FOR EACH GRID CELL
 C
 C     for each unit within the landscape:
-C     NH1,NV1,NH2,NV2=NW,SE column,row
-C     ASPX=N,E,S,W aspect (o)
-C     SL1,SL2=EW,NS slope (o)
-C     DPTHSX=initial snowpack depth
+C        NH1,NV1,NH2,NV2=column,row of NW,SE grid cell
+C        ASPX=aspect (o)
+C        SL0=slope (o)
+C        SLX=not used
+C        DPTHSX=initial snowpack depth
+C        DATA(7)=soil file name
 C
 50    READ(7,*,END=20)NH1,NV1,NH2,NV2,ASPX,SL0,SLX,DPTHSX
       READ(7,52)DATA(7)
@@ -153,6 +232,9 @@ C
 C     OPEN AND READ SOIL FILE
 C
       OPEN(9,FILE=TRIM(PREFIX)//DATA(7),STATUS='OLD')
+C
+C     FOR ALL GRID CELLS WITHIN EACH LANDSCAPE UNIT:
+C
       DO 9995 NX=NH1,NH2
       DO 9990 NY=NV1,NV2
 C
@@ -169,13 +251,16 @@ C
 C
 C     SURFACE PROPERTIES
 C
-C     PSIFC,PSIWP=water potentials at field capacity,wilting point (MPa)
+C     PSIFC,PSIWP=water potentials at field capacity,wilting
+C        point (MPa)
 C     ALBS=wet soil albedo
 C     PH=litter pH
-C     RSC,RSC,RSP=C,N,P in fine(1,0),woody(0,0),manure(2,0) surface litter (g m-2)
+C     RSC,RSC,RSP=C,N,P in fine(1,0),woody(0,0),manure(2,0)
+C        surface litter (g m-2)
 C     IXTYP=surface litter type:1=plant,2=manure
 C     NUI,NJ=number of soil surface layer,maximum rooting layer
-C     NL1,NL2=number of additional layers below NJ with,without data in file
+C     NL1,NL2=number of additional layers below NJ with,without
+C        data in soil file
 C     ISOILR=natural(0),reconstructed(1) soil profile
 C
 C      READ(9,*)PSIFC(NY,NX),PSIWP(NY,NX),ALBS(NY,NX),PH(0,NY,NX)
@@ -184,28 +269,27 @@ C     3,RSC(0,0,NY,NX),RSN(0,0,NY,NX),RSP(0,0,NY,NX)
 C     4,RSC(2,0,NY,NX),RSN(2,0,NY,NX),RSP(2,0,NY,NX)
 C     5,IXTYP(1,NY,NX),IXTYP(2,NY,NX)
 C     6,NUI(NY,NX),NJ(NY,NX),NL1,NL2,ISOILR(NY,NX)
-	  READ(9,*)(datav(jj),jj=1,20)
+	READ(9,*)(datav(jj),jj=1,20)
       PSIFC(NY,NX)=datav(1)
-	  PSIWP(NY,NX)=datav(2)
-	  ALBS(NY,NX) =datav(3)
-	  PH(0,NY,NX) =datav(4)
+	PSIWP(NY,NX)=datav(2)
+	ALBS(NY,NX) =datav(3)
+	PH(0,NY,NX) =datav(4)
       RSC(1,0,NY,NX) =datav(5)
-	  RSN(1,0,NY,NX) =datav(6)
-	  RSP(1,0,NY,NX) =datav(7)
+	RSN(1,0,NY,NX) =datav(6)
+	RSP(1,0,NY,NX) =datav(7)
       RSC(0,0,NY,NX) =datav(8)
-	  RSN(0,0,NY,NX) =datav(9)
-	  RSP(0,0,NY,NX) =datav(10)
+	RSN(0,0,NY,NX) =datav(9)
+	RSP(0,0,NY,NX) =datav(10)
       RSC(2,0,NY,NX) =datav(11)
-	  RSN(2,0,NY,NX) =datav(12)
-	  RSP(2,0,NY,NX) =datav(13)
+	RSN(2,0,NY,NX) =datav(12)
+	RSP(2,0,NY,NX) =datav(13)
       IXTYP(1,NY,NX) =int(datav(14))
-	  IXTYP(2,NY,NX) =int(datav(15))
+	IXTYP(2,NY,NX) =int(datav(15))
       NUI(NY,NX) = int(datav(16))
-	  NJ(NY,NX)  =int(datav(17))
-	  NL1=int(datav(18))
-	  NL2=int(datav(19))
-	  ISOILR(NY,NX)=int(datav(20))
-
+	NJ(NY,NX)  =int(datav(17))
+	NL1=int(datav(18))
+	NL2=int(datav(19))
+	ISOILR(NY,NX)=int(datav(20))
       NU(NY,NX)=NUI(NY,NX)
       NK(NY,NX)=NJ(NY,NX)+1
       NM(NY,NX)=NJ(NY,NX)+NL1
@@ -215,16 +299,9 @@ C
 C     PHYSICAL PROPERTIES
 C
 C     CDPTH=depth to bottom (m)
-C     BKDSI=initial bulk density (Mg m-3,0=water)
+C     BKDSI=initial bulk density (Mg m-3,water=0)
 C
       READ(9,*)(CDPTH(L,NY,NX),L=NU(NY,NX),NM(NY,NX))
-      DO L=NU(NY,NX),NM(NY,NX)
-        if(CDPTH(L,NY,NX)<ZERO)then
-          write(*,*)'not sufficient input data in line 2'//
-     2'of the soil file'
-          stop
-        endif
-      ENDDO
       READ(9,*)(BKDSI(L,NY,NX),L=NU(NY,NX),NM(NY,NX))
 C
 C     HYDROLOGIC PROPERTIES
@@ -277,7 +354,7 @@ C
 C     CATION AND ANION CONCENTRATIONS
 C
 C     C*=soluble concentration from sat. paste extract (g Mg-1)
-C     AL,FE,CA,MG,NA,KA,SO4,CL=Al,Fe,Ca,Mg,Na,K,SO4-S,Cl
+C        AL,FE,CA,MG,NA,KA,SO4,CL=Al,Fe,Ca,Mg,Na,K,SO4-S,Cl
 C
       READ(9,*)(CAL(L,NY,NX),L=NU(NY,NX),NM(NY,NX))
       READ(9,*)(CFE(L,NY,NX),L=NU(NY,NX),NM(NY,NX))
@@ -316,10 +393,10 @@ C
 C
 C     INITIAL WATER, ICE CONTENTS
 C
+C     THW,THI=initial water,ice:>1=satd,1=FC,0=WP,<0=0,0-1=m3 m-3
+C
       READ(9,*)(THW(L,NY,NX),L=NU(NY,NX),NM(NY,NX))
       READ(9,*)(THI(L,NY,NX),L=NU(NY,NX),NM(NY,NX))
-C
-C     THW,THI=initial water,ice:>1=satd,1=FC,0=WP,<0=0,0-1=m3 m-3
 C
 C     INITIAL PLANT AND ANIMAL RESIDUE C, N AND P
 C
@@ -338,7 +415,12 @@ C
       RSC(1,0,NY,NX)=AMAX1(1.0E-06,RSC(1,0,NY,NX))
       RSN(1,0,NY,NX)=AMAX1(0.04E-06,RSN(1,0,NY,NX))
       RSP(1,0,NY,NX)=AMAX1(0.004E-06,RSP(1,0,NY,NX))
-      SCNV(0,NY,NX)=10.0*0.098
+C
+C     LITTER KSAT
+C
+C     Ksat=250 mm h-1
+C
+      SCNV(0,NY,NX)=250.0*0.098
 C
 C     SET FLAGS FOR ESTIMATING FC,WP,SCNV,SCNH IF UNKNOWN
 C
@@ -369,7 +451,8 @@ C
       ENDIF
 25    CONTINUE
 C
-C     FILL OUT SOIL BOUNDARY LAYERS ABOVE ROOTING ZONE (NOT USED)
+C     FILL OUT SOIL BOUNDARY LAYER PROPERTESS ABOVE ROOTING ZONE
+C     (THESE LAYERS ARE NOT USED)
 C
       IF(NU(NY,NX).GT.1)THEN
       DO 31 L=NU(NY,NX)-1,0,-1
@@ -440,7 +523,7 @@ C
 31    CONTINUE
       ENDIF
 C
-C     ADD SOIL BOUNDARY LAYERS BELOW SOIL ZONE
+C     ADD SOIL BOUNDARY LAYER PROPERTIES BELOW SOIL ZONE
 C
       DO 32 L=NM(NY,NX)+1,JZ
       CDPTH(L,NY,NX)=2.0*CDPTH(L-1,NY,NX)-1.0*CDPTH(L-2,NY,NX)
@@ -510,14 +593,15 @@ C     ENDIF
       RSP(2,L,NY,NX)=0.0
 32    CONTINUE
 C
-C     CALCULATE DERIVED SOIL PROPERTIES FROM INPUT SOIL PROPERTIES
+C     CHANGE UNITS OF INPUT SOIL PROPERTIES TO THOSE USED
+C     IN THE MODEL
 C
 C     FMPR=micropore fraction excluding macropore,rock
 C     SCNV,SCNH=vertical,lateral Ksat converted to m2 MPa-1 h-1
 C     CSAND,CSILT,CCLAY=sand,silt,clay content converted to g Mg-1
 C     CORGC,CORGR=SOC,POC converted to g Mg-1
 C     CEC,AEC=cation,anion exchange capacity converted to mol Mg-1
-C     CNH4...=solute concentrations converted to mol Mg-1
+C     CNH4 TO CCASO=solute concentrations converted to mol Mg-1
 C
       DO 28 L=1,NL(NY,NX)
 C     BKDSI(L,NY,NX)=BKDSI(L,NY,NX)/(1.0-FHOL(L,NY,NX))
@@ -562,7 +646,7 @@ C     WP(L,NY,NX)=WP(L,NY,NX)/(1.0-FHOL(L,NY,NX))
       CCACO(L,NY,NX)=CCACO(L,NY,NX)/40.0
       CCASO(L,NY,NX)=CCASO(L,NY,NX)/40.0
 C
-C     ESTIMATE SON,SOP,CEC IF UNKNOWN
+C     ESTIMATE SON,SOP,CEC IF UNKNOWN (-VE VALUE IN INPUTS)
 C     BIOCHEMISTRY 130:117-131
 C
       IF(CORGN(L,NY,NX).LT.0.0)THEN
@@ -582,6 +666,7 @@ C     WRITE(*,1111)'CORGP',L,CORGP(L,NY,NX),CORGC(L,NY,NX)
       ENDIF
 28    CONTINUE
       CORGC(0,NY,NX)=0.55E+06
+      CORGCI(0,NY,NX)=0.55E+06
       FMPR(0,NY,NX)=1.0
 9990  CONTINUE
 9995  CONTINUE
