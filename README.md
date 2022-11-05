@@ -12,15 +12,15 @@ git clone https://github.com/jinyun1tang/ECOSYS.git
 
 You can also make a fork using the fork button on the upper right corner.
 
-## Be sure to make your own branch or your own fork. 
+## Be sure to make your own branch or your own fork.
 ## Please do not merge to the master, use pull request instead.
 
-# Build 
+# Build
 
 * clean the build folder
- 
+
  make distclean
- 
+
 * Configure for building
 
 make config CC=icc CXX=icpc FC=ifort
@@ -33,7 +33,7 @@ make config CC=gcc CXX=g++ FC=gfortran
 
 make install CC=icc CXX=icpc FC=ifort
 
-* The executable is located in 
+* The executable is located in
 
 ./local/bin/ecosys.x  
 
@@ -53,7 +53,7 @@ will make you a branch with name "your_branch"
 
   git push -u origin "your_branch"
 
-will push your branch to remote for the first time. 
+will push your branch to remote for the first time.
 
 You can also create a new branch using the github web tools.
 
@@ -71,14 +71,12 @@ will push your changes to your branch.
 
   git pull --ff-only
 
-will do fast forward merge in case your local branch is not synchronized with your remote branch. 
+will do fast forward merge in case your local branch is not synchronized with your remote branch and the two branches have no conflicts. 
 
   git stash
 
-will foget all your changes made in local directory. 
+will foget all your changes made in local directory.
 
   git diff
-  
-will list your changes that made the code different from the remote. 
 
-
+will list your changes that made the code different from the remote.
