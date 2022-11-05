@@ -69,9 +69,9 @@ will ask you to write a message about what you've done and what you want to othe
 
 will push your changes to your branch.
 
-  git pull --ff-only
+#  git pull --ff-only
 
-will do fast forward merge in case your local branch is not synchronized with your remote branch and the two branches have no conflicts. 
+will do fast forward merge in case your local branch is not synchronized with your remote branch and the two branches have no conflicts.
 
   git stash
 
