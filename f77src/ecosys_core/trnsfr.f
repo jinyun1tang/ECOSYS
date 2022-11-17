@@ -44,24 +44,24 @@ C
      2,ZN2W2(JS,JY,JX),ZN4W2(JS,JY,JX),ZN3W2(JS,JY,JX),ZNOW2(JS,JY,JX)
      3,ZHPW2(JS,JY,JX),Z1PW2(JS,JY,JX)
      2,H1PO42(0:JZ,JY,JX),H1POB2(0:JZ,JY,JX)
-      DIMENSION ROCSK2(0:4,0:JZ,JY,JX),RONSK2(0:4,0:JZ,JY,JX) 
+      DIMENSION ROCSK2(0:4,0:JZ,JY,JX),RONSK2(0:4,0:JZ,JY,JX)
      2,ROPSK2(0:4,0:JZ,JY,JX),ROASK2(0:4,0:JZ,JY,JX)
-     3,RCOSK2(0:JZ,JY,JX),ROXSK2(0:JZ,JY,JX),RCHSK2(0:JZ,JY,JX) 
+     3,RCOSK2(0:JZ,JY,JX),ROXSK2(0:JZ,JY,JX),RCHSK2(0:JZ,JY,JX)
      4,RNGSK2(0:JZ,JY,JX),RN2SK2(0:JZ,JY,JX),RN4SK2(0:JZ,JY,JX)
      5,RN3SK2(0:JZ,JY,JX),RNOSK2(0:JZ,JY,JX),RHPSK2(0:JZ,JY,JX)
      6,R4BSK2(JZ,JY,JX),R3BSK2(JZ,JY,JX),RNBSK2(JZ,JY,JX)
      7,RHBSK2(JZ,JY,JX),RNXSK2(0:JZ,JY,JX),RNZSK2(JZ,JY,JX)
-     8,RHGSK2(0:JZ,JY,JX),RNHSK2(0:JZ,JY,JX),R1PSK2(0:JZ,JY,JX) 
+     8,RHGSK2(0:JZ,JY,JX),RNHSK2(0:JZ,JY,JX),R1PSK2(0:JZ,JY,JX)
       DIMENSION CLSGL2(0:JZ,JY,JX),CQSGL2(0:JZ,JY,JX),OLSGL2(0:JZ,JY,JX)
      2,ZNSGL2(0:JZ,JY,JX),ZLSGL2(0:JZ,JY,JX),ZVSGL2(0:JZ,JY,JX)
      3,HLSGL2(0:JZ,JY,JX),ZOSGL2(0:JZ,JY,JX),POSGL2(0:JZ,JY,JX)
      4,RCODFS(JY,JX),RCHDFS(JY,JX),ROXDFS(JY,JX),RNGDFS(JY,JX)
      5,RN2DFS(JY,JX),RN3DFS(JY,JX),RNBDFS(JY,JX),RHGDFS(JY,JX)
      6,RCODFR(JY,JX),RCHDFR(JY,JX),ROXDFR(JY,JX),RNGDFR(JY,JX)
-     7,RN2DFR(JY,JX),RN3DFR(JY,JX),RHGDFR(JY,JX),R1BSK2(JZ,JY,JX) 
+     7,RN2DFR(JY,JX),RN3DFR(JY,JX),RHGDFR(JY,JX),R1BSK2(JZ,JY,JX)
      8,RQROC(0:4,2,2,JV,JH),RQRON(0:4,2,2,JV,JH),RQROP(0:4,2,2,JV,JH)
      9,RQROA(0:4,2,2,JV,JH),RQRCOS(2,2,JV,JH),RQRCHS(2,2,JV,JH)
-     1,RQROXS(2,2,JV,JH),RQRNGS(2,2,JV,JH),RQRN2S(2,2,JV,JH) 
+     1,RQROXS(2,2,JV,JH),RQRNGS(2,2,JV,JH),RQRN2S(2,2,JV,JH)
      2,RQRHGS(2,2,JV,JH),RQRNH4(2,2,JV,JH),RQRNH3(2,2,JV,JH)
      3,RQRNO3(2,2,JV,JH),RQRNO2(2,2,JV,JH),RQRH2P(2,2,JV,JH)
      4,RQRH1P(2,2,JV,JH),FLWU(JZ,JY,JX)
@@ -69,7 +69,7 @@ C
      6,RQSNGS(2,JV,JH),RQSN2S(2,JV,JH),RQSNH4(2,JV,JH)
      7,RQSNH3(2,JV,JH),RQSNO3(2,JV,JH),RQSH2P(2,JV,JH)
      8,RQSH1P(2,JV,JH)
-      DIMENSION RCOFLS(3,0:JD,JV,JH),RCHFLS(3,0:JD,JV,JH) 
+      DIMENSION RCOFLS(3,0:JD,JV,JH),RCHFLS(3,0:JD,JV,JH)
      2,ROXFLS(3,0:JD,JV,JH),RNGFLS(3,0:JD,JV,JH),RN2FLS(3,0:JD,JV,JH)
      3,RHGFLS(3,0:JD,JV,JH),RN4FLW(3,0:JD,JV,JH),RN3FLW(3,0:JD,JV,JH)
      4,RNOFLW(3,0:JD,JV,JH),RNXFLS(3,0:JD,JV,JH),RH2PFS(3,0:JD,JV,JH)
@@ -80,7 +80,7 @@ C
      9,RNOFHW(3,JD,JV,JH),RH2PHS(3,JD,JV,JH),RN4FHB(3,JD,JV,JH)
      1,RN3FHB(3,JD,JV,JH),RNOFHB(3,JD,JV,JH),RH2BHB(3,JD,JV,JH)
      2,ROCFLS(0:4,3,0:JD,JV,JH),RONFLS(0:4,3,0:JD,JV,JH)
-     3,ROPFLS(0:4,3,0:JD,JV,JH),ROAFLS(0:4,3,0:JD,JV,JH) 
+     3,ROPFLS(0:4,3,0:JD,JV,JH),ROAFLS(0:4,3,0:JD,JV,JH)
      4,ROCFHS(0:4,3,JD,JV,JH),RONFHS(0:4,3,JD,JV,JH)
      5,ROPFHS(0:4,3,JD,JV,JH),ROAFHS(0:4,3,JD,JV,JH)
      6,ROXFLG(3,JD,JV,JH),RN3FLG(3,JD,JV,JH),RCOFLG(3,JD,JV,JH)
@@ -123,7 +123,7 @@ C
      3,TNOFHB(JZ,JY,JX),TH2BHB(JZ,JY,JX),TNXFHS(JZ,JY,JX)
      4,ZNO2B2(JZ,JY,JX),ZN2BH2(JZ,JY,JX),TNXFLB(JZ,JY,JX)
      5,TNXFHB(JZ,JY,JX),H1P4H2(JZ,JY,JX),H1PBH2(JZ,JY,JX)
-     6,TH1PHS(JZ,JY,JX),TH1BHB(JZ,JY,JX)  
+     6,TH1PHS(JZ,JY,JX),TH1BHB(JZ,JY,JX)
       DIMENSION RCOFLZ(JZ,JY,JX),RCHFLZ(JZ,JY,JX)
      1,ROXFLZ(JZ,JY,JX),RNGFLZ(JZ,JY,JX)
      2,RN2FLZ(JZ,JY,JX),RN4FLZ(JZ,JY,JX),RN3FLZ(JZ,JY,JX)
@@ -161,12 +161,12 @@ C
      7,H2GG2(JZ,JY,JX),H2GS2(0:JZ,JY,JX),H2GSH2(JZ,JY,JX)
      8,HGSGL2(JZ,JY,JX),DH2GG(3,JZ,JY,JX),RHGFXS(JZ,JY,JX)
      2,RHGFLZ(JZ,JY,JX),RHGFLG(3,JD,JV,JH),THGFLS(JZ,JY,JX)
-     3,THGFHS(JZ,JY,JX),RHGDFG(0:JZ,JY,JX),FLQM(3,JD,JV,JH)  
+     3,THGFHS(JZ,JY,JX),RHGDFG(0:JZ,JY,JX),FLQM(3,JD,JV,JH)
      4,RHGFHS(3,JD,JV,JH),THGFLG(JZ,JY,JX),FLVM(JZ,JY,JX)
      5,THETH2(JZ,JY,JX),THETHL(JZ,JY,JX),VOLPMA(JZ,JY,JX)
      6,VOLPMB(JZ,JY,JX),VOLWMA(JZ,JY,JX),VOLWMB(JZ,JY,JX)
      7,VOLWXA(0:JZ,JY,JX),VOLWXB(JZ,JY,JX),PARGCO(JY,JX)
-     8,PARGCH(JY,JX),PARGOX(JY,JX),PARGNG(JY,JX) 
+     8,PARGCH(JY,JX),PARGOX(JY,JX),PARGNG(JY,JX)
      9,PARGN2(JY,JX),PARGN3(JY,JX),PARGH2(JY,JX)
       DIMENSION ROCFL0(0:2,JY,JX),RONFL0(0:2,JY,JX),ROPFL0(0:2,JY,JX)
      2,ROAFL0(0:2,JY,JX),ROCFL1(0:2,JY,JX),RONFL1(0:2,JY,JX)
@@ -184,7 +184,7 @@ C
      4,VOLN3T(JY,JX),VOLNBT(JY,JX),VOLHGT(JY,JX)
      5,RQROC0(0:4,JV,JH),RQRON0(0:4,JV,JH),RQROP0(0:4,JV,JH)
      6,RQROA0(0:4,JV,JH),RQRCOS0(JV,JH),RQRCHS0(JV,JH)
-     1,RQROXS0(JV,JH),RQRNGS0(JV,JH),RQRN2S0(JV,JH) 
+     1,RQROXS0(JV,JH),RQRNGS0(JV,JH),RQRN2S0(JV,JH)
      2,RQRHGS0(JV,JH),RQRNH40(JV,JH),RQRNH30(JV,JH)
      3,RQRNO30(JV,JH),RQRNO20(JV,JH),RQRH2P0(JV,JH)
      4,RQRH1P0(JV,JH)
@@ -201,7 +201,7 @@ C     GAS AND SOLUTE SINKS AND SOURCES IN SURFACE RESIDUE FROM MICROBIAL
 C     TRANSFORMATIONS IN 'NITRO' + ROOT EXCHANGE IN 'EXTRACT'
 C     + EQUILIBRIA REACTIONS IN 'SOLUTE' AT SUB-HOURLY TIME STEP
 C
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -211,20 +211,20 @@ C     XNPH=1/no. of cycles h-1 for water, heat and solute flux calculations
 C     R*SK2=total sink from nitro.f, uptake.f, solute.f
 C     RCO2O=net soil CO2 uptake from nitro.f
 C     RCH4O=net soil CH4 uptake from nitro.f
-C     RN2G=total soil N2 production from nitro.f 
-C     XN2GS=total N2 fixation from nitro.f 
+C     RN2G=total soil N2 production from nitro.f
+C     XN2GS=total N2 fixation from nitro.f
 C     RN2O=net soil N2O uptake from nitro.f
 C     RH2GO=net H2 uptake from nitro.f
 C     XOQCS,XOQNZ,XOQPS,XOQAS=net change in DOC,DON,DOP,acetate from nitro.f
-C     XNH4S=net change in NH4 from nitro.f 
+C     XNH4S=net change in NH4 from nitro.f
 C     TRN4S,TRN3S=NH4,NH3 dissolution from solute.f
-C     XNO3S=net change in NO3 from nitro.f 
+C     XNO3S=net change in NO3 from nitro.f
 C     TRNO3=NO3 dissolution from solute.f
-C     XNO2S=net change in NO2 from nitro.f 
+C     XNO2S=net change in NO2 from nitro.f
 C     TRNO2=NO2 dissolution from solute.f
-C     XH2PS=net change in H2PO4 from nitro.f 
+C     XH2PS=net change in H2PO4 from nitro.f
 C     TRH2P=H2PO4 dissolution from solute.f
-C     XH1PS=net change in HPO4 from nitro.f 
+C     XH1PS=net change in HPO4 from nitro.f
 C     TRH1P=HPO4 dissolution from solute.f
 C
       RCOSK2(0,NY,NX)=RCO2O(0,NY,NX)*XNPG
@@ -255,20 +255,20 @@ C     ZNH4S,ZNH3S,ZNO3S,ZNO2S,H1PO4,H2PO4=aqueous NH4,NH3,NO3,NO2,HPO4,H2PO4
 C     CHY0=H concentration
 C     PH=pH
 C
-      CO2S2(0,NY,NX)=CO2S(0,NY,NX) 
-      CH4S2(0,NY,NX)=CH4S(0,NY,NX) 
-      OXYS2(0,NY,NX)=OXYS(0,NY,NX) 
-      Z2GS2(0,NY,NX)=Z2GS(0,NY,NX) 
-      Z2OS2(0,NY,NX)=Z2OS(0,NY,NX) 
-      H2GS2(0,NY,NX)=H2GS(0,NY,NX) 
+      CO2S2(0,NY,NX)=CO2S(0,NY,NX)
+      CH4S2(0,NY,NX)=CH4S(0,NY,NX)
+      OXYS2(0,NY,NX)=OXYS(0,NY,NX)
+      Z2GS2(0,NY,NX)=Z2GS(0,NY,NX)
+      Z2OS2(0,NY,NX)=Z2OS(0,NY,NX)
+      H2GS2(0,NY,NX)=H2GS(0,NY,NX)
       DO 9979 K=0,4
-      OQC2(K,0,NY,NX)=OQC(K,0,NY,NX)-XOQCS(K,0,NY,NX) 
+      OQC2(K,0,NY,NX)=OQC(K,0,NY,NX)-XOQCS(K,0,NY,NX)
       OQN2(K,0,NY,NX)=OQN(K,0,NY,NX)-XOQNS(K,0,NY,NX)
       OQP2(K,0,NY,NX)=OQP(K,0,NY,NX)-XOQPS(K,0,NY,NX)
       OQA2(K,0,NY,NX)=OQA(K,0,NY,NX)-XOQAS(K,0,NY,NX)
 9979  CONTINUE
-      ZNH4S2(0,NY,NX)=ZNH4S(0,NY,NX) 
-      ZNH3S2(0,NY,NX)=ZNH3S(0,NY,NX) 
+      ZNH4S2(0,NY,NX)=ZNH4S(0,NY,NX)
+      ZNH3S2(0,NY,NX)=ZNH3S(0,NY,NX)
       ZNO3S2(0,NY,NX)=ZNO3S(0,NY,NX)
       ZNO2S2(0,NY,NX)=ZNO2S(0,NY,NX)
       H1PO42(0,NY,NX)=H1PO4(0,NY,NX)
@@ -300,10 +300,10 @@ C     HOURLY SOLUTE FLUXES FROM ATMOSPHERE TO SNOWPACK
 C     IN SNOWFALL AND IRRIGATION ACCORDING TO CONCENTRATIONS
 C     ENTERED IN WEATHER AND IRRIGATION FILES
 C
-C     PRECW,PRECR=snow,rain 
+C     PRECW,PRECR=snow,rain
 C     VHCPWM,VHCPWX=current,minimum volumetric heat capacity of snowpack
 C     X*BLS=hourly solute flux to snowpack
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -337,7 +337,7 @@ C
 C     HOURLY SOLUTE FLUXES FROM ATMOSPHERE TO SOIL SURFACE
 C     IF RAINFALL AND IRRIGATION IS ZERO IF SNOWPACK IS PRESENT
 C
-C     X*FLS,X*FLB=hourly solute flux to micropores in non-band,band 
+C     X*FLS,X*FLB=hourly solute flux to micropores in non-band,band
 C
       XCOFLS(3,0,NY,NX)=0.0
       XCHFLS(3,0,NY,NX)=0.0
@@ -383,7 +383,7 @@ C
 C     PRECQ,PRECI=snow+rain,irrigation
 C     X*BLS=hourly solute flux to snowpack
 C     X*FLS,X*FLB=hourly solute flux to surface litter,soil surface micropore non-band,band
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -421,7 +421,7 @@ C
      2*CNOQ(I,NY,NX))*14.0
       XNXFLS(3,0,NY,NX)=0.0
       XH1PFS(3,0,NY,NX)=(FLQRQ(NY,NX)*CH1PR(NY,NX)+FLQRI(NY,NX)
-     2*CH1PQ(I,NY,NX))*31.0 
+     2*CH1PQ(I,NY,NX))*31.0
       XH2PFS(3,0,NY,NX)=(FLQRQ(NY,NX)*CPOR(NY,NX)+FLQRI(NY,NX)
      2*CPOQ(I,NY,NX))*31.0
       XCOFLS(3,NU(NY,NX),NY,NX)=FLQGQ(NY,NX)*CCOR(NY,NX)
@@ -525,8 +525,8 @@ C     GAS AND SOLUTE FLUXES AT SUB-HOURLY FLUX TIME STEP
 C     ENTERED IN SITE FILE
 C
 C     XNPH=1/no. of cycles h-1 for water, heat and solute flux calculations
-C     R*BLS,R*FL0,R*FL1,R*FL2=solute flux to snowpack,surface litter,soil surface non-band,band 
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     R*BLS,R*FL0,R*FL1,R*FL2=solute flux to snowpack,surface litter,soil surface non-band,band
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -552,7 +552,7 @@ C
       RNOBLW(1,NY,NX)=XNOBLW(1,NY,NX)*XNPH
       RH1PBS(1,NY,NX)=XH1PBS(1,NY,NX)*XNPH
       RH2PBS(1,NY,NX)=XH2PBS(1,NY,NX)*XNPH
-      RCOFL0(NY,NX)=XCOFLS(3,0,NY,NX)*XNPH 
+      RCOFL0(NY,NX)=XCOFLS(3,0,NY,NX)*XNPH
       RCHFL0(NY,NX)=XCHFLS(3,0,NY,NX)*XNPH
       ROXFL0(NY,NX)=XOXFLS(3,0,NY,NX)*XNPH
       RNGFL0(NY,NX)=XNGFLS(3,0,NY,NX)*XNPH
@@ -584,7 +584,7 @@ C
       RH2BF2(NY,NX)=XH2BFB(3,NU(NY,NX),NY,NX)*XNPH
 C     IF(I.EQ.118.AND.NX.EQ.3.AND.NY.EQ.4)THEN
 C     WRITE(*,6767)'ROXFL0',I,J,NX,NY,ROXFL0(NY,NX),XOXFLS(3,0,NY,NX)
-C    2,OXYW(NY,NX),VFLWR 
+C    2,OXYW(NY,NX),VFLWR
 6767  FORMAT(A8,4I4,12E12.4)
 C     ENDIF
 C
@@ -594,7 +594,7 @@ C     + EQUILIBRIA REACTIONS IN 'SOLUTE' AT SUB-HOURLY TIME STEP
 C
 C     XNPH=1/no. of cycles h-1 for water, heat and solute flux calculations
 C     *SGL*=solute diffusivity from hour1.f
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -632,7 +632,7 @@ C
       ZHPW2(L,NY,NX)=ZHPW(L,NY,NX)
 20    CONTINUE
 C
-C     SOLUTE FLUXES FROM WATSUB.F, NITRO.F, UPTAKE.F, SOLUTE.F 
+C     SOLUTE FLUXES FROM WATSUB.F, NITRO.F, UPTAKE.F, SOLUTE.F
 C
 C     XNPH=1/no. of cycles h-1 for water, heat and solute flux calculations
 C     CHY0=H concentration
@@ -641,20 +641,20 @@ C     FLWU,TUPWTR=total root water uptake from extract.f
 C     R*SK2=total sink from nitro.f, uptake.f, solute.f
 C     RCO2O=net soil CO2 uptake from nitro.f
 C     RCH4O=net soil CH4 uptake from nitro.f
-C     RN2G=total soil N2 production from nitro.f 
-C     XN2GS=total N2 fixation from nitro.f 
+C     RN2G=total soil N2 production from nitro.f
+C     XN2GS=total N2 fixation from nitro.f
 C     RN2O=net soil N2O uptake from nitro.f
 C     RH2GO=net H2 uptake from nitro.f
 C     XOQCS,XOQNZ,XOQPS,XOQAS=net change in DOC,DON,DOP,acetate from nitro.f
-C     XNH4S=net change in NH4 from nitro.f 
+C     XNH4S=net change in NH4 from nitro.f
 C     TRN4S,TRN3S=NH4,NH3 dissolution from solute.f
-C     XNO3S=net change in NO3 from nitro.f 
+C     XNO3S=net change in NO3 from nitro.f
 C     TRNO3=NO3 dissolution from solute.f
-C     XNO2S=net change in NO2 from nitro.f 
+C     XNO2S=net change in NO2 from nitro.f
 C     TRNO2=NO2 dissolution from solute.f
-C     XH2PS=net change in H2PO4 from nitro.f 
+C     XH2PS=net change in H2PO4 from nitro.f
 C     TRH2P=H2PO4 dissolution from solute.f
-C     XH1PS=net change in HPO4 from nitro.f 
+C     XH1PS=net change in HPO4 from nitro.f
 C     TRH1P=HPO4 dissolution from solute.f
 C     TUPNH4,TUPNHB=root NH4 uptake in non-band,band from extract.f
 C     TUPNO3,TUPNOB=root NO3 uptake in non-band,band from extract.f
@@ -702,14 +702,14 @@ C     IF(IYRC.EQ.2012.AND.I.EQ.151.AND.NX.EQ.1)THEN
 C     WRITE(*,4441)'RN3SK2',I,J,NX,NY,L,RN3SK2(L,NY,NX)
 C    2,TRN3S(L,NY,NX),TUPN3S(L,NY,NX),RN4SK2(L,NY,NX)
 C    2,XNH4S(L,NY,NX),TRN4S(L,NY,NX),TUPNH4(L,NY,NX)
-4441  FORMAT(A8,5I4,20E12.4) 
+4441  FORMAT(A8,5I4,20E12.4)
 C     ENDIF
 C
 C     SOLUTE FLUXES FROM SUBSURFACE IRRIGATION
 C
 C     FLU=subsurface water flux from watsub.f
 C     R*FLU,R*FBU=subsurface solute flux in non-band,band
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -761,7 +761,7 @@ C
 C     XNPH=1/no. of cycles h-1 for water, heat and solute flux calculations
 C     XNPG=1/number of cycles h-1 for gas flux calculations
 C     *SGL*=solute diffusivity from hour1.f
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -791,7 +791,7 @@ C     STATE VARIABLES FOR GASES AND SOLUTES USED IN 'TRNSFR'
 C     TO STORE SUB-HOURLY CHANGES DURING FLUX CALCULATIONS
 C     INCLUDING TRANSFORMATIONS FROM NITRO.F, UPTAKE.F AND SOLUTE.F
 C
-C     CO2G,CH4G,OXYG,ZN3G,Z2GG,Z2OG,H2GG=gaseous CO2,CH4,O2,NH3,N2,N2O,H2 
+C     CO2G,CH4G,OXYG,ZN3G,Z2GG,Z2OG,H2GG=gaseous CO2,CH4,O2,NH3,N2,N2O,H2
 C     CO2S,CH4S,OXYS,Z2GS,Z2OS,H2GS=aqueous CO2,CH4,O2,N2,N2O,H2 in micropores
 C     OQC,OQN,OQP,OQA=DOC,DON,DOP,acetate in micropores
 C     XOQCS,XOQNZ,XOQPS,XOQAS=net change in DOC,DON,DOP,acetate from nitro.f
@@ -809,12 +809,12 @@ C
       Z2GG2(L,NY,NX)=Z2GG(L,NY,NX)
       Z2OG2(L,NY,NX)=Z2OG(L,NY,NX)
       H2GG2(L,NY,NX)=H2GG(L,NY,NX)
-      CO2S2(L,NY,NX)=CO2S(L,NY,NX) 
-      CH4S2(L,NY,NX)=CH4S(L,NY,NX) 
-      OXYS2(L,NY,NX)=OXYS(L,NY,NX) 
-      Z2GS2(L,NY,NX)=Z2GS(L,NY,NX) 
-      Z2OS2(L,NY,NX)=Z2OS(L,NY,NX) 
-      H2GS2(L,NY,NX)=H2GS(L,NY,NX) 
+      CO2S2(L,NY,NX)=CO2S(L,NY,NX)
+      CH4S2(L,NY,NX)=CH4S(L,NY,NX)
+      OXYS2(L,NY,NX)=OXYS(L,NY,NX)
+      Z2GS2(L,NY,NX)=Z2GS(L,NY,NX)
+      Z2OS2(L,NY,NX)=Z2OS(L,NY,NX)
+      H2GS2(L,NY,NX)=H2GS(L,NY,NX)
       DO 9980 K=0,4
       OQC2(K,L,NY,NX)=OQC(K,L,NY,NX)-XOQCS(K,L,NY,NX)
       OQN2(K,L,NY,NX)=OQN(K,L,NY,NX)-XOQNS(K,L,NY,NX)
@@ -830,14 +830,14 @@ C    2,XOQCS(K,L,NY,NX)
 449   FORMAT(A8,6I4,12E12.4)
 C     ENDIF
 9980  CONTINUE
-      ZNH4S2(L,NY,NX)=ZNH4S(L,NY,NX) 
-      ZNH3S2(L,NY,NX)=ZNH3S(L,NY,NX) 
+      ZNH4S2(L,NY,NX)=ZNH4S(L,NY,NX)
+      ZNH3S2(L,NY,NX)=ZNH3S(L,NY,NX)
       ZNO3S2(L,NY,NX)=ZNO3S(L,NY,NX)
       ZNO2S2(L,NY,NX)=ZNO2S(L,NY,NX)
       H1PO42(L,NY,NX)=H1PO4(L,NY,NX)
       H2PO42(L,NY,NX)=H2PO4(L,NY,NX)
       ZNH4B2(L,NY,NX)=ZNH4B(L,NY,NX)
-      ZNH3B2(L,NY,NX)=ZNH3B(L,NY,NX) 
+      ZNH3B2(L,NY,NX)=ZNH3B(L,NY,NX)
       ZNO3B2(L,NY,NX)=ZNO3B(L,NY,NX)
       ZNO2B2(L,NY,NX)=ZNO2B(L,NY,NX)
       H1POB2(L,NY,NX)=H1POB(L,NY,NX)
@@ -892,7 +892,7 @@ C     R*SK2=total sink from nitro.f, uptake.f, solute.f
 C     OQC,OQN,OQP,OQA=DOC,DON,DOP,acetate in micropores
 C     ZNH4S,ZNH3S,ZNO3S,ZNO2S,H1PO4,H2PO4=aqueous NH4,NH3,NO3,NO2,HPO4,H2PO4 in micropores
 C     CO2S,CH4S,OXYS,Z2GS,Z2OS,H2GS=aqueous CO2,CH4,O2,N2,N2O,H2 in micropores
-C     ZN3G=gaseous NH3 
+C     ZN3G=gaseous NH3
 C
       DO 9880 K=0,4
       TQROC(K,NY,NX)=0.0
@@ -926,20 +926,20 @@ C
       TQSNO3(NY,NX)=0.0
       TQSH1P(NY,NX)=0.0
       TQSH2P(NY,NX)=0.0
-      ZNH4S2(0,NY,NX)=ZNH4S2(0,NY,NX)-RN4SK2(0,NY,NX) 
+      ZNH4S2(0,NY,NX)=ZNH4S2(0,NY,NX)-RN4SK2(0,NY,NX)
       ZNH3S2(0,NY,NX)=ZNH3S2(0,NY,NX)-RN3SK2(0,NY,NX)
-      ZNO3S2(0,NY,NX)=ZNO3S2(0,NY,NX)-RNOSK2(0,NY,NX) 
+      ZNO3S2(0,NY,NX)=ZNO3S2(0,NY,NX)-RNOSK2(0,NY,NX)
       ZNO2S2(0,NY,NX)=ZNO2S2(0,NY,NX)-RNXSK2(0,NY,NX)
-      H2PO42(0,NY,NX)=H2PO42(0,NY,NX)-RHPSK2(0,NY,NX) 
-      H1PO42(0,NY,NX)=H1PO42(0,NY,NX)-R1PSK2(0,NY,NX) 
-      ROXSK2(0,NY,NX)=ROXSK(M,0,NY,NX)*XNPT 
+      H2PO42(0,NY,NX)=H2PO42(0,NY,NX)-RHPSK2(0,NY,NX)
+      H1PO42(0,NY,NX)=H1PO42(0,NY,NX)-R1PSK2(0,NY,NX)
+      ROXSK2(0,NY,NX)=ROXSK(M,0,NY,NX)*XNPT
       ENDIF
       CO2S2(0,NY,NX)=CO2S2(0,NY,NX)-RCOSK2(0,NY,NX)
       CH4S2(0,NY,NX)=CH4S2(0,NY,NX)-RCHSK2(0,NY,NX)
-      OXYS2(0,NY,NX)=OXYS2(0,NY,NX)-ROXSK2(0,NY,NX) 
+      OXYS2(0,NY,NX)=OXYS2(0,NY,NX)-ROXSK2(0,NY,NX)
       Z2GS2(0,NY,NX)=Z2GS2(0,NY,NX)-RNGSK2(0,NY,NX)
       Z2OS2(0,NY,NX)=Z2OS2(0,NY,NX)-RN2SK2(0,NY,NX)
-      H2GS2(0,NY,NX)=H2GS2(0,NY,NX)-RHGSK2(0,NY,NX) 
+      H2GS2(0,NY,NX)=H2GS2(0,NY,NX)-RHGSK2(0,NY,NX)
       ZN3G2(0,NY,NX)=ZN3G2(0,NY,NX)-RNHSK2(0,NY,NX)
 C
 C     INITIALIZE SNOWPACK NET FLUX ACCUMULATORS
@@ -1021,26 +1021,26 @@ C     ZNH4S,ZNH3S,ZNO3S,ZNO2S,H1PO4,H2PO4=aqueous NH4,NH3,NO3,NO2,HPO4,H2PO4 in 
 C     ZNH4B,ZNH3B,ZNO3B,ZNO2B,H1POB,H2POB=aqueous NH4,NH3,NO3,NO2,HPO4,H2PO4 in band micropores
 C
 C
-      ZNH4S2(L,NY,NX)=ZNH4S2(L,NY,NX)-RN4SK2(L,NY,NX) 
+      ZNH4S2(L,NY,NX)=ZNH4S2(L,NY,NX)-RN4SK2(L,NY,NX)
       ZNH3S2(L,NY,NX)=ZNH3S2(L,NY,NX)-RN3SK2(L,NY,NX)
-      ZNO3S2(L,NY,NX)=ZNO3S2(L,NY,NX)-RNOSK2(L,NY,NX) 
+      ZNO3S2(L,NY,NX)=ZNO3S2(L,NY,NX)-RNOSK2(L,NY,NX)
       ZNO2S2(L,NY,NX)=ZNO2S2(L,NY,NX)-RNXSK2(L,NY,NX)
-      H2PO42(L,NY,NX)=H2PO42(L,NY,NX)-RHPSK2(L,NY,NX) 
-      H1PO42(L,NY,NX)=H1PO42(L,NY,NX)-R1PSK2(L,NY,NX) 
+      H2PO42(L,NY,NX)=H2PO42(L,NY,NX)-RHPSK2(L,NY,NX)
+      H1PO42(L,NY,NX)=H1PO42(L,NY,NX)-R1PSK2(L,NY,NX)
       ZNH4B2(L,NY,NX)=ZNH4B2(L,NY,NX)-R4BSK2(L,NY,NX)
-      ZNH3B2(L,NY,NX)=ZNH3B2(L,NY,NX)-R3BSK2(L,NY,NX) 
+      ZNH3B2(L,NY,NX)=ZNH3B2(L,NY,NX)-R3BSK2(L,NY,NX)
       ZNO3B2(L,NY,NX)=ZNO3B2(L,NY,NX)-RNBSK2(L,NY,NX)
       ZNO2B2(L,NY,NX)=ZNO2B2(L,NY,NX)-RNZSK2(L,NY,NX)
       H2POB2(L,NY,NX)=H2POB2(L,NY,NX)-RHBSK2(L,NY,NX)
       H1POB2(L,NY,NX)=H1POB2(L,NY,NX)-R1BSK2(L,NY,NX)
-      ROXSK2(L,NY,NX)=ROXSK(M,L,NY,NX)*XNPT 
+      ROXSK2(L,NY,NX)=ROXSK(M,L,NY,NX)*XNPT
       ENDIF
 C
 C     SOIL GAS FLUX ACCUMULATORS
 C
 C     R*SK2=total sink from nitro.f, uptake.f, solute.f
 C     CO2S,CH4S,OXYS,Z2GS,Z2OS,H2GS=aqueous CO2,CH4,O2,N2,N2O,H2 in micropores
-C     ZN3G=gaseous NH3 
+C     ZN3G=gaseous NH3
 C
       TCOFLG(L,NY,NX)=0.0
       TCHFLG(L,NY,NX)=0.0
@@ -1049,17 +1049,17 @@ C
       TN2FLG(L,NY,NX)=0.0
       TN3FLG(L,NY,NX)=0.0
       THGFLG(L,NY,NX)=0.0
-      CO2S2(L,NY,NX)=CO2S2(L,NY,NX)-RCOSK2(L,NY,NX) 
-      CH4S2(L,NY,NX)=CH4S2(L,NY,NX)-RCHSK2(L,NY,NX) 
-      OXYS2(L,NY,NX)=OXYS2(L,NY,NX)-ROXSK2(L,NY,NX) 
+      CO2S2(L,NY,NX)=CO2S2(L,NY,NX)-RCOSK2(L,NY,NX)
+      CH4S2(L,NY,NX)=CH4S2(L,NY,NX)-RCHSK2(L,NY,NX)
+      OXYS2(L,NY,NX)=OXYS2(L,NY,NX)-ROXSK2(L,NY,NX)
       Z2GS2(L,NY,NX)=Z2GS2(L,NY,NX)-RNGSK2(L,NY,NX)
-      Z2OS2(L,NY,NX)=Z2OS2(L,NY,NX)-RN2SK2(L,NY,NX) 
+      Z2OS2(L,NY,NX)=Z2OS2(L,NY,NX)-RN2SK2(L,NY,NX)
       H2GS2(L,NY,NX)=H2GS2(L,NY,NX)-RHGSK2(L,NY,NX)
       ZN3G2(L,NY,NX)=ZN3G2(L,NY,NX)-RNHSK2(L,NY,NX)
 C     IF(I.EQ.105)THEN
 C     WRITE(*,444)'CO2S1',I,J,NX,NY,L,M,MM,CO2S2(L,NY,NX)
 C    2,RCOSK2(L,NY,NX),RCO2O(L,NY,NX),TCO2S(L,NY,NX)
-C    3,TRCO2(L,NY,NX) 
+C    3,TRCO2(L,NY,NX)
 C     ENDIF
 9885  CONTINUE
       IF(M.NE.MX)THEN
@@ -1077,7 +1077,7 @@ C     CO2W,CH4W,OXYW,ZNGW,ZN2W,ZN4W,ZN3W,ZNOW,Z1PW,ZHPW=CO2,CH4,O2,N2,N2O,H2 con
 C
       ICHKL=0
       DO 9775 L=1,JS
-      IF(VHCPWM(M,L,NY,NX).GT.VHCPWX(NY,NX))THEN 
+      IF(VHCPWM(M,L,NY,NX).GT.VHCPWX(NY,NX))THEN
       L2=MIN(JS,L+1)
       IF(L.LT.JS.AND.VHCPWM(M,L2,NY,NX).GT.VHCPWX(NY,NX))THEN
       IF(VOLWSL(L,NY,NX).GT.ZEROS2(NY,NX))THEN
@@ -1086,10 +1086,10 @@ C
       VFLWW=1.0
       ENDIF
       RCOBLS(L2,NY,NX)=CO2W2(L,NY,NX)*VFLWW
-      RCHBLS(L2,NY,NX)=CH4W2(L,NY,NX)*VFLWW 
-      ROXBLS(L2,NY,NX)=OXYW2(L,NY,NX)*VFLWW 
-      RNGBLS(L2,NY,NX)=ZNGW2(L,NY,NX)*VFLWW 
-      RN2BLS(L2,NY,NX)=ZN2W2(L,NY,NX)*VFLWW 
+      RCHBLS(L2,NY,NX)=CH4W2(L,NY,NX)*VFLWW
+      ROXBLS(L2,NY,NX)=OXYW2(L,NY,NX)*VFLWW
+      RNGBLS(L2,NY,NX)=ZNGW2(L,NY,NX)*VFLWW
+      RN2BLS(L2,NY,NX)=ZN2W2(L,NY,NX)*VFLWW
       RN4BLW(L2,NY,NX)=ZN4W2(L,NY,NX)*VFLWW
       RN3BLW(L2,NY,NX)=ZN3W2(L,NY,NX)*VFLWW
       RNOBLW(L2,NY,NX)=ZNOW2(L,NY,NX)*VFLWW
@@ -1108,10 +1108,10 @@ C
       ELSE
       IF(L.LT.JS)THEN
       RCOBLS(L2,NY,NX)=0.0
-      RCHBLS(L2,NY,NX)=0.0 
-      ROXBLS(L2,NY,NX)=0.0 
-      RNGBLS(L2,NY,NX)=0.0 
-      RN2BLS(L2,NY,NX)=0.0 
+      RCHBLS(L2,NY,NX)=0.0
+      ROXBLS(L2,NY,NX)=0.0
+      RNGBLS(L2,NY,NX)=0.0
+      RN2BLS(L2,NY,NX)=0.0
       RN4BLW(L2,NY,NX)=0.0
       RN3BLW(L2,NY,NX)=0.0
       RNOBLW(L2,NY,NX)=0.0
@@ -1127,7 +1127,7 @@ C     CVRD,BARE=litter cover fraction,1-CVRD
 C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
 C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
 C     R*S0=solute flux to surface litter
-C     R*S1,R*B1=solute flux to soil surface non-band,band 
+C     R*S1,R*B1=solute flux to soil surface non-band,band
 C     CO2W,CH4W,OXYW,ZNGW,ZN2W,ZN4W,ZN3W,ZNOW,Z1PW,ZHPW=CO2,CH4,O2,N2,N2O,H2 content in snowpack
 C
       IF(ICHKL.EQ.0)THEN
@@ -1153,7 +1153,7 @@ C
       RN4FLW0=ZN4W2(L,NY,NX)*VFLWR
       RN3FLW0=ZN3W2(L,NY,NX)*VFLWR
       RNOFLW0=ZNOW2(L,NY,NX)*VFLWR
-      RH1PFS0=Z1PW2(L,NY,NX)*VFLWR 
+      RH1PFS0=Z1PW2(L,NY,NX)*VFLWR
       RH2PFS0=ZHPW2(L,NY,NX)*VFLWR
       RCOFLS1=CO2W2(L,NY,NX)*VFLWS
       RCHFLS1=CH4W2(L,NY,NX)*VFLWS
@@ -1206,8 +1206,8 @@ C     SOLUTE FLUXES AT SOIL SURFACE FROM SURFACE WATER
 C     CONTENTS, WATER FLUXES 'FLQM' AND ATMOSPHERE BOUNDARY
 C     LAYER RESISTANCES 'PARGM' FROM 'WATSUB'
 C
-C     VOLWM,VOLWHM,VOLPM,FLPM=micropore,macropore water volume, air volume and change in air volume 
-C     FLWM,FLWHM=water flux into soil micropore,macropore from watsub.f 
+C     VOLWM,VOLWHM,VOLPM,FLPM=micropore,macropore water volume, air volume and change in air volume
+C     FLWM,FLWHM=water flux into soil micropore,macropore from watsub.f
 C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
 C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
 C     FLVM,FLM=air,water flux in gas flux calculations
@@ -1237,9 +1237,9 @@ C     DIFFUSIVITIES IN SURFACE RESIDUE
 C
 C     VOLT,DLYR,AREA=litter volume, thickness, area
 C     VOLWM=micropore water-filled porosity from watsub.f
-C     TORT=tortuosity from hour1.f 
+C     TORT=tortuosity from hour1.f
 C     *SGL*=solute diffusivity
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -1249,17 +1249,17 @@ C     OQC,OQN,OQP,OQA=DOC,DON,DOP,acetate in litter
 C     ZNH4S,ZNH3S,ZNO3S,ZNO2S,H1PO4,H2PO4=aqueous NH4,NH3,NO3,NO2,HPO4,H2PO4 in litter
 C     C*1=solute concentration in litter
 C
-      IF(VOLT(0,NY,NX).GT.ZEROS2(NY,NX) 
+      IF(VOLT(0,NY,NX).GT.ZEROS2(NY,NX)
      2.AND.VOLWM(M,0,NY,NX).GT.ZEROS2(NY,NX))THEN
       DLYR0=AMAX1(ZERO2,DLYR(3,0,NY,NX))
       TORT0=TORT(M,0,NY,NX)*AREA(3,NU(NY,NX),NY,NX)
      2/(0.5*DLYR0)*CVRD(NY,NX)
-      DFGSCO=CLSGL2(0,NY,NX)*TORT0 
-      DFGSCH=CQSGL2(0,NY,NX)*TORT0 
-      DFGSOX=OLSGL2(0,NY,NX)*TORT0 
+      DFGSCO=CLSGL2(0,NY,NX)*TORT0
+      DFGSCH=CQSGL2(0,NY,NX)*TORT0
+      DFGSOX=OLSGL2(0,NY,NX)*TORT0
       DFGSNG=ZLSGL2(0,NY,NX)*TORT0
-      DFGSN2=ZNSGL2(0,NY,NX)*TORT0 
-      DFGSN3=ZVSGL2(0,NY,NX)*TORT0 
+      DFGSN2=ZNSGL2(0,NY,NX)*TORT0
+      DFGSN3=ZVSGL2(0,NY,NX)*TORT0
       DFGSHL=HLSGL2(0,NY,NX)*TORT0
       DO 8810 K=0,4
       COQC1(K)=AMAX1(0.0,OQC2(K,0,NY,NX)/VOLWM(M,0,NY,NX))
@@ -1288,23 +1288,23 @@ C
 C     PARR=boundary layer conductance above litter surface from watsub.f
 C     C*E=atmospheric gas concentration from hour1.f
 C     C*Q=equilibrium gas concentration at litter surface
-C     S*L=solubility of gas in water from hour1.f 
+C     S*L=solubility of gas in water from hour1.f
 C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
 C             :*ZN3*=NH3,*H2G*=H2
 C     DFGS*=effective solute diffusivity
-C 
+C
       CCO2GQ=(PARR(NY,NX)*CCO2E(NY,NX)*SCO2L(0,NY,NX)+DFGSCO*CCO2S1)
-     2/(DFGSCO+PARR(NY,NX)) 
-      CCH4GQ=(PARR(NY,NX)*CCH4E(NY,NX)*SCH4L(0,NY,NX)+DFGSCH*CCH4S1) 
-     2/(DFGSCH+PARR(NY,NX)) 
+     2/(DFGSCO+PARR(NY,NX))
+      CCH4GQ=(PARR(NY,NX)*CCH4E(NY,NX)*SCH4L(0,NY,NX)+DFGSCH*CCH4S1)
+     2/(DFGSCH+PARR(NY,NX))
       COXYGQ=(PARR(NY,NX)*COXYE(NY,NX)*SOXYL(0,NY,NX)+DFGSOX*COXYS1)
-     2/(DFGSOX+PARR(NY,NX)) 
+     2/(DFGSOX+PARR(NY,NX))
       CZ2GGQ=(PARR(NY,NX)*CZ2GE(NY,NX)*SN2GL(0,NY,NX)+DFGSNG*CZ2GS1)
-     2/(DFGSNG+PARR(NY,NX)) 
+     2/(DFGSNG+PARR(NY,NX))
       CZ2OGQ=(PARR(NY,NX)*CZ2OE(NY,NX)*SN2OL(0,NY,NX)+DFGSN2*CZ2OS1)
-     2/(DFGSN2+PARR(NY,NX)) 
+     2/(DFGSN2+PARR(NY,NX))
       CZN3GQ=(PARR(NY,NX)*CNH3E(NY,NX)*SNH3L(0,NY,NX)+DFGSN3*CNH3S1)
-     2/(DFGSN3+PARR(NY,NX)) 
+     2/(DFGSN3+PARR(NY,NX))
       CH2GGQ=(PARR(NY,NX)*CH2GE(NY,NX)*SH2GL(0,NY,NX)+DFGSHL*CH2GS1)
      2/(DFGSHL+PARR(NY,NX))
 C
@@ -1321,13 +1321,13 @@ C     DFGS*=effective solute diffusivity
 C     XNPT=1/number of cycles NPH-1 for gas flux calculations
 C     R*DXR=R*DFR for gas flux calculations
 C
-      RCODFR(NY,NX)=(CCO2GQ-CCO2S1)*AMIN1(VOLWM(M,0,NY,NX),DFGSCO) 
-      RCHDFR(NY,NX)=(CCH4GQ-CCH4S1)*AMIN1(VOLWM(M,0,NY,NX),DFGSCH) 
-      ROXDFR(NY,NX)=(COXYGQ-COXYS1)*AMIN1(VOLWM(M,0,NY,NX),DFGSOX) 
-      RNGDFR(NY,NX)=(CZ2GGQ-CZ2GS1)*AMIN1(VOLWM(M,0,NY,NX),DFGSNG) 
-      RN2DFR(NY,NX)=(CZ2OGQ-CZ2OS1)*AMIN1(VOLWM(M,0,NY,NX),DFGSN2) 
+      RCODFR(NY,NX)=(CCO2GQ-CCO2S1)*AMIN1(VOLWM(M,0,NY,NX),DFGSCO)
+      RCHDFR(NY,NX)=(CCH4GQ-CCH4S1)*AMIN1(VOLWM(M,0,NY,NX),DFGSCH)
+      ROXDFR(NY,NX)=(COXYGQ-COXYS1)*AMIN1(VOLWM(M,0,NY,NX),DFGSOX)
+      RNGDFR(NY,NX)=(CZ2GGQ-CZ2GS1)*AMIN1(VOLWM(M,0,NY,NX),DFGSNG)
+      RN2DFR(NY,NX)=(CZ2OGQ-CZ2OS1)*AMIN1(VOLWM(M,0,NY,NX),DFGSN2)
       RN3DFR(NY,NX)=(CZN3GQ-CNH3S1)*AMIN1(VOLWM(M,0,NY,NX),DFGSN3)
-      RHGDFR(NY,NX)=(CH2GGQ-CH2GS1)*AMIN1(VOLWM(M,0,NY,NX),DFGSHL) 
+      RHGDFR(NY,NX)=(CH2GGQ-CH2GS1)*AMIN1(VOLWM(M,0,NY,NX),DFGSHL)
 C
 C     ACCUMULATE HOURLY FLUXES FOR USE IN REDIST.F
 C
@@ -1339,13 +1339,13 @@ C
       XN3DFR(NY,NX)=XN3DFR(NY,NX)+RN3DFR(NY,NX)
       XHGDFR(NY,NX)=XHGDFR(NY,NX)+RHGDFR(NY,NX)
 C     IF(J.EQ.24)THEN
-C     WRITE(*,1118)'RCODFR',I,J,NX,NY,M,MM,NU(NY,NX),RCODFR(NY,NX) 
+C     WRITE(*,1118)'RCODFR',I,J,NX,NY,M,MM,NU(NY,NX),RCODFR(NY,NX)
 C    2,PARR(NY,NX),CO2S2(0,NY,NX),CCO2E(NY,NX),CCO2Q,DFGSCO
 C    3,DCO21,CCO22,SCO2L(0,NY,NX),TORT1
 C    4,DLYR(3,0,NY,NX),VOLWM(M,0,NY,NX)
 C     WRITE(*,1118)'RCHDFR',I,J,NX,NY,M,MM,NU(NY,NX),RCHDFR(NY,NX)
 C    2,CH4GQ,CH4S2(0,NY,NX),PARR(NY,NX),CCH4E(NY,NX)
-C    3,VOLWCH(0,NY,NX),DFGSCH,TORT(M,0,NY,NX) 
+C    3,VOLWCH(0,NY,NX),DFGSCH,TORT(M,0,NY,NX)
 C     WRITE(*,1118)'ROXDFR',I,J,NX,NY,M,MM,NU(NY,NX),ROXDFR(NY,NX)
 C    2,XOXDFR(NY,NX),COXYGQ,COXYS1,PARR(NY,NX),DFGSOX,COXYE(NY,NX)
 C    3,TORT(M,0,NY,NX),VOLWM(M,0,NY,NX),VOLT(0,NY,NX),DLYR(3,0,NY,NX)
@@ -1353,29 +1353,29 @@ C    3,TORT(M,0,NY,NX),VOLWM(M,0,NY,NX),VOLT(0,NY,NX),DLYR(3,0,NY,NX)
 C     ENDIF
       ELSE
       RCODFR(NY,NX)=0.0
-      RCHDFR(NY,NX)=0.0 
+      RCHDFR(NY,NX)=0.0
       ROXDFR(NY,NX)=0.0
       RNGDFR(NY,NX)=0.0
       RN2DFR(NY,NX)=0.0
       RN3DFR(NY,NX)=0.0
-      RHGDFR(NY,NX)=0.0 
-      ENDIF 
+      RHGDFR(NY,NX)=0.0
+      ENDIF
       RCODXR=RCODFR(NY,NX)*XNPT
-      RCHDXR=RCHDFR(NY,NX)*XNPT 
-      ROXDXR=ROXDFR(NY,NX)*XNPT 
-      RNGDXR=RNGDFR(NY,NX)*XNPT 
-      RN2DXR=RN2DFR(NY,NX)*XNPT 
-      RN3DXR=RN3DFR(NY,NX)*XNPT 
-      RHGDXR=RHGDFR(NY,NX)*XNPT 
+      RCHDXR=RCHDFR(NY,NX)*XNPT
+      ROXDXR=ROXDFR(NY,NX)*XNPT
+      RNGDXR=RNGDFR(NY,NX)*XNPT
+      RN2DXR=RN2DFR(NY,NX)*XNPT
+      RN3DXR=RN3DFR(NY,NX)*XNPT
+      RHGDXR=RHGDFR(NY,NX)*XNPT
 C
 C     SURFACE EXCHANGE OF AQUEOUS CO2, CH4, O2, N2, NH3
 C     THROUGH VOLATILIZATION-DISSOLUTION FROM AQUEOUS
 C     DIFFUSIVITIES IN SURFACE SOIL LAYER
 C
 C     VOLWM=micropore water-filled porosity from watsub.f
-C     TORT=tortuosity from hour1.f 
+C     TORT=tortuosity from hour1.f
 C     *SGL*=solute diffusivity
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -1390,13 +1390,13 @@ C
       DLYR1=AMAX1(ZERO2,DLYR(3,NU(NY,NX),NY,NX))
       TORT1=TORT(M,NU(NY,NX),NY,NX)*AREA(3,NU(NY,NX),NY,NX)
      2/(0.5*DLYR1)
-      DFGSCO=CLSGL2(NU(NY,NX),NY,NX)*TORT1 
-      DFGSCH=CQSGL2(NU(NY,NX),NY,NX)*TORT1 
-      DFGSOX=OLSGL2(NU(NY,NX),NY,NX)*TORT1 
-      DFGSNG=ZLSGL2(NU(NY,NX),NY,NX)*TORT1 
-      DFGSN2=ZNSGL2(NU(NY,NX),NY,NX)*TORT1 
-      DFGSN3=ZVSGL2(NU(NY,NX),NY,NX)*TORT1 
-      DFGSHL=HLSGL2(NU(NY,NX),NY,NX)*TORT1 
+      DFGSCO=CLSGL2(NU(NY,NX),NY,NX)*TORT1
+      DFGSCH=CQSGL2(NU(NY,NX),NY,NX)*TORT1
+      DFGSOX=OLSGL2(NU(NY,NX),NY,NX)*TORT1
+      DFGSNG=ZLSGL2(NU(NY,NX),NY,NX)*TORT1
+      DFGSN2=ZNSGL2(NU(NY,NX),NY,NX)*TORT1
+      DFGSN3=ZVSGL2(NU(NY,NX),NY,NX)*TORT1
+      DFGSHL=HLSGL2(NU(NY,NX),NY,NX)*TORT1
       DO 8910 K=0,4
       COQC2(K)=AMAX1(0.0,OQC2(K,NU(NY,NX),NY,NX)
      2/VOLWM(M,NU(NY,NX),NY,NX))
@@ -1474,26 +1474,26 @@ C
 C     PARG=boundary layer conductance above soil surface from watsub.f
 C     C*E=atmospheric gas concentration from hour1.f
 C     C*Q=equilibrium gas concentration at soil surface
-C     S*L=solubility of gas in water from hour1.f 
+C     S*L=solubility of gas in water from hour1.f
 C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
 C             :*ZN3*=NH3,*H2G*=H2
 C     DFGS*=effective solute diffusivity
 C
-      CCO2GQ=(PARG(M,NY,NX)*CCO2E(NY,NX)*SCO2L(NU(NY,NX),NY,NX) 
+      CCO2GQ=(PARG(M,NY,NX)*CCO2E(NY,NX)*SCO2L(NU(NY,NX),NY,NX)
      2+DFGSCO*CCO2S2)/(DFGSCO+PARG(M,NY,NX))
-      CCH4GQ=(PARG(M,NY,NX)*CCH4E(NY,NX)*SCH4L(NU(NY,NX),NY,NX) 
+      CCH4GQ=(PARG(M,NY,NX)*CCH4E(NY,NX)*SCH4L(NU(NY,NX),NY,NX)
      2+DFGSCH*CCH4S2)/(DFGSCH+PARG(M,NY,NX))
-      COXYGQ=(PARG(M,NY,NX)*COXYE(NY,NX)*SOXYL(NU(NY,NX),NY,NX) 
+      COXYGQ=(PARG(M,NY,NX)*COXYE(NY,NX)*SOXYL(NU(NY,NX),NY,NX)
      2+DFGSOX*COXYS2)/(DFGSOX+PARG(M,NY,NX))
-      CZ2GGQ=(PARG(M,NY,NX)*CZ2GE(NY,NX)*SN2GL(NU(NY,NX),NY,NX) 
+      CZ2GGQ=(PARG(M,NY,NX)*CZ2GE(NY,NX)*SN2GL(NU(NY,NX),NY,NX)
      2+DFGSNG*CZ2GS2)/(DFGSNG+PARG(M,NY,NX))
-      CZ2OGQ=(PARG(M,NY,NX)*CZ2OE(NY,NX)*SN2OL(NU(NY,NX),NY,NX) 
+      CZ2OGQ=(PARG(M,NY,NX)*CZ2OE(NY,NX)*SN2OL(NU(NY,NX),NY,NX)
      2+DFGSN2*CZ2OS2)/(DFGSN2+PARG(M,NY,NX))
-      CZN3GQ=(PARG(M,NY,NX)*CNH3E(NY,NX)*SNH3L(NU(NY,NX),NY,NX) 
+      CZN3GQ=(PARG(M,NY,NX)*CNH3E(NY,NX)*SNH3L(NU(NY,NX),NY,NX)
      2+DFGSN3*CNH3S2)/(DFGSN3+PARG(M,NY,NX))
-      CZN3BQ=(PARG(M,NY,NX)*CNH3E(NY,NX)*SNH3L(NU(NY,NX),NY,NX) 
+      CZN3BQ=(PARG(M,NY,NX)*CNH3E(NY,NX)*SNH3L(NU(NY,NX),NY,NX)
      2+DFGSN3*CNH3B2)/(DFGSN3+PARG(M,NY,NX))
-      CH2GGQ=(PARG(M,NY,NX)*CH2GE(NY,NX)*SH2GL(NU(NY,NX),NY,NX) 
+      CH2GGQ=(PARG(M,NY,NX)*CH2GE(NY,NX)*SH2GL(NU(NY,NX),NY,NX)
      2+DFGSHL*CH2GS2)/(DFGSHL+PARG(M,NY,NX))
 C
 C     SURFACE VOLATILIZATION-DISSOLUTION FROM DIFFERENCES
@@ -1520,11 +1520,11 @@ C
       RN2DFS(NY,NX)=(CZ2OGQ-CZ2OS2)*AMIN1(VOLWM(M,NU(NY,NX),NY,NX)
      2,DFGSN2)
       RN3DFS(NY,NX)=(CZN3GQ-CNH3S2)*AMIN1(VOLWM(M,NU(NY,NX),NY,NX)
-     2*VLNH4(NU(NY,NX),NY,NX),DFGSN3) 
+     2*VLNH4(NU(NY,NX),NY,NX),DFGSN3)
       RNBDFS(NY,NX)=(CZN3BQ-CNH3B2)*AMIN1(VOLWM(M,NU(NY,NX),NY,NX)
-     2*VLNHB(NU(NY,NX),NY,NX),DFGSN3) 
+     2*VLNHB(NU(NY,NX),NY,NX),DFGSN3)
       RHGDFS(NY,NX)=(CH2GGQ-CH2GS2)*AMIN1(VOLWM(M,NU(NY,NX),NY,NX)
-     2,DFGSHL) 
+     2,DFGSHL)
 C
 C     ACCUMULATE HOURLY FLUXES FOR USE IN REDIST.F
 C
@@ -1542,7 +1542,7 @@ C    2,XCODFS(NY,NX),CO2GQ,CO2S2X,CO2S2(NU(NY,NX),NY,NX),PARG(M,NY,NX)
 C    3,CCO2E(NY,NX),VOLWCO(NU(NY,NX),NY,NX),DFGSCO
 C    2,TORT(M,NU(NY,NX),NY,NX),CLSGL2(NU(NY,NX),NY,NX),TORT1
 C    4,DLYR(3,NU(NY,NX),NY,NX),CO2S(NU(NY,NX),NY,NX)
-C    5,RCOSK2(NU(NY,NX),NY,NX) 
+C    5,RCOSK2(NU(NY,NX),NY,NX)
 C     WRITE(*,1118)'RCHDFS',I,J,NX,NY,M,MM,NU(NY,NX),RCHDFS(NY,NX)
 C    2,XCHDFS(NY,NX),CH4GQ,CH4S2X,CH4S2(NU(NY,NX),NY,NX),PARG(M,NY,NX)
 C    3,CCH4E(NY,NX),VOLWCH(NU(NY,NX),NY,NX),DFGSCH,TORT(M,0,NY,NX)
@@ -1561,7 +1561,7 @@ C     WRITE(*,1118)'RN3DFS',I,J,NX,NY,M,MM,NU(NY,NX),RN3DFS(NY,NX)
 C    2,XN3DFS(NY,NX),ZN3GQ,ZN3S2X,PARG(M,NY,NX),CNH3E(NY,NX)
 C    3,VOLWN3(NU(NY,NX),NY,NX),DFGSN3,ZNH3S2(NU(NY,NX),NY,NX)
 C    4,ZN3G2(NU(NY,NX),NY,NX)
-C     ENDIF 
+C     ENDIF
       ELSE
       RCODFS(NY,NX)=0.0
       RCHDFS(NY,NX)=0.0
@@ -1573,18 +1573,18 @@ C     ENDIF
       RHGDFS(NY,NX)=0.0
       ENDIF
       RCODXS=RCODFS(NY,NX)*XNPT
-      RCHDXS=RCHDFS(NY,NX)*XNPT 
-      ROXDXS=ROXDFS(NY,NX)*XNPT 
-      RNGDXS=RNGDFS(NY,NX)*XNPT 
-      RN2DXS=RN2DFS(NY,NX)*XNPT 
-      RN3DXS=RN3DFS(NY,NX)*XNPT 
-      RNBDXS=RNBDFS(NY,NX)*XNPT 
-      RHGDXS=RHGDFS(NY,NX)*XNPT 
+      RCHDXS=RCHDFS(NY,NX)*XNPT
+      ROXDXS=ROXDFS(NY,NX)*XNPT
+      RNGDXS=RNGDFS(NY,NX)*XNPT
+      RN2DXS=RN2DFS(NY,NX)*XNPT
+      RN3DXS=RN3DFS(NY,NX)*XNPT
+      RNBDXS=RNBDFS(NY,NX)*XNPT
+      RHGDXS=RHGDFS(NY,NX)*XNPT
 C
 C     CONVECTIVE SOLUTE EXCHANGE BETWEEN RESIDUE AND SOIL SURFACE
 C
       FLWRM1=FLWRM(M,NY,NX)
-C 
+C
 C     FLWRM=litter-soil water flux from watsub.f
 C
 C     IF WATER FLUX FROM 'WATSUB' IS FROM RESIDUE TO
@@ -1595,18 +1595,18 @@ C
 C     VOLWM=litter water volume
 C     RFL*=soil-litter convective solute flux
 C     *S2=litter solute content
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
 C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
 C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
 C
-      IF(FLWRM1.GT.0.0)THEN   
+      IF(FLWRM1.GT.0.0)THEN
       IF(VOLWM(M,0,NY,NX).GT.ZEROS2(NY,NX))THEN
       VFLW=AMAX1(0.0,AMIN1(VFLWX,FLWRM1/VOLWM(M,0,NY,NX)))
       ELSE
-      VFLW=VFLWX 
+      VFLW=VFLWX
       ENDIF
       DO 8820 K=0,4
       RFLOC(K)=VFLW*AMAX1(0.0,OQC2(K,0,NY,NX))
@@ -1641,7 +1641,7 @@ C
 C     VOLWM=micropore water-filled porosity from watsub.f
 C     RFL*=soil-litter convective solute flux
 C     *S2=soil solute content
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -1652,7 +1652,7 @@ C
       IF(VOLWM(M,NU(NY,NX),NY,NX).GT.ZEROS2(NY,NX))THEN
       VFLW=AMIN1(0.0,AMAX1(-VFLWX,FLWRM1/VOLWM(M,NU(NY,NX),NY,NX)))
       ELSE
-      VFLW=-VFLWX 
+      VFLW=-VFLWX
       ENDIF
       DO 8815 K=0,4
       RFLOC(K)=VFLW*AMAX1(0.0,OQC2(K,NU(NY,NX),NY,NX))
@@ -1687,20 +1687,20 @@ C
 C     VOLT,DLYR,AREA=soil surface volume, thickness, area
 C     VOLWM=micropore water-filled porosity from watsub.f
 C
-      IF((VOLT(0,NY,NX).GT.ZEROS2(NY,NX) 
+      IF((VOLT(0,NY,NX).GT.ZEROS2(NY,NX)
      2.AND.VOLWM(M,0,NY,NX).GT.ZEROS2(NY,NX))
      3.AND.(VOLWM(M,NU(NY,NX),NY,NX).GT.ZEROS2(NY,NX)))THEN
 C
 C     DIFFUSIVITIES IN RESIDUE AND SOIL SURFACE
 C
-C     DLYR0,DLYR1=litter, soil surface thickness    
-C     TORT=tortuosity from hour1.f 
+C     DLYR0,DLYR1=litter, soil surface thickness
+C     TORT=tortuosity from hour1.f
 C     CVRD,BARE=litter cover fraction,1-CVRD
 C     DISP=dispersivity parameter
 C     FLWRM=litter-soil water flux from watsub.f
-C     DIF*0,DIF*1=aqueous diffusivity-dispersivity in litter, soil surface 
+C     DIF*0,DIF*1=aqueous diffusivity-dispersivity in litter, soil surface
 C     *SGL*=solute diffusivity from hour1.f
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -1709,7 +1709,7 @@ C
       DLYR0=AMAX1(ZERO2,DLYR(3,0,NY,NX))
       TORT0=TORT(M,0,NY,NX)/DLYR0*CVRD(NY,NX)
       DLYR1=AMAX1(ZERO2,DLYR(3,NU(NY,NX),NY,NX))
-      TORT1=TORT(M,NU(NY,NX),NY,NX)/DLYR1 
+      TORT1=TORT(M,NU(NY,NX),NY,NX)/DLYR1
       DISPN=DISP(3,NU(NY,NX),NY,NX)
      2*AMIN1(VFLWX,ABS(FLWRM1/AREA(3,NU(NY,NX),NY,NX)))
       DIFOC0=(OCSGL2(0,NY,NX)*TORT0+DISPN)
@@ -1757,7 +1757,7 @@ C     MICROPORES
 C
 C     DFV*S,DFV*B=diffusive solute flux between litter and soil surface in non-band,band
 C     DIF*=aqueous diffusivity-dispersivity between litter and soil surface
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -1821,12 +1821,12 @@ C     ADJACENT GRID CELLS = CONVECTIVE + DIFFUSIVE FLUXES
 C
 C     R*FLS=convective + diffusive solute flux between litter, soil surface
 C     R*FLW,R*FLB=convective + diffusive solute flux into soil in non-band,band
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
 C     R*FL0,R*FL1=convective flux into surface litter, soil surface
-C     RFL*=convective flux between surface litter and soil surface 
+C     RFL*=convective flux between surface litter and soil surface
 C     DFV*=diffusive solute flux between litter and soil surface
 C
       DO 9760 K=0,2
@@ -1861,7 +1861,7 @@ C     ENDIF
      2-DFVNOB
       RNXFLS(3,0,NY,NX)=RNXFL0(NY,NX)-RFLNO2-DFVNO2-RFLN2B-DFVN2B
       RH1PFS(3,0,NY,NX)=RH1PF0(NY,NX)+RH1PFS0-RFLP14-DFVP14-RFLP1B
-     2-DFVP1B 
+     2-DFVP1B
       RH2PFS(3,0,NY,NX)=RH2PF0(NY,NX)+RH2PFS0-RFLPO4-DFVPO4-RFLPOB
      2-DFVPOB
       RCOFLS(3,NU(NY,NX),NY,NX)=RCOFL1(NY,NX)+RCOFLS1+RFLCOS+DFVCOS
@@ -1964,12 +1964,12 @@ C     MACROPORE-MICROPORE CONVECTIVE SOLUTE EXCHANGE IN SOIL
 C     SURFACE LAYER FROM WATER EXCHANGE IN 'WATSUB' AND
 C     FROM MACROPORE OR MICROPORE SOLUTE CONCENTRATIONS
 C
-C     FINHM=macro-micropore water transfer from watsub.f 
+C     FINHM=macro-micropore water transfer from watsub.f
 C     VOLWM,VOLWHM=micropore,macropore water volume
-C     RFL*=convective macropore-micropore solute transfer 
+C     RFL*=convective macropore-micropore solute transfer
 C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
 C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -1982,7 +1982,7 @@ C
       VFLW=AMAX1(0.0,AMIN1(VFLWX,FINHM(M,NU(NY,NX),NY,NX)
      2/VOLWHM(M,NU(NY,NX),NY,NX)))
       ELSE
-      VFLW=VFLWX 
+      VFLW=VFLWX
       ENDIF
       DO 9870 K=0,4
       RFLOC(K)=VFLW*AMAX1(0.0,OQCH2(K,NU(NY,NX),NY,NX))
@@ -2028,7 +2028,7 @@ C
       VFLW=AMIN1(0.0,AMAX1(-VFLWX,FINHM(M,NU(NY,NX),NY,NX)
      2/VOLWM(M,NU(NY,NX),NY,NX)))
       ELSE
-      VFLW=-VFLWX 
+      VFLW=-VFLWX
       ENDIF
       DO 9865 K=0,4
       RFLOC(K)=VFLW*AMAX1(0.0,OQC2(K,NU(NY,NX),NY,NX))
@@ -2101,8 +2101,8 @@ C     MACROPORES FROM AQUEOUS DIFFUSIVITIES AND CONCENTRATION DIFFERENCES
 C
 C     VOLWM,VOLWHM=micropore,macropore water volume
 C     XFRS*VOLT=maximum macropore volume for solute transfer
-C     DFV*=diffusive macropore-micropore solute transfer 
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     DFV*=diffusive macropore-micropore solute transfer
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -2121,32 +2121,32 @@ C
      2-AMAX1(0.0,OQC2(K,NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
       DFVON(K)=XNPH*(AMAX1(0.0,OQNH2(K,NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
-     2-AMAX1(0.0,OQN2(K,NU(NY,NX),NY,NX))*VOLWHS)/VOLWT 
+     2-AMAX1(0.0,OQN2(K,NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
       DFVOP(K)=XNPH*(AMAX1(0.0,OQPH2(K,NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
-     2-AMAX1(0.0,OQP2(K,NU(NY,NX),NY,NX))*VOLWHS)/VOLWT 
+     2-AMAX1(0.0,OQP2(K,NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
       DFVOA(K)=XNPH*(AMAX1(0.0,OQAH2(K,NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
-     2-AMAX1(0.0,OQA2(K,NU(NY,NX),NY,NX))*VOLWHS)/VOLWT 
+     2-AMAX1(0.0,OQA2(K,NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
 8835  CONTINUE
       DFVCOS=XNPH*(AMAX1(0.0,CO2SH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,CO2S2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
       DFVCHS=XNPH*(AMAX1(0.0,CH4SH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
-     2-AMAX1(0.0,CH4S2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT 
+     2-AMAX1(0.0,CH4S2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
       DFVOXS=XNPH*(AMAX1(0.0,OXYSH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
-     2-AMAX1(0.0,OXYS2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT 
+     2-AMAX1(0.0,OXYS2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
       DFVNGS=XNPH*(AMAX1(0.0,Z2GSH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
-     2-AMAX1(0.0,Z2GS2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT 
+     2-AMAX1(0.0,Z2GS2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
       DFVN2S=XNPH*(AMAX1(0.0,Z2OSH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
-     2-AMAX1(0.0,Z2OS2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT 
+     2-AMAX1(0.0,Z2OS2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
       DFVHGS=XNPH*(AMAX1(0.0,H2GSH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
-     2-AMAX1(0.0,H2GS2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT 
+     2-AMAX1(0.0,H2GS2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
       DFVNH4=XNPH*(AMAX1(0.0,ZNH4H2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZNH4S2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
@@ -2225,9 +2225,9 @@ C
 C     TOTAL CONVECTIVE +DIFFUSIVE TRANSFER BETWEEN MACROPOES AND MICROPORES
 C
 C     R*FXS=convective + diffusive solute flux between macropores and micropores
-C     RFL*=convective flux between macropores and micropores 
-C     DFV*=diffusive solute flux between macropores and micropores 
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     RFL*=convective flux between macropores and micropores
+C     DFV*=diffusive solute flux between macropores and micropores
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -2261,7 +2261,7 @@ C     ACCUMULATE HOURLY FLUXES FOR USE IN REDIST.F
 C
 C     X*FXS=hourly convective + diffusive solute flux between macropores and micropores
 C     R*FXS=total convective + diffusive solute flux between macropores and micropores
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -2315,7 +2315,7 @@ C
 C     IF(I.EQ.133)THEN
 C     WRITE(*,441)'RH1BXB',I,J,M,NX,NY,RH1BXB(NU(NY,NX),NY,NX)
 C    2,RFLP1B,DFVP1B,XH1BXB(NU(NY,NX),NY,NX),H1PBH2(NU(NY,NX),NY,NX)
-C    2,H1POB2(NU(NY,NX),NY,NX) 
+C    2,H1POB2(NU(NY,NX),NY,NX)
 441   FORMAT(A8,5I4,20E17.8)
 C     ENDIF
 C
@@ -2325,7 +2325,7 @@ C     IN SOIL SURFACE LAYER
 C
 C     QRM=runoff from watsub.f
 C     RQR*=solute in runoff
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -2341,7 +2341,7 @@ C
       IF(VOLWM(M,0,N2,N1).GT.ZEROS2(N2,N1))THEN
       VFLW=AMIN1(VFLWX,QRM(M,N2,N1)/VOLWM(M,0,N2,N1))
       ELSE
-      VFLW=VFLWX 
+      VFLW=VFLWX
       ENDIF
       DO 9835 K=0,4
       RQROC0(K,N2,N1)=VFLW*AMAX1(0.0,OQC2(K,0,N2,N1))
@@ -2410,7 +2410,7 @@ C
 C
 C     QRM=runoff from watsub.f
 C     RQR*=solute in runoff
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -2592,7 +2592,7 @@ C     SNOW DRIFT
 C
 C     QSM=snow transfer from watsub.f
 C     RQS*=solute flux in snow transfer
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -2621,7 +2621,7 @@ C
       IF(VOLS(N2,N1).GT.ZEROS2(N2,N1))THEN
       VFLW=AMAX1(0.0,AMIN1(VFLWX,QSM(M,N,N5,N4)/VOLS(N2,N1)))
       ELSE
-      VFLW=VFLWX 
+      VFLW=VFLWX
       ENDIF
       RQSCOS(N,N5,N4)=VFLW*AMAX1(0.0,CO2W2(1,N2,N1))
       RQSCHS(N,N5,N4)=VFLW*AMAX1(0.0,CH4W2(1,N2,N1))
@@ -2640,7 +2640,7 @@ C
       IF(VOLS(N5,N4).GT.ZEROS2(N5,N4))THEN
       VFLW=AMIN1(0.0,AMAX1(-VFLWX,QSM(M,N,N5,N4)/VOLS(N5,N4)))
       ELSE
-      VFLW=-VFLWX 
+      VFLW=-VFLWX
       ENDIF
       RQSCOS(N,N5,N4)=VFLW*AMAX1(0.0,CO2W2(1,N5,N4))
       RQSCHS(N,N5,N4)=VFLW*AMAX1(0.0,CH4W2(1,N5,N4))
@@ -2695,13 +2695,13 @@ C             :*ZN3*=NH3,*H2G*=H2
 C     R*DFG=surface gas volatilization
 C     DFGS=rate constant for air-water gas exchange from watsub.f
 C     *S2=litter solute content
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
 C     R*DXR=gas exchange between atmosphere and surface litter water for gas flux calculations
 C
-      IF(VOLT(0,NY,NX).GT.ZEROS2(NY,NX) 
+      IF(VOLT(0,NY,NX).GT.ZEROS2(NY,NX)
      2.AND.VOLPM(M,0,NY,NX).GT.ZEROS2(NY,NX)
      3.AND.VOLWM(M,0,NY,NX).GT.ZEROS2(NY,NX))THEN
       VOLWCO(0,NY,NX)=VOLWM(M,0,NY,NX)*SCO2L(0,NY,NX)
@@ -2729,23 +2729,23 @@ C
       RCODFG(0,NY,NX)=DFGS(M,0,NY,NX)
      2*(AMAX1(ZEROS(NY,NX),CO2G0)*VOLWCO(0,NY,NX)
      3-AMAX1(ZEROS(NY,NX),CO2S2(0,NY,NX)+RCODXR)
-     4*VOLPM(M,0,NY,NX))/VOLCOR(NY,NX) 
+     4*VOLPM(M,0,NY,NX))/VOLCOR(NY,NX)
       RCHDFG(0,NY,NX)=DFGS(M,0,NY,NX)
      2*(AMAX1(ZEROS(NY,NX),CH4G0)*VOLWCH(0,NY,NX)
      3-AMAX1(ZEROS(NY,NX),CH4S2(0,NY,NX)+RCHDXR)
-     4*VOLPM(M,0,NY,NX))/VOLCHR(NY,NX) 
+     4*VOLPM(M,0,NY,NX))/VOLCHR(NY,NX)
       ROXDFG(0,NY,NX)=DFGS(M,0,NY,NX)
-     2*(AMAX1(ZEROS(NY,NX),OXYG0)*VOLWOX(0,NY,NX) 
+     2*(AMAX1(ZEROS(NY,NX),OXYG0)*VOLWOX(0,NY,NX)
      3-AMAX1(ZEROS(NY,NX),OXYS2(0,NY,NX)+ROXDXR)
-     4*VOLPM(M,0,NY,NX))/VOLOXR(NY,NX) 
+     4*VOLPM(M,0,NY,NX))/VOLOXR(NY,NX)
       RNGDFG(0,NY,NX)=DFGS(M,0,NY,NX)
      2*(AMAX1(ZEROS(NY,NX),Z2GG0)*VOLWNG(0,NY,NX)
      3-AMAX1(ZEROS(NY,NX),Z2GS2(0,NY,NX)+RNGDXR)
-     4*VOLPM(M,0,NY,NX))/VOLNGR(NY,NX) 
+     4*VOLPM(M,0,NY,NX))/VOLNGR(NY,NX)
       RN2DFG(0,NY,NX)=DFGS(M,0,NY,NX)
      2*(AMAX1(ZEROS(NY,NX),Z2OG0)*VOLWN2(0,NY,NX)
      3-AMAX1(ZEROS(NY,NX),Z2OS2(0,NY,NX)+RN2DXR)
-     4*VOLPM(M,0,NY,NX))/VOLN2R(NY,NX) 
+     4*VOLPM(M,0,NY,NX))/VOLN2R(NY,NX)
       RN3DFG(0,NY,NX)=DFGS(M,0,NY,NX)
      2*(AMAX1(ZEROS(NY,NX),ZN3G0)*VOLWN3(0,NY,NX)
      3-AMAX1(ZEROS(NY,NX),ZNH3S2(0,NY,NX)+RN3DXR)
@@ -2757,7 +2757,7 @@ C
       RHGDFG(0,NY,NX)=DFGS(M,0,NY,NX)
      2*(AMAX1(ZEROS(NY,NX),H2GG0)*VOLWHG(0,NY,NX)
      3-AMAX1(ZEROS(NY,NX),H2GS2(0,NY,NX)+RHGDXR)
-     4*VOLPM(M,0,NY,NX))/VOLHGR(NY,NX) 
+     4*VOLPM(M,0,NY,NX))/VOLHGR(NY,NX)
 C     IF(J.EQ.24)THEN
 C     WRITE(*,323)'RCODFG',I,J,NX,NY,M,MM,RCODFG(0,NY,NX)
 C    2,DFGS(M,0,NY,NX),CO2G0,VOLWCO(0,NY,NX),CO2S2(0,NY,NX)
@@ -2886,7 +2886,7 @@ C     CONVECTIVE GAS TRANSFER DRIVEN BY SURFACE WATER FLUXES
 C     FROM 'WATSUB' AND GAS CONCENTRATIONS IN THE SOIL SURFACE
 C     OR THE ATMOSPHERE DEPENDING ON WATER FLUX DIRECTION
 C
-C     FLQM=total water flux into soil micropore+macropore from watsub.f 
+C     FLQM=total water flux into soil micropore+macropore from watsub.f
 C     VOLPM=air-filled porosity
 C     RFL*G=convective gas flux
 C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
@@ -2899,7 +2899,7 @@ C
       VFLW=-AMAX1(0.0,AMIN1(VFLWX,FLQM(3,NU(NY,NX),NY,NX)
      2/VOLPM(M,NU(NY,NX),NY,NX)))
       ELSE
-      VFLW=-VFLWX 
+      VFLW=-VFLWX
       ENDIF
       RFLCOG=VFLW*AMAX1(0.0,CO2G2(NU(NY,NX),NY,NX))
       RFLCHG=VFLW*AMAX1(0.0,CH4G2(NU(NY,NX),NY,NX))
@@ -2925,17 +2925,17 @@ C     gas code:*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,*NH*=NH3,*HG*=H2
 C     DFV*G=diffusive gas flux
 C     RFL*G=convective gas flux
 C
-      RCOFLG(3,NU(NY,NX),NY,NX)=DFVCOG+RFLCOG 
-      RCHFLG(3,NU(NY,NX),NY,NX)=DFVCHG+RFLCHG 
-      ROXFLG(3,NU(NY,NX),NY,NX)=DFVOXG+RFLOXG 
-      RNGFLG(3,NU(NY,NX),NY,NX)=DFVNGG+RFLNGG 
-      RN2FLG(3,NU(NY,NX),NY,NX)=DFVN2G+RFLN2G 
-      RN3FLG(3,NU(NY,NX),NY,NX)=DFVN3G+RFLN3G 
-      RHGFLG(3,NU(NY,NX),NY,NX)=DFVHGG+RFLH2G 
+      RCOFLG(3,NU(NY,NX),NY,NX)=DFVCOG+RFLCOG
+      RCHFLG(3,NU(NY,NX),NY,NX)=DFVCHG+RFLCHG
+      ROXFLG(3,NU(NY,NX),NY,NX)=DFVOXG+RFLOXG
+      RNGFLG(3,NU(NY,NX),NY,NX)=DFVNGG+RFLNGG
+      RN2FLG(3,NU(NY,NX),NY,NX)=DFVN2G+RFLN2G
+      RN3FLG(3,NU(NY,NX),NY,NX)=DFVN3G+RFLN3G
+      RHGFLG(3,NU(NY,NX),NY,NX)=DFVHGG+RFLH2G
 C
 C     ACCUMULATE HOURLY FLUXES FOR USE IN REDIST.F
 C
-C     X*FLG=hourly convective+diffusive gas flux 
+C     X*FLG=hourly convective+diffusive gas flux
 C
       XCOFLG(3,NU(NY,NX),NY,NX)=XCOFLG(3,NU(NY,NX),NY,NX)
      2+RCOFLG(3,NU(NY,NX),NY,NX)
@@ -2953,14 +2953,14 @@ C
      2+RHGFLG(3,NU(NY,NX),NY,NX)
 C     IF(J.EQ.24)THEN
 C     WRITE(*,3131)'ROXFLG',I,J,NX,NY,M,MM,XOXFLG(3,NU(NY,NX),NY,NX)
-C    2,ROXFLG(3,NU(NY,NX),NY,NX),DFVOXG,RFLOXG,COXYE(NY,NX) 
+C    2,ROXFLG(3,NU(NY,NX),NY,NX),DFVOXG,RFLOXG,COXYE(NY,NX)
 C    2,COXYG2,DOXYGQ,OXYG2(NU(NY,NX),NY,NX),FLQM(3,NU(NY,NX),NY,NX)
-C    3,VFLW,DOXYG(3,NU(NY,NX),NY,NX),PARGOX(NY,NX) 
+C    3,VFLW,DOXYG(3,NU(NY,NX),NY,NX),PARGOX(NY,NX)
 C    4,THETPM(M,NU(NY,NX),NY,NX),VOLPM(M,NU(NY,NX),NY,NX)
 C    5,DFGS(M,NU(NY,NX),NY,NX),FLWM(M,3,NU(NY,NX),NY,NX)
 C    2+FLWHM(M,3,NU(NY,NX),NY,NX)
 C     WRITE(*,3131)'RNGFLG',I,J,NX,NY,M,MM,XNGFLG(3,NU(NY,NX),NY,NX)
-C    2,RNGFLG(3,NU(NY,NX),NY,NX),DFVNGG,RFLNGG,CZ2GE(NY,NX) 
+C    2,RNGFLG(3,NU(NY,NX),NY,NX),DFVNGG,RFLNGG,CZ2GE(NY,NX)
 C    2,CZ2GG2,DZ2GGQ,Z2GG2(NU(NY,NX),NY,NX),FLQM(3,NU(NY,NX),NY,NX)
 C    3,VFLW,DZ2GG(3,NU(NY,NX),NY,NX),PARGNG(NY,NX)
 C    4,THETPM(M,NU(NY,NX),NY,NX),VOLPM(M,NU(NY,NX),NY,NX)
@@ -2973,13 +2973,13 @@ C     VOLWM=micropore water-filled porosity from watsub.f
 C     VOLW*=equivalent aqueous volume for gas
 C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
 C             :*ZN3*=NH3,*H2G*=H2
-C     S*L=solubility of gas in water from hour1.f 
+C     S*L=solubility of gas in water from hour1.f
 C     VOLPM=air-filled porosity
 C     R*DFG=water-air gas flux
 C     DFGS=rate constant for air-water gas exchange from watsub.f
 C     *G2,*S2=gaseous,aqueous gas content
-C     R*DXS=gas exchange between atmosphere and soil surface water 
-C 
+C     R*DXS=gas exchange between atmosphere and soil surface water
+C
       IF(VOLWM(M,NU(NY,NX),NY,NX).GT.ZEROS2(NY,NX))THEN
       VOLWCO(NU(NY,NX),NY,NX)=VOLWM(M,NU(NY,NX),NY,NX)
      2*SCO2L(NU(NY,NX),NY,NX)
@@ -3008,18 +3008,18 @@ C
       RCODFG(NU(NY,NX),NY,NX)=DFGS(M,NU(NY,NX),NY,NX)
      2*(AMAX1(ZEROS(NY,NX),CO2G2(NU(NY,NX),NY,NX))
      3*VOLWCO(NU(NY,NX),NY,NX)-AMAX1(ZEROS(NY,NX)
-     2,CO2S2(NU(NY,NX),NY,NX)+RCODXS) 
+     2,CO2S2(NU(NY,NX),NY,NX)+RCODXS)
      4*VOLPM(M,NU(NY,NX),NY,NX))/VOLCOT(NY,NX)
       RCHDFG(NU(NY,NX),NY,NX)=DFGS(M,NU(NY,NX),NY,NX)
      2*(AMAX1(ZEROS(NY,NX),CH4G2(NU(NY,NX),NY,NX))
      3*VOLWCH(NU(NY,NX),NY,NX)-AMAX1(ZEROS(NY,NX)
-     2,CH4S2(NU(NY,NX),NY,NX)+RCHDXS) 
+     2,CH4S2(NU(NY,NX),NY,NX)+RCHDXS)
      4*VOLPM(M,NU(NY,NX),NY,NX))/VOLCHT(NY,NX)
       ROXDFG(NU(NY,NX),NY,NX)=DFGS(M,NU(NY,NX),NY,NX)
      2*(AMAX1(ZEROS(NY,NX),OXYG2(NU(NY,NX),NY,NX))
      3*VOLWOX(NU(NY,NX),NY,NX)-AMAX1(ZEROS(NY,NX)
-     2,OXYS2(NU(NY,NX),NY,NX)+ROXDXS) 
-     4*VOLPM(M,NU(NY,NX),NY,NX))/VOLOXT(NY,NX) 
+     2,OXYS2(NU(NY,NX),NY,NX)+ROXDXS)
+     4*VOLPM(M,NU(NY,NX),NY,NX))/VOLOXT(NY,NX)
       RNGDFG(NU(NY,NX),NY,NX)=DFGS(M,NU(NY,NX),NY,NX)
      2*(AMAX1(ZEROS(NY,NX),Z2GG2(NU(NY,NX),NY,NX))
      3*VOLWNG(NU(NY,NX),NY,NX)-AMAX1(ZEROS(NY,NX)
@@ -3027,7 +3027,7 @@ C
      4*VOLPM(M,NU(NY,NX),NY,NX))/VOLNGT(NY,NX)
       RN2DFG(NU(NY,NX),NY,NX)=DFGS(M,NU(NY,NX),NY,NX)
      2*(AMAX1(ZEROS(NY,NX),Z2OG2(NU(NY,NX),NY,NX))
-     3*VOLWN2(NU(NY,NX),NY,NX)-AMAX1(ZEROS(NY,NX) 
+     3*VOLWN2(NU(NY,NX),NY,NX)-AMAX1(ZEROS(NY,NX)
      2,Z2OS2(NU(NY,NX),NY,NX)+RN2DXS)
      4*VOLPM(M,NU(NY,NX),NY,NX))/VOLN2T(NY,NX)
       IF(VOLN3T(NY,NX).GT.ZEROS2(NY,NX)
@@ -3064,18 +3064,18 @@ C
      4,H2GS2(NU(NY,NX),NY,NX)+RHGDXS)
      4*VOLPM(M,NU(NY,NX),NY,NX))/VOLHGT(NY,NX)
 C     IF(I.EQ.121)THEN
-C     WRITE(*,323)'RCODFG',I,J,M,MM,NX,NY,XCODFG(NU(NY,NX),NY,NX)      
+C     WRITE(*,323)'RCODFG',I,J,M,MM,NX,NY,XCODFG(NU(NY,NX),NY,NX)
 C    2,RCODFG(NU(NY,NX),NY,NX),DFGS(M,NU(NY,NX),NY,NX)
-C    2,CO2G2(NU(NY,NX),NY,NX),VOLWCO(NU(NY,NX),NY,NX) 
-C    2,CO2S2(NU(NY,NX),NY,NX),RCODXS,VOLWM(M,NU(NY,NX),NY,NX) 
+C    2,CO2G2(NU(NY,NX),NY,NX),VOLWCO(NU(NY,NX),NY,NX)
+C    2,CO2S2(NU(NY,NX),NY,NX),RCODXS,VOLWM(M,NU(NY,NX),NY,NX)
 C    4,VOLPM(M,NU(NY,NX),NY,NX),VOLCOT(NY,NX),SCO2L(NU(NY,NX),NY,NX)
-C     5,RCOFLG(3,NU(NY,NX),NY,NX),DFVCOG,RFLCOG 
-C     WRITE(*,323)'ROXDFG',I,J,M,MM,NX,NY,XOXDFG(NU(NY,NX),NY,NX)      
+C     5,RCOFLG(3,NU(NY,NX),NY,NX),DFVCOG,RFLCOG
+C     WRITE(*,323)'ROXDFG',I,J,M,MM,NX,NY,XOXDFG(NU(NY,NX),NY,NX)
 C    2,ROXDFG(NU(NY,NX),NY,NX),DFGS(M,NU(NY,NX),NY,NX)
-C    2,OXYG2(NU(NY,NX),NY,NX),VOLWOX(NU(NY,NX),NY,NX) 
-C    2,OXYS2(NU(NY,NX),NY,NX),ROXDXS,VOLWM(M,NU(NY,NX),NY,NX) 
+C    2,OXYG2(NU(NY,NX),NY,NX),VOLWOX(NU(NY,NX),NY,NX)
+C    2,OXYS2(NU(NY,NX),NY,NX),ROXDXS,VOLWM(M,NU(NY,NX),NY,NX)
 C    4,VOLPM(M,NU(NY,NX),NY,NX),VOLOXT(NY,NX),SOXYL(NU(NY,NX),NY,NX)
-C    5,ROXFLG(3,NU(NY,NX),NY,NX),DFVOXG,RFLOXG 
+C    5,ROXFLG(3,NU(NY,NX),NY,NX),DFVOXG,RFLOXG
 C     WRITE(*,323)'RN3FLG',I,J,M,MM,NX,NY,RN3FLG(3,NU(NY,NX),NY,NX)
 C    2,DNH3GQ,CNH3E(NY,NX),CNH3G2,FLQM(3,NU(NY,NX),NY,NX),CNH3GV
 C    2,CNH3B2,ZNH3B2(NU(NY,NX),NY,NX),RNBDFG(NU(NY,NX),NY,NX)
@@ -3090,7 +3090,7 @@ C     ENDIF
 C
 C     ACCUMULATE HOURLY FLUXES FOR USE IN REDIST.F
 C
-C     X*DFG=hourly water-air gas flux 
+C     X*DFG=hourly water-air gas flux
 C
       XCODFG(NU(NY,NX),NY,NX)=XCODFG(NU(NY,NX),NY,NX)
      2+RCODFG(NU(NY,NX),NY,NX)
@@ -3196,7 +3196,7 @@ C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
 C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
 C     VOLWM,VOLWHM=micropore,macropore water-filled porosity from watsub.f
 C     THETW=volumetric water content
-C     FLPM=change in air volume 
+C     FLPM=change in air volume
 C     XNPT=1/number of cycles NPH-1 for gas flux calculations
 C
       IF(VOLX(N3,N2,N1).GT.ZEROS2(N2,N1))THEN
@@ -3239,9 +3239,9 @@ C     VOLWM=micropore water-filled porosity from watsub.f
 C     VOLW*=equivalent aqueous volume for gas
 C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
 C             :*ZN3*=NH3,*H2G*=H2
-C     S*L=solubility of gas in water from hour1.f 
-C     FLQM=total water flux into soil micropore+macropore from watsub.f 
-C     
+C     S*L=solubility of gas in water from hour1.f
+C     FLQM=total water flux into soil micropore+macropore from watsub.f
+C
       IF(N.EQ.3)THEN
       VOLWCO(N6,N5,N4)=VOLWM(M,N6,N5,N4)*SCO2L(N6,N5,N4)
       VOLWCH(N6,N5,N4)=VOLWM(M,N6,N5,N4)*SCH4L(N6,N5,N4)
@@ -3261,10 +3261,10 @@ C     ADJACENT GRID CELL THEN CONVECTIVE TRANSPORT IS THE PRODUCT
 C     OF WATER FLUX AND MICROPORE GAS OR SOLUTE CONCENTRATIONS
 C     IN CURRENT GRID CELL
 C
-C     FLWM=water flux through soil micropore from watsub.f 
+C     FLWM=water flux through soil micropore from watsub.f
 C     VOLWM=micropore water-filled porosity from watsub.f
 C     RFL*S=solute diffusive flux through micropore
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -3275,7 +3275,7 @@ C
       VFLW=AMAX1(0.0,AMIN1(VFLWX,FLWM(M,N,N6,N5,N4)
      2/VOLWM(M,N3,N2,N1)))
       ELSE
-      VFLW=VFLWX 
+      VFLW=VFLWX
       ENDIF
       DO 9820 K=0,4
       RFLOC(K)=VFLW*AMAX1(0.0,OQC2(K,N3,N2,N1))
@@ -3312,7 +3312,7 @@ C
       VFLW=AMIN1(0.0,AMAX1(-VFLWX,FLWM(M,N,N6,N5,N4)
      2/VOLWM(M,N6,N5,N4)))
       ELSE
-      VFLW=-VFLWX 
+      VFLW=-VFLWX
       ENDIF
       DO 9815 K=0,4
       RFLOC(K)=VFLW*AMAX1(0.0,OQC2(K,N6,N5,N4))
@@ -3358,7 +3358,7 @@ C
 C     C*1,C*2=solute concentration in source,destination layer
 C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
 C             :*ZN3*=NH3,*H2G*=H2
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -3474,18 +3474,18 @@ C
 C     DIFFUSIVITIES IN CURRENT AND ADJACENT GRID CELL MICROPORES
 C
 C     DLYR=soil layer thickness
-C     TORT=micropore tortuosity from hour1.f 
+C     TORT=micropore tortuosity from hour1.f
 C     DISP=dispersivity parameter
-C     FLWM=water flux through soil micropore from watsub.f 
+C     FLWM=water flux through soil micropore from watsub.f
 C     DIF*=aqueous diffusivity-dispersivity through micropore
 C     *SGL2=solute diffusivity from hour1.f
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
 C     XDPTH=cross-sectional area/distance between layers
 C     C*1,C*2=micropore solute concentration in source,destination layer
-C     DFV*=diffusive solute transfer through soil micropore 
+C     DFV*=diffusive solute transfer through soil micropore
 C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
 C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
 C
@@ -3577,7 +3577,7 @@ C
 C
 C     SOLUTE TRANSPORT IN MACROPORES
 C
-C     FLWHM=water flux through soil macropore from watsub.f 
+C     FLWHM=water flux through soil macropore from watsub.f
 C
       IF(FLWHM(M,N,N6,N5,N4).GT.0.0)THEN
 C
@@ -3589,7 +3589,7 @@ C
 C     VOLWHM=macropore water-filled porosity from watsub.f
 C     VOLWAH=macropore porosity
 C     RFH*=solute diffusive flux through macropore
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -3602,7 +3602,7 @@ C
       VFLW=AMAX1(0.0,AMIN1(VFLWX,FLWHM(M,N,N6,N5,N4)
      2/VOLWHM(M,N3,N2,N1)))
       ELSE
-      VFLW=VFLWX 
+      VFLW=VFLWX
       ENDIF
 C
 C     ACCOUNT FOR MACROPORE-MICROPORE EXCHANGE
@@ -3706,7 +3706,7 @@ C
       VFLW=AMIN1(0.0,AMAX1(-VFLWX,FLWHM(M,N,N6,N5,N4)
      2/VOLWHM(M,N6,N5,N4)))
       ELSE
-      VFLW=-VFLWX 
+      VFLW=-VFLWX
       ENDIF
       DO 9665 K=0,4
       RFHOC(K)=VFLW*AMAX1(0.0,OQCH2(K,N6,N5,N4))
@@ -3775,12 +3775,12 @@ C
 C
 C     MACROPORE CONCENTRATIONS IN CURRENT AND ADJACENT GRID CELLS
 C
-C     C*H1,C*H2=macropore solute concentration in source,destination layer 
+C     C*H1,C*H2=macropore solute concentration in source,destination layer
 C     *H2=macropore solute content
-C     VOLWHM=macropore water content 
+C     VOLWHM=macropore water content
 C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
 C             :*ZN3*=NH3,*H2G*=H2
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -3901,18 +3901,18 @@ C
 C     DIFFUSIVITIES IN CURRENT AND ADJACENT GRID CELL MACROPORES
 C
 C     DLYR=soil layer thickness
-C     TORTH=macropore tortuosity from hour1.f 
+C     TORTH=macropore tortuosity from hour1.f
 C     DISP=dispersivity parameter
-C     FLWHM=water flux through soil macropore from watsub.f 
+C     FLWHM=water flux through soil macropore from watsub.f
 C     DIF*=aqueous diffusivity-dispersivity through macropore
 C     *SGL2=solute diffusivity from hour1.f
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
 C     XDPTH=cross-sectional area/distance between layers
 C     C*H1,C*H2=macropore solute concentration in source,destination layer
-C     DFH*=diffusive solute transfer through soil macropore 
+C     DFH*=diffusive solute transfer through soil macropore
 C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
 C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
 C
@@ -4012,13 +4012,13 @@ C     R*FLS=convective + diffusive solute flux through micropores
 C     R*FLW,R*FLB=convective + diffusive solute flux through micropores in non-band,band
 C     R*FHS=convective + diffusive solute flux through macropores
 C     R*FHW,R*FHB=convective + diffusive solute flux through macropores in non-band,band
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
-C     RFL*=convective flux through micropores 
+C     RFL*=convective flux through micropores
 C     DFV*=diffusive solute flux through micropores
-C     RFH*=convective flux through macropores 
+C     RFH*=convective flux through macropores
 C     DFH*=diffusive solute flux through macropores
 C
       DO 9765 K=0,4
@@ -4034,10 +4034,10 @@ C     IF(N3.LE.3)THEN
 C     WRITE(*,447)'ROCFLS',I,J,N4,N5,N6,M,MM,N,K
 C    2,ROCFLS(K,N,N6,N5,N4),RFLOC(K),DFVOC(K),DIFOC
 C    3,COQC1(K),COQC2(K),OQC2(K,N3,N2,N1),VOLWM(M,N3,N2,N1)
-C    4,OQC2(K,N6,N5,N4),VOLWM(M,N6,N5,N4) 
+C    4,OQC2(K,N6,N5,N4),VOLWM(M,N6,N5,N4)
 C    2,ROAFLS(K,N,N6,N5,N4),RFLOA(K),DFVOA(K),DIFOA
 C    3,COQA1(K),COQA2(K),OQA2(K,N3,N2,N1),VOLWM(M,N3,N2,N1)
-C    4,OQA2(K,N6,N5,N4),VOLWM(M,N6,N5,N4) 
+C    4,OQA2(K,N6,N5,N4),VOLWM(M,N6,N5,N4)
 447   FORMAT(A8,9I4,20E12.4)
 C     ENDIF
 9765  CONTINUE
@@ -4078,24 +4078,24 @@ C     ENDIF
       RH1BHB(N,N6,N5,N4)=RFHP1B+DFHP1B
       RH2BHB(N,N6,N5,N4)=RFHPOB+DFHPOB
 C     IF(I.EQ.361.AND.NY.EQ.2)THEN
-C     WRITE(*,443)'RN4FHB',I,J,M,MM,N1,N2,N3,N4,N5,N6,N 
+C     WRITE(*,443)'RN4FHB',I,J,M,MM,N1,N2,N3,N4,N5,N6,N
 C    2,RN4FHB(N,N6,N5,N4),RFHN4B,DFHN4B,VFLW,ZN4BH2(N3,N2,N1)
 C    2,RN4FXB(NU(N2,N1),N2,N1),VLNHB(N3,N2,N1),VLNHB(N6,N5,N4)
 C    3,FLWHM(M,N,N6,N5,N4),VFLWX,VOLWHM(M,N3,N2,N1)
-C    4,VOLWHM(M,N6,N5,N4) 
+C    4,VOLWHM(M,N6,N5,N4)
 C     WRITE(*,443)'RCOFLS',I,J,M,MM,N1,N2,N3,N4,N5,N6,N
 C    2,RCOFLS(N,N6,N5,N4),RFLCOS,DFVCOS,DIFCS,CCO2S1,CCO2S2
 C    3,CLSGL2(N6,N5,N4),TORTL,DISPN,XDPTH(N,N6,N5,N4)
-C    4,CO2S2(N3,N2,N1),VOLWM(M,N3,N2,N1),VOLY(N3,N2,N1) 
-C    4,CO2S2(N6,N5,N4),VOLWM(M,N6,N5,N4),VOLY(N6,N5,N4) 
-C     WRITE(*,443)'ROXFLS',I,J,M,MM,N1,N2,N3,N4,N5,N6,N 
+C    4,CO2S2(N3,N2,N1),VOLWM(M,N3,N2,N1),VOLY(N3,N2,N1)
+C    4,CO2S2(N6,N5,N4),VOLWM(M,N6,N5,N4),VOLY(N6,N5,N4)
+C     WRITE(*,443)'ROXFLS',I,J,M,MM,N1,N2,N3,N4,N5,N6,N
 C    2,ROXFLS(N,N6,N5,N4),RFLOXS,DFVOXS,DIFOS,COXYS1,COXYS2
 C    3,OLSGL2(N6,N5,N4),TORTL,DISPN,XDPTH(N,N6,N5,N4)
-C     WRITE(*,443)'RN3FLW',I,J,M,MM,N1,N2,N3,N4,N5,N6,N 
+C     WRITE(*,443)'RN3FLW',I,J,M,MM,N1,N2,N3,N4,N5,N6,N
 C    2,RN3FLW(N,N6,N5,N4),RFLNH3,DFVNH3,DIFNH,CNH3S1,CNH3S2
 C    3,ZHSGL2(N6,N5,N4),TORTL,DIFNH0,DIFNH1,DISPN,XDPTH(N,N6,N5,N4)
-C    4,VFLW,ZNH3S2(N3,N2,N1),ZNH3S2(N6,N5,N4)    
-C     WRITE(*,443)'RH2PFS',I,J,M,MM,N1,N2,N3,N4,N5,N6,N 
+C    4,VFLW,ZNH3S2(N3,N2,N1),ZNH3S2(N6,N5,N4)
+C     WRITE(*,443)'RH2PFS',I,J,M,MM,N1,N2,N3,N4,N5,N6,N
 C    2,RH2PFS(N,N6,N5,N4),RFLPO4,DFVPO4,DIFPO,CPO4S1,CPO4S2
 C    3,VLPO4(N3,N2,N1),VLPO4(N6,N5,N4),VOLW2A,VOLWPA
 C    4,H2PO42(N3,N2,N1),H2PO42(N6,N5,N4)
@@ -4139,6 +4139,7 @@ C
       XN3FLB(N,N6,N5,N4)=XN3FLB(N,N6,N5,N4)+RN3FLB(N,N6,N5,N4)
       XNOFLB(N,N6,N5,N4)=XNOFLB(N,N6,N5,N4)+RNOFLB(N,N6,N5,N4)
       XNXFLB(N,N6,N5,N4)=XNXFLB(N,N6,N5,N4)+RNXFLB(N,N6,N5,N4)
+      XH1BFB(N,N6,N5,N4)=XH1BFB(N,N6,N5,N4)+RH1BFB(N,N6,N5,N4)
       XH2BFB(N,N6,N5,N4)=XH2BFB(N,N6,N5,N4)+RH2BFB(N,N6,N5,N4)
       XCOFHS(N,N6,N5,N4)=XCOFHS(N,N6,N5,N4)+RCOFHS(N,N6,N5,N4)
       XCHFHS(N,N6,N5,N4)=XCHFHS(N,N6,N5,N4)+RCHFHS(N,N6,N5,N4)
@@ -4169,12 +4170,12 @@ C     MACROPORE-MICROPORE CONVECTIVE SOLUTE EXCHANGE IN SOIL
 C     LAYER FROM WATER EXCHANGE IN 'WATSUB' AND
 C     FROM MACROPORE OR MICROPORE SOLUTE CONCENTRATIONS
 C
-C     FINHM=macro-micropore water transfer from watsub.f 
+C     FINHM=macro-micropore water transfer from watsub.f
 C     VOLWM,VOLWHM=micropore,macropore water volume
-C     RFL*=convective macropore-micropore solute transfer 
+C     RFL*=convective macropore-micropore solute transfer
 C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
 C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -4187,7 +4188,7 @@ C
       VFLW=AMAX1(0.0,AMIN1(VFLWX,FINHM(M,N6,N5,N4)
      2/VOLWHM(M,N6,N5,N4)))
       ELSE
-      VFLW=VFLWX 
+      VFLW=VFLWX
       ENDIF
       DO 9970 K=0,4
       RFLOC(K)=VFLW*AMAX1(0.0,OQCH2(K,N6,N5,N4))
@@ -4221,7 +4222,7 @@ C
       VFLW=AMIN1(0.0,AMAX1(-VFLWX,FINHM(M,N6,N5,N4)
      2/VOLWM(M,N6,N5,N4)))
       ELSE
-      VFLW=-VFLWX 
+      VFLW=-VFLWX
       ENDIF
       DO 9965 K=0,4
       RFLOC(K)=VFLW*AMAX1(0.0,OQC2(K,N6,N5,N4))
@@ -4278,13 +4279,13 @@ C
       ENDIF
 C
 C     DIFFUSIVE FLUXES OF SOLUTES BETWEEN MICROPORES AND
-C     MACROPORES FROM AQUEOUS DIFFUSIVITIES AND CONCENTRATION 
-C     DIFFERENCES 
+C     MACROPORES FROM AQUEOUS DIFFUSIVITIES AND CONCENTRATION
+C     DIFFERENCES
 C
 C     VOLWM,VOLWHM=micropore,macropore water-filled porosity from watsub.f
 C     DFV*S,DFV*B=diffusive solute flux between macro- and micropore in non-band,band
 C     XNPH=1/no. of cycles h-1 for water, heat and solute flux calculations
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -4292,29 +4293,29 @@ C     *2,*H2=solute content of micropores,macropores
 C
       IF(VOLWHM(M,N6,N5,N4).GT.ZEROS2(N5,N4))THEN
       VOLWHS=AMIN1(XFRS*VOLT(N6,N5,N4),VOLWHM(M,N6,N5,N4))
-      VOLWT=VOLWM(M,N6,N5,N4)+VOLWHS 
+      VOLWT=VOLWM(M,N6,N5,N4)+VOLWHS
       DO 9955 K=0,4
       DFVOC(K)=XNPH*(AMAX1(0.0,OQCH2(K,N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,OQC2(K,N6,N5,N4))*VOLWHS)/VOLWT
       DFVON(K)=XNPH*(AMAX1(0.0,OQNH2(K,N6,N5,N4))*VOLWM(M,N6,N5,N4)
-     2-AMAX1(0.0,OQN2(K,N6,N5,N4))*VOLWHS)/VOLWT 
+     2-AMAX1(0.0,OQN2(K,N6,N5,N4))*VOLWHS)/VOLWT
       DFVOP(K)=XNPH*(AMAX1(0.0,OQPH2(K,N6,N5,N4))*VOLWM(M,N6,N5,N4)
-     2-AMAX1(0.0,OQP2(K,N6,N5,N4))*VOLWHS)/VOLWT 
+     2-AMAX1(0.0,OQP2(K,N6,N5,N4))*VOLWHS)/VOLWT
       DFVOA(K)=XNPH*(AMAX1(0.0,OQAH2(K,N6,N5,N4))*VOLWM(M,N6,N5,N4)
-     2-AMAX1(0.0,OQA2(K,N6,N5,N4))*VOLWHS)/VOLWT 
+     2-AMAX1(0.0,OQA2(K,N6,N5,N4))*VOLWHS)/VOLWT
 9955  CONTINUE
       DFVCOS=XNPH*(AMAX1(0.0,CO2SH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,CO2S2(N6,N5,N4))*VOLWHS)/VOLWT
       DFVCHS=XNPH*(AMAX1(0.0,CH4SH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
-     2-AMAX1(0.0,CH4S2(N6,N5,N4))*VOLWHS)/VOLWT 
+     2-AMAX1(0.0,CH4S2(N6,N5,N4))*VOLWHS)/VOLWT
       DFVOXS=XNPH*(AMAX1(0.0,OXYSH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
-     2-AMAX1(0.0,OXYS2(N6,N5,N4))*VOLWHS)/VOLWT 
+     2-AMAX1(0.0,OXYS2(N6,N5,N4))*VOLWHS)/VOLWT
       DFVNGS=XNPH*(AMAX1(0.0,Z2GSH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
-     2-AMAX1(0.0,Z2GS2(N6,N5,N4))*VOLWHS)/VOLWT 
+     2-AMAX1(0.0,Z2GS2(N6,N5,N4))*VOLWHS)/VOLWT
       DFVN2S=XNPH*(AMAX1(0.0,Z2OSH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
-     2-AMAX1(0.0,Z2OS2(N6,N5,N4))*VOLWHS)/VOLWT 
+     2-AMAX1(0.0,Z2OS2(N6,N5,N4))*VOLWHS)/VOLWT
       DFVHGS=XNPH*(AMAX1(0.0,H2GSH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
-     2-AMAX1(0.0,H2GS2(N6,N5,N4))*VOLWHS)/VOLWT 
+     2-AMAX1(0.0,H2GS2(N6,N5,N4))*VOLWHS)/VOLWT
       DFVNH4=XNPH*(AMAX1(0.0,ZNH4H2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZNH4S2(N6,N5,N4))*VOLWHS)/VOLWT
      3*VLNH4(N6,N5,N4)
@@ -4381,12 +4382,12 @@ C
 C     TOTAL CONVECTIVE +DIFFUSIVE TRANSFER BETWEEN MACROPOES AND MICROPORES
 C
 C     R*FXS,R*FXB=total convective + diffusive solute flux between macro- and micropore in non-band,band
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
-C     RFL*=convective flux between macro- and micropore 
-C     DFV*=diffusive solute flux between macro- and micropore 
+C     RFL*=convective flux between macro- and micropore
+C     DFV*=diffusive solute flux between macro- and micropore
 C
       DO 9950 K=0,4
       ROCFXS(K,N6,N5,N4)=RFLOC(K)+DFVOC(K)
@@ -4462,7 +4463,7 @@ C     POROQ=Penman Water Linear Reduction tortuosity from starts.f
 C     POROS=total porosity
 C     DLYR=soil layer thickness
 C     D*G=gaseous diffusivity in soil
-C     CND*1,CND*2=gaseous conductance in source,destination layer 
+C     CND*1,CND*2=gaseous conductance in source,destination layer
 C     *SGL2= gaseous diffusivity in air
 C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
 C             :*ZN3*=NH3,*H2G*=H2
@@ -4526,7 +4527,7 @@ C
       CNH3G2=AMAX1(0.0,ZN3G2(N6,N5,N4)/VOLPM(M,N6,N5,N4))
       CH2GG2=AMAX1(0.0,H2GG2(N6,N5,N4)/VOLPM(M,N6,N5,N4))
 C
-C     DIFFUSIVE GAS TRANSFER DRIVEN BY GAS CONCENTRATIONS IN 
+C     DIFFUSIVE GAS TRANSFER DRIVEN BY GAS CONCENTRATIONS IN
 C     ADJACENT GRID CELLS
 C
 C     DFV*G=diffusive gas flux
@@ -4544,7 +4545,7 @@ C     CONVECTIVE GAS TRANSFER DRIVEN BY SOIL WATER FLUXES
 C     FROM 'WATSUB' AND GAS CONCENTRATIONS IN THE ADJACENT GRID CELLS
 C     DEPENDING ON WATER FLUX DIRECTION
 C
-C     FLQM=total water flux into soil micropore+macropore from watsub.f 
+C     FLQM=total water flux into soil micropore+macropore from watsub.f
 C     VOLPM=air-filled porosity
 C     RFL*G=convective gas flux
 C     gas code:*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,*NH*=NH3,*HG*=H2
@@ -4555,7 +4556,7 @@ C
       VFLW=-AMAX1(0.0,AMIN1(VFLWX,FLQM(N,N6,N5,N4)
      2/VOLPM(M,N6,N5,N4)))
       ELSE
-      VFLW=-VFLWX 
+      VFLW=-VFLWX
       ENDIF
       RFLCOG=VFLW*AMAX1(0.0,CO2G2(N6,N5,N4))
       RFLCHG=VFLW*AMAX1(0.0,CH4G2(N6,N5,N4))
@@ -4569,7 +4570,7 @@ C
       VFLW=-AMIN1(0.0,AMAX1(-VFLWX,FLQM(N,N6,N5,N4)
      2/VOLPM(M,N3,N2,N1)))
       ELSE
-      VFLW=VFLWX 
+      VFLW=VFLWX
       ENDIF
       RFLCOG=VFLW*AMAX1(0.0,CO2G2(N3,N2,N1))
       RFLCHG=VFLW*AMAX1(0.0,CH4G2(N3,N2,N1))
@@ -4587,16 +4588,16 @@ C     gas code:*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,*NH*=NH3,*HG*=H2
 C     DFV*G=diffusive gas flux
 C     RFL*G=convective gas flux
 C
-      RCOFLG(N,N6,N5,N4)=DFVCOG+RFLCOG 
-      RCHFLG(N,N6,N5,N4)=DFVCHG+RFLCHG 
-      ROXFLG(N,N6,N5,N4)=DFVOXG+RFLOXG 
-      RNGFLG(N,N6,N5,N4)=DFVNGG+RFLNGG 
-      RN2FLG(N,N6,N5,N4)=DFVN2G+RFLN2G 
-      RN3FLG(N,N6,N5,N4)=DFVN3G+RFLN3G 
-      RHGFLG(N,N6,N5,N4)=DFVHGG+RFLH2G 
+      RCOFLG(N,N6,N5,N4)=DFVCOG+RFLCOG
+      RCHFLG(N,N6,N5,N4)=DFVCHG+RFLCHG
+      ROXFLG(N,N6,N5,N4)=DFVOXG+RFLOXG
+      RNGFLG(N,N6,N5,N4)=DFVNGG+RFLNGG
+      RN2FLG(N,N6,N5,N4)=DFVN2G+RFLN2G
+      RN3FLG(N,N6,N5,N4)=DFVN3G+RFLN3G
+      RHGFLG(N,N6,N5,N4)=DFVHGG+RFLH2G
 C     IF(I.EQ.43)THEN
 C     WRITE(*,3133)'ROXFL2',I,J,M,MM,N1,N2,N3,N,XOXFLG(N,N6,N5,N4)
-C    2,ROXFLG(N,N6,N5,N4),DFVOXG,RFLOXG,COXYG1,COXYG2 
+C    2,ROXFLG(N,N6,N5,N4),DFVOXG,RFLOXG,COXYG1,COXYG2
 C    3,OXYG2(N3,N2,N1),OXYG2(N6,N5,N4)
 C    4,FLQM(N,N6,N5,N4),VFLW,DOXYG(N,N6,N5,N4)
 C    5,THETPM(M,N3,N2,N1),THETPM(M,N6,N5,N4)
@@ -4608,7 +4609,7 @@ C     ENDIF
 C
 C     ACCUMULATE HOURLY FLUXES FOR USE IN REDIST.F
 C
-C     X*FLG=hourly total convective+diffusive gas flux 
+C     X*FLG=hourly total convective+diffusive gas flux
 C
       XCOFLG(N,N6,N5,N4)=XCOFLG(N,N6,N5,N4)+RCOFLG(N,N6,N5,N4)
       XCHFLG(N,N6,N5,N4)=XCHFLG(N,N6,N5,N4)+RCHFLG(N,N6,N5,N4)
@@ -4643,29 +4644,29 @@ C
       IF(N.EQ.3)THEN
       IF(THETPM(M,N6,N5,N4).GT.THETX)THEN
       RCODFG(N6,N5,N4)=DFGS(M,N6,N5,N4)*(AMAX1(ZEROS(N5,N4)
-     2,CO2G2(N6,N5,N4))*VOLWCO(N6,N5,N4) 
+     2,CO2G2(N6,N5,N4))*VOLWCO(N6,N5,N4)
      3-CO2S2(N6,N5,N4)*VOLPM(M,N6,N5,N4))
      4/(VOLWCO(N6,N5,N4)+VOLPM(M,N6,N5,N4))
       RCHDFG(N6,N5,N4)=DFGS(M,N6,N5,N4)*(AMAX1(ZEROS(N5,N4)
-     2,CH4G2(N6,N5,N4))*VOLWCH(N6,N5,N4) 
+     2,CH4G2(N6,N5,N4))*VOLWCH(N6,N5,N4)
      3-CH4S2(N6,N5,N4)*VOLPM(M,N6,N5,N4))
      4/(VOLWCH(N6,N5,N4)+VOLPM(M,N6,N5,N4))
       ROXDFG(N6,N5,N4)=DFGS(M,N6,N5,N4)*(AMAX1(ZEROS(N5,N4)
-     2,OXYG2(N6,N5,N4))*VOLWOX(N6,N5,N4) 
+     2,OXYG2(N6,N5,N4))*VOLWOX(N6,N5,N4)
      3-OXYS2(N6,N5,N4)*VOLPM(M,N6,N5,N4))
      4/(VOLWOX(N6,N5,N4)+VOLPM(M,N6,N5,N4))
       RNGDFG(N6,N5,N4)=DFGS(M,N6,N5,N4)*(AMAX1(ZEROS(N5,N4)
-     2,Z2GG2(N6,N5,N4))*VOLWNG(N6,N5,N4) 
+     2,Z2GG2(N6,N5,N4))*VOLWNG(N6,N5,N4)
      3-Z2GS2(N6,N5,N4)*VOLPM(M,N6,N5,N4))
      4/(VOLWNG(N6,N5,N4)+VOLPM(M,N6,N5,N4))
       RN2DFG(N6,N5,N4)=DFGS(M,N6,N5,N4)*(AMAX1(ZEROS(N5,N4)
-     2,Z2OG2(N6,N5,N4))*VOLWN2(N6,N5,N4) 
+     2,Z2OG2(N6,N5,N4))*VOLWN2(N6,N5,N4)
      3-Z2OS2(N6,N5,N4)*VOLPM(M,N6,N5,N4))
      3/(VOLWN2(N6,N5,N4)+VOLPM(M,N6,N5,N4))
       IF(VOLPMA(N6,N5,N4).GT.ZEROS2(N5,N4)
      2.AND.VOLWXA(N6,N5,N4).GT.ZEROS2(N5,N4))THEN
       RN3DFG(N6,N5,N4)=DFGS(M,N6,N5,N4)*(AMAX1(ZEROS(N5,N4)
-     2,ZN3G2(N6,N5,N4))*VOLWN3(N6,N5,N4) 
+     2,ZN3G2(N6,N5,N4))*VOLWN3(N6,N5,N4)
      3-ZNH3S2(N6,N5,N4)*VOLPMA(N6,N5,N4))
      4/(VOLWN3(N6,N5,N4)+VOLPMA(N6,N5,N4))
       CNH3S0=AMAX1(0.0,(ZNH3S2(N6,N5,N4)+RN3DFG(N6,N5,N4))
@@ -4688,7 +4689,7 @@ C
       RNBDFG(N6,N5,N4)=0.0
       ENDIF
       RHGDFG(N6,N5,N4)=DFGS(M,N6,N5,N4)*(AMAX1(ZEROS(N5,N4)
-     2,H2GG2(N6,N5,N4))*VOLWHG(N6,N5,N4) 
+     2,H2GG2(N6,N5,N4))*VOLWHG(N6,N5,N4)
      3-H2GS2(N6,N5,N4)*VOLPM(M,N6,N5,N4))
      4/(VOLWHG(N6,N5,N4)+VOLPM(M,N6,N5,N4))
 C     IF(I.EQ.121.AND.N6.EQ.2)THEN
@@ -4704,7 +4705,7 @@ C     WRITE(*,6666)'RCHDFG',I,J,M,MM,N4,N5,N6,RCHDFG(N6,N5,N4)
 C    2,DFGS(M,N6,N5,N4),CH4G2(N6,N5,N4),VOLWCH(N6,N5,N4)
 C    3,CH4S2(N6,N5,N4),VOLWM(M,N6,N5,N4),THETPM(M,N6,N5,N4)
 C    4,SCH4L(N6,N5,N4),XCHDFG(N6,N5,N4)
-C     WRITE(*,6666)'RNGDFG',I,J,M,MM,N4,N5,N6 
+C     WRITE(*,6666)'RNGDFG',I,J,M,MM,N4,N5,N6
 C    2,RNGDFG(N6,N5,N4),DFGS(M,N6,N5,N4),Z2GG2(N6,N5,N4)
 C    3,VOLWNG(N6,N5,N4),Z2GS2(N6,N5,N4),VOLPM(M,N6,N5,N4)
 C    4,VOLWNG(N6,N5,N4),VOLPM(M,N6,N5,N4)
@@ -4713,7 +4714,7 @@ C     ENDIF
 C
 C     ACCUMULATE HOURLY FLUXES FOR USE IN REDIST.F
 C
-C     X*DFG=hourly water-air gas flux 
+C     X*DFG=hourly water-air gas flux
 C
       XCODFG(N6,N5,N4)=XCODFG(N6,N5,N4)+RCODFG(N6,N5,N4)
       XCHDFG(N6,N5,N4)=XCHDFG(N6,N5,N4)+RCHDFG(N6,N5,N4)
@@ -4795,7 +4796,7 @@ C
       RN3FLG(N,N6,N5,N4)=0.0
       RHGFLG(N,N6,N5,N4)=0.0
       ENDIF
-      ELSE 
+      ELSE
       DCO2G(N,N3,N2,N1)=0.0
       DCH4G(N,N3,N2,N1)=0.0
       DOXYG(N,N3,N2,N1)=0.0
@@ -4864,7 +4865,7 @@ C
 C     VOLWM=micropore water-filled porosity from watsub.f
 C     VOLY=micropore volume
 C     IFLGB=bubbling flag:0=enabled,1=disabled
-C     S*L=solubility of gas in water from hour1.f 
+C     S*L=solubility of gas in water from hour1.f
 C
       IF(N3.GE.NUM(N2,N1).AND.M.NE.MX)THEN
       THETW1(N3,N2,N1)=AMAX1(0.0,VOLWM(M,N3,N2,N1)/VOLY(N3,N2,N1))
@@ -4893,7 +4894,7 @@ C
       VNH3G2=(ZNH3S2(N3,N2,N1)+RN3DFS(NY,NX))/SNH3X
       VNHBG2=(ZNH3B2(N3,N2,N1)+RNBDFS(NY,NX))/SNH3X
       VH2GG2=(H2GS2(N3,N2,N1)+RHGDFS(NY,NX))/SH2GX
-      ELSE 
+      ELSE
       VCO2G2=CO2S2(N3,N2,N1)/SCO2X
       VCH4G2=CH4S2(N3,N2,N1)/SCH4X
       VOXYG2=OXYS2(N3,N2,N1)/SOXYX
@@ -4907,7 +4908,7 @@ C
 C     GASEOUS EQUIVALENT ATMOSPHERIC CONCENTRATION
 C
 C     VTATM=molar gas concentration at atmospheric pressure
-C     VTGAS=total molar gas concentration 
+C     VTGAS=total molar gas concentration
 C
       VTATM=AMAX1(0.0,1.2194E+04*VOLWM(M,N3,N2,N1)/TKS(N3,N2,N1))
       VTGAS=VCO2G2+VCH4G2+VOXYG2+VZ2GG2+VZ2OG2+VNH3G2+VNHBG2+VH2GG2
@@ -4964,12 +4965,12 @@ C
       ENDIF
 C     IF(I.EQ.296)THEN
 C     WRITE(*,6688)'RCOBBL',I,J,N1,N2,N3,M,MM,IFLGB
-C    2,RCOBBL(N3,N2,N1),XCOBBL(N3,N2,N1),VTGAS,VTATM 
+C    2,RCOBBL(N3,N2,N1),XCOBBL(N3,N2,N1),VTGAS,VTATM
 C    2,DVTGAS,SCO2X,VCO2G2,VCH4G2,VOXYG2,VZ2GG2,VZ2OG2
 C    3,VNH3G2,VNHBG2,VH2GG2
 C    4,CO2S2(N3,N2,N1),VOLWM(M,N3,N2,N1)
 C     WRITE(*,6688)'ROXBBL',I,J,N1,N2,N3,M,MM,IFLGB
-C    2,ROXBBL(N3,N2,N1),XOXBBL(N3,N2,N1),VTGAS,VTATM 
+C    2,ROXBBL(N3,N2,N1),XOXBBL(N3,N2,N1),VTGAS,VTATM
 C    2,DVTGAS,SOXYX,VCO2G2,VCH4G2,VOXYG2,VZ2GG2,VZ2OG2
 C    3,VNH3G2,VNHBG2,VH2GG2,SOXYL(N3,N2,N1)
 C    4,OXYS2(N3,N2,N1),VOLWM(M,N3,N2,N1),TCS(N3,N2,N1)
@@ -5099,9 +5100,9 @@ C
 C     SURFACE SOLUTE TRANSPORT FROM BOUNDARY SURFACE
 C     RUNOFF IN 'WATSUB' AND CONCENTRATIONS IN THE SURFACE SOIL LAYER
 C
-C     QRM =runoff from watsub.f 
+C     QRM =runoff from watsub.f
 C     RQR*=solute in runoff
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -5119,7 +5120,7 @@ c
       RQRCHS(N,NN,M5,M4)=0.0
       RQROXS(N,NN,M5,M4)=0.0
       RQRNGS(N,NN,M5,M4)=0.0
-      RQRN2S(N,NN,M5,M4)=0.0 
+      RQRN2S(N,NN,M5,M4)=0.0
       RQRHGS(N,NN,M5,M4)=0.0
       RQRNH4(N,NN,M5,M4)=0.0
       RQRNH3(N,NN,M5,M4)=0.0
@@ -5227,7 +5228,7 @@ C
       RQRH2P(N,NN,M5,M4)=0.0
       ENDIF
 C     WRITE(*,1114)'RQR',I,J,M,N1,N2,N4,N5,M4,M5,N,NN
-C    2,QRM(M,N2,N1),QRMN(M,N,NN,M5,M4) 
+C    2,QRM(M,N2,N1),QRMN(M,N,NN,M5,M4)
 C    3,RQROC0(1,N2,N1),RQROC(1,N,NN,M5,M4),XOCQRS(1,N,NN,M5,M4)
 C    3,RQROP0(1,N2,N1),RQROP(1,N,NN,M5,M4),XOPQRS(1,N,NN,M5,M4)
 1114  FORMAT(A8,11I4,30E12.4)
@@ -5251,11 +5252,11 @@ C
 C
 C     SOLUTE LOSS WITH SUBSURFACE MICROPORE WATER LOSS
 C
-C     FLWM=water flux through soil micropore from watsub.f 
+C     FLWM=water flux through soil micropore from watsub.f
 C     VOLWM=micropore water-filled porosity from watsub.f
 C     R*FLS=convective solute flux through micropores
 C     R*FLW,R*FLB=convective solute flux through micropores in non-band,band
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -5302,6 +5303,8 @@ C
      2*VLNOB(M3,M2,M1)
       RNXFLB(N,M6,M5,M4)=VFLW*AMAX1(0.0,ZNO2B2(M3,M2,M1))
      2*VLNOB(M3,M2,M1)
+      RH1BFB(N,M6,M5,M4)=VFLW*AMAX1(0.0,H1POB2(M3,M2,M1))
+     2*VLPOB(M3,M2,M1)
       RH2BFB(N,M6,M5,M4)=VFLW*AMAX1(0.0,H2POB2(M3,M2,M1))
      2*VLPOB(M3,M2,M1)
 C     IF(J.EQ.15)THEN
@@ -5338,7 +5341,7 @@ C
       RH2PFS(N,M6,M5,M4)=FLWM(M,N,M6,M5,M4)*CH2PU(M3,M2,M1)
      2*VLPO4(M3,M2,M1)
       RN4FLB(N,M6,M5,M4)=FLWM(M,N,M6,M5,M4)*CN4U(M3,M2,M1)
-     2*VLNHB(M3,M2,M1) 
+     2*VLNHB(M3,M2,M1)
       RN3FLB(N,M6,M5,M4)=FLWM(M,N,M6,M5,M4)*CN3U(M3,M2,M1)
      2*VLNHB(M3,M2,M1)
       RNOFLB(N,M6,M5,M4)=FLWM(M,N,M6,M5,M4)*CNOU(M3,M2,M1)
@@ -5359,10 +5362,10 @@ C     ENDIF
 C
 C     SOLUTE LOSS WITH SUBSURFACE MACROPORE WATER LOSS
 C
-C     FLWHM=water flux through soil macropore from watsub.f 
+C     FLWHM=water flux through soil macropore from watsub.f
 C     VOLWHM=macropore water-filled porosity from watsub.f
 C     RFH*S=solute diffusive flux through macropore
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -5443,10 +5446,10 @@ C
 C
 C     ACCUMULATE HOURLY FLUXES FOR USE IN REDIST.F
 C
-C     X*FLS,X*FLW,X*FLB=hourly solute flux in non-band,band micropores 
-C     X*FHS,X*FHW,X*FHB=hourly solute flux in non-band,band macropores 
-C     R*FLS,R*FLW,R*FLB=solute flux in non-band,band micropores 
-C     R*FHS,R*FHW,R*FHB=solute flux in non-band,band macropores 
+C     X*FLS,X*FLW,X*FLB=hourly solute flux in non-band,band micropores
+C     X*FHS,X*FHW,X*FHB=hourly solute flux in non-band,band macropores
+C     R*FLS,R*FLW,R*FLB=solute flux in non-band,band micropores
+C     R*FHS,R*FHW,R*FHB=solute flux in non-band,band macropores
 C
       DO 9555 K=0,4
       XOCFLS(K,N,M6,M5,M4)=XOCFLS(K,N,M6,M5,M4)+ROCFLS(K,N,M6,M5,M4)
@@ -5594,7 +5597,7 @@ C     NET OVERLAND SOLUTE FLUX IN WATER
 C
 C     TQR*=net overland solute flux
 C     RQR*=overland solute flux
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -5764,7 +5767,7 @@ C     R*FLW,R*FLB=convective + diffusive solute flux through micropores in non-b
 C     T*FHS=net convective + diffusive solute flux through macropores
 C     R*FHS=convective + diffusive solute flux through macropores
 C     R*FHW,R*FHB=convective + diffusive solute flux through macropores in non-band,band
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -5972,10 +5975,10 @@ C
 C     STATE VARIABLES FOR SOLUTES IN SNOWPACK
 C
 C     *W2=solute content of snowpack
-C     TQS*=net overland solute flux in snow 
+C     TQS*=net overland solute flux in snow
 C     T*BLS=net solute flux in snowpack
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
-C             :N4=NH4,N3=NH3,NO=NO3,1P=HPO4,HP=H2PO4 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
+C             :N4=NH4,N3=NH3,NO=NO3,1P=HPO4,HP=H2PO4
 C
       CO2W2(1,NY,NX)=CO2W2(1,NY,NX)+TQSCOS(NY,NX)
       CH4W2(1,NY,NX)=CH4W2(1,NY,NX)+TQSCHS(NY,NX)
@@ -6009,16 +6012,16 @@ C     ENDIF
 9670  CONTINUE
 C
 C     STATE VARIABLES FOR SOLUTES IN SURFACE RESIDUE AND IN
-C     MICROPORES AND MACROPORES IN SOIL SURFACE LAYER FROM OVERLAND 
+C     MICROPORES AND MACROPORES IN SOIL SURFACE LAYER FROM OVERLAND
 C     FLOW AND SURFACE VOLATILIZATION-DISSOLUTION
 C
 C     *S2=litter solute content
 C     R*DFR=gas exchange between atmosphere and surface litter water
 C     R*DFS=gas exchange between atmosphere and soil surface water
-C     R*FLS=convective + diffusive solute flux into litter,soil surface 
+C     R*FLS=convective + diffusive solute flux into litter,soil surface
 C     R*FLW,R*FLB=convective + diffusive solute flux into litter from non-band,band
 C     TQR*=net overland solute flux
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -6101,7 +6104,7 @@ C     AND ROOT EXCHANGE IN 'NITRO' AND 'UPTAKE', AND EQUILIBRIUM
 C     REACTIONS IN 'SOLUTE'
 C
 C     *S2,*B2=micropore solute content in non-band,band
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2
 C             :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C             :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 in non-band
 C             :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 in band
@@ -6132,13 +6135,13 @@ C
      2+RHGFLZ(L,NY,NX)+RHGBBL(L,NY,NX)
       DO 9675 K=0,4
       OQC2(K,L,NY,NX)=OQC2(K,L,NY,NX)+TOCFLS(K,L,NY,NX)
-     2+ROCFXS(K,L,NY,NX) 
+     2+ROCFXS(K,L,NY,NX)
       OQN2(K,L,NY,NX)=OQN2(K,L,NY,NX)+TONFLS(K,L,NY,NX)
-     2+RONFXS(K,L,NY,NX) 
+     2+RONFXS(K,L,NY,NX)
       OQP2(K,L,NY,NX)=OQP2(K,L,NY,NX)+TOPFLS(K,L,NY,NX)
-     2+ROPFXS(K,L,NY,NX) 
+     2+ROPFXS(K,L,NY,NX)
       OQA2(K,L,NY,NX)=OQA2(K,L,NY,NX)+TOAFLS(K,L,NY,NX)
-     2+ROAFXS(K,L,NY,NX) 
+     2+ROAFXS(K,L,NY,NX)
       OQCH2(K,L,NY,NX)=OQCH2(K,L,NY,NX)+TOCFHS(K,L,NY,NX)
      2-ROCFXS(K,L,NY,NX)
       OQNH2(K,L,NY,NX)=OQNH2(K,L,NY,NX)+TONFHS(K,L,NY,NX)
@@ -6187,7 +6190,7 @@ C
       ENDIF
       ENDIF
 C
-C     STATE VARIABLES FOR GASES IN SOIL LAYERS FROM SUBSURFACE FLOW, 
+C     STATE VARIABLES FOR GASES IN SOIL LAYERS FROM SUBSURFACE FLOW,
 C     MICROBIAL AND ROOT EXCHANGE IN 'NITRO' AND 'UPTAKE'
 C
 C     *G2,*S2=soil gas, solute content
@@ -6202,8 +6205,8 @@ C
       OXYS2(L,NY,NX)=OXYS2(L,NY,NX)+ROXDFG(L,NY,NX)
       Z2GS2(L,NY,NX)=Z2GS2(L,NY,NX)+RNGDFG(L,NY,NX)
       Z2OS2(L,NY,NX)=Z2OS2(L,NY,NX)+RN2DFG(L,NY,NX)
-      ZNH3S2(L,NY,NX)=ZNH3S2(L,NY,NX)+RN3DFG(L,NY,NX) 
-      ZNH3B2(L,NY,NX)=ZNH3B2(L,NY,NX)+RNBDFG(L,NY,NX) 
+      ZNH3S2(L,NY,NX)=ZNH3S2(L,NY,NX)+RN3DFG(L,NY,NX)
+      ZNH3B2(L,NY,NX)=ZNH3B2(L,NY,NX)+RNBDFG(L,NY,NX)
       H2GS2(L,NY,NX)=H2GS2(L,NY,NX)+RHGDFG(L,NY,NX)
       CO2G2(L,NY,NX)=CO2G2(L,NY,NX)+TCOFLG(L,NY,NX)-RCODFG(L,NY,NX)
       CH4G2(L,NY,NX)=CH4G2(L,NY,NX)+TCHFLG(L,NY,NX)-RCHDFG(L,NY,NX)
@@ -6222,24 +6225,24 @@ C    2,XOQCS(K,L,NY,NX)
 C     WRITE(*,446)'OQA2',I,J,NX,NY,L,M,MM,K,OQA2(K,L,NY,NX)
 C    2,TOAFLS(K,L,NY,NX),ROAFXS(K,L,NY,NX),ROASK2(K,L,NY,NX)
 446   FORMAT(A8,8I4,12E12.4)
-9676  CONTINUE 
-C     WRITE(*,448)'CO2S2',I,J,M,MM,NX,NY,L 
+9676  CONTINUE
+C     WRITE(*,448)'CO2S2',I,J,M,MM,NX,NY,L
 C    2,CO2S2(L,NY,NX),TCOFLS(L,NY,NX),RCOFXS(L,NY,NX)
 C    2,RCOFLZ(L,NY,NX),RCOBBL(L,NY,NX),RCODFG(L,NY,NX)
 C    2,CO2S(L,NY,NX),RCOSK2(L,NY,NX),TQRCOS(NY,NX)
-C    3,RCODFS(NY,NX),PARG(M,NY,NX),CCO2E(NY,NX),CO2GQ 
+C    3,RCODFS(NY,NX),PARG(M,NY,NX),CCO2E(NY,NX),CO2GQ
 C    4,VOLWM(M,L,NY,NX),DLYR(3,L,NY,NX),AREA(1,L,NY,NX)
 C    6,RCO2O(L,NY,NX),TCO2S(L,NY,NX),TRCO2(L,NY,NX)
 C    7,VOLY(L,NY,NX)
 448   FORMAT(A8,7I4,40E12.4)
-C     WRITE(*,444)'OXYS2',I,J,M,MM,NX,NY,L 
+C     WRITE(*,444)'OXYS2',I,J,M,MM,NX,NY,L
 C    2,OXYS2(L,NY,NX),TOXFLS(L,NY,NX),ROXFXS(L,NY,NX)
 C    3,ROXFLZ(L,NY,NX),ROXBBL(L,NY,NX),ROXDFG(L,NY,NX)
 C    4,ROXSK(M,L,NY,NX),OXYG2(L,NY,NX),ROXFLS(3,L,NY,NX)
-C    5,ROXFLS(3,L+1,NY,NX),ROXFLS(1,L,NY,NX+1),ROXDFS(NY,NX) 
+C    5,ROXFLS(3,L+1,NY,NX),ROXFLS(1,L,NY,NX+1),ROXDFS(NY,NX)
 C    6,XOXFLS(3,L,NY,NX),XOXFLS(3,L+1,NY,NX),XOXFLS(1,L,NY,NX+1)
 C    6,ROXSK2(L,NY,NX),ROXSK(M,L,NY,NX),VOLWM(M,L,NY,NX)
-C     WRITE(*,444)'OXYSH2',I,J,M,MX,NX,NY,L 
+C     WRITE(*,444)'OXYSH2',I,J,M,MX,NX,NY,L
 C    2,OXYSH2(L,NY,NX),TOXFHS(L,NY,NX),ROXFXS(L,NY,NX)
 C     WRITE(*,444)'CH4S2',I,J,NX,NY,L,M,MM,CH4S2(L,NY,NX)
 C    2,TCHFLS(L,NY,NX),RCHFXS(L,NY,NX),RCHFLZ(L,NY,NX)
@@ -6253,33 +6256,33 @@ C    2,Z2GS2(L,NY,NX),RNGDFG(L,NY,NX),RNGSK2(L,NY,NX)
 C    3,RNGDFS(NY,NX),RNGFLS(3,0,NY,NX),TQRNGS(NY,NX)
 C    4,TNGFLS(L,NY,NX),RNGFXS(L,NY,NX),RNGFLZ(L,NY,NX)
 C    2,RNGBBL(L,NY,NX),Z2GG2(L,NY,NX),TNGFLG(L,NY,NX)
-C     WRITE(*,444)'ZN3G2',I,J,M,MM,NX,NY,L,ZN3G2(L,NY,NX) 
-C    2,TN3FLG(L,NY,NX),RN3DFG(L,NY,NX),RNBDFG(L,NY,NX) 
+C     WRITE(*,444)'ZN3G2',I,J,M,MM,NX,NY,L,ZN3G2(L,NY,NX)
+C    2,TN3FLG(L,NY,NX),RN3DFG(L,NY,NX),RNBDFG(L,NY,NX)
 C    3,ZNH3S2(L,NY,NX),ZNH3B2(L,NY,NX),TN3FLW(L,NY,NX),RN3FXW(L,NY,NX)
 C    2,RN3FLZ(L,NY,NX),RN3BBL(L,NY,NX),RN3SK2(L,NY,NX)
 C    3,ZNH4S2(L,NY,NX),ZNH4B2(L,NY,NX),RN4SK2(L,NY,NX)
 C    4,TN4FLW(L,NY,NX),RN4FXW(L,NY,NX),RN4FLZ(L,NY,NX)
-C    5,RN4SK2(L,NY,NX) 
-C     WRITE(*,444)'CO2G2',I,J,M,MM,NX,NY,L,CO2G2(L,NY,NX) 
-C    2,TCOFLG(L,NY,NX),RCODFG(L,NY,NX),CO2S2(L,NY,NX) 
-C    3,RCOFLG(3,L,NY,NX),RCOFLG(3,L+1,NY,NX),RCOFLG(1,L,NY,NX+1)  
+C    5,RN4SK2(L,NY,NX)
+C     WRITE(*,444)'CO2G2',I,J,M,MM,NX,NY,L,CO2G2(L,NY,NX)
+C    2,TCOFLG(L,NY,NX),RCODFG(L,NY,NX),CO2S2(L,NY,NX)
+C    3,RCOFLG(3,L,NY,NX),RCOFLG(3,L+1,NY,NX),RCOFLG(1,L,NY,NX+1)
 C    4,DCO2G(3,L,NY,NX),THETPM(M,L,NY,NX),PARGCO(NY,NX)
 C    6,XCOFLG(3,L,NY,NX),XCOFLG(3,L+1,NY,NX),XCOFLG(1,L,NY,NX+1)
-C    7,CCO2E(NY,NX),VOLPM(M,L,NY,NX) 
-C     WRITE(*,444)'OXYG2',I,J,M,MM,NX,NY,L,OXYG2(L,NY,NX) 
-C    2,TOXFLG(L,NY,NX),ROXDFG(L,NY,NX),OXYS2(L,NY,NX) 
-C    3,ROXFLG(3,L,NY,NX),ROXFLG(3,L+1,NY,NX),ROXFLG(1,L,NY,NX+1)  
+C    7,CCO2E(NY,NX),VOLPM(M,L,NY,NX)
+C     WRITE(*,444)'OXYG2',I,J,M,MM,NX,NY,L,OXYG2(L,NY,NX)
+C    2,TOXFLG(L,NY,NX),ROXDFG(L,NY,NX),OXYS2(L,NY,NX)
+C    3,ROXFLG(3,L,NY,NX),ROXFLG(3,L+1,NY,NX),ROXFLG(1,L,NY,NX+1)
 C    4,DOXYG(3,L,NY,NX),THETPM(M,L,NY,NX),PARGOX(NY,NX)
 C    6,XOXFLG(3,L,NY,NX),XOXFLG(3,L+1,NY,NX),XOXFLG(1,L,NY,NX+1)
-C    7,COXYE(NY,NX),VOLPM(M,L,NY,NX) 
+C    7,COXYE(NY,NX),VOLPM(M,L,NY,NX)
 C     WRITE(*,444)'N2OG2',I,J,M,MM,NX,NY,L,Z2OG2(L,NY,NX)
 C    2,Z2OS2(L,NY,NX),Z2OSH2(L,NY,NX),TN2FLG(L,NY,NX),RN2DFG(L,NY,NX)
 C    3,TN2FLS(L,NY,NX),RN2FXS(L,NY,NX),RN2FLZ(L,NY,NX),RN2BBL(L,NY,NX)
-C    2,TN2FHS(L,NY,NX),RN2SK2(L,NY,NX),RN2O(L,NY,NX),TUPN2S(L,NY,NX) 
+C    2,TN2FHS(L,NY,NX),RN2SK2(L,NY,NX),RN2O(L,NY,NX),TUPN2S(L,NY,NX)
 C     WRITE(*,444)'H2GS2',I,J,NX,NY,M,MM,L,H2GS2(L,NY,NX)
 C    2,THGFLS(L,NY,NX),RHGFXS(L,NY,NX),RHGFLZ(L,NY,NX),RHGBBL(L,NY,NX)
 C    3,H2GSH2(L,NY,NX),THGFHS(L,NY,NX),RHGDFG(L,NY,NX),RHGSK2(L,NY,NX)
-C    4,RH2GO(L,NY,NX),TUPHGS(L,NY,NX) 
+C    4,RH2GO(L,NY,NX),TUPHGS(L,NY,NX)
 C     WRITE(*,444)'H1PO42',I,J,M,MM,NX,NY,L,H1PO42(L,NY,NX)
 C    2,TH1PFS(L,NY,NX),RH1PXS(L,NY,NX),RH1PFZ(L,NY,NX)
 C    3,H2PO42(L,NY,NX),TH2PFS(L,NY,NX),RH2PXS(L,NY,NX)
@@ -6304,7 +6307,7 @@ C
       OXYS2(0,NY,NX)=OXYS2(0,NY,NX)+ROXDFG(0,NY,NX)
       Z2GS2(0,NY,NX)=Z2GS2(0,NY,NX)+RNGDFG(0,NY,NX)
       Z2OS2(0,NY,NX)=Z2OS2(0,NY,NX)+RN2DFG(0,NY,NX)
-      ZNH3S2(0,NY,NX)=ZNH3S2(0,NY,NX)+RN3DFG(0,NY,NX) 
+      ZNH3S2(0,NY,NX)=ZNH3S2(0,NY,NX)+RN3DFG(0,NY,NX)
       H2GS2(0,NY,NX)=H2GS2(0,NY,NX)+RHGDFG(0,NY,NX)
 C     IF(I.EQ.53)THEN
 C     WRITE(*,1119)'OXYS20',I,J,M,MX,NX,NY,OXYS2(0,NY,NX)
@@ -6313,9 +6316,9 @@ C    3,TQROXS(NY,NX),ROXSK2(0,NY,NX),OXYS2(0,NY,NX)/VOLWM(M,0,NY,NX)
 C    4,VOLWM(M,0,NY,NX)/VOLA(0,NY,NX),VOLPM(M,0,NY,NX)/VOLA(0,NY,NX)
 C    5,VOLWM(M,0,NY,NX),VOLA(0,NY,NX),VOLWG(NY,NX),DFGS(M,0,NY,NX)
 C    6,VOLPM(M,NU(NY,NX),NY,NX),VOLWM(M,NU(NY,NX),NY,NX)
-C    7,VOLWHM(M,NU(NY,NX),NY,NX) 
+C    7,VOLWHM(M,NU(NY,NX),NY,NX)
 C     WRITE(*,1119)'CH4S2G',I,J,NX,NY,M,MM,CH4S2(0,NY,NX)
-C    2,RCHDFG(0,NY,NX) 
+C    2,RCHDFG(0,NY,NX)
 1119  FORMAT(A8,6I4,20E12.4)
 C     ENDIF
 9690  CONTINUE
@@ -6325,6 +6328,3 @@ C     ENDIF
 30    CONTINUE
       RETURN
       END
-
-
-
