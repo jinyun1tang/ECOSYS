@@ -217,25 +217,25 @@ C
 C     XNPG=1/number of cycles h-1 for gas flux calculations
 C     XNPH=1/no. of cycles h-1 for water, heat and solute flux
 C        calculations
-C     R*SK2=total flux from ‘nitro.f’,‘uptake.f’,‘solute.f’
-C     RCO2O=net soil CO2 uptake from ‘nitro.f’
-C     RCH4O=net soil CH4 uptake from ‘nitro.f’
-C     RN2G=total soil N2 production from ‘nitro.f’ 
-C     XN2GS=total N2 fixation from ‘nitro.f’ 
-C     RN2O=net soil N2O uptake from ‘nitro.f’
-C     RH2GO=net H2 uptake from ‘nitro.f’
+C     R*SK2=total flux from nitro.f,uptake.f,solute.f
+C     RCO2O=net soil CO2 uptake from nitro.f
+C     RCH4O=net soil CH4 uptake from nitro.f
+C     RN2G=total soil N2 production from nitro.f
+C     XN2GS=total N2 fixation from nitro.f
+C     RN2O=net soil N2O uptake from nitro.f
+C     RH2GO=net H2 uptake from nitro.f
 C     XOQCS,XOQNZ,XOQPS,XOQAS=net change in DOC,DON,DOP,acetate 
-C        from ‘nitro.f’
-C     XNH4S=net change in NH4 from ‘nitro.f’ 
-C     TRN4S,TRN3S=NH4,NH3 dissolution from ‘solute.f’
-C     XNO3S=net change in NO3 from ‘nitro.f’ 
-C     TRNO3=NO3 dissolution from ‘solute.f’
-C     XNO2S=net change in NO2 from ‘nitro.f’ 
-C     TRNO2=NO2 dissolution from ‘solute.f’
-C     XH2PS=net change in H2PO4 from ‘nitro.f’ 
-C     TRH2P=H2PO4 dissolution from ‘solute.f’
-C     XH1PS=net change in HPO4 from ‘nitro.f’ 
-C     TRH1P=HPO4 dissolution from ‘solute.f’
+C        from nitro.f
+C     XNH4S=net change in NH4 from nitro.f
+C     TRN4S,TRN3S=NH4,NH3 dissolution from solute.f
+C     XNO3S=net change in NO3 from nitro.f
+C     TRNO3=NO3 dissolution from solute.f
+C     XNO2S=net change in NO2 from nitro.f 
+C     TRNO2=NO2 dissolution from solute.f
+C     XH2PS=net change in H2PO4 from nitro.f 
+C     TRH2P=H2PO4 dissolution from solute.f
+C     XH1PS=net change in HPO4 from nitro.f
+C     TRH1P=HPO4 dissolution from solute.f
 C
       RCOSK2(0,NY,NX)=RCO2O(0,NY,NX)*XNPG
       RCHSK2(0,NY,NX)=RCH4O(0,NY,NX)*XNPG
@@ -263,7 +263,7 @@ C     CO2S,CH4S,OXYS,Z2GS,Z2OS,H2GS=aqueous CO2,CH4,O2,N2,N2O,H2
 C        content
 C     OQC,OQN,OQP,OQA=DOC,DON,DOP,acetate
 C     XOQCS,XOQNZ,XOQPS,XOQAS=net change in DOC,DON,DOP,acetate 
-C        from ‘nitro.f’
+C        from nitro.f
 C     ZNH4S,ZNH3S,ZNO3S,ZNO2S,H1PO4,H2PO4
 C        =aqueous NH4,NH3,NO3,NO2,HPO4,H2PO4
 C     CHY0=H concentration
@@ -338,7 +338,7 @@ C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
 C     FLQGQ,FLQGI=water flux to snowpack from rain,irrigation 
-C        from ‘watsub.f’
+C        from watsub.f
 C     C*R,C*Q=precipitation,irrigation solute concentrations 
 C        from weather, irrigation files
 C     gas code:*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
@@ -428,9 +428,9 @@ C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
 C     FLQRQ,FLQRI=water flux to surface litter from rain,irrigation
-C        from ‘watsub.f’
+C        from watsub.f
 C     FLQGQ,FLQGI=water flux to snowpack from rain,irrigation 
-C        from ‘watsub.f’
+C        from watsub.f
 C     C*R,C*Q=precipitation,irrigation solute concentrations 
 C        from weather, irrigation files
 C     gas code:*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
@@ -706,7 +706,7 @@ C     RCGSK2,ROGSK2,RC4SK2=CO2 emission,O2 uptake,CH4 emission
 C        from soil fire
 C     RCGSK=total soil combustion from nitro.f
 C     RC4SK=soil CH4 combustion fraction from nitro.f
-C     XNPG=time step from ‘wthr.f’
+C     XNPG=time step from wthr.f
 C
       RCGSK2(L,NY,NX)=RCGSK(L,NY,NX)*XNPG 
       ROGSK2(L,NY,NX)=RCGSK(L,NY,NX)*2.667*XNPG 
@@ -742,7 +742,7 @@ C     TUPNH4,TUPNHB=root NH4 uptake in non-band,band from extract.f
 C     TUPNO3,TUPNOB=root NO3 uptake in non-band,band from extract.f
 C     TUPH2P,TUPH2B=root H2PO4 uptake in non-band,band from extract.f
 C     TUPH1P,TUPH1B=root HPO4 uptake in non-band,band from extract.f
-C     XNPH,XNPG=time step from ‘wthr.f’
+C     XNPH,XNPG=time step from wthr.f
 C
       CHY0(L,NY,NX)=10.0**(-(PH(L,NY,NX)-3.0))
       FLWU(L,NY,NX)=TUPWTR(L,NY,NX)*XNPH
