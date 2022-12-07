@@ -210,19 +210,26 @@ C
       FL(2)=0.45
       DO 95 K=0,5
       DO 95 N=1,7
+
       IF(K.LE.4.AND.N.EQ.3)THEN
-      CNOMC(1,N,K)=0.15
-      CNOMC(2,N,K)=0.09
-      CPOMC(1,N,K)=0.015
-      CPOMC(2,N,K)=0.009
+      DO NGL=1,JG
+      CNOMC(1,NGL,N,K)=0.15
+      CNOMC(2,NGL,N,K)=0.09
+      CPOMC(1,NGL,N,K)=0.015
+      CPOMC(2,NGL,N,K)=0.009
+      ENDDO
       ELSE
-      CNOMC(1,N,K)=0.225
-      CNOMC(2,N,K)=0.135
-      CPOMC(1,N,K)=0.0225
-      CPOMC(2,N,K)=0.0135
+      DO NGL=1,JG
+      CNOMC(1,NGL,N,K)=0.225
+      CNOMC(2,NGL,N,K)=0.135
+      CPOMC(1,NGL,N,K)=0.0225
+      CPOMC(2,NGL,N,K)=0.0135
+      ENDDO
       ENDIF
-      CNOMC(3,N,K)=FL(1)*CNOMC(1,N,K)+FL(2)*CNOMC(2,N,K)
-      CPOMC(3,N,K)=FL(1)*CPOMC(1,N,K)+FL(2)*CPOMC(2,N,K)
+      DO NGL=1,JG
+      CNOMC(3,NGL,N,K)=FL(1)*CNOMC(1,NGL,N,K)+FL(2)*CNOMC(2,NGL,N,K)
+      CPOMC(3,NGL,N,K)=FL(1)*CPOMC(1,NGL,N,K)+FL(2)*CPOMC(2,NGL,N,K)
+      ENDDO
 95    CONTINUE
 C
 C     CALCULATE ELEVATION OF EACH GRID CELL
@@ -1216,10 +1223,14 @@ C
       OSPI(K)=CORGPX(K)*VOLT(L,NY,NX)
       ENDIF
       TOSCK(K)=OMCK(K)+ORCK(K)+OQCK(K)+OHCK(K)
-      TOSNK(K)=OMCI(1,K)*CNOMC(1,1,K)+OMCI(2,K)*CNOMC(2,1,K)
-     2+ORCK(K)*CNRH(K)+OQCK(K)*CNOSCT(KK)+OHCK(K)*CNOSCT(KK)
-      TOSPK(K)=OMCI(1,K)*CPOMC(1,1,K)+OMCI(2,K)*CPOMC(2,1,K)
-     2+ORCK(K)*CPRH(K)+OQCK(K)*CPOSCT(KK)+OHCK(K)*CPOSCT(KK)
+      TOSNK(K)=ORCK(K)*CNRH(K)+OQCK(K)*CNOSCT(KK)+OHCK(K)*CNOSCT(KK)
+      TOSPK(K)=ORCK(K)*CPRH(K)+OQCK(K)*CPOSCT(KK)+OHCK(K)*CPOSCT(KK)
+      DO NGL=1,JG
+      TOSNK(K)=TOSNK(K)+OMCI(1,K)*CNOMC(1,NGL,1,K)
+     2+OMCI(2,K)*CNOMC(2,NGL,1,K)
+      TOSPK(K)=TOSPK(K)+OMCI(1,K)*CPOMC(1,NGL,1,K)
+     2+OMCI(2,K)*CPOMC(2,NGL,1,K)
+      ENDDO
       TOSCI=TOSCI+OSCI(K)*TOSCK(K)
       TOSNI=TOSNI+OSCI(K)*TOSNK(K)
       TOSPI=TOSPI+OSCI(K)*TOSPK(K)
@@ -1277,27 +1288,50 @@ C     CNOMC,CPOMC=maximum N:C and P:C ratios in microbial biomass
 C     OSCX,OSNX,OSPX=remaining unallocated SOC,SON,SOP
 C
       DO 7990 N=1,7
+      DO 7990 NGL=1,JG
       DO 7985 M=1,3
+<<<<<<< HEAD
       OMC(M,N,5,L,NY,NX)=0.0
       OMN(M,N,5,L,NY,NX)=0.0
       OMP(M,N,5,L,NY,NX)=0.0
+=======
+      OMC(M,NGL,N,5,L,NY,NX)=0.0
+      OMN(M,NGL,N,5,L,NY,NX)=0.0
+      OMP(M,NGL,N,5,L,NY,NX)=0.0
+>>>>>>> b7348cf (add an extra dimension to microbial populations)
 7985  CONTINUE
 7990  CONTINUE
       DO 8990 N=1,7
+      DO 8991 NGL=1,JG
       DO 8991 M=1,3
+<<<<<<< HEAD
       OMC1=AMAX1(0.0,OSCM(K)*OMCI(M,K)*OMCF(N)*FOSCI)
       OMN1=AMAX1(0.0,OMC1*CNOMC(M,N,K)*FOSNI)
       OMP1=AMAX1(0.0,OMC1*CPOMC(M,N,K)*FOSPI)
       OMC(M,N,K,L,NY,NX)=OMC1
       OMN(M,N,K,L,NY,NX)=OMN1
       OMP(M,N,K,L,NY,NX)=OMP1
+=======
+      OMC1=AMAX1(0.0,OSCM(K)*OMCI(M,K)*OMCF(N)*FOSCI)/dble(JG)
+      OMN1=AMAX1(0.0,OMC1*CNOMC(M,NGL,N,K)*FOSNI)
+      OMP1=AMAX1(0.0,OMC1*CPOMC(M,NGL,N,K)*FOSPI)
+      OMC(M,NGL,N,K,L,NY,NX)=OMC1
+      OMN(M,NGL,N,K,L,NY,NX)=OMN1
+      OMP(M,NGL,N,K,L,NY,NX)=OMP1
+>>>>>>> b7348cf (add an extra dimension to microbial populations)
       OSCX(KK)=OSCX(KK)+OMC1
       OSNX(KK)=OSNX(KK)+OMN1
       OSPX(KK)=OSPX(KK)+OMP1
       DO 8992 NN=1,7
+<<<<<<< HEAD
       OMC(M,NN,5,L,NY,NX)=OMC(M,NN,5,L,NY,NX)+OMC1*OMCA(NN)
       OMN(M,NN,5,L,NY,NX)=OMN(M,NN,5,L,NY,NX)+OMN1*OMCA(NN)
       OMP(M,NN,5,L,NY,NX)=OMP(M,NN,5,L,NY,NX)+OMP1*OMCA(NN)
+=======
+      OMC(M,NGL,NN,5,L,NY,NX)=OMC(M,NGL,NN,5,L,NY,NX)+OMC1*OMCA(NN)
+      OMN(M,NGL,NN,5,L,NY,NX)=OMN(M,NGL,NN,5,L,NY,NX)+OMN1*OMCA(NN)
+      OMP(M,NGL,NN,5,L,NY,NX)=OMP(M,NGL,NN,5,L,NY,NX)+OMP1*OMCA(NN)
+>>>>>>> b7348cf (add an extra dimension to microbial populations)
       OSCX(KK)=OSCX(KK)+OMC1*OMCA(NN)
       OSNX(KK)=OSNX(KK)+OMN1*OMCA(NN)
       OSPX(KK)=OSPX(KK)+OMP1*OMCA(NN)
@@ -1312,8 +1346,8 @@ C     ORCI=allocation of microbial residue to kinetic components
 C
       DO 8985 M=1,2
       ORC(M,K,L,NY,NX)=X*AMAX1(0.0,OSCM(K)*ORCI(M,K)*FOSCI)
-      ORN(M,K,L,NY,NX)=AMAX1(0.0,ORC(M,K,L,NY,NX)*CNOMC(M,1,K)*FOSNI)
-      ORP(M,K,L,NY,NX)=AMAX1(0.0,ORC(M,K,L,NY,NX)*CPOMC(M,1,K)*FOSPI)
+      ORN(M,K,L,NY,NX)=AMAX1(0.0,ORC(M,K,L,NY,NX)*CNOMC(M,1,1,K)*FOSNI)
+      ORP(M,K,L,NY,NX)=AMAX1(0.0,ORC(M,K,L,NY,NX)*CPOMC(M,1,1,K)*FOSPI)
       OSCX(KK)=OSCX(KK)+ORC(M,K,L,NY,NX)
       OSNX(KK)=OSNX(KK)+ORN(M,K,L,NY,NX)
       OSPX(KK)=OSPX(KK)+ORP(M,K,L,NY,NX)
@@ -1387,33 +1421,34 @@ C
       ENDIF
       DO 6990 K=0,5
       DO 6990 N=1,7
-      OC=OC+OMC(3,N,K,L,NY,NX)
-      ON=ON+OMN(3,N,K,L,NY,NX)
-      OP=OP+OMP(3,N,K,L,NY,NX)
+      DO 6990 NGL=1,JG
+      OC=OC+OMC(3,NGL,N,K,L,NY,NX)
+      ON=ON+OMN(3,NGL,N,K,L,NY,NX)
+      OP=OP+OMP(3,NGL,N,K,L,NY,NX)
       IF(K.LE.2)THEN
-      RC=RC+OMC(3,N,K,L,NY,NX)
+      RC=RC+OMC(3,NGL,N,K,L,NY,NX)
       ENDIF
-      ROXYS(N,K,L,NY,NX)=0.0
-      RVMX4(N,K,L,NY,NX)=0.0
-      RVMX3(N,K,L,NY,NX)=0.0
-      RVMX2(N,K,L,NY,NX)=0.0
-      RVMX1(N,K,L,NY,NX)=0.0
-      RINHO(N,K,L,NY,NX)=0.0
-      RINOO(N,K,L,NY,NX)=0.0
-      RIPOO(N,K,L,NY,NX)=0.0
+      ROXYS(NGL,N,K,L,NY,NX)=0.0
+      RVMX4(NGL,N,K,L,NY,NX)=0.0
+      RVMX3(NGL,N,K,L,NY,NX)=0.0
+      RVMX2(NGL,N,K,L,NY,NX)=0.0
+      RVMX1(NGL,N,K,L,NY,NX)=0.0
+      RINHO(NGL,N,K,L,NY,NX)=0.0
+      RINOO(NGL,N,K,L,NY,NX)=0.0
+      RIPOO(NGL,N,K,L,NY,NX)=0.0
       IF(L.EQ.0)THEN
-      RINHOR(N,K,NY,NX)=0.0
-      RINOOR(N,K,NY,NX)=0.0
-      RIPOOR(N,K,NY,NX)=0.0
+      RINHOR(NGL,N,K,NY,NX)=0.0
+      RINOOR(NGL,N,K,NY,NX)=0.0
+      RIPOOR(NGL,N,K,NY,NX)=0.0
       ENDIF
       DO 6990 M=1,3
-      OC=OC+OMC(M,N,K,L,NY,NX)
-      ON=ON+OMN(M,N,K,L,NY,NX)
-      OP=OP+OMP(M,N,K,L,NY,NX)
+      OC=OC+OMC(M,NGL,N,K,L,NY,NX)
+      ON=ON+OMN(M,NGL,N,K,L,NY,NX)
+      OP=OP+OMP(M,NGL,N,K,L,NY,NX)
       IF(K.LE.2)THEN
-      RC=RC+OMC(M,N,K,L,NY,NX)
+      RC=RC+OMC(M,NGL,N,K,L,NY,NX)
       ENDIF
-      RC0(K,NY,NX)=RC0(K,NY,NX)+OMC(M,N,K,L,NY,NX)
+      RC0(K,NY,NX)=RC0(K,NY,NX)+OMC(M,NGL,N,K,L,NY,NX)
 6990  CONTINUE
       DO 6995 K=0,4
       DO 6985 M=1,2
