@@ -2470,18 +2470,12 @@ C
       DO 9380 NO=1,7
       DO 9380 NGL=1,JG
       DO 9380 M=1,3
-<<<<<<< HEAD
-      TOMCER(M,NO,K,N2,N1)=TOMCER(M,NO,K,N2,N1)+OMCER(M,NO,K,N,NN,N2,N1)
-      TOMNER(M,NO,K,N2,N1)=TOMNER(M,NO,K,N2,N1)+OMNER(M,NO,K,N,NN,N2,N1)
-      TOMPER(M,NO,K,N2,N1)=TOMPER(M,NO,K,N2,N1)+OMPER(M,NO,K,N,NN,N2,N1)
-=======
       TOMCER(M,NGL,NO,K,N2,N1)=TOMCER(M,NGL,NO,K,N2,N1)
      2+OMCER(M,NGL,NO,K,N,NN,N2,N1)
       TOMNER(M,NGL,NO,K,N2,N1)=TOMNER(M,NGL,NO,K,N2,N1)
      2+OMNER(M,NGL,NO,K,N,NN,N2,N1)
       TOMPER(M,NGL,NO,K,N2,N1)=TOMPER(M,NGL,NO,K,N2,N1)
      2+OMPER(M,NGL,NO,K,N,NN,N2,N1)
->>>>>>> b7348cf (add an extra dimension to microbial populations)
 9380  CONTINUE
       DO 9375 K=0,4
       DO 9370 M=1,2
@@ -4449,13 +4443,6 @@ C
       VOLIXX=VOLI(L,NY,NX)
       VOLW(L,NY,NX)=VOLW(L,NY,NX)+TFLW(L,NY,NX)+FINH(L,NY,NX)
      2+TTHAW(L,NY,NX)+TUPWTR(L,NY,NX)+FLU(L,NY,NX)
-<<<<<<< HEAD
-      if(VOLW(L,NY,NX)<0. .and. L==NU(NY,NX))then
-      write(*,*)VOLWXX,VOLW(L,NY,NX),TFLW(L,NY,NX),FINH(L,NY,NX)
-     2,TTHAW(L,NY,NX),TUPWTR(L,NY,NX),FLU(L,NY,NX)
-      endif
-=======
->>>>>>> b7348cf (add an extra dimension to microbial populations)
       VOLWX(L,NY,NX)=VOLWX(L,NY,NX)+TFLWX(L,NY,NX)+FINH(L,NY,NX)
      2+TTHAW(L,NY,NX)+TUPWTR(L,NY,NX)+FLU(L,NY,NX)
       VOLWX(L,NY,NX)=AMIN1(VOLW(L,NY,NX)
@@ -8417,17 +8404,6 @@ C     ENDIF
       DO 3945 N=1,7
       DO 3945 NGL=1,JG
       DO 3945 M=1,3
-<<<<<<< HEAD
-      TOMGC(M,N,K)=OMC(M,N,K,0,NY,NX)*CORP0
-      TOMGN(M,N,K)=OMN(M,N,K,0,NY,NX)*CORP0
-      TOMGP(M,N,K)=OMP(M,N,K,0,NY,NX)*CORP0
-      OMC(M,N,K,0,NY,NX)=OMC(M,N,K,0,NY,NX)*XCORP0
-      OMN(M,N,K,0,NY,NX)=OMN(M,N,K,0,NY,NX)*XCORP0
-      OMP(M,N,K,0,NY,NX)=OMP(M,N,K,0,NY,NX)*XCORP0
-      DC=DC+OMC(M,N,K,0,NY,NX)
-      DN=DN+OMN(M,N,K,0,NY,NX)
-      DP=DP+OMP(M,N,K,0,NY,NX)
-=======
       TOMGC(M,NGL,N,K)=OMC(M,NGL,N,K,0,NY,NX)*CORP0
       TOMGN(M,NGL,N,K)=OMN(M,NGL,N,K,0,NY,NX)*CORP0
       TOMGP(M,NGL,N,K)=OMP(M,NGL,N,K,0,NY,NX)*CORP0
@@ -8437,7 +8413,6 @@ C     ENDIF
       DC=DC+OMC(M,NGL,N,K,0,NY,NX)
       DN=DN+OMN(M,NGL,N,K,0,NY,NX)
       DP=DP+OMP(M,NGL,N,K,0,NY,NX)
->>>>>>> b7348cf (add an extra dimension to microbial populations)
 3945  CONTINUE
       ENDIF
 3950  CONTINUE
