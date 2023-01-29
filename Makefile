@@ -1,7 +1,7 @@
 # Makefile -- Use this to build on *NIX systems.
 
 # Options set on command line.
-debug      = not-set
+debug      = 1
 mpi        = not-set
 shared     = not-set
 precision  = not-set
