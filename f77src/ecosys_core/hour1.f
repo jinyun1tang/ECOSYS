@@ -67,7 +67,7 @@ C
      6,RDNDID(4,4,JP,JY,JX),PARDID(4,4,JP,JY,JX),RADSD(JP,JY,JX)
      7,RADPD(JP,JY,JX),RAYSD(JP,JY,JX),RAYPD(JP,JY,JX),RADD1(JP,JY,JX)
      8,RADZ1(JP,JY,JX),RAYD1(JP,JY,JX),RAYZ1(JP,JY,JX),RADD2(JP,JY,JX)
-     9,RADZ2(JP,JY,JX),RAYD2(JP,JY,JX),RAYZ2(JP,JY,JX)
+     9,RADZ2(JP,JY,JX),RAYD2(JP,JY,JX),RAYZ2(JP,JY,JX),ARSTQ(JP,JY,JX)
      6,IALBS(4,4),YKL(0:JZ,JY,JX)
 C
 C     *SG=diffusivity (m2 h-1):CG=CO2g,CL=CO2s,CH=CH4g,CQ=CH4s,OG=O2g
@@ -112,7 +112,7 @@ C
      2,ALBRD=0.1,ALBPD=0.1,ABSRD=1.0-ALBRD,ABSPD=1.0-ALBPD)
       PARAMETER (VISCW=1.0E-06,BKDSX=1.89,ZW=0.005,CFW=0.5
      2,FORGW=0.25E+06,DTHETW=1.0E-06,THETPW=0.01,THETWP=1.0-THETPW 
-     3,WBNDX=0.01,FSCNV=0.10)
+     3,WBNDX=0.01,FSCNV=0.1)
 C
 C     XVOLWC=foliar water retention capacity for IGTYP=0,3 (m3 m-2)
 C     THETRX=litter water retention capaciity for woody(0), fine(1)
@@ -123,21 +123,36 @@ C
       REAL*4 TFACL,TFACG,TFACW,TFACR,TFACA
       XJ=J
       DOY=I-1+XJ/24
-C
-C     CONCENTRATIONS OF CO2, CH4, O2, N2, N2O, NH3, H2 IN ATMOSPHERE,
-C     PRECIPITATION AND IRRIGATION FROM MIXING RATIOS READ IN 'READS'
-C
-C     C*E,C*R,C*Q=atmospheric,precipitation,irrigation 
-C        solute concentrations
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2
-C
-C     THINGS DONE ONCE PER HOURLY CYCLE
-C
       XNFZ=NFZ
-      IF(NFZ.EQ.1)THEN
-      DO 9045 NX=NHW,NHE
-      DO 9050 NY=NVN,NVS
+C
+C     RESET HOURLY SOIL ACCUMULATORS FOR WATER, HEAT, GASES, SOLUTES
+C
+      VOLWSO=0.0
+      HEATSO=0.0
+      OXYGSO=0.0
+      TLH2G=0.0
+      TSEDSO=0.0
+      TLRSDC=0.0
+      TLORGC=0.0
+      TLCO2G=0.0
+      TLRSDN=0.0
+      TLORGN=0.0
+      TLN2G=0.0
+      TLRSDP=0.0
+      TLORGP=0.0
+      TLNH4=0.0
+      TLNO3=0.0
+      TLPO4=0.0
+      TION=0.0
+      TBALC=0.0
+      TBALN=0.0
+      TBALP=0.0
+C     IF(NFZ.EQ.1.OR.ICHKF.EQ.1)THEN
+C     DO 9045 NX=NHW,NHE
+C     DO 9050 NY=NVN,NVS
+      DO 9145 NX=NHW,NHE
+      DO 9140 NY=NVN,NVS
+      IF(NFZ.EQ.1)THEN 
 C
 C     PAREX,PARSX=terms used to calculate boundary layer
 C        conductance in ‘watsub.f’ and ‘uptake.f’
@@ -188,802 +203,6 @@ C
       TTRAN(NZ,NY,NX)=0.0
       HCNET(NZ,NY,NX)=0.0
 1035  CONTINUE
-C
-C     MULTILAYER CANOPY INTERECEPTION OF DIRECT AND DIFFUSE RADIATION
-C     IN SW AND VISIBLE BANDS BY INCLINATION N, AZIMUTH M, LAYER L,
-C     NODE K, BRANCH NB, PFT NZ
-C
-C     ARLFS,ARLSS=leaf+stalk area of combined,each PFT canopy 
-C     ZL=height to top of canopy layer
-C     DPTHS,DPTH0=snowpack,surface water depths
-C     ARLFL,ARSTK=leaf,stalk areas of PFT
-C     RAD,RAP=vertical direct+diffuse SW,PAR
-C     RADS,RADY,RAPS,RAPY=solar beam direct,diffuse SW,PAR 
-C     SSIN,TYSIN=sine of solar,sky angles
-C     RADC,RADP=total SW,PAR absorbed by living canopy
-C     RADD,RADQ=total SW,PAR absorbed by standing dead 
-C     CFX=clumping factor for self-shading
-C     ARLFP=canopy leaf area
-C
-      IF(SSIN(NY,NX).GT.ZERO)THEN
-      RAD(NY,NX)=RADS(NY,NX)*SSIN(NY,NX)+RADY(NY,NX)*TYSIN
-      RAP(NY,NX)=RAPS(NY,NX)*SSIN(NY,NX)+RAPY(NY,NX)*TYSIN
-      ELSE
-      RADS(NY,NX)=0.0
-      RADY(NY,NX)=0.0
-      RAPS(NY,NX)=0.0
-      RAPY(NY,NX)=0.0
-      RAD(NY,NX)=0.0
-      RAP(NY,NX)=0.0
-      ENDIF
-      TRADC(NY,NX)=0.0
-      TRAPC(NY,NX)=0.0
-      DO 1025 NZ=1,NP(NY,NX)
-      RADC(NZ,NY,NX)=0.0
-      RADD(NZ,NY,NX)=0.0
-      RADP(NZ,NY,NX)=0.0
-      RADQ(NZ,NY,NX)=0.0
-      CFX(NZ,NY,NX)=CF(NZ,NY,NX)*(1.0-0.025
-     2*ARLFP(NZ,NY,NX)/AREA(3,NU(NY,NX),NY,NX))
-1025  CONTINUE
-C
-C     ANGLE BETWEEN SUN AND GROUND SURFACE
-C
-C     SAZI,SCOS=solar azimuth,cosine of solar angle
-C     BETAG=incident solar angle at ground surface
-C     GCOS,GSIN=cos,sin of ground surface
-C     ZNOON=hour of solar noon from weather file
-C
-      IF(SSIN(NY,NX).GT.ZERO)THEN
-      SAZI=0.2618*(ZNOON(NY,NX)-J)+4.7124
-      SCOS=SQRT(1.0-SSIN(NY,NX)**2)
-      DGAZI=COS(GAZI(NY,NX)-SAZI)
-      BETAG=AMAX1(0.0,AMIN1(1.0,GCOS(NY,NX)*SSIN(NY,NX)
-     2+GSIN(NY,NX)*SCOS*DGAZI))
-      IF(ARLSS(NY,NX).GT.0.0)THEN
-      SAGL=ASIN(SSIN(NY,NX))
-C
-C     ABSORBED RADIATION FROM OPTICAL PROPERTIES ENTERED IN 'READS'
-C
-C     RADSA,RADWA,RAPSA,RAPWA=SW,PAR absorbed at leaf,stalk surface    
-C        perpendicular to incoming radiation
-C     RADDA,RAPDA=SW,PAR absorbed at standing dead surface    
-C        perpendicular to incoming radiation
-C     ABS*=absorption coeffient=1-albedo
-C
-      DO 1050 NZ=1,NP(NY,NX)
-      RADSA(NZ,NY,NX)=RADS(NY,NX)*ABSR(NZ,NY,NX)
-      RADWA(NZ,NY,NX)=RADS(NY,NX)*ABSRW
-      RADDA(NZ,NY,NX)=RADS(NY,NX)*ABSRD
-      RAPSA(NZ,NY,NX)=RAPS(NY,NX)*ABSP(NZ,NY,NX)
-      RAPWA(NZ,NY,NX)=RAPS(NY,NX)*ABSPW
-      RAPDA(NZ,NY,NX)=RAPS(NY,NX)*ABSPD
-1050  CONTINUE
-C
-C     ANGLES BETWEEN SUN OR SKY ZONES AND FOLIAR SURFACES
-C
-C     ZAZI=leaf azimuth
-C     BETA,BETX=incident angle of direct radiation at leaf,
-C        horizontal surface
-C     ZAGL=determines forward vs back scattering
-C     IALBS=flag for forward vs back scattering
-C
-      DO 1100 M=1,4
-      ZAZI=SAZI+(M-0.5)*3.1416/4
-      DAZI=COS(ZAZI-SAZI)
-      DO 1100 N=1,4
-      BETY=ZCOS(N)*SSIN(NY,NX)+ZSIN(N)*SCOS*DAZI
-      BETA(N,M)=ABS(BETY)
-      BETX(N,M)=BETA(N,M)/SSIN(NY,NX)
-      IF(ZCOS(N).GT.SSIN(NY,NX))THEN
-      BETZ=ACOS(BETY)
-      ELSE
-      BETZ=-ACOS(BETY)
-      ENDIF
-      IF(BETZ.GT.-1.5708)THEN
-      ZAGL=SAGL+2.0*BETZ
-      ELSE
-      ZAGL=SAGL-2.0*(3.1416+BETZ)
-      ENDIF
-      IF(ZAGL.GT.0.0.AND.ZAGL.LT.3.1416)THEN
-      IALBS(N,M)=1
-      ELSE
-      IALBS(N,M)=2
-      ENDIF
-C
-C     INTENSITY OF ABSORBED DIRECT RADIATION AT LEAF SURFACES
-C
-C     RDNDIR,RDNDIW,PARDIR,PARDIW=atmospheric SW,PAR flux 
-C        absorbed by leaf, stalk surfaces
-C     RDNDID,PARDID= atmospheric SW,PAR flux absorbed by standing
-C        dead surfaces
-C     PAR,PARDIF=direct,diffuse PAR flux
-C     RADYL,RAPYL=solar beam diffuse SW,PAR flux
-C     RAFYL,RAFPL=forward scattered diffuse SW,PAR flux
-C     TAUS,TAUY=fraction of direct,diffuse radiation transmitted 
-C
-      DO 1100 NZ=1,NP(NY,NX)
-      RDNDIR(N,M,NZ,NY,NX)=RADSA(NZ,NY,NX)*ABS(BETA(N,M))
-      RDNDIW(N,M,NZ,NY,NX)=RADWA(NZ,NY,NX)*ABS(BETA(N,M))
-      RDNDID(N,M,NZ,NY,NX)=RADDA(NZ,NY,NX)*ABS(BETA(N,M))
-      PARDIR(N,M,NZ,NY,NX)=RAPSA(NZ,NY,NX)*ABS(BETA(N,M))
-      PARDIW(N,M,NZ,NY,NX)=RAPWA(NZ,NY,NX)*ABS(BETA(N,M))
-      PARDID(N,M,NZ,NY,NX)=RAPDA(NZ,NY,NX)*ABS(BETA(N,M))
-      DO 1100 L=1,JC
-      PARDIF(N,M,L,NZ,NY,NX)=0.0
-      PAR(N,M,L,NZ,NY,NX)=PARDIR(N,M,NZ,NY,NX)
-1100  CONTINUE
-      XAREA=1.00/AREA(3,NU(NY,NX),NY,NX)
-      YAREA=0.25/AREA(3,NU(NY,NX),NY,NX)
-      RADYL=RADY(NY,NX)
-      RAPYL=RAPY(NY,NX)
-      TAUS(JC+1,NY,NX)=1.0
-      TAUY(JC+1)=1.0
-      RAFSL(JC+1)=0.0
-      RAFPL(JC+1)=0.0
-      STOPS=0.0
-C
-C     RESET ARRAYS OF SUNLIT AND SHADED LEAF AREAS IN DIFFERENT
-C     LAYERS AND ANGLE CLASSES
-C
-C     TSURF,TSURFB,SURF,SURFB=leaf,stalk total,PFT surface area
-C     TSURFD,SURFD=standing dead total,PFT surface area
-C     ZL=height of top of canopy layer
-C     DPTHS,DPTH0=depth of snowpack, surface litter
-C
-      DO 1150 NZ=1,NP(NY,NX)
-      DO 1150 L=1,JC
-      DO 1150 N=1,4
-      TSURF(N,L,NZ,NY,NX)=0.0
-      TSURFB(N,L,NZ,NY,NX)=0.0
-      TSURFD(N,L,NZ,NY,NX)=0.0
-1150  CONTINUE
-      DO 1200 NZ=1,NP(NY,NX)
-      DO 1200 L=1,JC
-      TSURFD(4,L,NZ,NY,NX)=TSURFD(4,L,NZ,NY,NX)
-     2+SURFD(4,L,NZ,NY,NX)
-      DO 1200 NB=1,NBR(NZ,NY,NX)
-      IF(ZL(L-1,NY,NX).GT.DPTHS(NY,NX)-ZERO
-     2.AND.ZL(L-1,NY,NX).GT.DPTH0(NY,NX)-ZERO)THEN
-      DO 1205 N=1,4
-      DO 1210 K=1,25
-      TSURF(N,L,NZ,NY,NX)=TSURF(N,L,NZ,NY,NX)+SURF(N,L,K,NB,NZ,NY,NX)
-1210  CONTINUE
-      TSURFB(N,L,NZ,NY,NX)=TSURFB(N,L,NZ,NY,NX)
-     2+SURFB(N,L,NB,NZ,NY,NX)
-1205  CONTINUE
-      ENDIF
-1200  CONTINUE
-C
-C     CALCULATE ABSORPTION, REFLECTION AND TRANSMISSION OF DIRECT AND 
-C     DIFFUSE DOWNWARD TOTAL AND VISIBLE RADIATION BY EACH SPECIES 
-C     NZ IN EACH LAYER L
-C
-C     RAFYL,RAFPL=forward scattered diffuse SW,PAR
-C     RABYL,RABPL=backscattered diffuse SW,PAR
-C     RADYL,RAPYL=solar beam diffuse SW,PAR
-C     STOPY,STOPSZ,STOPYZ=fraction of direct,diffuse radiation intercepted
-C
-      DO 1800 L=JC,1,-1
-      IF(ZL(L-1,NY,NX).GE.DPTHS(NY,NX)-ZERO
-     2.AND.ZL(L-1,NY,NX).GE.DPTH0(NY,NX)-ZERO)THEN
-      RADYL=RADYL*TAUY(L+1)+RAFSL(L+1)
-      RAPYL=RAPYL*TAUY(L+1)+RAFPL(L+1)
-      RAFSL(L)=0.0
-      RAFPL(L)=0.0
-      RABSL(L)=0.0
-      RABPL(L)=0.0
-      STOPY=0.0
-      STOPSZ=0.0
-      STOPYZ=0.0
-C
-C     RESET ACCUMULATORS OB ABSORBED, REFLECTED AND TRANSMITTED RADIATION
-C
-C     RADSL,RADSW,RADPL,RADPW=direct SW,PAR absorbed by 
-C        leaf,stalk surfaces
-C     RADSD,RADPD=direct SW,PAR absorbed by 
-C        standing dead surfaces
-C     RAYSL,RAYSW,RAYPL,RAYPW=diffuse SW,PAR absorbed by 
-C        leaf,stalk surfaces
-C     RAYSD,RAYPD=diffuse SW,PAR absorbed by 
-C        standing dead surfaces
-C     RADS1,RADW1,RADP1,RADQ1=back scattered direct SW,PAR 
-C        absorbed by leaf,stalk surfaces
-C     RADD1,RADZ1=back scattered direct SW,PAR 
-C        absorbed by sanding dead surfaces 
-C     RAYS1,RAYW1,RAYP1,RAYQ1=back scattered diffuse SW,PAR 
-C        absorbed by leaf,stalk surfaces
-C     RAYD1,RAYZ1=back scattered diffuse SW,PAR 
-C        absorbed by standing dead surfaces
-C     RADS2,RADW2,RADP2,RADQ2=forward scattered direct SW,PAR
-C        absorbed by leaf,stalk surfaces 
-C     RADD2,RADZ2=forward scattered direct SW,PAR 
-C        absorbed by sanding dead surfaces 
-C     RAYS2,RAYW2,RAYP2,RAYQ2=forward scattered diffuse SW,PAR
-C        absorbed by leaf,stalk surfaces
-C     RAYD2,RAYZ2=forward scattered diffuse SW,PAR 
-C        absorbed by standing dead surfaces
-C
-      DO 1500 NZ=1,NP(NY,NX)
-      RADSL(NZ,NY,NX)=0.0
-      RADSW(NZ,NY,NX)=0.0
-      RADSD(NZ,NY,NX)=0.0
-      RADPL(NZ,NY,NX)=0.0
-      RADPW(NZ,NY,NX)=0.0
-      RADPD(NZ,NY,NX)=0.0
-      RAYSL(NZ,NY,NX)=0.0
-      RAYSW(NZ,NY,NX)=0.0
-      RAYSD(NZ,NY,NX)=0.0
-      RAYPL(NZ,NY,NX)=0.0
-      RAYPW(NZ,NY,NX)=0.0
-      RAYPD(NZ,NY,NX)=0.0
-      RADS1(NZ,NY,NX)=0.0
-      RADW1(NZ,NY,NX)=0.0
-      RADD1(NZ,NY,NX)=0.0
-      RADP1(NZ,NY,NX)=0.0
-      RADQ1(NZ,NY,NX)=0.0
-      RADZ1(NZ,NY,NX)=0.0
-      RAYS1(NZ,NY,NX)=0.0
-      RAYW1(NZ,NY,NX)=0.0
-      RAYD1(NZ,NY,NX)=0.0
-      RAYP1(NZ,NY,NX)=0.0
-      RAYQ1(NZ,NY,NX)=0.0
-      RAYZ1(NZ,NY,NX)=0.0
-      RADS2(NZ,NY,NX)=0.0
-      RADW2(NZ,NY,NX)=0.0
-      RADD2(NZ,NY,NX)=0.0
-      RADP2(NZ,NY,NX)=0.0
-      RADQ2(NZ,NY,NX)=0.0
-      RADZ2(NZ,NY,NX)=0.0
-      RAYS2(NZ,NY,NX)=0.0
-      RAYW2(NZ,NY,NX)=0.0
-      RAYD2(NZ,NY,NX)=0.0
-      RAYP2(NZ,NY,NX)=0.0
-      RAYQ2(NZ,NY,NX)=0.0
-      RAYZ2(NZ,NY,NX)=0.0
-C
-C     LEAF SURFACE AREA IN EACH INCLINATION CLASS N, AZIMUTH CLASS M,
-C     LAYER L AND SPECIES NZ
-C
-C     TSURFY=unself-shaded leaf area 
-C     TSURFZ=unself-shaded leaf area m-2 in each azimuth class
-C     TSURFS=TSURFY with shading from canopy layers above
-C     TSURFX=TSURFS m-2 
-C     TSURWY=unself-shaded stalk area
-C     TSURWZ=unself-shaded stalk area m-2 in each azimuth class
-C     TSURWS=TSURWY with shading from canopy layers above
-C     TSURWX=TSURWS m-2 
-C     TSURDY=unself-shaded standing dead area 
-C     TSURDZ=unself-shaded standing dead area m-2 in each azimuth
-C        class
-C     TSURDS=TSURDY with shading from canopy layers above
-C     TSURDX=TSURDS m-2 
-C
-      DO 1600 N=1,4
-      TSURFY=TSURF(N,L,NZ,NY,NX)*CFX(NZ,NY,NX)
-      TSURFZ=TSURFY*YAREA
-      TSURFS=TSURFY*TAUS(L+1,NY,NX)
-      TSURFX=TSURFS*XAREA
-      TSURWY=TSURFB(N,L,NZ,NY,NX)*CFW
-      TSURWZ=TSURWY*YAREA
-      TSURWS=TSURWY*TAUS(L+1,NY,NX)
-      TSURWX=TSURWS*XAREA
-      TSURDY=TSURFD(N,L,NZ,NY,NX)*CFW
-      TSURDZ=TSURDY*YAREA
-      TSURDS=TSURDY*TAUS(L+1,NY,NX)
-      TSURDX=TSURDS*XAREA
-C
-C     ABSORPTION OF DIRECT RADIATION BY SUNLIT LEAF SURFACES
-C
-C     STOPZ=accumulated horizontal area of intercepted direct
-C        radiation
-C
-      DO 1700 M=1,4
-      RADSL(NZ,NY,NX)=RADSL(NZ,NY,NX)+TSURFS*RDNDIR(N,M,NZ,NY,NX)
-      RADSW(NZ,NY,NX)=RADSW(NZ,NY,NX)+TSURWS*RDNDIW(N,M,NZ,NY,NX)
-      RADSD(NZ,NY,NX)=RADSD(NZ,NY,NX)+TSURDS*RDNDID(N,M,NZ,NY,NX)
-      RADPL(NZ,NY,NX)=RADPL(NZ,NY,NX)+TSURFS*PARDIR(N,M,NZ,NY,NX)
-      RADPW(NZ,NY,NX)=RADPW(NZ,NY,NX)+TSURWS*PARDIW(N,M,NZ,NY,NX)
-      RADPD(NZ,NY,NX)=RADPD(NZ,NY,NX)+TSURDS*PARDID(N,M,NZ,NY,NX)
-      STOPSZ=STOPSZ+(TSURFX+TSURWX+TSURDX)*BETX(N,M)
-C
-C     BACKSCATTERING OF REFLECTED DIRECT RADIATION
-C
-      IF(IALBS(N,M).EQ.1)THEN
-      RADS1(NZ,NY,NX)=RADS1(NZ,NY,NX)+TSURFS*RDNDIR(N,M,NZ,NY,NX)
-      RADW1(NZ,NY,NX)=RADW1(NZ,NY,NX)+TSURWS*RDNDIW(N,M,NZ,NY,NX)
-      RADD1(NZ,NY,NX)=RADD1(NZ,NY,NX)+TSURDS*RDNDID(N,M,NZ,NY,NX)
-      RADP1(NZ,NY,NX)=RADP1(NZ,NY,NX)+TSURFS*PARDIR(N,M,NZ,NY,NX)
-      RADQ1(NZ,NY,NX)=RADQ1(NZ,NY,NX)+TSURWS*PARDIW(N,M,NZ,NY,NX)
-      RADZ1(NZ,NY,NX)=RADZ1(NZ,NY,NX)+TSURDS*PARDID(N,M,NZ,NY,NX)
-C
-C     FORWARD SCATTERING OF REFLECTED DIRECT RADIATION
-C
-      ELSE
-      RADS2(NZ,NY,NX)=RADS2(NZ,NY,NX)+TSURFS*RDNDIR(N,M,NZ,NY,NX)
-      RADW2(NZ,NY,NX)=RADW2(NZ,NY,NX)+TSURWS*RDNDIW(N,M,NZ,NY,NX)
-      RADD2(NZ,NY,NX)=RADD2(NZ,NY,NX)+TSURDS*RDNDID(N,M,NZ,NY,NX)
-      RADP2(NZ,NY,NX)=RADP2(NZ,NY,NX)+TSURFS*PARDIR(N,M,NZ,NY,NX)
-      RADQ2(NZ,NY,NX)=RADQ2(NZ,NY,NX)+TSURWS*PARDIW(N,M,NZ,NY,NX)
-      RADZ2(NZ,NY,NX)=RADZ2(NZ,NY,NX)+TSURDS*PARDID(N,M,NZ,NY,NX)
-      ENDIF
-C
-C     INTENSITY OF ABSORBED DIFFUSE RADIATION AT LEAF SURFACES
-C
-C     RADYN,RADYW,RAPYN,RAPYW=diffuse SW,PAR flux absorbed by
-C        leaf,stalk surfaces
-C     RADYD,RAPYD= diffuse SW,PAR flux absorbed by
-C        standing dead surfaces
-C     OMEGA=incident angle of diffuse radiation 
-C     PAR,PARDIF=direct,diffuse PAR flux
-C
-      DO 1750 NN=1,4
-      RADYN=RADYL*OMEGA(M,N,NN)*ABSR(NZ,NY,NX)
-      RADYW=RADYL*OMEGA(M,N,NN)*ABSRW
-      RADYD=RADYL*OMEGA(M,N,NN)*ABSRD
-      RAPYN=RAPYL*OMEGA(M,N,NN)*ABSP(NZ,NY,NX)
-      RAPYW=RAPYL*OMEGA(M,N,NN)*ABSPW
-      RAPYD=RAPYL*OMEGA(M,N,NN)*ABSPD
-      PARDIF(N,M,L,NZ,NY,NX)=PARDIF(N,M,L,NZ,NY,NX)+RAPYN
-      PAR(N,M,L,NZ,NY,NX)=PAR(N,M,L,NZ,NY,NX)+RAPYN
-C
-C     ABSORPTION OF DIFFUSE RADIATION BY SHADED LEAF SURFACES
-C
-C     STOPYZ=accumulated horizontal area of intercepted diffuse
-C        radiation
-C
-      RAYSL(NZ,NY,NX)=RAYSL(NZ,NY,NX)+TSURFY*RADYN
-      RAYSW(NZ,NY,NX)=RAYSW(NZ,NY,NX)+TSURWY*RADYW
-      RAYSD(NZ,NY,NX)=RAYSD(NZ,NY,NX)+TSURDY*RADYD
-      RAYPL(NZ,NY,NX)=RAYPL(NZ,NY,NX)+TSURFY*RAPYN
-      RAYPW(NZ,NY,NX)=RAYPW(NZ,NY,NX)+TSURWY*RAPYW
-      RAYPD(NZ,NY,NX)=RAYPD(NZ,NY,NX)+TSURDY*RAPYD
-      STOPYZ=STOPYZ+(TSURFZ+TSURWZ+TSURDZ)*OMEGX(M,N,NN)
-C
-C     BACKSCATTERING OF REFLECTED DIFFUSE RADIATION
-C
-      IF(IALBY(M,N,NN).EQ.1)THEN
-      RAYS1(NZ,NY,NX)=RAYS1(NZ,NY,NX)+TSURFY*RADYN
-      RAYW1(NZ,NY,NX)=RAYW1(NZ,NY,NX)+TSURWY*RADYW
-      RAYD1(NZ,NY,NX)=RAYD1(NZ,NY,NX)+TSURDY*RADYD
-      RAYP1(NZ,NY,NX)=RAYP1(NZ,NY,NX)+TSURFY*RAPYN
-      RAYQ1(NZ,NY,NX)=RAYQ1(NZ,NY,NX)+TSURWY*RAPYW
-      RAYZ1(NZ,NY,NX)=RAYZ1(NZ,NY,NX)+TSURDY*RAPYD
-C
-C     FORWARD SCATTERING OF REFLECTED DIFFUSE RADIATION
-C
-      ELSE
-      RAYS2(NZ,NY,NX)=RAYS2(NZ,NY,NX)+TSURFY*RADYN
-      RAYW2(NZ,NY,NX)=RAYW2(NZ,NY,NX)+TSURWY*RADYW
-      RAYD2(NZ,NY,NX)=RAYD2(NZ,NY,NX)+TSURDY*RADYD
-      RAYP2(NZ,NY,NX)=RAYP2(NZ,NY,NX)+TSURFY*RAPYN
-      RAYQ2(NZ,NY,NX)=RAYQ2(NZ,NY,NX)+TSURWY*RAPYW
-      RAYZ2(NZ,NY,NX)=RAYZ2(NZ,NY,NX)+TSURDY*RAPYD
-      ENDIF
-1750  CONTINUE
-1700  CONTINUE
-1600  CONTINUE
-1500  CONTINUE
-C
-C     ACCUMULATED INTERCEPTION BY CANOPY LAYER
-C
-C     XTAUS=interception of direct radiation in current layer
-C     STOPZ=accumulated interception of direct radiation 
-C        from topmost layer
-C     TAUS=transmission of direct radiation to next lower layer   
-C     
-      IF(STOPS+STOPSZ.GT.1.0)THEN
-      IF(STOPSZ.GT.ZERO)THEN
-      XTAUS=(1.0-STOPS)/((1.0-STOPS)-(1.0-STOPS-STOPSZ))
-      ELSE
-      XTAUS=0.0
-      ENDIF
-      TAUS(L+1,NY,NX)=TAUS(L+1,NY,NX)*XTAUS
-      STOPSZ=STOPSZ*XTAUS
-      DO 1510 NZ=1,NP(NY,NX)
-      RADSL(NZ,NY,NX)=RADSL(NZ,NY,NX)*XTAUS
-      RADSW(NZ,NY,NX)=RADSW(NZ,NY,NX)*XTAUS
-      RADSD(NZ,NY,NX)=RADSD(NZ,NY,NX)*XTAUS
-      RADPL(NZ,NY,NX)=RADPL(NZ,NY,NX)*XTAUS
-      RADPW(NZ,NY,NX)=RADPW(NZ,NY,NX)*XTAUS
-      RADPD(NZ,NY,NX)=RADPD(NZ,NY,NX)*XTAUS
-      RADS1(NZ,NY,NX)=RADS1(NZ,NY,NX)*XTAUS
-      RADW1(NZ,NY,NX)=RADW1(NZ,NY,NX)*XTAUS
-      RADD1(NZ,NY,NX)=RADD1(NZ,NY,NX)*XTAUS
-      RADP1(NZ,NY,NX)=RADP1(NZ,NY,NX)*XTAUS
-      RADQ1(NZ,NY,NX)=RADQ1(NZ,NY,NX)*XTAUS
-      RADZ1(NZ,NY,NX)=RADZ1(NZ,NY,NX)*XTAUS
-      RADS2(NZ,NY,NX)=RADS2(NZ,NY,NX)*XTAUS
-      RADW2(NZ,NY,NX)=RADW2(NZ,NY,NX)*XTAUS
-      RADD2(NZ,NY,NX)=RADD2(NZ,NY,NX)*XTAUS
-      RADP2(NZ,NY,NX)=RADP2(NZ,NY,NX)*XTAUS
-      RADQ2(NZ,NY,NX)=RADQ2(NZ,NY,NX)*XTAUS
-      RADZ2(NZ,NY,NX)=RADZ2(NZ,NY,NX)*XTAUS
-1510  CONTINUE
-      ENDIF
-C
-C     XTAUY=interception of diffuse radiation in current layer
-C     STOPYZ=accumulated interception of diffuse radiation 
-C        from topmost layer
-C     TAUY=transmission of diffuse radiation to next lower layer   
-C     PAR,PARDIF=direct,diffuse PAR flux
-C
-      IF(STOPY+STOPYZ.GT.1.0)THEN
-      XTAUY=(1.0-STOPY)/((1.0-STOPY)-(1.0-STOPY-STOPYZ))
-      TAUY(L+1)=TAUY(L+1)*XTAUY
-      STOPYZ=STOPYZ*XTAUY
-      DO 1520 NZ=1,NP(NY,NX)
-      RAYSL(NZ,NY,NX)=RAYSL(NZ,NY,NX)*XTAUY
-      RAYSW(NZ,NY,NX)=RAYSW(NZ,NY,NX)*XTAUY
-      RAYSD(NZ,NY,NX)=RAYSD(NZ,NY,NX)*XTAUY
-      RAYPL(NZ,NY,NX)=RAYPL(NZ,NY,NX)*XTAUY
-      RAYPW(NZ,NY,NX)=RAYPW(NZ,NY,NX)*XTAUY
-      RAYPD(NZ,NY,NX)=RAYPD(NZ,NY,NX)*XTAUY
-      RAYS1(NZ,NY,NX)=RAYS1(NZ,NY,NX)*XTAUY
-      RAYW1(NZ,NY,NX)=RAYW1(NZ,NY,NX)*XTAUY
-      RAYD1(NZ,NY,NX)=RAYD1(NZ,NY,NX)*XTAUY
-      RAYP1(NZ,NY,NX)=RAYP1(NZ,NY,NX)*XTAUY
-      RAYQ1(NZ,NY,NX)=RAYQ1(NZ,NY,NX)*XTAUY
-      RAYZ1(NZ,NY,NX)=RAYZ1(NZ,NY,NX)*XTAUY
-      RAYS2(NZ,NY,NX)=RAYS2(NZ,NY,NX)*XTAUY
-      RAYW2(NZ,NY,NX)=RAYW2(NZ,NY,NX)*XTAUY
-      RAYD2(NZ,NY,NX)=RAYD2(NZ,NY,NX)*XTAUY
-      RAYP2(NZ,NY,NX)=RAYP2(NZ,NY,NX)*XTAUY
-      RAYQ2(NZ,NY,NX)=RAYQ2(NZ,NY,NX)*XTAUY
-      RAYZ2(NZ,NY,NX)=RAYZ2(NZ,NY,NX)*XTAUY
-      DO 1730 N=1,4
-      DO 1730 M=1,4
-      PARDIF(N,M,L,NZ,NY,NX)=PARDIF(N,M,L,NZ,NY,NX)*XTAUY
-      PAR(N,M,L,NZ,NY,NX)=PARDIR(N,M,NZ,NY,NX)+PARDIF(N,M,L,NZ,NY,NX)
-1730  CONTINUE
-1520  CONTINUE
-      ENDIF
-C
-C     TOTAL RADIATION ABSORBED, REFLECTED AND TRANSMITTED BY ALL PFTs
-C
-C     RADST,RADWT,RADPT,RADQT=total atmospheric SW,PAR absorbed 
-C        by leaf,stalk surfaces
-C     RADDT,RADZT=total atmospheric SW,PAR absorbed 
-C        by standing dead surfaces
-C     RA1ST,RA1WT,RA1PT,RA1QT=total back scattered SW,PAR absorbed 
-C        by leaf,stalk surfaces 
-C     RA1DT,RA1ZT=total back scattered SW,PAR absorbed 
-C        by standing dead surfaces
-C     RA2ST,RA2WT,RA2PT,RA2QT=total forward scattered SW,PAR absorbed 
-C        by leaf,stalk surfaces 
-C     RA2DT,RA2ZT=total forward scattered SW,PAR absorbed 
-C        by standing dead surfaces
-C     RAFSL,RAFPL=total forward scattered SW,PAR to next layer 
-C     RABSL,RABPL=total back scattered SW,PAR to next layer
-C     RADC,TRADC,RADP,TRADP=total SW,PAR absorbed 
-C        by canopy of each,all PFT 
-C     RADD,RADQ=total SW,PAR absorbed 
-C        by standing dead of each PFT 
-C     STOPS,STOPY=accumulated interception of direct,diffuse radiation
-C     TAUS,TAUY=transmission of direct,diffuse radiation 
-C        to next lower layer  
-C
-      DO 1530 NZ=1,NP(NY,NX)
-      RADST=RADSL(NZ,NY,NX)+RAYSL(NZ,NY,NX)
-      RADWT=RADSW(NZ,NY,NX)+RAYSW(NZ,NY,NX)
-      RADDT=RADSD(NZ,NY,NX)+RAYSD(NZ,NY,NX)
-      RADPT=RADPL(NZ,NY,NX)+RAYPL(NZ,NY,NX)
-      RADQT=RADPW(NZ,NY,NX)+RAYPW(NZ,NY,NX)
-      RADZT=RADPD(NZ,NY,NX)+RAYPD(NZ,NY,NX)
-      RA1ST=RADS1(NZ,NY,NX)+RAYS1(NZ,NY,NX)
-      RA1WT=RADW1(NZ,NY,NX)+RAYW1(NZ,NY,NX)
-      RA1DT=RADD1(NZ,NY,NX)+RAYD1(NZ,NY,NX)
-      RA1PT=RADP1(NZ,NY,NX)+RAYP1(NZ,NY,NX)
-      RA1QT=RADQ1(NZ,NY,NX)+RAYQ1(NZ,NY,NX)
-      RA1ZT=RADZ1(NZ,NY,NX)+RAYZ1(NZ,NY,NX)
-      RA2ST=RADS2(NZ,NY,NX)+RAYS2(NZ,NY,NX)
-      RA2WT=RADW2(NZ,NY,NX)+RAYW2(NZ,NY,NX)
-      RA2DT=RADD2(NZ,NY,NX)+RAYD2(NZ,NY,NX)
-      RA2PT=RADP2(NZ,NY,NX)+RAYP2(NZ,NY,NX)
-      RA2QT=RADQ2(NZ,NY,NX)+RAYQ2(NZ,NY,NX)
-      RA2ZT=RADZ2(NZ,NY,NX)+RAYZ2(NZ,NY,NX)
-      RAFSL(L)=RAFSL(L)+(RADST*TAUR(NZ,NY,NX)
-     2+RA2ST*ALBR(NZ,NY,NX)+RA2WT*ALBRW+RA2DT*ALBRD)*YAREA
-      RAFPL(L)=RAFPL(L)+(RADPT*TAUP(NZ,NY,NX)
-     2+RA2PT*ALBP(NZ,NY,NX)+RA2QT*ALBPW+RA2ZT*ALBPD)*YAREA
-      RABSL(L)=RABSL(L)+(RA1ST*ALBR(NZ,NY,NX)
-     2+RA1WT*ALBRW+RA1DT*ALBRD)*YAREA
-      RABPL(L)=RABPL(L)+(RA1PT*ALBP(NZ,NY,NX)
-     2+RA1QT*ALBPW+RA1ZT*ALBPD)*YAREA
-      RADC(NZ,NY,NX)=RADC(NZ,NY,NX)+RADST+RADWT 
-      RADD(NZ,NY,NX)=RADD(NZ,NY,NX)+RADDT 
-      RADP(NZ,NY,NX)=RADP(NZ,NY,NX)+RADPT+RADQT 
-      RADQ(NZ,NY,NX)=RADQ(NZ,NY,NX)+RADZT 
-      TRADC(NY,NX)=TRADC(NY,NX)+RADST+RADWT+RADDT 
-      TRAPC(NY,NX)=TRAPC(NY,NX)+RADPT+RADQT+RADZT 
-1530  CONTINUE
-      STOPS=STOPS+STOPSZ
-      STOPY=STOPY+STOPYZ
-      TAUS(L,NY,NX)=1.0-STOPS
-      TAU0(L,NY,NX)=1.0-TAUS(L,NY,NX)
-      TAUY(L)=1.0-STOPY
-      ELSE
-      RAFSL(L)=RAFSL(L+1)
-      RAFPL(L)=RAFPL(L+1)
-      TAUS(L,NY,NX)=TAUS(L+1,NY,NX)
-      TAU0(L,NY,NX)=1.0-TAUS(L,NY,NX)
-      TAUY(L)=TAUY(L+1)
-      ENDIF
-1800  CONTINUE
-C
-C     DIRECT AND DIFFUSE RADIATION ABSORBED AT GROUND SURFACE
-C
-C     RADSG,RADYG,RAPSG,RAPYG=direct,diffuse SW,PAR at horizontal
-C        ground surface
-C     RADS,RAPS =solar beam direct SW,PAR flux
-C     TAUS,TAUY=transmission of direct,diffuse radiation below canopy   
-C     RADYL,RAPYL=solar beam diffuse SW,PAR flux
-C     RASG,RAPG=total SW,PAR at ground surface
-C     BETAG,OMEGAG=incident solar,sky angle at ground surface
-C     RADG=total direct+diffuse SW at ground surface
-C
-      RADSG=RADS(NY,NX)*TAUS(1,NY,NX)
-      RADYG=RADYL*TAUY(1)+RAFSL(1)
-      RAPSG=RAPS(NY,NX)*TAUS(1,NY,NX)
-      RAPYG=RAPYL*TAUY(1)+RAFPL(1)
-      RASG=ABS(BETAG)*RADSG
-      RAPG=ABS(BETAG)*RAPSG
-      DO 20 N=1,4
-      RASG=RASG+ABS(OMEGAG(N,NY,NX))*RADYG
-      RAPG=RAPG+ABS(OMEGAG(N,NY,NX))*RAPYG
-20    CONTINUE
-      RADG(NY,NX)=RASG*AREA(3,NU(NY,NX),NY,NX)
-C
-C     RADIATION REFLECTED FROM GROUND SURFACE
-C
-C     VHCPW,VHCPWX=current,minimum snowpack heat capacity
-C     ALBW,VOLSSL,VOLWSL,VOLISL=snowpack surface albedo,snow,water,
-C        ice volume
-C     ALBG,ALBS,FSNOW=ground,soil albedo,snow cover fraction
-C     THETW1=soil surface water content
-C     RABSL,RADPL=SW,PAR backscatter from ground surface
-C     TRADG,TRAPG=SW,PAR absorbed by ground surface 
-C
-      IF(VHCPW(1,NY,NX).GT.VHCPWX(NY,NX))THEN
-      ALBW=(0.80*VOLSSL(1,NY,NX)+0.30*VOLISL(1,NY,NX)
-     2+0.06*VOLWSL(1,NY,NX)) 
-     2/(VOLSSL(1,NY,NX)+VOLISL(1,NY,NX)+VOLWSL(1,NY,NX))
-      FSNOW=AMIN1((DPTHS(NY,NX)/0.07)**2,1.0)
-      ALBG=FSNOW*ALBW+(1.0-FSNOW)*ALBS(NY,NX)
-      ELSE
-      IF(VOLX(NU(NY,NX),NY,NX).GT.ZEROS2(NY,NX))THEN
-      THETW1=AMIN1(POROS(NU(NY,NX),NY,NX)
-     2,VOLW(NU(NY,NX),NY,NX)/VOLY(NU(NY,NX),NY,NX))
-      ELSE
-      THETW1=0.0
-      ENDIF
-      ALBG=AMIN1(ALBX(NY,NX),ALBS(NY,NX)
-     2+AMAX1(0.0,ALBX(NY,NX)-THETW1))
-      ENDIF
-      RABSL(0)=RASG*ALBG*0.25
-      RABPL(0)=RAPG*ALBG*0.25
-      TRADG(NY,NX)=(1.0-ALBG)*RASG*AREA(3,NU(NY,NX),NY,NX)
-      TRAPG(NY,NX)=(1.0-ALBG)*RAPG*AREA(3,NU(NY,NX),NY,NX)
-C
-C     ADD RADIATION FROM SCATTERING THROUGH CANOPY LAYERS
-C
-C     RABSL,RABPL=total back scattered SW,PAR to next layer
-C     RAFSL,RAFPL=total forward scattered SW,PAR to next layer
-C     RADYN,RADYW,RAPYN,RAPYW=leaf,stalk SW,PAR absorbed 
-C        forward+back scatter flux
-C     RADYD,RAPYD=standing dead SW,PAR absorbed 
-C        forward+back scatter flux
-C     RAYSL,RAYSW,RAYPL,RAYPW=total leaf,stalk SW,PAR absorbed 
-C        forward+back scatter flux
-C     RAYSD,RAYPD=total standing dead SW,PAR absorbed 
-C        forward+back scatter flux 
-C     RADC,TRADC,RADP,TRAPC=total SW,PAR absorbed by canopy of 
-C        each,all PFT 
-C     RADD,RADQ=total SW,PAR absorbed by standing dead of 
-C        each PFT 
-C     ZL=height of top of canopy layer
-C     DPTHS,DPTH0=depth of snowpack, surface litter
-C     TSURFY=unself-shaded leaf area 
-C     TSURWY=unself-shaded stalk area
-C     TSURDY=unself-shaded standing dead area 
-C     PAR,PARDIF=direct,diffuse PAR flux
-C
-      RADYL=0.0
-      RAPYL=0.0
-      TAUY(0)=1.0
-      RAFSL(0)=0.0
-      RAFPL(0)=0.0
-      DO 2800 L=1,JC
-      IF(ZL(L-1,NY,NX).GE.DPTHS(NY,NX)-ZERO
-     2.AND.ZL(L-1,NY,NX).GE.DPTH0(NY,NX)-ZERO)THEN
-      RADYL=RADYL*TAUY(L-1)+RAFSL(L-1)+RABSL(L-1)
-      RAPYL=RAPYL*TAUY(L-1)+RAFPL(L-1)+RABPL(L-1)
-      RAFSL(L)=0.0
-      RAFPL(L)=0.0
-      DO 2500 NZ=1,NP(NY,NX)
-      RAYSL(NZ,NY,NX)=0.0
-      RAYSW(NZ,NY,NX)=0.0
-      RAYSD(NZ,NY,NX)=0.0
-      RAYPL(NZ,NY,NX)=0.0
-      RAYPW(NZ,NY,NX)=0.0
-      RAYPD(NZ,NY,NX)=0.0
-      DO 2600 N=1,4
-      TSURFY=TSURF(N,L,NZ,NY,NX)*CFX(NZ,NY,NX)
-      TSURWY=TSURFB(N,L,NZ,NY,NX)*CFW
-      TSURDY=TSURFD(N,L,NZ,NY,NX)*CFW
-      DO 2700 M=1,4
-      DO 2750 NN=1,4
-      RADYN=RADYL*OMEGA(M,N,NN)*ABSR(NZ,NY,NX)
-      RADYW=RADYL*OMEGA(M,N,NN)*ABSRW
-      RADYD=RADYL*OMEGA(M,N,NN)*ABSRD
-      RAPYN=RAPYL*OMEGA(M,N,NN)*ABSP(NZ,NY,NX)
-      RAPYW=RAPYL*OMEGA(M,N,NN)*ABSPW
-      RAPYD=RAPYL*OMEGA(M,N,NN)*ABSPD
-      PARDIF(N,M,L,NZ,NY,NX)=PARDIF(N,M,L,NZ,NY,NX)+RAPYN
-      PAR(N,M,L,NZ,NY,NX)=PAR(N,M,L,NZ,NY,NX)+RAPYN
-      RAYSL(NZ,NY,NX)=RAYSL(NZ,NY,NX)+TSURFY*RADYN
-      RAYSW(NZ,NY,NX)=RAYSW(NZ,NY,NX)+TSURWY*RADYW
-      RAYSD(NZ,NY,NX)=RAYSD(NZ,NY,NX)+TSURDY*RADYD
-      RAYPL(NZ,NY,NX)=RAYPL(NZ,NY,NX)+TSURFY*RAPYN
-      RAYPW(NZ,NY,NX)=RAYPW(NZ,NY,NX)+TSURWY*RAPYW
-      RAYPD(NZ,NY,NX)=RAYPD(NZ,NY,NX)+TSURDY*RAPYD
-2750  CONTINUE
-2700  CONTINUE
-2600  CONTINUE
-      RAFSL(L)=RAFSL(L)+RAYSL(NZ,NY,NX)*TAUR(NZ,NY,NX)*YAREA
-      RAFPL(L)=RAFPL(L)+RAYPL(NZ,NY,NX)*TAUP(NZ,NY,NX)*YAREA
-      RADC(NZ,NY,NX)=RADC(NZ,NY,NX)+RAYSL(NZ,NY,NX)+RAYSW(NZ,NY,NX)
-      RADD(NZ,NY,NX)=RADD(NZ,NY,NX)+RAYSD(NZ,NY,NX)
-      RADP(NZ,NY,NX)=RADP(NZ,NY,NX)+RAYPL(NZ,NY,NX)+RAYPW(NZ,NY,NX)
-      RADQ(NZ,NY,NX)=RADQ(NZ,NY,NX)+RAYPD(NZ,NY,NX)
-      TRADC(NY,NX)=TRADC(NY,NX)+RAYSL(NZ,NY,NX)
-     2+RAYSW(NZ,NY,NX)+RAYSD(NZ,NY,NX)
-      TRAPC(NY,NX)=TRAPC(NY,NX)+RAYPL(NZ,NY,NX)
-     2+RAYPW(NZ,NY,NX)+RAYPD(NZ,NY,NX)
-2500  CONTINUE
-      ELSE
-      RAFSL(L)=RAFSL(L-1)
-      RAFPL(L)=RAFPL(L-1)
-      RABSL(L)=RABSL(L-1)
-      RABPL(L)=RABPL(L-1)
-      ENDIF
-2800  CONTINUE
-C
-C     RADIATION AT GROUND SURFACE IF NO CANOPY
-C
-      ELSE
-      RASG=ABS(BETAG)*RADS(NY,NX)
-      DO 120 N=1,4
-      RASG=RASG+ABS(OMEGAG(N,NY,NX))*RADY(NY,NX)
-120   CONTINUE
-      RADG(NY,NX)=RASG*AREA(3,NU(NY,NX),NY,NX)
-      DO 135 NZ=1,NP(NY,NX)
-      RADC(NZ,NY,NX)=0.0
-      RADD(NZ,NY,NX)=0.0
-      RADP(NZ,NY,NX)=0.0
-      RADQ(NZ,NY,NX)=0.0
-135   CONTINUE
-      ENDIF
-C
-C     IF NO RADIATION 
-C
-      ELSE
-      RADG(NY,NX)=0.0
-      DO 125 NZ=1,NP(NY,NX)
-      RADC(NZ,NY,NX)=0.0
-      RADD(NZ,NY,NX)=0.0
-      RADP(NZ,NY,NX)=0.0
-      RADQ(NZ,NY,NX)=0.0
-125   CONTINUE
-      ENDIF
-C
-C     DIVISION OF CANOPY INTO LAYERS WITH EQUAL LAI 
-C
-C     ZT,ZC=heights of combined canopy,PFT canopy
-C     ZL=height to top of each canopy layer
-C     ARLFC,ARSTC=leaf,stalk area of combined canopy
-C     ARLFT,ARSTT=leaf,stalk area of combined canopy layer
-C
-      ZL(JC,NY,NX)=ZT(NY,NX)+0.01
-      ZL1(JC,NY,NX)=ZL(JC,NY,NX)
-      ZL1(0,NY,NX)=0.0
-      ART=(ARLFC(NY,NX)+ARSTC(NY,NX)+ARSDC(NY,NX))/JC
-      IF(ART.GT.ZEROS(NY,NX))THEN
-      DO 2765 L=JC,2,-1
-      ARL=ARLFT(L,NY,NX)+ARSTT(L,NY,NX)+ARSDT(L,NY,NX)
-      IF(ARL.GT.1.01*ART)THEN
-      DZL=ZL(L,NY,NX)-ZL(L-1,NY,NX)
-      ZL1(L-1,NY,NX)=ZL(L-1,NY,NX)+0.5*AMIN1(1.0,(ARL-ART)/ARL)*DZL
-      ELSEIF(ARL.LT.0.99*ART)THEN
-      ARX=ARLFT(L-1,NY,NX)+ARSTT(L-1,NY,NX)+ARSDT(L-1,NY,NX)
-      DZL=ZL(L-1,NY,NX)-ZL(L-2,NY,NX)
-      IF(ARX.GT.ZEROS(NY,NX))THEN
-      ZL1(L-1,NY,NX)=AMIN1(ZT(NY,NX),ZL(L-1,NY,NX)
-     2-0.5*AMIN1(1.0,(ART-ARL)/ARX)*DZL)
-      ELSE
-      ZL1(L-1,NY,NX)=ZL1(L,NY,NX)
-      ENDIF
-      ELSE
-      ZL1(L-1,NY,NX)=ZL(L-1,NY,NX)
-      ENDIF
-C     IF(J.EQ.12)THEN
-C     WRITE(*,3233)'ZL',I,J,NX,NY,L,ZL1(L,NY,NX),ZL1(L-1,NY,NX)
-C    3,ZL(L,NY,NX),ZL(L-1,NY,NX),ART,ARL
-C    2,ARLFC(NY,NX),ARSTC(NY,NX),ARSDC(NY,NX)
-C    3,ARLFT(L,NY,NX),ARSTT(L,NY,NX),ARSDT(L,NY,NX)
-C    3,ARLFT(L-1,NY,NX),ARSTT(L-1,NY,NX),ARSDT(L-1,NY,NX)
-C    3,ZL(JC,NY,NX),ZT(NY,NX),(ZC(NZ,NY,NX),NZ=1,3)
-C    4,(ZG(NZ,NY,NX),NZ=1,3)
-3233  FORMAT(A8,5I4,30E12.4)
-C     ENDIF
-2765  CONTINUE
-      DO 2770 L=JC,2,-1
-      ZL(L-1,NY,NX)=ZL1(L-1,NY,NX)
-C     ZL(L-1,NY,NX)=AMAX1(0.0,AMIN1(ZL(L,NY,NX)-1.0E-06
-C    2,ZL(L-1,NY,NX)))
-2770  CONTINUE
-      ELSE
-      DO 2775 L=JC,2,-1
-      ZL(L-1,NY,NX)=0.0
-2775  CONTINUE
-      ENDIF
-C
-C     CANOPY RETENTION OF PRECIPITATION
-C
-C     XVOLWC=foliar surface water retention capacity 
-C     ARLFP,ARSTP=leaf,stalk area of PFT
-C     FLWC=foliar water retention of precipitation by PFT 
-C     FLWD=standing dead water retention of precipitation by PFT 
-C     TFLWC,TFLWCI=total water retention,interception 
-C        by combined canopy
-C     PRECA=precipitation+irrigation
-C
-      TFLWCI(NY,NX)=0.0
-      TFLWC(NY,NX)=0.0
-      DO 1930 NZ=1,NP(NY,NX)
-      VOLWCX=XVOLWC(IGTYP(NZ,NY,NX))
-     2*(ARLFP(NZ,NY,NX)+ARSTP(NZ,NY,NX))
-      FLWC(NZ,NY,NX)=AMAX1(0.0,AMIN1(PRECA(NY,NX)*FRADP(NZ,NY,NX)
-     2,VOLWCX-VOLWC(NZ,NY,NX)))-AMAX1(0.0,VOLWC(NZ,NY,NX)-VOLWCX)
-      VOLWQX=XVOLWC(IGTYP(NZ,NY,NX))*ARSTG(NZ,NY,NX) 
-      FLWD(NZ,NY,NX)=AMAX1(0.0,AMIN1(PRECA(NY,NX)*FRADQ(NZ,NY,NX)
-     2,VOLWQX-VOLWQ(NZ,NY,NX)))-AMAX1(0.0,VOLWQ(NZ,NY,NX)-VOLWQX) 
-      TFLWCI(NY,NX)=TFLWCI(NY,NX)+PRECA(NY,NX)
-     2*(FRADP(NZ,NY,NX)+FRADQ(NZ,NY,NX))
-      TFLWC(NY,NX)=TFLWC(NY,NX)+FLWC(NZ,NY,NX)+FLWD(NZ,NY,NX)
-C     IF(NZ.EQ.2)THEN
-C     WRITE(*,6634)'TFLWC',I,J,NFZ,NX,NY,NZ
-C    2,TFLWC(NY,NX),FLWC(NZ,NY,NX),FLWD(NZ,NY,NX),PRECA(NY,NX)
-C    3,FRADP(NZ,NY,NX),VOLWCX,VOLWC(NZ,NY,NX),FRADQ(NZ,NY,NX)
-C    4,VOLWQX,VOLWQ(NZ,NY,NX),ARLFP(NZ,NY,NX),ARSTP(NZ,NY,NX)
-C    5,ARSTG(NZ,NY,NX)
-6634  FORMAT(A8,6I4,30E12.4)
-C     ENDIF
-C
-C     NUMBERS OF TOP AND BOTTOM ROOTED SOIL LAYERS 
-C
-C     NG=number of uppermost rooted layer
-C     NINR=number of lowest rooted layer
-C
-      NG(NZ,NY,NX)=MAX(NG(NZ,NY,NX),NU(NY,NX))
-      NIX(NZ,NY,NX)=MAX(NIX(NZ,NY,NX),NU(NY,NX))
-      DO 9790 NR=1,10
-      NINR(NR,NZ,NY,NX)=MAX(NINR(NR,NZ,NY,NX),NU(NY,NX))
-9790  CONTINUE
-1930  CONTINUE
-C
-C     WRITE SW AND PAR ALBEDO
-C
-C     IF(ABS(J-ZNOON(NY,NX)).LT.1)THEN
-C     IF(RAD(NY,NX).GT.0.0.AND.RAP(NY,NX).GT.0.0)THEN
-C     WRITE(19,1927)'ALBEDO',IYRC,I,J,NX,NY
-C    2,RAD(NY,NX),RAP(NY,NX),TRADC(NY,NX),TRAPC(NY,NX)
-C    3,TRADG(NY,NX),TRAPG(NY,NX)
-C    4,(RAD(NY,NX)-TRADC(NY,NX)-TRADG(NY,NX))/RAD(NY,NX) 
-C    5,(RAP(NY,NX)-TRAPC(NY,NX)-TRAPG(NY,NX))/RAP(NY,NX) 
-1927  FORMAT(A10,5I6,30E12.4)
-C     ENDIF
-C     ENDIF
 C
 C     FERTILIZER APPLICATIONS OCCUR AT SOLAR NOON
 C
@@ -1624,6 +843,804 @@ C
 9965  CONTINUE
       ENDIF
       ENDIF
+      ENDIF
+C
+C     MULTILAYER CANOPY INTERECEPTION OF DIRECT AND DIFFUSE RADIATION
+C     IN SW AND VISIBLE BANDS BY INCLINATION N, AZIMUTH M, LAYER L,
+C     NODE K, BRANCH NB, PFT NZ
+C
+C     ARLFS,ARLSS=leaf+stalk area of combined,each PFT canopy 
+C     ZL=height to top of canopy layer
+C     DPTHS,DPTH0=snowpack,surface water depths
+C     ARLFL,ARSTK=leaf,stalk areas of PFT
+C     RAD,RAP=vertical direct+diffuse SW,PAR
+C     RADS,RADY,RAPS,RAPY=solar beam direct,diffuse SW,PAR 
+C     SSIN,TYSIN=sine of solar,sky angles
+C     RADC,RADP=total SW,PAR absorbed by living canopy
+C     RADD,RADQ=total SW,PAR absorbed by standing dead 
+C     CFX=clumping factor for self-shading
+C     ARLFP=canopy leaf area
+C
+      IF(SSIN(NY,NX).GT.ZERO)THEN
+      RAD(NY,NX)=RADS(NY,NX)*SSIN(NY,NX)+RADY(NY,NX)*TYSIN
+      RAP(NY,NX)=RAPS(NY,NX)*SSIN(NY,NX)+RAPY(NY,NX)*TYSIN
+      ELSE
+      RADS(NY,NX)=0.0
+      RADY(NY,NX)=0.0
+      RAPS(NY,NX)=0.0
+      RAPY(NY,NX)=0.0
+      RAD(NY,NX)=0.0
+      RAP(NY,NX)=0.0
+      ENDIF
+      TRADC(NY,NX)=0.0
+      TRAPC(NY,NX)=0.0
+      DO 1025 NZ=1,NP(NY,NX)
+      RADC(NZ,NY,NX)=0.0
+      RADD(NZ,NY,NX)=0.0
+      RADP(NZ,NY,NX)=0.0
+      RADQ(NZ,NY,NX)=0.0
+      CFX(NZ,NY,NX)=CF(NZ,NY,NX)*(1.0-0.025
+     2*ARLFP(NZ,NY,NX)/AREA(3,NU(NY,NX),NY,NX))
+1025  CONTINUE
+C
+C     ANGLE BETWEEN SUN AND GROUND SURFACE
+C
+C     SAZI,SCOS=solar azimuth,cosine of solar angle
+C     BETAG=incident solar angle at ground surface
+C     GCOS,GSIN=cos,sin of ground surface
+C     ZNOON=hour of solar noon from weather file
+C
+      IF(SSIN(NY,NX).GT.ZERO)THEN
+      SAZI=0.2618*(ZNOON(NY,NX)-J)+4.7124
+      SCOS=SQRT(1.0-SSIN(NY,NX)**2)
+      DGAZI=COS(GAZI(NY,NX)-SAZI)
+      BETAG=AMAX1(0.0,AMIN1(1.0,GCOS(NY,NX)*SSIN(NY,NX)
+     2+GSIN(NY,NX)*SCOS*DGAZI))
+      IF(ARLSS(NY,NX).GT.0.0)THEN
+      SAGL=ASIN(SSIN(NY,NX))
+C
+C     ABSORBED RADIATION FROM OPTICAL PROPERTIES ENTERED IN 'READS'
+C
+C     RADSA,RADWA,RAPSA,RAPWA=SW,PAR absorbed at leaf,stalk surface    
+C        perpendicular to incoming radiation
+C     RADDA,RAPDA=SW,PAR absorbed at standing dead surface    
+C        perpendicular to incoming radiation
+C     ABS*=absorption coeffient=1-albedo
+C
+      DO 1050 NZ=1,NP(NY,NX)
+      RADSA(NZ,NY,NX)=RADS(NY,NX)*ABSR(NZ,NY,NX)
+      RADWA(NZ,NY,NX)=RADS(NY,NX)*ABSRW
+      RADDA(NZ,NY,NX)=RADS(NY,NX)*ABSRD
+      RAPSA(NZ,NY,NX)=RAPS(NY,NX)*ABSP(NZ,NY,NX)
+      RAPWA(NZ,NY,NX)=RAPS(NY,NX)*ABSPW
+      RAPDA(NZ,NY,NX)=RAPS(NY,NX)*ABSPD
+1050  CONTINUE
+C
+C     ANGLES BETWEEN SUN OR SKY ZONES AND FOLIAR SURFACES
+C
+C     ZAZI=leaf azimuth
+C     BETA,BETX=incident angle of direct radiation at leaf,
+C        horizontal surface
+C     ZAGL=determines forward vs back scattering
+C     IALBS=flag for forward vs back scattering
+C
+      DO 1100 M=1,4
+      ZAZI=SAZI+(M-0.5)*3.1416/4
+      DAZI=COS(ZAZI-SAZI)
+      DO 1100 N=1,4
+      BETY=ZCOS(N)*SSIN(NY,NX)+ZSIN(N)*SCOS*DAZI
+      BETA(N,M)=ABS(BETY)
+      BETX(N,M)=BETA(N,M)/SSIN(NY,NX)
+      IF(ZCOS(N).GT.SSIN(NY,NX))THEN
+      BETZ=ACOS(BETY)
+      ELSE
+      BETZ=-ACOS(BETY)
+      ENDIF
+      IF(BETZ.GT.-1.5708)THEN
+      ZAGL=SAGL+2.0*BETZ
+      ELSE
+      ZAGL=SAGL-2.0*(3.1416+BETZ)
+      ENDIF
+      IF(ZAGL.GT.0.0.AND.ZAGL.LT.3.1416)THEN
+      IALBS(N,M)=1
+      ELSE
+      IALBS(N,M)=2
+      ENDIF
+C
+C     INTENSITY OF ABSORBED DIRECT RADIATION AT LEAF SURFACES
+C
+C     RDNDIR,RDNDIW,PARDIR,PARDIW=atmospheric SW,PAR flux 
+C        absorbed by leaf, stalk surfaces
+C     RDNDID,PARDID= atmospheric SW,PAR flux absorbed by standing
+C        dead surfaces
+C     PAR,PARDIF=direct,diffuse PAR flux
+C     RADYL,RAPYL=solar beam diffuse SW,PAR flux
+C     RAFYL,RAFPL=forward scattered diffuse SW,PAR flux
+C     TAUS,TAUY=fraction of direct,diffuse radiation transmitted 
+C
+      DO 1100 NZ=1,NP(NY,NX)
+      RDNDIR(N,M,NZ,NY,NX)=RADSA(NZ,NY,NX)*ABS(BETA(N,M))
+      RDNDIW(N,M,NZ,NY,NX)=RADWA(NZ,NY,NX)*ABS(BETA(N,M))
+      RDNDID(N,M,NZ,NY,NX)=RADDA(NZ,NY,NX)*ABS(BETA(N,M))
+      PARDIR(N,M,NZ,NY,NX)=RAPSA(NZ,NY,NX)*ABS(BETA(N,M))
+      PARDIW(N,M,NZ,NY,NX)=RAPWA(NZ,NY,NX)*ABS(BETA(N,M))
+      PARDID(N,M,NZ,NY,NX)=RAPDA(NZ,NY,NX)*ABS(BETA(N,M))
+      DO 1100 L=1,JC
+      PARDIF(N,M,L,NZ,NY,NX)=0.0
+      PAR(N,M,L,NZ,NY,NX)=PARDIR(N,M,NZ,NY,NX)
+1100  CONTINUE
+      XAREA=1.00/AREA(3,NU(NY,NX),NY,NX)
+      YAREA=0.25/AREA(3,NU(NY,NX),NY,NX)
+      RADYL=RADY(NY,NX)
+      RAPYL=RAPY(NY,NX)
+      TAUS(JC+1,NY,NX)=1.0
+      TAUY(JC+1)=1.0
+      RAFSL(JC+1)=0.0
+      RAFPL(JC+1)=0.0
+      STOPS=0.0
+C
+C     RESET ARRAYS OF SUNLIT AND SHADED LEAF AREAS IN DIFFERENT
+C     LAYERS AND ANGLE CLASSES
+C
+C     TSURF,TSURFB,SURF,SURFB=leaf,stalk total,PFT surface area
+C     TSURFD,SURFD=standing dead total,PFT surface area
+C     ZL=height of top of canopy layer
+C     DPTHS,DPTH0=depth of snowpack, surface litter
+C
+      DO 1150 NZ=1,NP(NY,NX)
+      DO 1150 L=1,JC
+      DO 1150 N=1,4
+      TSURF(N,L,NZ,NY,NX)=0.0
+      TSURFB(N,L,NZ,NY,NX)=0.0
+      TSURFD(N,L,NZ,NY,NX)=0.0
+1150  CONTINUE
+      DO 1200 NZ=1,NP(NY,NX)
+      DO 1201 L=1,JC
+      IF(ZL(L-1,NY,NX).GT.DPTHS(NY,NX)-ZERO
+     2.AND.ZL(L-1,NY,NX).GT.DPTH0(NY,NX)-ZERO)THEN
+      TSURFD(4,L,NZ,NY,NX)=TSURFD(4,L,NZ,NY,NX)
+     2+SURFD(4,L,NZ,NY,NX)
+      DO 1205 NB=1,NBR(NZ,NY,NX)
+      DO 1205 N=1,4
+      TSURFB(N,L,NZ,NY,NX)=TSURFB(N,L,NZ,NY,NX)
+     2+SURFB(N,L,NB,NZ,NY,NX)
+      DO 1210 K=1,25
+      TSURF(N,L,NZ,NY,NX)=TSURF(N,L,NZ,NY,NX)+SURF(N,L,K,NB,NZ,NY,NX)
+1210  CONTINUE
+1205  CONTINUE
+      ENDIF
+1201  CONTINUE
+1200  CONTINUE
+C
+C     CALCULATE ABSORPTION, REFLECTION AND TRANSMISSION OF DIRECT AND 
+C     DIFFUSE DOWNWARD TOTAL AND VISIBLE RADIATION BY EACH SPECIES 
+C     NZ IN EACH LAYER L
+C
+C     RAFYL,RAFPL=forward scattered diffuse SW,PAR
+C     RABYL,RABPL=backscattered diffuse SW,PAR
+C     RADYL,RAPYL=solar beam diffuse SW,PAR
+C     STOPY,STOPSZ,STOPYZ=fraction of direct,diffuse radiation intercepted
+C
+      DO 1800 L=JC,1,-1
+      IF(ZL(L-1,NY,NX).GE.DPTHS(NY,NX)-ZERO
+     2.AND.ZL(L-1,NY,NX).GE.DPTH0(NY,NX)-ZERO)THEN
+      RADYL=RADYL*TAUY(L+1)+RAFSL(L+1)
+      RAPYL=RAPYL*TAUY(L+1)+RAFPL(L+1)
+      RAFSL(L)=0.0
+      RAFPL(L)=0.0
+      RABSL(L)=0.0
+      RABPL(L)=0.0
+      STOPY=0.0
+      STOPSZ=0.0
+      STOPYZ=0.0
+C
+C     RESET ACCUMULATORS OB ABSORBED, REFLECTED AND TRANSMITTED RADIATION
+C
+C     RADSL,RADSW,RADPL,RADPW=direct SW,PAR absorbed by 
+C        leaf,stalk surfaces
+C     RADSD,RADPD=direct SW,PAR absorbed by 
+C        standing dead surfaces
+C     RAYSL,RAYSW,RAYPL,RAYPW=diffuse SW,PAR absorbed by 
+C        leaf,stalk surfaces
+C     RAYSD,RAYPD=diffuse SW,PAR absorbed by 
+C        standing dead surfaces
+C     RADS1,RADW1,RADP1,RADQ1=back scattered direct SW,PAR 
+C        absorbed by leaf,stalk surfaces
+C     RADD1,RADZ1=back scattered direct SW,PAR 
+C        absorbed by sanding dead surfaces 
+C     RAYS1,RAYW1,RAYP1,RAYQ1=back scattered diffuse SW,PAR 
+C        absorbed by leaf,stalk surfaces
+C     RAYD1,RAYZ1=back scattered diffuse SW,PAR 
+C        absorbed by standing dead surfaces
+C     RADS2,RADW2,RADP2,RADQ2=forward scattered direct SW,PAR
+C        absorbed by leaf,stalk surfaces 
+C     RADD2,RADZ2=forward scattered direct SW,PAR 
+C        absorbed by sanding dead surfaces 
+C     RAYS2,RAYW2,RAYP2,RAYQ2=forward scattered diffuse SW,PAR
+C        absorbed by leaf,stalk surfaces
+C     RAYD2,RAYZ2=forward scattered diffuse SW,PAR 
+C        absorbed by standing dead surfaces
+C
+      DO 1500 NZ=1,NP(NY,NX)
+      RADSL(NZ,NY,NX)=0.0
+      RADSW(NZ,NY,NX)=0.0
+      RADSD(NZ,NY,NX)=0.0
+      RADPL(NZ,NY,NX)=0.0
+      RADPW(NZ,NY,NX)=0.0
+      RADPD(NZ,NY,NX)=0.0
+      RAYSL(NZ,NY,NX)=0.0
+      RAYSW(NZ,NY,NX)=0.0
+      RAYSD(NZ,NY,NX)=0.0
+      RAYPL(NZ,NY,NX)=0.0
+      RAYPW(NZ,NY,NX)=0.0
+      RAYPD(NZ,NY,NX)=0.0
+      RADS1(NZ,NY,NX)=0.0
+      RADW1(NZ,NY,NX)=0.0
+      RADD1(NZ,NY,NX)=0.0
+      RADP1(NZ,NY,NX)=0.0
+      RADQ1(NZ,NY,NX)=0.0
+      RADZ1(NZ,NY,NX)=0.0
+      RAYS1(NZ,NY,NX)=0.0
+      RAYW1(NZ,NY,NX)=0.0
+      RAYD1(NZ,NY,NX)=0.0
+      RAYP1(NZ,NY,NX)=0.0
+      RAYQ1(NZ,NY,NX)=0.0
+      RAYZ1(NZ,NY,NX)=0.0
+      RADS2(NZ,NY,NX)=0.0
+      RADW2(NZ,NY,NX)=0.0
+      RADD2(NZ,NY,NX)=0.0
+      RADP2(NZ,NY,NX)=0.0
+      RADQ2(NZ,NY,NX)=0.0
+      RADZ2(NZ,NY,NX)=0.0
+      RAYS2(NZ,NY,NX)=0.0
+      RAYW2(NZ,NY,NX)=0.0
+      RAYD2(NZ,NY,NX)=0.0
+      RAYP2(NZ,NY,NX)=0.0
+      RAYQ2(NZ,NY,NX)=0.0
+      RAYZ2(NZ,NY,NX)=0.0
+C
+C     LEAF SURFACE AREA IN EACH INCLINATION CLASS N, AZIMUTH CLASS M,
+C     LAYER L AND SPECIES NZ
+C
+C     TSURFY=unself-shaded leaf area 
+C     TSURFZ=unself-shaded leaf area m-2 in each azimuth class
+C     TSURFS=TSURFY with shading from canopy layers above
+C     TSURFX=TSURFS m-2 
+C     TSURWY=unself-shaded stalk area
+C     TSURWZ=unself-shaded stalk area m-2 in each azimuth class
+C     TSURWS=TSURWY with shading from canopy layers above
+C     TSURWX=TSURWS m-2 
+C     TSURDY=unself-shaded standing dead area 
+C     TSURDZ=unself-shaded standing dead area m-2 in each azimuth
+C        class
+C     TSURDS=TSURDY with shading from canopy layers above
+C     TSURDX=TSURDS m-2 
+C
+      DO 1600 N=1,4
+      TSURFY=TSURF(N,L,NZ,NY,NX)*CFX(NZ,NY,NX)
+      TSURFZ=TSURFY*YAREA
+      TSURFS=TSURFY*TAUS(L+1,NY,NX)
+      TSURFX=TSURFS*XAREA
+      TSURWY=TSURFB(N,L,NZ,NY,NX)*CFW
+      TSURWZ=TSURWY*YAREA
+      TSURWS=TSURWY*TAUS(L+1,NY,NX)
+      TSURWX=TSURWS*XAREA
+      TSURDY=TSURFD(N,L,NZ,NY,NX)*CFW
+      TSURDZ=TSURDY*YAREA
+      TSURDS=TSURDY*TAUS(L+1,NY,NX)
+      TSURDX=TSURDS*XAREA
+C
+C     ABSORPTION OF DIRECT RADIATION BY SUNLIT LEAF SURFACES
+C
+C     STOPZ=accumulated horizontal area of intercepted direct
+C        radiation
+C
+      DO 1700 M=1,4
+      RADSL(NZ,NY,NX)=RADSL(NZ,NY,NX)+TSURFS*RDNDIR(N,M,NZ,NY,NX)
+      RADSW(NZ,NY,NX)=RADSW(NZ,NY,NX)+TSURWS*RDNDIW(N,M,NZ,NY,NX)
+      RADSD(NZ,NY,NX)=RADSD(NZ,NY,NX)+TSURDS*RDNDID(N,M,NZ,NY,NX)
+      RADPL(NZ,NY,NX)=RADPL(NZ,NY,NX)+TSURFS*PARDIR(N,M,NZ,NY,NX)
+      RADPW(NZ,NY,NX)=RADPW(NZ,NY,NX)+TSURWS*PARDIW(N,M,NZ,NY,NX)
+      RADPD(NZ,NY,NX)=RADPD(NZ,NY,NX)+TSURDS*PARDID(N,M,NZ,NY,NX)
+      STOPSZ=STOPSZ+(TSURFX+TSURWX+TSURDX)*BETX(N,M)
+C
+C     BACKSCATTERING OF REFLECTED DIRECT RADIATION
+C
+      IF(IALBS(N,M).EQ.1)THEN
+      RADS1(NZ,NY,NX)=RADS1(NZ,NY,NX)+TSURFS*RDNDIR(N,M,NZ,NY,NX)
+      RADW1(NZ,NY,NX)=RADW1(NZ,NY,NX)+TSURWS*RDNDIW(N,M,NZ,NY,NX)
+      RADD1(NZ,NY,NX)=RADD1(NZ,NY,NX)+TSURDS*RDNDID(N,M,NZ,NY,NX)
+      RADP1(NZ,NY,NX)=RADP1(NZ,NY,NX)+TSURFS*PARDIR(N,M,NZ,NY,NX)
+      RADQ1(NZ,NY,NX)=RADQ1(NZ,NY,NX)+TSURWS*PARDIW(N,M,NZ,NY,NX)
+      RADZ1(NZ,NY,NX)=RADZ1(NZ,NY,NX)+TSURDS*PARDID(N,M,NZ,NY,NX)
+C
+C     FORWARD SCATTERING OF REFLECTED DIRECT RADIATION
+C
+      ELSE
+      RADS2(NZ,NY,NX)=RADS2(NZ,NY,NX)+TSURFS*RDNDIR(N,M,NZ,NY,NX)
+      RADW2(NZ,NY,NX)=RADW2(NZ,NY,NX)+TSURWS*RDNDIW(N,M,NZ,NY,NX)
+      RADD2(NZ,NY,NX)=RADD2(NZ,NY,NX)+TSURDS*RDNDID(N,M,NZ,NY,NX)
+      RADP2(NZ,NY,NX)=RADP2(NZ,NY,NX)+TSURFS*PARDIR(N,M,NZ,NY,NX)
+      RADQ2(NZ,NY,NX)=RADQ2(NZ,NY,NX)+TSURWS*PARDIW(N,M,NZ,NY,NX)
+      RADZ2(NZ,NY,NX)=RADZ2(NZ,NY,NX)+TSURDS*PARDID(N,M,NZ,NY,NX)
+      ENDIF
+C
+C     INTENSITY OF ABSORBED DIFFUSE RADIATION AT LEAF SURFACES
+C
+C     RADYN,RADYW,RAPYN,RAPYW=diffuse SW,PAR flux absorbed by
+C        leaf,stalk surfaces
+C     RADYD,RAPYD= diffuse SW,PAR flux absorbed by
+C        standing dead surfaces
+C     OMEGA=incident angle of diffuse radiation 
+C     PAR,PARDIF=direct,diffuse PAR flux
+C
+      DO 1750 NN=1,4
+      RADYN=RADYL*OMEGA(M,N,NN)*ABSR(NZ,NY,NX)
+      RADYW=RADYL*OMEGA(M,N,NN)*ABSRW
+      RADYD=RADYL*OMEGA(M,N,NN)*ABSRD
+      RAPYN=RAPYL*OMEGA(M,N,NN)*ABSP(NZ,NY,NX)
+      RAPYW=RAPYL*OMEGA(M,N,NN)*ABSPW
+      RAPYD=RAPYL*OMEGA(M,N,NN)*ABSPD
+      PARDIF(N,M,L,NZ,NY,NX)=PARDIF(N,M,L,NZ,NY,NX)+RAPYN
+      PAR(N,M,L,NZ,NY,NX)=PAR(N,M,L,NZ,NY,NX)+RAPYN
+C
+C     ABSORPTION OF DIFFUSE RADIATION BY SHADED LEAF SURFACES
+C
+C     STOPYZ=accumulated horizontal area of intercepted diffuse
+C        radiation
+C
+      RAYSL(NZ,NY,NX)=RAYSL(NZ,NY,NX)+TSURFY*RADYN
+      RAYSW(NZ,NY,NX)=RAYSW(NZ,NY,NX)+TSURWY*RADYW
+      RAYSD(NZ,NY,NX)=RAYSD(NZ,NY,NX)+TSURDY*RADYD
+      RAYPL(NZ,NY,NX)=RAYPL(NZ,NY,NX)+TSURFY*RAPYN
+      RAYPW(NZ,NY,NX)=RAYPW(NZ,NY,NX)+TSURWY*RAPYW
+      RAYPD(NZ,NY,NX)=RAYPD(NZ,NY,NX)+TSURDY*RAPYD
+      STOPYZ=STOPYZ+(TSURFZ+TSURWZ+TSURDZ)*OMEGX(M,N,NN)
+C
+C     BACKSCATTERING OF REFLECTED DIFFUSE RADIATION
+C
+      IF(IALBY(M,N,NN).EQ.1)THEN
+      RAYS1(NZ,NY,NX)=RAYS1(NZ,NY,NX)+TSURFY*RADYN
+      RAYW1(NZ,NY,NX)=RAYW1(NZ,NY,NX)+TSURWY*RADYW
+      RAYD1(NZ,NY,NX)=RAYD1(NZ,NY,NX)+TSURDY*RADYD
+      RAYP1(NZ,NY,NX)=RAYP1(NZ,NY,NX)+TSURFY*RAPYN
+      RAYQ1(NZ,NY,NX)=RAYQ1(NZ,NY,NX)+TSURWY*RAPYW
+      RAYZ1(NZ,NY,NX)=RAYZ1(NZ,NY,NX)+TSURDY*RAPYD
+C
+C     FORWARD SCATTERING OF REFLECTED DIFFUSE RADIATION
+C
+      ELSE
+      RAYS2(NZ,NY,NX)=RAYS2(NZ,NY,NX)+TSURFY*RADYN
+      RAYW2(NZ,NY,NX)=RAYW2(NZ,NY,NX)+TSURWY*RADYW
+      RAYD2(NZ,NY,NX)=RAYD2(NZ,NY,NX)+TSURDY*RADYD
+      RAYP2(NZ,NY,NX)=RAYP2(NZ,NY,NX)+TSURFY*RAPYN
+      RAYQ2(NZ,NY,NX)=RAYQ2(NZ,NY,NX)+TSURWY*RAPYW
+      RAYZ2(NZ,NY,NX)=RAYZ2(NZ,NY,NX)+TSURDY*RAPYD
+      ENDIF
+1750  CONTINUE
+1700  CONTINUE
+1600  CONTINUE
+1500  CONTINUE
+C
+C     ACCUMULATED INTERCEPTION BY CANOPY LAYER
+C
+C     XTAUS=interception of direct radiation in current layer
+C     STOPZ=accumulated interception of direct radiation 
+C        from topmost layer
+C     TAUS=transmission of direct radiation to next lower layer   
+C     
+      IF(STOPS+STOPSZ.GT.1.0)THEN
+      IF(STOPSZ.GT.ZERO)THEN
+      XTAUS=(1.0-STOPS)/((1.0-STOPS)-(1.0-STOPS-STOPSZ))
+      ELSE
+      XTAUS=0.0
+      ENDIF
+      TAUS(L+1,NY,NX)=TAUS(L+1,NY,NX)*XTAUS
+      STOPSZ=STOPSZ*XTAUS
+      DO 1510 NZ=1,NP(NY,NX)
+      RADSL(NZ,NY,NX)=RADSL(NZ,NY,NX)*XTAUS
+      RADSW(NZ,NY,NX)=RADSW(NZ,NY,NX)*XTAUS
+      RADSD(NZ,NY,NX)=RADSD(NZ,NY,NX)*XTAUS
+      RADPL(NZ,NY,NX)=RADPL(NZ,NY,NX)*XTAUS
+      RADPW(NZ,NY,NX)=RADPW(NZ,NY,NX)*XTAUS
+      RADPD(NZ,NY,NX)=RADPD(NZ,NY,NX)*XTAUS
+      RADS1(NZ,NY,NX)=RADS1(NZ,NY,NX)*XTAUS
+      RADW1(NZ,NY,NX)=RADW1(NZ,NY,NX)*XTAUS
+      RADD1(NZ,NY,NX)=RADD1(NZ,NY,NX)*XTAUS
+      RADP1(NZ,NY,NX)=RADP1(NZ,NY,NX)*XTAUS
+      RADQ1(NZ,NY,NX)=RADQ1(NZ,NY,NX)*XTAUS
+      RADZ1(NZ,NY,NX)=RADZ1(NZ,NY,NX)*XTAUS
+      RADS2(NZ,NY,NX)=RADS2(NZ,NY,NX)*XTAUS
+      RADW2(NZ,NY,NX)=RADW2(NZ,NY,NX)*XTAUS
+      RADD2(NZ,NY,NX)=RADD2(NZ,NY,NX)*XTAUS
+      RADP2(NZ,NY,NX)=RADP2(NZ,NY,NX)*XTAUS
+      RADQ2(NZ,NY,NX)=RADQ2(NZ,NY,NX)*XTAUS
+      RADZ2(NZ,NY,NX)=RADZ2(NZ,NY,NX)*XTAUS
+1510  CONTINUE
+      ENDIF
+C
+C     XTAUY=interception of diffuse radiation in current layer
+C     STOPYZ=accumulated interception of diffuse radiation 
+C        from topmost layer
+C     TAUY=transmission of diffuse radiation to next lower layer   
+C     PAR,PARDIF=direct,diffuse PAR flux
+C
+      IF(STOPY+STOPYZ.GT.1.0)THEN
+      XTAUY=(1.0-STOPY)/((1.0-STOPY)-(1.0-STOPY-STOPYZ))
+      TAUY(L+1)=TAUY(L+1)*XTAUY
+      STOPYZ=STOPYZ*XTAUY
+      DO 1520 NZ=1,NP(NY,NX)
+      RAYSL(NZ,NY,NX)=RAYSL(NZ,NY,NX)*XTAUY
+      RAYSW(NZ,NY,NX)=RAYSW(NZ,NY,NX)*XTAUY
+      RAYSD(NZ,NY,NX)=RAYSD(NZ,NY,NX)*XTAUY
+      RAYPL(NZ,NY,NX)=RAYPL(NZ,NY,NX)*XTAUY
+      RAYPW(NZ,NY,NX)=RAYPW(NZ,NY,NX)*XTAUY
+      RAYPD(NZ,NY,NX)=RAYPD(NZ,NY,NX)*XTAUY
+      RAYS1(NZ,NY,NX)=RAYS1(NZ,NY,NX)*XTAUY
+      RAYW1(NZ,NY,NX)=RAYW1(NZ,NY,NX)*XTAUY
+      RAYD1(NZ,NY,NX)=RAYD1(NZ,NY,NX)*XTAUY
+      RAYP1(NZ,NY,NX)=RAYP1(NZ,NY,NX)*XTAUY
+      RAYQ1(NZ,NY,NX)=RAYQ1(NZ,NY,NX)*XTAUY
+      RAYZ1(NZ,NY,NX)=RAYZ1(NZ,NY,NX)*XTAUY
+      RAYS2(NZ,NY,NX)=RAYS2(NZ,NY,NX)*XTAUY
+      RAYW2(NZ,NY,NX)=RAYW2(NZ,NY,NX)*XTAUY
+      RAYD2(NZ,NY,NX)=RAYD2(NZ,NY,NX)*XTAUY
+      RAYP2(NZ,NY,NX)=RAYP2(NZ,NY,NX)*XTAUY
+      RAYQ2(NZ,NY,NX)=RAYQ2(NZ,NY,NX)*XTAUY
+      RAYZ2(NZ,NY,NX)=RAYZ2(NZ,NY,NX)*XTAUY
+      DO 1730 N=1,4
+      DO 1730 M=1,4
+      PARDIF(N,M,L,NZ,NY,NX)=PARDIF(N,M,L,NZ,NY,NX)*XTAUY
+      PAR(N,M,L,NZ,NY,NX)=PARDIR(N,M,NZ,NY,NX)+PARDIF(N,M,L,NZ,NY,NX)
+1730  CONTINUE
+1520  CONTINUE
+      ENDIF
+C
+C     TOTAL RADIATION ABSORBED, REFLECTED AND TRANSMITTED BY ALL PFTs
+C
+C     RADST,RADWT,RADPT,RADQT=total atmospheric SW,PAR absorbed 
+C        by leaf,stalk surfaces
+C     RADDT,RADZT=total atmospheric SW,PAR absorbed 
+C        by standing dead surfaces
+C     RA1ST,RA1WT,RA1PT,RA1QT=total back scattered SW,PAR absorbed 
+C        by leaf,stalk surfaces 
+C     RA1DT,RA1ZT=total back scattered SW,PAR absorbed 
+C        by standing dead surfaces
+C     RA2ST,RA2WT,RA2PT,RA2QT=total forward scattered SW,PAR absorbed 
+C        by leaf,stalk surfaces 
+C     RA2DT,RA2ZT=total forward scattered SW,PAR absorbed 
+C        by standing dead surfaces
+C     RAFSL,RAFPL=total forward scattered SW,PAR to next layer 
+C     RABSL,RABPL=total back scattered SW,PAR to next layer
+C     RADC,TRADC,RADP,TRADP=total SW,PAR absorbed 
+C        by canopy of each,all PFT 
+C     RADD,RADQ=total SW,PAR absorbed 
+C        by standing dead of each PFT 
+C     STOPS,STOPY=accumulated interception of direct,diffuse radiation
+C     TAUS,TAUY=transmission of direct,diffuse radiation 
+C        to next lower layer  
+C
+      DO 1530 NZ=1,NP(NY,NX)
+      RADST=RADSL(NZ,NY,NX)+RAYSL(NZ,NY,NX)
+      RADWT=RADSW(NZ,NY,NX)+RAYSW(NZ,NY,NX)
+      RADDT=RADSD(NZ,NY,NX)+RAYSD(NZ,NY,NX)
+      RADPT=RADPL(NZ,NY,NX)+RAYPL(NZ,NY,NX)
+      RADQT=RADPW(NZ,NY,NX)+RAYPW(NZ,NY,NX)
+      RADZT=RADPD(NZ,NY,NX)+RAYPD(NZ,NY,NX)
+      RA1ST=RADS1(NZ,NY,NX)+RAYS1(NZ,NY,NX)
+      RA1WT=RADW1(NZ,NY,NX)+RAYW1(NZ,NY,NX)
+      RA1DT=RADD1(NZ,NY,NX)+RAYD1(NZ,NY,NX)
+      RA1PT=RADP1(NZ,NY,NX)+RAYP1(NZ,NY,NX)
+      RA1QT=RADQ1(NZ,NY,NX)+RAYQ1(NZ,NY,NX)
+      RA1ZT=RADZ1(NZ,NY,NX)+RAYZ1(NZ,NY,NX)
+      RA2ST=RADS2(NZ,NY,NX)+RAYS2(NZ,NY,NX)
+      RA2WT=RADW2(NZ,NY,NX)+RAYW2(NZ,NY,NX)
+      RA2DT=RADD2(NZ,NY,NX)+RAYD2(NZ,NY,NX)
+      RA2PT=RADP2(NZ,NY,NX)+RAYP2(NZ,NY,NX)
+      RA2QT=RADQ2(NZ,NY,NX)+RAYQ2(NZ,NY,NX)
+      RA2ZT=RADZ2(NZ,NY,NX)+RAYZ2(NZ,NY,NX)
+      RAFSL(L)=RAFSL(L)+(RADST*TAUR(NZ,NY,NX)
+     2+RA2ST*ALBR(NZ,NY,NX)+RA2WT*ALBRW+RA2DT*ALBRD)*YAREA
+      RAFPL(L)=RAFPL(L)+(RADPT*TAUP(NZ,NY,NX)
+     2+RA2PT*ALBP(NZ,NY,NX)+RA2QT*ALBPW+RA2ZT*ALBPD)*YAREA
+      RABSL(L)=RABSL(L)+(RA1ST*ALBR(NZ,NY,NX)
+     2+RA1WT*ALBRW+RA1DT*ALBRD)*YAREA
+      RABPL(L)=RABPL(L)+(RA1PT*ALBP(NZ,NY,NX)
+     2+RA1QT*ALBPW+RA1ZT*ALBPD)*YAREA
+      RADC(NZ,NY,NX)=RADC(NZ,NY,NX)+RADST+RADWT 
+      RADD(NZ,NY,NX)=RADD(NZ,NY,NX)+RADDT 
+      RADP(NZ,NY,NX)=RADP(NZ,NY,NX)+RADPT+RADQT 
+      RADQ(NZ,NY,NX)=RADQ(NZ,NY,NX)+RADZT 
+      TRADC(NY,NX)=TRADC(NY,NX)+RADST+RADWT+RADDT 
+      TRAPC(NY,NX)=TRAPC(NY,NX)+RADPT+RADQT+RADZT 
+1530  CONTINUE
+      STOPS=STOPS+STOPSZ
+      STOPY=STOPY+STOPYZ
+      TAUS(L,NY,NX)=1.0-STOPS
+      TAU0(L,NY,NX)=1.0-TAUS(L,NY,NX)
+      TAUY(L)=1.0-STOPY
+      ELSE
+      RAFSL(L)=RAFSL(L+1)
+      RAFPL(L)=RAFPL(L+1)
+      TAUS(L,NY,NX)=TAUS(L+1,NY,NX)
+      TAU0(L,NY,NX)=1.0-TAUS(L,NY,NX)
+      TAUY(L)=TAUY(L+1)
+      ENDIF
+1800  CONTINUE
+C
+C     DIRECT AND DIFFUSE RADIATION ABSORBED AT GROUND SURFACE
+C
+C     RADSG,RADYG,RAPSG,RAPYG=direct,diffuse SW,PAR at horizontal
+C        ground surface
+C     RADS,RAPS =solar beam direct SW,PAR flux
+C     TAUS,TAUY=transmission of direct,diffuse radiation below canopy   
+C     RADYL,RAPYL=solar beam diffuse SW,PAR flux
+C     RASG,RAPG=total SW,PAR at ground surface
+C     BETAG,OMEGAG=incident solar,sky angle at ground surface
+C     RADG=total direct+diffuse SW at ground surface
+C
+      RADSG=RADS(NY,NX)*TAUS(1,NY,NX)
+      RADYG=RADYL*TAUY(1)+RAFSL(1)
+      RAPSG=RAPS(NY,NX)*TAUS(1,NY,NX)
+      RAPYG=RAPYL*TAUY(1)+RAFPL(1)
+      RASG=ABS(BETAG)*RADSG
+      RAPG=ABS(BETAG)*RAPSG
+      DO 20 N=1,4
+      RASG=RASG+ABS(OMEGAG(N,NY,NX))*RADYG
+      RAPG=RAPG+ABS(OMEGAG(N,NY,NX))*RAPYG
+20    CONTINUE
+      RADG(NY,NX)=RASG*AREA(3,NU(NY,NX),NY,NX)
+C
+C     RADIATION REFLECTED FROM GROUND SURFACE
+C
+C     VHCPW,VHCPWX=current,minimum snowpack heat capacity
+C     ALBW,VOLSSL,VOLWSL,VOLISL=snowpack surface albedo,snow,water,
+C        ice volume
+C     ALBG,ALBS,FSNOW=ground,soil albedo,snow cover fraction
+C     THETW1=soil surface water content
+C     RABSL,RADPL=SW,PAR backscatter from ground surface
+C     TRADG,TRAPG=SW,PAR absorbed by ground surface 
+C
+      IF(VHCPW(1,NY,NX).GT.VHCPWX(NY,NX))THEN
+      ALBW=(0.80*VOLSSL(1,NY,NX)+0.30*VOLISL(1,NY,NX)
+     2+0.06*VOLWSL(1,NY,NX)) 
+     2/(VOLSSL(1,NY,NX)+VOLISL(1,NY,NX)+VOLWSL(1,NY,NX))
+      FSNOW=AMIN1((DPTHS(NY,NX)/0.07)**2,1.0)
+      ALBG=FSNOW*ALBW+(1.0-FSNOW)*ALBS(NY,NX)
+      ELSE
+      IF(VOLX(NU(NY,NX),NY,NX).GT.ZEROS2(NY,NX))THEN
+      THETW1=AMIN1(POROS(NU(NY,NX),NY,NX)
+     2,VOLW(NU(NY,NX),NY,NX)/VOLY(NU(NY,NX),NY,NX))
+      ELSE
+      THETW1=0.0
+      ENDIF
+      ALBG=AMIN1(ALBX(NY,NX),ALBS(NY,NX)
+     2+AMAX1(0.0,ALBX(NY,NX)-THETW1))
+      ENDIF
+      RABSL(0)=RASG*ALBG*0.25
+      RABPL(0)=RAPG*ALBG*0.25
+      TRADG(NY,NX)=(1.0-ALBG)*RASG*AREA(3,NU(NY,NX),NY,NX)
+      TRAPG(NY,NX)=(1.0-ALBG)*RAPG*AREA(3,NU(NY,NX),NY,NX)
+C
+C     ADD RADIATION FROM SCATTERING THROUGH CANOPY LAYERS
+C
+C     RABSL,RABPL=total back scattered SW,PAR to next layer
+C     RAFSL,RAFPL=total forward scattered SW,PAR to next layer
+C     RADYN,RADYW,RAPYN,RAPYW=leaf,stalk SW,PAR absorbed 
+C        forward+back scatter flux
+C     RADYD,RAPYD=standing dead SW,PAR absorbed 
+C        forward+back scatter flux
+C     RAYSL,RAYSW,RAYPL,RAYPW=total leaf,stalk SW,PAR absorbed 
+C        forward+back scatter flux
+C     RAYSD,RAYPD=total standing dead SW,PAR absorbed 
+C        forward+back scatter flux 
+C     RADC,TRADC,RADP,TRAPC=total SW,PAR absorbed by canopy of 
+C        each,all PFT 
+C     RADD,RADQ=total SW,PAR absorbed by standing dead of 
+C        each PFT 
+C     ZL=height of top of canopy layer
+C     DPTHS,DPTH0=depth of snowpack, surface litter
+C     TSURFY=unself-shaded leaf area 
+C     TSURWY=unself-shaded stalk area
+C     TSURDY=unself-shaded standing dead area 
+C     PAR,PARDIF=direct,diffuse PAR flux
+C
+      RADYL=0.0
+      RAPYL=0.0
+      TAUY(0)=1.0
+      RAFSL(0)=0.0
+      RAFPL(0)=0.0
+      DO 2800 L=1,JC
+      IF(ZL(L-1,NY,NX).GE.DPTHS(NY,NX)-ZERO
+     2.AND.ZL(L-1,NY,NX).GE.DPTH0(NY,NX)-ZERO)THEN
+      RADYL=RADYL*TAUY(L-1)+RAFSL(L-1)+RABSL(L-1)
+      RAPYL=RAPYL*TAUY(L-1)+RAFPL(L-1)+RABPL(L-1)
+      RAFSL(L)=0.0
+      RAFPL(L)=0.0
+      DO 2500 NZ=1,NP(NY,NX)
+      RAYSL(NZ,NY,NX)=0.0
+      RAYSW(NZ,NY,NX)=0.0
+      RAYSD(NZ,NY,NX)=0.0
+      RAYPL(NZ,NY,NX)=0.0
+      RAYPW(NZ,NY,NX)=0.0
+      RAYPD(NZ,NY,NX)=0.0
+      DO 2600 N=1,4
+      TSURFY=TSURF(N,L,NZ,NY,NX)*CFX(NZ,NY,NX)
+      TSURWY=TSURFB(N,L,NZ,NY,NX)*CFW
+      TSURDY=TSURFD(N,L,NZ,NY,NX)*CFW
+      DO 2700 M=1,4
+      DO 2750 NN=1,4
+      RADYN=RADYL*OMEGA(M,N,NN)*ABSR(NZ,NY,NX)
+      RADYW=RADYL*OMEGA(M,N,NN)*ABSRW
+      RADYD=RADYL*OMEGA(M,N,NN)*ABSRD
+      RAPYN=RAPYL*OMEGA(M,N,NN)*ABSP(NZ,NY,NX)
+      RAPYW=RAPYL*OMEGA(M,N,NN)*ABSPW
+      RAPYD=RAPYL*OMEGA(M,N,NN)*ABSPD
+      PARDIF(N,M,L,NZ,NY,NX)=PARDIF(N,M,L,NZ,NY,NX)+RAPYN
+      PAR(N,M,L,NZ,NY,NX)=PAR(N,M,L,NZ,NY,NX)+RAPYN
+      RAYSL(NZ,NY,NX)=RAYSL(NZ,NY,NX)+TSURFY*RADYN
+      RAYSW(NZ,NY,NX)=RAYSW(NZ,NY,NX)+TSURWY*RADYW
+      RAYSD(NZ,NY,NX)=RAYSD(NZ,NY,NX)+TSURDY*RADYD
+      RAYPL(NZ,NY,NX)=RAYPL(NZ,NY,NX)+TSURFY*RAPYN
+      RAYPW(NZ,NY,NX)=RAYPW(NZ,NY,NX)+TSURWY*RAPYW
+      RAYPD(NZ,NY,NX)=RAYPD(NZ,NY,NX)+TSURDY*RAPYD
+2750  CONTINUE
+2700  CONTINUE
+2600  CONTINUE
+      RAFSL(L)=RAFSL(L)+RAYSL(NZ,NY,NX)*TAUR(NZ,NY,NX)*YAREA
+      RAFPL(L)=RAFPL(L)+RAYPL(NZ,NY,NX)*TAUP(NZ,NY,NX)*YAREA
+      RADC(NZ,NY,NX)=RADC(NZ,NY,NX)+RAYSL(NZ,NY,NX)+RAYSW(NZ,NY,NX)
+      RADD(NZ,NY,NX)=RADD(NZ,NY,NX)+RAYSD(NZ,NY,NX)
+      RADP(NZ,NY,NX)=RADP(NZ,NY,NX)+RAYPL(NZ,NY,NX)+RAYPW(NZ,NY,NX)
+      RADQ(NZ,NY,NX)=RADQ(NZ,NY,NX)+RAYPD(NZ,NY,NX)
+      TRADC(NY,NX)=TRADC(NY,NX)+RAYSL(NZ,NY,NX)
+     2+RAYSW(NZ,NY,NX)+RAYSD(NZ,NY,NX)
+      TRAPC(NY,NX)=TRAPC(NY,NX)+RAYPL(NZ,NY,NX)
+     2+RAYPW(NZ,NY,NX)+RAYPD(NZ,NY,NX)
+2500  CONTINUE
+      ELSE
+      RAFSL(L)=RAFSL(L-1)
+      RAFPL(L)=RAFPL(L-1)
+      RABSL(L)=RABSL(L-1)
+      RABPL(L)=RABPL(L-1)
+      ENDIF
+2800  CONTINUE
+C
+C     RADIATION AT GROUND SURFACE IF NO CANOPY
+C
+      ELSE
+      RASG=ABS(BETAG)*RADS(NY,NX)
+      DO 120 N=1,4
+      RASG=RASG+ABS(OMEGAG(N,NY,NX))*RADY(NY,NX)
+120   CONTINUE
+      RADG(NY,NX)=RASG*AREA(3,NU(NY,NX),NY,NX)
+      DO 135 NZ=1,NP(NY,NX)
+      RADC(NZ,NY,NX)=0.0
+      RADD(NZ,NY,NX)=0.0
+      RADP(NZ,NY,NX)=0.0
+      RADQ(NZ,NY,NX)=0.0
+135   CONTINUE
+      ENDIF
+C
+C     IF NO RADIATION 
+C
+      ELSE
+      RADG(NY,NX)=0.0
+      DO 125 NZ=1,NP(NY,NX)
+      RADC(NZ,NY,NX)=0.0
+      RADD(NZ,NY,NX)=0.0
+      RADP(NZ,NY,NX)=0.0
+      RADQ(NZ,NY,NX)=0.0
+125   CONTINUE
+      ENDIF
+C
+C     DIVISION OF CANOPY INTO LAYERS WITH EQUAL LAI 
+C
+C     ZT,ZC=heights of combined canopy,PFT canopy
+C     ZL=height to top of each canopy layer
+C     ARLFC,ARSTC=leaf,stalk area of combined canopy
+C     ARLFT,ARSTT=leaf,stalk area of combined canopy layer
+C
+      ZL(JC,NY,NX)=ZT(NY,NX)+0.01
+      ZL1(JC,NY,NX)=ZL(JC,NY,NX)
+      ZL1(0,NY,NX)=0.0
+      ART=(ARLFC(NY,NX)+ARSTC(NY,NX)+ARSDC(NY,NX))/JC
+      IF(ART.GT.ZEROS(NY,NX))THEN
+      DO 2765 L=JC,2,-1
+      ARL=ARLFT(L,NY,NX)+ARSTT(L,NY,NX)+ARSDT(L,NY,NX)
+      IF(ARL.GT.1.01*ART)THEN
+      DZL=ZL(L,NY,NX)-ZL(L-1,NY,NX)
+      ZL1(L-1,NY,NX)=ZL(L-1,NY,NX)+0.5*AMIN1(1.0,(ARL-ART)/ARL)*DZL
+      ELSEIF(ARL.LT.0.99*ART)THEN
+      ARX=ARLFT(L-1,NY,NX)+ARSTT(L-1,NY,NX)+ARSDT(L-1,NY,NX)
+      DZL=ZL(L-1,NY,NX)-ZL(L-2,NY,NX)
+      IF(ARX.GT.ZEROS(NY,NX))THEN
+      ZL1(L-1,NY,NX)=AMIN1(ZT(NY,NX),ZL(L-1,NY,NX)
+     2-0.5*AMIN1(1.0,(ART-ARL)/ARX)*DZL)
+      ELSE
+      ZL1(L-1,NY,NX)=ZL1(L,NY,NX)
+      ENDIF
+      ELSE
+      ZL1(L-1,NY,NX)=ZL(L-1,NY,NX)
+      ENDIF
+C     IF(J.EQ.12)THEN
+C     WRITE(*,3233)'ZL',I,J,NX,NY,L,ZL1(L,NY,NX),ZL1(L-1,NY,NX)
+C    3,ZL(L,NY,NX),ZL(L-1,NY,NX),ART,ARL
+C    2,ARLFC(NY,NX),ARSTC(NY,NX),ARSDC(NY,NX)
+C    3,ARLFT(L,NY,NX),ARSTT(L,NY,NX),ARSDT(L,NY,NX)
+C    3,ARLFT(L-1,NY,NX),ARSTT(L-1,NY,NX),ARSDT(L-1,NY,NX)
+C    3,ZL(JC,NY,NX),ZT(NY,NX),(ZC(NZ,NY,NX),NZ=1,3)
+C    4,(ZG(NZ,NY,NX),NZ=1,3)
+3233  FORMAT(A8,5I4,30E12.4)
+C     ENDIF
+2765  CONTINUE
+      DO 2770 L=JC,2,-1
+      ZL(L-1,NY,NX)=ZL1(L-1,NY,NX)
+C     ZL(L-1,NY,NX)=AMAX1(0.0,AMIN1(ZL(L,NY,NX)-1.0E-06
+C    2,ZL(L-1,NY,NX)))
+2770  CONTINUE
+      ELSE
+      DO 2775 L=JC,2,-1
+      ZL(L-1,NY,NX)=0.0
+2775  CONTINUE
+      ENDIF
+C
+C     CANOPY RETENTION OF PRECIPITATION
+C
+C     XVOLWC=foliar surface water retention capacity 
+C     ARLFP,ARSTP=leaf,stalk area of PFT
+C     FLWC=foliar water retention of precipitation by PFT 
+C     FLWD=standing dead water retention of precipitation by PFT 
+C     TFLWC,TFLWCI=total water retention,interception 
+C        by combined canopy
+C     PRECA=precipitation+irrigation
+C
+      TFLWCI(NY,NX)=0.0
+      TFLWC(NY,NX)=0.0
+      DO 1930 NZ=1,NP(NY,NX)
+      VOLWCX=XVOLWC(IGTYP(NZ,NY,NX))
+     2*(ARLFP(NZ,NY,NX)+ARSTP(NZ,NY,NX))
+      FLWC(NZ,NY,NX)=AMAX1(0.0,AMIN1(PRECA(NY,NX)*FRADP(NZ,NY,NX)
+     2,VOLWCX-VOLWC(NZ,NY,NX)))-AMAX1(0.0,VOLWC(NZ,NY,NX)-VOLWCX)
+      VOLWQX=XVOLWC(IGTYP(NZ,NY,NX))*ARSTG(NZ,NY,NX) 
+      FLWD(NZ,NY,NX)=AMAX1(0.0,AMIN1(PRECA(NY,NX)*FRADQ(NZ,NY,NX)
+     2,VOLWQX-VOLWQ(NZ,NY,NX)))-AMAX1(0.0,VOLWQ(NZ,NY,NX)-VOLWQX) 
+      TFLWCI(NY,NX)=TFLWCI(NY,NX)+PRECA(NY,NX)
+     2*(FRADP(NZ,NY,NX)+FRADQ(NZ,NY,NX))
+      TFLWC(NY,NX)=TFLWC(NY,NX)+FLWC(NZ,NY,NX)+FLWD(NZ,NY,NX)
+C     IF(NZ.EQ.2)THEN
+C     WRITE(*,6634)'TFLWC',I,J,NFZ,NX,NY,NZ
+C    2,TFLWC(NY,NX),FLWC(NZ,NY,NX),FLWD(NZ,NY,NX),PRECA(NY,NX)
+C    3,FRADP(NZ,NY,NX),VOLWCX,VOLWC(NZ,NY,NX),FRADQ(NZ,NY,NX)
+C    4,VOLWQX,VOLWQ(NZ,NY,NX),ARLFP(NZ,NY,NX),ARSTP(NZ,NY,NX)
+C    5,ARSTG(NZ,NY,NX)
+6634  FORMAT(A8,6I4,30E12.4)
+C     ENDIF
+C
+C     NUMBERS OF TOP AND BOTTOM ROOTED SOIL LAYERS 
+C
+C     NG=number of uppermost rooted layer
+C     NINR=number of lowest rooted layer
+C
+      NG(NZ,NY,NX)=MAX(NG(NZ,NY,NX),NU(NY,NX))
+      NIX(NZ,NY,NX)=MAX(NIX(NZ,NY,NX),NU(NY,NX))
+      DO 9790 NR=1,10
+      NINR(NR,NZ,NY,NX)=MAX(NINR(NR,NZ,NY,NX),NU(NY,NX))
+9790  CONTINUE
+1930  CONTINUE
+C
+C     WRITE SW AND PAR ALBEDO
+C
+C     IF(ABS(J-ZNOON(NY,NX)).LT.1)THEN
+C     IF(RAD(NY,NX).GT.0.0.AND.RAP(NY,NX).GT.0.0)THEN
+C     WRITE(19,1927)'ALBEDO',IYRC,I,J,NX,NY
+C    2,RAD(NY,NX),RAP(NY,NX),TRADC(NY,NX),TRAPC(NY,NX)
+C    3,TRADG(NY,NX),TRAPG(NY,NX)
+C    4,(RAD(NY,NX)-TRADC(NY,NX)-TRADG(NY,NX))/RAD(NY,NX) 
+C    5,(RAP(NY,NX)-TRAPC(NY,NX)-TRAPG(NY,NX))/RAP(NY,NX) 
+1927  FORMAT(A10,5I6,30E12.4)
+C     ENDIF
+C     ENDIF
 C
 C     RESET SURFACE LITTER PHYSICAL PROPERTIES (DENSITY, TEXTURE)
 C     AFTER DISTURBANCES (E.G. TILLAGE, EROSION)
@@ -1669,7 +1686,7 @@ C
       WPL(0,NY,NX)=LOG(WP(0,NY,NX))
       PSD(0,NY,NX)=PSL(0,NY,NX)-FCL(0,NY,NX)
       FCD(0,NY,NX)=FCL(0,NY,NX)-WPL(0,NY,NX)
-      SRP(0,NY,NX)=0.25
+      SRP(0,NY,NX)=0.50
       YKL(0,NY,NX)=1.00
       THETY(0,NY,NX)=EXP((PSIMX(NY,NX)-LOG(-PSIHY))
      2*FCD(0,NY,NX)/PSIMD(NY,NX)+FCL(0,NY,NX))
@@ -1698,15 +1715,20 @@ C
       XK=K-1
       THETK(K)=POROS0(NY,NX)-(XK/100.0*POROS0(NY,NX))
       IF(THETK(K).LT.FC(0,NY,NX))THEN
-      PSISK(K)=AMAX1(PSISX,-EXP(PSIMX(NY,NX)
+      PSISKK=AMAX1(PSISX,-EXP(PSIMX(NY,NX)
      2+((FCL(0,NY,NX)-LOG(THETK(K)))
      3/FCD(0,NY,NX)*PSIMD(NY,NX))))
       ELSEIF(THETK(K).LT.POROS0(NY,NX))THEN 
-      PSISK(K)=AMAX1(PSISX,-EXP(PSIMS(NY,NX)
+      PSISKK=AMAX1(PSISX,-EXP(PSIMS(NY,NX)
      2+((AMAX1(0.0,(PSL(0,NY,NX)-LOG(THETK(K))))
      3/PSD(0,NY,NX))**SRP(0,NY,NX)*PSISD(NY,NX))))
       ELSE
-      PSISK(K)=PSISE(0,NY,NX)
+      PSISKK=PSISE(0,NY,NX)
+      ENDIF
+      IF(PSISKK.GT.PSIWP(NY,NX))THEN
+      PSISK(K)=PSISKK
+      ELSE
+      PSISK(K)=PSIWP(NY,NX)+0.1*(PSISKK-PSIWP(NY,NX))
       ENDIF
       SUM2=SUM2+(2*K-1)/(PSISK(K)**2)
 1220  CONTINUE
@@ -1791,33 +1813,30 @@ C
       POROS(L,NY,NX)=1.0
       VHCM(L,NY,NX)=0.0
       ENDIF
-C     VOLA(L,NY,NX)=AMAX1(POROS(L,NY,NX)*VOLY(L,NY,NX)
-C    2,VOLW(L,NY,NX)+VOLI(L,NY,NX))
-C     VOLAH(L,NY,NX)=AMAX1(FHOL(L,NY,NX)*VOLT(L,NY,NX)
-C    2,VOLWH(L,NY,NX)+VOLIH(L,NY,NX))
       VOLA(L,NY,NX)=POROS(L,NY,NX)*VOLY(L,NY,NX)
       VOLAH(L,NY,NX)=FHOL(L,NY,NX)*VOLT(L,NY,NX)
-      EHUM(L,NY,NX)=0.200+0.333*AMIN1(0.30,CCLAY(L,NY,NX))
+      EHUM(L,NY,NX)=0.200+0.200*AMIN1(0.50,CCLAY(L,NY,NX))
 C    2+0.167E-06*CORGC(L,NY,NX)
 C     WRITE(*,3331)'EHUM',I,J,NFZ,NX,NY,L
 C    2,POROS(L,NY,NX),BKDS(L,NY,NX),PTDS,CORGC(L,NY,NX)
 C    3,ORGC(L,NY,NX),BKVL(L,NY,NX)
 C    2,EHUM(L,NY,NX),CCLAY(L,NY,NX)
 C    3,CSILT(L,NY,NX),CSAND(L,NY,NX) 
-C    4,VOLA(L,NY,NX),POROS(L,NY,NX),VOLX(L,NY,NX)
+C    4,VOLA(L,NY,NX),POROS(L,NY,NX),VOLY(L,NY,NX)
+C    5,VOLT(L,NY,NX),VOLX(L,NY,NX),AREA(3,L,NY,NX),DLYR(3,L,NY,NX)
 3331  FORMAT(A8,6I4,12E12.4)
       IF(CORGC(L,NY,NX).GT.FORGC)THEN
-      SRP(L,NY,NX)=0.25
+      SRP(L,NY,NX)=0.50
       YKL(L,NY,NX)=1.00
       ELSEIF(CORGC(L,NY,NX).GT.0.5*FORGC)THEN
-      SRP(L,NY,NX)=0.50
+      SRP(L,NY,NX)=0.75
       YKL(L,NY,NX)=1.00
       ELSE
       SRP(L,NY,NX)=1.00
       YKL(L,NY,NX)=1.00
       ENDIF
       PSL(L,NY,NX)=LOG(POROS(L,NY,NX))
-      IF((ISOIL(1,L,NY,NX).EQ.0.AND.ISOIL(2,L,NY,NX).EQ.0)
+      IF((ISOIL(1,L,NY,NX).EQ.0.AND.ISOIL(2,L,NY,NX).EQ.0) 
      2.OR.DATA(20).EQ.'YES')THEN
       FCL(L,NY,NX)=LOG(FC(L,NY,NX))
       WPL(L,NY,NX)=LOG(WP(L,NY,NX))
@@ -2005,17 +2024,26 @@ C     IF(BKVL(L,NY,NX).GT.ZEROS(NY,NX))THEN
       XK=K-1
       THETK(K)=POROS(L,NY,NX)-(XK/100.0*POROS(L,NY,NX))
       IF(THETK(K).LT.FC(L,NY,NX))THEN
-      PSISK(K)=AMAX1(PSISX,-EXP(PSIMX(NY,NX)
+      PSISKK=AMAX1(PSISX,-EXP(PSIMX(NY,NX)
      2+((FCL(L,NY,NX)-LOG(THETK(K)))
      3/FCD(L,NY,NX)*PSIMD(NY,NX))))
       ELSEIF(THETK(K).LT.POROS(L,NY,NX)-DTHETW)THEN 
-      PSISK(K)=AMAX1(PSISX,-EXP(PSIMS(NY,NX)
+      PSISKK=AMAX1(PSISX,-EXP(PSIMS(NY,NX)
      2+((AMAX1(0.0,(PSL(L,NY,NX)-LOG(THETK(K))))
      3/PSD(L,NY,NX))**SRP(L,NY,NX)*PSISD(NY,NX))))
       ELSE
-      PSISK(K)=PSISE(L,NY,NX)
+      PSISKK=PSISE(L,NY,NX)
+      ENDIF
+      IF(PSISKK.GT.PSIWP(NY,NX))THEN
+      PSISK(K)=PSISKK
+      ELSE
+      PSISK(K)=PSIWP(NY,NX)+0.1*(PSISKK-PSIWP(NY,NX))
       ENDIF
       SUM2=SUM2+(2*K-1)/(PSISK(K)**2)
+C     IF(NFZ.EQ.1.AND.J.EQ.1)THEN
+C     WRITE(*,3536)'PSISK',I,J,NFZ,NX,NY,L,K
+C    2,PSISKK,PSISK(K),PSIWP(NY,NX)
+C     ENDIF
 1320  CONTINUE
       DO 1335 K=1,100
       SUM1=0.0
@@ -2028,19 +2056,21 @@ C     IF(BKVL(L,NY,NX).GT.ZEROS(NY,NX))THEN
       IF(N.EQ.3)THEN
       HCND(N,K,L,NY,NX)=SCNV(L,NY,NX)*YK*SUM1/SUM2
       IF(K.GT.1)THEN
-      IF(HCND(3,K,L,NY,NX).LT.FSCNV*SCNV(L,NY,NX)
+      IF(HCND(N,K,L,NY,NX).LT.FSCNV*SCNV(L,NY,NX)
      2.AND.HCND(3,K-1,L,NY,NX).GE.FSCNV*SCNV(L,NY,NX))THEN
       PSISA(L,NY,NX)=PSISK(K-1)
       THETS(L,NY,NX)=THETK(K-1)
       ENDIF
       ENDIF
-C     WRITE(*,3536)'PSI',I,J,NFZ,NX,NY,L,K
-C    2,THETK(K),PSISK(K),HCND(N,K,L,NY,NX) 
+C     IF(NFZ.EQ.1.AND.J.EQ.1)THEN
+C     WRITE(*,3536)'HCND',I,J,NFZ,NX,NY,L,K
+C    2,HCND(N,K,L,NY,NX),THETK(K),PSISK(K) 
 C    2,SCNV(L,NY,NX),PSL(L,NY,NX),LOG(THETK(K)),POROS(L,NY,NX)
-C    2,FC(L,NY,NX),WP(L,NY,NX),PSISK(K)
+C    2,FC(L,NY,NX),WP(L,NY,NX),YK,SUM1/SUM2
 C    3,SRP(L,NY,NX),YKL(L,NY,NX)
-C    4,THETS(L,NY,NX),PSISA(L,NY,NX)
+C    4,CORGC(L,NY,NX),THETS(L,NY,NX),PSISA(L,NY,NX)
 3536  FORMAT(A8,7I4,30E12.4)
+C     ENDIF
       ELSE
       HCND(N,K,L,NY,NX)=SCNH(L,NY,NX)*YK*SUM1/SUM2
       ENDIF
@@ -2156,7 +2186,7 @@ C    3,AREA(3,NU(NY,NX),NY,NX),VOLWD(NY,NX),ZS(NY,NX),SLOPE(0,NY,NX)
       CSILT(NU(NY,NX),NY,NX)=0.0
       CSAND(NU(NY,NX),NY,NX)=0.0
       ENDIF
-      EHUM(0,NY,NX)=0.200+0.333*AMIN1(0.30,CCLAY(NU(NY,NX),NY,NX))
+      EHUM(0,NY,NX)=0.200+0.200*AMIN1(0.50,CCLAY(NU(NY,NX),NY,NX))
 C    2+0.167E-06*CORGC(NU(NY,NX),NY,NX)
 C
 C     IFLGS=reset disturbance flag
@@ -2166,36 +2196,13 @@ C
 C
 C     END OF RESET AFTER DISTURBANCE
 C
-9050  CONTINUE
-9045  CONTINUE 
-      ENDIF
+C9050  CONTINUE
+C9045  CONTINUE 
+C     ENDIF
 C
 C     THINGS DONE EVERY SUBHOURLY CYCLE
-C
-C     RESET HOURLY SOIL ACCUMULATORS FOR WATER, HEAT, GASES, SOLUTES
-C
-      VOLWSO=0.0
-      HEATSO=0.0
-      OXYGSO=0.0
-      TLH2G=0.0
-      TSEDSO=0.0
-      TLRSDC=0.0
-      TLORGC=0.0
-      TLCO2G=0.0
-      TLRSDN=0.0
-      TLORGN=0.0
-      TLN2G=0.0
-      TLRSDP=0.0
-      TLORGP=0.0
-      TLNH4=0.0
-      TLNO3=0.0
-      TLPO4=0.0
-      TION=0.0
-      TBALC=0.0
-      TBALN=0.0
-      TBALP=0.0
-      DO 9145 NX=NHW,NHE
-      DO 9140 NY=NVN,NVS
+C     DO 9145 NX=NHW,NHE
+C     DO 9140 NY=NVN,NVS
 C
 C     TKAM,VPAM=interpolation for NFH of change in hourly air
 C        temperature DTKA and vapor pressure DVPA
@@ -3263,21 +3270,18 @@ C     VOLP=soil air-filled porosity
 C     THETW,THETI,THETP=soil micropore water,ice,air concentration
 C     THETPZ=soil micropore+macropore air concentration for output
 C
-      IF(BKDS(L,NY,NX).LE.ZERO.AND.DLYR(3,L,NY,NX).LE.ZERO2)THEN
-      VOLW(L,NY,NX)=0.0
-      VOLI(L,NY,NX)=0.0
-      ENDIF
+C     IF(NY.EQ.5)THEN
+C     WRITE(*,443)'VOLT',I,J,NFZ,NX,NY,L,VOLT(L,NY,NX)
+C    2,VOLX(L,NY,NX),VOLW(L,NY,NX),VOLI(L,NY,NX)
+C    3,DLYR(3,L,NY,NX),AREA(3,L,NY,NX)
+443   FORMAT(A8,6I4,20E16.8)
+C     ENDIF
       AREA(1,L,NY,NX)=DLYR(3,L,NY,NX)*DLYR(2,L,NY,NX)
       AREA(2,L,NY,NX)=DLYR(3,L,NY,NX)*DLYR(1,L,NY,NX)
       VOLT(L,NY,NX)=AREA(3,L,NY,NX)*DLYR(3,L,NY,NX)
       VOLX(L,NY,NX)=VOLT(L,NY,NX)*FMPR(L,NY,NX)
-      IF(BKDS(L,NY,NX).LE.ZERO)THEN
+C     IF(BKDS(L,NY,NX).LE.ZERO)THEN
       VOLY(L,NY,NX)=VOLX(L,NY,NX)
-      ENDIF
-C     IF(NX.EQ.1)THEN
-C     WRITE(*,443)'VOLT',I,J,NX,NY,L,VOLT(L,NY,NX)
-C    2,VOLX(L,NY,NX),DLYR(3,L,NY,NX),AREA(3,L,NY,NX)
-443   FORMAT(A8,5I4,20E14.6)
 C     ENDIF
       IF(BKDS(L,NY,NX).GT.ZERO)THEN
       VOLP(L,NY,NX)=AMAX1(0.0,VOLA(L,NY,NX)-VOLW(L,NY,NX)
@@ -4096,33 +4100,6 @@ C
       WGSGW(L,NY,NX)=WGSG*TFACW
 5060  CONTINUE
 C
-C     OUTPUT FOR LITTER, SOIL WATER, ICE CONCENTRATIONS
-C
-C     THETWZ=litter, soil water concentration in output files 
-C     THETIZ=litter, soil ice concentration in output files 
-C
-      THETWZ(0,NY,NX)=AMAX1(0.0,(VOLW(0,NY,NX)-VOLWRX(NY,NX))
-     2/AREA(3,0,NY,NX))
-      THETIZ(0,NY,NX)=AMAX1(0.0,(VOLI(0,NY,NX)-VOLWRX(NY,NX))
-     2/AREA(3,0,NY,NX))
-C     THETWZ(0,NY,NX)=AMAX1(0.0,VOLW(0,NY,NX)/VOLR(NY,NX))
-C     THETIZ(0,NY,NX)=AMAX1(0.0,VOLI(0,NY,NX)/VOLR(NY,NX))
-      DO 9945 L=NUI(NY,NX),NL(NY,NX)
-      VOLXX=AREA(3,L,NY,NX)*DLYR(3,L,NY,NX)*FMPR(L,NY,NX)
-      VOLTX=VOLXX+VOLAH(L,NY,NX)
-      THETWZ(L,NY,NX)=(VOLW(L,NY,NX)+AMIN1(VOLAH(L,NY,NX)
-     2,VOLWH(L,NY,NX)))/VOLTX
-      THETIZ(L,NY,NX)=(VOLI(L,NY,NX)+AMIN1(VOLAH(L,NY,NX)
-     2,VOLIH(L,NY,NX)))/VOLTX
-C     IF(NX.EQ.1)THEN
-C     WRITE(*,1189)'THETWZ',I,J,NFZ,NX,NY,L
-C     2,THETWZ(L,NY,NX),THETIZ(L,NY,NX),VOLW(L,NY,NX) 
-C    2,VOLWH(L,NY,NX),VOLI(L,NY,NX),VOLIH(L,NY,NX)
-C    2,VOLTX,VOLXX,DLYR(3,L,NY,NX),PSISM(L,NY,NX)
-1189  FORMAT(A8,6I4,20E12.4)
-C     ENDIF
-9945  CONTINUE
-C
 C     CANOPY AND GROUND SKY FRACTIONS USED FOR BOUNDARY LAYER CALCULNS
 C
 C     FRADT,FRADG=fraction of radiation received by all PFT canopies,
@@ -4138,35 +4115,59 @@ C     FLAIP,FLAIQ=fraction of total canopy + standing dead radiation
 C        received by each PFT canopy, standing dead 
 C
       ARLSS(NY,NX)=0.0
-      DO 1135 NZ=1,NP(NY,NX)
+      DO 1145 NZ=1,NP(NY,NX)
       ARLFS(NZ,NY,NX)=0.0
-      DO 1135 L=1,JC
-      ARLSS(NY,NX)=ARLSS(NY,NX)+ARSTD(L,NZ,NY,NX)
-      DO 1135 NB=1,NBR(NZ,NY,NX)
+      ARSTQ(NZ,NY,NX)=0.0
+      DO 1140 L=1,JC
       IF(ZL(L-1,NY,NX).GE.DPTHS(NY,NX)-ZERO
      2.AND.ZL(L-1,NY,NX).GE.DPTH0(NY,NX)-ZERO)THEN
+      ARSTQ(NZ,NY,NX)=ARSTQ(NZ,NY,NX)+ARSTD(L,NZ,NY,NX)
+      ARLSS(NY,NX)=ARLSS(NY,NX)+ARSTD(L,NZ,NY,NX)
+      DO 1135 NB=1,NBR(NZ,NY,NX)
       DO 1130 K=1,25
       ARLFS(NZ,NY,NX)=ARLFS(NZ,NY,NX)+ARLFL(L,K,NB,NZ,NY,NX)
       ARLSS(NY,NX)=ARLSS(NY,NX)+ARLFL(L,K,NB,NZ,NY,NX)
 1130  CONTINUE
       ARLFS(NZ,NY,NX)=ARLFS(NZ,NY,NX)+ARSTK(L,NB,NZ,NY,NX)
       ARLSS(NY,NX)=ARLSS(NY,NX)+ARSTK(L,NB,NZ,NY,NX)
-      ENDIF
 1135  CONTINUE
-      IF(ARLSS(NY,NX).GT.ZEROS(NY,NX))THEN
+      ENDIF
+1140  CONTINUE
+1145  CONTINUE
+      IF(SSIN(NY,NX).GT.ZERO)THEN
+      TRADT=TRADC(NY,NX)+RADG(NY,NX)
+      IF(TRADT.GT.ZEROS(NY,NX))THEN
       FRADT(NY,NX)=0.0
       FRADG(NY,NX)=1.0
-      FRADPT=1.0-EXP(-0.65*ARLSS(NY,NX)/AREA(3,NU(NY,NX),NY,NX))
+      DO 155 NZ=1,NP(NY,NX)
+      FRADP(NZ,NY,NX)=RADC(NZ,NY,NX)/TRADT
+      FRADQ(NZ,NY,NX)=RADD(NZ,NY,NX)/TRADT
+      FRADT(NY,NX)=FRADT(NY,NX)+FRADP(NZ,NY,NX)+FRADQ(NZ,NY,NX)
+      FRADG(NY,NX)=FRADG(NY,NX)-FRADP(NZ,NY,NX)-FRADQ(NZ,NY,NX)
+155   CONTINUE
+      ELSE
+      TRADT=0.0
+      FRADT(NY,NX)=0.0
+      FRADG(NY,NX)=1.0
+      DO 156 NZ=1,NP(NY,NX)
+      FRADP(NZ,NY,NX)=0.0
+      FRADQ(NZ,NY,NX)=0.0
+156   CONTINUE
+      ENDIF
+      ELSEIF(ARLSS(NY,NX).GT.ZEROS(NY,NX))THEN
+      FRADT(NY,NX)=0.0
+      FRADG(NY,NX)=1.0
+      TRADT=1.0-EXP(-0.65*ARLSS(NY,NX)/AREA(3,NU(NY,NX),NY,NX))
       DO 145 NZ=1,NP(NY,NX)
-      FRADP(NZ,NY,NX)=FRADPT*ARLFS(NZ,NY,NX)/ARLSS(NY,NX)
-      FRADQ(NZ,NY,NX)=FRADPT*ARSTG(NZ,NY,NX)/ARLSS(NY,NX)
+      FRADP(NZ,NY,NX)=TRADT*ARLFS(NZ,NY,NX)/ARLSS(NY,NX)
+      FRADQ(NZ,NY,NX)=TRADT*ARSTQ(NZ,NY,NX)/ARLSS(NY,NX)
       FRADT(NY,NX)=FRADT(NY,NX)+FRADP(NZ,NY,NX)+FRADQ(NZ,NY,NX)
       FRADG(NY,NX)=FRADG(NY,NX)-FRADP(NZ,NY,NX)-FRADQ(NZ,NY,NX)
 145   CONTINUE
       ELSE
+      TRADT=0.0
       FRADT(NY,NX)=0.0
       FRADG(NY,NX)=1.0
-      FRADPT=0.0
       DO 146 NZ=1,NP(NY,NX)
       FRADP(NZ,NY,NX)=0.0
       FRADQ(NZ,NY,NX)=0.0
@@ -4197,22 +4198,27 @@ C
      2+TKQD(NZ,NY,NX)*FLAIQ(NZ,NY,NX)
       VPQT(NY,NX)=VPQT(NY,NX)+VPQC(NZ,NY,NX)*FLAIP(NZ,NY,NX)
      2+VPQD(NZ,NY,NX)*FLAIQ(NZ,NY,NX)
-C     IF(NX.EQ.4.AND.NY.EQ.5)THEN
+C     IF(ICHKF.EQ.1)THEN
 C     WRITE(*,1926)'CANOPY',I,J,NFZ,NX,NY,NZ
 C    2,FRADP(NZ,NY,NX),RADP(NZ,NY,NX)/AREA(3,NU(NY,NX),NY,NX)
 C    2,FRADQ(NZ,NY,NX),RADQ(NZ,NY,NX)/AREA(3,NU(NY,NX),NY,NX)
-C    2,FRADG(NY,NX),ARLFS(NZ,NY,NX)/AREA(3,NU(NY,NX),NY,NX)
+C    2,FRADG(NY,NX)/AREA(3,NU(NY,NX),NY,NX)
+C    3,ARLFS(NZ,NY,NX)/AREA(3,NU(NY,NX),NY,NX)
+C    3,ARSTQ(NZ,NY,NX)/AREA(3,NU(NY,NX),NY,NX)
 C    3,ARSTG(NZ,NY,NX)/AREA(3,NU(NY,NX),NY,NX)
+C    3,WTSTG(NZ,NY,NX)/AREA(3,NU(NY,NX),NY,NX)
+C    3,ARSTP(NZ,NY,NX)/AREA(3,NU(NY,NX),NY,NX)
+C    3,WTSTK(NZ,NY,NX)/AREA(3,NU(NY,NX),NY,NX)
+C    3,ARLFP(NZ,NY,NX)/AREA(3,NU(NY,NX),NY,NX)
+C    3,(ARLFP(NZ,NY,NX)+ARSTP(NZ,NY,NX))/AREA(3,NU(NY,NX),NY,NX)
+C    3,ARLFS(NZ,NY,NX)/AREA(3,NU(NY,NX),NY,NX)
 C    4,ARLSS(NY,NX)/AREA(3,NU(NY,NX),NY,NX)
-C    5,SSIN(NY,NX),DPTHS(NY,NX),ARSTD(1,NZ,NY,NX),FRADPT
-C    6,TKCT(NY,NX),TKC(NZ,NY,NX),FLAIP(NZ,NY,NX)
-C    2,TKD(NZ,NY,NX),FLAIQ(NZ,NY,NX) 
-C    7,TKQT(NY,NX),TKQC(NZ,NY,NX),FLAIP(NZ,NY,NX)
-C    2,TKQD(NZ,NY,NX),FLAIQ(NZ,NY,NX)
-C    8,VPQT(NY,NX),VPQC(NZ,NY,NX),FLAIP(NZ,NY,NX)
-C    2,VPQD(NZ,NY,NX),FLAIQ(NZ,NY,NX)
-C     ENDIF
+C    5,RADC(NZ,NY,NX),RADD(NZ,NY,NX),TRADC(NY,NX)
+C    6,RADG(NY,NX),TRADG(NY,NX),SRADH(J,I),SSIN(NY,NX) 
+C    7,FLAIP(NZ,NY,NX),FLAIQ(NZ,NY,NX)
+C    8,DPTHS(NY,NX),DPTH0(NY,NX),ZT(NY,NX),ZC(NZ,NY,NX)
 1926  FORMAT(A10,6I4,30E12.4)
+C     ENDIF
 140   CONTINUE
 C
 C     CANOPY ZERO PLANE AND ROUGHNESS HEIGHTS
@@ -4242,9 +4248,9 @@ C
       ENDIF
       IF(IETYP(NY,NX).GE.0)THEN
       IF(VHCPW(1,NY,NX).GT.VHCPWX(NY,NX))THEN
-      ZR(NY,NX)=AMAX1(0.01,ZE,ZW)
+      ZR(NY,NX)=AMAX1(ZE,ZW)
       ELSE
-      ZR(NY,NX)=AMAX1(0.01,ZE,ZS(NY,NX))
+      ZR(NY,NX)=AMAX1(ZE,ZS(NY,NX))
       ENDIF
 C
 C     CANOPY ISOTHERMAL BOUNDARY LAYER RESISTANCE USED TO CALCULATE
@@ -4269,7 +4275,7 @@ C
       RIBX(NY,NX)=0.0
       RABX(NY,NX)=RABM
       ENDIF
-      ALFZ(NY,NX)=2.0+(1.0-FRADG(NY,NX))
+      ALFZ(NY,NX)=3.0+(1.0-FRADG(NY,NX))
       VHCPQ(NY,NX)=(5.0+ZD(NY,NX))*AREA(3,NUM(NY,NX),NY,NX)*1.25E-03
       EVAPQ(NY,NX)=(5.0+ZD(NY,NX))*AREA(3,NUM(NY,NX),NY,NX)
 C     IF(NFZ.EQ.NFH)THEN 

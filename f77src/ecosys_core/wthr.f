@@ -47,10 +47,10 @@ C     CDIR,CDIF=fraction of solar SW,sky diffuse radiation in visible
 C        band
 C     PDIR,PDIF=PAR:SW ratio (umol s-1/(MJ h-1)) 
 C     TSNOW=temperature below which precipitation is snow (oC)
-C     TCMBF=minimum temperature used to identify fire event (K)
+C     TCMBS=minimum temperature used to identify fire event (K)
 C
       PARAMETER (CDIR=0.42,CDIF=0.58,PDIR=1269.4,PDIF=1269.4)
-      PARAMETER (TSNOW=-0.25,TWILGT=0.06976,TCMBF=348.15)
+      PARAMETER (TSNOW=-0.25,TWILGT=0.06976,TCMBS=373.15,TCMBL=348.15)
       XJ=J
       DOY=I-1+XJ/24
 C
@@ -476,6 +476,7 @@ C     TWIND=total wind travel (m)
 C     TRAI=total precipitation (mm)
 C     DTKA,DVPA=hourly change in TKA,VPA    
 C
+      ICHKV=0
       DO 9945 NX=NHW,NHE
       DO 9940 NY=NVN,NVS
       IF(SSIN(NY,NX).GT.0.0)TRAD(NY,NX)=TRAD(NY,NX)+RADS(NY,NX)
@@ -517,14 +518,18 @@ C     SET FIRE FLAG
 C
 C     ICHKF:0=no fire,1=fire
 C     TKS,TKQ=soil,canopy air temperature
-C     TCMBF=minimum temperature used to identify fire event (K)
+C     TCMBS=minimum temperature used to identify fire event (K)
 C     ITILL=if 22:fire
 C
       ICHKL=0
       DO 9840 L=0,NL(NY,NX)
-      IF(TKS(L,NY,NX).GT.TCMBF)ICHKL=1
+      IF(L.LE.NU(NY,NX))THEN
+      IF(TKS(L,NY,NX).GT.TCMBS)ICHKL=1
+      ELSE
+      IF(TKS(L,NY,NX).GT.TCMBL)ICHKL=1
+      ENDIF
 9840  CONTINUE     
-      IF(TKQ(NY,NX).GT.TCMBF)ICHKL=1
+      IF(TKQ(NY,NX).GT.TCMBS)ICHKL=1
       IF((ITILL(I,NY,NX).EQ.22.AND.J.EQ.INT(ZNOON(NY,NX)))
      2.OR.ICHKL.EQ.1)THEN
       ICHKF=1
@@ -535,6 +540,10 @@ C
       WRITE(*,1112)'ICHKF',I,J,ICHKF,ICHKL
      2,TKQ(NY,NX),(TKS(L,NY,NX),L=0,NL(NY,NX)) 
 1112  FORMAT(A8,4I4,20E12.4)
+      ENDIF
+      IF(VHCP(NU(NY,NX),NY,NX)
+     2.LT.4.19E-03*AREA(3,NU(NY,NX),NY,NX))THEN
+      ICHKV=1
       ENDIF
 9940  CONTINUE
 9945  CONTINUE
@@ -550,11 +559,17 @@ C     NPR,NPS=number of cycles NPH-1 for litter,snowpack flux
 C        calculations
 C
       IF(ICHKF.EQ.1)THEN
-      NFH=360
-      NPH=NPX
+      NFH=120
+      NPH=MAX(24,NPX)
+      RIX=RIXF
+      ELSEIF(ICHKV.EQ.1)THEN
+      NFH=4
+      NPH=MAX(24,NPX)
+      RIX=RIX0
       ELSE
       NFH=4
       NPH=NPX
+      RIX=RIX0
       ENDIF
       NPT=NPY
       NPG=NPH*NPT
@@ -572,7 +587,7 @@ C
       XNPYX=XNPHX*XNPS 
       XNPZX=XNPHX*XNPR 
       XNPQX=XNPZX*XNPS 
-      XNPDX=120.0*XNPGX
+      XNPDX=144.0*XNPGX
       XNPXX=XNPH 
       XNPAX=XNPXX*XNPS 
       XNPBX=XNPXX*XNPR 

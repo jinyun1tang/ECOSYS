@@ -95,9 +95,9 @@ C        solute equilibria
 C     SPNH4,SPNH3,SPNHU,SPNO3,SPPO4=specific rate constants for 
 C        NH4,NH3,urea,NO3,H2PO4 fertilizer dissolution
 C
-      PARAMETER (MRXN=1,TPDH=2.5E-03,TPDXH=TPDH/MRXN,TADAH=5.0E-02
+      PARAMETER (MRXN=1,TPDH=5.0E-03,TPDXH=TPDH/MRXN,TADAH=5.0E-02
      2,TADAXH=TADAH/MRXN,TADCH=5.0E-02,TADCXH=TADCH/MRXN
-     3,TADC0H=TADCH*1.0E-01,TSLH=5.0E-01,TSLXH=TSLH/MRXN)
+     3,TADC0H=TADCH*5.0E-02,TSLH=5.0E-01,TSLXH=TSLH/MRXN)
       PARAMETER (SPNH4H=1.0E-00,SPNH3H=1.0E-00,SPNHUH=1.0E-01
      2,SPNO3H=1.0E-00,SPPO4H=5.0E-02)
 C
@@ -507,7 +507,7 @@ C     CCEC,XCEC=cation exchange concentration,capacity
 C     BKVLX=soil mass
 C     VOLWM=soil water volume
 C
-      IF(BKVLX.GT.ZEROS(NY,NX))THEN
+      IF(BKVLX.GT.ZEROS2(NY,NX))THEN
       CCEC=AMAX1(ZERO,XCEC(L,NY,NX)/BKVLX)
       ELSE
       CCEC=ZERO
@@ -628,7 +628,7 @@ C
 C
 C     EXCHANGEABLE ION CONCENTRATIONS
 C
-      IF(BKVLX.GT.ZEROS(NY,NX))THEN
+      IF(BKVLX.GT.ZEROS2(NY,NX))THEN
       XHY1=AMAX1(0.0,XHY(L,NY,NX)/BKVLX)
       XAL1=AMAX1(0.0,XAL(L,NY,NX)/BKVLX)
       XFE1=AMAX1(0.0,XFE(L,NY,NX)/BKVLX)
@@ -2526,7 +2526,7 @@ C     TRH0B,TRH1B,TRH2B,TRH3B=net PO4,HPO4,H2PO4,H3PO4 transformation
 C        in band
 C     TRF1B,TRF2B,TRC0B,TRC1B,TRC2B,TRM1B
 C     =total FeHPO4,FeH2PO4,CaPO4,CaHPO4,CaH2PO4,MgHPO4 in band
-C     TRNX4,TRNXB=total NH4 adsorption in non-band,band
+C     TRXN4,TRXNB=total NH4 adsorption in non-band,band
 C     TRXHY,TRXAL,TRXFE,TRXCA,TRXMG,TRXNA,TRXKA=total
 C        H,Al,Fe,Ca,Mg,Na,K adsorpn
 C     TRXHC,TRXAL2,TRXFE2=total HCO3,AlOH2,FeOH2 adsorption
@@ -2820,7 +2820,7 @@ C     SP*=solubility product from PARAMETER above
 C     PH=soil pH from soil file
 C     VOLWM=soil water volume
 C
-      IF(BKVLX.GT.ZEROS(NY,NX))THEN
+      IF(BKVLX.GT.ZEROS2(NY,NX))THEN
       CCEC=AMAX1(ZERO,XCEC(L,NY,NX)/BKVLX)
       ELSE
       CCEC=ZERO
@@ -3296,7 +3296,7 @@ C     TRN4S,TRN4B=total NH4 transformation in non-band,band
 C     TRN3S,TRN3B=total NH3 transformation in non-band,band
 C     TRH1P,TRH2P=net HPO4,H2PO4 transformation in non-band
 C     TRH1B,TRH2B=net HPO4,H2PO4 transformation in band
-C     TRNX4,TRNXB=total NH4 adsorption in non-band,band
+C     TRXN4,TRXNB=total NH4 adsorption in non-band,band
 C     TRXH1,TRXH2,TRX1P,TRX2P
 C        =total R-OH,R-OH2,R-HPO4,R-H2PO4 adsorption in non-band
 C     TRBH1,TRBH2,TRB1P,TRB2P
@@ -3922,7 +3922,7 @@ C
       RN3X=14.0*RSNUAA/VOLWMX
       CN41=AMAX1(ZERO,ZNH4S(0,NY,NX)/VOLWMX+RN4X)
       CN31=AMAX1(ZERO,ZNH3S(0,NY,NX)/VOLWMX+RN3X)
-      IF(BKVLX.GT.ZEROS(NY,NX))THEN
+      IF(BKVLX.GT.ZEROS2(NY,NX))THEN
       XN41=AMAX1(ZERO,XN4(0,NY,NX)/BKVLX)
       ELSE
       XN41=0.0
@@ -3958,7 +3958,7 @@ C     PALPO1,PFEPO1=concentration of precipitated AlPO4,FEPO4
 C     PCAPM1,PCAPD1,PCAPH1=concentration of precipitated
 C        CaH2PO4,CaHPO4,apatite 
 C
-      IF(BKVLX.GT.ZEROS(NY,NX))THEN
+      IF(BKVLX.GT.ZEROS2(NY,NX))THEN
       PALPO1=AMAX1(0.0,PALPO(0,NY,NX)/BKVLX)
       PFEPO1=AMAX1(0.0,PFEPO(0,NY,NX)/BKVLX)
       PCAPM1=AMAX1(0.0,PCAPM(0,NY,NX)/BKVLX)
@@ -4077,7 +4077,7 @@ C        CA-NH4,CA-H,CA-AL,CA-MG,CA-NA,CA-K
 C     X*Q=equilibrium exchangeable concentrations
 C     XTLQ=total equilibrium exchangeable concentration 
 C
-      IF(BKVLX.GT.ZEROS(NY,NX))THEN
+      IF(BKVLX.GT.ZEROS2(NY,NX))THEN
       CCEC0=AMAX1(ZERO,COOH*ORGC(0,NY,NX)/BKVLX)
       ELSE
       CCEC0=ZERO
@@ -4127,13 +4127,13 @@ C
       RXN4=TADC0*(XN4Q-XN41) 
       RNH4=TSL*(CHY1*CN31-DPN4*CN41)/(DPN4+CHY1)
 C     IF(J.EQ.12)THEN
-C     WRITE(*,2223)'RXN4',I,J,RXN4,CN41,XN41,TADC0,XN4Q
+C     WRITE(*,2223)'RXN4',I,J,NFZ,RXN4,CN41,XN41,TADC0,XN4Q
 C    2,CCAX,CCA1,CCO20,CCO31 
 C    2,XCAQ,CCEC0,FN4X,FCAQ,GKC4(NU(NY,NX),NY,NX)
 C    3,PH(0,NY,NX),CHY1,RNH4
 C    3,CN31,DPN4,ZNH4S(0,NY,NX),XN4(0,NY,NX),14.0*RSN4AA,RN4X,BKVLX
 C    4,BKVL(0,NY,NX),VOLWM(NPH,0,NY,NX) 
-2223  FORMAT(A8,2I4,30E12.4)
+2223  FORMAT(A8,3I4,30E12.4)
 C     ENDIF
       ELSE
       RSN4AA=0.0
@@ -4172,7 +4172,7 @@ C
 C     TRN4S=total NH4 transformation 
 C     TRN3S=total NH3 transformation 
 C     TRH1P,TRH2P=net HPO4,H2PO4 transformation 
-C     TRNX4=total NH4 adsorption 
+C     TRXN4=total NH4 adsorption 
 C     TRALPO,TRFEPO,TRCAPD,TRCAPH,TRCAPM
 C        =total AlPO4,FePO4,CaHPO4,apatite,Ca(H2PO4)2 precipitation 
 C     ZNH4FA,ZNH3FA,ZNHUFA,ZNO3FA=broadcast NH4,NH3,urea,NO3
@@ -4207,7 +4207,7 @@ C
 C     IF((I/30)*30.EQ.I.AND.J.EQ.15)THEN
 C     WRITE(*,9989)'TRN3S',I,J,NFZ,TRN3S(0,NY,NX)
 C    2,RN3S,VOLWM(NPH,0,NY,NX),RSN3AA,RSNUAA 
-C     WRITE(*,9989)'TRN4S',I,J,NFZ,TRN4S(0,NY,NX)
+C     WRITE(*,9989)'TRN4S',I,J,NFZ,TRN4S(0,NY,NX),TRXN4(0,NY,NX)
 C    2,RN4S,RNH4,RXN4,RSN4AA,VOLWM(NPH,0,NY,NX)
 C    3,SPNH4,ZNH4FA(0,NY,NX),THETWR
 9989  FORMAT(A8,3I4,12E12.4)

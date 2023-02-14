@@ -173,7 +173,7 @@ C
      6,TQRFE3(JY,JX),TQRFE4(JY,JX),TQRFES(JY,JX),TQRCAO(JY,JX)
      7,TQRCAC(JY,JX),TQRCAH(JY,JX),TQRCAS(JY,JX),TQRMGO(JY,JX)
      8,TQRMGC(JY,JX),TQRMGH(JY,JX),TQRMGS(JY,JX),TQRNAC(JY,JX)
-     9,TQRNAS(JY,JX),TQRKAS(JY,JX),TQRH0P(JY,JX)
+     9,TQRNAS(JY,JX),TQRKAS(JY,JX),TQRH0P(JY,JX) 
      1,TQRH3P(JY,JX),TQRF1P(JY,JX),TQRF2P(JY,JX),TQRC0P(JY,JX)
      2,TQRC1P(JY,JX),TQRC2P(JY,JX),TQRM1P(JY,JX)
       DIMENSION TQSAL(JY,JX),TQSFE(JY,JX),TQSHY(JY,JX)
@@ -345,10 +345,10 @@ C     SOLUTE FLUXES FROM ATMOSPHERE TO SNOWPACK
 C     IN SNOWFALL AND IRRIGATION ACCORDING TO CONCENTRATIONS
 C     ENTERED IN WEATHER AND IRRIGATION FILES
 C
-C     PRECW,PRECR=snow,rain
-C     VHCPWM,VHCPWX=current,minimum volumetric heat capacity
+C     PRECW,PRECR=snow,rain 
+C     VHCPWM,VHCPWX=current,minimum volumetric heat capacity 
 C        of snowpack
-C     X*BLS=aggregated solute flux to snowpack used in redist.f
+C     X*BLS=aggregated solute flux to snowpack used in redist.f 
 C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
@@ -452,7 +452,7 @@ C     SOLUTE FLUXES FROM ATMOSPHERE TO SOIL SURFACE
 C     IN RAINFALL AND IRRIGATION ARE ZERO IF SNOWPACK IS PRESENT
 C
 C     X*FLS,X*FLB=aggregate solute flux to micropores in non-band,band
-C     used in redist.f
+C     used in redist.f 
 C
       XALFLS(3,0,NY,NX)=0.0
       XFEFLS(3,0,NY,NX)=0.0
@@ -556,9 +556,9 @@ C     SOLUTE FLUXES FROM ATMOSPHERE TO SNOWPACK
 C     IN SNOWFALL AND IRRIGATION IS ZERO IF SNOWPACK IS ABSENT
 C
 C     PRECQ,PRECI=snow+rain,irrigation
-C     X*BLS=aggregated solute flux to snowpack used in redist.f
+C     X*BLS=aggregated solute flux to snowpack used in redist.f 
 C     X*FLS,X*FLB=aggregated solute flux to surface litter,soil
-C        surface micropore non-band,band used in redist.f
+C        surface micropore non-band,band used in redist.f 
 C     FLQRQ,FLQRI=water flux to surface litter from rain,irrigation
 C     FLQGQ,FLQGI=water flux to soil surface from rain,irrigation
 C     C*R,C*Q=precipitation,irrigation solute concentrations
@@ -683,21 +683,21 @@ C
       XKASFS(3,0,NY,NX)=FLQRQ(NY,NX)*CKASR(NY,NX)+FLQRI(NY,NX)
      2*CKASQ(I,NY,NX)
       XH0PFS(3,0,NY,NX)=FLQRQ(NY,NX)*CH0PR(NY,NX)+FLQRI(NY,NX)
-     2*CH0PQ(I,NY,NX)
+     2*CH0PQ(I,NY,NX) 
       XH3PFS(3,0,NY,NX)=FLQRQ(NY,NX)*CH3PR(NY,NX)+FLQRI(NY,NX)
-     2*CH3PQ(I,NY,NX)
+     2*CH3PQ(I,NY,NX) 
       XF1PFS(3,0,NY,NX)=FLQRQ(NY,NX)*CF1PR(NY,NX)+FLQRI(NY,NX)
-     2*CF1PQ(I,NY,NX)
+     2*CF1PQ(I,NY,NX) 
       XF2PFS(3,0,NY,NX)=FLQRQ(NY,NX)*CF2PR(NY,NX)+FLQRI(NY,NX)
-     2*CF2PQ(I,NY,NX)
+     2*CF2PQ(I,NY,NX) 
       XC0PFS(3,0,NY,NX)=FLQRQ(NY,NX)*CC0PR(NY,NX)+FLQRI(NY,NX)
-     2*CC0PQ(I,NY,NX)
+     2*CC0PQ(I,NY,NX) 
       XC1PFS(3,0,NY,NX)=FLQRQ(NY,NX)*CC1PR(NY,NX)+FLQRI(NY,NX)
-     2*CC1PQ(I,NY,NX)
+     2*CC1PQ(I,NY,NX) 
       XC2PFS(3,0,NY,NX)=FLQRQ(NY,NX)*CC2PR(NY,NX)+FLQRI(NY,NX)
-     2*CC2PQ(I,NY,NX)
+     2*CC2PQ(I,NY,NX) 
       XM1PFS(3,0,NY,NX)=FLQRQ(NY,NX)*CM1PR(NY,NX)+FLQRI(NY,NX)
-     2*CM1PQ(I,NY,NX)
+     2*CM1PQ(I,NY,NX) 
       XALFLS(3,NU(NY,NX),NY,NX)=FLQGQ(NY,NX)*CALR(NY,NX)+FLQGI(NY,NX)
      2*CALQ(I,NY,NX)
       XFEFLS(3,NU(NY,NX),NY,NX)=FLQGQ(NY,NX)*CFER(NY,NX)+FLQGI(NY,NX)
@@ -939,7 +939,7 @@ C
 C
 C     XNPH=time step from wthr.f
 C     R*BLS,R*FL0,R*FL1,R*FL2=solute flux to snowpack,surface
-C        litter,soil surface non-band,band
+C        litter,soil surface non-band,band 
 C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
@@ -1110,14 +1110,14 @@ C
       ZKAW2(L,NY,NX)=ZKAW(L,NY,NX)
       ZOHW2(L,NY,NX)=ZOHW(L,NY,NX)
       ZSO4W2(L,NY,NX)=ZSO4W(L,NY,NX)
-      ZCLW2(L,NY,NX)=ZCLW(L,NY,NX)
-      ZCO3W2(L,NY,NX)=ZCO3W(L,NY,NX)
+      ZCLW2(L,NY,NX)=ZCLW(L,NY,NX) 
+      ZCO3W2(L,NY,NX)=ZCO3W(L,NY,NX) 
       ZHCO3W2(L,NY,NX)=ZHCO3W(L,NY,NX)
       ZALH1W2(L,NY,NX)=ZALH1W(L,NY,NX)
       ZALH2W2(L,NY,NX)=ZALH2W(L,NY,NX)
       ZALH3W2(L,NY,NX)=ZALH3W(L,NY,NX)
       ZALH4W2(L,NY,NX)=ZALH4W(L,NY,NX)
-      ZALSW2(L,NY,NX)=ZALSW(L,NY,NX)
+      ZALSW2(L,NY,NX)=ZALSW(L,NY,NX) 
       ZFEH1W2(L,NY,NX)=ZFEH1W(L,NY,NX)
       ZFEH2W2(L,NY,NX)=ZFEH2W(L,NY,NX)
       ZFEH3W2(L,NY,NX)=ZFEH3W(L,NY,NX)
@@ -1144,7 +1144,7 @@ C
       ZMG1PW2(L,NY,NX)=ZMG1PW(L,NY,NX)
 20    CONTINUE
 C
-C     SOLUTE FLUXES FROM SOLUTE.F
+C     SOLUTE FLUXES FROM SOLUTE.F 
 C
 C     XNPH=time step from wthr.f
 C     RZ*2=solute flux at time step for flux calculations
@@ -1383,15 +1383,15 @@ C
       ZNA2(L,NY,NX)=ZNA(L,NY,NX)
       ZKA2(L,NY,NX)=ZKA(L,NY,NX)
       ZOH2(L,NY,NX)=ZOH(L,NY,NX)
-      ZSO42(L,NY,NX)=ZSO4(L,NY,NX)
+      ZSO42(L,NY,NX)=ZSO4(L,NY,NX) 
       ZCL2(L,NY,NX)=ZCL(L,NY,NX)
-      ZCO32(L,NY,NX)=ZCO3(L,NY,NX)
+      ZCO32(L,NY,NX)=ZCO3(L,NY,NX) 
       ZHCO32(L,NY,NX)=ZHCO3(L,NY,NX)
       ZAL12(L,NY,NX)=ZALOH1(L,NY,NX)
       ZAL22(L,NY,NX)=ZALOH2(L,NY,NX)
       ZAL32(L,NY,NX)=ZALOH3(L,NY,NX)
       ZAL42(L,NY,NX)=ZALOH4(L,NY,NX)
-      ZALS2(L,NY,NX)=ZALS(L,NY,NX)
+      ZALS2(L,NY,NX)=ZALS(L,NY,NX) 
       ZFE12(L,NY,NX)=ZFEOH1(L,NY,NX)
       ZFE22(L,NY,NX)=ZFEOH2(L,NY,NX)
       ZFE32(L,NY,NX)=ZFEOH3(L,NY,NX)
@@ -1718,7 +1718,7 @@ C
       TC2BHB(L,NY,NX)=0.0
       TM1BHB(L,NY,NX)=0.0
 C
-C     ADD FLUXES FROM SOLUTE.F
+C     ADD FLUXES FROM SOLUTE.F   
 C
 C     RZ*2=solute flux at time step for flux calculations
 C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
@@ -1734,18 +1734,18 @@ C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
 C
-      ZAL2(L,NY,NX)=ZAL2(L,NY,NX)-RZAL2(L,NY,NX)
-      ZFE2(L,NY,NX)=ZFE2(L,NY,NX)-RZFE2(L,NY,NX)
-      ZHY2(L,NY,NX)=ZHY2(L,NY,NX)-RZHY2(L,NY,NX)
+      ZAL2(L,NY,NX)=ZAL2(L,NY,NX)-RZAL2(L,NY,NX) 
+      ZFE2(L,NY,NX)=ZFE2(L,NY,NX)-RZFE2(L,NY,NX) 
+      ZHY2(L,NY,NX)=ZHY2(L,NY,NX)-RZHY2(L,NY,NX) 
       ZCA2(L,NY,NX)=ZCA2(L,NY,NX)-RZCA2(L,NY,NX)
       ZMG2(L,NY,NX)=ZMG2(L,NY,NX)-RZMG2(L,NY,NX)
       ZNA2(L,NY,NX)=ZNA2(L,NY,NX)-RZNA2(L,NY,NX)
       ZKA2(L,NY,NX)=ZKA2(L,NY,NX)-RZKA2(L,NY,NX)
       ZOH2(L,NY,NX)=ZOH2(L,NY,NX)-RZOH2(L,NY,NX)
-      ZSO42(L,NY,NX)=ZSO42(L,NY,NX)-RZSO42(L,NY,NX)
+      ZSO42(L,NY,NX)=ZSO42(L,NY,NX)-RZSO42(L,NY,NX) 
       ZCL2(L,NY,NX)=ZCL2(L,NY,NX)-RZCL2(L,NY,NX)
       ZCO32(L,NY,NX)=ZCO32(L,NY,NX)-RZCO32(L,NY,NX)
-      ZHCO32(L,NY,NX)=ZHCO32(L,NY,NX)-RZHCO32(L,NY,NX)
+      ZHCO32(L,NY,NX)=ZHCO32(L,NY,NX)-RZHCO32(L,NY,NX) 
       ZAL12(L,NY,NX)=ZAL12(L,NY,NX)-RZAL12(L,NY,NX)
       ZAL22(L,NY,NX)=ZAL22(L,NY,NX)-RZAL22(L,NY,NX)
       ZAL32(L,NY,NX)=ZAL32(L,NY,NX)-RZAL32(L,NY,NX)
@@ -1789,16 +1789,16 @@ C     SOLUTE FLUXES FROM MELTING SNOWPACK TO
 C     SOIL SURFACE FROM SNOWMELT IN 'WATSUB' AND
 C     CONCENTRATIONS IN SNOWPACK
 C
-C     VHCPWM,VHCPWX=current,minimum volumetric heat capacity
+C     VHCPWM,VHCPWX=current,minimum volumetric heat capacity 
 C        of snowpack
 C     VOLWSL=snowpack water content
 C     FLQWM=snowpack water flux
 C     R*BLS=solute flux in snowpack
-C     X*BLS=aggregated solute flux in snowpack used in redist.f
+C     X*BLS=aggregated solute flux in snowpack used in redist.f 
 C
       ICHKL=0
       DO 9775 L=1,JS
-      IF(VHCPWM(M,L,NY,NX).GT.VHCPWX(NY,NX))THEN
+      IF(VHCPWM(M,L,NY,NX).GT.VHCPWX(NY,NX))THEN 
       L2=MIN(JS,L+1)
       IF(L.LT.JS.AND.VHCPWM(M,L2,NY,NX).GT.VHCPWX(NY,NX))THEN
       IF(VOLWSL(L,NY,NX).GT.ZEROS2(NY,NX))THEN
@@ -1942,7 +1942,7 @@ C     CVRD,BARE=litter cover fraction,1-CVRD
 C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
 C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
 C     R*S0=solute flux to surface litter
-C     R*S1,R*B1=solute flux to soil surface non-band,band
+C     R*S1,R*B1=solute flux to soil surface non-band,band 
 C
       IF(ICHKL.EQ.0)THEN
       IF(VOLWSL(L,NY,NX).GT.ZEROS2(NY,NX))THEN
@@ -2008,29 +2008,29 @@ C
       RCLFLS1=ZCLW2(L,NY,NX)*VFLWS
       RC3FLS1=ZCO3W2(L,NY,NX)*VFLWS
       RHCFLS1=ZHCO3W2(L,NY,NX)*VFLWS
-      RAL1FS1=ZALH1W2(L,NY,NX)*VFLWS
-      RAL2FS1=ZALH2W2(L,NY,NX)*VFLWS
-      RAL3FS1=ZALH3W2(L,NY,NX)*VFLWS
-      RAL4FS1=ZALH4W2(L,NY,NX)*VFLWS
-      RALSFS1=ZALSW2(L,NY,NX)*VFLWS
-      RFE1FS1=ZFEH1W2(L,NY,NX)*VFLWS
-      RFE2FS1=ZFEH2W2(L,NY,NX)*VFLWS
-      RFE3FS1=ZFEH3W2(L,NY,NX)*VFLWS
-      RFE4FS1=ZFEH4W2(L,NY,NX)*VFLWS
-      RFESFS1=ZFESW2(L,NY,NX)*VFLWS
-      RCAOFS1=ZCAOW2(L,NY,NX)*VFLWS
-      RCACFS1=ZCACW2(L,NY,NX)*VFLWS
-      RCAHFS1=ZCAHW2(L,NY,NX)*VFLWS
-      RCASFS1=ZCASW2(L,NY,NX)*VFLWS
-      RMGOFS1=ZMGOW2(L,NY,NX)*VFLWS
-      RMGCFS1=ZMGCW2(L,NY,NX)*VFLWS
-      RMGHFS1=ZMGHW2(L,NY,NX)*VFLWS
-      RMGSFS1=ZMGSW2(L,NY,NX)*VFLWS
-      RNACFS1=ZNACW2(L,NY,NX)*VFLWS
-      RNASFS1=ZNASW2(L,NY,NX)*VFLWS
-      RKASFS1=ZKASW2(L,NY,NX)*VFLWS
+      RAL1FS1=ZALH1W2(L,NY,NX)*VFLWS 
+      RAL2FS1=ZALH2W2(L,NY,NX)*VFLWS 
+      RAL3FS1=ZALH3W2(L,NY,NX)*VFLWS 
+      RAL4FS1=ZALH4W2(L,NY,NX)*VFLWS 
+      RALSFS1=ZALSW2(L,NY,NX)*VFLWS 
+      RFE1FS1=ZFEH1W2(L,NY,NX)*VFLWS 
+      RFE2FS1=ZFEH2W2(L,NY,NX)*VFLWS 
+      RFE3FS1=ZFEH3W2(L,NY,NX)*VFLWS 
+      RFE4FS1=ZFEH4W2(L,NY,NX)*VFLWS 
+      RFESFS1=ZFESW2(L,NY,NX)*VFLWS 
+      RCAOFS1=ZCAOW2(L,NY,NX)*VFLWS 
+      RCACFS1=ZCACW2(L,NY,NX)*VFLWS 
+      RCAHFS1=ZCAHW2(L,NY,NX)*VFLWS 
+      RCASFS1=ZCASW2(L,NY,NX)*VFLWS 
+      RMGOFS1=ZMGOW2(L,NY,NX)*VFLWS 
+      RMGCFS1=ZMGCW2(L,NY,NX)*VFLWS 
+      RMGHFS1=ZMGHW2(L,NY,NX)*VFLWS 
+      RMGSFS1=ZMGSW2(L,NY,NX)*VFLWS 
+      RNACFS1=ZNACW2(L,NY,NX)*VFLWS 
+      RNASFS1=ZNASW2(L,NY,NX)*VFLWS 
+      RKASFS1=ZKASW2(L,NY,NX)*VFLWS 
       RH0PFS1=H0PO4W2(L,NY,NX)*VFLWPO4
-      RH3PFS1=H3PO4W2(L,NY,NX)*VFLWPO4
+      RH3PFS1=H3PO4W2(L,NY,NX)*VFLWPO4 
       RF1PFS1=ZFE1PW2(L,NY,NX)*VFLWPO4
       RF2PFS1=ZFE2PW2(L,NY,NX)*VFLWPO4
       RC0PFS1=ZCA0PW2(L,NY,NX)*VFLWPO4
@@ -2145,8 +2145,8 @@ C
 C
 C     CONVECTIVE SOLUTE EXCHANGE BETWEEN RESIDUE AND SOIL SURFACE
 C
-      FLWRM1=FLWRM(M,NY,NX)
-C
+      FLWRM1=FLWRM(M,NY,NX) 
+C 
 C     FLWRM=litter-soil water flux from watsub.f
 C
 C     IF WATER FLUX FROM 'WATSUB' IS FROM RESIDUE TO
@@ -2172,11 +2172,11 @@ C        :*1=non-band,*B=band
 C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
 C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
 C
-      IF(FLWRM1.GT.0.0)THEN
+      IF(FLWRM1.GT.0.0)THEN   
       IF(VOLWM(M,0,NY,NX).GT.ZEROS2(NY,NX))THEN
       VFLW=AMAX1(0.0,AMIN1(VFLWX,FLWRM1/VOLWM(M,0,NY,NX)))
       ELSE
-      VFLW=VFLWX
+      VFLW=VFLWX 
       ENDIF
       RFLAL=VFLW*AMAX1(0.0,ZAL2(0,NY,NX))
       RFLFE=VFLW*AMAX1(0.0,ZFE2(0,NY,NX))
@@ -2211,7 +2211,6 @@ C
       RFLNAC=VFLW*AMAX1(0.0,ZNAC2(0,NY,NX))
       RFLNAS=VFLW*AMAX1(0.0,ZNAS2(0,NY,NX))
       RFLKAS=VFLW*AMAX1(0.0,ZKAS2(0,NY,NX))
-C pay attention to the banded fluxes, which likely involves typos
       RFLH0P=VFLW*AMAX1(0.0,H0PO42(0,NY,NX))*VLPO4(NU(NY,NX),NY,NX)
       RFLH3P=VFLW*AMAX1(0.0,H3PO42(0,NY,NX))*VLPO4(NU(NY,NX),NY,NX)
       RFLF1P=VFLW*AMAX1(0.0,ZFE1P2(0,NY,NX))*VLPO4(NU(NY,NX),NY,NX)
@@ -2256,7 +2255,7 @@ C
       IF(VOLWM(M,NU(NY,NX),NY,NX).GT.ZEROS2(NY,NX))THEN
       VFLW=AMIN1(0.0,AMAX1(-VFLWX,FLWRM1/VOLWM(M,NU(NY,NX),NY,NX)))
       ELSE
-      VFLW=-VFLWX
+      VFLW=-VFLWX 
       ENDIF
       RFLAL=VFLW*AMAX1(0.0,ZAL2(NU(NY,NX),NY,NX))
       RFLFE=VFLW*AMAX1(0.0,ZFE2(NU(NY,NX),NY,NX))
@@ -2316,7 +2315,7 @@ C
 C     VOLT,DLYR,AREA=soil surface volume, thickness, area
 C     VOLWM=micropore water-filled porosity from watsub.f
 C
-      IF((VOLT(0,NY,NX).GT.ZEROS(NY,NX)
+      IF((VOLT(0,NY,NX).GT.ZEROS(NY,NX) 
      2.AND.VOLWM(M,0,NY,NX).GT.ZEROS2(NY,NX))
      3.AND.(VOLWM(M,NU(NY,NX),NY,NX).GT.ZEROS2(NY,NX)))THEN
 C
@@ -2442,12 +2441,12 @@ C
 C
 C     DIFFUSIVITIES IN RESIDUE AND SOIL SURFACE
 C
-C     DLYR0,DLYR1=litter, soil surface thickness
-C     TORT=tortuosity from hour1.f
+C     DLYR0,DLYR1=litter, soil surface thickness    
+C     TORT=tortuosity from hour1.f 
 C     CVRD,BARE=litter cover fraction,1-CVRD
 C     DISP=dispersivity parameter
 C     FLWRM=litter-soil water flux from watsub.f
-C     DIF*=aqueous diffusivity-dispersivity in soil surface
+C     DIF*=aqueous diffusivity-dispersivity in soil surface 
 C     *SGL*=solute diffusivity from hour1.f
 C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
@@ -2461,13 +2460,13 @@ C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
-C     DIF*=aqueous diffusivity-dispersivity between litter and
+C     DIF*=aqueous diffusivity-dispersivity between litter and 
 C        soil surface
 C
       DLYR0=AMAX1(ZERO2,DLYR(3,0,NY,NX))
       TORT0=TORT(M,0,NY,NX)*CVRD(NY,NX)
       DLYR1=AMAX1(ZERO2,DLYR(3,NU(NY,NX),NY,NX))
-      TORT1=TORT(M,NU(NY,NX),NY,NX)
+      TORT1=TORT(M,NU(NY,NX),NY,NX) 
       TORTL=AMIN1(1.0,(TORT0+TORT1)/(DLYR0+DLYR1))
       DISPN=DISP(3,NU(NY,NX),NY,NX)
      2*AMIN1(VFLWX,ABS(FLWRM1/AREA(3,NU(NY,NX),NY,NX)))
@@ -2501,9 +2500,9 @@ C
 C     DIFFUSIVE FLUXES BETWEEN CURRENT AND ADJACENT GRID CELL
 C     MICROPORES
 C
-C     DFV*S,DFV*B=diffusive solute flux between litter and
+C     DFV*S,DFV*B=diffusive solute flux between litter and 
 C        soil surface in non-band,band
-C     DIF*=aqueous diffusivity-dispersivity between litter and
+C     DIF*=aqueous diffusivity-dispersivity between litter and 
 C        soil surface
 C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
@@ -2624,9 +2623,9 @@ C     TOTAL MICROPORE AND MACROPORE SOLUTE TRANSPORT FLUXES BETWEEN
 C     ADJACENT GRID CELLS = CONVECTIVE + DIFFUSIVE FLUXES
 C
 C
-C     R*FLS=convective + diffusive solute flux between litter,
+C     R*FLS=convective + diffusive solute flux between litter, 
 C        soil surface
-C     R*FLW,R*FLB=convective + diffusive solute flux into soil
+C     R*FLW,R*FLB=convective + diffusive solute flux into soil 
 C        in non-band,band
 C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
@@ -2641,7 +2640,7 @@ C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
 C     R*FL0,R*FL1=convective flux into surface litter, soil surface
-C     RFL*=convective flux between surface litter and soil surface
+C     RFL*=convective flux between surface litter and soil surface 
 C     DFV*=diffusive solute flux between litter and soil surface
 C
       RALFLS(3,0,NY,NX)=RALFL0(NY,NX)+RALFLS0-RFLAL-DFVAL
@@ -2678,19 +2677,19 @@ C
       RNASFS(3,0,NY,NX)=RNASF0(NY,NX)+RNASFS0-RFLNAS-DFVNAS
       RKASFS(3,0,NY,NX)=RKASF0(NY,NX)+RKASFS0-RFLKAS-DFVKAS
       RH0PFS(3,0,NY,NX)=RH0PF0(NY,NX)+RH0PFS0-RFLH0P-DFVH0P
-     2-RFLH0B-DFVH0B
+     2-RFLH0B-DFVH0B 
       RH3PFS(3,0,NY,NX)=RH3PF0(NY,NX)+RH3PFS0-RFLH3P-DFVH3P
-     2-RFLH3B-DFVH3B
+     2-RFLH3B-DFVH3B 
       RF1PFS(3,0,NY,NX)=RF1PF0(NY,NX)+RF1PFS0-RFLF1P-DFVF1P
-     2-RFLF1B-DFVF1B
+     2-RFLF1B-DFVF1B 
       RF2PFS(3,0,NY,NX)=RF2PF0(NY,NX)+RF2PFS0-RFLF2P-DFVF2P
-     2-RFLF2B-DFVF2B
+     2-RFLF2B-DFVF2B 
       RC0PFS(3,0,NY,NX)=RC0PF0(NY,NX)+RC0PFS0-RFLC0P-DFVC0P
-     2-RFLC0B-DFVC0B
+     2-RFLC0B-DFVC0B 
       RC1PFS(3,0,NY,NX)=RC1PF0(NY,NX)+RC1PFS0-RFLC1P-DFVC1P
-     2-RFLC1B-DFVC1B
+     2-RFLC1B-DFVC1B 
       RC2PFS(3,0,NY,NX)=RC2PF0(NY,NX)+RC2PFS0-RFLC2P-DFVC2P
-     2-RFLC2B-DFVC2B
+     2-RFLC2B-DFVC2B 
       RM1PFS(3,0,NY,NX)=RM1PF0(NY,NX)+RM1PFS0-RFLM1P-DFVM1P
      2-RFLM1B-DFVM1B
       RALFLS(3,NU(NY,NX),NY,NX)=RALFL1(NY,NX)+RALFLS1+RFLAL+DFVAL
@@ -2745,15 +2744,15 @@ C
 C
 C     ACCUMULATE FLUXES FOR USE IN REDIST.F
 C
-C     X*FLS=aggregated convective+diffusive solute flux
-C        used in redist.f
-C     X*FLW,X*FLB= aggregated convective+diffusive solute flux
-C        in non-band,band used in redist.f
+C     X*FLS=aggregated convective+diffusive solute flux 
+C        used in redist.f 
+C     X*FLW,X*FLB= aggregated convective+diffusive solute flux 
+C        in non-band,band used in redist.f 
 C
-      XALFLS(3,0,NY,NX)=XALFLS(3,0,NY,NX)+RALFLS0-RFLAL-DFVAL
-      XFEFLS(3,0,NY,NX)=XFEFLS(3,0,NY,NX)+RFEFLS0-RFLFE-DFVFE
-      XHYFLS(3,0,NY,NX)=XHYFLS(3,0,NY,NX)+RHYFLS0-RFLHY-DFVHY
-      XCAFLS(3,0,NY,NX)=XCAFLS(3,0,NY,NX)+RCAFLS0-RFLCA-DFVCA
+      XALFLS(3,0,NY,NX)=XALFLS(3,0,NY,NX)+RALFLS0-RFLAL-DFVAL 
+      XFEFLS(3,0,NY,NX)=XFEFLS(3,0,NY,NX)+RFEFLS0-RFLFE-DFVFE 
+      XHYFLS(3,0,NY,NX)=XHYFLS(3,0,NY,NX)+RHYFLS0-RFLHY-DFVHY 
+      XCAFLS(3,0,NY,NX)=XCAFLS(3,0,NY,NX)+RCAFLS0-RFLCA-DFVCA 
       XMGFLS(3,0,NY,NX)=XMGFLS(3,0,NY,NX)+RMGFLS0-RFLMG-DFVMG
       XNAFLS(3,0,NY,NX)=XNAFLS(3,0,NY,NX)+RNAFLS0-RFLNA-DFVNA
       XKAFLS(3,0,NY,NX)=XKAFLS(3,0,NY,NX)+RKAFLS0-RFLKA-DFVKA
@@ -2788,7 +2787,7 @@ C
       XH3PFS(3,0,NY,NX)=XH3PFS(3,0,NY,NX)+RH3PFS0-RFLH3P-DFVH3P
      2-RFLH3B-DFVH3B
       XF1PFS(3,0,NY,NX)=XF1PFS(3,0,NY,NX)+RF1PFS0-RFLF1P-DFVF1P
-     2-RFLF1B-DFVF1B
+     2-RFLF1B-DFVF1B 
       XF2PFS(3,0,NY,NX)=XF2PFS(3,0,NY,NX)+RF2PFS0-RFLF2P-DFVF2P
      2-RFLF2B-DFVF2B
       XC0PFS(3,0,NY,NX)=XC0PFS(3,0,NY,NX)+RC0PFS0-RFLC0P-DFVC0P
@@ -2844,7 +2843,7 @@ C
       XFESFS(3,NU(NY,NX),NY,NX)=XFESFS(3,NU(NY,NX),NY,NX)+RFESFS1
      2+RFLFES+DFVFES
       XCAOFS(3,NU(NY,NX),NY,NX)=XCAOFS(3,NU(NY,NX),NY,NX)+RCAOFS1
-     2+RFLCAO+DFVCAO
+     2+RFLCAO+DFVCAO 
       XCACFS(3,NU(NY,NX),NY,NX)=XCACFS(3,NU(NY,NX),NY,NX)+RCACFS1
      2+RFLCAC+DFVCAC
       XCAHFS(3,NU(NY,NX),NY,NX)=XCAHFS(3,NU(NY,NX),NY,NX)+RCAHFS1
@@ -2902,9 +2901,9 @@ C     MACROPORE-MICROPORE SOLUTE EXCHANGE IN SOIL
 C     SURFACE LAYER FROM WATER EXCHANGE IN 'WATSUB' AND
 C     FROM MACROPORE OR MICROPORE SOLUTE CONCENTRATIONS
 C
-C     FINHM=macro-micropore water transfer from watsub.f
+C     FINHM=macro-micropore water transfer from watsub.f 
 C     VOLWM,VOLWHM=micropore,macropore water volume
-C     RFL*=convective macropore-micropore solute transfer
+C     RFL*=convective macropore-micropore solute transfer 
 C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
 C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
 C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
@@ -2930,7 +2929,7 @@ C
       ELSE
       VFLW=VFLWX
       ENDIF
-      RFLAL=VFLW*AMAX1(0.0,ZALH2(NU(NY,NX),NY,NX))
+      RFLAL=VFLW*AMAX1(0.0,ZALH2(NU(NY,NX),NY,NX)) 
       RFLFE=VFLW*AMAX1(0.0,ZFEH2(NU(NY,NX),NY,NX))
       RFLHY=VFLW*AMAX1(0.0,ZHYH2(NU(NY,NX),NY,NX))
       RFLCA=VFLW*AMAX1(0.0,ZCCH2(NU(NY,NX),NY,NX))
@@ -3003,10 +3002,10 @@ C
       VFLW=AMIN1(0.0,AMAX1(-VFLWX,FINHM(M,NU(NY,NX),NY,NX)
      2/VOLWM(M,NU(NY,NX),NY,NX)))
       ELSE
-      VFLW=-VFLWX
+      VFLW=-VFLWX 
       ENDIF
       RFLAL=VFLW*AMAX1(0.0,ZAL2(NU(NY,NX),NY,NX))
-      RFLFE=VFLW*AMAX1(0.0,ZFE2(NU(NY,NX),NY,NX))
+      RFLFE=VFLW*AMAX1(0.0,ZFE2(NU(NY,NX),NY,NX)) 
       RFLHY=VFLW*AMAX1(0.0,ZHY2(NU(NY,NX),NY,NX))
       RFLCA=VFLW*AMAX1(0.0,ZCA2(NU(NY,NX),NY,NX))
       RFLMG=VFLW*AMAX1(0.0,ZMG2(NU(NY,NX),NY,NX))
@@ -3131,7 +3130,7 @@ C     DIFFERENCES
 C
 C     VOLWM,VOLWHM=micropore,macropore water volume
 C     XFRS*VOLT=maximum macropore volume for solute transfer
-C     DFV*=diffusive macropore-micropore solute transfer
+C     DFV*=diffusive macropore-micropore solute transfer 
 C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
@@ -3152,7 +3151,7 @@ C
       IF(VOLWHM(M,NU(NY,NX),NY,NX).GT.ZEROS2(NY,NX))THEN
       VOLWHS=AMIN1(XFRS*VOLT(NU(NY,NX),NY,NX)
      2,VOLWHM(M,NU(NY,NX),NY,NX))
-      VOLWT=VOLWM(M,NU(NY,NX),NY,NX)+VOLWHS
+      VOLWT=VOLWM(M,NU(NY,NX),NY,NX)+VOLWHS 
       DFVAL=XNPH*(AMAX1(0.0,ZALH2(NU(NY,NX),NY,NX))
      2*VOLWM(M,NU(NY,NX),NY,NX)
      2-AMAX1(0.0,ZAL2(NU(NY,NX),NY,NX))*VOLWHS)/VOLWT
@@ -3374,10 +3373,10 @@ C
 C     TOTAL CONVECTIVE +DIFFUSIVE TRANSFER BETWEEN MACROPOES AND
 C     MICROPORES
 C
-C     R*FXS=convective + diffusive solute flux between macropores
+C     R*FXS=convective + diffusive solute flux between macropores 
 C        and micropores
-C     RFL*=convective flux between macropores and micropores
-C     DFV*=diffusive solute flux between macropores and micropores
+C     RFL*=convective flux between macropores and micropores 
+C     DFV*=diffusive solute flux between macropores and micropores 
 C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
@@ -3444,8 +3443,8 @@ C
 C     ACCUMULATE FLUXES FOR USE IN REDIST.F
 C
 C     X*FXS=aggregated convective+diffusive solute flux between
-C        macropores and micropores used in redist.f
-C     R*FXS=total convective+diffusive solute flux between
+C        macropores and micropores used in redist.f 
+C     R*FXS=total convective+diffusive solute flux between 
 C        macropores and micropores
 C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
@@ -3566,8 +3565,8 @@ C
 C     N2,N1=NY,NX of source grid cell
 C     N5,N4=NY,NX of destination grid cell
 C     QRM,QST=runoff,snow drift from watsub.f
-C     RQR*0,RQS*0=solute flux in runoff, snow drift
-C     FQRM,FQSM=partitions RQR*0,RQS*0 into EW(N=1),NS(N=2) directions
+C     RQR*0,RQS*0=solute flux in runoff, snow drift 
+C     FQRM,FQSM=partitions RQR*0,RQS*0 into EW(N=1),NS(N=2) directions 
 C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
@@ -3582,7 +3581,7 @@ C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
 C     VOLWM=litter water volume from watsub.f
 C     *S2=litter solute content
-C     X*QRS=accumulated aggregated solute in runoff used in redist.f
+C     X*QRS=accumulated aggregated solute in runoff used in redist.f 
 C
       N1=NX
       N2=NY
@@ -3590,9 +3589,9 @@ C
       IF(VOLWM(M,0,N2,N1).GT.ZEROS2(N2,N1))THEN
       VFLW=AMIN1(VFLWX,QRM(M,N2,N1)/VOLWM(M,0,N2,N1))
       ELSE
-      VFLW=VFLWX
+      VFLW=VFLWX 
       ENDIF
-      RQRAL0(N2,N1)=VFLW*AMAX1(0.0,ZAL2(0,N2,N1))
+      RQRAL0(N2,N1)=VFLW*AMAX1(0.0,ZAL2(0,N2,N1)) 
       RQRFE0(N2,N1)=VFLW*AMAX1(0.0,ZFE2(0,N2,N1))
       RQRHY0(N2,N1)=VFLW*AMAX1(0.0,ZHY2(0,N2,N1))
       RQRCA0(N2,N1)=VFLW*AMAX1(0.0,ZCA2(0,N2,N1))
@@ -3600,7 +3599,7 @@ C
       RQRNA0(N2,N1)=VFLW*AMAX1(0.0,ZNA2(0,N2,N1))
       RQRKA0(N2,N1)=VFLW*AMAX1(0.0,ZKA2(0,N2,N1))
       RQROH0(N2,N1)=VFLW*AMAX1(0.0,ZOH2(0,N2,N1))
-      RQRSO0(N2,N1)=VFLW*AMAX1(0.0,ZSO42(0,N2,N1))
+      RQRSO0(N2,N1)=VFLW*AMAX1(0.0,ZSO42(0,N2,N1)) 
       RQRCL0(N2,N1)=VFLW*AMAX1(0.0,ZCL2(0,N2,N1))
       RQRC30(N2,N1)=VFLW*AMAX1(0.0,ZCO32(0,N2,N1))
       RQRHC0(N2,N1)=VFLW*AMAX1(0.0,ZHCO32(0,N2,N1))
@@ -3616,7 +3615,7 @@ C
       RQRFES0(N2,N1)=VFLW*AMAX1(0.0,ZFES2(0,N2,N1))
       RQRCAO0(N2,N1)=VFLW*AMAX1(0.0,ZCAO2(0,N2,N1))
       RQRCAC0(N2,N1)=VFLW*AMAX1(0.0,ZCAC2(0,N2,N1))
-      RQRCAH0(N2,N1)=VFLW*AMAX1(0.0,ZCAH2(0,N2,N1))
+      RQRCAH0(N2,N1)=VFLW*AMAX1(0.0,ZCAH2(0,N2,N1)) 
       RQRCAS0(N2,N1)=VFLW*AMAX1(0.0,ZCAS2(0,N2,N1))
       RQRMGO0(N2,N1)=VFLW*AMAX1(0.0,ZMGO2(0,N2,N1))
       RQRMGC0(N2,N1)=VFLW*AMAX1(0.0,ZMGC2(0,N2,N1))
@@ -3642,7 +3641,7 @@ C
       RQRNA0(N2,N1)=0.0
       RQRKA0(N2,N1)=0.0
       RQROH0(N2,N1)=0.0
-      RQRSO0(N2,N1)=0.0
+      RQRSO0(N2,N1)=0.0 
       RQRCL0(N2,N1)=0.0
       RQRC30(N2,N1)=0.0
       RQRHC0(N2,N1)=0.0
@@ -3680,9 +3679,9 @@ C
       IF(VOLSL(1,N2,N1).GT.ZEROS2(N2,N1))THEN
       VFLW=AMIN1(VFLWX,QST(M,N2,N1)/VOLSL(1,N2,N1))
       ELSE
-      VFLW=VFLWX
+      VFLW=VFLWX 
       ENDIF
-      RQSAL0(N2,N1)=VFLW*AMAX1(0.0,ZALW2(1,N2,N1))
+      RQSAL0(N2,N1)=VFLW*AMAX1(0.0,ZALW2(1,N2,N1)) 
       RQSFE0(N2,N1)=VFLW*AMAX1(0.0,ZFEW2(1,N2,N1))
       RQSHY0(N2,N1)=VFLW*AMAX1(0.0,ZHYW2(1,N2,N1))
       RQSCA0(N2,N1)=VFLW*AMAX1(0.0,ZCAW2(1,N2,N1))
@@ -3693,7 +3692,7 @@ C
       RQSSO0(N2,N1)=VFLW*AMAX1(0.0,ZSO4W2(1,N2,N1))
       RQSCL0(N2,N1)=VFLW*AMAX1(0.0,ZCLW2(1,N2,N1))
       RQSC30(N2,N1)=VFLW*AMAX1(0.0,ZCO3W2(1,N2,N1))
-      RQSHC0(N2,N1)=VFLW*AMAX1(0.0,ZHCO3W2(1,N2,N1))
+      RQSHC0(N2,N1)=VFLW*AMAX1(0.0,ZHCO3W2(1,N2,N1)) 
       RQSAL10(N2,N1)=VFLW*AMAX1(0.0,ZALH1W2(1,N2,N1))
       RQSAL20(N2,N1)=VFLW*AMAX1(0.0,ZALH2W2(1,N2,N1))
       RQSAL30(N2,N1)=VFLW*AMAX1(0.0,ZALH3W2(1,N2,N1))
@@ -3708,7 +3707,7 @@ C
       RQSCAC0(N2,N1)=VFLW*AMAX1(0.0,ZCACW2(1,N2,N1))
       RQSCAH0(N2,N1)=VFLW*AMAX1(0.0,ZCAHW2(1,N2,N1))
       RQSCAS0(N2,N1)=VFLW*AMAX1(0.0,ZCASW2(1,N2,N1))
-      RQSMGO0(N2,N1)=VFLW*AMAX1(0.0,ZMGOW2(1,N2,N1))
+      RQSMGO0(N2,N1)=VFLW*AMAX1(0.0,ZMGOW2(1,N2,N1)) 
       RQSMGC0(N2,N1)=VFLW*AMAX1(0.0,ZMGCW2(1,N2,N1))
       RQSMGH0(N2,N1)=VFLW*AMAX1(0.0,ZMGHW2(1,N2,N1))
       RQSMGS0(N2,N1)=VFLW*AMAX1(0.0,ZMGSW2(1,N2,N1))
@@ -3735,7 +3734,7 @@ C
       RQSSO0(N2,N1)=0.0
       RQSCL0(N2,N1)=0.0
       RQSC30(N2,N1)=0.0
-      RQSHC0(N2,N1)=0.0
+      RQSHC0(N2,N1)=0.0 
       RQSAL10(N2,N1)=0.0
       RQSAL20(N2,N1)=0.0
       RQSAL30(N2,N1)=0.0
@@ -3800,8 +3799,8 @@ C
       ENDIF
 C
 C     QRM,QST=runoff,snow drift from watsub.f
-C     RQR*0,RQS*0=solute flux in runoff, snow drift
-C     FQRM,FQSM=partitions RQR*0,RQS*0 into EW(N=1),NS(N=2) directions
+C     RQR*0,RQS*0=solute flux in runoff, snow drift 
+C     FQRM,FQSM=partitions RQR*0,RQS*0 into EW(N=1),NS(N=2) directions 
 C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
@@ -3864,7 +3863,7 @@ C
 C
 C     ACCUMULATE FLUXES FOR USE IN REDIST.F
 C
-C     XQR*=aggregated solute flux in runoff used in redist.f
+C     XQR*=aggregated solute flux in runoff used in redist.f 
 C     RQR*=solute flux in runoff
 C
       XQRAL(N,2,N5,N4)=XQRAL(N,2,N5,N4)+RQRAL(N,2,N5,N4)
@@ -3969,7 +3968,7 @@ C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
-C
+C 
       IF(NN.EQ.2)THEN
       IF(N4B.GT.0.AND.N5B.GT.0)THEN
       FQRM=QRMN(M,N,1,N5B,N4B)/QRM(M,N2,N1)
@@ -4013,11 +4012,11 @@ C
       RQRC0P(N,1,N5B,N4B)=RQRC0P0(N2,N1)*FQRM
       RQRC1P(N,1,N5B,N4B)=RQRC1P0(N2,N1)*FQRM
       RQRC2P(N,1,N5B,N4B)=RQRC2P0(N2,N1)*FQRM
-      RQRM1P(N,1,N5B,N4B)=RQRM1P0(N2,N1)*FQRM
+      RQRM1P(N,1,N5B,N4B)=RQRM1P0(N2,N1)*FQRM 
 C
 C     ACCUMULATE FLUXES FOR USE IN REDIST.F
 C
-C     XQR*=aggregated solute flux in runoff used in redist.f
+C     XQR*=aggregated solute flux in runoff used in redist.f 
 C     RQR*=solute flux in runoff
 C
       XQRAL(N,1,N5B,N4B)=XQRAL(N,1,N5B,N4B)+RQRAL(N,1,N5B,N4B)
@@ -4102,7 +4101,7 @@ C
       RQRC0P(N,1,N5B,N4B)=0.0
       RQRC1P(N,1,N5B,N4B)=0.0
       RQRC2P(N,1,N5B,N4B)=0.0
-      RQRM1P(N,1,N5B,N4B)=0.0
+      RQRM1P(N,1,N5B,N4B)=0.0 
       ENDIF
       ENDIF
       ELSE
@@ -4192,7 +4191,7 @@ C
       ENDIF
       ENDIF
 C
-C     SNOW DRIFT
+C     SNOW DRIFT 
 C
 C     QSM=snow transfer from watsub.f
 C     RQS*=solute flux in snow transfer
@@ -4260,7 +4259,7 @@ C
 C
 C     ACCUMULATE FLUXES USED IN REDIST.F
 C
-C     XQS*=aggregated solute in snow transfer used in redist.f
+C     XQS*=aggregated solute in snow transfer used in redist.f 
 C     RQS*=solute in snow transfer
 C
       XQSAL(N,2,N5,N4)=XQSAL(N,2,N5,N4)+RQSAL(N,2,N5,N4)
@@ -4397,7 +4396,7 @@ C
 C
 C     ACCUMULATE FLUXES USED IN REDIST.F
 C
-C     X*QSS=aggregated solute in snow flux used in redist.f
+C     X*QSS=aggregated solute in snow flux used in redist.f 
 C     RQS*=solute in snow flux
 C
       XQSAL(N,1,N5B,N4B)=XQSAL(N,1,N5B,N4B)+RQSAL(N,1,N5B,N4B)
@@ -4627,10 +4626,10 @@ C
 C     VOLX,VOLY=soil volume excluding rock, macropore
 C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
 C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
-C     VOLWM,VOLWHM=micropore,macropore water-filled porosity
+C     VOLWM,VOLWHM=micropore,macropore water-filled porosity 
 C        from watsub.f
 C     THETW=volumetric water content
-C     FLPM=change in air volume
+C     FLPM=change in air volume 
 C     XNPT=time step from wthr.f
 C
       IF(VOLX(N3,N2,N1).GT.ZEROS2(NY,NX))THEN
@@ -4646,7 +4645,7 @@ C     ADJACENT GRID CELL THEN CONVECTIVE TRANSPORT IS THE PRODUCT
 C     OF WATER FLUX AND MICROPORE GAS OR SOLUTE CONCENTRATIONS
 C     IN CURRENT GRID CELL
 C
-C     FLWM=water flux through soil micropore from watsub.f
+C     FLWM=water flux through soil micropore from watsub.f 
 C     VOLWM=micropore water-filled porosity from watsub.f
 C     RFL*S,RFL*B =solute diffusive flux through micropore
 C        in non-band,band
@@ -4970,9 +4969,9 @@ C
 C     DIFFUSIVITIES IN CURRENT AND ADJACENT GRID CELL MICROPORES
 C
 C     DLYR=soil layer thickness
-C     TORT=micropore tortuosity from hour1.f
+C     TORT=micropore tortuosity from hour1.f 
 C     DISP=dispersivity parameter
-C     FLWM=water flux through soil micropore from watsub.f
+C     FLWM=water flux through soil micropore from watsub.f 
 C     DIF*=aqueous diffusivity-dispersivity through micropore
 C     *SGL2=solute diffusivity from hour1.f
 C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
@@ -4990,7 +4989,7 @@ C        :*1=non-band,*B=band
 C     XDPTH=cross-sectional area/distance between layers
 C     C*1,C*2=micropore solute concentration in source,
 C        destination layer
-C     DFV*=diffusive solute transfer through soil micropore
+C     DFV*=diffusive solute transfer through soil micropore 
 C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
 C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
 C
@@ -5120,7 +5119,7 @@ C
 C
 C     SOLUTE TRANSPORT IN MACROPORES
 C
-C     FLWHM=water flux through soil macropore from watsub.f
+C     FLWHM=water flux through soil macropore from watsub.f 
 C
       IF(FLWHM(M,N,N6,N5,N4).GT.0.0)THEN
 C
@@ -5145,7 +5144,7 @@ C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
 C     *SH2,*BH2=macropore solute content in non-band,band
-C     R*FXS=convective + diffusive solute flux between macropores
+C     R*FXS=convective + diffusive solute flux between macropores 
 C        and micropores
 C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
 C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
@@ -5443,9 +5442,9 @@ C
 C     MACROPORE CONCENTRATIONS IN CURRENT AND ADJACENT GRID CELLS
 C
 C     C*H1,C*H2=macropore solute concentration in source,
-C        destination layer
+C        destination layer 
 C     *H2=macropore solute content
-C     VOLWHM=macropore water content
+C     VOLWHM=macropore water content 
 C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
@@ -5561,9 +5560,9 @@ C
 C     DIFFUSIVITIES IN CURRENT AND ADJACENT GRID CELL MACROPORES
 C
 C     DLYR=soil layer thickness
-C     TORTH=macropore tortuosity from hour1.f
+C     TORTH=macropore tortuosity from hour1.f 
 C     DISP=dispersivity parameter
-C     FLWHM=water flux through soil macropore from watsub.f
+C     FLWHM=water flux through soil macropore from watsub.f 
 C     DIF*=aqueous diffusivity-dispersivity through macropore
 C     *SGL2=solute diffusivity from hour1.f
 C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
@@ -5581,7 +5580,7 @@ C        :*1=non-band,*B=band
 C     XDPTH=cross-sectional area/distance between layers
 C     C*H1,C*H2=macropore solute concentration in source,
 C        destination layer
-C     DFH*=diffusive solute transfer through soil macropore
+C     DFH*=diffusive solute transfer through soil macropore 
 C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
 C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
 C
@@ -5730,9 +5729,9 @@ C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
-C     RFL*=convective flux through micropores
+C     RFL*=convective flux through micropores 
 C     DFV*=diffusive solute flux through micropores
-C     RFH*=convective flux through macropores
+C     RFH*=convective flux through macropores 
 C     DFH*=diffusive solute flux through macropores
 C
       RALFLS(N,N6,N5,N4)=RFLAL+DFVAL
@@ -5837,13 +5836,13 @@ C
 C     ACCUMULATE FLUXES FOR USE IN REDIST.F
 C
 C     X*FLS=aggregated convective + diffusive solute flux through
-C        micropores used in redist.f
+C        micropores used in redist.f 
 C     X*FLW,X*FLB= aggregated convective + diffusive solute flux
-C        through micropores in non-band,band used in redist.f
+C        through micropores in non-band,band used in redist.f 
 C     X*FHS=aggregated convective + diffusive solute flux through
-C        macropores used in redist.f
+C        macropores used in redist.f 
 C     X*FHW,X*FHB= aggregated convective + diffusive solute flux
-C        through macropores in non-band,band used in redist.f
+C        through macropores in non-band,band used in redist.f 
 C     R*FLS=convective + diffusive solute flux through micropores
 C     R*FLW,X*FLB=convective + diffusive solute flux through
 C        micropores in non-band,band
@@ -5960,9 +5959,9 @@ C     MACROPORE-MICROPORE CONVECTIVE SOLUTE EXCHANGE IN SOIL
 C     LAYER FROM WATER EXCHANGE IN 'WATSUB' AND
 C     FROM MACROPORE OR MICROPORE SOLUTE CONCENTRATIONS
 C
-C     FINHM=macro-micropore water transfer from watsub.f
+C     FINHM=macro-micropore water transfer from watsub.f 
 C     VOLWM,VOLWHM=micropore,macropore water volume
-C     RFL*=convective macropore-micropore solute transfer
+C     RFL*=convective macropore-micropore solute transfer 
 C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
 C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
 C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
@@ -5988,7 +5987,7 @@ C
       ELSE
       VFLW=VFLWX
       ENDIF
-      RFLAL=VFLW*AMAX1(0.0,ZALH2(N6,N5,N4))
+      RFLAL=VFLW*AMAX1(0.0,ZALH2(N6,N5,N4)) 
       RFLFE=VFLW*AMAX1(0.0,ZFEH2(N6,N5,N4))
       RFLHY=VFLW*AMAX1(0.0,ZHYH2(N6,N5,N4))
       RFLCA=VFLW*AMAX1(0.0,ZCCH2(N6,N5,N4))
@@ -6064,7 +6063,7 @@ C
       VFLW=-VFLWX
       ENDIF
       RFLAL=VFLW*AMAX1(0.0,ZAL2(N6,N5,N4))
-      RFLFE=VFLW*AMAX1(0.0,ZFE2(N6,N5,N4))
+      RFLFE=VFLW*AMAX1(0.0,ZFE2(N6,N5,N4)) 
       RFLHY=VFLW*AMAX1(0.0,ZHY2(N6,N5,N4))
       RFLCA=VFLW*AMAX1(0.0,ZCA2(N6,N5,N4))
       RFLMG=VFLW*AMAX1(0.0,ZMG2(N6,N5,N4))
@@ -6187,7 +6186,7 @@ C     DIFFUSIVE FLUXES OF SOLUTES BETWEEN MICROPORES AND
 C     MACROPORES FROM AQUEOUS DIFFUSIVITIES AND CONCENTRATION
 C     DIFFERENCES
 C
-C     VOLWM,VOLWHM=micropore,macropore water-filled porosity
+C     VOLWM,VOLWHM=micropore,macropore water-filled porosity 
 C        from watsub.f
 C     DFV*S,DFV*B=diffusive solute flux between macro- and micropore
 C        in non-band,band
@@ -6208,7 +6207,7 @@ C     *2,*H2=solute content of micropores,macropores
 C
       IF(VOLWHM(M,N6,N5,N4).GT.ZEROS2(NY,NX))THEN
       VOLWHS=AMIN1(XFRS*VOLT(N6,N5,N4),VOLWHM(M,N6,N5,N4))
-      VOLWT=VOLWM(M,N6,N5,N4)+VOLWHS
+      VOLWT=VOLWM(M,N6,N5,N4)+VOLWHS 
       DFVAL=XNPH*(AMAX1(0.0,ZALH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
      2-AMAX1(0.0,ZAL2(N6,N5,N4))*VOLWHS)/VOLWT
       DFVFE=XNPH*(AMAX1(0.0,ZFEH2(N6,N5,N4))*VOLWM(M,N6,N5,N4)
@@ -6394,8 +6393,8 @@ C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
-C     RFL*=convective flux between macro- and micropore
-C     DFV*=diffusive solute flux between macro- and micropore
+C     RFL*=convective flux between macro- and micropore 
+C     DFV*=diffusive solute flux between macro- and micropore 
 C
       RALFXS(N6,N5,N4)=RFLAL+DFVAL
       RFEFXS(N6,N5,N4)=RFLFE+DFVFE
@@ -6449,8 +6448,8 @@ C
 C
 C     ACCUMULATE FLUXES FOR USE IN REDIST.F
 C
-C     X*FXS,X*FXB= aggregated convective+diffusive solute flux between
-C        macro- and micropore in non-band,band used in redist.f
+C     X*FXS,X*FXB= aggregated convective+diffusive solute flux between 
+C        macro- and micropore in non-band,band used in redist.f 
 C     R*FXS,R*FXB=convective+diffusive solute flux between macro- and
 C        micropore in non-band,band
 C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
@@ -6617,7 +6616,7 @@ C
       RC2BHB(N,N6,N5,N4)=0.0
       RM1BHB(N,N6,N5,N4)=0.0
       ENDIF
-      ELSE
+      ELSE 
       THETW1(N3,N2,N1)=0.0
       THETW1(N6,N5,N4)=0.0
       RALFLS(N,N6,N5,N4)=0.0
@@ -6838,8 +6837,8 @@ C     SURFACE SOLUTE TRANSPORT FROM BOUNDARY SURFACE
 C     RUNOFF IN WATSUB AND CONCENTRATIONS IN THE SURFACE SOIL LAYER
 C
 C     QRM,QST=runoff,snow drift from watsub.f
-C     RQR*0,RQS*0=solute flux in runoff, snow drift
-C     FQRM,FQSM=partitions RQR*0,RQS*0 into EW(N=1),NS(N=2) directions
+C     RQR*0,RQS*0=solute flux in runoff, snow drift 
+C     FQRM,FQSM=partitions RQR*0,RQS*0 into EW(N=1),NS(N=2) directions 
 C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
@@ -6950,7 +6949,7 @@ C
 C
 C     ACCUMULATE FLUXES FOR USE IN REDIST.F
 C
-C     X*QRS=aggregated solute flux in runoff used in redist.f
+C     X*QRS=aggregated solute flux in runoff used in redist.f 
 C     RQR*=solute flux in runoff
 C
       XQRAL(N,NN,M5,M4)=XQRAL(N,NN,M5,M4)+RQRAL(N,NN,M5,M4)
@@ -6998,7 +6997,7 @@ C
 C     SOLUTE GAIN FROM RUNON DEPENDING ON ASPECT
 C     AND BOUNDARY CONDITIONS SET IN SITE FILE
 C
-C     X*QRS=aggregated solute flux in runoff used in redist.f
+C     X*QRS=aggregated solute flux in runoff used in redist.f 
 C     RQR*=solute in runoff
 C
       ELSEIF((NN.EQ.2.AND.QRMN(M,N,NN,M5,M4).GT.ZEROS(N2,N1))
@@ -7015,9 +7014,9 @@ C
       RQRCL(N,NN,M5,M4)=0.0
       RQRC3(N,NN,M5,M4)=0.0
       RQRHC(N,NN,M5,M4)=0.0
-      RQRAL1(N,NN,M5,M4)=0.0
+      RQRAL1(N,NN,M5,M4)=0.0 
       RQRAL2(N,NN,M5,M4)=0.0
-      RQRAL3(N,NN,M5,M4)=0.0
+      RQRAL3(N,NN,M5,M4)=0.0 
       RQRAL4(N,NN,M5,M4)=0.0
       RQRALS(N,NN,M5,M4)=0.0
       RQRFE1(N,NN,M5,M4)=0.0
@@ -7057,9 +7056,9 @@ C
       RQRCL(N,NN,M5,M4)=0.0
       RQRC3(N,NN,M5,M4)=0.0
       RQRHC(N,NN,M5,M4)=0.0
-      RQRAL1(N,NN,M5,M4)=0.0
+      RQRAL1(N,NN,M5,M4)=0.0 
       RQRAL2(N,NN,M5,M4)=0.0
-      RQRAL3(N,NN,M5,M4)=0.0
+      RQRAL3(N,NN,M5,M4)=0.0 
       RQRAL4(N,NN,M5,M4)=0.0
       RQRALS(N,NN,M5,M4)=0.0
       RQRFE1(N,NN,M5,M4)=0.0
@@ -7110,9 +7109,9 @@ C
       RQSCL(N,NN,M5,M4)=0.0
       RQSC3(N,NN,M5,M4)=0.0
       RQSHC(N,NN,M5,M4)=0.0
-      RQSAL1(N,NN,M5,M4)=0.0
+      RQSAL1(N,NN,M5,M4)=0.0 
       RQSAL2(N,NN,M5,M4)=0.0
-      RQSAL3(N,NN,M5,M4)=0.0
+      RQSAL3(N,NN,M5,M4)=0.0 
       RQSAL4(N,NN,M5,M4)=0.0
       RQSALS(N,NN,M5,M4)=0.0
       RQSFE1(N,NN,M5,M4)=0.0
@@ -7191,7 +7190,7 @@ C
 C
 C     ACCUMULATE FLUXES USED IN REDIST.F
 C
-C     XQS*=aggregated solute in snow transfer used in redist.f
+C     XQS*=aggregated solute in snow transfer used in redist.f 
 C     RQS*=solute in snow transfer
 C
       XQSAL(N,NN,M5,M4)=XQSAL(N,NN,M5,M4)+RQSAL(N,NN,M5,M4)
@@ -7330,10 +7329,10 @@ C
 C
 C     SUBSURFACE SOLUTE BOUNDARY FLUX THROUGH MICROPORES
 C
-C     FLWM=water flux through soil micropore from watsub.f
+C     FLWM=water flux through soil micropore from watsub.f 
 C     VOLWM=micropore water-filled porosity from watsub.f
 C     R*FLS=convective solute flux through micropores
-C     R*FLW,R*FLB=convective solute flux through micropores
+C     R*FLW,R*FLB=convective solute flux through micropores 
 C        in non-band,band
 C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
@@ -7354,7 +7353,7 @@ C
       VFLW=AMAX1(-VFLWX,AMIN1(VFLWX,FLWM(M,N,M6,M5,M4)
      2/VOLWM(M,M3,M2,M1)))
       ELSE
-      VFLW=0.0
+      VFLW=0.0 
       ENDIF
       IF(ABS(VFLW).GT.ZERO)THEN
 C
@@ -7432,205 +7431,205 @@ C     IF RECHARGE (NEGATIVE FLUX)
 C
       ELSEIF(NN.EQ.1.AND.FLWM(M,N,M6,M5,M4).LT.0.0)THEN
       RALFLS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZAL2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CALU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CALU(M3,M2,M1)) 
       RFEFLS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZFE2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CFEU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CFEU(M3,M2,M1)) 
       RHYFLS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZHY2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CHYU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CHYU(M3,M2,M1)) 
       RCAFLS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZCA2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CCAU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CCAU(M3,M2,M1)) 
       RMGFLS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZMG2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CMGU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CMGU(M3,M2,M1)) 
       RNAFLS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZNA2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CNAU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CNAU(M3,M2,M1)) 
       RKAFLS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZKA2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CKAU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CKAU(M3,M2,M1)) 
       ROHFLS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZOH2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*COHU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*COHU(M3,M2,M1)) 
       RSOFLS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZSO42(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CSOU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CSOU(M3,M2,M1)) 
       RCLFLS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZCL2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CCLU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CCLU(M3,M2,M1)) 
       RC3FLS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZCO32(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CC3U(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CC3U(M3,M2,M1)) 
       RHCFLS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZHCO32(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CHCU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CHCU(M3,M2,M1)) 
       RAL1FS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZAL12(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CAL1U(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CAL1U(M3,M2,M1)) 
       RAL2FS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZAL22(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CAL2U(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CAL2U(M3,M2,M1)) 
       RAL3FS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZAL32(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CAL3U(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CAL3U(M3,M2,M1)) 
       RAL4FS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZAL42(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CAL4U(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CAL4U(M3,M2,M1)) 
       RALSFS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZALS2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CALU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CALU(M3,M2,M1)) 
       RFE1FS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZFE12(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CFE1U(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CFE1U(M3,M2,M1)) 
       RFE2FS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZFE22(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CFE2U(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CFE2U(M3,M2,M1)) 
       RFE3FS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZFE32(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CFE3U(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CFE3U(M3,M2,M1)) 
       RFE4FS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZFE42(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CFE4U(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CFE4U(M3,M2,M1)) 
       RFESFS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZFES2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CFESU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CFESU(M3,M2,M1)) 
       RCAOFS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZCAO2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CCAOU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CCAOU(M3,M2,M1)) 
       RCACFS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZCAC2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CCACU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CCACU(M3,M2,M1)) 
       RCAHFS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZCAH2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CCAHU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CCAHU(M3,M2,M1)) 
       RCASFS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZCAS2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CCASU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CCASU(M3,M2,M1)) 
       RMGOFS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZMGO2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CMGOU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CMGOU(M3,M2,M1)) 
       RMGCFS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZMGC2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CMGCU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CMGCU(M3,M2,M1)) 
       RMGHFS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZMGH2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CMGHU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CMGHU(M3,M2,M1)) 
       RMGSFS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZMGS2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CMGSU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CMGSU(M3,M2,M1)) 
       RNACFS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZNAC2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CNACU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CNACU(M3,M2,M1)) 
       RNASFS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZNAS2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CNASU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CNASU(M3,M2,M1)) 
       RKASFS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZKAS2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CKASU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CKASU(M3,M2,M1)) 
       RH0PFS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,H0PO42(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CH0PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CH0PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RH3PFS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,H3PO42(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CH3PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CH3PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RF1PFS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZFE1P2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CF1PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CF1PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RF2PFS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZFE2P2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CF2PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CF2PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RC0PFS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZCA0P2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CC0PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CC0PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RC1PFS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZCA1P2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CC1PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CC1PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RC2PFS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZCA2P2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CC2PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CC2PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RM1PFS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZMG1P2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CM1PU(M3,M2,M1))*VLPO4(M3,M2,M1)
-      RH0BFB(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,H0POB2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CH0PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CM1PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
+      RH0BFB(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,H0POB2(M3,M2,M1)) 
+     2,FLWM(M,N,M6,M5,M4)*CH0PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RH3BFB(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,H3POB2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CH3PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CH3PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RF1BFB(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZF1PB2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CF1PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CF1PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RF2BFB(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZF2PB2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CF2PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CF2PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RC0BFB(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZC0PB2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CC0PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CC0PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RC1BFB(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZC1PB2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CC1PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CC1PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RC2BFB(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZC2PB2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CC2PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CC2PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RM1BFB(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZM1PB2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CM1PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CM1PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
 C
 C     IF RECHARGE (POSITIVE FLUX)
 C
       ELSEIF(NN.EQ.2.AND.FLWM(M,N,M6,M5,M4).GT.0.0)THEN
       RALFLS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZAL2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CALU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CALU(M3,M2,M1)) 
       RFEFLS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZFE2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CFEU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CFEU(M3,M2,M1)) 
       RHYFLS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZHY2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CHYU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CHYU(M3,M2,M1)) 
       RCAFLS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZCA2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CCAU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CCAU(M3,M2,M1)) 
       RMGFLS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZMG2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CMGU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CMGU(M3,M2,M1)) 
       RNAFLS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZNA2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CNAU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CNAU(M3,M2,M1)) 
       RKAFLS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZKA2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CKAU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CKAU(M3,M2,M1)) 
       ROHFLS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZOH2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*COHU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*COHU(M3,M2,M1)) 
       RSOFLS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZSO42(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CSOU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CSOU(M3,M2,M1)) 
       RCLFLS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZCL2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CCLU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CCLU(M3,M2,M1)) 
       RC3FLS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZCO32(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CC3U(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CC3U(M3,M2,M1)) 
       RHCFLS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZHCO32(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CHCU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CHCU(M3,M2,M1)) 
       RAL1FS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZAL12(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CAL1U(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CAL1U(M3,M2,M1)) 
       RAL2FS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZAL22(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CAL2U(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CAL2U(M3,M2,M1)) 
       RAL3FS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZAL32(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CAL3U(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CAL3U(M3,M2,M1)) 
       RAL4FS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZAL42(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CAL4U(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CAL4U(M3,M2,M1)) 
       RALSFS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZALS2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CALU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CALU(M3,M2,M1)) 
       RFE1FS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZFE12(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CFE1U(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CFE1U(M3,M2,M1)) 
       RFE2FS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZFE22(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CFE2U(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CFE2U(M3,M2,M1)) 
       RFE3FS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZFE32(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CFE3U(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CFE3U(M3,M2,M1)) 
       RFE4FS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZFE42(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CFE4U(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CFE4U(M3,M2,M1)) 
       RFESFS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZFES2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CFESU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CFESU(M3,M2,M1)) 
       RCAOFS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZCAO2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CCAOU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CCAOU(M3,M2,M1)) 
       RCACFS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZCAC2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CCACU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CCACU(M3,M2,M1)) 
       RCAHFS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZCAH2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CCAHU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CCAHU(M3,M2,M1)) 
       RCASFS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZCAS2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CCASU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CCASU(M3,M2,M1)) 
       RMGOFS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZMGO2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CMGOU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CMGOU(M3,M2,M1)) 
       RMGCFS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZMGC2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CMGCU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CMGCU(M3,M2,M1)) 
       RMGHFS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZMGH2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CMGHU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CMGHU(M3,M2,M1)) 
       RMGSFS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZMGS2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CMGSU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CMGSU(M3,M2,M1)) 
       RNACFS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZNAC2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CNACU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CNACU(M3,M2,M1)) 
       RNASFS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZNAS2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CNASU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CNASU(M3,M2,M1)) 
       RKASFS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZKAS2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CKASU(M3,M2,M1))
+     2,FLWM(M,N,M6,M5,M4)*CKASU(M3,M2,M1)) 
       RH0PFS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,H0PO42(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CH0PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CH0PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RH3PFS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,H3PO42(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CH3PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CH3PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RF1PFS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZFE1P2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CF1PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CF1PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RF2PFS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZFE2P2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CF2PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CF2PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RC0PFS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZCA0P2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CC0PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CC0PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RC1PFS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZCA1P2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CC1PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CC1PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RC2PFS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZCA2P2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CC2PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CC2PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RM1PFS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZMG1P2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CM1PU(M3,M2,M1))*VLPO4(M3,M2,M1)
-      RH0BFB(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,H0POB2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CH0PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CM1PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
+      RH0BFB(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,H0POB2(M3,M2,M1)) 
+     2,FLWM(M,N,M6,M5,M4)*CH0PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RH3BFB(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,H3POB2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CH3PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CH3PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RF1BFB(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZF1PB2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CF1PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CF1PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RF2BFB(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZF2PB2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CF2PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CF2PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RC0BFB(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZC0PB2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CC0PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CC0PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RC1BFB(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZC1PB2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CC1PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CC1PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RC2BFB(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZC2PB2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CC2PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CC2PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RM1BFB(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZM1PB2(M3,M2,M1))
-     2,FLWM(M,N,M6,M5,M4)*CM1PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWM(M,N,M6,M5,M4)*CM1PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
 C
 C     OTHERWISE NO FLUX
 C
@@ -7689,8 +7688,8 @@ C
 C     ACCUMULATE FLUXES FOR USE IN REDIST.F
 C
 C     X*FLS,X*FLW,X*FLB=aggregated solute flux in non-band,band
-C        micropores used in redist.f
-C     R*FLS,R*FLW,R*FLB=solute flux in non-band,band micropores
+C        micropores used in redist.f 
+C     R*FLS,R*FLW,R*FLB=solute flux in non-band,band micropores 
 C
       XALFLS(N,M6,M5,M4)=XALFLS(N,M6,M5,M4)+RALFLS(N,M6,M5,M4)
       XFEFLS(N,M6,M5,M4)=XFEFLS(N,M6,M5,M4)+RFEFLS(N,M6,M5,M4)
@@ -7795,7 +7794,7 @@ C
 C
 C     SUBSURFACE SOLUTE BOUNDARY FLUX THROUGH MACROPORES
 C
-C     FLWHM=water flux through soil macropore from watsub.f
+C     FLWHM=water flux through soil macropore from watsub.f 
 C     VOLWHM=macropore water-filled porosity from watsub.f
 C     RFH*S=solute diffusive flux through macropore
 C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
@@ -7815,7 +7814,7 @@ C
       VFLW=AMAX1(-VFLWX,AMIN1(VFLWX,FLWHM(M,N,M6,M5,M4)
      2/VOLWHM(M,M3,M2,M1)))
       ELSE
-      VFLW=0.0
+      VFLW=0.0 
       ENDIF
       IF(ABS(VFLW).GT.ZERO)THEN
 C
@@ -7829,7 +7828,7 @@ C
       RMGFHS(N,M6,M5,M4)=VFLW*AMAX1(0.0,ZMAH2(M3,M2,M1))
       RNAFHS(N,M6,M5,M4)=VFLW*AMAX1(0.0,ZNAH2(M3,M2,M1))
       RKAFHS(N,M6,M5,M4)=VFLW*AMAX1(0.0,ZKAH2(M3,M2,M1))
-      ROHFHS(N,M6,M5,M4)=VFLW*AMAX1(0.0,ZOHH2(M3,M2,M1))
+      ROHFHS(N,M6,M5,M4)=VFLW*AMAX1(0.0,ZOHH2(M3,M2,M1)) 
       RSOFHS(N,M6,M5,M4)=VFLW*AMAX1(0.0,ZSO4H2(M3,M2,M1))
       RCLFHS(N,M6,M5,M4)=VFLW*AMAX1(0.0,ZCLH2(M3,M2,M1))
       RC3FHS(N,M6,M5,M4)=VFLW*AMAX1(0.0,ZCO3H2(M3,M2,M1))
@@ -7892,205 +7891,205 @@ C     IF RECHARGE (NEGATIVE FLUX)
 C
       ELSEIF(NN.EQ.1.AND.FLWM(M,N,M6,M5,M4).LT.0.0)THEN
       RALFHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZALH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CALU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CALU(M3,M2,M1)) 
       RFEFHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZFEH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CFEU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CFEU(M3,M2,M1)) 
       RHYFHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZHYH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CHYU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CHYU(M3,M2,M1)) 
       RCAFHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZCCH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CCAU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CCAU(M3,M2,M1)) 
       RMGFHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZMAH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CMGU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CMGU(M3,M2,M1)) 
       RNAFHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZNAH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CNAU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CNAU(M3,M2,M1)) 
       RKAFHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZKAH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CKAU(M3,M2,M1))
-      ROHFHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZOHH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*COHU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CKAU(M3,M2,M1)) 
+      ROHFHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZOHH2(M3,M2,M1)) 
+     2,FLWHM(M,N,M6,M5,M4)*COHU(M3,M2,M1)) 
       RSOFHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZSO4H2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CSOU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CSOU(M3,M2,M1)) 
       RCLFHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZCLH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CCLU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CCLU(M3,M2,M1)) 
       RC3FHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZCO3H2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CC3U(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CC3U(M3,M2,M1)) 
       RHCFHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZHCOH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CHCU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CHCU(M3,M2,M1)) 
       RAL1HS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZAL1H2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CAL1U(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CAL1U(M3,M2,M1)) 
       RAL2HS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZAL2H2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CAL2U(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CAL2U(M3,M2,M1)) 
       RAL3HS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZAL3H2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CAL3U(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CAL3U(M3,M2,M1)) 
       RAL4HS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZAL4H2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CAL4U(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CAL4U(M3,M2,M1)) 
       RALSHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZALSH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CALU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CALU(M3,M2,M1)) 
       RFE1HS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZFE1H2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CFE1U(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CFE1U(M3,M2,M1)) 
       RFE2HS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZFE2H2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CFE2U(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CFE2U(M3,M2,M1)) 
       RFE3HS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZFE3H2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CFE3U(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CFE3U(M3,M2,M1)) 
       RFE4HS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZFE4H2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CFE4U(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CFE4U(M3,M2,M1)) 
       RFESHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZFESH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CFESU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CFESU(M3,M2,M1)) 
       RCAOHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZCAOH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CCAOU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CCAOU(M3,M2,M1)) 
       RCACHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZCACH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CCACU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CCACU(M3,M2,M1)) 
       RCAHHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZCAHH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CCAHU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CCAHU(M3,M2,M1)) 
       RCASHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZCASH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CCASU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CCASU(M3,M2,M1)) 
       RMGOHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZMGOH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CMGOU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CMGOU(M3,M2,M1)) 
       RMGCHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZMGCH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CMGCU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CMGCU(M3,M2,M1)) 
       RMGHHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZMGHH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CMGHU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CMGHU(M3,M2,M1)) 
       RMGSHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZMGSH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CMGSU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CMGSU(M3,M2,M1)) 
       RNACHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZNACH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CNACU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CNACU(M3,M2,M1)) 
       RNASHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZNASH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CNASU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CNASU(M3,M2,M1)) 
       RKASHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZKASH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CKASU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CKASU(M3,M2,M1)) 
       RH0PHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,H0P4H2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CH0PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CH0PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RH3PHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,H3P4H2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CH3PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CH3PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RF1PHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZF1PH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CF1PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CF1PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RF2PHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZF2PH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CF2PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CF2PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RC0PHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZC0PH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CC0PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CC0PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RC1PHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZC1PH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CC1PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CC1PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RC2PHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZC2PH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CC2PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CC2PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RM1PHS(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZM1PH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CM1PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CM1PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RH0BHB(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,H0PBH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CH0PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CH0PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RH3BHB(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,H3PBH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CH3PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CH3PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RF1BHB(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZF1BH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CF1PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CF1PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RF2BHB(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZF2BH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CF2PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CF2PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RC0BHB(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZC0BH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CC0PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CC0PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RC1BHB(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZC1BH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CC1PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CC1PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RC2BHB(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZC2BH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CC2PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CC2PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RM1BHB(N,M6,M5,M4)=AMAX1(VFLW*AMAX1(0.0,ZM1BH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CM1PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CM1PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
 C
 C     IF RECHARGE (POSITIVE FLUX)
 C
       ELSEIF(NN.EQ.2.AND.FLWM(M,N,M6,M5,M4).GT.0.0)THEN
       RALFHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZALH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CALU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CALU(M3,M2,M1)) 
       RFEFHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZFEH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CFEU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CFEU(M3,M2,M1)) 
       RHYFHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZHYH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CHYU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CHYU(M3,M2,M1)) 
       RCAFHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZCCH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CCAU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CCAU(M3,M2,M1)) 
       RMGFHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZMAH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CMGU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CMGU(M3,M2,M1)) 
       RNAFHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZNAH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CNAU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CNAU(M3,M2,M1)) 
       RKAFHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZKAH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CKAU(M3,M2,M1))
-      ROHFHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZOHH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*COHU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CKAU(M3,M2,M1)) 
+      ROHFHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZOHH2(M3,M2,M1)) 
+     2,FLWHM(M,N,M6,M5,M4)*COHU(M3,M2,M1)) 
       RSOFHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZSO4H2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CSOU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CSOU(M3,M2,M1)) 
       RCLFHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZCLH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CCLU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CCLU(M3,M2,M1)) 
       RC3FHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZCO3H2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CC3U(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CC3U(M3,M2,M1)) 
       RHCFHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZHCOH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CHCU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CHCU(M3,M2,M1)) 
       RAL1HS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZAL1H2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CAL1U(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CAL1U(M3,M2,M1)) 
       RAL2HS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZAL2H2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CAL2U(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CAL2U(M3,M2,M1)) 
       RAL3HS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZAL3H2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CAL3U(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CAL3U(M3,M2,M1)) 
       RAL4HS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZAL4H2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CAL4U(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CAL4U(M3,M2,M1)) 
       RALSHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZALSH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CALU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CALU(M3,M2,M1)) 
       RFE1HS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZFE1H2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CFE1U(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CFE1U(M3,M2,M1)) 
       RFE2HS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZFE2H2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CFE2U(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CFE2U(M3,M2,M1)) 
       RFE3HS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZFE3H2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CFE3U(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CFE3U(M3,M2,M1)) 
       RFE4HS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZFE4H2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CFE4U(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CFE4U(M3,M2,M1)) 
       RFESHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZFESH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CFESU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CFESU(M3,M2,M1)) 
       RCAOHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZCAOH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CCAOU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CCAOU(M3,M2,M1)) 
       RCACHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZCACH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CCACU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CCACU(M3,M2,M1)) 
       RCAHHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZCAHH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CCAHU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CCAHU(M3,M2,M1)) 
       RCASHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZCASH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CCASU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CCASU(M3,M2,M1)) 
       RMGOHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZMGOH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CMGOU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CMGOU(M3,M2,M1)) 
       RMGCHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZMGCH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CMGCU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CMGCU(M3,M2,M1)) 
       RMGHHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZMGHH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CMGHU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CMGHU(M3,M2,M1)) 
       RMGSHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZMGSH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CMGSU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CMGSU(M3,M2,M1)) 
       RNACHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZNACH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CNACU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CNACU(M3,M2,M1)) 
       RNASHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZNASH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CNASU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CNASU(M3,M2,M1)) 
       RKASHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZKASH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CKASU(M3,M2,M1))
+     2,FLWHM(M,N,M6,M5,M4)*CKASU(M3,M2,M1)) 
       RH0PHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,H0P4H2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CH0PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CH0PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RH3PHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,H3P4H2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CH3PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CH3PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RF1PHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZF1PH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CF1PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CF1PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RF2PHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZF2PH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CF2PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CF2PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RC0PHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZC0PH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CC0PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CC0PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RC1PHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZC1PH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CC1PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CC1PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RC2PHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZC2PH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CC2PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CC2PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RM1PHS(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZM1PH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CM1PU(M3,M2,M1))*VLPO4(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CM1PU(M3,M2,M1))*VLPO4(M3,M2,M1) 
       RH0BHB(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,H0PBH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CH0PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CH0PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RH3BHB(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,H3PBH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CH3PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CH3PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RF1BHB(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZF1BH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CF1PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CF1PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RF2BHB(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZF2BH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CF2PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CF2PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RC0BHB(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZC0BH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CC0PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CC0PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RC1BHB(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZC1BH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CC1PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CC1PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RC2BHB(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZC2BH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CC2PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CC2PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
       RM1BHB(N,M6,M5,M4)=AMIN1(VFLW*AMAX1(0.0,ZM1BH2(M3,M2,M1))
-     2,FLWHM(M,N,M6,M5,M4)*CM1PU(M3,M2,M1))*VLPOB(M3,M2,M1)
+     2,FLWHM(M,N,M6,M5,M4)*CM1PU(M3,M2,M1))*VLPOB(M3,M2,M1) 
 C
 C     OTHERWISE NO FLUX
 C
@@ -8144,13 +8143,13 @@ C
       RC1BHB(N,M6,M5,M4)=0.0
       RC2BHB(N,M6,M5,M4)=0.0
       RM1BHB(N,M6,M5,M4)=0.0
-      ENDIF
+      ENDIF   
 C
 C     ACCUMULATE FLUXES FOR USE IN REDIST.F
 C
 C     X*FHS,X*FHW,X*FHB=aggregated solute flux in non-band,band
-C        macropores used in redist.f
-C     R*FHS,R*FHW,R*FHB=solute flux in non-band,band macropores
+C        macropores used in redist.f 
+C     R*FHS,R*FHW,R*FHB=solute flux in non-band,band macropores 
 C
       XALFHS(N,M6,M5,M4)=XALFHS(N,M6,M5,M4)+RALFHS(N,M6,M5,M4)
       XFEFHS(N,M6,M5,M4)=XFEFHS(N,M6,M5,M4)+RFEFHS(N,M6,M5,M4)
@@ -8321,7 +8320,7 @@ C
       TQRC0P(N2,N1)=TQRC0P(N2,N1)+RQRC0P(N,NN,N2,N1)
       TQRC1P(N2,N1)=TQRC1P(N2,N1)+RQRC1P(N,NN,N2,N1)
       TQRC2P(N2,N1)=TQRC2P(N2,N1)+RQRC2P(N,NN,N2,N1)
-      TQRM1P(N2,N1)=TQRM1P(N2,N1)+RQRM1P(N,NN,N2,N1)
+      TQRM1P(N2,N1)=TQRM1P(N2,N1)+RQRM1P(N,NN,N2,N1) 
       TQSAL(N2,N1)=TQSAL(N2,N1)+RQSAL(N,NN,N2,N1)
       TQSFE(N2,N1)=TQSFE(N2,N1)+RQSFE(N,NN,N2,N1)
       TQSHY(N2,N1)=TQSHY(N2,N1)+RQSHY(N,NN,N2,N1)
@@ -8537,7 +8536,7 @@ C
 C
 C     NET SOLUTE FLUX IN SNOWPACK
 C
-C     VHCPWM,VHCPWX=current,minimum volumetric heat capacity
+C     VHCPWM,VHCPWX=current,minimum volumetric heat capacity 
 C        of snowpack
 C     T*BLS=net solute flux in snowpack
 C     R*BLS=solute flux in snowpack
@@ -9077,7 +9076,7 @@ C     STATE VARIABLES FOR SOLUTES IN MICROPORES AND MACROPORES IN
 C     SOIL SURFACE LAYER FROM OVERLAND FLOW
 C
 C     *W2=solute content of snowpack
-C     TQS*=net overland solute flux in snow
+C     TQS*=net overland solute flux in snow 
 C     T*BLS=net solute flux in snowpack
 C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
@@ -9100,15 +9099,15 @@ C
       ZNAW2(1,NY,NX)=ZNAW2(1,NY,NX)+TQSNA(NY,NX)
       ZKAW2(1,NY,NX)=ZKAW2(1,NY,NX)+TQSKA(NY,NX)
       ZOHW2(1,NY,NX)=ZOHW2(1,NY,NX)+TQSOH(NY,NX)
-      ZSO4W2(1,NY,NX)=ZSO4W2(1,NY,NX)+TQSSO(NY,NX)
-      ZCLW2(1,NY,NX)=ZCLW2(1,NY,NX)+TQSCL(NY,NX)
-      ZCO3W2(1,NY,NX)=ZCO3W2(1,NY,NX)+TQSC3(NY,NX)
+      ZSO4W2(1,NY,NX)=ZSO4W2(1,NY,NX)+TQSSO(NY,NX) 
+      ZCLW2(1,NY,NX)=ZCLW2(1,NY,NX)+TQSCL(NY,NX) 
+      ZCO3W2(1,NY,NX)=ZCO3W2(1,NY,NX)+TQSC3(NY,NX) 
       ZHCO3W2(1,NY,NX)=ZHCO3W2(1,NY,NX)+TQSHC(NY,NX)
       ZALH1W2(1,NY,NX)=ZALH1W2(1,NY,NX)+TQSAL1(NY,NX)
       ZALH2W2(1,NY,NX)=ZALH2W2(1,NY,NX)+TQSAL2(NY,NX)
       ZALH3W2(1,NY,NX)=ZALH3W2(1,NY,NX)+TQSAL3(NY,NX)
       ZALH4W2(1,NY,NX)=ZALH4W2(1,NY,NX)+TQSAL4(NY,NX)
-      ZALSW2(1,NY,NX)=ZALSW2(1,NY,NX)+TQSALS(NY,NX)
+      ZALSW2(1,NY,NX)=ZALSW2(1,NY,NX)+TQSALS(NY,NX) 
       ZFEH1W2(1,NY,NX)=ZFEH1W2(1,NY,NX)+TQSFE1(NY,NX)
       ZFEH2W2(1,NY,NX)=ZFEH2W2(1,NY,NX)+TQSFE2(NY,NX)
       ZFEH3W2(1,NY,NX)=ZFEH3W2(1,NY,NX)+TQSFE3(NY,NX)
@@ -9125,7 +9124,7 @@ C
       ZNACW2(1,NY,NX)=ZNACW2(1,NY,NX)+TQSNAC(NY,NX)
       ZNASW2(1,NY,NX)=ZNASW2(1,NY,NX)+TQSNAS(NY,NX)
       ZKASW2(1,NY,NX)=ZKASW2(1,NY,NX)+TQSKAS(NY,NX)
-      H0PO4W2(1,NY,NX)=H0PO4W2(1,NY,NX)+TQSH0P(NY,NX)
+      H0PO4W2(1,NY,NX)=H0PO4W2(1,NY,NX)+TQSH0P(NY,NX) 
       H3PO4W2(1,NY,NX)=H3PO4W2(1,NY,NX)+TQSH3P(NY,NX)
       ZFE1PW2(1,NY,NX)=ZFE1PW2(1,NY,NX)+TQSF1P(NY,NX)
       ZFE2PW2(1,NY,NX)=ZFE2PW2(1,NY,NX)+TQSF2P(NY,NX)
@@ -9177,15 +9176,15 @@ C
       ZMG1PW2(L,NY,NX)=ZMG1PW2(L,NY,NX)+TM1PBS(L,NY,NX)
 9670  CONTINUE
 C
-C     STATE VARIABLES FOR SOLUTES IN SURFACE RESIDUE FROM OVERLAND
+C     STATE VARIABLES FOR SOLUTES IN SURFACE RESIDUE FROM OVERLAND 
 C     FLOW AND SURFACE FLUX
 C
 C     *S2=litter solute content
 C     R*DFR=gas exchange between atmosphere and surface litter water
 C     R*DFS=gas exchange between atmosphere and soil surface water
 C     R*FLS=convective + diffusive solute flux into litter,
-C        soil surface
-C     R*FLW,R*FLB=convective + diffusive solute flux into litter
+C        soil surface 
+C     R*FLW,R*FLB=convective + diffusive solute flux into litter 
 C        from non-band,band
 C     TQR*=net overland solute flux
 C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
@@ -9262,7 +9261,7 @@ C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
 C     T*FLS=net convective + diffusive solute flux through micropores
 C     T*FHS=net convective + diffusive solute flux through macropores
-C     R*FXS=convective + diffusive solute flux between macropores
+C     R*FXS=convective + diffusive solute flux between macropores 
 C        and micropores
 C     R*FLZ,R*FBZ=subsurface solute flux in non-band,band
 C
@@ -9271,101 +9270,101 @@ C
       ZAL2(L,NY,NX)=ZAL2(L,NY,NX)+TALFLS(L,NY,NX)+RALFXS(L,NY,NX)
      2+RALFLZ(L,NY,NX)
       ZFE2(L,NY,NX)=ZFE2(L,NY,NX)+TFEFLS(L,NY,NX)+RFEFXS(L,NY,NX)
-     2+RFEFLZ(L,NY,NX)
+     2+RFEFLZ(L,NY,NX) 
       ZHY2(L,NY,NX)=ZHY2(L,NY,NX)+THYFLS(L,NY,NX)+RHYFXS(L,NY,NX)
-     2+RHYFLZ(L,NY,NX)
+     2+RHYFLZ(L,NY,NX) 
       ZCA2(L,NY,NX)=ZCA2(L,NY,NX)+TCAFLS(L,NY,NX)+RCAFXS(L,NY,NX)
-     2+RCAFLZ(L,NY,NX)
+     2+RCAFLZ(L,NY,NX) 
       ZMG2(L,NY,NX)=ZMG2(L,NY,NX)+TMGFLS(L,NY,NX)+RMGFXS(L,NY,NX)
-     2+RMGFLZ(L,NY,NX)
+     2+RMGFLZ(L,NY,NX) 
       ZNA2(L,NY,NX)=ZNA2(L,NY,NX)+TNAFLS(L,NY,NX)+RNAFXS(L,NY,NX)
-     2+RNAFLZ(L,NY,NX)
+     2+RNAFLZ(L,NY,NX) 
       ZKA2(L,NY,NX)=ZKA2(L,NY,NX)+TKAFLS(L,NY,NX)+RKAFXS(L,NY,NX)
-     2+RKAFLZ(L,NY,NX)
+     2+RKAFLZ(L,NY,NX) 
       ZOH2(L,NY,NX)=ZOH2(L,NY,NX)+TOHFLS(L,NY,NX)+ROHFXS(L,NY,NX)
-     2+ROHFLZ(L,NY,NX)
+     2+ROHFLZ(L,NY,NX) 
       ZSO42(L,NY,NX)=ZSO42(L,NY,NX)+TSOFLS(L,NY,NX)+RSOFXS(L,NY,NX)
-     2+RSOFLZ(L,NY,NX)
+     2+RSOFLZ(L,NY,NX) 
       ZCL2(L,NY,NX)=ZCL2(L,NY,NX)+TCLFLS(L,NY,NX)+RCLFXS(L,NY,NX)
      2+RCLFLZ(L,NY,NX)
       ZCO32(L,NY,NX)=ZCO32(L,NY,NX)+TC3FLS(L,NY,NX)+RC3FXS(L,NY,NX)
-     2+RC3FLZ(L,NY,NX)
+     2+RC3FLZ(L,NY,NX) 
       ZHCO32(L,NY,NX)=ZHCO32(L,NY,NX)+THCFLS(L,NY,NX)+RHCFXS(L,NY,NX)
-     2+RHCFLZ(L,NY,NX)
+     2+RHCFLZ(L,NY,NX) 
       ZAL12(L,NY,NX)=ZAL12(L,NY,NX)+TAL1FS(L,NY,NX)+RAL1XS(L,NY,NX)
-     2+RAL1FZ(L,NY,NX)
+     2+RAL1FZ(L,NY,NX) 
       ZAL22(L,NY,NX)=ZAL22(L,NY,NX)+TAL2FS(L,NY,NX)+RAL2XS(L,NY,NX)
-     2+RAL2FZ(L,NY,NX)
+     2+RAL2FZ(L,NY,NX) 
       ZAL32(L,NY,NX)=ZAL32(L,NY,NX)+TAL3FS(L,NY,NX)+RAL3XS(L,NY,NX)
-     2+RAL3FZ(L,NY,NX)
+     2+RAL3FZ(L,NY,NX) 
       ZAL42(L,NY,NX)=ZAL42(L,NY,NX)+TAL4FS(L,NY,NX)+RAL4XS(L,NY,NX)
-     2+RAL4FZ(L,NY,NX)
+     2+RAL4FZ(L,NY,NX) 
       ZALS2(L,NY,NX)=ZALS2(L,NY,NX)+TALSFS(L,NY,NX)+RALSXS(L,NY,NX)
-     2+RALSFZ(L,NY,NX)
+     2+RALSFZ(L,NY,NX) 
       ZFE12(L,NY,NX)=ZFE12(L,NY,NX)+TFE1FS(L,NY,NX)+RFE1XS(L,NY,NX)
-     2+RFE1FZ(L,NY,NX)
+     2+RFE1FZ(L,NY,NX) 
       ZFE22(L,NY,NX)=ZFE22(L,NY,NX)+TFE2FS(L,NY,NX)+RFE2XS(L,NY,NX)
-     2+RFE2FZ(L,NY,NX)
+     2+RFE2FZ(L,NY,NX) 
       ZFE32(L,NY,NX)=ZFE32(L,NY,NX)+TFE3FS(L,NY,NX)+RFE3XS(L,NY,NX)
-     2+RFE3FZ(L,NY,NX)
+     2+RFE3FZ(L,NY,NX) 
       ZFE42(L,NY,NX)=ZFE42(L,NY,NX)+TFE4FS(L,NY,NX)+RFE4XS(L,NY,NX)
-     2+RFE4FZ(L,NY,NX)
+     2+RFE4FZ(L,NY,NX) 
       ZFES2(L,NY,NX)=ZFES2(L,NY,NX)+TFESFS(L,NY,NX)+RFESXS(L,NY,NX)
-     2+RFESFZ(L,NY,NX)
+     2+RFESFZ(L,NY,NX) 
       ZCAO2(L,NY,NX)=ZCAO2(L,NY,NX)+TCAOFS(L,NY,NX)+RCAOXS(L,NY,NX)
-     2+RCAOFZ(L,NY,NX)
+     2+RCAOFZ(L,NY,NX) 
       ZCAC2(L,NY,NX)=ZCAC2(L,NY,NX)+TCACFS(L,NY,NX)+RCACXS(L,NY,NX)
-     2+RCACFZ(L,NY,NX)
+     2+RCACFZ(L,NY,NX) 
       ZCAH2(L,NY,NX)=ZCAH2(L,NY,NX)+TCAHFS(L,NY,NX)+RCAHXS(L,NY,NX)
-     2+RCAHFZ(L,NY,NX)
+     2+RCAHFZ(L,NY,NX) 
       ZCAS2(L,NY,NX)=ZCAS2(L,NY,NX)+TCASFS(L,NY,NX)+RCASXS(L,NY,NX)
      2+RCASFZ(L,NY,NX)
       ZMGO2(L,NY,NX)=ZMGO2(L,NY,NX)+TMGOFS(L,NY,NX)+RMGOXS(L,NY,NX)
-     2+RMGOFZ(L,NY,NX)
+     2+RMGOFZ(L,NY,NX) 
       ZMGC2(L,NY,NX)=ZMGC2(L,NY,NX)+TMGCFS(L,NY,NX)+RMGCXS(L,NY,NX)
-     2+RMGCFZ(L,NY,NX)
+     2+RMGCFZ(L,NY,NX) 
       ZMGH2(L,NY,NX)=ZMGH2(L,NY,NX)+TMGHFS(L,NY,NX)+RMGHXS(L,NY,NX)
-     2+RMGHFZ(L,NY,NX)
+     2+RMGHFZ(L,NY,NX) 
       ZMGS2(L,NY,NX)=ZMGS2(L,NY,NX)+TMGSFS(L,NY,NX)+RMGSXS(L,NY,NX)
-     2+RMGSFZ(L,NY,NX)
+     2+RMGSFZ(L,NY,NX) 
       ZNAC2(L,NY,NX)=ZNAC2(L,NY,NX)+TNACFS(L,NY,NX)+RNACXS(L,NY,NX)
-     2+RNACFZ(L,NY,NX)
+     2+RNACFZ(L,NY,NX) 
       ZNAS2(L,NY,NX)=ZNAS2(L,NY,NX)+TNASFS(L,NY,NX)+RNASXS(L,NY,NX)
-     2+RNASFZ(L,NY,NX)
+     2+RNASFZ(L,NY,NX) 
       ZKAS2(L,NY,NX)=ZKAS2(L,NY,NX)+TKASFS(L,NY,NX)+RKASXS(L,NY,NX)
      2+RKASFZ(L,NY,NX)
       H0PO42(L,NY,NX)=H0PO42(L,NY,NX)+TH0PFS(L,NY,NX)+RH0PXS(L,NY,NX)
-     2+RH0PFZ(L,NY,NX)
+     2+RH0PFZ(L,NY,NX) 
       H3PO42(L,NY,NX)=H3PO42(L,NY,NX)+TH3PFS(L,NY,NX)+RH3PXS(L,NY,NX)
      2+RH3PFZ(L,NY,NX)
       ZFE1P2(L,NY,NX)=ZFE1P2(L,NY,NX)+TF1PFS(L,NY,NX)+RF1PXS(L,NY,NX)
-     2+RF1PFZ(L,NY,NX)
+     2+RF1PFZ(L,NY,NX) 
       ZFE2P2(L,NY,NX)=ZFE2P2(L,NY,NX)+TF2PFS(L,NY,NX)+RF2PXS(L,NY,NX)
-     2+RF2PFZ(L,NY,NX)
+     2+RF2PFZ(L,NY,NX) 
       ZCA0P2(L,NY,NX)=ZCA0P2(L,NY,NX)+TC0PFS(L,NY,NX)+RC0PXS(L,NY,NX)
-     2+RC0PFZ(L,NY,NX)
+     2+RC0PFZ(L,NY,NX) 
       ZCA1P2(L,NY,NX)=ZCA1P2(L,NY,NX)+TC1PFS(L,NY,NX)+RC1PXS(L,NY,NX)
-     2+RC1PFZ(L,NY,NX)
+     2+RC1PFZ(L,NY,NX) 
       ZCA2P2(L,NY,NX)=ZCA2P2(L,NY,NX)+TC2PFS(L,NY,NX)+RC2PXS(L,NY,NX)
-     2+RC2PFZ(L,NY,NX)
+     2+RC2PFZ(L,NY,NX) 
       ZMG1P2(L,NY,NX)=ZMG1P2(L,NY,NX)+TM1PFS(L,NY,NX)+RM1PXS(L,NY,NX)
      2+RM1PFZ(L,NY,NX)
       H0POB2(L,NY,NX)=H0POB2(L,NY,NX)+TH0BFB(L,NY,NX)+RH0BXB(L,NY,NX)
      2+RH0BBZ(L,NY,NX)
       H3POB2(L,NY,NX)=H3POB2(L,NY,NX)+TH3BFB(L,NY,NX)+RH3BXB(L,NY,NX)
-     2+RH3BBZ(L,NY,NX)
+     2+RH3BBZ(L,NY,NX) 
       ZF1PB2(L,NY,NX)=ZF1PB2(L,NY,NX)+TF1BFB(L,NY,NX)+RF1BXB(L,NY,NX)
-     2+RF1BBZ(L,NY,NX)
+     2+RF1BBZ(L,NY,NX) 
       ZF2PB2(L,NY,NX)=ZF2PB2(L,NY,NX)+TF2BFB(L,NY,NX)+RF2BXB(L,NY,NX)
      2+RF2BBZ(L,NY,NX)
       ZC0PB2(L,NY,NX)=ZC0PB2(L,NY,NX)+TC0BFB(L,NY,NX)+RC0BXB(L,NY,NX)
      2+RC0BBZ(L,NY,NX)
       ZC1PB2(L,NY,NX)=ZC1PB2(L,NY,NX)+TC1BFB(L,NY,NX)+RC1BXB(L,NY,NX)
-     2+RC1BBZ(L,NY,NX)
+     2+RC1BBZ(L,NY,NX) 
       ZC2PB2(L,NY,NX)=ZC2PB2(L,NY,NX)+TC2BFB(L,NY,NX)+RC2BXB(L,NY,NX)
-     2+RC2BBZ(L,NY,NX)
+     2+RC2BBZ(L,NY,NX) 
       ZM1PB2(L,NY,NX)=ZM1PB2(L,NY,NX)+TM1BFB(L,NY,NX)+RM1BXB(L,NY,NX)
-     2+RM1BBZ(L,NY,NX)
+     2+RM1BBZ(L,NY,NX) 
       ZALH2(L,NY,NX)=ZALH2(L,NY,NX)+TALFHS(L,NY,NX)-RALFXS(L,NY,NX)
       ZFEH2(L,NY,NX)=ZFEH2(L,NY,NX)+TFEFHS(L,NY,NX)-RFEFXS(L,NY,NX)
       ZHYH2(L,NY,NX)=ZHYH2(L,NY,NX)+THYFHS(L,NY,NX)-RHYFXS(L,NY,NX)
@@ -9417,7 +9416,7 @@ C
       ZM1BH2(L,NY,NX)=ZM1BH2(L,NY,NX)+TM1BHB(L,NY,NX)-RM1BXB(L,NY,NX)
 C     IF(I.EQ.268.AND.L.EQ.1)THEN
 C     WRITE(*,444)'ZOH2',I,J,M,NX,NY,L,ZOH2(L,NY,NX)
-C    2,TOHFLS(L,NY,NX),ROHFXS(L,NY,NX),ROHFLZ(L,NY,NX)
+C    2,TOHFLS(L,NY,NX),ROHFXS(L,NY,NX),ROHFLZ(L,NY,NX) 
 C    3,ROHFLS(3,L-1,NY,NX),ROHFLS(3,L,NY,NX)
 C     WRITE(*,444)'ZAL2',I,J,M,NX,NY,L,ZAL2(L,NY,NX)
 C    2,TALFLS(L,NY,NX),RALFXS(L,NY,NX),RALFLZ(L,NY,NX)
@@ -9432,3 +9431,4 @@ C     ENDIF
 30    CONTINUE
       RETURN
       END
+

@@ -63,16 +63,14 @@ C     FMN=min PFT:total population ratio
 C     FEXU=rate constant for root C,N,P exudation (h-1)
 C     RZS,RZE=canopy surface resistance to sensible,latent heat 
 C        (h m-1)
-C     RACM,RACZ=minimum,maximum canopy aerodynamic resistance (h m-1)
 C
       PARAMETER(MXN=200,DIFFE=1.0E-06,DIFFT=1.0E-03)
-      PARAMETER(VHCPYM=0.209E-04,VHCPXM=0.419E-03
+      PARAMETER(VHCPYM=0.419E-04,VHCPXM=0.419E-03
      2,DTKX1=0.125,DTKX2=0.025,DTKD1=0.125,DTKD2=0.025)
       PARAMETER(SNH3X=2.852E+02,EMMC=0.97,EMODW=50.0)
       PARAMETER(ZCKI=0.1,PCKI=0.1,ZPKI=1.0,PZKI=1.0)
       PARAMETER(FMN=1.0E-04,FEXU=0.75E-03)
-      PARAMETER (RZS=0.139E-02,RZE=0.139E-01
-     2,RACM=0.139E-02,RACZ=0.694E-02)
+      PARAMETER (RZS=0.278E-02,RZE=0.139E-01)
       REAL*4 TKGO,TKSO
       DO 9895 NX=NHW,NHE
       DO 9890 NY=NVN,NVS
@@ -135,7 +133,7 @@ C
      2-TKCT(N5,N4)**4*AREA(3,NU(N5,N4),N5,N4))
      3*EMMC*2.04E-10*AMIN1(FRADT(N2,N1),FRADT(N5,N4))
       RACGQ=5.0*(AMAX1(RABM,AMIN1(RABZ
-     2,0.5*(RACG(N2,N1)+RACG(N5,N4)))))
+     2,0.5*(RACG(NPH,N2,N1)+RACG(NPH,N5,N4)))))
       TKY=(TKQT(N2,N1)*VHCPQ(N2,N1)+TKQT(N5,N4) 
      2*VHCPQ(N5,N4))/(VHCPQ(N2,N1)+VHCPQ(N5,N4))
       IF(TKQT(N2,N1).GT.TKQT(N5,N4))THEN
@@ -178,7 +176,7 @@ C    4,DVPQ(N,N5,N4),VPQT(N2,N1),VPQT(N5,N4)
 C    5,DCO2Q(N,N5,N4),CO2Q(N2,N1),CO2Q(N5,N4)
 C    6,DCH4Q(N,N5,N4),CH4Q(N2,N1),CH4Q(N5,N4)
 C    7,DOXYQ(N,N5,N4),OXYQ(N2,N1),OXYQ(N5,N4)
-C    8,RACG(N2,N1),RACG(N5,N4),RACGQ,RABM,RABZ
+C    8,RACG(NPH,N2,N1),RACG(NPH,N5,N4),RACGQ,RABM,RABZ
 C    9,FRADT(N2,N1),FRADT(N5,N4),VHCPQ(N2,N1),VHCPQ(N5,N4)
 C    3,AMIN1(ZT(N2,N1)*AREA(3,NU(N2,N1),N2,N1)
 C    3,ZT(N5,N4)*AREA(3,NU(N5,N4),N5,N4))
@@ -824,7 +822,9 @@ C     RADCC=SW radiation absorbed by canopy
 C     RFLXCCM=net SW+LW radiation absorbed by canopy
 C
       THRMCZM=EMMCX*TKCY**4
-      THRMCGM=THRMGC(M,NZ,NY,NX)
+      THRMCGM=EMMCX*(TKCY**4-TKGS(M,NY,NX)**4)
+     2*FRADP(NZ,NY,NX)
+C     THRMCGM=THRMGC(M,NZ,NY,NX)
       DTHRMC=THRMCXM+THRMCYM-THRMCZM-THRMCGM
       RFLXCCM=RADCC+DTHRMC 
 C     IF(NZ.EQ.3.AND.ICHKF.EQ.1)THEN
@@ -835,7 +835,7 @@ C     ENDIF
 C
 C     CANOPY BOUNDARY LAYER RESISTANCE 
 C
-C     DTKQ=air-canopy temperature difference
+C     DTKQC=air-canopy temperature difference
 C     TKAM,TKQC=air,canopy temperature
 C     RI=Richardson number
 C     RIX,RIY=minimum, maximum values used to calculate Richardson’s
@@ -853,28 +853,27 @@ C     RACC=canopy aerodynamic resistance between canopy height
 C        and maximum canopy height 
 C     RACG,RACGX=canopy aerodynamic resistance below 
 C        maximum canopy height
-C     RACM,RACZ=minimum,maximum canopy aerodynamic resistance
 C     RA=canopy boundary layer+aerodynamic resistance
 C     RZSC=canopy surface resistance adjusted for canopy 
 C        aerodynamic resistance
 C     RZS,RZE=canopy surface resistance to sensible,latent heat 
+C     DTKC=difference between canopy,surface air temperature
 C     PARSC,PAREC=canopy surface conductance to sensible,latent heat
 C 
-      DTKQ=TKAM(NY,NX)-TKQY 
+      DTKQC=TKAM(NY,NX)-TKQY 
       RI=AMAX1(RIX,AMIN1(RIY
-     2,RIBX(NY,NX)/TKAM(NY,NX)*DTKQ))
-      RABC=AMIN1(RABZ,AMAX1(RABM,RABX(NY,NX)/(1.0-10.0*RI)))
-      IF(ZC(NZ,NY,NX).GT.ZERO)THEN
-      RAGC=ZC(NZ,NY,NX)*EXP(ALFZ(NY,NX))
-     2/(ALFZ(NY,NX)/RAB(NY,NX))*(EXP(-ALFZ(NY,NX)
-     3*ZR(NY,NX)/ZT(NY,NX))-EXP(-ALFZ(NY,NX)
-     4*(ZD(NY,NX)+ZR(NY,NX))/ZC(NZ,NY,NX))) 
-      ELSE
-      RAGC=0.0
-      ENDIF
-      RACC=AMIN1(RACZ,AMAX1(RACM,RACG(NY,NX)-RAGC))
+     2,RIBX(NY,NX)/TKAM(NY,NX)*DTKQC))
+      RIC=1.0-10.0*RI
+      RABC=AMIN1(RABZ,AMAX1(RABM,RABX(NY,NX)/RIC))
+      RACC=AMAX1(0.0,RACG(M,NY,NX)-RAGC(M,NZ,NY,NX))
       RA(NZ,NY,NX)=RABC+RACC
-      RZSC=RZS*RA(NZ,NY,NX)/RABC 
+      PARSGC=PARSX(NY,NX)/RAGC(M,NZ,NY,NX)*FRADT(NY,NX)
+      PAREGC=PAREX(NY,NX)/RAGC(M,NZ,NY,NX)*FRADT(NY,NX)
+      DTKC=TKQY-TKCY
+      RI=AMAX1(RIX,AMIN1(RIY
+     2,RIBX(NY,NX)/TKQY*DTKC))
+      RIS=1.0-3.3*RI
+      RZSC=RZS/RIS 
       PARSC=PARSZ/RZSC
       PAREC=PAREZ/(RZSC+RZE) 
 C
@@ -927,10 +926,10 @@ C        aerodynamic resistance
 C     RZE=canopy surface resistance to latent heat 
 C     EFLXCCM=canopy surface latent heat flux
 C     VFLXCCM=convective heat flux from EFLXCCM
+C     DTKC=difference between canopy,surface air temperature
 C     VAP=latent heat of evaporation
 C     VOLWPDM=difference between current canopy water volume 
 C        and canopy water holding capacity
-C     DTKC=difference between canopy,surface air temperature
 C     SFLXCCM=canopy surface sensible heat flux
 C     XNPG=time step from ‘wthr.f’ 
 C
@@ -949,7 +948,6 @@ C
       EPCCM=EPCCMX+VOLWPDM 
       EFLXCCM=(EPCCMX+EVAPCCM)*VAP
       VFLXCCM=EVAPCCM*4.19*TKCY
-      DTKC=TKQY-TKCY
       SFLXCCM=PARSC*DTKC
 C
 C     CANOPY SENSIBLE+STORAGE HEAT FROM RN,LE AND CONVECTIVE HEAT
@@ -994,10 +992,10 @@ C
       ELSE
       IC=0
       ENDIF
-C     IF(NZ.EQ.3.AND.ICHKF.EQ.1)THEN
+C     IF(NZ.EQ.1)THEN
 C     WRITE(*,4444)'TKCY',I,J,NFZ,M,NN,NX,NY,NZ 
-C    2,XC,TKCX,TKCY,TKCY-TKCX,DTKX,TKC(NZ,NY,NX),TKQY
-C    2,TKQC(NZ,NY,NX),TKQG(NY,NX),VHCPCX,VHCPCC,VHCPXZ
+C    2,XC,TKCX,TKCY,TKCZ,TKCY-TKCX,DTKX,TKC(NZ,NY,NX),TKQY
+C    2,TKQC(NZ,NY,NX),TKQG(M,NY,NX),VHCPCX,VHCPCC,VHCPXZ
 C    3,FRADP(NZ,NY,NX),WVPLT(NZ,NY,NX),EX,VPCY,VPQY  
 C    3,VPQC(NZ,NY,NX),PAREC,PARSC,EPCCM,VOLWPDM
 C    3,EVAPCCM,FLWCCM,RC(NZ,NY,NX) 
@@ -1007,7 +1005,7 @@ C    3,CCPOLP(NZ,NY,NX),CPOOLP(NZ,NY,NX)
 C    3,RADCC,DTHRMC,THRMCXM,THRMCYM,THRMCZM,THRMCGM 
 C    2,TKAM(NY,NX),TKS(0,NY,NX),TKS(NU(NY,NX),NY,NX)
 C    2,RZSC,RZE,RZS,RA(NZ,NY,NX),RABC,RACC,RABX(NY,NX),RI
-C    3,RIBX(NY,NX),TKAM(NY,NX),DTKQ 
+C    3,RIBX(NY,NX),TKAM(NY,NX),DTKQC,DTKC,RIS,RZSC 
 C    4,HCBFCY(NZ,NY,NX),VHCPQ(NY,NX),FRADP(NZ,NY,NX)
 C    3,HFLXCCM,RFLXCCM,EFLXCCM,SFLXCCM,VFLXCCM,HFLWCCM 
 C    3,HFLXCC,RFLXCC,EFLXCC,SFLXCC,VFLXCC,HFLWCC 
@@ -1167,7 +1165,7 @@ C     CALCULATE CANOPY AIR TEMPERATURE, VAPOR CONCENTRATION
 C
 C     VHCPCP=dry canopy heat capacity
 C     SFLXA,EVAPA=canopy-atmosphere sensible heat flux,vapor flux
-C     DTKQ=air-canopy temperature difference
+C     DTKQC=air-canopy temperature difference
 C     PAREZ,PARSZ=terms used to calculate boundary layer conductance 
 C     RA=canopy boundary layer+aerodynamic resistance
 C     VHCPQ,EVAPQ=canopy volume used to calculate TKQ,VPQ 
@@ -1186,23 +1184,23 @@ C     TKQY=canopy air temperature
 C     VPQY,VPSY=canopy,saturated vapor pressure
 C     VOLWP,VOLWC=water volume in canopy,on canopy surfaces
 C
-      IF(VHCPCP.GT.VHCPXZ)THEN
-      SFLXA=DTKQ*AMIN1(PARSZ/RA(NZ,NY,NX)
+      IF(VHCPCP.GT.VHCPXZ.AND.FLAIP(NZ,NY,NX).GT.1.0E-03)THEN
+      SFLXA=DTKQC*AMIN1(PARSZ/RA(NZ,NY,NX)
      2,VHCPQ(NY,NX)*FLAIP(NZ,NY,NX))
       DVPQA=VPAM(NY,NX)-VPQY
       EVAPA=DVPQA*AMIN1(PAREZ/RA(NZ,NY,NX)
      2,EVAPQ(NY,NX)*FLAIP(NZ,NY,NX))
-      TSHCNM=SFLXCCM-SFLXA
-      TEVCNM=EPCCM+EVAPCCM-EVAPA
-      TSHCGM=SHGCM(M,NZ,NY,NX) 
-      TEVCGM=VPGCM(M,NZ,NY,NX) 
+      TSHCNM=SFLXA-SFLXCCM 
+      TEVCNM=EVAPA-EPCCM-EVAPCCM 
+      TSHCGM=PARSGC*(TKQY-TKQG(M,NY,NX))*FLAIP(NZ,NY,NX)
+      TEVCGM=PAREGC*(VPQY-VPQG(M,NY,NX))*FLAIP(NZ,NY,NX)
       TSHCYM=DSHQT(NY,NX)*FLAIP(NZ,NY,NX)*XNPHX 
       TEVCYM=DVPQT(NY,NX)*FLAIP(NZ,NY,NX)*XNPHX
-      TKQY=TKQY-(TSHCNM+TSHCGM-TSHCYM)
+      TKQY=TKQY+(TSHCNM-TSHCGM-TSHCYM)
      2/(VHCPQ(NY,NX)*FLAIP(NZ,NY,NX)) 
       VPSY=2.173E-03/TKQY
      2*0.61*EXP(5360.0*(3.661E-03-1.0/TKQY))
-      VPQY=AMAX1(0.0,AMIN1(VPSY,VPQY-(TEVCNM+TEVCGM-TEVCYM)
+      VPQY=AMAX1(0.0,AMIN1(VPSY,VPQY+(TEVCNM-TEVCGM-TEVCYM)
      2/(EVAPQ(NY,NX)*FLAIP(NZ,NY,NX))))
       ELSE
       TSHCNM=0.0
@@ -1211,8 +1209,8 @@ C
       TEVCGM=0.0
       TSHCYM=0.0 
       TEVCYM=0.0
-      TKQY=TKQ(NY,NX)
-      VPQY=VPQ(NY,NX)
+      TKQY=TKAM(NY,NX)
+      VPQY=VPAM(NY,NX)
       ENDIF   
       VOLWC(NZ,NY,NX)=VOLWC(NZ,NY,NX)+EVAPCCM
       VOLWP(NZ,NY,NX)=VOLWP(NZ,NY,NX)+EPCCM-UPRTM
@@ -1241,15 +1239,15 @@ C
       TSHCG=TSHCG+TSHCGM
       VHCPCX=VHCPCP+4.19*(AMAX1(0.0,VOLWC(NZ,NY,NX))
      2+AMAX1(0.0,VOLWP(NZ,NY,NX)))
-C     IF(NZ.EQ.3)THEN
+C     IF(NZ.EQ.2)THEN
 C     WRITE(*,3114)'TKQC',I,J,NFZ,M,NN,NX,NY,NZ 
 C    2,TKQY,TKAM(NY,NX),VPQY,VPAM(NY,NX),TKCY,TKC(NZ,NY,NX)
-C    3,TKQC(NZ,NY,NX),TSHCNM,TSHCGM,TSHCYM,SFLXCCM,SFLXA
-C    4,FLAIP(NZ,NY,NX)
+C    3,TKQC(NZ,NY,NX),TKQG(M,NY,NX),TSHCNM,TSHCGM,TSHCYM,SFLXCCM,SFLXA
 C    2,RABX(NY,NX),RIBX(NY,NX),RA(NZ,NY,NX),RABC,RACC,RI
-C    3,RACG(NY,NX),RAGC,ZC(NZ,NY,NX),ZG(NZ,NY,NX),ZT(NY,NX),DTKQ
+C    3,RACG(M,NY,NX),RAGD(M,NZ,NY,NX),RAGD(M,NZ,NY,NX),ZC(NZ,NY,NX)
+C    4,ZG(NZ,NY,NX),ZT(NY,NX),DTKQC
 C    3,VPSY,VPQC(NZ,NY,NX),TEVCNM,TEVCN,EPCCM,UPRTM,EVAPCCM 
-C    2,EVAPA
+C    2,EVAPA,FLAIP(NZ,NY,NX),VHCPCP,VHCPXZ
 C    3,VHCPQ(NY,NX),FRADP(NZ,NY,NX),HCBFCY(NZ,NY,NX)
 C    4,FRADP(NZ,NY,NX),FRADQ(NZ,NY,NX),VOLWC(NZ,NY,NX),TSHCN,TEVCN 
 C    3,RADC(NZ,NY,NX),RA(NZ,NY,NX),RADP(NZ,NY,NX),RADQ(NZ,NY,NX)
@@ -1305,10 +1303,10 @@ C
       WRITE(*,9999)IYRC,I,J,NFZ,NX,NY,NZ
 9999  FORMAT('CONVERGENCE FOR WATER UPTAKE NOT ACHIEVED ON   ',7I6)
       ENDIF
-      TKQC(NZ,NY,NX)=TKQ(NY,NX)
-      VPQC(NZ,NY,NX)=VPQ(NY,NX)
-      TKC(NZ,NY,NX)=TKQ(NY,NX)
-      TCC(NZ,NY,NX)=TKC(NZ,NY,NX)-273.15
+C     TKQC(NZ,NY,NX)=TKQ(NY,NX)
+C     VPQC(NZ,NY,NX)=VPQ(NY,NX)
+C     TKC(NZ,NY,NX)=TKQ(NY,NX)
+C     TCC(NZ,NY,NX)=TKC(NZ,NY,NX)-273.15
       EMMCX=EMMC*2.04E-10*FRADP(NZ,NY,NX)*AREA(3,NU(NY,NX),NY,NX)
      2*XNPHX 
       THRMCC=EMMCX*TKC(NZ,NY,NX)**4 
@@ -1415,14 +1413,14 @@ C
       TEVCG=0.0
       TSHCG=0.0
       IF(ZC(NZ,NY,NX).GE.DPTHS(NY,NX)-ZERO)THEN
-      TKQC(NZ,NY,NX)=TKQ(NY,NX)
-      TKC(NZ,NY,NX)=TKQ(NY,NX)
+      TKQC(NZ,NY,NX)=TKAM(NY,NX)
+      TKC(NZ,NY,NX)=TKAM(NY,NX)
       ELSE
       TKQC(NZ,NY,NX)=TKW(1,NY,NX)
       TKC(NZ,NY,NX)=TKW(1,NY,NX)
       ENDIF
       TCC(NZ,NY,NX)=TKC(NZ,NY,NX)-273.15
-      VPQC(NZ,NY,NX)=VPQ(NY,NX)
+      VPQC(NZ,NY,NX)=VPAM(NY,NX)
       EMMCX=EMMC*2.04E-10*FRADP(NZ,NY,NX)*AREA(3,NU(NY,NX),NY,NX)
      2*XNPHX
       THRMCC=EMMCX*TKC(NZ,NY,NX)**4 
@@ -1896,7 +1894,6 @@ C                   *a=gaseous,*s=aqueous
 C     XNPDX,XNPG=time step for gas transfer calculations from ‘wthr.f’ 
 C     DFGP=rate constant for equilibriation of gas concentration 
 C        in gaseous-aqueous phases
-C     TFND=temperature effect on aqueous diffusivity 
 C     RCO2PX=root CO2 gas flux 
 C     RCO2A=root CO2 flux from grosub.f 
 C
@@ -1932,7 +1929,7 @@ C
       DFNHA=0.0
       DFHGA=0.0
       ENDIF
-      DFGP=AMIN1(1.0,SQRT(PORT(N,NZ,NY,NX))*TFND(L,NY,NX)*XNPDX)
+      DFGP=AMIN1(1.0,SQRT(PORT(N,NZ,NY,NX))*XNPDX)
       RCO2PX=-RCO2A(N,L,NZ,NY,NX)*XNPG
 C
 C     SOLVE FOR GAS EXCHANGE IN SOIL AND ROOTS DURING ROOT UPTAKE
@@ -2439,7 +2436,7 @@ C    2,RCO2SX,RDFCOS,RDXCOS,RMFCOS,DIFCL,DFGS(M,L,NY,NX)
 C    3,CCO2S1,CCO2P1,RTVLW(N,L,NZ,NY,NX),CO2S1,VOLWMM
 C    4,CO2P1,VOLWSP,PP(NZ,NY,NX),FPQ(N,L,NZ),RCODF1,RCO2PX
 C    5,CO2PX,RTVLP(N,L,NZ,NY,NX),DFGP,VOLWCA,CO2A1
-C    6,PORT(N,NZ,NY,NX),TFND(L,NY,NX),RCO2FX
+C    6,PORT(N,NZ,NY,NX),RCO2FX
 C    7,RCODFQ,DFGSP,FOXYX,CO2G1,VOLWCO,VOLPMM,THETPM(M,L,NY,NX),THETX
 C    8,ROXYP(N,L,NZ,NY,NX),ROXYY(L,NY,NX) 
 C     WRITE(*,5566)'OXYP1',I,J,NFZ,M,MX,NZ,L,N 
@@ -3563,7 +3560,9 @@ C     RFLXCDM=net SW+LW radiation absorbed by standing dead
 C     RADCD=total SW radiation absorbed by standing dead 
 C
       THRMDZM=EMMDX*TKDY**4 
-      THRMDGM=THRMGD(M,NZ,NY,NX) 
+      THRMDGM=EMMDX*(TKDY**4-TKGS(M,NY,NX)**4)
+     2*FRADQ(NZ,NY,NX)
+C     THRMDGM=THRMGD(M,NZ,NY,NX) 
       DTHRMD=THRMDXM+THRMDYM-THRMDZM-THRMDGM 
       RFLXCDM=RADCD+DTHRMD
 C     IF(NZ.EQ.2.AND.ICHKF.EQ.1)THEN
@@ -3575,7 +3574,7 @@ C     ENDIF
 C
 C     STANDING DEAD BOUNDARY LAYER RESISTANCE 
 C
-C     DTKQ=air-standing dead temperature difference
+C     DTKQD=air-standing dead temperature difference
 C     TKAM,TKQY=air,standing dead temperature
 C     RI=Richardson number
 C     RIX,RIY=minimum, maximum values used to calculate Richardson’s
@@ -3589,35 +3588,34 @@ C     RAGD=standing dead aerodynamic resistance below canopy height
 C     ZG,ZT,ZR=PFT standing dead,biome,surface roughness height 
 C     ALFZ=parameter to calculate standing dead effect on aerodynamic 
 C        resistance 
-C     RACD= standing dead aerodynamic resistance between canopy height
+C     RACD=standing dead aerodynamic resistance between canopy height
 C        and maximum standing dead height 
-C     RACG,RACGX= standing dead aerodynamic resistance below 
+C     RACG,RACGX=standing dead aerodynamic resistance below 
 C        maximum standing dead height
-C     RACM,RACZ=minimum,maximum canopy aerodynamic resistance
 C     RATD=standing dead boundary layer+aerodynamic resistance
 C     RZSD=standing dead surface resistance adjusted for standing dead
 C        aerodynamic resistance
 C     RZS,RZE=standing dead surface resistance to sensible,latent heat 
+C     DTKD=difference between standing dead,surface air temperature
 C     PARSD,PARED=standing dead surface conductance to sensible,
 C        latent heat
 C
-      DTKQ=TKAM(NY,NX)-TKQY 
+      DTKQD=TKAM(NY,NX)-TKQY 
       RI=AMAX1(RIX,AMIN1(RIY
-     2,RIBX(NY,NX)/TKAM(NY,NX)*DTKQ))
-      RABD=AMIN1(RABZ,AMAX1(RABM,RABX(NY,NX)/(1.0-10.0*RI)))
-      IF(ZG(NZ,NY,NX).GT.ZERO)THEN
-      RAGD=ZG(NZ,NY,NX)*EXP(ALFZ(NY,NX))
-     2/(ALFZ(NY,NX)/RAB(NY,NX))*(EXP(-ALFZ(NY,NX)
-     3*ZR(NY,NX)/ZT(NY,NX))-EXP(-ALFZ(NY,NX)
-     4*(ZD(NY,NX)+ZR(NY,NX))/ZG(NZ,NY,NX))) 
-      ELSE
-      RAGD=0.0
-      ENDIF
-      RACD=AMIN1(RACZ,AMAX1(RACM,RACG(NY,NX)-RAGD))
+     2,RIBX(NY,NX)/TKAM(NY,NX)*DTKQD))
+      RID=1.0-10.0*RI 
+      RABD=AMIN1(RABZ,AMAX1(RABM,RABX(NY,NX)/RID))
+      RACD=AMAX1(0.0,RACG(M,NY,NX)-RAGD(M,NZ,NY,NX))
       RATD=RABD+RACD 
-      RZSD=RZS*RATD/RABD 
-      PARED=PAREY/(RZSD+RZE)  
+      PARSGD=PARSX(NY,NX)/RAGD(M,NZ,NY,NX)*FRADT(NY,NX)
+      PAREGD=PAREX(NY,NX)/RAGD(M,NZ,NY,NX)*FRADT(NY,NX)
+      DTKD=TKQY-TKDY
+      RI=AMAX1(RIX,AMIN1(RIY
+     2,RIBX(NY,NX)/TKQY*DTKD))
+      RIS=1.0-3.3*RI 
+      RZSD=RZS/RIS 
       PARSD=PARSY/RZSD
+      PARED=PAREY/(RZSD+RZE)  
 C
 C     STANDING DEAD VAPOR PRESSURE AND EVAPORATION OF INTERCEPTED 
 C     WATER OR TRANSPIRATION OF UPTAKEN WATER
@@ -3650,7 +3648,6 @@ C
       EPCDM=0.0
       EFLXCDM=(EPCDM+EVAPCDM)*VAP
       VFLXCDM=EVAPCDM*4.19*TKDY
-      DTKD=TKQY-TKDY
       SFLXCDM=PARSD*DTKD
 C
 C     STANDING DEAD SENSIBLE+STORAGE HEAT FROM RN,LE AND CONVECTIVE
@@ -3696,13 +3693,13 @@ C
       ELSE
       IC=0
       ENDIF
-C     IF(NZ.EQ.2.AND.ICHKF.EQ.1)THEN
+C     IF(NZ.EQ.1.AND.ICHKF.EQ.1)THEN
 C     WRITE(*,4446)'TKDY',I,J,NFZ,M,NN,NX,NY,NZ 
-C    2,XC,TKDX,TKDY,TKDY-TKDX,DTKX,TKD(NZ,NY,NX),TKQY
+C    2,XC,TKDX,TKDY,TKDY-TKDX,DTKX,TKD(NZ,NY,NX),TKQG(M,NY,NX)
 C    2,TKQD(NZ,NY,NX),DTKD,VHCPDC,VHCPYZ,FRADQ(NZ,NY,NX),EX
 C    3,EPCDM,EVAPCDM,FLWCDM,PARED,PARSD,RZSD,RABD,RACD,RZS,RZE 
 C    2,VOLWQ(NZ,NY,NX),ARSTG(NZ,NY,NX),RADD(NZ,NY,NX)
-C    3,RADCD,DTHRMD,THRMDXM,THRMDYM,THRMDZM,THRMDGM 
+C    3,RADCD,DTHRMD,THRMDXM,THRMDYM,THRMDZM,THRMDGM,TKGS(M,NY,NX) 
 C    3,HFLXCDM,RFLXCDM,EFLXCDM,SFLXCDM,VFLXCDM,HFLWCDM
 C    5,VPQD(NZ,NY,NX) 
 C    3,HFLXCD,RFLXCD,EFLXCD,SFLXCD,VFLXCD,HFLWCD 
@@ -3722,7 +3719,7 @@ C
 C     VHCPDP=dry standing dead heat capacity
 C     SFLXA,EVAPA=standing dead-atmosphere sensible heat flux,
 C        vapor flux
-C     DTKQ=air-standing dead temperature difference
+C     DTKQD=air-standing dead temperature difference
 C     PAREY,PARSY=terms used to calculate boundary layer conductance 
 C     RATD=standing dead boundary layer+aerodynamic resistance
 C     VHCPQ,EVAPQ=standing dead volume used to calculate TKQ,VPQ 
@@ -3742,23 +3739,23 @@ C     TKQY=standing dead air temperature
 C     VPQY,VPSY=standing dead,saturated vapor pressure
 C     VOLWQ=water volume on canopy surfaces
 C
-      IF(VHCPDP.GT.VHCPXZ)THEN
-      SFLXA=DTKQ*AMIN1(PARSY/RATD
+      IF(VHCPDP.GT.VHCPXZ.AND.FLAIQ(NZ,NY,NX).GT.1.0E-03)THEN
+      SFLXA=DTKQD*AMIN1(PARSY/RATD
      2,VHCPQ(NY,NX)*FLAIQ(NZ,NY,NX))
       DVPQA=VPAM(NY,NX)-VPQY
       EVAPA=DVPQA*AMIN1(PAREY/RATD
      2,EVAPQ(NY,NX)*FLAIQ(NZ,NY,NX))
-      TSHDNM=SFLXCDM-SFLXA
-      TEVDNM=EPCDM+EVAPCDM-EVAPA 
-      TSHDGM=SHGDM(M,NZ,NY,NX) 
-      TEVDGM=VPGDM(M,NZ,NY,NX) 
+      TSHDNM=SFLXA-SFLXCDM
+      TEVDNM=EVAPA-EPCDM-EVAPCDM 
+      TSHDGM=PARSGD*(TKQY-TKQG(M,NY,NX))*FLAIQ(NZ,NY,NX)
+      TEVDGM=PAREGD*(VPQY-VPQG(M,NY,NX))*FLAIQ(NZ,NY,NX)
       TSHDYM=DSHQT(NY,NX)*FLAIQ(NZ,NY,NX)*XNPHX 
       TEVDYM=DVPQT(NY,NX)*FLAIQ(NZ,NY,NX)*XNPHX
-      TKQY=TKQY-(TSHDNM+TSHDGM-TSHDYM)
+      TKQY=TKQY+(TSHDNM-TSHDGM-TSHDYM)
      2/(VHCPQ(NY,NX)*FLAIQ(NZ,NY,NX)) 
       VPSY=2.173E-03/TKQY
      2*0.61*EXP(5360.0*(3.661E-03-1.0/TKQY))
-      VPQY=AMAX1(0.0,AMIN1(VPSY,VPQY-(TEVDNM+TEVDGM-TEVDYM)
+      VPQY=AMAX1(0.0,AMIN1(VPSY,VPQY+(TEVDNM-TEVDGM-TEVDYM)
      2/(EVAPQ(NY,NX)*FLAIQ(NZ,NY,NX))))
       ELSE
       TSHDNM=0.0
@@ -3767,8 +3764,8 @@ C
       TEVDGM=0.0 
       TSHDYM=0.0 
       TEVDYM=0.0
-      TKQY=TKQ(NY,NX)
-      VPQY=VPQ(NY,NX)
+      TKQY=TKAM(NY,NX)
+      VPQY=VPAM(NY,NX)
       ENDIF
       VOLWQ(NZ,NY,NX)=VOLWQ(NZ,NY,NX)+EVAPCDM
 C
@@ -3795,15 +3792,16 @@ C
       TEVDG=TEVDG+TEVDGM
       TSHDG=TSHDG+TSHDGM
       VHCPDX=VHCPDP+4.19*AMAX1(0.0,VOLWQ(NZ,NY,NX))
-C     IF(NZ.EQ.1.AND.ICHKF.EQ.1)THEN 
-C     WRITE(*,4448)'TKQD',I,J,NFZ,M,NN,NX,NY,NZ
-C    2,TKQY,TKAM(NY,NX),TKDY,TKD(NZ,NY,NX),TKQD(NZ,NY,NX) 
-C    3,TSHDNM,TSHDGM,TSHDYM,SFLXCDM,SFLXA,PARSDG,RACG(NY,NX)
-C    3,RATD,RABD,RACD,RACG(NY,NX),RAGD,RI,ZG(NZ,NY,NX),ZT(NY,NX),DTKQ
-C    3,VHCPQ(NY,NX),FLAIQ(NZ,NY,NX),FRADQ(NZ,NY,NX),SHGDM(M,NZ,NY,NX)
-C    3,HCBFDY(NZ,NY,NX)*XNPH
-C    3,VPQY,VPAM(NY,NX),VPSY,VPQC(NZ,NY,NX),TEVDNM,EPCDM,EVAPCDM 
-C    4,EVAPA,EVAPQ(NY,NX),PAREY/RATD,TEVDN,EVAPCD
+C     IF(NZ.EQ.3)THEN
+C     WRITE(*,4448)'TKQD',I,J,NFZ,M,NN,NX,NY,NZ,TKQD(NZ,NY,NX)
+C    2,TKQY,TKAM(NY,NX),TKDY,TKD(NZ,NY,NX),TKQG(M,NY,NX),VHCPDP,VHCPXZ 
+C    3,TSHDNM,TSHDGM,TSHDYM,SFLXCDM,SFLXA,PARSGD,RACG(M,NY,NX),PARSY
+C    3,RATD,RABD,RACD,RAGD(M,NZ,NY,NX),RIC,ZG(NZ,NY,NX),ZT(NY,NX) 
+C    3,VHCPQ(NY,NX),FLAIQ(NZ,NY,NX),VHCPQ(NY,NX)*FLAIQ(NZ,NY,NX) 
+C    3,HCBFDY(NZ,NY,NX)*XNPH,WTSTG(NZ,NY,NX)
+C    4,ARSTG(NZ,NY,NX),DTKQD,PARSY/RATD,VHCPQ(NY,NX)*FLAIQ(NZ,NY,NX) 
+C    3,VPQY,VPAM(NY,NX),VPSY,VPQD(NZ,NY,NX),TEVDNM,EPCDM,EVAPCDM 
+C    4,EVAPA,EVAPQ(NY,NX)*FLAIQ(NZ,NY,NX),PAREY/RATD,TEVDN,EVAPCD
 C    5,DVPQA,PAREY,FRADQ(NZ,NY,NX) 
 C    2,WTSTG(NZ,NY,NX),ZT(NY,NX),ARLSS(NY,NX)
 C    4,FRADP(NZ,NY,NX),FRADQ(NZ,NY,NX) 
@@ -3835,14 +3833,14 @@ C
       EPCD=0.0
       TEVDG=0.0
       TSHDG=0.0
-      TKQD(NZ,NY,NX)=TKQ(NY,NX)
-      VPQD(NZ,NY,NX)=VPQ(NY,NX)
-      IF(ZG(NZ,NY,NX).GE.DPTHS(NY,NX)-ZERO)THEN
-      TKD(NZ,NY,NX)=TKQ(NY,NX)
-      ELSE
-      TKD(NZ,NY,NX)=TKW(1,NY,NX)
-      ENDIF
-      TCD(NZ,NY,NX)=TKD(NZ,NY,NX)-273.15
+C     TKQD(NZ,NY,NX)=TKQ(NY,NX)
+C     VPQD(NZ,NY,NX)=VPQ(NY,NX)
+C     IF(ZG(NZ,NY,NX).GE.DPTHS(NY,NX)-ZERO)THEN
+C     TKD(NZ,NY,NX)=TKQ(NY,NX)
+C     ELSE
+C     TKD(NZ,NY,NX)=TKW(1,NY,NX)
+C     ENDIF
+C     TCD(NZ,NY,NX)=TKD(NZ,NY,NX)-273.15
       ENDIF
       ELSE
       VOLWQ(NZ,NY,NX)=VOLWQ(NZ,NY,NX)+FLWD(NZ,NY,NX)*XNFH
@@ -3856,10 +3854,10 @@ C
       EPCD=0.0
       TEVDG=0.0
       TSHDG=0.0
-      TKQD(NZ,NY,NX)=TKQ(NY,NX)
-      VPQD(NZ,NY,NX)=VPQ(NY,NX)
+      TKQD(NZ,NY,NX)=TKAM(NY,NX)
+      VPQD(NZ,NY,NX)=VPAM(NY,NX)
       IF(ZG(NZ,NY,NX).GE.DPTHS(NY,NX)-ZERO)THEN
-      TKD(NZ,NY,NX)=TKQ(NY,NX)
+      TKD(NZ,NY,NX)=TKAM(NY,NX)
       ELSE
       TKD(NZ,NY,NX)=TKW(1,NY,NX)
       ENDIF

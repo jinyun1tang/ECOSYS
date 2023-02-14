@@ -33,9 +33,9 @@ C
 C
 C     OPEN AND NAME OUTPUT FILES
 C
-C     DATAC(21-30)=output file names from runscript read in ï¿½main.fï¿½
-C     PREFIX=path for files in current or higher level directory
-C        from ï¿½main.fï¿½
+C     DATAC(21-30)=output file names from runscript read in ‘main.f’ 
+C     PREFIX=path for files in current or higher level directory 
+C        from ‘main.f’
 C     IYRC=current year
 C     OUTFILS=output file name for grid cell, year
 C

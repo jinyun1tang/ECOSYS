@@ -95,7 +95,7 @@ C
 C     TPD,TAD,TSL=rate constants for equilibrating precipitation
 C        adsorption,solution reactions
 C
-      PARAMETER (TPD=2.5E-03,TAD=5.0E-02,TSL=5.0E-01,A0=1.0
+      PARAMETER (TPD=5.0E-02,TAD=5.0E-02,TSL=5.0E-01,A0=1.0
      2,CALMX=10.0,CFEMX=10.0,CCAMX=10.0,MRXN=1000)
 C
 C     INITIALIZE CATION AND ANION CONCENTRATIONS
