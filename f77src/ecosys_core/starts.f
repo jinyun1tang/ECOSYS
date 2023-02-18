@@ -979,7 +979,7 @@ C
       FC0=FCY*EXP(-5.0*(AMIN1(CORGNX(4),10.0*CORGPX(4))
      2/CORGCX(4)))
       ELSE
-      FCO=FCY
+      FC0=FCY
       ENDIF
       FCX=EXP(HCX*TORGL(L))
 C
@@ -991,7 +991,7 @@ C
       FC0=FCY*EXP(-5.0*(AMIN1(CORGNX(4),10.0*CORGPX(4))
      2/CORGCX(4)))
       ELSE
-      FCO=FCY
+      FC0=FCY
       ENDIF
 C     FCX=(EXP(HCX*TORGL(L)))**0.5
       FCX=EXP(HCX*TORGL(L))
@@ -1005,7 +1005,7 @@ C
       FC0=FCY*EXP(-5.0*(AMIN1(CORGNX(4),10.0*CORGPX(4))
      2/CORGCX(4)))
       ELSE
-      FCO=FCY
+      FC0=FCY
       ENDIF
       FCX=1.0
       ENDIF
