@@ -1,0 +1,2 @@
+This line specifies coordinates for a grid cell (eg  1 1 1 1) followed by a line with the crop name. Can specify as many grid cells u want here 
+crop name,  plating_data.txt

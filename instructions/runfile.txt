@@ -1,0 +1,33 @@
+Data between $ is a scene (eg. a year) . N scenes can be specified on the following lines  
+Grid size, interpreted by the model as [start_cols,  start_rows,  end_cols,  end_rows]. This represents the outer structure of the terrain, eg . 1 1 1 1 will represent a 1x1 tile.
+site_data.txt
+topography_data.txt
+number of times scenario in the model are to be executed (Default 1 1) 
+number of scenes in the next scenario (need to specify all files for the new scenarios),  number of times the current scenario is to be executed
+
+$1 // remove these symbols when creating the runfile
+weather_data.txt
+weather_options.txt
+land_management.txt
+plant_management.txt
+soil_output.txt (output file)
+atmospheric_output.txt (output file)
+n20_nh3_flux.txt (output file)
+phosphorus_flux.txt (output file)
+soil_output2.txt (output file)
+soil_output3.txt (output file)
+water_properties.txt (output file)
+n_properties_output.txt (output file)
+p_properties_output.txt (output file)
+t_properties_output.txt (output file)
+$1
+
+$2
+weather_data for next scene
+weather_options for next scene
+...
+
+plant_management for next scene
+$2
+
+0  0

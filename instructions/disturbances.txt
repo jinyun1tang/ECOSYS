@@ -1,0 +1,2 @@
+***Here are specified disturbances/ accidents that happened at given dates and their intensities, each on a separate line****
+date DDMMYY, [soil disturbance type 1-20:tillage,21=litter removal,22=fire,23-24=drainage] , [intensity (fire) or depth (tillage,drainage) of disturbance]

@@ -1,0 +1,34 @@
+latitude, altitude, mean avarage temperature (degrees celcius), water table flag
+
+atm O2,N2,CO2,CH4,N2O,NH3 (ppm)
+
+Koppen climate zone,salt,erosion options, grid cells connections, depth of natural water table, depth of artificial water table, slope of natural water table relative to landscape surface
+
+N E S W boundary conditions for surface runoff, N,E,S,W bound condns for subsurf flow, N,E,S,W distance to water table (m), lower boundary conditions for water flow
+
+width of each W-E landscape column
+
+width of each N-S landscape row
+
+
+
+
+
+
+water table flag:
+0=none:
+1,2=natural stationary,mobile:
+3,4=artificial stationary,mobile
+
+grid cells:
+	   1:2d Transect as rows
+	   2:2D transect as cols
+	   3:no connections
+	   
+erosion options:
+       :=0 means allowing  freeze- thaw to change elevation
+       :=1 means allowing freeze-thaw plus erosion to change elevation
+       :=2 means allowing freeze-thaw plus SOC accumulation to change elevation
+       :=3 means allowing freeze-thaw plus SOC accumulation, plus erosion to change elevation
+       :=-1 means no change in elevation.
+

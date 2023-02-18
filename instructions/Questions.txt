@@ -1,0 +1,19 @@
+1. the first four values passed in a runfile eg 1 1 1 1 represent columns and rows as presented in main.f as values NHW,NVN,NHE,NVS.
+The only use I found so far is that they index matrices or vectors, but not sure what they represent physically, eg  coordinates for landscape or something?
+
+2. This might be related to the previous question, but the site data file takes in grid cells connections which can be 1 = lateral connections or 3 = no connections. 
+Is this with respect to the terrain, eg whether its tiled or not?
+
+3. The topography file takes (NW SE column row) for each unit within the landscape, but that is just four values eg 1 1 1 1 in dryland maize. I am a bit confused as to what these are supposed to represent.
+
+4. In the soil data, IXTYP=surface litter type:1=plant,2=manure. IXTYP takes in 2 values at index 1 and 2. In the dryland_maize example it takes in values 3 and 1 respectively.
+I am confused here as why there are 2 entries here, is there one for plant and one for manure and if so what does 3 and 1 stand for then? maybe g m^-1 or something like that?
+
+
+Why is koppen climate zone a numerical value? How do you count it? On wikipedia, I have only counted up to 30 but the maize example takes in 31
+
+What does PFT stand for? Perfluorinated compound potentially?
+
+What is the 2 lines of the output represent? Also why are 100 Yes/No provided, as from the code it seems there are less than that that are actually read
+
+Whats up with years file I tried to understand it in code but couldnt?

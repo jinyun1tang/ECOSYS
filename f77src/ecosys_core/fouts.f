@@ -19,9 +19,9 @@ C
       CHARACTER*4 CHARR
       CHARACTER*16 HEAD(50)
       CHARACTER*80 PREFIX
-      CDOY='DOY     '
-      DATE='DATE    '
-      HOUR='HOUR    '
+      CDOY='DOY'
+      DATE='DATE'
+      HOUR='HOUR'
       CHARM='0'
       CHARO='0'
       CHARZ='0'
