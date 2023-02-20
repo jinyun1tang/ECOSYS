@@ -553,3 +553,4 @@ local/include/ecosys/core/files.h
 local/include/ecosys/core/parameters.h
 local/lib/libcore.a
 local/share/ecosys/ecosys.cmake
+build
