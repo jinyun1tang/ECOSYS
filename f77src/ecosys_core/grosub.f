@@ -35,7 +35,8 @@ C
       include "blk18b.h"
       DIMENSION PART(7),TFN6(JZ),ARSTKB(JB),NRX(2,JZ),ICHK1(2,JZ)
      2,FXFB(0:5),FXFR(0:5),FXRT(0:1),FXSH(0:1),FXRN(6) 
-     3,FPART1(0:5),FPART2(0:5),CNDLI(6),CMOSC(4),WTLSBZ(JB),CPOOLZ(JB)
+     3,FPART1(0:5),FPART2(0:5),PART1X(0:5),PART2X(0:5)
+     4,CNDLI(6),CMOSC(4),WTLSBZ(JB),CPOOLZ(JB)
      4,ZPOOLZ(JB),PPOOLZ(JB),ZCX(JP,JY,JX),UPNFC(JP,JY,JX)
      5,FRSV(0:5),FXFY(0:1),FXFZ(0:1),NBZ(JB)
       DIMENSION RTNT(2),RLNT(2,JZ),RTSK1(2,JZ,10),RTSK2(2,JZ,10)
@@ -74,7 +75,7 @@ C     FSNK=minimum ratio of branch or mycorrhizae to root for
 C        calculating shoot-root C transfer 
 C     FMYC=rate constant for root-mycorrhizal C,N,P exchange (h-1) 
 C
-      PARAMETER(PART1=0.75,PART2=0.25,PART1X=0.05,PART2X=0.0167
+      PARAMETER(PART1=0.75,PART2=0.25
      2,VMXC=0.015,FSNR=2.884E-03,FLG4X=168.0
      3,FLGZX=480.0,XFRX=2.5E-02,XFRY=2.5E-03,IFLGQX=960
      4,FSNK=0.05,FMYC=0.1,TFNCX=1.0)
@@ -152,19 +153,21 @@ C
       PARAMETER(GN2X=150.0,EOMC=37.5,EN2F=EOMC/GN2X
      2,VMXO=0.125,WTNDI=1.0E-04,CZKM=1.0E-04
      3,CPKM=1.0E-05,SPNDL=1.0E-02,ZCKI=1.0E+01,ZPKI=1.0E+03
-     4,RCCZN=0.150,RCCYN=0.300,RCCXN=0.833,RCCQN=0.833)
-      DATA RCCZ/0.150,0.150,0.150,0.150,0.150,0.150/
-      DATA RCCY/0.300,0.300,0.300,0.300,0.300,0.300/
+     4,RCCZN=0.167,RCCYN=0.333,RCCXN=0.833,RCCQN=0.833)
+      DATA RCCZ/0.167,0.167,0.167,0.167,0.167,0.167/
+      DATA RCCY/0.333,0.333,0.333,0.333,0.333,0.333/
       DATA RCCX/0.833,0.833,0.833,0.833,0.833,0.833/
       DATA RCCQ/0.833,0.833,0.833,0.833,0.833,0.833/
-      DATA RCCZR/0.150,0.150,0.150,0.150,0.150,0.150/
-      DATA RCCYR/0.300,0.300,0.300,0.300,0.300,0.300/
+      DATA RCCZR/0.167,0.167,0.167,0.167,0.167,0.167/
+      DATA RCCYR/0.333,0.333,0.333,0.333,0.333,0.333/
       DATA RCCXR/0.833,0.833,0.833,0.833,0.833,0.833/
       DATA RCCQR/0.833,0.833,0.833,0.833,0.833,0.833/
-      DATA FXFB/5.0E-03,5.0E-03,0.0E-06,0.0E-06,5.0E-05,5.0E-04/
+      DATA FXFB/5.0E-03,5.0E-03,5.0E-06,5.0E-06,5.0E-05,5.0E-04/
       DATA FXFR/2.0E-04,2.0E-05,2.0E-05,2.0E-05,2.0E-05,2.0E-05/
-      DATA FPART1/0.75,1.00,2.00,2.00,1.00,1.00/
-      DATA FPART2/0.25,0.33,0.67,0.67,0.33,0.33/
+      DATA FPART1/0.75,1.00,3.00,3.00,2.00,1.00/
+      DATA FPART2/0.25,0.33,1.00,1.00,0.67,0.33/
+      DATA PART1X/0.05,0.05,0.02,0.05,0.05,0.05/
+      DATA PART2X/0.0167,0.0167,0.0167,0.0067,0.0167,0.0167/
 C
 C     RTSK=relative primary root sink strength 0.25=shallow,
 C        4.0=deep root profile
@@ -178,7 +181,7 @@ C     FXFY,FXFZ=rate constant for leaf-reserve nonstructural C,N,P
 C        exchange (h-1)
 C     PSILY=canopy water potential below which leafoff is induced
 C       (MPa)
-C     FLG4Y=number of hours after physiolical maturity required for
+C     FLG4Y=number of hours after physiological maturity required for
 C        senescence
 C     ATRPX=number of hours required to initiate remobilization of
 C        storage C for leafout
@@ -499,9 +502,9 @@ C     TGSTGI=total change in vegetative node number normalized for
 C        maturity group 
 C
       ELSEIF(IDAY(6,NB,NZ,NY,NX).EQ.0)THEN
-      PART(1)=AMAX1(PART1X
+      PART(1)=AMAX1(PART1X(IBTYP(NZ,NY,NX))
      2,PART1-FPART1(IBTYP(NZ,NY,NX))*TGSTGI(NB,NZ,NY,NX))
-      PART(2)=AMAX1(PART2X
+      PART(2)=AMAX1(PART2X(IBTYP(NZ,NY,NX))
      2,PART2-FPART2(IBTYP(NZ,NY,NX))*TGSTGI(NB,NZ,NY,NX))
       PARTS=1.0-PART(1)-PART(2)
       IF(SNL1(NZ,NY,NX).GT.0.0)THEN
@@ -530,9 +533,11 @@ C
       PART(1)=0.0
       PART(2)=0.0
       ELSE
-      PART(1)=AMAX1(PART1X,(PART1-FPART1(IBTYP(NZ,NY,NX)))
+      PART(1)=AMAX1(PART1X(IBTYP(NZ,NY,NX))
+     2,(PART1-FPART1(IBTYP(NZ,NY,NX)))
      2*(1.0-TGSTGF(NB,NZ,NY,NX)))
-      PART(2)=AMAX1(PART2X,(PART2-FPART2(IBTYP(NZ,NY,NX)))
+      PART(2)=AMAX1(PART2X(IBTYP(NZ,NY,NX))
+     2,(PART2-FPART2(IBTYP(NZ,NY,NX)))
      2*(1.0-TGSTGF(NB,NZ,NY,NX)))
       ENDIF
       PARTS=1.0-PART(1)-PART(2)
@@ -557,8 +562,8 @@ C
       IF(IDTYP(NZ,NY,NX).EQ.0)THEN
       PART(7)=1.0
       ELSE
-      PART(1)=PART1X
-      PART(2)=PART2X
+      PART(1)=PART1X(IBTYP(NZ,NY,NX))
+      PART(2)=PART2X(IBTYP(NZ,NY,NX))
       PARTS=1.0-PART(1)-PART(2)
       IF(ISTYP(NZ,NY,NX).EQ.0)THEN
       IF(SNL1(NZ,NY,NX).GT.0.0)THEN
@@ -639,24 +644,6 @@ C
       ENDIF
       ENDIF
       ENDIF
-C
-C     REDIRECT FROM LEAVES TO STALK IF LAI BECOMES TOO LARGE
-C
-C     ARLFP=PFT leaf area (m2 m-2)
-C     PTRT=allocation to leaf+petiole used to simulate phenology
-C        effect on shoot-root C transfer
-C
-C     ARLFI=ARLFP(NZ,NY,NX)/AREA(3,NU(NY,NX),NY,NX)
-C     IF(ARLFI.GT.5.0)THEN
-C     FPARTL=AMIN1(1.0,(ARLFI-5.0)/5.0)
-C     IF(SNL1(NZ,NY,NX).GT.0.0)THEN
-C     PART(3)=PART(3)+FPARTL*(PART(1)+PART(2))
-C     ELSE
-C     PART(4)=PART(4)+FPARTL*(PART(1)+PART(2))
-C     ENDIF
-C     PART(1)=(1.0-FPARTL)*PART(1)
-C     PART(2)=(1.0-FPARTL)*PART(2)
-C     ENDIF
 C
 C     ADJUST ROOT C ALLOCATION TO LEAF C ALLOCATION
 C
@@ -7638,6 +7625,7 @@ C     WHVSTT=total phytomass grazed or removed
 C     TFN3=temperature function for canopy growth
 C     CCPOLP=nonstructural C concentration in canopy
 C     CCPLNP=nonstructural C concentration in canopy nodules
+C     XNFH=time step from ‘wthr.f’
 C
       IF(WTSHTA(NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
       WHVSTT=HVST(NZ,I,NY,NX)*THIN(NZ,I,NY,NX)*0.45/24.0
@@ -8272,7 +8260,7 @@ C     FHGT=fraction of canopy layer height not harvested
 C     FHVST=fraction of canopy layer mass not harvested 
 C     EHVST(1,1,EHVST(1,2,EHVST(1,3,EHVST(1,4=fraction of 
 C        leaf,non-foliar,woody, standing dead removed from PFT
-C     THIN=IHVST=0-3,5: fraction of population removed, 
+C     THIN=IHVST=0 - 3: fraction of population removed, 
 C          IHVST=4 or 6:specific herbivory rate (g DM g-1 LM d-1)
 C     WTSTK=stalk C mass
 C
@@ -9648,9 +9636,6 @@ C
       TCSN0(NZ,NY,NX)=TCSN0(NZ,NY,NX)+WTHTRT+WTHTXT
       TZSN0(NZ,NY,NX)=TZSNC(NZ,NY,NX)+WTHNRT+WTHNXT 
       TPSN0(NZ,NY,NX)=TPSNC(NZ,NY,NX)+WTHPRT+WTHPXT
-C     WRITE(*,4812)'GRAZ',I,J,NFZ,NX,NY,NZ,NB,IHVST(NZ,I,NY,NX)
-C    2,TCSN0(NZ,NY,NX),WTHTRT,WTHTXT
-4812  FORMAT(A8,8I4,12E12.4)
 C
 C     ADD MANURE FROM GRAZING TO SURFACE LITTERFALL 
 C
@@ -9695,6 +9680,10 @@ C     ENDIF
       UORGF(NY,NX)=UORGF(NY,NX)+WTHTRT+WTHTXT
       UFERTN(NY,NX)=UFERTN(NY,NX)+WTHNRT+WTHNXT
       UFERTP(NY,NX)=UFERTP(NY,NX)+WTHPRT+WTHPXT
+C     WRITE(*,4812)'GRAZ',I,J,NFZ,NX,NY,NZ,NB,IHVST(NZ,I,NY,NX)
+C    2,WHVSTT,TFN3(NZ,NY,NX),WTHTHT,WTHTRT,WTHTXT,FHVST,FHVSH
+C    3,UORGF(NY,NX)
+4812  FORMAT(A8,8I4,12E12.4)
       ENDIF
       ZEROP(NZ,NY,NX)=ZERO*PP(NZ,NY,NX)
       ZEROQ(NZ,NY,NX)=ZERO*PP(NZ,NY,NX)/AREA(3,NU(NY,NX),NY,NX)

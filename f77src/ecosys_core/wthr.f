@@ -75,7 +75,7 @@ C
       DO 9915 NX=NHW,NHE
       DO 9910 NY=NVN,NVS
       IF(I.EQ.ISTART.AND.J.EQ.1)THEN
-      TKAX(NY,NX)=0.0
+      TKAX(NY,NX)=ATKA(NY,NX)
       VPAX(NY,NX)=0.0
       ELSE
       TKAX(NY,NX)=TKA(NY,NX)
@@ -163,12 +163,15 @@ C
       DO 9935 NX=NHW,NHE
       DO 9930 NY=NVN,NVS
       IF(I.EQ.ISTART.AND.J.EQ.1)THEN
-      TKAX(NY,NX)=0.0
+      TKAX(NY,NX)=ATKA(NY,NX)
       VPAX(NY,NX)=0.0
       ELSE
       TKAX(NY,NX)=TKA(NY,NX)
       VPAX(NY,NX)=VPA(NY,NX)
       ENDIF
+C     WRITE(*,6633)'TKAX',I,J,NY,NX,ISTART,IBEGIN
+C    2,TKAX(NY,NX),ATKA(NY,NX)
+6633  FORMAT(A8,6I4,30E12.4)
 C
 C     RADN=SW radiation at horizontal surface
 C     TCA,TKA=air temperature (oC,K)

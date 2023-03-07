@@ -95,7 +95,7 @@ C        nutrient recycling (g N,P g-1 C)
 C     
       PARAMETER (ORAD=2.5E-06,BIOS=1.0E-06/(4.19*ORAD**3) 
      2,BIOA=BIOS*12.57*ORAD**2,DCKI=2.5,FPRIM=5.0E-02
-     3,FPRIMM=1.0E-06,RCCZ=0.150,RCCY=0.300,RCCX=0.833,RCCQ=0.833
+     3,FPRIMM=1.0E-06,RCCZ=0.167,RCCY=0.333,RCCX=0.833,RCCQ=0.833
      4,OMGR=2.5E-01,OQKI=2.4E+03,H2KI=1.0,OAKI=12.0,COMKI=2.5E-03
      5,COMKM=1.0E-04,FPRIMB=2.5E-08,FPRIML=2.5E-08
      6,FPRIM0=2.5E-08,FMN=1.0E-03,DCKM=1.0E+03,TCMBX=473.15
@@ -106,23 +106,35 @@ C     SPECIFIC RESPIRATION RATES, M-M UPTAKE CONSTANTS,
 C     STOICHIOMETRIC CONSTANTS FOR MICROBIAL REDOX REACTIONS
 C
 C     VMX*=specific oxidation rates (g C g-1 C h-1_
-C        O=all bacteria, F=fungi, M=acetotrophic methanogens
-C        H=ammonia oxidizers, N=nitrite oxidizers, 4=methanotrophs
+C        O=all bacteria, 
+C        F=fungi
+C        M=acetotrophic methanogens
+C        H=ammonia oxidizers
+C        N=nitrite oxidizers
+C        4=methanotrophs
 C        C=hydrogenotrophic methanogens
-C     OQKM,OQKA=Km for DOC,acetate uptake by heterotrophs (g C m-3)
-C        M=all bacteria and fungi, A=acetate by fermenters
+C     OQK*=Km for DOC,acetate uptake by heterotrophs (g C m-3)
+C        M=DOC by all bacteria and fungi 
+C        A=acetate by fermenters
 C        AM=acetate by acetotrophic methanogens
-C     CCKM=Km for CO2 uptake, CCK4=Km for CH4 uptake (g C m-3)
+C     CCKM=Km for CO2 uptake(g C m-3)
+C     CCK4=Km for CH4 uptake (g C m-3)
 C     Z*KM=Km for N uptake (g N m-3)
 C        H=NH4 by nitrifiers, N=NO2 by nitrifiers
 C        3=NO3 by denitrifiers, 2=NO2 by denitrifiers
 C        1=N2O uptake by denitrifiers
 C     Z4*=NH4 uptake kinetics by all MFTs(g N m-2 h-1, g N m-3)
-C        MX=maximum uptake rate, KU=Km, MN= minimum concentration  
+C        MX=maximum uptake rate, 
+C        KU=Km
+C        MN= minimum concentration  
 C     ZO*=NO3 uptake kinetics by all MFTs(g N m-2 h-1, g N m-3)
-C        MX=maximum uptake rate, KU=Km, MN= minimum concentration  
+C        MX=maximum uptake rate
+C        KU=Km
+C        MN= minimum concentration  
 C     HP*=H2PO4 uptake kinetics by all MFTs(g P m-2 h-1, g P m-3)
-C        MX=maximum uptake rate, KU=Km, MN= minimum concentration
+C        MX=maximum uptake rate
+C        KU=Km
+C        MN= minimum concentration
 C     ZFKM=Km for N2 uptake by diazotrophs (g N m-3)
 C     H2KM=Km for H2 uptake by hydrogenotrophic methanogens (g H m-3)  
 C     ECNH=efficiency CO2 conversion to biomass by ammonia oxidizers
@@ -2445,9 +2457,9 @@ C        to microbial residue
 C
       RHOMC(M,N,K)=AMAX1(0.0,RDOMC(M,N,K)*EHUM(L,NY,NX))
       RHOMN(M,N,K)=AMAX1(0.0,AMIN1(RDOMN(M,N,K)*EHUM(L,NY,NX)
-     2,RDOMC(M,N,K)*CNRH(4)))
+     2,RHOMC(M,N,K)*CNRH(4)))
       RHOMP(M,N,K)=AMAX1(0.0,AMIN1(RDOMP(M,N,K)*EHUM(L,NY,NX)
-     2,RDOMC(M,N,K)*CPRH(4))) 
+     2,RHOMC(M,N,K)*CPRH(4))) 
 C     IF(L.EQ.3.AND.K.EQ.1.AND.N.EQ.6)THEN
 C     WRITE(*,8821)'RHOMC',I,J,L,K,N,M
 C    2,RXOMC(M,N,K),RXOMN(M,N,K),RXOMP(M,N,K)
@@ -3760,7 +3772,7 @@ C     IF(ISALTG.NE.0)THEN
 C     XZHYS(L,NY,NX)=XZHYS(L,NY,NX)+0.1429*(RVOXA(1)+RVOXB(1)
 C    2-TRDN3-TRDNB)-0.0714*(TRDN2+TRD2B+TRDNO)
 C     ENDIF
-      IF(L.EQ.0)THEN
+C     IF(L.EQ.0)THEN
 C     WRITE(*,2324)'XNH4S',I,J,NFZ,NX,NY,L,XNH4S(L,NY,NX)
 C    2,TRINH,RVOXA(1),VLNH4(L,NY,NX),TRDN2
 C     WRITE(*,2324)'XNO3S',I,J,NFZ,NX,NY,L,NPH,XNO3S(L,NY,NX)
@@ -3775,7 +3787,7 @@ C     WRITE(*,2324)'XNO2B',I,J,NFZ,NX,NY,L,XNO2B(L,NY,NX),RVOXB(1)
 C    2,VLNHB(L,NY,NX),RVOXB(2),VLNOB(L,NY,NX),TRDNB,TRD2B,RCNOB
 C     WRITE(*,2324)'XOQCS',I,J,NFZ,NX,NY,L,(XOQCS(K,L,NY,NX),K=0,KL)
 2324  FORMAT(A8,6I4,30E12.4)
-      ENDIF
+C     ENDIF
       ELSE
       RCO2O(L,NY,NX)=0.0
       RCH4O(L,NY,NX)=0.0
@@ -3800,14 +3812,19 @@ C     MIX MICROBIAL C,N,P BETWEEN ADJACENT SOIL LAYERS L AND LL
 C
 C     IDENTIFY NEXT LOWER SOIL LAYER
 C
-      IF(L.LT.NL(NY,NX).AND.BKDS(L,NY,NX).GT.ZERO)THEN
-      DO 1100 LN=L+1,NL(NY,NX)
+      IF(L.EQ.0.OR.(L.GE.NU(NY,NX)
+     2.AND.L.LT.NL(NY,NX).AND.BKDS(L,NY,NX).GT.ZERO))THEN
+      IF(L.EQ.0)THEN
+      LL=NU(NY,NX)
+      ELSE
+      DO 1100 LN=NU(NY,NX)+1,NL(NY,NX)
       IF(VOLX(LN,NY,NX).GT.ZEROS2(NY,NX))THEN
       LL=LN
       GO TO 1101
       ENDIF
 1100  CONTINUE
 1101  CONTINUE
+      ENDIF
 C
 C     MIX MICROBIAL BIOMASS BETWEEN ADJACENT SOIL LAYERS L AND LL
 C

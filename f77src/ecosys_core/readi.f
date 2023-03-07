@@ -38,7 +38,7 @@ C
       OPEN(20,FILE='logfile3',STATUS='UNKNOWN')
       OPEN(1,FILE=TRIM(PREFIX)//DATA(1),STATUS='OLD')
       OPEN(7,FILE=TRIM(PREFIX)//DATA(2),STATUS='OLD')
-      WRITE(18,5000)' 10 FEB 2023 '
+      WRITE(18,5000)' 03 MAR 2023 '
 5000  FORMAT(A16)
       NF=1
       NFX=1
@@ -117,7 +117,6 @@ C        table :0=no flow, 1=unimpeded flow
 C     DHI=width of each W-E landscape column
 C     DVI=width of each N-S landscape row  
 C
-    
       READ(1,*)(datav(K),K=1,4)
       ALATG=datav(1)
       ALTIG=datav(2)
@@ -446,16 +445,12 @@ C
       ENDIF
 25    CONTINUE
 C
-C     FILL OUT SOIL BOUNDARY LAYER PROPERTESS ABOVE ROOTING ZONE 
+C     FILL OUT SOIL BOUNDARY LAYER PROPERTIES ABOVE ROOTING ZONE 
 C     (THESE LAYERS ARE NOT USED)
 C
       IF(NU(NY,NX).GT.1)THEN
       DO 31 L=NU(NY,NX)-1,0,-1
-      IF(BKDSI(L+1,NY,NX).GT.0.025)THEN
-      CDPTH(L,NY,NX)=CDPTH(L+1,NY,NX)-0.01
-      ELSE
-      CDPTH(L,NY,NX)=CDPTH(L+1,NY,NX)-0.02
-      ENDIF
+      CDPTH(L,NY,NX)=CDPTH(L+1,NY,NX)-0.01 
       IF(L.GT.0)THEN
       BKDSI(L,NY,NX)=BKDSI(L+1,NY,NX)
       FC(L,NY,NX)=FC(L+1,NY,NX)
