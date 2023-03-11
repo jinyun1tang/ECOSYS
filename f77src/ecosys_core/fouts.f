@@ -87,8 +87,8 @@ C
       M=M+1
       IF(L.EQ.1)HEAD(M)='SOIL_CO2_FLUX'
       IF(L.EQ.2)HEAD(M)='ECO_CO2_FLUX'
-      IF(L.EQ.3)HEAD(M)='CH4_FLUX'
-      IF(L.EQ.4)HEAD(M)='O2_FLUX'
+      IF(L.EQ.3)HEAD(M)='SOIL_CH4_FLUX'
+      IF(L.EQ.4)HEAD(M)='SOIL_O2_FLUX'
       IF(L.EQ.5)HEAD(M)='CO2_1'
       IF(L.EQ.6)HEAD(M)='CO2_2'
       IF(L.EQ.7)HEAD(M)='CO2_3'

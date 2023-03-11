@@ -10,7 +10,7 @@
                 "<",
                 "runfile"
             ],
-            "cwd": "${workspaceFolder}/data/cool_temp_maize-soybean",
+            "cwd": "${workspaceFolder}/../input_data/cool_temp_maize-soybean",
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
@@ -49,7 +49,7 @@
             ]
         },
         {
-            "name": "dev_cool_maize_soybean",
+            "name": "warm_tem_maize_soybean_irrigated",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/local/bin/ecosys.x",
@@ -58,7 +58,7 @@
                 "<",
                 "runfile"
             ],
-            "cwd": "${workspaceFolder}/data/dev_cool_temp_maize-soybean",
+            "cwd": "${workspaceFolder}/data/warm_tem_maize_soybean_irrigated",
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
