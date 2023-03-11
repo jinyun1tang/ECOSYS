@@ -1,4 +1,5 @@
 Makefile
+build
 build/cmake_install.cmake
 build/CMakeCache.txt
 build/compile_commands.json
