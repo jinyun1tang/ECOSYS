@@ -37,6 +37,13 @@ make install CC=icc CXX=icpc FC=ifort
 
 ./local/bin/ecosys.x  
 
+# Run
+* suppose you are in the directory examples/sample_run/, cp the executable and do
+
+./ecosys.x  < runscript_test
+
+* and then check output in examples/sample_run/outputs
+* 
 # Several useful git commands
 
   git log --graph
