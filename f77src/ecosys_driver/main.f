@@ -30,12 +30,12 @@ C
       CALL CHDIR(BUF)
       PREFIX='.\\'
 C     make output directory
-      outdir=trim(buf)//'\\outputs\\'
+      outdir='.\\outputs\\'
       ELSE
       PREFIX='./'
 C     make output directory
-      if(len(trim(buf))==0)buf='./'
-      outdir=trim(buf)//'/outputs/'
+      buf='./'
+      outdir='./outputs/'
       ENDIF
       call system('mkdir -p '//trim(outdir))
 C
