@@ -30,7 +30,7 @@ C     make output directory
       ELSE
       PREFIX='./'
 C     make output directory
-      outdir=trim(buf)//'/outputs/'
+      outdir='./outputs/'
       ENDIF
       call system('mkdir -p '//trim(outdir))
 C

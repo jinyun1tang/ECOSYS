@@ -3477,7 +3477,7 @@ C
       IF(THETPM(M,N3,N2,N1).GT.THETX
      2.AND.THETPM(M,N6,N5,N4).GT.THETX)THEN
       TK11=TK1(N3,N2,N1)
-      if(abs(tks(n3,n2,n1))>400.)pause
+C      if(abs(tks(n3,n2,n1))>400.)pause
       TK12=TK1(N6,N5,N4)
       VP1=2.173E-03/TK11
      2*0.61*EXP(5360.0*(3.661E-03-1.0/TK11))
