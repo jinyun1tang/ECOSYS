@@ -16,7 +16,7 @@ C
       SAVE NF,NX,NTZ,NTZX
       DATA NF,NX,NTZ,NTZX/0,0,0,0/
 C
-C     READ INPUT DATA FOR SITE AND SOILS IN ‘READI’ AND MANAGEMENT 
+C     READ INPUT DATA FOR SITE AND SOILS IN ï¿½READIï¿½ AND MANAGEMENT 
 C     IN 'READS', AND SET UP OUTPUT AND CHECKPOINT FILES IN 'FOUTS'
 C
 C     IGO: =0, first scene in first scenario.
@@ -41,7 +41,7 @@ C
 C     RECOVER VALUES OF ALL SOIL STATE VARIABLES FROM EARLIER RUN
 C     IN 'ROUTS' IF NEEDED
 C
-C     DATA(20):= ‘YES’, resume from earlier run
+C     DATA(20):= ï¿½YESï¿½, resume from earlier run
 C     IDAYR,IYRR=day, year of resumption
 C
       IF(DATA(20).EQ.'YES')THEN
@@ -96,6 +96,7 @@ C     BEGIN DAILY TIME STEP
 C
 C     LYRC,LYRX=number of days in current, previous year
 C
+      call omwriter(0,0,0,0,0,0,'openfile')
 9000  I=IDAYR+1
       IF(I.NE.LYRC.OR.NYR.NE.0)THEN
       IF(I.GT.LYRX.AND.NYR.NE.0)THEN
@@ -119,7 +120,7 @@ C
 C     WRITE(*,333)'WTHR'
       CALL WTHR(I,J,NHW,NHE,NVN,NVS)
 C
-C     START SUBHOURLY LOOP FROM NFH SET IN ‘WTHR’
+C     START SUBHOURLY LOOP FROM NFH SET IN ï¿½WTHRï¿½
 C
       DO 9990 NFZ=1,NFH
 C
@@ -194,6 +195,8 @@ C     WRITE(*,333)'RED'
       CALL REDIST(I,J,NFZ,NHW,NHE,NVN,NVS)
 C     WRITE(*,333)'END'
 9990  CONTINUE
+
+      call omwriter(I,J,NHW,NHE,NVN,NVS,'write')
 C
 C     WRITE HOURLY SOIL AND PLANT OUTPUT IN 'OUTSH' AND 'OUTPH'
 C
@@ -260,5 +263,6 @@ Celse
 C     CALL SPLITC(NT,NE,NAX,NDX,NTX,NEX,NHW,NHE,NVN,NVS)
 Cendif
 C     WRITE(*,333)'SPLIT'
+      call omwriter(0,0,0,0,0,0,'closefile')
       RETURN
       END

@@ -69,6 +69,7 @@ set(ECOSYS_SOURCES
 	outph.f
 	outsd.f
 	outsh.f
+	omwriter.f
 	readi.f
 	readq.f
 	reads.f
