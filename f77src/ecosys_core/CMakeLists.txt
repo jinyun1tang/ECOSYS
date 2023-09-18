@@ -64,6 +64,7 @@ set(ECOSYS_SOURCES
 	grosub.f
 	hfunc.f
 	hour1.f
+	mbwrtr.f
 	nitro.f
 	outpd.f
 	outph.f
