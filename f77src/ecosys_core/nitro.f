@@ -1332,7 +1332,7 @@ C     ROXYM=O2 demand from respiration
 C     ROXYP=O2 demand from respiration + CH4 oxidation
 C
       ROXYM(N,K)=2.667*RGOMP
-      ROXYP(N,K)=ROXYM(N,K)+4.00*RVOXP 
+      ROXYP(N,K)=ROXYM(N,K)+5.333*RVOXP 
       ROXYS(N,K,L,NY,NX)=ROXYP(N,K) 
       ELSE
       RGOMP=0.0
