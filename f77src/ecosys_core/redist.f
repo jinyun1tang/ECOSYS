@@ -2663,6 +2663,9 @@ C
       TFLWX(N3,N2,N1)=TFLWX(N3,N2,N1)+FLWX(N,N3,N2,N1)-FLWXNU(N5,N4)
       TFLWH(N3,N2,N1)=TFLWH(N3,N2,N1)+FLWH(N,N3,N2,N1)-FLWHNU(N5,N4)
       THFLW(N3,N2,N1)=THFLW(N3,N2,N1)+HFLW(N,N3,N2,N1)-HFLWNU(N5,N4)
+C      if(n3==1)then
+C      write(*,*)'n3u',HFLW(N,N3,N2,N1),HFLWNU(N5,N4)
+C      endif
       ELSE
       TFLW(N3,N2,N1)=TFLW(N3,N2,N1)+FLW(N,N3,N2,N1)-FLW(N,N6,N5,N4)
       TFLWX(N3,N2,N1)=TFLWX(N3,N2,N1)+FLWX(N,N3,N2,N1)
@@ -2671,7 +2674,13 @@ C
      2-FLWH(N,N6,N5,N4)
       THFLW(N3,N2,N1)=THFLW(N3,N2,N1)+HFLW(N,N3,N2,N1)
      2-HFLW(N,N6,N5,N4)
+C      if(N3==2)then
+C      write(*,*)'TKSFLW',HFLW(N,N3,N2,N1)
+C     2,HFLW(N,N6,N5,N4),N3,N6
+C      endif
       ENDIF
+C      write(*,*)TFLW(N3,N2,N1),FLW(N,N3,N2,N1),FLWNU(N5,N4)
+C     2,FLW(N,N6,N5,N4)
 C     IF(N1.EQ.1.AND.N3.EQ.1)THEN
 C     WRITE(*,6632)'TFLW',I,J,N,N1,N2,N3,N4,N5,N6,NU(N2,N1)
 C    2,TFLW(N3,N2,N1),FLW(N,N3,N2,N1),FLW(N,N6,N5,N4),FLWNU(N5,N4)
@@ -3456,8 +3465,11 @@ C
       IF(VHCP(NUM(NY,NX),NY,NX).GT.ZEROS(NY,NX))THEN
       TKS(NUM(NY,NX),NY,NX)=(ENGY+HFLWS)
      2/VHCP(NUM(NY,NX),NY,NX)
-
-      if(abs(TKS(NUM(NY,NX),NY,NX)/tksx-1.)>0.025)then
+      if(TKS(NUM(NY,NX),NY,NX)/=TKS(NUM(NY,NX),NY,NX))then
+      write(*,*)ENGY,HFLWS,VHCP(NUM(NY,NX),NY,NX)
+      pause
+      endif
+      if(abs(TKS(NUM(NY,NX),NY,NX)/tksx-1.)>0.25)then
       TKS(NUM(NY,NX),NY,NX)=TKSX
       endif
       ELSE
@@ -4413,6 +4425,9 @@ C
       TVOLI=0.0
       TVOLIH=0.0
       TENGY=0.0
+C      write(*,*)'NU=',NU(NY,NX),NL(NY,NX),NUM(NY,NX),NUI(NY,NX)
+C      write(*,*)TFLW(NU(NY,NX),NY,NX),iLAKE(NY,NX)
+C      if(NU(NY,NX)/=1)pause
       DO 125 L=NU(NY,NX),NL(NY,NX)
 C
 C     WATER, ICE, HEAT, TEMPERATURE
@@ -4421,6 +4436,11 @@ C
       VHCPX=VHCP(L,NY,NX)
       VOLWXX=VOLW(L,NY,NX)
       VOLIXX=VOLI(L,NY,NX)
+      VOLW0=VOLW(L,NY,NX)
+      if(iLAKE(NY,NX).EQ.1)then
+      VOLW(L,NY,NX)=VOLW(L,NY,NX)+TFLW(L,NY,NX)+FINH(L,NY,NX)
+     2+TTHAW(L,NY,NX)+FLU(L,NY,NX)
+      else
       VOLW(L,NY,NX)=VOLW(L,NY,NX)+TFLW(L,NY,NX)+FINH(L,NY,NX)
      2+TTHAW(L,NY,NX)+TUPWTR(L,NY,NX)+FLU(L,NY,NX)
 C      if(VOLW(L,NY,NX)<0. .and. L==NU(NY,NX))then
@@ -4478,14 +4498,26 @@ C
       IF(VHCP(L,NY,NX).GT.ZEROS(NY,NX))THEN
       TKS(L,NY,NX)=(ENGY+THFLW(L,NY,NX)+THTHAW(L,NY,NX)
      2+TUPHT(L,NY,NX)+HWFLU(L,NY,NX))/VHCP(L,NY,NX)
-      if(L==1.and.abs(TKS(L,NY,NX)/TKS10-1.)>0.025)then
+      
+      IF(TKS(L,NY,NX)/=TKS(L,NY,NX)
+     2.or.TKS(L,NY,NX)>400.)then
+      write(*,*)ENGY,THFLW(L,NY,NX),THTHAW(L,NY,NX)
+     2,TUPHT(L,NY,NX),HWFLU(L,NY,NX)
+      endif
+      if(L==1.and.abs(TKS(L,NY,NX)/TKS10-1.)>0.25)then
       TKS(L,NY,NX)=TKS10
       endif
       ELSE
       TKS(L,NY,NX)=TKS(NUM(NY,NX),NY,NX)
       ENDIF
-
+C      if(L==2)then
+C      write(*,*)'watawTKS',TKS(L-1,NY,NX),TKS(L,NY,NX)
+C     2,THFLW(L,NY,NX),THTHAW(L,NY,NX)
+C     3,TUPHT(L,NY,NX),HWFLU(L,NY,NX)
+C      endif
       TCS(L,NY,NX)=TKS(L,NY,NX)-273.15
+C      if(L.eq.1)write(*,*)TCS(L,NY,NX)
+      if(TCS(L,NY,NX)/=TCS(L,NY,NX))PAUSE
       TSMX(L,NY,NX)=AMAX1(TSMX(L,NY,NX),TCS(L,NY,NX))
       TSMN(L,NY,NX)=AMIN1(TSMN(L,NY,NX),TCS(L,NY,NX))
       UN2GS(NY,NX)=UN2GS(NY,NX)+XN2GS(L,NY,NX)
@@ -5669,7 +5701,7 @@ C     ENDIF
 C
 C     SOIL SUBSIDENCE
 C
-      IF(IERSNG.GE.0)THEN
+      IF(IERSNG.GE.0.and.iLAKE(NY,NX).eq.0)THEN
       IF(BKDS(NU(NY,NX),NY,NX).LE.ZERO)THEN
       ICHKLX=0
       ELSE
