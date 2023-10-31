@@ -262,6 +262,7 @@ C
       FLU1(L,NY,NX)=0.0
       HWFLU1(L,NY,NX)=0.0
       ENDIF
+      
       IF(CDPTH(L,NY,NX).GE.DTBLX(NY,NX))THEN
       AREAU(L,NY,NX)=AMIN1(1.0,AMAX1(0.0
      2,(CDPTH(L,NY,NX)-DTBLX(NY,NX))
@@ -2041,6 +2042,7 @@ C
       ELSE
       VFLXG=EVAPG(NY,NX)*4.19*TKQ(NY,NX)
       ENDIF
+      if(iLAKE(NY,NX).EQ.1)VFLXG=0.0
       VOLW2(NUM(NY,NX),NY,NX)=VOLW2(NUM(NY,NX),NY,NX)+EVAPG(NY,NX)
 C
 C     SOLVE FOR SOIL SURFACE TEMPERATURE AT WHICH ENERGY
@@ -2287,6 +2289,10 @@ C
       FLV2=0.0
       HWFLV2=0.0
       ENDIF
+      if(iLAKE(NY,NX).eq.1)then
+      FLV2=0.0
+      HWFLV2=0.0
+      endif
       TKXR=TKR1-HWFLV2/VHCPR2
       TK1X=TKS1+HWFLV2/VHCP12
       TKY=(TKXR*VHCPR2+TK1X*VHCP12)/(VHCPR2+VHCP12)
@@ -2415,6 +2421,7 @@ C      endif
       FLWLXG=FLQM+EVAPG(NY,NX)+FLV1
       FLWHLG=FLHM
       HFLWLG=HWFLQM+HFLXG+HWFLV1+HFLCR1
+C      write(*,*)'watx',HWFLQM,HFLXG,HWFLV1,HFLCR1
       FLWRLG=FLYM+EVAPR(NY,NX)-FLV1
       HFLWRLG=HWFLYM+HFLXR-HWFLV1-HFLCR1
       FLWVLS=(VOLW1(NUM(NY,NX),NY,NX)-VOLWX1(NUM(NY,NX),NY,NX))*XNPH
@@ -2487,6 +2494,9 @@ C      endif
       FLWLX(3,NUM(NY,NX),NY,NX)=FLWLXW+FLWLXG
       FLWHL(3,NUM(NY,NX),NY,NX)=FLWHLW+FLWHLG
       HFLWL(3,NUM(NY,NX),NY,NX)=HFLWLW+HFLWLG
+      if(HFLWL(3,NUM(NY,NX),NY,NX)/=HFLWL(3,NUM(NY,NX),NY,NX))then
+      write(*,*)'watsub',HFLWLW,HFLWLG
+      endif
       FLWRL(NY,NX)=FLWRLW+FLWRLG
       HFLWRL(NY,NX)=HFLWRLW+HFLWRLG
 C     IF(I.GT.350.AND.NX.EQ.1)THEN
@@ -2603,7 +2613,9 @@ C more water than saturation in layer 1,remove excessive water
       FLQ2=FLQ2+AMIN1(0.0,AMAX1(-VOLW1(NUM(NY,NX),NY,NX)*XNPX
      2,VOLP1Z(NUM(NY,NX),NY,NX)))
       ENDIF
-
+      if(iLAKE(NY,NX).eq.1)then
+      FLQR=0.0
+      endif
       IF(FLQR.GT.0.0)THEN
 C from layer 0 to layer 1
       HFLQR=4.19*TK1(0,NY,NX)*FLQR
@@ -2641,7 +2653,11 @@ C    2,VOLWH1(NUM(NY,NX),NY,NX),VOLIH1(NUM(NY,NX),NY,NX)
 4322  FORMAT(A8,8I4,40E12.4)
 C     ENDIF
       ELSE
+      IF(iLAKE(NY,NX).EQ.1)then
+      FLQR=0.0
+      else
       FLQR=XVOLW(NY,NX)*XNPX
+      endif
       HFLQR=4.19*TK1(0,NY,NX)*FLQR
       FLWL(3,NUM(NY,NX),NY,NX)=FLWL(3,NUM(NY,NX),NY,NX)+FLQR
       HFLWL(3,NUM(NY,NX),NY,NX)=HFLWL(3,NUM(NY,NX),NY,NX)+HFLQR
@@ -2676,8 +2692,9 @@ C     FLWL,HFLWL=micropore water,heat flux
 C     FLWRL,HFLWRL=total litter water,heat flux
 C
       IF(VOLPH1(NUM(NY,NX),NY,NX).GT.0.0
-     2.AND.XVOLW(NY,NX).GT.0.0)THEN
+     2.AND.XVOLW(NY,NX).GT.0.0)THEN      
       FLQHR=AMIN1(XVOLW(NY,NX)*XNPX,VOLPH1(NUM(NY,NX),NY,NX))
+      if(iLAKE(NY,NX).EQ.1)FLQHR=0.0
       HFLQHR=FLQHR*4.19*TK1(0,NY,NX)
       FLWHL(3,NUM(NY,NX),NY,NX)=FLWHL(3,NUM(NY,NX),NY,NX)+FLQHR
       HFLWL(3,NUM(NY,NX),NY,NX)=HFLWL(3,NUM(NY,NX),NY,NX)+HFLQHR
@@ -2691,6 +2708,7 @@ C    4,HFLQHR,HFLWRL(NY,NX),HFLWL(3,NUM(NY,NX),NY,NX),TK1(0,NY,NX)
 4357  FORMAT(A8,6I4,40E12.4)
 C     ENDIF
       ENDIF
+
 C
 C     FREEZE-THAW IN RESIDUE SURFACE FROM NET CHANGE IN RESIDUE
 C     SURFACE HEAT STORAGE
@@ -2982,12 +3000,14 @@ C     VOLWX1=VOLW1 accounting for wetting front
 C
       THAWR(NY,NX)=THAWR(NY,NX)+WFLXR(NY,NX)
       HTHAWR(NY,NX)=HTHAWR(NY,NX)+TFLXR(NY,NX)
+      IF(iLAKE(NY,NX).EQ.0)THEN
       FLW(3,NUM(NY,NX),NY,NX)=FLW(3,NUM(NY,NX),NY,NX)
      2+FLWL(3,NUM(NY,NX),NY,NX)
       FLWX(3,NUM(NY,NX),NY,NX)=FLWX(3,NUM(NY,NX),NY,NX)
      2+FLWLX(3,NUM(NY,NX),NY,NX)
       FLWH(3,NUM(NY,NX),NY,NX)=FLWH(3,NUM(NY,NX),NY,NX)
      2+FLWHL(3,NUM(NY,NX),NY,NX)
+      ENDIF
       HFLW(3,NUM(NY,NX),NY,NX)=HFLW(3,NUM(NY,NX),NY,NX)
      2+HFLWL(3,NUM(NY,NX),NY,NX)
       FLWR(NY,NX)=FLWR(NY,NX)+FLWRL(NY,NX)
@@ -3332,7 +3352,8 @@ C     FKSAT=reduction in soil surface Ksat from rainfall energy impact
 C     AVCNDL=source-destination hydraulic conductance
 C     DLYR=layer thickness
 C
-      IF(CND1.GT.ZERO.AND.CNDL.GT.ZERO)THEN
+      IF(CND1.GT.ZERO.AND.CNDL.GT.ZERO.and.
+     2iLAKE(N2,N1).EQ.0)THEN
       AVCNDL=2.0*CND1*CNDL/(CND1*DLYR(N,N6,N5,N4)
      2+CNDL*DLYR(N,N3,N2,N1))
       ELSE
@@ -3383,17 +3404,20 @@ C     FLQL2=(THETW1-THETS(N3,N2,N1))*VOLY(N3,N2,N1)
 C     FLQL3=FLQX+AMAX1(FLQL1,AMIN1(0.0,FLQL2))*XNPX
 C     FLQL4=AMIN1(0.0,AMAX1(FLQL3,-VOLP1(N3,N2,N1)*XNPX))
       ENDIF
+C      write(*,*)'FLQL0',FLQL,VOLP1Z(N6,N5,N4),N,VOLW2(N6,N5,N4)
       IF(N.EQ.3.AND.VOLP1Z(N6,N5,N4).LT.0.0)THEN
       FLQL=FLQL+AMIN1(0.0,AMAX1(-VOLW2(N6,N5,N4)*XNPX
      2,VOLP1Z(N6,N5,N4)))
       FLQ2=FLQ2+AMIN1(0.0,AMAX1(-VOLW2(N6,N5,N4)*XNPX
      2,VOLP1Z(N6,N5,N4)))
       ENDIF
+      if(iLAKE(N2,N1).EQ.1)FLQL=0.0
       IF(FLQL.GT.0.0)THEN
       HWFLQL=4.19*TK1(N3,N2,N1)*FLQL
       ELSE
       HWFLQL=4.19*TK1(N6,N5,N4)*FLQL
       ENDIF
+C      WRITE(*,*)'FLQL',AVCNDL,FLQL,n1,n2,n3,n4,n5,n6
       VOLW2(N3,N2,N1)=VOLW2(N3,N2,N1)-FLQL
       VOLW2(N6,N5,N4)=VOLW2(N6,N5,N4)+FLQL
 C
@@ -3435,7 +3459,8 @@ C
       ENDIF
       IF(N.EQ.3)THEN
       FLWHL(N,N6,N5,N4)=FLWHL(N,N6,N5,N4)+AMIN1(0.0,VOLPH1Z(N6,N5,N4))
-      ENDIF
+      if(iLAKE(N5,N4).eq.1)FLWHL(N,N6,N5,N4)=0.0
+      ENDIF      
       FLWHM(M,N,N6,N5,N4)=FLWHL(N,N6,N5,N4)
 C     IF(N4.EQ.1)THEN
 C     WRITE(*,5478)'FLWH',I,J,M,N1,N2,N3,IFLGH
@@ -3511,6 +3536,12 @@ C
       FLVL=0.0
       HWFLVL=0.0
       ENDIF
+      if(iLAKE(N2,N1).EQ.1)then
+      FLVC=0.0
+      FLVX=0.0
+      HWFLVL=0.0
+      ENDIF
+
 C
 C     FLWL=total water+vapor flux to destination
 C     FLWLX=total unsaturated water+vapor flux to destination
@@ -3628,6 +3659,13 @@ C
       ENDIF
       TKY=(VHCP1(N3,N2,N1)*TK1X+VHCP1(N6,N5,N4)*TKLX)
      2/(VHCP1(N3,N2,N1)+VHCP1(N6,N5,N4))
+      if(TKY>400.0 .OR. TK1X>400.0)THEN
+      WRITE(*,*)M,N1,N2,N3,N4,N5,N6,TK1X,TKLX,TKY
+      write(*,*)TKS(N3,N2,N1),TKS(N6,N5,N4)
+      WRITE(*,*)HWFLVL,HFLXG
+      write(*,*)'tk>400'
+      PAUSE
+      ENDIF
       HFLWX=(TK1X-TKY)*VHCP1(N3,N2,N1)*XNPX
       HFLWC=ATCNDL*(TK1X-TKLX)*AREA(N,N3,N2,N1)*XNPH
       IF(HFLWC.GE.0.0)THEN
@@ -3636,6 +3674,11 @@ C
       HFLWSX=AMIN1(0.0,AMAX1(HFLWX,HFLWC))
       ENDIF
       HFLWL(N,N6,N5,N4)=HWFLWL+HWFLHL+HFLWSX
+      if(N6==N6X(N2,N1))then
+C      write(*,*)'wataw',M,HWFLWL,HWFLHL,HFLWSX,tk1x,tky
+C     2,TK1(N3,N2,N1),TK1(N6,N5,N4),TKS(N3,N2,N1),TKS(N6,N5,N4)
+      if(abs(HFLWSX)>1.e10)pause
+      endif
 C     IF(N3.EQ.1)THEN
 C     WRITE(*,8765)'HFLWL',I,J,M,N1,N2,N3,N4,N5,N6,N
 C    2,HFLWL(N,N3,N2,N1),HFLWL(N,N6,N5,N4)
@@ -3659,10 +3702,14 @@ C     FLW,FLWX,FLWH=total water flux through micropores,macropores
 C     HFLW=total heat flux
 C     FLWM=water flux used for solute flux calculations in trnsfr.f
 C
+      IF(iLAKE(NY,NX).EQ.0)THEN
       FLW(N,N6,N5,N4)=FLW(N,N6,N5,N4)+FLWL(N,N6,N5,N4)
       FLWX(N,N6,N5,N4)=FLWX(N,N6,N5,N4)+FLWLX(N,N6,N5,N4)
       FLWH(N,N6,N5,N4)=FLWH(N,N6,N5,N4)+FLWHL(N,N6,N5,N4)
+      ENDIF
       HFLW(N,N6,N5,N4)=HFLW(N,N6,N5,N4)+HFLWL(N,N6,N5,N4)
+C      if(N6==N6X(N2,N1).or.N6<3)write(*,*)'wwww',M,N6,HFLW(N,N6,N5,N4)
+C     2,HFLWL(N,N6,N5,N4)
       FLWM(M,N,N6,N5,N4)=FLWL(N,N6,N5,N4)
       IF(N.EQ.3)THEN
 C     IF(I.EQ.55)THEN
@@ -3718,7 +3765,20 @@ C    2,FLWL(N,N6,N5,N4),FLW(N,N6,N5,N4)
 C    3,VOLX(N3,N2,N1),VOLX(N6,N5,N4)
 C     ENDIF
       ENDIF
+C      if(N6<=2)then
+C      write(*,*)'in4320',M,N,N6,N5,N4,N1,N2,N3,HFLWL(N,N3,N2,N1)
+C     2,HFLWL(N,N6,N5,N4)
+C      endif
+C      TFLWL(N3,N2,N1)=TFLWL(N3,N2,N1)+FLWL(N,N3,N2,N1)
+C     2-FLWL(N,N6,N5,N4)
+C      TFLWLX(N3,N2,N1)=TFLWLX(N3,N2,N1)+FLWLX(N,N3,N2,N1)
+C     2-FLWLX(N,N6,N5,N4)
+C      TFLWHL(N3,N2,N1)=TFLWHL(N3,N2,N1)+FLWHL(N,N3,N2,N1)
+C     2-FLWHL(N,N6,N5,N4)
+C      THFLWL(N3,N2,N1)=THFLWL(N3,N2,N1)+HFLWL(N,N3,N2,N1)
+C     2-HFLWL(N,N6,N5,N4)
 4320  CONTINUE
+
 4400  CONTINUE
 9890  CONTINUE
 9895  CONTINUE
@@ -3730,6 +3790,10 @@ C     VOLP2,VOLPH2=air-filled porosity in micropores,macropores
 C
       DO 9595 NX=NHW,NHE
       DO 9590 NY=NVN,NVS
+      
+C      write(*,*)'in950',M,HFLWL(N,1,1,1)
+C     2,HFLWL(N,2,1,1)
+      
       DO 9585 L=NUM(NY,NX),NL(NY,NX)
       VOLP2=VOLA1(L,NY,NX)-VOLW1(L,NY,NX)-VOLI1(L,NY,NX)
       VOLPX2=VOLP2
@@ -4129,6 +4193,10 @@ C
       FLWHL(N,M6,M5,M4)=AMIN1(VOLWH1(L,NY,NX)*XNPX
      2,XN*0.0098*-ABS(SLOPE(N,N2,N1))*CNDH1(L,NY,NX)*AREA(3,N3,N2,N1))
      3*RCHGFU*RCHGFT*XNPH
+      if(iLAKE(n2,n1).eq.1)then
+      FLWL(N,M6,M5,M4)=0.0
+      FLWHL(N,M6,M5,M4)=0.0
+      endif
       HFLWL(N,M6,M5,M4)=4.19*TK1(N3,N2,N1)
      2*(FLWL(N,M6,M5,M4)+FLWHL(N,M6,M5,M4))
 C     IF(I.EQ.336)THEN
@@ -4169,6 +4237,7 @@ C
       IF(PSISWT.LT.0.0)PSISWT=PSISWT-PSISWD
       FLWT=PSISWT*HCND(N,1,N3,N2,N1)*AREA(N,N3,N2,N1)
      2*(1.0-AREAU(N3,N2,N1))/(RCHGFU+1.0)*RCHGFT*XNPH
+      if(iLAKE(N2,N1).eq.1)FLWT=0.0
       FLWL(N,M6,M5,M4)=XN*FLWT
       FLWLX(N,M6,M5,M4)=XN*FLWT
       HFLWL(N,M6,M5,M4)=4.19*TK1(N3,N2,N1)*XN*FLWT
@@ -4256,6 +4325,7 @@ C
       IF(PSISWT.LT.0.0)PSISWT=PSISWT-PSISWD
       FLWT=PSISWT*HCND(N,1,N3,N2,N1)*AREA(N,N3,N2,N1)
      2*(1.0-AREAUD(N3,N2,N1))/(RCHGFU+1.0)*RCHGFT*XNPH
+      if(iLAKE(N2,N1).eq.1)FLWT=0.0
       FLWL(N,M6,M5,M4)=FLWL(N,M6,M5,M4)+XN*FLWT
       FLWLX(N,M6,M5,M4)=FLWLX(N,M6,M5,M4)+XN*FLWT
       HFLWL(N,M6,M5,M4)=HFLWL(N,M6,M5,M4)+4.19*TK1(N3,N2,N1)*XN*FLWT
@@ -4353,6 +4423,10 @@ C
       FLWUL=FLWU
       FLWUX=FLWU
       ENDIF
+      if(iLAKE(N2,N1).EQ.1)THEN
+      FLWUL=0.0
+      FLWUX=0.0
+      ENDIF
       FLWL(N,M6,M5,M4)=FLWL(N,M6,M5,M4)+XN*FLWUL
       FLWLX(N,M6,M5,M4)=FLWLX(N,M6,M5,M4)+XN*FLWUX
       HFLWL(N,M6,M5,M4)=HFLWL(N,M6,M5,M4)+4.19*TK1(N3,N2,N1)
@@ -4437,10 +4511,14 @@ C
      2-TKSD(N2,N1))*TCNDG/(DPTHSK(N2,N1)-CDPTH(N3,N2,N1))
      3*AREA(N,N3,N2,N1)*XNPH
       ENDIF
+      IF(iLAKE(NY,NX).EQ.0)THEN
       FLW(N,M6,M5,M4)=FLW(N,M6,M5,M4)+FLWL(N,M6,M5,M4)
       FLWX(N,M6,M5,M4)=FLWX(N,M6,M5,M4)+FLWLX(N,M6,M5,M4)
       FLWH(N,M6,M5,M4)=FLWH(N,M6,M5,M4)+FLWHL(N,M6,M5,M4)
+      ENDIF
       HFLW(N,M6,M5,M4)=HFLW(N,M6,M5,M4)+HFLWL(N,M6,M5,M4)
+C      if(M6==N6X(N2,N1).or.M6<3)write(*,*)'mmmm',M6
+C     2,HFLW(N,M6,M5,M4),HFLWL(N,M6,M5,M4)
       FLWM(M,N,M6,M5,M4)=FLWL(N,M6,M5,M4)
       FLWHM(M,N,M6,M5,M4)=FLWHL(N,M6,M5,M4)
       ENDIF
@@ -4452,7 +4530,15 @@ C
       FLWM(M,N,M6,M5,M4)=0.0
       FLWHM(M,N,M6,M5,M4)=0.0
       ENDIF
+C      if(N6<=2)then
+C      write(*,*)'n9575',M,M6,M6,M4,HFLWL(N,M6,M5,M4)
+C      endif
 9575  CONTINUE
+C      if(N6<=2)then
+C      write(*,*)'in9575',M,N6,N5,N4,N1,N2,N3,HFLWL(N,N3,N2,N1)
+C     2,HFLWL(N,N6,N5,N4)
+C      endif
+
 C
 C     NET WATER AND HEAT FLUXES IN RUNOFF AND SNOW DRIFT
 C
@@ -4518,6 +4604,7 @@ C
       ENDIF
 1200  CONTINUE
 1201  CONTINUE
+CCC
       IF(VOLX(N3,N2,N1).GT.ZEROS2(N2,N1))THEN
       TFLWL(N3,N2,N1)=TFLWL(N3,N2,N1)+FLWL(N,N3,N2,N1)
      2-FLWL(N,N6,N5,N4)
@@ -4527,6 +4614,11 @@ C
      2-FLWHL(N,N6,N5,N4)
       THFLWL(N3,N2,N1)=THFLWL(N3,N2,N1)+HFLWL(N,N3,N2,N1)
      2-HFLWL(N,N6,N5,N4)
+C      IF(N3<=2)THEN
+C      WRITE(*,*)'watawTHFLWL',M,N3,N,N1,N6,N5,N4
+C     2,THFLWL(N3,N2,N1),HFLWL(N,N3,N2,N1)
+C     3,HFLWL(N,N6,N5,N4),HFLW(N,N3,N2,N1),HFLW(N,N6,N5,N4)
+C      ENDIF
 C     IF(N3.EQ.1)THEN
 C     WRITE(*,3378)'THFLW',I,J,M,N1,N2,N3,N4,N5,N6,N
 C    2,TFLWL(N3,N2,N1),FLWL(N,N3,N2,N1),FLWL(N,N6,N5,N4)
@@ -4570,7 +4662,9 @@ C
       FINHL(N3,N2,N1)=AMIN1(0.0,AMAX1(FINHX,-VOLPH1X,-VOLW1X))
       ENDIF
       FINHM(M,N3,N2,N1)=FINHL(N3,N2,N1)
+      IF(iLAKE(NY,NX).EQ.0)THEN
       FINH(N3,N2,N1)=FINH(N3,N2,N1)+FINHL(N3,N2,N1)
+      ENDIF
 C     IF(NX.EQ.1.AND.NY.EQ.1)THEN
 C     WRITE(*,3366)'FINHL',I,J,M,N4,N5,N6,IFLGH,FINHL(N3,N2,N1)
 C    3,FINHX,VOLWH1(N3,N2,N1),VOLPH1(N3,N2,N1),VOLP1(N3,N2,N1)
@@ -4691,7 +4785,7 @@ C
 C
 C     UPDATE STATE VARIABLES FROM FLUXES CALCULATED ABOVE
 C
-      IF(M.NE.NPH)THEN
+C      IF(M.NE.NPH)THEN
       DO 9795 NX=NHW,NHE
       DO 9790 NY=NVN,NVS
 C
@@ -4896,11 +4990,25 @@ C     VHCP1,VHCM=volumetric heat capacities of total volume, solid
 C     VHCP1A,VHCP1B=volumetric heat capacities of soil+micropore,macropore
 C     TK1=soil temperature
 C
+C     FOR LAKE turnoff the update of water content
+      if(iLAKE(NY,NX).EQ.1)THEN
+      DO 9784 L=NUM(NY,NX),NL(NY,NX)
+        TFLWL(L,NY,NX)=0.0
+        TFLWLX(L,NY,NX)=0.0
+        FLU1(L,NY,NX)=0.0
+        FINHL(L,NY,NX)=0.0
+9784  CONTINUE
+      ENDIF
       DO 9785 L=NUM(NY,NX),NL(NY,NX)
       IF(VOLT(L,NY,NX).GT.ZEROS2(NY,NX))THEN
-      VOLw10=VOLW1(L,NY,NX)
+      VOLw10=VOLW1(L,NY,NX)      
       VOLW1(L,NY,NX)=VOLW1(L,NY,NX)+TFLWL(L,NY,NX)
      2+FINHL(L,NY,NX)+TWFLXL(L,NY,NX)+FLU1(L,NY,NX)
+C      if(L<=1)then
+C      write(*,*)'volw',M,L,VOLW(L,NY,NX),VOLw10,VOLW1(L,NY,NX)
+C     2,TFLWL(L,NY,NX),FINHL(L,NY,NX),TWFLXL(L,NY,NX)
+C     3,FLU1(L,NY,NX)
+C      endif
 C      if(VOLW1(L,NY,NX)/=VOLW1(L,NY,NX))then
 C      print*,'volw',L,VOLw10
 C      print*,TFLWL(L,NY,NX),
@@ -4982,12 +5090,15 @@ C     ENDIF
 C
 C     END ARTIFICIAL SOIL WARMING
 C
-      IF(VHCP1(L,NY,NX).GT.ZEROS(NY,NX))THEN
       tk1l=TK1(L,NY,NX)
+      IF(VHCP1(L,NY,NX).GT.ZEROS(NY,NX))THEN      
       TK1(L,NY,NX)=(ENGY1+THFLWL(L,NY,NX)+TTFLXL(L,NY,NX)
      2+HWFLU1(L,NY,NX))/VHCP1(L,NY,NX)
-      if(abs(TK1(L,NY,NX)/tk1l-1.)>0.025)then
-      TK1(L,NY,NX)=tk1l
+
+      if(TK1(L,NY,NX)>400.0)then
+      write(*,*)'watawTK1',M,L,TK1(L,NY,NX),tk1l 
+     2,ENGY1,THFLWL(L,NY,NX),TTFLXL(L,NY,NX)
+     2,HWFLU1(L,NY,NX),VHCP1(L,NY,NX)      
       endif
       ELSEIF(L.EQ.1)THEN
       TK1(L,NY,NX)=TKA(NY,NX)
@@ -5072,9 +5183,11 @@ C    4,VHCPNX(NY,NX),VHCP1(0,NY,NX)
 9971  CONTINUE
 9790  CONTINUE
 9795  CONTINUE
-      ELSE
+C      ENDIF
+      IF(M.EQ.NPH)THEN
       DO 9695 NX=NHW,NHE
       DO 9690 NY=NVN,NVS
+
       IF(NUM(NY,NX).EQ.NU(NY,NX))THEN
       FLWNU(NY,NX)=FLW(3,N6X(NY,NX),NY,NX)
       FLWXNU(NY,NX)=FLWX(3,N6X(NY,NX),NY,NX)
@@ -5086,6 +5199,11 @@ C    4,VHCPNX(NY,NX),VHCP1(0,NY,NX)
       FLWHNU(NY,NX)=FLWHNX(NY,NX)
       HFLWNU(NY,NX)=HFLWNX(NY,NX)
       ENDIF
+      if(iLAKE(NY,NX).EQ.1)then
+      FLWNU(NY,NX)=0.0
+      FLWXNU(NY,NX)=0.0
+      FLWHNU(NY,NX)=0.0
+      endif
 9690  CONTINUE
 9695  CONTINUE
       ENDIF

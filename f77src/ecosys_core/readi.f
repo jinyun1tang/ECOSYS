@@ -67,12 +67,13 @@ C       :=1 means allowing freeze-thaw plus erosion to change elevation
 C       :=2 means allowing freeze-thaw plus SOC accumulation to change elevation
 C       :=3 means allowing freeze-thaw plus SOC accumulation, plus erosion to change elevation
 C       :=-1 means no change in elevation.
-      READ(1,*)(datav(jj),jj=1,4)
+      READ(1,*)(datav(jj),jj=1,5)
 	  ALATG=datav(1)
 	  ALTIG=datav(2)
 	  ATCAG=datav(3)
 	  IDTBLG=int(datav(4))
-C      READ(1,*)ALATG,ALTIG,ATCAG,IDTBLG
+        iLAKEG=int(datav(5))
+C      READ(1,*)ALATG,ALTIG,ATCAG,IDTBLG,iLAKEG
       READ(1,*)OXYEG,Z2GEG,CO2EIG,CH4EG,Z2OEG,ZNH3EG
       READ(1,*)IETYPG,ISALTG,IERSNG,NCNG,DTBLIG,DTBLDIG,DTBLGG
       READ(1,*)RCHQNG,RCHQEG,RCHQSG,RCHQWG,RCHGNUG,RCHGEUG,RCHGSUG
@@ -80,6 +81,7 @@ C      READ(1,*)ALATG,ALTIG,ATCAG,IDTBLG
       READ(1,*)(DHI(NX),NX=1,NHE)
       READ(1,*)(DVI(NY),NY=1,NVS)
       CLOSE(1)
+      
       DO 9895 NX=NHW,NHE
       DO 9890 NY=NVN,NVS
       ALAT(NY,NX)=ALATG
@@ -93,7 +95,8 @@ C      READ(1,*)ALATG,ALTIG,ATCAG,IDTBLG
       Z2OE(NY,NX)=Z2OEG
       ZNH3E(NY,NX)=ZNH3EG
       IETYP(NY,NX)=IETYPG
-      NCN(NY,NX)=NCNG
+      NCN(NY,NX)=max(NCNG,1)
+      iLAKE(NY,NX)=iLAKEG
       DTBLI(NY,NX)=DTBLIG
       DTBLDI(NY,NX)=DTBLDIG
       DTBLG(NY,NX)=DTBLGG
