@@ -4443,6 +4443,7 @@ C
       else
       VOLW(L,NY,NX)=VOLW(L,NY,NX)+TFLW(L,NY,NX)+FINH(L,NY,NX)
      2+TTHAW(L,NY,NX)+TUPWTR(L,NY,NX)+FLU(L,NY,NX)
+
 C      if(VOLW(L,NY,NX)<0. .and. L==NU(NY,NX))then
 C      write(*,*)VOLWXX,VOLW(L,NY,NX),TFLW(L,NY,NX),FINH(L,NY,NX)
 C     2,TTHAW(L,NY,NX),TUPWTR(L,NY,NX),FLU(L,NY,NX)
