@@ -4439,14 +4439,14 @@ C
       if(iLAKE(NY,NX).EQ.1)then
       VOLW(L,NY,NX)=VOLW(L,NY,NX)+TFLW(L,NY,NX)+FINH(L,NY,NX)
      2+TTHAW(L,NY,NX)+FLU(L,NY,NX)
-      else
-      VOLW(L,NY,NX)=VOLW(L,NY,NX)+TFLW(L,NY,NX)+FINH(L,NY,NX)
-     2+TTHAW(L,NY,NX)+TUPWTR(L,NY,NX)+FLU(L,NY,NX)
-      endif
       if(abs(VOLW0-VOLW(L,NY,NX))>1.e-6)then
       write(*,*)'VLL=',L,TFLW(L,NY,NX),FINH(L,NY,NX)
      2,TTHAW(L,NY,NX),TUPWTR(L,NY,NX),FLU(L,NY,NX),PRECU(NY,NX)
       stop
+      endif
+      else
+      VOLW(L,NY,NX)=VOLW(L,NY,NX)+TFLW(L,NY,NX)+FINH(L,NY,NX)
+     2+TTHAW(L,NY,NX)+TUPWTR(L,NY,NX)+FLU(L,NY,NX)
       endif
 C      if(VOLW(L,NY,NX)<0. .and. L==NU(NY,NX))then
 C      write(*,*)'negative water',L,VOLW(L,NY,NX),tksx,VOLI(L,NY,NX)
