@@ -33,6 +33,7 @@ C     make output directory
       outdir='./outputs/'
       ENDIF
       call system('mkdir -p '//trim(outdir))
+      call bkinit()
 C
 C     READ INPUT FILES
 C
