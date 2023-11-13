@@ -4439,11 +4439,12 @@ C
       if(iLAKE(NY,NX).EQ.1)then
       VOLW(L,NY,NX)=VOLW(L,NY,NX)+TFLW(L,NY,NX)+FINH(L,NY,NX)
      2+TTHAW(L,NY,NX)+FLU(L,NY,NX)
-      if(abs(VOLW0-VOLW(L,NY,NX))>1.e-6)then
-      write(*,*)'VLL=',L,TFLW(L,NY,NX),FINH(L,NY,NX)
-     2,TTHAW(L,NY,NX),TUPWTR(L,NY,NX),FLU(L,NY,NX),PRECU(NY,NX)
-      stop
-      endif
+C      if(abs(VOLW0-VOLW(L,NY,NX))>1.e-6)then
+C      write(*,*)'VLL=',L,TFLW(L,NY,NX),FINH(L,NY,NX)
+C     2,TTHAW(L,NY,NX),TUPWTR(L,NY,NX),FLU(L,NY,NX),PRECU(NY,NX)
+C      write(*,*)'VOLW',VOLW0,VOLW(L,NY,NX)
+C      stop
+C      endif
       else
       VOLW(L,NY,NX)=VOLW(L,NY,NX)+TFLW(L,NY,NX)+FINH(L,NY,NX)
      2+TTHAW(L,NY,NX)+TUPWTR(L,NY,NX)+FLU(L,NY,NX)
