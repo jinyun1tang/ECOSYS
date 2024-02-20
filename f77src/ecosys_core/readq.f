@@ -21,6 +21,14 @@ C
       CHARACTER*8 CDATE
       CHARACTER*80 PREFIX
       PARAMETER (TWILGT=0.06976)
+      CHARACTER*60 fnm_loc
+      integer :: iqfile
+      iqfile=111
+      if(idispq==1)then
+      write(fnm_loc,'(A,I4,A)')'plant_trait.',IYRC,'.desc'
+      open(unit=iqfile, file=fnm_loc, status='replace'
+     2, action='write', iostat=ierr)
+      endif
       DO 9995 NX=NHW,NHE
       DO 9990 NY=NVN,NVS
       DO 9985 NZ=1,NP(NY,NX)	
@@ -175,6 +183,369 @@ C
       READ(11,*)CPLF(NZ,NY,NX),CPSHE(NZ,NY,NX),CPSTK(NZ,NY,NX)
      2,CPRSV(NZ,NY,NX),CPHSK(NZ,NY,NX),CPEAR(NZ,NY,NX)
      3,CPGR(NZ,NY,NX),CPRT(NZ,NY,NX),CPND(NZ,NY,NX)
+
+      if(idispq==1)then
+      write(iqfile,*)('=',j=1,100)
+      write(iqfile,*)'PLANT traits for FUNCTIONAL TYPE (NZ,NY,NX)='
+     2,NZ,NY,NX,DATAP(NZ,NY,NX)(1:6)
+      write(iqfile,*)'Plant name: ',DATAP(NZ,NY,NX)(1:6)
+      write(iqfile,*)'koppen climate zone:',IETYP(NY,NX)
+      select CASE (ICTYP(NZ,NY,NX))
+      case (3)
+      write(iqfile,*)'C3 photosynthesis'
+      case (4)
+      write(iqfile,*)'C4 photosynthesis'
+      case default
+      write(iqfile,*)'photosynthesis type not defined'
+      end select
+
+      select case(IGTYP(NZ,NY,NX))
+      case (0)
+      write(iqfile,*)'shallow root profile, like bryophytes'
+      case (1)
+      write(iqfile,*)'intermediate root profile, like herbs'
+      case (2)
+      write(iqfile,*)'deep root profile, like trees'
+      case default
+      write(iqfile,*)'root profile not defined'
+      end select
+
+      select case (ISTYP(NZ,NY,NX))
+      case (0)
+      write(iqfile,*)'Annual plant'
+      case (1)
+      write(iqfile,*)'perennial plant'
+      case default
+      write(iqfile,*)'growth habit not defined'
+      end select
+
+      select case (IDTYP(NZ,NY,NX))
+      case (0)
+      write(iqfile,*)'determinate growth pattern'
+      case (1)
+      write(iqfile,*)'indetermimate growth pattern'
+      case default
+      write(iqfile,*)'growth pattern not defined'
+      end select
+
+      select case (INTYP(NZ,NY,NX))
+      ! 1,2, 3, e.g. legumes
+      case (1)
+      write(iqfile,*)'Rapid root N2 fixation symbiosis'
+      case (2)
+      write(iqfile,*)'Intermediate root N2 fixation symbiosis'
+      case (3)
+      write(iqfile,*)'Slow root N2 fixation symbiosis'
+      !4,5,6, e.g. cyanobacteria
+      case (4)
+      write(iqfile,*)'Rapid canopy N2 fixation symbiosis'
+      case (5)
+      write(iqfile,*)'Intermediate canopy N2 fixation symbiosis'
+      case (6)
+      write(iqfile,*)'Slow canopy N2 fixation symbiosis'
+      case default
+      write(iqfile,*)'No N2 fixation symbiosis defined'
+      end select
+
+      select case(IWTYP(NZ,NY,NX))
+      case (0)
+      write(iqfile,*)'phenology type: evergreen'
+      case (1)
+      write(iqfile,*)'phenology type: cold deciduous'
+      case (2)
+      write(iqfile,*)'phenology type: drought deciduous'
+      case (3)
+      write(iqfile,*)'phenology type: cold+drought deciduous'
+      case default
+      write(iqfile,*)'phenology type not defined'
+      end select
+
+      select case(IPTYP(NZ,NY,NX))
+      case (0)
+      write(iqfile,*)'day neutral photoperiod'
+      case (1)
+      write(iqfile,*)'short day photoperiod'
+      case (2)
+      write(iqfile,*)'long day photoperiod'
+      case default
+      write(iqfile,*)'photoperiod not defined'
+      end select
+
+      if(IGTYP(NZ,NY,NX).GT.1)then
+      select case(IBTYP(NZ,NY,NX))
+      case (0, 1)
+      write(iqfile,*)'Rapid tree biome turnover (deciduous)'
+      case (2)
+      write(iqfile,*)'Very slow tree biome '
+     2//'turnover (needleleaf evergreen)'
+      case (3)
+      write(iqfile,*)'Slow tree biome turnover '
+     2//'(Broadleaf evergreen)'
+      case (4)
+      write(iqfile,*)'Tree biome turnover semi-deciduous'
+      case (5)
+      write(iqfile,*)'Tree biome turnover semi-evergreen'
+      case default
+      write(iqfile,*)'Tree biome turnover not defined'
+      end select
+      else
+      select case(IBTYP(NZ,NY,NX))
+      case (0, 1)
+      write(iqfile,*)'Rapid all aboveground plant'
+     2//' biome turnover (herbaceous)'
+      case default
+      write(iqfile,*)'Plant biome turnover not defined'
+      end select
+      endif
+
+      select case(IRTYP(NZ,NY,NX))
+      case (0)
+      write(iqfile,*)'Above ground storage organ'
+      case (1)
+      write(iqfile,*)'Belowground storage organ'
+      case default
+      write(iqfile,*)'Storage organ not defined'
+      end select
+
+      select case(MY(NZ,NY,NX))
+      case (1)
+      write(iqfile,*)'No mycorrhizal'
+      case (2)
+      write(iqfile,*)'Mycorrhizal'
+      case default
+      write(iqfile,*)'Wrong option for mycorrhizae'
+      end select
+
+      select case(INT(ZTYPI(NZ,NY,NX)))
+      case (1)
+      write(iqfile,*)'thermal adaptation zone: arctic, boreal'
+      case (2)
+      write(iqfile,*)'thermal adaptation zone: cool temperate'
+      case (3)
+      write(iqfile,*)'thermal adaptation zone: warm temperate'
+      case (4)
+      write(iqfile,*)'thermal adaptation zone: subtropical'
+      case (5)
+      write(iqfile,*)'thermal adaptation zone: tropical'
+      case default
+      write(iqfile,*)'Not thermal adaptation zone defined'
+      end select
+
+      write(iqfile,*)('-',j=1,100)
+      write(iqfile,*)'PHOTOSYNTHETIC PROPERTIES'
+      write(iqfile,*)'Specific rubisco carboxylase '
+     2//'(umol C g-1 s-1) VCMX: ',VCMX(NZ,NY,NX)
+      write(iqfile,*)'Specific rubisco oxygenase'
+     2//' (umol O2 g-1 s-1) VOMX: ',VOMX(NZ,NY,NX)
+      write(iqfile,*)'Specific PEP carboxylase'
+     2//' activity (umol g-1 s-1) VCMX4: ',VCMX4(NZ,NY,NX)
+      write(iqfile,*)'Km for VmaxRubCarboxyRef_pft(uM) '
+     2//'XKCO2: ',XKCO2(NZ,NY,NX)
+      write(iqfile,*)'Km for VmaxRubOxyRef_pft (uM) XKO2: '
+     2,XKO2(NZ,NY,NX)
+      write(iqfile,*)'KM for VmaxPEPCarboxyRef_pft (uM) '
+     2//'XKCO24: ',XKCO24(NZ,NY,NX)
+      write(iqfile,*)'Fraction of leaf protein in rubisco'
+     2//' (g rub/(g protein)) RUBP: ',RUBP(NZ,NY,NX)
+      write(iqfile,*)'Fraction of leaf protein in PEP '
+     2//'carboxylase (g pep/(g protein)) PEPC: '
+     3,PEPC(NZ,NY,NX)
+      write(iqfile,*)'Specific chlorophyll activity'
+     2//' (umol e- gC-1 s-1) ETMX: ',ETMX(NZ,NY,NX)
+      if(ICTYP(NZ,NY,NX).eq.3)then
+      write(iqfile,*)'Fraction of leaf protein as '
+     2//'chlorophyll in mesophyll (C3) '
+     3//'(g Chl /(g protein)) CHL:',CHL(NZ,NY,NX)
+      elseif(ICTYP(NZ,NY,NX).eq.4)then
+      write(iqfile,*)'Fraction of leaf protein as'
+     2//' chlorophyll in bundle sheath(C4) '
+     3//'(g Chl /(g protein)) CHL:',CHL(NZ,NY,NX)
+      write(iqfile,*)'fraction of leaf protein in '
+     2//'mesophyll chlorophyll(C4)'
+     3//' (g Chl /(g protein)) CHL4:',CHL4(NZ,NY,NX)
+      endif
+      write(iqfile,*)'intercellular:atmospheric '
+     2//'CO2 concentration ratio FCO2:',FCO2(NZ,NY,NX)
+
+      write(iqfile,*)('-',j=1,100)
+      write(iqfile,*)'OPTICAL PROPERTIES'
+      write(iqfile,*)'leaf SW albedo ALBR:',ALBR(NZ,NY,NX)
+      write(iqfile,*)'leaf PAR albedo ALBP:',ALBP(NZ,NY,NX)
+      write(iqfile,*)'leaf SW transmission TAUR:',TAUR(NZ,NY,NX)
+      write(iqfile,*)'leaf PAR transmission TAUP:',TAUP(NZ,NY,NX)
+
+      write(iqfile,*)('-',j=1,100)
+      write(iqfile,*)'PHENOLOGICAL PROPERTIES'
+      write(iqfile,*)'rate of node initiation at '
+     2//'25oC (h-1) XRNI:',XRNI(NZ,NY,NX)
+      write(iqfile,*)'rate of leaf appearance at '
+     2//'25oC (h-1) XRLA:',XRLA(NZ,NY,NX)
+      write(iqfile,*)'chilling temperature for CO2 fixation, '
+     2//'seed loss (oC) CTC:',CTC(NZ,NY,NX)
+      write(iqfile,*)'hour requirement for spring '
+     2//'leafout VRNLI:',VRNLI
+      write(iqfile,*)'hour requirement for autumn'
+     2//' leafoff VRNXI:',VRNXI
+      write(iqfile,*)'leaf length:width ratio '
+     2//'WDLF:',WDLF(NZ,NY,NX)
+      write(iqfile,*)'nonstructural C concentration needed '
+     2//'for branching PB:',PB(NZ,NY,NX)
+
+      write(iqfile,*)('-',j=1,100)  
+      write(iqfile,*)'MORPHOLOGICAL PROPERTIES'
+      write(iqfile,*)'growth in leaf area vs mass '
+     2//'(m2 g-1) SLA1: ',SLA1(NZ,NY,NX)
+      write(iqfile,*)'growth in petiole length vs'
+     2//' mass (m g-1) SSL1: ',SSL1(NZ,NY,NX)
+      write(iqfile,*)'growth in internode length '
+     2//'vs mass (m g-1) SNL1:',SNL1(NZ,NY,NX)
+      write(iqfile,*)'fraction of leaf area in '
+     2//'0-22.5,45,67.5,90o inclination classes CLASS:'
+     3,(CLASS(N,NZ,NY,NX),N=1,4)
+      write(iqfile,*)'initial clumping factor CFI:'
+     2,CFI(NZ,NY,NX)
+      write(iqfile,*)'stem angle from horizontal'
+     2//' ANGBR:',ANGBR(NZ,NY,NX)
+      write(iqfile,*)'petiole angle from horizontal'
+     2//' ANGSH:',ANGSH(NZ,NY,NX)
+      write(iqfile,*)'maximum potential seed mumber from '
+     2//'pre-anthesis stalk growth STMX:',STMX(NZ,NY,NX)
+      write(iqfile,*)'maximum seed number per '
+     2//'STMX (none) SDMX:',SDMX(NZ,NY,NX)
+      write(iqfile,*)'maximum seed size per '
+     2//'SDMX (g) GRMX:',GRMX(NZ,NY,NX)
+      write(iqfile,*)'seed size at planting (gC)'
+     2//' GRDM:',GRDM(NZ,NY,NX)    
+      write(iqfile,*)'grain filling rate at 25 oC'
+     2//' (g seed-1 h-1) GFILL:',GFILL(NZ,NY,NX)
+      write(iqfile,*)'mass of dead standing biomass'
+     2//' at planting (gC m-2) WTSTDI:',WTSTDI(NZ,NY,NX)
+
+      write(iqfile,*)('-',j=1,100)
+      write(iqfile,*)'ROOT CHARACTERISTICS'
+      write(iqfile,*)'radius of primary roots (m) '
+     2//'RRAD1M:',RRAD1M(1,NZ,NY,NX)
+      write(iqfile,*)'radius of secondary roots (m)'
+     2//' RRAD2M:',RRAD2M(1,NZ,NY,NX)
+      write(iqfile,*)'primary/fine root porosity '
+     2//'(m3 m-3) PORT:',PORT(1,NZ,NY,NX)
+      write(iqfile,*)'nonstructural C concentration '
+     2//'needed for root branching (gC/gC) PR:'
+     3,PR(NZ,NY,NX)
+      write(iqfile,*)'radial root resistivity for '
+     2//'water uptake (m2 MPa-1 h-1) RSRR:'
+     3,RSRR(1,NZ,NY,NX)
+      write(iqfile,*)'axial root resistivity for '
+     2//'water uptake (m2 MPa-1 h-1) RSRA:'
+     3,RSRA(1,NZ,NY,NX)
+      write(iqfile,*)'rate constant for equilibrating'
+     2//' shoot-root nonstructural C concn PTSHT:'
+     3,PTSHT(NZ,NY,NX)
+      write(iqfile,*)'root branching frequency (m-1)'
+     2//' RTFQ:',RTFQ(NZ,NY,NX)
+
+      write(iqfile,*)('-',j=1,100)
+      write(iqfile,*)'ROOT UPTAKE PARAMETERS'
+      write(iqfile,*)'NH4 max uptake (g m-2 h-1) UPMXZH:'
+     2,UPMXZH(1,NZ,NY,NX)
+      write(iqfile,*)'NH4 uptake Km (uM) UPKMZH:'
+     2,UPKMZH(1,NZ,NY,NX)
+      write(iqfile,*)'NH4 uptake min concn (uM) UPMNZH:'
+     2,UPMNZH(1,NZ,NY,NX)
+      write(iqfile,*)'NO3 max uptake (g m-2 h-1) UPMXZO:'
+     2,UPMXZO(1,NZ,NY,NX)
+      write(iqfile,*)'NO3 uptake Km (uM) UPKMZO:'
+     2,UPKMZO(1,NZ,NY,NX)
+      write(iqfile,*)'NO3 uptake min concn (uM) UPMNZO:'
+     2,UPMNZO(1,NZ,NY,NX)
+      write(iqfile,*)'H2PO4 or H1PO4 max uptake '
+     2//'(g m-2 h-1) UPMXPO:',UPMXPO(1,NZ,NY,NX)
+      write(iqfile,*)'H2PO4 or H1PO4 uptake Km (uM) '
+     2//'UPKMPO:',UPKMPO(1,NZ,NY,NX)
+      write(iqfile,*)'H2PO4 or H1PO4 uptake min'
+     2//' conc (uM) UPMNPO:',UPMNPO(1,NZ,NY,NX)
+
+      write(iqfile,*)('-',j=1,100)  
+      write(iqfile,*)'WATER RELATIONS'
+      write(iqfile,*)'leaf osmotic potential at '
+     2//'zero leaf water potential (MPa) OSMO:'
+     3,OSMO(NZ,NY,NX)
+      write(iqfile,*)'shape parameter for '
+     2//'stomatal resistance vs leaf turgor potential RCS:'
+     3,RCS(NZ,NY,NX)
+      write(iqfile,*)'cuticular resistance (s m-1)'
+     2//' RSMX:',RSMX(NZ,NY,NX)
+
+      write(iqfile,*)('-',j=1,100)
+      write(iqfile,*)'ORGAN GROWTH YIELDS'
+      write(iqfile,*)'leaf dry matter C production vs '
+     2//'nonstructural C consumption (g g-1) DMLF:'
+     3,DMLF(NZ,NY,NX)
+      write(iqfile,*)'petiole dry matter C production vs '
+     2//'nonstructural C consumption (g g-1) DMSHE:'
+     3,DMSHE(NZ,NY,NX)
+      write(iqfile,*)'stalk dry matter C production vs '
+     2//'nonstructural C consumption (g g-1) DMSTK:'
+     3,DMSTK(NZ,NY,NX)
+      write(iqfile,*)'stalk reserve C production vs '
+     2//'nonstructural C consumption (g g-1) DMRSV:'
+     3,DMRSV(NZ,NY,NX)
+      write(iqfile,*)'husk dry matter C production vs '
+     2//'nonstructural Cconsumption (g g-1) DMHSK:'
+     3,DMHSK(NZ,NY,NX)
+      write(iqfile,*)'ear dry matter C production vs '
+     2//'nonstructural Cconsumption (g g-1) DMEAR:'
+     3,DMEAR(NZ,NY,NX)
+      write(iqfile,*)'grain C production vs nonstructural '
+     2//'C consumption (g g-1) DMGR:',DMGR(NZ,NY,NX)
+      write(iqfile,*)'root dry matter C production vs '
+     2//'nonstructural C consumption (g g-1) DMRT:'
+     3,DMRT(NZ,NY,NX)
+      write(iqfile,*)'nodule bacteria in root ,'
+     2//' canopy dry matter C production vs nonstructural'
+     3//' C consumption (g g-1) DMND:'
+     4,DMND(NZ,NY,NX)
+
+      write(iqfile,*)('-',j=1,100)
+      write(iqfile,*)'ORGAN N AND P CONCENTRATIONS'
+      write(iqfile,*)'NC ratio in plant leaves (gN/gC) '
+     2//'CNLF:',CNLF(NZ,NY,NX)
+      write(iqfile,*)'NC ratio in plant petiole (gN/gC) '
+     2//'CNSHE:',CNSHE(NZ,NY,NX)
+      write(iqfile,*)'NC ratio in plant stalk (gN/gC) '
+     2//'CNSTK:',CNSTK(NZ,NY,NX)
+      write(iqfile,*)'NC ratio in plant stalk reserve '
+     2//'(gN/gC) CNRSV:',CNRSV(NZ,NY,NX)
+      write(iqfile,*)'NC ratio in plant husk (gN/gC) '
+     2//'CNHSK:',CNHSK(NZ,NY,NX)
+      write(iqfile,*)'NC ratio in plant ear (gN/gC) '
+     2//'CNEAR:',CNEAR(NZ,NY,NX)
+      write(iqfile,*)'NC ratio in plant grain (gN/gC)'
+     2//' CNGR:',CNGR(NZ,NY,NX)
+      write(iqfile,*)'NC ratio in plant root (gN/gC) '
+     2//'CNRT:',CNRT(NZ,NY,NX)
+      write(iqfile,*)'NC ratio in plant nodule (gN/gC)'
+     2//' CNND:',CNND(NZ,NY,NX)
+      write(iqfile,*)'PC ratio in plant leaves (gP/gC)'
+     2//' CPLF:',CPLF(NZ,NY,NX)
+      write(iqfile,*)'PC ratio in plant petiole (gP/gC)'
+     2//' CPSHE:',CPSHE(NZ,NY,NX)
+      write(iqfile,*)'PC ratio in plant stalk (gP/gC)'
+     2//' CPSTK:',CPSTK(NZ,NY,NX)
+      write(iqfile,*)'PC ratio in plant stalk reserve'
+     2//' (gP/gC) CPRSV:',CPRSV(NZ,NY,NX)
+      write(iqfile,*)'PC ratio in plant husk (gP/gC)'
+     2//' CPHSK:',CPHSK(NZ,NY,NX)
+      write(iqfile,*)'PC ratio in plant ear (gP/gC) '
+     2//'CPEAR:',CPEAR(NZ,NY,NX)
+      write(iqfile,*)'PC ratio in plant grain (gP/gC) '
+     2//'CPGR:',CPGR(NZ,NY,NX)
+      write(iqfile,*)'PC ratio in plant root (gP/gC) '
+     2//'CPRT:',CPRT(NZ,NY,NX)
+      write(iqfile,*)'PC ratio in plant nodule (gP/gC) '
+     2//'CPND:',CPND(NZ,NY,NX)
+
+      endif
 C
 C     RE-CALCULATE PLANT INPUTS IN MODEL UNITS
 C
@@ -369,5 +740,8 @@ C
 9985  CONTINUE
 9990  CONTINUE
 9995  CONTINUE
+      if(idispq==1)then
+      close(iqfile)
+      endif
       RETURN
       END
