@@ -333,217 +333,218 @@ C
 
       write(iqfile,*)('-',j=1,100)
       write(iqfile,*)'PHOTOSYNTHETIC PROPERTIES'
-      write(iqfile,*)'Specific rubisco carboxylase '
-     2//'(umol C g-1 s-1) VCMX: ',VCMX(NZ,NY,NX)
-      write(iqfile,*)'Specific rubisco oxygenase'
-     2//' (umol O2 g-1 s-1) VOMX: ',VOMX(NZ,NY,NX)
-      write(iqfile,*)'Specific PEP carboxylase'
-     2//' activity (umol g-1 s-1) VCMX4: ',VCMX4(NZ,NY,NX)
-      write(iqfile,*)'Km for VmaxRubCarboxyRef_pft(uM) '
-     2//'XKCO2: ',XKCO2(NZ,NY,NX)
-      write(iqfile,*)'Km for VmaxRubOxyRef_pft (uM) XKO2: '
-     2,XKO2(NZ,NY,NX)
-      write(iqfile,*)'KM for VmaxPEPCarboxyRef_pft (uM) '
-     2//'XKCO24: ',XKCO24(NZ,NY,NX)
-      write(iqfile,*)'Fraction of leaf protein in rubisco'
-     2//' (g rub/(g protein)) RUBP: ',RUBP(NZ,NY,NX)
-      write(iqfile,*)'Fraction of leaf protein in PEP '
-     2//'carboxylase (g pep/(g protein)) PEPC: '
-     3,PEPC(NZ,NY,NX)
-      write(iqfile,*)'Specific chlorophyll activity'
-     2//' (umol e- gC-1 s-1) ETMX: ',ETMX(NZ,NY,NX)
+      call wrfixl(iqfile,'Specific rubisco carboxylase '
+     2//'(umol C g-1 s-1) VCMX',VCMX(NZ,NY,NX),90)
+      call wrfixl(iqfile,'Specific rubisco oxygenase'
+     2//' (umol O2 g-1 s-1) VOMX',VOMX(NZ,NY,NX),90)
+      call wrfixl(iqfile,'Specific PEP carboxylase'
+     2//' activity (umol g-1 s-1) VCMX4',VCMX4(NZ,NY,NX)
+     3,90)
+      call wrfixl(iqfile,'Km for VmaxRubCarboxyRef_pft(uM) '
+     2//'XKCO2',XKCO2(NZ,NY,NX),90)
+      call wrfixl(iqfile,'Km for VmaxRubOxyRef_pft (uM) XKO2'
+     2,XKO2(NZ,NY,NX),90)
+      call wrfixl(iqfile,'KM for VmaxPEPCarboxyRef_pft (uM) '
+     2//'XKCO24',XKCO24(NZ,NY,NX),90)
+      call wrfixl(iqfile,'Fraction of leaf protein in rubisco'
+     2//' (g rub/(g protein)) RUBP',RUBP(NZ,NY,NX),90)
+      call wrfixl(iqfile,'Fraction of leaf protein in PEP '
+     2//'carboxylase (g pep/(g protein)) PEPC'
+     3,PEPC(NZ,NY,NX),90)
+      call wrfixl(iqfile,'Specific chlorophyll activity'
+     2//' (umol e- gC-1 s-1) ETMX',ETMX(NZ,NY,NX),90)
       if(ICTYP(NZ,NY,NX).eq.3)then
-      write(iqfile,*)'Fraction of leaf protein as '
+      call wrfixl(iqfile,'Fraction of leaf protein as '
      2//'chlorophyll in mesophyll (C3) '
-     3//'(g Chl /(g protein)) CHL:',CHL(NZ,NY,NX)
+     3//'(g Chl /(g protein)) CHL',CHL(NZ,NY,NX),90)
       elseif(ICTYP(NZ,NY,NX).eq.4)then
-      write(iqfile,*)'Fraction of leaf protein as'
+      call wrfixl(iqfile,'Fraction of leaf protein as'
      2//' chlorophyll in bundle sheath(C4) '
-     3//'(g Chl /(g protein)) CHL:',CHL(NZ,NY,NX)
-      write(iqfile,*)'fraction of leaf protein in '
+     3//'(g Chl /(g protein)) CHL',CHL(NZ,NY,NX),90)
+      call wrfixl(iqfile,'fraction of leaf protein in '
      2//'mesophyll chlorophyll(C4)'
-     3//' (g Chl /(g protein)) CHL4:',CHL4(NZ,NY,NX)
+     3//' (g Chl /(g protein)) CHL4',CHL4(NZ,NY,NX),90)
       endif
-      write(iqfile,*)'intercellular:atmospheric '
-     2//'CO2 concentration ratio FCO2:',FCO2(NZ,NY,NX)
+      call wrfixl(iqfile,'intercellular:atmospheric '
+     2//'CO2 concentration ratio FCO2',FCO2(NZ,NY,NX),90)
 
       write(iqfile,*)('-',j=1,100)
       write(iqfile,*)'OPTICAL PROPERTIES'
-      write(iqfile,*)'leaf SW albedo ALBR:',ALBR(NZ,NY,NX)
-      write(iqfile,*)'leaf PAR albedo ALBP:',ALBP(NZ,NY,NX)
-      write(iqfile,*)'leaf SW transmission TAUR:',TAUR(NZ,NY,NX)
-      write(iqfile,*)'leaf PAR transmission TAUP:',TAUP(NZ,NY,NX)
+      call wrfixl(iqfile,'leaf SW albedo ALBR',ALBR(NZ,NY,NX),50)
+      call wrfixl(iqfile,'leaf PAR albedo ALBP',ALBP(NZ,NY,NX),50)
+      call wrfixl(iqfile,'leaf SW transmission TAUR',TAUR(NZ,NY,NX),50)
+      call wrfixl(iqfile,'leaf PAR transmission TAUP',TAUP(NZ,NY,NX),50)
 
       write(iqfile,*)('-',j=1,100)
       write(iqfile,*)'PHENOLOGICAL PROPERTIES'
-      write(iqfile,*)'rate of node initiation at '
-     2//'25oC (h-1) XRNI:',XRNI(NZ,NY,NX)
-      write(iqfile,*)'rate of leaf appearance at '
-     2//'25oC (h-1) XRLA:',XRLA(NZ,NY,NX)
-      write(iqfile,*)'chilling temperature for CO2 fixation, '
-     2//'seed loss (oC) CTC:',CTC(NZ,NY,NX)
-      write(iqfile,*)'hour requirement for spring '
-     2//'leafout VRNLI:',VRNLI
-      write(iqfile,*)'hour requirement for autumn'
-     2//' leafoff VRNXI:',VRNXI
-      write(iqfile,*)'leaf length:width ratio '
-     2//'WDLF:',WDLF(NZ,NY,NX)
-      write(iqfile,*)'nonstructural C concentration needed '
-     2//'for branching PB:',PB(NZ,NY,NX)
+      call wrfixl(iqfile,'rate of node initiation at '
+     2//'25oC (h-1) XRNI',XRNI(NZ,NY,NX),70)
+      call wrfixl(iqfile,'rate of leaf appearance at '
+     2//'25oC (h-1) XRLA',XRLA(NZ,NY,NX),70)
+      call wrfixl(iqfile,'chilling temperature for CO2 fixation, '
+     2//'seed loss (oC) CTC',CTC(NZ,NY,NX),70)
+      call wrfixl(iqfile,'hour requirement for spring '
+     2//'leafout VRNLI',VRNLI,70)
+      call wrfixl(iqfile,'hour requirement for autumn'
+     2//' leafoff VRNXI',VRNXI,70)
+      call wrfixl(iqfile,'leaf length:width ratio '
+     2//'WDLF',WDLF(NZ,NY,NX),70)
+      call wrfixl(iqfile,'nonstructural C concentration needed '
+     2//'for branching PB',PB(NZ,NY,NX),70)
 
       write(iqfile,*)('-',j=1,100)  
       write(iqfile,*)'MORPHOLOGICAL PROPERTIES'
-      write(iqfile,*)'growth in leaf area vs mass '
-     2//'(m2 g-1) SLA1: ',SLA1(NZ,NY,NX)
-      write(iqfile,*)'growth in petiole length vs'
-     2//' mass (m g-1) SSL1: ',SSL1(NZ,NY,NX)
-      write(iqfile,*)'growth in internode length '
-     2//'vs mass (m g-1) SNL1:',SNL1(NZ,NY,NX)
-      write(iqfile,*)'fraction of leaf area in '
-     2//'0-22.5,45,67.5,90o inclination classes CLASS:'
-     3,(CLASS(N,NZ,NY,NX),N=1,4)
-      write(iqfile,*)'initial clumping factor CFI:'
-     2,CFI(NZ,NY,NX)
-      write(iqfile,*)'stem angle from horizontal'
-     2//' ANGBR:',ANGBR(NZ,NY,NX)
-      write(iqfile,*)'petiole angle from horizontal'
-     2//' ANGSH:',ANGSH(NZ,NY,NX)
-      write(iqfile,*)'maximum potential seed mumber from '
-     2//'pre-anthesis stalk growth STMX:',STMX(NZ,NY,NX)
-      write(iqfile,*)'maximum seed number per '
-     2//'STMX (none) SDMX:',SDMX(NZ,NY,NX)
-      write(iqfile,*)'maximum seed size per '
-     2//'SDMX (g) GRMX:',GRMX(NZ,NY,NX)
-      write(iqfile,*)'seed size at planting (gC)'
-     2//' GRDM:',GRDM(NZ,NY,NX)    
-      write(iqfile,*)'grain filling rate at 25 oC'
-     2//' (g seed-1 h-1) GFILL:',GFILL(NZ,NY,NX)
-      write(iqfile,*)'mass of dead standing biomass'
-     2//' at planting (gC m-2) WTSTDI:',WTSTDI(NZ,NY,NX)
+      call wrfixl(iqfile,'growth in leaf area vs mass '
+     2//'(m2 g-1) SLA1',SLA1(NZ,NY,NX),70)
+      call wrfixl(iqfile,'growth in petiole length vs'
+     2//' mass (m g-1) SSL1',SSL1(NZ,NY,NX),70)
+      call wrfixl(iqfile,'growth in internode length '
+     2//'vs mass (m g-1) SNL1',SNL1(NZ,NY,NX),70)
+      call wafixl(iqfile,'fraction of leaf area in '
+     2//'0-22.5,45,67.5,90o inclination classes CLASS'
+     3,CLASS(1:4,NZ,NY,NX),70)
+      call wrfixl(iqfile,'initial clumping factor CFI'
+     2,CFI(NZ,NY,NX),70)
+      call wrfixl(iqfile,'stem angle from horizontal'
+     2//' ANGBR',ANGBR(NZ,NY,NX),70)
+      call wrfixl(iqfile,'petiole angle from horizontal'
+     2//' ANGSH',ANGSH(NZ,NY,NX),70)
+      call wrfixl(iqfile,'maximum potential seed mumber from '
+     2//'pre-anthesis stalk growth STMX',STMX(NZ,NY,NX),70)
+      call wrfixl(iqfile,'maximum seed number per '
+     2//'STMX (none) SDMX',SDMX(NZ,NY,NX),70)
+      call wrfixl(iqfile,'maximum seed size per '
+     2//'SDMX (g) GRMX',GRMX(NZ,NY,NX),70)
+      call wrfixl(iqfile,'seed size at planting (gC)'
+     2//' GRDM',GRDM(NZ,NY,NX),70)
+      call wrfixl(iqfile,'grain filling rate at 25 oC'
+     2//' (g seed-1 h-1) GFILL',GFILL(NZ,NY,NX),70)
+      call wrfixl(iqfile,'mass of dead standing biomass'
+     2//' at planting (gC m-2) WTSTDI',WTSTDI(NZ,NY,NX),70)
 
       write(iqfile,*)('-',j=1,100)
       write(iqfile,*)'ROOT CHARACTERISTICS'
-      write(iqfile,*)'radius of primary roots (m) '
-     2//'RRAD1M:',RRAD1M(1,NZ,NY,NX)
-      write(iqfile,*)'radius of secondary roots (m)'
-     2//' RRAD2M:',RRAD2M(1,NZ,NY,NX)
-      write(iqfile,*)'primary/fine root porosity '
-     2//'(m3 m-3) PORT:',PORT(1,NZ,NY,NX)
-      write(iqfile,*)'nonstructural C concentration '
-     2//'needed for root branching (gC/gC) PR:'
-     3,PR(NZ,NY,NX)
-      write(iqfile,*)'radial root resistivity for '
-     2//'water uptake (m2 MPa-1 h-1) RSRR:'
-     3,RSRR(1,NZ,NY,NX)
-      write(iqfile,*)'axial root resistivity for '
-     2//'water uptake (m2 MPa-1 h-1) RSRA:'
-     3,RSRA(1,NZ,NY,NX)
-      write(iqfile,*)'rate constant for equilibrating'
-     2//' shoot-root nonstructural C concn PTSHT:'
-     3,PTSHT(NZ,NY,NX)
-      write(iqfile,*)'root branching frequency (m-1)'
-     2//' RTFQ:',RTFQ(NZ,NY,NX)
+      call wrfixl(iqfile,'radius of primary roots (m) '
+     2//'RRAD1M',RRAD1M(1,NZ,NY,NX),70)
+      call wrfixl(iqfile,'radius of secondary roots (m)'
+     2//' RRAD2M',RRAD2M(1,NZ,NY,NX),70)
+      call wrfixl(iqfile,'primary/fine root porosity '
+     2//'(m3 m-3) PORT',PORT(1,NZ,NY,NX),70)
+      call wrfixl(iqfile,'nonstructural C concentration '
+     2//'needed for root branching (gC/gC) PR'
+     3,PR(NZ,NY,NX),70)
+      call wrfixl(iqfile,'radial root resistivity for '
+     2//'water uptake (m2 MPa-1 h-1) RSRR'
+     3,RSRR(1,NZ,NY,NX),70)
+      call wrfixl(iqfile,'axial root resistivity for '
+     2//'water uptake (m2 MPa-1 h-1) RSRA'
+     3,RSRA(1,NZ,NY,NX),70)
+      call wrfixl(iqfile,'rate constant for equilibrating'
+     2//' shoot-root nonstructural C concn PTSHT'
+     3,PTSHT(NZ,NY,NX),70)
+      call wrfixl(iqfile,'root branching frequency (m-1)'
+     2//' RTFQ',RTFQ(NZ,NY,NX),70)
 
       write(iqfile,*)('-',j=1,100)
       write(iqfile,*)'ROOT UPTAKE PARAMETERS'
-      write(iqfile,*)'NH4 max uptake (g m-2 h-1) UPMXZH:'
-     2,UPMXZH(1,NZ,NY,NX)
-      write(iqfile,*)'NH4 uptake Km (uM) UPKMZH:'
-     2,UPKMZH(1,NZ,NY,NX)
-      write(iqfile,*)'NH4 uptake min concn (uM) UPMNZH:'
-     2,UPMNZH(1,NZ,NY,NX)
-      write(iqfile,*)'NO3 max uptake (g m-2 h-1) UPMXZO:'
-     2,UPMXZO(1,NZ,NY,NX)
-      write(iqfile,*)'NO3 uptake Km (uM) UPKMZO:'
-     2,UPKMZO(1,NZ,NY,NX)
-      write(iqfile,*)'NO3 uptake min concn (uM) UPMNZO:'
-     2,UPMNZO(1,NZ,NY,NX)
-      write(iqfile,*)'H2PO4 or H1PO4 max uptake '
-     2//'(g m-2 h-1) UPMXPO:',UPMXPO(1,NZ,NY,NX)
-      write(iqfile,*)'H2PO4 or H1PO4 uptake Km (uM) '
-     2//'UPKMPO:',UPKMPO(1,NZ,NY,NX)
-      write(iqfile,*)'H2PO4 or H1PO4 uptake min'
-     2//' conc (uM) UPMNPO:',UPMNPO(1,NZ,NY,NX)
+      call wrfixl(iqfile,'NH4 max uptake (g m-2 h-1) UPMXZH'
+     2,UPMXZH(1,NZ,NY,NX),70)
+      call wrfixl(iqfile,'NH4 uptake Km (uM) UPKMZH'
+     2,UPKMZH(1,NZ,NY,NX),70)
+      call wrfixl(iqfile,'NH4 uptake min concn (uM) UPMNZH'
+     2,UPMNZH(1,NZ,NY,NX),70)
+      call wrfixl(iqfile,'NO3 max uptake (g m-2 h-1) UPMXZO'
+     2,UPMXZO(1,NZ,NY,NX),70)
+      call wrfixl(iqfile,'NO3 uptake Km (uM) UPKMZO'
+     2,UPKMZO(1,NZ,NY,NX),70)
+      call wrfixl(iqfile,'NO3 uptake min concn (uM) UPMNZO'
+     2,UPMNZO(1,NZ,NY,NX),70)
+      call wrfixl(iqfile,'H2PO4 or H1PO4 max uptake '
+     2//'(g m-2 h-1) UPMXPO',UPMXPO(1,NZ,NY,NX),70)
+      call wrfixl(iqfile,'H2PO4 or H1PO4 uptake Km (uM) '
+     2//'UPKMPO',UPKMPO(1,NZ,NY,NX),70)
+      call wrfixl(iqfile,'H2PO4 or H1PO4 uptake min'
+     2//' conc (uM) UPMNPO',UPMNPO(1,NZ,NY,NX),70)
 
       write(iqfile,*)('-',j=1,100)  
       write(iqfile,*)'WATER RELATIONS'
-      write(iqfile,*)'leaf osmotic potential at '
-     2//'zero leaf water potential (MPa) OSMO:'
-     3,OSMO(NZ,NY,NX)
-      write(iqfile,*)'shape parameter for '
-     2//'stomatal resistance vs leaf turgor potential RCS:'
-     3,RCS(NZ,NY,NX)
-      write(iqfile,*)'cuticular resistance (s m-1)'
-     2//' RSMX:',RSMX(NZ,NY,NX)
+      call wrfixl(iqfile,'leaf osmotic potential at '
+     2//'zero leaf water potential (MPa) OSMO'
+     3,OSMO(NZ,NY,NX),70)
+      call wrfixl(iqfile,'shape parameter for '
+     2//'stomatal resistance vs leaf turgor potential RCS'
+     3,RCS(NZ,NY,NX),70)
+      call wrfixl(iqfile,'cuticular resistance (s m-1)'
+     2//' RSMX',RSMX(NZ,NY,NX),70)
 
       write(iqfile,*)('-',j=1,100)
       write(iqfile,*)'ORGAN GROWTH YIELDS'
-      write(iqfile,*)'leaf dry matter C production vs '
-     2//'nonstructural C consumption (g g-1) DMLF:'
-     3,DMLF(NZ,NY,NX)
-      write(iqfile,*)'petiole dry matter C production vs '
-     2//'nonstructural C consumption (g g-1) DMSHE:'
-     3,DMSHE(NZ,NY,NX)
-      write(iqfile,*)'stalk dry matter C production vs '
-     2//'nonstructural C consumption (g g-1) DMSTK:'
-     3,DMSTK(NZ,NY,NX)
-      write(iqfile,*)'stalk reserve C production vs '
-     2//'nonstructural C consumption (g g-1) DMRSV:'
-     3,DMRSV(NZ,NY,NX)
-      write(iqfile,*)'husk dry matter C production vs '
-     2//'nonstructural Cconsumption (g g-1) DMHSK:'
-     3,DMHSK(NZ,NY,NX)
-      write(iqfile,*)'ear dry matter C production vs '
-     2//'nonstructural Cconsumption (g g-1) DMEAR:'
-     3,DMEAR(NZ,NY,NX)
-      write(iqfile,*)'grain C production vs nonstructural '
-     2//'C consumption (g g-1) DMGR:',DMGR(NZ,NY,NX)
-      write(iqfile,*)'root dry matter C production vs '
-     2//'nonstructural C consumption (g g-1) DMRT:'
-     3,DMRT(NZ,NY,NX)
-      write(iqfile,*)'nodule bacteria in root ,'
+      call wrfixl(iqfile,'leaf dry matter C production vs '
+     2//'nonstructural C consumption (g g-1) DMLF'
+     3,DMLF(NZ,NY,NX),101)
+      call wrfixl(iqfile,'petiole dry matter C production vs '
+     2//'nonstructural C consumption (g g-1) DMSHE'
+     3,DMSHE(NZ,NY,NX),101)
+      call wrfixl(iqfile,'stalk dry matter C production vs '
+     2//'nonstructural C consumption (g g-1) DMSTK'
+     3,DMSTK(NZ,NY,NX),101)
+      call wrfixl(iqfile,'stalk reserve C production vs '
+     2//'nonstructural C consumption (g g-1) DMRSV'
+     3,DMRSV(NZ,NY,NX),101)
+      call wrfixl(iqfile,'husk dry matter C production vs '
+     2//'nonstructural Cconsumption (g g-1) DMHSK'
+     3,DMHSK(NZ,NY,NX),101)
+      call wrfixl(iqfile,'ear dry matter C production vs '
+     2//'nonstructural Cconsumption (g g-1) DMEAR'
+     3,DMEAR(NZ,NY,NX),101)
+      call wrfixl(iqfile,'grain C production vs nonstructural '
+     2//'C consumption (g g-1) DMGR',DMGR(NZ,NY,NX),101)
+      call wrfixl(iqfile,'root dry matter C production vs '
+     2//'nonstructural C consumption (g g-1) DMRT'
+     3,DMRT(NZ,NY,NX),101)
+      call wrfixl(iqfile,'nodule bacteria in root,'
      2//' canopy dry matter C production vs nonstructural'
-     3//' C consumption (g g-1) DMND:'
-     4,DMND(NZ,NY,NX)
+     3//' C consumption (g g-1) DMND'
+     4,DMND(NZ,NY,NX),101)
 
       write(iqfile,*)('-',j=1,100)
       write(iqfile,*)'ORGAN N AND P CONCENTRATIONS'
-      write(iqfile,*)'NC ratio in plant leaves (gN/gC) '
-     2//'CNLF:',CNLF(NZ,NY,NX)
-      write(iqfile,*)'NC ratio in plant petiole (gN/gC) '
-     2//'CNSHE:',CNSHE(NZ,NY,NX)
-      write(iqfile,*)'NC ratio in plant stalk (gN/gC) '
-     2//'CNSTK:',CNSTK(NZ,NY,NX)
-      write(iqfile,*)'NC ratio in plant stalk reserve '
-     2//'(gN/gC) CNRSV:',CNRSV(NZ,NY,NX)
-      write(iqfile,*)'NC ratio in plant husk (gN/gC) '
-     2//'CNHSK:',CNHSK(NZ,NY,NX)
-      write(iqfile,*)'NC ratio in plant ear (gN/gC) '
-     2//'CNEAR:',CNEAR(NZ,NY,NX)
-      write(iqfile,*)'NC ratio in plant grain (gN/gC)'
-     2//' CNGR:',CNGR(NZ,NY,NX)
-      write(iqfile,*)'NC ratio in plant root (gN/gC) '
-     2//'CNRT:',CNRT(NZ,NY,NX)
-      write(iqfile,*)'NC ratio in plant nodule (gN/gC)'
-     2//' CNND:',CNND(NZ,NY,NX)
-      write(iqfile,*)'PC ratio in plant leaves (gP/gC)'
-     2//' CPLF:',CPLF(NZ,NY,NX)
-      write(iqfile,*)'PC ratio in plant petiole (gP/gC)'
-     2//' CPSHE:',CPSHE(NZ,NY,NX)
-      write(iqfile,*)'PC ratio in plant stalk (gP/gC)'
-     2//' CPSTK:',CPSTK(NZ,NY,NX)
-      write(iqfile,*)'PC ratio in plant stalk reserve'
-     2//' (gP/gC) CPRSV:',CPRSV(NZ,NY,NX)
-      write(iqfile,*)'PC ratio in plant husk (gP/gC)'
-     2//' CPHSK:',CPHSK(NZ,NY,NX)
-      write(iqfile,*)'PC ratio in plant ear (gP/gC) '
-     2//'CPEAR:',CPEAR(NZ,NY,NX)
-      write(iqfile,*)'PC ratio in plant grain (gP/gC) '
-     2//'CPGR:',CPGR(NZ,NY,NX)
-      write(iqfile,*)'PC ratio in plant root (gP/gC) '
-     2//'CPRT:',CPRT(NZ,NY,NX)
-      write(iqfile,*)'PC ratio in plant nodule (gP/gC) '
-     2//'CPND:',CPND(NZ,NY,NX)
+      call wrfixl(iqfile,'NC ratio in plant leaves (gN/gC) '
+     2//'CNLF:',CNLF(NZ,NY,NX),70)
+      call wrfixl(iqfile,'NC ratio in plant petiole (gN/gC) '
+     2//'CNSHE',CNSHE(NZ,NY,NX),70)
+      call wrfixl(iqfile,'NC ratio in plant stalk (gN/gC) '
+     2//'CNSTK',CNSTK(NZ,NY,NX),70)
+      call wrfixl(iqfile,'NC ratio in plant stalk reserve '
+     2//'(gN/gC) CNRSV',CNRSV(NZ,NY,NX),70)
+      call wrfixl(iqfile,'NC ratio in plant husk (gN/gC) '
+     2//'CNHSK',CNHSK(NZ,NY,NX),70)
+      call wrfixl(iqfile,'NC ratio in plant ear (gN/gC) '
+     2//'CNEAR',CNEAR(NZ,NY,NX),70)
+      call wrfixl(iqfile,'NC ratio in plant grain (gN/gC)'
+     2//' CNGR',CNGR(NZ,NY,NX),70)
+      call wrfixl(iqfile,'NC ratio in plant root (gN/gC) '
+     2//'CNRT',CNRT(NZ,NY,NX),70)
+      call wrfixl(iqfile,'NC ratio in plant nodule (gN/gC)'
+     2//' CNND',CNND(NZ,NY,NX),70)
+      call wrfixl(iqfile,'PC ratio in plant leaves (gP/gC)'
+     2//' CPLF',CPLF(NZ,NY,NX),70)
+      call wrfixl(iqfile,'PC ratio in plant petiole (gP/gC)'
+     2//' CPSHE',CPSHE(NZ,NY,NX),70)
+      call wrfixl(iqfile,'PC ratio in plant stalk (gP/gC)'
+     2//' CPSTK',CPSTK(NZ,NY,NX),70)
+      call wrfixl(iqfile,'PC ratio in plant stalk reserve'
+     2//' (gP/gC) CPRSV',CPRSV(NZ,NY,NX),70)
+      call wrfixl(iqfile,'PC ratio in plant husk (gP/gC)'
+     2//' CPHSK',CPHSK(NZ,NY,NX),70)
+      call wrfixl(iqfile,'PC ratio in plant ear (gP/gC) '
+     2//'CPEAR',CPEAR(NZ,NY,NX),70)
+      call wrfixl(iqfile,'PC ratio in plant grain (gP/gC) '
+     2//'CPGR',CPGR(NZ,NY,NX),70)
+      call wrfixl(iqfile,'PC ratio in plant root (gP/gC) '
+     2//'CPRT',CPRT(NZ,NY,NX),70)
+      call wrfixl(iqfile,'PC ratio in plant nodule (gP/gC) '
+     2//'CPND',CPND(NZ,NY,NX),70)
 
       endif
 C
@@ -744,4 +745,32 @@ C
       close(iqfile)
       endif
       RETURN
+      contains
+
+      subroutine wrfixl(nu_plt,desc,value,width)
+      implicit none
+      integer,intent(in)  :: nu_plt
+      character(len=*), intent(in) :: desc
+      integer, intent(in) :: width
+      real,intent(in) :: value
+
+      character(len=width) :: line
+      line=desc
+      line(width:width)=':'
+      write(nu_plt,*)line,value
+      end subroutine wrfixl
+
+      subroutine wafixl(nu_plt,desc,values,width)
+      implicit none
+      integer,intent(in)  :: nu_plt
+      character(len=*), intent(in) :: desc
+      integer, intent(in) :: width
+      real,dimension(:),intent(in) :: values
+
+      character(len=width) :: line
+      line=desc
+      line(width:width)=':'
+      write(nu_plt,*)line,values
+      end subroutine wafixl
+
       END
