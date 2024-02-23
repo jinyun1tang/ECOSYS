@@ -2670,7 +2670,7 @@ C
       RA1ST=RADS1(NZ,NY,NX)+RAYS1(NZ,NY,NX)
       RA1WT=RADW1(NZ,NY,NX)+RAYW1(NZ,NY,NX)
       RA1PT=RADP1(NZ,NY,NX)+RAYP1(NZ,NY,NX)
-      RA1QT=RADP1(NZ,NY,NX)+RAYQ1(NZ,NY,NX)
+      RA1QT=RADQ1(NZ,NY,NX)+RAYQ1(NZ,NY,NX)
       RA2ST=RADS2(NZ,NY,NX)+RAYS2(NZ,NY,NX)
       RA2WT=RADW2(NZ,NY,NX)+RAYW2(NZ,NY,NX)
       RA2PT=RADP2(NZ,NY,NX)+RAYP2(NZ,NY,NX)
@@ -3648,7 +3648,9 @@ C
       write(*,*)'check setup in opt file or soil file'
       stop
       endif
-
+      
+      write(103,*)NY,NX,J,(RADP(NZ,NY,NX),NZ=1,NP(NY,NX))
+      
 8995  CONTINUE
 8990  CONTINUE
       RETURN
