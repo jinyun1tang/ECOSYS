@@ -26,7 +26,8 @@ C
       CHARACTER*1 TTYPE,CTYPE,IVAR(20),VAR(50),TYP(50)
       CHARACTER*80 PREFIX
       DIMENSION IDAT(20),DAT(50),DATK(50),OUT(50)
-	  dimension datav(50)
+      CHARACTER*100 LINE
+      dimension datav(50)
       PARAMETER (TWILGT=0.06976)
       DATA IFLGY,IYRX,IYRD/0,0,0/
       SAVE N1,N2,N1X,N2X,IFLGY,IYRX,IYRD
@@ -222,12 +223,14 @@ C
      2,(VAR(K),K=1,NN)
       READ(3,'(50A1)')(TYP(K),K=1,NN)
 C      READ(3,*)Z0G,IFLGW,ZNOONG
-	  read(3,*)(datav(jl),jl=1,3)
-	  Z0G=datav(1)
-	  IFLGW=int(datav(2))
-	  ZNOONG=datav(3)
-      READ(3,*)PHRG,CN4RIG,CNORIG,CPORG,CALRG,CFERG,CCARG,CMGRG,CNARG
+      read(3,*)(datav(jl),jl=1,3)
+      Z0G=datav(1)
+      IFLGW=int(datav(2))
+      ZNOONG=datav(3)
+      READ(3,'(A)')LINE
+      READ(LINE,*)PHRG,CN4RIG,CNORIG,CPORG,CALRG,CFERG,CCARG,CMGRG,CNARG
      2,CKARG,CSORG,CCLRG
+
       DO 55 K=1,NN
       DATK(K)=0.0
 55    CONTINUE
