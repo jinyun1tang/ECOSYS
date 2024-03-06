@@ -1,0 +1,2 @@
+Inner structure of the grid cells (1 1 1 1 default) ,  landscape aspect (orientiation measured in degrees clockwise),  (EW , NS ) landscape slope (landscape steepnes in degrees), 0.0
+soil_data.txt

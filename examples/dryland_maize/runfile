@@ -19,7 +19,7 @@ scpd1
 sced1
 me02w.csv
 me02y
-NO
+me02m
 me02p
 scch1
 scwh1
@@ -47,7 +47,7 @@ scpd1
 sced1
 me04w.csv
 me04y
-NO
+me05m
 me04p
 scch1
 scwh1
@@ -75,7 +75,7 @@ scpd1
 sced1
 me06w.csv
 me06y
-NO
+me06m
 me06p
 scch1
 scwh1
@@ -87,4 +87,3 @@ scwd1
 scnd1
 scpd1
 sced1
-0  0

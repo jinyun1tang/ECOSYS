@@ -1,0 +1,96 @@
+#!/bin/bash
+#SBATCH --time=12:00:00
+#SBATCH --mem=1G
+./ecosys.x << eor > logdry
+1  1  1  1
+mesite
+metopo
+1  1
+6  25
+me01w.csv
+me01y
+me01m
+me01p
+scch1
+scwh1
+NO
+NO
+sceh1
+sccd1
+scwd1
+scnd1
+scpd1
+sced1
+me02w.csv
+me02y
+me02m
+me02p
+scch1
+scwh1
+NO
+NO
+sceh1
+sccd1
+scwd1
+scnd1
+scpd1
+sced1
+me03w.csv
+me03y
+me03m
+me03p
+scch1
+scwh1
+NO
+NO
+sceh1
+sccd1
+scwd1
+scnd1
+scpd1
+sced1
+me04w.csv
+me04y
+me04m
+me04p
+scch1
+scwh1
+NO
+NO
+sceh1
+sccd1
+scwd1
+scnd1
+scpd1
+sced1
+me05w.csv
+me05y
+me05m
+me05p
+scch1
+scwh1
+NO
+NO
+sceh1
+sccd1
+scwd1
+scnd1
+scpd1
+sced1
+me06w.csv
+me06y
+me06m
+me06p
+scch1
+scwh1
+NO
+NO
+sceh1
+sccd1
+scwd1
+scnd1
+scpd1
+sced1
+0  0
+eor
+echo "job complete"

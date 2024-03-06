@@ -1,0 +1,55 @@
+[water potentials at field capacity], [wilting point (MPa)], [wet soil albedo], [litter pH], [C,N,P] for each: fine(1,0),woody(0,0),manure(2,0) per surface litter (g m-2), surface litter type for: [plant], [manure] , [number of soil surface layer], [maximum rooting layer], [number of additional layers below rooting layer with data file], [number of additional layers below rooting layer without data file], [soil profile (0= natural, 1 = reconstructed)]
+For each layer up to maximum rooting layer + number of soil surface layer + number of additional layers below rooting layer the following properties AS INT/FLOAT need to be specified:
+depth to bottom (m) 
+initial bulk density (Mg m-3,0=water) 
+field capacity <0=unknown (m3 m-3) 
+wilting point:<0=unknown (m3 m-3) 
+vertical Ksat <0=unknown (mm h-1) 
+lateral Ksat:<0=unknown (mm h-1)
+sand contents (kg Mg-1)
+silt contents (kg Mg-1)
+macropore
+rock fraction
+pH
+cation exchange capacity:CEC<0=unknown (cmol Kg-1)
+anion exchange capacity
+total SOC (kg Mg-1)
+POC(part of SOC) (kg Mg-1)
+SON ( soil organic nitrogen ) <0=unknown (g Mg-1)
+SOP:<0=unknown (g Mg-1)
+soluble+exchangeable NH4 (g Mg-1)
+soluble+exchangeable NO3 (g Mg-1)
+soluble+exchangeable H2PO4 (g Mg-1)
+soluble concentration from sat. paste extract Al (g Mg-1) 
+soluble concentration from sat. paste extract Fe (g Mg-1) 
+soluble concentration from sat. paste extract Ca (g Mg-1) 
+soluble concentration from sat. paste extract Mg (g Mg-1) 
+soluble concentration from sat. paste extract Na (g Mg-1) 
+soluble concentration from sat. paste extract K (g Mg-1) 
+soluble concentration from sat. paste extract SO4-s (g Mg-1) 
+soluble concentration from sat. paste extract Cl (g Mg-1) 
+AlPO4 mineral concentration (g Mg-1)
+FePO4 mineral concentration (g Mg-1)
+CaHPO4 mineral concentration (g Mg-1)
+apatite mineral concentration (g Mg-1)
+AlOH3 mineral concentration (g Mg-1)
+FeOH3 mineral concentration (g Mg-1)
+CaSO4 mineral concentration (g Mg-1)
+CaCO3 mineral concentration (g Mg-1)
+Gapon selectivity coefficient for Ca-NH4
+Gapon selectivity coefficients for Ca-H
+Gapon selectivity coefficients for Ca-Al
+Gapon selectivity coefficients for Ca-Mg
+Gapon selectivity coefficients for Ca-Na
+Gapon selectivity coefficients for Ca-K
+Initial water contents >1=satd,1=Field Capacity,0=Wilting Point,<0=0,0 -1=m3 m-3
+Initial Ice contents >1=satd,1=Field Capacity,0=Wilting Point,<0=0,0  -1=m3 m-3
+Initial C in fine litter (g m-2)
+Initial N in fine litter (g m-2)
+Initial P in fine litter (g m-2)
+Initial C in woody litter (g m-2)
+Initial N in woody litter (g m-2)
+Initial P in woody litter (g m-2)
+Initial C in manure litter (g m-2)
+Initial N in manure litter (g m-2)
+Initial P in manure litter (g m-2)

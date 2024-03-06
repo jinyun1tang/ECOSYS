@@ -1,0 +1,12 @@
+start date of scenario DDMMYYYY
+end date of scenario DDMMYYYY
+start date of run DDMMYYYY
+generate files data (YES)
+generate checkpoint files (YES/NO)
+resume from earlier files (YES/NO)
+The next four lines contain annual changes in:
+[radiation, max temp, min temp, humidity, precip, irrigation, windspeed, atm CO2 concn, NH4, NO3 concn in precip] (INT/FLOAT)
+
+
+(number of cycles per hour for water,heat,solute flux calcns), (number of cycles per NPX for gas flux calcns), [output frequency for hourly, daily, checkpoint data DEFAULT = 1,1, 500] , changes to weather data (0=none,1=step,2=transient) (INT/FLOAT)
+

@@ -1,0 +1,76 @@
+{
+    "configurations": [
+        {
+            "name": "cool_maize_soybean_original",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/local/bin/ecosys.x",
+            "MIMode": "gdb",
+            "args": [
+                "<",
+                "runfile"
+            ],
+            "cwd": "${workspaceFolder}/../input_data/cool_temp_maize-soybean",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "warm_temp_maize_soybean_dryland",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/local/bin/ecosys.x",
+            "MIMode": "gdb",
+            "args": [
+                "<",
+                "runfile"
+            ],
+            "cwd": "${workspaceFolder}/data/warm_temp_maize-soybean_dryland",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "warm_tem_maize_soybean_irrigated",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/local/bin/ecosys.x",
+            "MIMode": "gdb",
+            "args": [
+                "<",
+                "runfile"
+            ],
+            "cwd": "${workspaceFolder}/data/warm_tem_maize_soybean_irrigated",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]
+        }
+    ]
+}
