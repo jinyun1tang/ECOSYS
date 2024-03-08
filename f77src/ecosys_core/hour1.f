@@ -3649,7 +3649,7 @@ C
       stop
       endif
       
-      write(103,*)NY,NX,J,(RADP(NZ,NY,NX),NZ=1,NP(NY,NX))
+C      write(103,*)NY,NX,J,(RADP(NZ,NY,NX),NZ=1,NP(NY,NX))
       
 8995  CONTINUE
 8990  CONTINUE

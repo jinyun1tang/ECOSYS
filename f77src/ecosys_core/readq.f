@@ -316,7 +316,7 @@ C
       write(iqfile,*)'Wrong option for mycorrhizae'
       end select
 
-      select case(INT(ZTYPI(NZ,NY,NX)))
+      select case(INT(ZTYPI(NZ,NY,NX)+0.5005))
       case (1)
       write(iqfile,*)'thermal adaptation zone: arctic, boreal'
       case (2)
