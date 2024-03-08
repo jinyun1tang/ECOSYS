@@ -1,0 +1,13 @@
+#!/bin/bash -l
+#SBATCH --job-name=ecosys_dk
+#SBATCH --partition=lr3
+#SBATCH --qos=lr_debug
+#SBATCH --account=ac_co2seq
+#SBATCH --mail-user=yaningliu@lbl.gov
+#SBATCH --mail-type=all
+#SBATCH --time=00:30:00
+#SBATCH --ntasks=16
+
+source activate py27
+export PYTHONPATH="/global/home/users/yaningl/repos/prome/scripts/python_scripts/romclass"
+python /global/home/users/yaningl/repos/prome/scripts/python_scripts/Test/driver_ecosys_DukeForest_tigres.py 2 >& out1.out 

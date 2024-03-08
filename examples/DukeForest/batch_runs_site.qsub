@@ -1,0 +1,23 @@
+cd ca_ca1_s
+qsub  -v RunFile="runca_ca1" -N "runca_ca1" ~/ecosys.pbs
+cd ..
+
+cd dl_s
+qsub  -v RunFile="rundl" -N "rundl" ~/ecosys.pbs
+cd ..
+
+cd dk3_s
+qsub  -v RunFile="rundk3" -N "rundk3" ~/ecosys.pbs
+cd ..
+
+cd oas_s
+qsub  -v RunFile="runoas" -N "runoas" ~/ecosys.pbs
+cd ..
+
+cd ojp_s
+qsub  -v RunFile="runojp" -N "runojp" ~/ecosys.pbs
+cd ..
+
+cd qfo_s
+qsub  -v RunFile="runqfo" -N "runqfo" ~/ecosys.pbs
+cd ..

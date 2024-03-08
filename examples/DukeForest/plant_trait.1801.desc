@@ -1,0 +1,230 @@
+ ====================================================================================================
+ PLANT traits for FUNCTIONAL TYPE (NZ,NY,NX)=           1           1           1 bspruc
+ Plant name: bspruc
+ koppen climate zone:           0
+ C3 photosynthesis
+ deep root profile, like trees
+ perennial plant
+ indetermimate growth pattern
+ No N2 fixation symbiosis defined
+ phenology type: evergreen
+ long day photoperiod
+ Very slow tree biome turnover (needleleaf evergreen)
+ Above ground storage organ
+ Mycorrhizal
+ thermal adaptation zone: subtropical
+ ----------------------------------------------------------------------------------------------------
+ PHOTOSYNTHETIC PROPERTIES
+ Specific rubisco carboxylase (umol C g-1 s-1) VCMX                                       :   45.0000000    
+ Specific rubisco oxygenase (umol O2 g-1 s-1) VOMX                                        :   9.50000000    
+ Specific PEP carboxylase activity (umol g-1 s-1) VCMX4                                   :   0.00000000    
+ Km for VmaxRubCarboxyRef_pft(uM) XKCO2                                                   :   12.5000000    
+ Km for VmaxRubOxyRef_pft (uM) XKO2                                                       :   500.000000    
+ KM for VmaxPEPCarboxyRef_pft (uM) XKCO24                                                 :   0.00000000    
+ Fraction of leaf protein in rubisco (g rub/(g protein)) RUBP                             :  0.125000000    
+ Fraction of leaf protein in PEP carboxylase (g pep/(g protein)) PEPC                     :   0.00000000    
+ Specific chlorophyll activity (umol e- gC-1 s-1) ETMX                                    :   450.000000    
+ Fraction of leaf protein as chlorophyll in mesophyll (C3) (g Chl /(g protein)) CHL       :   2.50000004E-02
+ intercellular:atmospheric CO2 concentration ratio FCO2                                   :  0.750000000    
+ ----------------------------------------------------------------------------------------------------
+ OPTICAL PROPERTIES
+ leaf SW albedo ALBR                              :  0.100000001    
+ leaf PAR albedo ALBP                             :   5.00000007E-02
+ leaf SW transmission TAUR                        :  0.100000001    
+ leaf PAR transmission TAUP                       :   5.00000007E-02
+ ----------------------------------------------------------------------------------------------------
+ PHENOLOGICAL PROPERTIES
+ rate of node initiation at 25oC (h-1) XRNI                           :   1.49999997E-02
+ rate of leaf appearance at 25oC (h-1) XRLA                           :   8.99999961E-03
+ chilling temperature for CO2 fixation, seed loss (oC) CTC            :   0.00000000    
+ hour requirement for spring leafout VRNLI                            :   2160.00000    
+ hour requirement for autumn leafoff VRNXI                            :   3600.00000    
+ leaf length:width ratio WDLF                                         :   4.00000000    
+ nonstructural C concentration needed for branching PB                :   10.0000000    
+ ----------------------------------------------------------------------------------------------------
+ MORPHOLOGICAL PROPERTIES
+ growth in leaf area vs mass (m2 g-1) SLA1                            :   8.29999987E-03
+ growth in petiole length vs mass (m g-1) SSL1                        :   5.00000007E-02
+ growth in internode length vs mass (m g-1) SNL1                      :  0.600000024    
+ fraction of leaf area in 0-22.5,45,67.5,90o inclination classes CLASS:  0.250000000      0.250000000      0.250000000      0.250000000    
+ initial clumping factor CFI                                          :  0.500000000    
+ stem angle from horizontal ANGBR                                     :   90.0000000    
+ petiole angle from horizontal ANGSH                                  :   0.00000000    
+ maximum potential seed mumber from pre-anthesis stalk growth STMX    :  0.100000001    
+ maximum seed number per STMX (none) SDMX                             :  0.100000001    
+ maximum seed size per SDMX (g) GRMX                                  :   10.0000000    
+ seed size at planting (gC) GRDM                                      :   10.0000000    
+ grain filling rate at 25 oC (g seed-1 h-1) GFILL                     :   1.99999996E-02
+ mass of dead standing biomass at planting (gC m-2) WTSTDI            :   0.00000000    
+ ----------------------------------------------------------------------------------------------------
+ ROOT CHARACTERISTICS
+ radius of primary roots (m) RRAD1M                                   :   1.00000005E-03
+ radius of secondary roots (m) RRAD2M                                 :   1.99999995E-04
+ primary/fine root porosity (m3 m-3) PORT                             :  0.250000000    
+ nonstructural C concentration needed for root branching (gC/gC) PR   :  0.100000001    
+ radial root resistivity for water uptake (m2 MPa-1 h-1) RSRR         :   10000.0000    
+ axial root resistivity for water uptake (m2 MPa-1 h-1) RSRA          :   4.00000000E+09
+ rate constant for equilibrating shoot-root nonstructural C concn PTSH:   3.74999992E-03
+ root branching frequency (m-1) RTFQ                                  :   250.000000    
+ ----------------------------------------------------------------------------------------------------
+ ROOT UPTAKE PARAMETERS
+ NH4 max uptake (g m-2 h-1) UPMXZH                                    :   4.99999989E-03
+ NH4 uptake Km (uM) UPKMZH                                            :  0.400000006    
+ NH4 uptake min concn (uM) UPMNZH                                     :   1.25000002E-02
+ NO3 max uptake (g m-2 h-1) UPMXZO                                    :   4.99999989E-03
+ NO3 uptake Km (uM) UPKMZO                                            :  0.349999994    
+ NO3 uptake min concn (uM) UPMNZO                                     :   2.99999993E-02
+ H2PO4 or H1PO4 max uptake (g m-2 h-1) UPMXPO                         :   1.00000005E-03
+ H2PO4 or H1PO4 uptake Km (uM) UPKMPO                                 :   7.50000030E-02
+ H2PO4 or H1PO4 uptake min conc (uM) UPMNPO                           :   2.00000009E-03
+ ----------------------------------------------------------------------------------------------------
+ WATER RELATIONS
+ leaf osmotic potential at zero leaf water potential (MPa) OSMO       :  -1.25000000    
+ shape parameter for stomatal resistance vs leaf turgor potential RCS :  -5.00000000    
+ cuticular resistance (s m-1) RSMX                                    :   5000.00000    
+ ----------------------------------------------------------------------------------------------------
+ ORGAN GROWTH YIELDS
+ leaf dry matter C production vs nonstructural C consumption (g g-1) DMLF                            :  0.759999990    
+ petiole dry matter C production vs nonstructural C consumption (g g-1) DMSHE                        :  0.759999990    
+ stalk dry matter C production vs nonstructural C consumption (g g-1) DMSTK                          :  0.800000012    
+ stalk reserve C production vs nonstructural C consumption (g g-1) DMRSV                             :  0.879999995    
+ husk dry matter C production vs nonstructural Cconsumption (g g-1) DMHSK                            :  0.759999990    
+ ear dry matter C production vs nonstructural Cconsumption (g g-1) DMEAR                             :  0.759999990    
+ grain C production vs nonstructural C consumption (g g-1) DMGR                                      :  0.879999995    
+ root dry matter C production vs nonstructural C consumption (g g-1) DMRT                            :  0.759999990    
+ nodule bacteria in root, canopy dry matter C production vs nonstructural C consumption (g g-1) DMND :  0.720000029    
+ ----------------------------------------------------------------------------------------------------
+ ORGAN N AND P CONCENTRATIONS
+ NC ratio in plant leaves (gN/gC) CNLF:                               :   4.50000018E-02
+ NC ratio in plant petiole (gN/gC) CNSHE                              :   1.99999996E-02
+ NC ratio in plant stalk (gN/gC) CNSTK                                :   4.00000019E-03
+ NC ratio in plant stalk reserve (gN/gC) CNRSV                        :   1.99999996E-02
+ NC ratio in plant husk (gN/gC) CNHSK                                 :   1.99999996E-02
+ NC ratio in plant ear (gN/gC) CNEAR                                  :   1.99999996E-02
+ NC ratio in plant grain (gN/gC) CNGR                                 :   1.99999996E-02
+ NC ratio in plant root (gN/gC) CNRT                                  :   1.99999996E-02
+ NC ratio in plant nodule (gN/gC) CNND                                :  0.100000001    
+ PC ratio in plant leaves (gP/gC) CPLF                                :   4.49999981E-03
+ PC ratio in plant petiole (gP/gC) CPSHE                              :   2.00000009E-03
+ PC ratio in plant stalk (gP/gC) CPSTK                                :   3.99999990E-04
+ PC ratio in plant stalk reserve (gP/gC) CPRSV                        :   2.00000009E-03
+ PC ratio in plant husk (gP/gC) CPHSK                                 :   2.00000009E-03
+ PC ratio in plant ear (gP/gC) CPEAR                                  :   2.00000009E-03
+ PC ratio in plant grain (gP/gC) CPGR                                 :   2.00000009E-03
+ PC ratio in plant root (gP/gC) CPRT                                  :   2.00000009E-03
+ PC ratio in plant nodule (gP/gC) CPND                                :   9.99999978E-03
+ ====================================================================================================
+ PLANT traits for FUNCTIONAL TYPE (NZ,NY,NX)=           2           1           1 moss3 
+ Plant name: moss3 
+ koppen climate zone:           0
+ C3 photosynthesis
+ shallow root profile, like bryophytes
+ perennial plant
+ indetermimate growth pattern
+ No N2 fixation symbiosis defined
+ phenology type: evergreen
+ day neutral photoperiod
+ Rapid all aboveground plant biome turnover (herbaceous)
+ Above ground storage organ
+ No mycorrhizal
+ thermal adaptation zone: warm temperate
+ ----------------------------------------------------------------------------------------------------
+ PHOTOSYNTHETIC PROPERTIES
+ Specific rubisco carboxylase (umol C g-1 s-1) VCMX                                       :   45.0000000    
+ Specific rubisco oxygenase (umol O2 g-1 s-1) VOMX                                        :   9.50000000    
+ Specific PEP carboxylase activity (umol g-1 s-1) VCMX4                                   :   0.00000000    
+ Km for VmaxRubCarboxyRef_pft(uM) XKCO2                                                   :   12.5000000    
+ Km for VmaxRubOxyRef_pft (uM) XKO2                                                       :   500.000000    
+ KM for VmaxPEPCarboxyRef_pft (uM) XKCO24                                                 :   0.00000000    
+ Fraction of leaf protein in rubisco (g rub/(g protein)) RUBP                             :  0.125000000    
+ Fraction of leaf protein in PEP carboxylase (g pep/(g protein)) PEPC                     :   0.00000000    
+ Specific chlorophyll activity (umol e- gC-1 s-1) ETMX                                    :   450.000000    
+ Fraction of leaf protein as chlorophyll in mesophyll (C3) (g Chl /(g protein)) CHL       :   2.50000004E-02
+ intercellular:atmospheric CO2 concentration ratio FCO2                                   :   1.00000000    
+ ----------------------------------------------------------------------------------------------------
+ OPTICAL PROPERTIES
+ leaf SW albedo ALBR                              :  0.200000003    
+ leaf PAR albedo ALBP                             :   7.50000030E-02
+ leaf SW transmission TAUR                        :  0.200000003    
+ leaf PAR transmission TAUP                       :   7.50000030E-02
+ ----------------------------------------------------------------------------------------------------
+ PHENOLOGICAL PROPERTIES
+ rate of node initiation at 25oC (h-1) XRNI                           :   1.49999997E-02
+ rate of leaf appearance at 25oC (h-1) XRLA                           :   8.99999961E-03
+ chilling temperature for CO2 fixation, seed loss (oC) CTC            :   0.00000000    
+ hour requirement for spring leafout VRNLI                            :   2880.00000    
+ hour requirement for autumn leafoff VRNXI                            :   2880.00000    
+ leaf length:width ratio WDLF                                         :   1.00000000    
+ nonstructural C concentration needed for branching PB                :  0.100000001    
+ ----------------------------------------------------------------------------------------------------
+ MORPHOLOGICAL PROPERTIES
+ growth in leaf area vs mass (m2 g-1) SLA1                            :   2.50000004E-02
+ growth in petiole length vs mass (m g-1) SSL1                        :   0.00000000    
+ growth in internode length vs mass (m g-1) SNL1                      :   0.00000000    
+ fraction of leaf area in 0-22.5,45,67.5,90o inclination classes CLASS:   1.00000000       0.00000000       0.00000000       0.00000000    
+ initial clumping factor CFI                                          :   1.00000000    
+ stem angle from horizontal ANGBR                                     :   0.00000000    
+ petiole angle from horizontal ANGSH                                  :   0.00000000    
+ maximum potential seed mumber from pre-anthesis stalk growth STMX    :   0.00000000    
+ maximum seed number per STMX (none) SDMX                             :   0.00000000    
+ maximum seed size per SDMX (g) GRMX                                  :   1.00000005E-03
+ seed size at planting (gC) GRDM                                      :   1.00000005E-03
+ grain filling rate at 25 oC (g seed-1 h-1) GFILL                     :   3.19999999E-05
+ mass of dead standing biomass at planting (gC m-2) WTSTDI            :   0.00000000    
+ ----------------------------------------------------------------------------------------------------
+ ROOT CHARACTERISTICS
+ radius of primary roots (m) RRAD1M                                   :   9.99999975E-05
+ radius of secondary roots (m) RRAD2M                                 :   9.99999975E-05
+ primary/fine root porosity (m3 m-3) PORT                             :  0.250000000    
+ nonstructural C concentration needed for root branching (gC/gC) PR   :  0.100000001    
+ radial root resistivity for water uptake (m2 MPa-1 h-1) RSRR         :   10000.0000    
+ axial root resistivity for water uptake (m2 MPa-1 h-1) RSRA          :   4.00000000E+09
+ rate constant for equilibrating shoot-root nonstructural C concn PTSH:   7.49999983E-03
+ root branching frequency (m-1) RTFQ                                  :   250.000000    
+ ----------------------------------------------------------------------------------------------------
+ ROOT UPTAKE PARAMETERS
+ NH4 max uptake (g m-2 h-1) UPMXZH                                    :   5.00000024E-04
+ NH4 uptake Km (uM) UPKMZH                                            :   3.99999991E-02
+ NH4 uptake min concn (uM) UPMNZH                                     :   1.24999997E-03
+ NO3 max uptake (g m-2 h-1) UPMXZO                                    :   5.00000024E-04
+ NO3 uptake Km (uM) UPKMZO                                            :   3.50000001E-02
+ NO3 uptake min concn (uM) UPMNZO                                     :   3.00000003E-03
+ H2PO4 or H1PO4 max uptake (g m-2 h-1) UPMXPO                         :   9.99999975E-05
+ H2PO4 or H1PO4 uptake Km (uM) UPKMPO                                 :   7.49999983E-03
+ H2PO4 or H1PO4 uptake min conc (uM) UPMNPO                           :   1.99999995E-04
+ ----------------------------------------------------------------------------------------------------
+ WATER RELATIONS
+ leaf osmotic potential at zero leaf water potential (MPa) OSMO       :  -1.25000000    
+ shape parameter for stomatal resistance vs leaf turgor potential RCS :   0.00000000    
+ cuticular resistance (s m-1) RSMX                                    :   500.000000    
+ ----------------------------------------------------------------------------------------------------
+ ORGAN GROWTH YIELDS
+ leaf dry matter C production vs nonstructural C consumption (g g-1) DMLF                            :  0.759999990    
+ petiole dry matter C production vs nonstructural C consumption (g g-1) DMSHE                        :  0.759999990    
+ stalk dry matter C production vs nonstructural C consumption (g g-1) DMSTK                          :  0.800000012    
+ stalk reserve C production vs nonstructural C consumption (g g-1) DMRSV                             :  0.879999995    
+ husk dry matter C production vs nonstructural Cconsumption (g g-1) DMHSK                            :  0.759999990    
+ ear dry matter C production vs nonstructural Cconsumption (g g-1) DMEAR                             :  0.759999990    
+ grain C production vs nonstructural C consumption (g g-1) DMGR                                      :  0.879999995    
+ root dry matter C production vs nonstructural C consumption (g g-1) DMRT                            :  0.759999990    
+ nodule bacteria in root, canopy dry matter C production vs nonstructural C consumption (g g-1) DMND :  0.720000029    
+ ----------------------------------------------------------------------------------------------------
+ ORGAN N AND P CONCENTRATIONS
+ NC ratio in plant leaves (gN/gC) CNLF:                               :   4.50000018E-02
+ NC ratio in plant petiole (gN/gC) CNSHE                              :   1.99999996E-02
+ NC ratio in plant stalk (gN/gC) CNSTK                                :   9.99999978E-03
+ NC ratio in plant stalk reserve (gN/gC) CNRSV                        :   1.99999996E-02
+ NC ratio in plant husk (gN/gC) CNHSK                                 :   1.99999996E-02
+ NC ratio in plant ear (gN/gC) CNEAR                                  :   1.99999996E-02
+ NC ratio in plant grain (gN/gC) CNGR                                 :   1.99999996E-02
+ NC ratio in plant root (gN/gC) CNRT                                  :   1.99999996E-02
+ NC ratio in plant nodule (gN/gC) CNND                                :  0.100000001    
+ PC ratio in plant leaves (gP/gC) CPLF                                :   4.49999981E-03
+ PC ratio in plant petiole (gP/gC) CPSHE                              :   2.00000009E-03
+ PC ratio in plant stalk (gP/gC) CPSTK                                :   1.00000005E-03
+ PC ratio in plant stalk reserve (gP/gC) CPRSV                        :   2.00000009E-03
+ PC ratio in plant husk (gP/gC) CPHSK                                 :   2.00000009E-03
+ PC ratio in plant ear (gP/gC) CPEAR                                  :   2.00000009E-03
+ PC ratio in plant grain (gP/gC) CPGR                                 :   2.00000009E-03
+ PC ratio in plant root (gP/gC) CPRT                                  :   2.00000009E-03
+ PC ratio in plant nodule (gP/gC) CPND                                :   9.99999978E-03

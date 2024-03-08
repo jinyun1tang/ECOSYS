@@ -1,0 +1,47 @@
+#!/bin/bash -l
+#SBATCH --job-name=ecosys_dk
+#SBATCH --partition=lr2
+#SBATCH --qos=lr_lowprio
+#SBATCH --account=ac_co2seq
+#SBATCH --mail-user=yaningliu@lbl.gov
+#SBATCH --mail-type=all
+#SBATCH --time=10:00:00
+#SBATCH --ntasks=1
+
+/global/home/users/yaningl/repos/src_120316/ecosysf77.exe << eor > log_dk3
+1 1 1 1
+stdk3
+tpdk3
+2 1
+1 1
+w03dk3
+opt2003_nowrtrst
+sm
+nlegg3
+hc
+hw
+hn
+hp
+hh
+dc
+dw
+NO
+NO
+NO
+1 1
+w04dk3
+opt2004_nowrtrst
+sm
+nlegg3
+hc
+hw
+hn
+hp
+hh
+dc
+dw
+NO
+NO
+NO
+0 0
+eor
