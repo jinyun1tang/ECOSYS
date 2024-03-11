@@ -391,6 +391,14 @@ C
      2//'WDLF',WDLF(NZ,NY,NX),70)
       call wrfixl(iqfile,'nonstructural C concentration needed '
      2//'for branching PB',PB(NZ,NY,NX),70)
+      call wrfixl(iqfile,'Maturity group, node number required '
+     2//'for floral initiation, GROUPX',GROUPX(NZ,NY,NX),70)
+      call wrfixl(iqfile,'Node number at planting XTLI'
+     2,XTLI(NZ,NY,NX),70)
+      call wrfixl(iqfile,'critical photoperiod (h) '
+     2//'<= maximum daylength XDL',XDL(NZ,NY,NX),70)
+      call wrfixl(iqfile,'photoperiod sensitivity (node h-1) XPPD'
+     2,XPPD(NZ,NY,NX),70)
 
       write(iqfile,*)('-',j=1,100)  
       write(iqfile,*)'MORPHOLOGICAL PROPERTIES'
