@@ -32,7 +32,7 @@ macro(set_up_compilers)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-sign-compare -Wno-unused-parameter ")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-int-to-pointer-cast -Wno-pointer-to-int-cast")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-function")
-
+    
   elseif (CMAKE_C_COMPILER_ID STREQUAL "Intel")
     if (CMAKE_BUILD_TYPE MATCHES "Debug")
       set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 -Wall -g")
@@ -46,6 +46,7 @@ macro(set_up_compilers)
   #
   # Fortran compiler flags.
   #
+  message("check fortran compiler")
   if (CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
    if (CMAKE_BUILD_TYPE MATCHES "Debug")
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -W -Wall -std=gnu -pedantic -finit-local-zero -Wall -cpp -g")
@@ -69,11 +70,22 @@ macro(set_up_compilers)
       if (CMAKE_BUILD_TYPE MATCHES "Debug")
         set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -g -debug -r8 -i4 -align dcommons -auto-scalar -fimf-arch-consistency=true")
       else()
-      set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -O2 -mp1 -r8 -i4 -align dcommons -auto-scalar -fimf-arch-consistency=true")
+        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -O2 -mp1 -r8 -i4 -align dcommons -auto-scalar -fimf-arch-consistency=true")
       endif()
     else()
       set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -O2 -mp1 -r8 -i4 -align dcommons -auto-scalar -fimf-arch-consistency=true")
     endif()
+  elseif()
+  
+  elseif (CMAKE_Fortran_COMPILER_ID STREQUAL "Flang")
+    set(CMAKE_Fortran_COMPILER /usr/local/bin/flang15)
+    include_directories(/opt/local/libexec/llvm-15/include)
+    link_directories(/opt/local/libexec/llvm-15/lib)
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -DCPRINTEL -flang-experimental-exec")
+
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -O2 -mp1 -r8 -i4 -align dcommons -auto-scalar -fimf-arch-consistency=true")
+
+
   endif()
 
 endmacro()

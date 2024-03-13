@@ -1,0 +1,22 @@
+./ecosys_write_extra.x << eor > log_dk3
+1 1 1 1
+stdk3
+tpdk3
+1 1
+1 1
+w05dk3
+opt2005
+sm
+nlegg3
+hc
+hw
+hn
+hp
+hh
+dc
+dw
+NO
+NO
+NO
+0 0
+eor

@@ -41,7 +41,7 @@ C
 C
 C     NUMBER OF COLUMNS AND ROWS
 C
-      READ(5,*)NHW,NVN,NHE,NVS
+      READ(5,*)NHW,NVN,NHE,NVS,idispq
 C
 C     SITE FILE
 C
