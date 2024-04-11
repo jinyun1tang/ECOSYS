@@ -35,8 +35,8 @@ C
 C
 C     OPEN AND NAME OUTPUT FILES
 C
-C     DATAC(21-30)=output file names from runscript read in �main.f�
-C     PREFIX=path for files in current or higher level directory
+C     DATAC(21-30)=output file names from runscript read in �main.f� 
+C     PREFIX=path for files in current or higher level directory 
 C        from �main.f�
 C     IYRC=current year
 C     OUTFILS=output file name for grid cell, year
@@ -67,7 +67,7 @@ C
 9990  CONTINUE
 9995  CONTINUE
       LUN=N+20
-      OPEN(LUN,FILE=trim(outdir)//OUTP(N-20),STATUS='UNKNOWN')
+      OPEN(LUN,FILE=trim(outdir)//OUTP(N-20),STATUS='UNKNOWN')      
 C
 C     WRITE HEADINGS TO OUTPUT FILES
 C
@@ -348,7 +348,7 @@ C
       ENDIF
       IF(N.EQ.30)THEN
 C
-C     DAILY PHENOLOGY,N, P, WATER, O2, TEMPERATURE STRESS
+C     DAILY PHENOLOGY,N, P, WATER, O2, TEMPERATURE STRESS 
 C
       DO 1030 L=51,100
       IF(CHOICE(L,N-20).EQ.'YES')THEN

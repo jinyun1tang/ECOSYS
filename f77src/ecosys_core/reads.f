@@ -26,7 +26,6 @@ C
       CHARACTER*1 TTYPE,CTYPE,IVAR(20),VAR(50),TYP(50)
       CHARACTER*80 PREFIX
       DIMENSION IDAT(20),DAT(50),DATK(50),OUT(50)
-      dimension datav(50)
       PARAMETER (TWILGT=0.06976)
       DATA IFLGY,IYRX,IYRD/0,0,0/
       SAVE N1,N2,N1X,N2X,IFLGY,IYRX,IYRD
@@ -35,7 +34,7 @@ C     OPEN WEATHER (DATAC(3,),OPTIONS (DATAC(4,) AND LAND MANAGEMENT
 C        (DATAC(9,) FILES FROM DATA ARRAYS READ IN MAIN.F
 C
 C     PREFIX=path for files in current or higher level directory 
-C        from main.f
+C        from ‘main.f’
 C
       OPEN(3,FILE=TRIM(PREFIX)//DATAC(3,NE,NEX),STATUS='OLD')
       OPEN(4,FILE=TRIM(PREFIX)//DATAC(4,NE,NEX),STATUS='OLD')
@@ -90,9 +89,9 @@ C        from those read in the weather file
 C        (temperature changes in oC, other changes relative to 
 C        existing values)  
 C     NPX=number of cycles per time step for water,heat,solute flux
-C        calculations (suggest 12)
+C        calculations (suggest 10)
 C     NPY=number of cycles per NPX for gas flux calculations 
-C        (suggest 3)
+C        (suggest 3-6)
 C     JOUT,IOUT,KOUT=output frequency for hourly,daily,checkpoint data
 C     ICLM=changes to weather data 
 C        :0=none (weather data are used as read)
@@ -109,6 +108,9 @@ C
       READ(4,*)DRAD(N),DTMPX(N),DTMPN(N),DHUM(N),DPREC(N)
      2,DIRRI(N),DWIND(N),DCO2E(N),DCN4R(N),DCNOR(N)
 25    CONTINUE
+C
+C     OPTION FOR ANNUAL CHANGES IN MONTHLY WEATHER NOT USED 
+C
       DO 26 N=5,12
       DRAD(N)=DRAD(N-1)
       DTMPX(N)=DTMPX(N-1)
@@ -124,10 +126,12 @@ C
       READ(4,*)NPX,NPY,JOUT,IOUT,KOUT,ICLM
 C
 C     INCREMENTS IN START AND END DATES FOR SUCCESSIVE SCENES
-C     FROM LOOPS FOR SCENES, SCENARIOS IN RUNSCRIPT SET IN MAIN.F
+C     FROM LOOPS FOR SCENES, SCENARIOS IN RUNSCRIPT SET IN ‘MAIN.F’
 C
-C     IDATA(3),IDATA(6)=start,end year of current scene
-C     IYRC=current year
+C     IDATA(3),IDATA(6)=start,end year of current scene calculated from
+C        start,end dates of previous scene using loop counters from
+C        ‘main.f’
+C     IYRC=year of current scene
 C     IGO: =0, first scene in first scenario.
 C
       NTZX=NTZ
@@ -173,11 +177,11 @@ C    3,NA(NEX),ND(NEX),NAX
 C
 C     OPEN CHECKPOINT FILES FOR SOIL VARIABLES
 C
-C     IDATE=year label for checkpoint files
+C     IDATE=year label for checkpoint files from start of original run
 C     DATA(1)=site file name
 C     W,N=water+heat,nutrient checkpoint files
-C     DATA(20)=’YES’:find checkpoint files
-C             =’NO’: start new run 
+C     DATA(20)=’YES’:find checkpoint files and resume from original run
+C             =’NO’:start new run in current year 
 C
       IF(IGO.EQ.0)THEN
       IF(DATA(20).EQ.'YES')THEN
@@ -230,9 +234,13 @@ C
 C     READ WEATHER DATA
 C
 C     DATAC(3,=weather file
-C     TTYPE=time step:S=subhourly,H=hourly,3=3-hourly,D=daily
-C     CTYPE=calendar format:J=Julian,C=calendar(day,month)
-C     NI,NN=number of time,weather data variables
+C     TTYPE=time step:S=subhourly
+C                    :H=hourly
+C                    :3=3-hourly
+C                    :D=daily
+C     CTYPE=calendar format:J=Julian
+C                          :C=calendar(day,month)
+C     NI,NN=number of time,weather data variables in weather file
 C     IVAR,VAR=time,weather variable type
 C     TYP=weather variable units
 C     Z0G=windspeed measurement height
@@ -248,31 +256,24 @@ C
       READ(3,'(2A1,2I2,50A1)')TTYPE,CTYPE,NI,NN,(IVAR(K),K=1,NI)
      2,(VAR(K),K=1,NN)
       READ(3,'(50A1)')(TYP(K),K=1,NN)
-      read(3,*)(datav(K),K=1,3)
-      Z0G=datav(1)
-      IFLGW=int(datav(2))
-      ZNOONG=datav(3)
+      READ(3,*)Z0G,IFLGW,ZNOONG
       READ(3,*)PHRG,CN4RIG,CNORIG,CPORG,CALRG,CFERG,CCARG,CMGRG,CNARG
      2,CKARG,CSORG,CCLRG
       DO 55 K=1,NN
       DATK(K)=0.0
 55    CONTINUE
       IH=1
-60    read(3,*,END=110)(datav(k),k=1,NI),(DAT(K),K=1,NN)
-      do k = 1, ni
-        idat(k)=int(datav(k))
-      enddo
-C     WRITE(*,61)(IDAT(K),K=1,NI),(DAT(K),K=1,NN)
-61    FORMAT(3I6,50E12.4)
+60    READ(3,*,END=110)(IDAT(K),K=1,NI),(DAT(K),K=1,NN)
+C     WRITE(*,61)'MET',(IDAT(K),K=1,NI),(DAT(K),K=1,NN)
+61    FORMAT(A8,4I6,50E12.4)
 C
 C     READ DAILY WEATHER DATA AND CONVERT TO MODEL UNITS
 C
       IF(TTYPE.EQ.'D')THEN
 C
-C     DERIVE DAY I FROM TIME VARIABLES IVAR
+C     DERIVE DOY I FROM TIME VARIABLES IN IVAR FROM WEATHER FILE
 C
-C     IWTHR=weather data type:1=daily,2=hourly for first(L=1) 
-C        or second(L=2) scene
+C     IWTHR=weather data type:1=daily 
 C
       IWTHR(L)=1
       DO 160 K=1,NI
@@ -314,14 +315,14 @@ C
       IF(I.LE.ILAST)GO TO 60
       ENDIF
 C
-C     CONVERT DAILY WEATHER VARIABLES TO MODEL UNITS 
-C     AND ENTER INTO MODEL ARRAYS
+C     CONVERT DAILY WEATHER VARIABLES IN TYP FROM WEATHER FILE 
+C     INTO MODEL UNITS AND ENTER INTO MODEL ARRAYS
 C
-C     TMPX,TMPN=maximum,minimum temperature (OC) 
-C     SRAD=solar radiation (MJ m-2 d-1)
-C     WIND=windspeed (m h-1)
-C     DWPT=vapor pressure (kPa)
-C     RAIN=precipitation (mm d-1)
+C     TMPX,TMPN=maximum (‘M’),minimum (‘N’)temperature (OC) 
+C     SRAD=solar radiation (‘R’) (MJ m-2 d-1)
+C     WIND=windspeed (‘W’)(m h-1)
+C     DWPT=vapor pressure (‘H’)(kPa)
+C     RAIN=precipitation (‘P’)(mm d-1)
 C
       DO 65 K=1,NN
 C
@@ -440,7 +441,10 @@ C     READ HOURLY WEATHER DATA AND CONVERT TO MODEL UNITS
 C
       ELSE
 C
-C     DERIVE DAY I AND HOUR J FROM TIME VARIABLES IVAR
+C     DERIVE DAY I AND HOUR J FROM TIME VARIABLES IN IVAR 
+C     FROM WEATHER FILE 
+C
+C     IWTHR=weather data type:2=sub-daily 
 C
       IWTHR(L)=2
       DO 190 K=1,NI
@@ -494,15 +498,16 @@ C
       ENDIF
       XRADH(J,I)=0.0
 C
-C     CONVERT HOURLY WEATHER VARIABLES TO MODEL UNITS 
-C     AND ENTER INTO MODEL ARRAYS
+C     CONVERT HOURLY WEATHER VARIABLES IN TYP FROM WEATHER FILE 
+C     INTO MODEL UNITS AND ENTER INTO MODEL ARRAYS
 C
-C     TMPH=temperature (oC)
-C     SRADH=solar radiation (MJ m-2 h-1)
-C     WINDH=windspeed (m h-1)
-C     DWPTH=vapor pressure (kPa)
-C     RAINH=precipitation (mm h-1)
-C     XRADH=longwave radiation (MJ m-2 h-1)
+C     TMPH=temperature (‘T’) (oC)
+C     SRADH=solar radiation (‘R’) (MJ m-2 h-1)
+C     WINDH=windspeed (‘W’)(m h-1)
+C     DWPTH=vapor pressure (‘H’)(kPa)
+C     RAINH=precipitation (‘P’)(mm h-1)
+C     XRADH=longwave radiation (‘L’) (MJ m-2 h-1) 
+C        (optional – will be calculated in ‘wthr.f’ if absent)
 C
       DO 95 K=1,NN
 C
@@ -588,7 +593,7 @@ C
       IF(TTYPE.EQ.'H')THEN
       RAINH(J,I)=AMAX1(0.0,DAT(K)+DATK(K))*3.6
       ELSE
-      RAINH(J,I)=AMAX1(0.0,DAT(K)+DATK(K))*1.8
+      RAINH(J,I)=AMAX1(0.0,DAT(K)+DATK(K))*3.6/IH
       ENDIF
       ELSE
       RAINH(J,I)=AMAX1(0.0,DAT(K)+DATK(K))
@@ -612,7 +617,7 @@ C
       IH=1
       IX=I
 C
-C     INFILL 3-HOURLY WEATHER DATA
+C     INFILL HOURLY WEATHER DATA FROM 3-HOURLY WEATHER DATA
 C
       IF(TTYPE.EQ.'3')THEN
       JJ=J-3
@@ -702,7 +707,7 @@ C
       IX=365
       ENDIF
 C
-C     CALCULATE PRECIPITATION CONCENTRATIONS IN MOLE UNITS
+C     CALCULATE PRECIPITATION SOLUTE CONCENTRATIONS IN MOLE UNITS
 C
       CN4RIG=CN4RIG/14.0
       CNORIG=CNORIG/14.0
@@ -718,7 +723,8 @@ C
       CSORG=CSORG/32.0
       CCLRG=CCLRG/35.5
 C
-C     ALLOCATE PECIITATION ION CONCENTRATIONS TO LANDSCAPE UNITS
+C     ALLOCATE PECIITATION ION CONCENTRATIONS TO GRID CELLS IN
+C     LANDSCAPE
 C
       DO 8970 NX=NHW,NHE
       DO 8975 NY=NVN,NVS
@@ -741,7 +747,7 @@ C
 8975  CONTINUE
 8970  CONTINUE
 C
-C     DERIVE END DATES FROM TIME VARIABLES
+C     DERIVE END DATES FOR SCENE FROM TIME VARIABLES
 C
       ICHECK=0
       IF(TTYPE.EQ.'H'.AND.J.NE.24)ICHECK=1
@@ -762,13 +768,15 @@ C
 C     READ LAND MANAGEMENT FILE NAMES FOR EACH GRID CELL
 C
 C     ROWN,ROWO,ROWP=row spacing for band NH4, NO3 and PO4
-C        fertilizer applications
+C        fertilizer applications (m)
 C     ITILL,DCORP=disturbance type,intensity
-C     FERT,IYTYP,FDPTH=fertilizer amount,type,application depth
-C     RRIG=irrigation timing,depth
+C     FERT,IYTYP,FDPTH=fertilizer amount,type,application depth (g m-2,m)
+C     RRIG=irrigation timing,depth (h,m)
 C     PHQX,CN4QX,CNOQX,CPOQX,CALQX,CFEQX,CCAQX,CMGQX,CNAQX,CKAQX, 
 C     CSOQX,CCLQX=pH,NH4,NO3,H2PO4,Al,Fe,Ca,Mg,Na,K,SO4,Cl 
 C        concentration in irrigation water (g m-3)
+C
+C     INITIALIZE MANAGEMENT ARRAYS
 C
       DO 9980 NX=NHW,NHE
       DO 9985 NY=NVN,NVS
@@ -838,17 +846,26 @@ C
 C
 C     DY=date DDMMYYYY
 C     IDIST=soil disturbance type 1-10:tillage including crop
-C                                 11-20:tillage not including crop 
+C        soil and surface litter mixing within tillage depth
+C        = disturbance type/10  
+C                                 11-20:tillage not including crop
+C        soil and surface litter mixing within tillage depth
+C        = (disturbance type – 10)/10  
 C                                 21:surface litter removal
 C                                 22:fire
 C                                 23-24:natural, artificial drainage
-C     DDIST=energy (kW m-2) (fire, likely 25 - 75) 
-C           or depth (m) (tillage,drainage) of disturbance 
+C     DDIST=tillage (1-20), drainage (23-24): depth (m)
+C          =surface litter removal (21): fraction (0 - 1) 
+C          =fire (22): energy (kW m-2) (likely 25 - 75)
+C
+C     if disturbance 24 is indicated:
+C 
 C     RCHGNAG,RCHGEAG,RCHGSAG,RCHGWAG=distance to N,E,S,W external
-C        artificial water table (m)
+C        artificial water table (m) 
 C     RCHGNBG,RCHGEBG,RCHGSBG,RCHGWBG=boundary conditions for 
 C        N,E,S,W subsurface exchange with external artificial water 
-C        table :0=no flow, 1=unimpeded flow 
+C        table :0=no flow
+C              :1=unimpeded flow 
 C
 295   CONTINUE
       READ(10,*,END=305)DY,IDIST,DDIST
@@ -878,14 +895,17 @@ C
       ITILL(IDY,NY,NX)=IDIST
       DCORP(IDY,NY,NX)=DDIST
       IF(IDIST.EQ.24)THEN
-      RCHGNA(NY,NX)=RCHGNAG
-      RCHGEA(NY,NX)=RCHGEAG
-      RCHGSA(NY,NX)=RCHGSAG
-      RCHGWA(NY,NX)=RCHGWAG
-      RCHGNB(NY,NX)=RCHGNBG
-      RCHGEB(NY,NX)=RCHGEBG
-      RCHGSB(NY,NX)=RCHGSBG
-      RCHGWB(NY,NX)=RCHGWBG
+      RCHGNAZ(NY,NX)=RCHGNAG
+      RCHGEAZ(NY,NX)=RCHGEAG
+      RCHGSAZ(NY,NX)=RCHGSAG
+      RCHGWAZ(NY,NX)=RCHGWAG
+      RCHGNBZ(NY,NX)=RCHGNBG
+      RCHGEBZ(NY,NX)=RCHGEBG
+      RCHGSBZ(NY,NX)=RCHGSBG
+      RCHGWBZ(NY,NX)=RCHGWBG
+      WRITE(*,1001)'READS',NY,NX,RCHGNAG,RCHGEAG,RCHGSAG,RCHGWAG
+     2,RCHGNBG,RCHGEBG,RCHGSBG,RCHGWBG,RCHGEA(NY,NX),RCHGEB(NY,NX)
+1001  FORMAT(A8,2I4,10E12.4)
       ENDIF
 8990  CONTINUE
 8995  CONTINUE
@@ -898,18 +918,59 @@ C     READ FERTLIZER INPUT FILE
 C
       IF(DATA(5).NE.'NO')THEN
 C
-C     DY=date DDMMYYYY
-C     *A,*B=broadcast,banded fertilizer application
-C     Z4,Z3,ZU,ZO=NH4,NH3,urea,NO3
-C     PM*,PH*=Ca(H2PO4)2,apatite
-C     CAC,CAS=CaCO3,CaSO4
-C     *1,*2=litter,manure amendments
-C     RSC,RSN,RSC=amendment C,N,P content
-C     FDPTHI=fertilizer application depth
-C     ROWX=row width of band application
-C     IRO,IR1,IR2=fertilizer,litter,manure type
-C        IR0:0=fast (urea as urine),1=normal,2=slow release
-C        IR1,IR2:used to set decomposition parameters in ‘hour1.f’ 
+C     DY=date DDMMYYYY (col. 1)
+C
+C     NITROGEN FERTILIZER
+C
+C     *A=broadcast N fertilizer application (g N m-2) (col. 2-5)
+C        Z4,Z3,ZU,ZO=NH4,NH3,urea,NO3
+C     *B=banded N fertilizer application(g N m-2) (col. 6-9)
+C        Z4,Z3,ZU,ZO=NH4,NH3,urea,NO3
+C
+C     PHOSPHORUS FERTILIZER
+C
+C     PMA,PMB=broadcast,banded Ca(H2PO4)2 (g P m-2) (col. 10-11)
+C     PHA=broadcast apatite (g P m-2) (col. 12)
+C
+C     LIME, GYPSUM AMENDMENTS
+C
+C     CAC,CAS=CaCO3,CaSO4 (g Ca m-2)(col. 13-14)
+C
+C     LITTER, MANURE AMENDMENTS
+C
+C     RSC1,RSN1,RSP1=litter amendment C,N,P content (g m-2)(col. 15-17)
+C     RSC2,RSN2,RSP2=manure amendment C,N,P content (g m-2)(col. 18-20)
+C
+C     FERTILIZER PLACEMENT
+C
+C     FDPTHI=fertilizer application depth (col. 21)
+C     ROWX=row width of band application (col. 22)
+C
+C     FERTILIZER, LITTER, MANURE AMENDMENT TYPES
+C
+C     IRO=fertilizer formulation (col. 23)
+C        urea hydrolysis
+C           :0=fast (urine)
+C           :1=normal
+C           :2=slow release
+C        nitrification inhibition
+C           :3=normal release plus nitrification inhibitor
+C           :4=slow release plus nitrification inhibitor
+C     IR1=litter amendment type (col. 24)
+C        :1=maize
+C        :2=wheat
+C        :3=soybean
+C        :4=old straw
+C        :5=straw
+C        :6=compost
+C        :7=green manure
+C        :8=glucose
+C        :used to set decomposition parameters in ‘hour1.f’ 
+C     IR2=manure amendment type (col. 25)
+C        :1=ruminant stored
+C        :2=non-ruminant stored
+C        :3=ruminant grazing
+C        :used to set decomposition parameters in ‘hour1.f’ 
 C
 1500  CONTINUE
       READ(8,*,END=85)DY,Z4A,Z3A,ZUA,ZOA,Z4B,Z3B,ZUB,ZOB
@@ -933,6 +994,8 @@ C     IF(IDY2.GE.7)IDY=IDY+0.5*(NTX-1)
 C
 C     ENTER AMENDMENTS INTO GRID CELLS FOR EACH LANDSCAPE UNIT 
 C
+C     FERT=array used to carry daily fertilizer applications
+C        into ‘hour1.f’
 C     NH4,NH3,UREA,NO3 BROADCAST (A) AND BANDED (B)
 C
       FERT(1,IDY,NY,NX)=Z4A
@@ -999,8 +1062,8 @@ C        or minimum canopy water potential(IFLGV=1), to trigger
 C        irrigation
 C     CIRRX= fraction of FC to which irrigation will raise SWC
 C     DIRRX= depth to which water depletion and rewatering is
-C        calculated
-C     WDPTHI=depth at which irrigation is applied (0=surface) 
+C        calculated (m)
+C     WDPTHI=depth at which irrigation is applied (0=surface) (m)
 C     PHQX,CN4QX,CNOQX,CPOQX,CALQX,CFEQX,CCAQX,CMGQX,CNAQX,CKAQX, 
 C        CSOQX,CCLQX=pH,NH4,NO3,H2PO4,Al,Fe,Ca,Mg,Na,K,SO4,Cl 
 C        concentration in irrigation water (g m-3)
@@ -1073,10 +1136,10 @@ C
 2500  CONTINUE
 C
 C     DY,RR,JST,JEN=date DDMMYYYY,amount (mm),start and end hours
-C     WDPTHI=depth at which irrigation is applied (0=surface) 
+C     WDPTHI=depth at which irrigation is applied (0=surface)(m) 
 C     PHQX,CN4QX,CNOQX,CPOQX,CALQX,CFEQX,CCAQX,CMGQX,CNAQX,CKAQX, 
 C        CSOQX,CCLQX=pH,NH4,NO3,H2PO4,Al,Fe,Ca,Mg,Na,K,SO4,Cl 
-C        concentration in irrigation water
+C        concentration in irrigation water (g m-3)
 C
       READ(2,*,END=105)DY,RR,JST,JEN,WDPTHI,PHQX,CN4QX,CNOQX,CPOQX
      2,CALQX,CFEQX,CCAQX,CMGQX,CNAQX,CKAQX,CSOQX,CCLQX

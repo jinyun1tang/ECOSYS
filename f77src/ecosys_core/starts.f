@@ -1,6 +1,6 @@
       SUBROUTINE starts(NHW,NHE,NVN,NVS)
 C
-C     THIS SUBROUTINE INITIALIZES ALL SOIL VARIABLES
+C     THIS SUBROUTINE INITIALIZES ALL SOIL AND ECOSYSTEM VARIABLES
 C
       include "parameters.h"
       include "blkc.h"
@@ -26,13 +26,16 @@ C
      6,OHCK(0:4),TOSCK(0:4),TOSNK(0:4),TOSPK(0:4),TORGL(JZ)
 C
 C     DCKR,DCKM=parameters to initialize microbial biomass from SOC
+C     RDN=degree radian-1
 C     OMCI,ORCI=initial allocation of microbial biomass, residue 
 C        to kinetic components
 C     OMCK,ORCK,OQCK,OHCK=initial fractions of SOC in biomass, litter,
 C        DOC, adsorbed C
-C     OMCF,OMCA=initial heterotrophic, autotrophic microbial biomass 
+C     OMCF,OMCA=initial fractions N in heterotrophic (K=1,4), 
+C        autotrophic (K=5) microbial populations
 C        composition in SOC
 C     CNRH,CPRH=default N:C,P:C ratios in SOC complexes
+C        woody(0),fine(1),manure(2),POC(3),humus (4)
 C     BKRS=dry bulk density of woody(0),fine(1),manure(2) litter 
 C        (Mg m-3) 
 C     FORGC=minimum SOC for organic soil (g Mg-1)
@@ -45,10 +48,10 @@ C     POROQ=Penman Water Linear Reduction tortuosity
 C        used in gas flux calculations in ‘trnsfr.f’
 C     RIX,RIY=minimum, maximum values used to calculate Richardson’s
 C        number in ‘watsub.f’ and ‘uptake.f’
-C     RABM,RABX=minimum, maximum values used to calculate  boundary
+C     RABM,RABZ=minimum, maximum values used to calculate  boundary
 C        layer resistances (h m-1) in ‘watsub.f’ and ‘uptake.f’
 C     GCBCO,GCBCH,GCBC4=combustion energy of organic C (aerobic,
-C        anaerobic), and CH4 (MJ g-1) used during fire in ‘extract.f’
+C        anaerobic), and CH4 (MJ g C-1) used during fire in ‘extract.f’
 C        and ‘redist.f’
 C     COXYGK,CCH4GK=M-M constant for O2,CH4 combustion (umol mol-1)
 C     COXYGL,CCH4GL=M-M constant for O2,CH4 combustion (g m-3) 
@@ -69,16 +72,17 @@ C
       DATA OMCA/0.06,0.02,0.01,0.0,0.01,0.0,0.0/
       DATA CNRH/3.33E-02,3.33E-02,3.33E-02,5.00E-02,12.50E-02/
       DATA CPRH/3.33E-03,3.33E-03,3.33E-03,5.00E-03,12.50E-03/
-      DATA BKRS/0.0333,0.0167,0.0167/
+      DATA BKRS/0.100,0.0167,0.025/
       DATA FORGC/0.1E+06/
       DATA PSIPS,PSIHY,PSISX/-0.5E-03,-1.5E+02,-1.5E+12/
       DATA FCI,WPI/0.05,0.025/ 
-      DATA CDPTHSI/0.05,0.15,0.30,0.60,1.00/
+      DATA CDPTHSI/0.05,0.125,0.25,0.50,1.00/
       DATA POROQ/0.66/
-      DATA RIX0,RIXF,RIY/-0.3,-0.4,0.075/
+      DATA RIX0,RIXF,RIY/-0.3,-2.4,0.075/
       DATA RABM,RABZ/0.278E-02,0.278E-01/
-      DATA GCBCO,GCBCH,GCBC4/0.0375,0.0125,0.0743/
-      DATA COXYGK,CCH4GK,COXYGL,CCH4GL/2.5E+04,5.0E+02,37.5,0.5/
+      DATA GCBCO,GCBCH,GCBC4,TCMBX/0.0375,0.0125,0.0743,473.15/
+      DATA COXYGK,CCH4GK,COXYGL,CCH4GL/2.1E+03,1.0E+01
+     2,2.8E+00,0.5E-02/
       DATA VAP,VAPS,OXKM/2465.0,2834.0,0.064/
 C
 C     ZERO,ZERO2=mimimum values used for all calculations
@@ -176,7 +180,9 @@ C
 C     INITIALIZE C-N AND C-P RATIOS OF RESIDUE AND SOIL
 C
 C     CNOFC,CPOFC=fractions to allocate N,P to kinetic components
-C     CNOMC,CPOMC=maximum N:C and P:C ratios in microbial biomass  
+C     CNOMC,CPOMC=maximum N:C and P:C ratios in microbial biomass
+C        (1-4,*)=litter fractions protein, CH2O, cellulose, lignin
+C        (*0-2)=woody (0), fine (1), manure (2)  
 C
       CNOFC(1,0)=0.005
       CNOFC(2,0)=0.005
@@ -202,8 +208,26 @@ C
       CPOFC(2,2)=0.0020
       CPOFC(3,2)=0.0020
       CPOFC(4,2)=0.0020
+C
+C     PARTITION LITTER DECOMPOSITION PRODUCTS TO MICROBIAL FRACTIONS
+C
+C     1=labile
+C     2=recalcitrant
+C
       FL(1)=0.55
       FL(2)=0.45
+C
+C     MICROBIAL N:C AND P:C RATIOS
+C
+C     (1*)=labile
+C     (2*)=recalcitrant
+C     K=woody(0),fine(1),manure(2),POC(3),humus (4), autotrophic (5)
+C     N:K=0,4: aerobic heterotrophs (1), denitrifiers (2), fungus (3),
+C        fermenters (4), methanogens (5), aerobic diazotrophs, (6),
+C        anaerobic diazotrophs (7)
+C      :K=5: NH3 oxidizers (1), NO2 oxidizers (2), methanogens (2),
+C         methanotrophs (5)    
+C
       DO 95 K=0,5
       DO 95 N=1,7
       IF(K.LE.4.AND.N.EQ.3)THEN
@@ -223,14 +247,16 @@ C
 C
 C     CALCULATE ELEVATION OF EACH GRID CELL
 C
-C     GAZI=ground surface azimuth
-C     GSIN,GCOS=sine,cosine of ground surface
-C     OMEGAG=incident sky angle at ground surface
+C     GAZI=ground surface azimuth (rad)
+C     GSIN,GCOS=sine,cosine of ground surface (rad)
+C     OMEGAG=incident sky angle at ground surface (rad)
 C     SLOPE=sine of ground surface slope in (0)aspect, (1)EW,
-C        (2)NS directions
-C     ALT=ground surface elevation at center of grid cell
-C     ALTY=maximum surface elevation in landscape
-C     IRCHG=runoff boundary flags:0=not possible,1=possible
+C        (2)NS directions (m m-1)
+C     ALT=ground surface elevation at center of grid cell (m)
+C     ALTY=maximum surface elevation in landscape (m)
+C     IRCHG=runoff boundary flags (0 – 1)
+C        :0=runoff disabled
+C        :1=runoff enabled
 C     FSLOPE=partitions surface water flow in (1)EW, (2)NS directions
 C
       ALTY=0.0
@@ -327,8 +353,12 @@ C    4,GSIN(NY,NX),GCOSA(NY,NX),GSINA(NY,NX)
 9980  CONTINUE
 9985  CONTINUE
 C
-C     INITIALIZE ACCUMULATORS AND MASS BALANCE CHECKS
-C     OF EACH GRID CELL
+C     INITIALIZE SOIL AND CANOPY AIR PROPERTIES OF EACH GRID CELL
+C
+C     TD*=used to calculate changes in daily weather variables
+C        TPX=max temp, TPN=min temp,RAD=radiation, WND=wind speed,
+C        HUM=vapor pressure, PRC=precipitation, IRI=irrigation, 
+C        CO2=CO2, CN4=NH4, CNO=NO3
 C
       ALTZG=0.0
       CDPTHG=0.0
@@ -355,6 +385,9 @@ C
 C
 C     ATCA,ATCS,ATKA,ATKS=mean annual temperature of air(A), 
 C        deep soil(S)
+C     TKQ,TCQ=canopy air temperature (K,OC)
+C     VPQ=canopy vapor pressure (kPa)
+C     CO2Q,CH4Q,OXYQ=canopy air CO2, CH4, O2 concentrations
 C
       ATCA(NY,NX)=ATCAI(NY,NX)
       ATCS(NY,NX)=ATCAI(NY,NX)
@@ -364,11 +397,15 @@ C
       TKQGX(NY,NX)=ATKA(NY,NX)
       TCQ(NY,NX)=ATCA(NY,NX)
       VPQ(NY,NX)=0.0
-      VPQGX(NY,NX)=0.0
+      VPQGX(NY,NX)=0.0 
       CO2Q(NY,NX)=CO2E(NY,NX)
       CH4Q(NY,NX)=CH4E(NY,NX)
       OXYQ(NY,NX)=OXYE(NY,NX)
       OXYC(NY,NX)=0.0
+C
+C     INITIALIZE ACCUMULATORS AND MASS BALANCE CHECKS
+C     OF EACH GRID CELL
+C
       URAIN(NY,NX)=0.0
       UCO2G(NY,NX)=0.0
       UCH4G(NY,NX)=0.0
@@ -407,6 +444,7 @@ C
       DPNH4(NY,NX)=0.0
       DPNO3(NY,NX)=0.0
       DPPO4(NY,NX)=0.0
+      DPPOX(NY,NX)=0.0
       FRADG(NY,NX)=1.0
       TRN(NY,NX)=0.0
       TLE(NY,NX)=0.0
@@ -468,7 +506,9 @@ C
 C     WRITE(*,2222)'OFFSET',OFFSET(NY,NX),ATCS(NY,NX)
 2222  FORMAT(A8,2E12.4)
 C
-C     INITIALIZE WATER POTENTIAL VARIABLES FOR SOIL LAYERS
+C     INITIALIZE WATER POTENTIAL PARAMETERS FOR SOIL LAYERS
+C     USED TO CALCULATE SOIL MATRIC POTENTIALS IN ‘HOUR1.F’ 
+C     AND ‘WATSUB.F’
 C
 C     PSIMX,PSIMN,PSIMS=log water potential at FC,WP,saturation 
 C        (m3 m-3) from inputs in soil file in ‘readi.f’
@@ -481,21 +521,19 @@ C
       PSIMD(NY,NX)=PSIMN(NY,NX)-PSIMX(NY,NX)
 C     BKVL(0,NY,NX)=0.0
 C
-C     DISTRIBUTION OF OM AMONG FRACTIONS OF DIFFERING
-C     BIOLOGICAL ACTIVITY
-C
-      DO 1195 L=0,NL(NY,NX)
-C
-C     LAYER DEPTHS AND THEIR PHYSICAL PROPERTIES
+C     LAYER DEPTHS AND THEIR PHYSICAL PROPERTIES IN LANDSCAPE UNIT
 C
 C     surface litter:L=0,soil layer:L>0
-C     DLYR,AREA=layer thickness,x-sectional area:1=EW,2=NS,3=vertical
-C     ORGC=organic C content
+C     DLYR,AREA=layer thickness (m),x-sectional area:1=EW,2=NS,
+C        3=vertical (m2)
+C     ORGC=organic C content (g Mg-1)
 C     VOLT,VOLX=volume soil layer including,excluding macropores+rock
-C     VOLR=volume of surface litter
-C     BKVL=mass of surface, soil layer
-C     CDPTH,DPTH=depth to bottom,midpoint of soil layers
+C        (m3 unit-1)
+C     VOLR=volume of surface litter (m3 unit-1)
+C     BKVL=mass of surface, soil layer (Mg unit-1)
+C     CDPTH,DPTH=depth to bottom,midpoint of soil layers (m)
 C
+      DO 1195 L=0,NL(NY,NX)
       DLYRI(1,L,NY,NX)=DH(NY,NX)
       DLYRI(2,L,NY,NX)=DV(NY,NX)
       DLYR(1,L,NY,NX)=DLYRI(1,L,NY,NX)
@@ -540,9 +578,9 @@ C
 C
 C     INITIALIZE SNOWPACK LAYERS
 C
-C     CDPTHS=depth to bottom of layer
+C     CDPTHS=depth to bottom of layer (m)
 C     DENS0=snow density (Mg m-3)
-C     DLYRSI,VOLSI=set snowpack layer depth, volume
+C     DLYRSI,VOLSI=set snowpack layer depth, volume (m), m3 unit-1)
 C     VOLSS,VOLWS,VOLIS,VOLS=snow,water,ice,total snowpack volume(m3)
 C     DPTHA=active layer depth (m)
 C     CDPTHSI=initial depth to bottom of snowpack layers (m)
@@ -553,7 +591,7 @@ C     TKW,TCW=later temperature K,oC
 C     VHCPW=layer volumetric heat capacity (MJ m-3 K-1)
 C
       CDPTHS(0,NY,NX)=0.0
-      DENS0(NY,NX)=0.10
+      DENS0(NY,NX)=0.075
       VOLSS(NY,NX)=DPTHS(NY,NX)*DENS0(NY,NX)*DH(NY,NX)*DV(NY,NX)
       VOLWS(NY,NX)=0.0
       VOLIS(NY,NX)=0.0
@@ -597,13 +635,14 @@ C     SURFACE WATER STORAGE AND LOWER HEAT SINK
 C
 C     VHCPWX,VHCPRX,VHCPNX=minimum heat capacities for solving
 C     snowpack,surface litter,soil layer water and heat fluxes
-C     DPTHSK=depth at which soil heat sink-source calculated
+C        (MJ K-1)
+C     DPTHSK=depth at which soil heat sink-source calculated (m)
 C     TCNDG=assumed thermal conductivity below lower soil boundary 
 C        (MJ m-1 K-1 h-1)
-C     TKSD=deep source/sink temperature from geothermal flux(K)
+C     TKSD=deep source/sink temperature from geothermal flux (K)
 C
-      VHCPWX(NY,NX)=8.380E-05*AREA(3,NU(NY,NX),NY,NX)
-      VHCPRX(NY,NX)=8.380E-05*AREA(3,NU(NY,NX),NY,NX)
+      VHCPWX(NY,NX)=8.380E-04*AREA(3,NU(NY,NX),NY,NX)
+      VHCPRX(NY,NX)=4.190E-05*AREA(3,NU(NY,NX),NY,NX)
       VHCPNX(NY,NX)=4.190E-03*AREA(3,NU(NY,NX),NY,NX)
       DPTHSK(NY,NX)=AMAX1(10.0,CDPTH(NL(NY,NX),NY,NX)+1.0)
       TCS(0,NY,NX)=ATCS(NY,NX)
@@ -691,18 +730,22 @@ C
       ENDIF
       DIST(N,N6,N5,N4)=0.5*(DLYR(N,N3,N2,N1)+DLYR(N,N6,N5,N4))
       XDPTH(N,N6,N5,N4)=AREA(N,N3,N2,N1)/DIST(N,N6,N5,N4)
-      DISP(N,N6,N5,N4)=0.20*DIST(N,N6,N5,N4)**1.07
+      DISP(N,N6,N5,N4)=0.20*DIST(N,N6,N5,N4)**1.07*XNPHX
 4320  CONTINUE
       IF(L.EQ.NU(NY,NX))THEN
       DIST(3,N3,N2,N1)=0.5*DLYR(3,N3,N2,N1)
       XDPTH(3,N3,N2,N1)=AREA(3,N3,N2,N1)/DIST(3,N3,N2,N1)
-      DISP(3,N3,N2,N1)=0.20*DIST(3,N3,N2,N1)**1.07
+      DISP(3,N3,N2,N1)=0.20*DIST(3,N3,N2,N1)**1.07*XNPHX
       ENDIF
 4400  CONTINUE
 C
-C     INITIALIZE SOM FROM ORGANIC INPUTS IN SOIL FILE FROM 'READS'
+C     PARTITION HUMUS TO LESS OR MORE RECALCITRANT
+C     FRACTIONS ACCORDING TO HUMUS ACCUMULATION
 C
 C     CORGC,CORGR,CORGN,CORGP=SOC,POC,SON,SOP (g Mg-1)
+C     TORGL=accumulated humus down to soil layer (g m-2)
+C     TORGM=TORGL used to calculate partitioning (g m-2)
+C     HCX=shape parameter for depth effect on partitioning 
 C
       TORGC=0.0
       DO 1190 L=NU(NY,NX),NL(NY,NX)
@@ -710,14 +753,6 @@ C
       TORGL(L)=TORGC+CORGL*BKVL(L,NY,NX)/AREA(3,L,NY,NX)*0.5
       TORGC=TORGC+CORGL*BKVL(L,NY,NX)/AREA(3,L,NY,NX)
 1190  CONTINUE
-C
-C     PARAMETERS TO PARTITION HUMUS TO LESS OR MORE RECALCITRANT
-C     FRACTIONS
-C
-C     TORGL=accumulated humus down to soil layer (g m-2)
-C     TORGM=TORGL used to calculate partitioning (g m-2)
-C     HCX=shape parameter for depth effect on partitioning 
-C
       TORGM=AMAX1(2.0E+03,AMIN1(5.0E+03,0.25*TORGL(NJ(NY,NX))))
       IF(TORGM.GT.ZERO)THEN
       HCX=LOG(0.5)/TORGM
@@ -966,12 +1001,13 @@ C     CORGCX,CORGNX,CORGPX=C,N,P concentations in humus
 C     DPTH=depth to soil layer midpoint (m)
 C     DTBLZ=depth of external water table (m)
 C     HCX=shape parameter for depth effect on partitioning 
+C     TORGL=accumulated humus down to soil layer (g m-2)
 C
       IF(CORGC(L,NY,NX).LE.FORGC.OR
      2.DPTH(L,NY,NX).LE.DTBLZ(NY,NX)
      2+CDPTH(NU(NY,NX),NY,NX)-CDPTHG)THEN
       FCY=0.60
-      IF(CORGCX(4).GT.1.0E-32)THEN
+      IF(CORGCX(4).GT.ZERO)THEN
       FC0=FCY*EXP(-5.0*(AMIN1(CORGNX(4),10.0*CORGPX(4))
      2/CORGCX(4)))
       ELSE
@@ -1031,16 +1067,16 @@ C    4,EXP(HCX*TORGL(L))
 5432  FORMAT(A8,I4,20E12.4)
       ENDIF
 C
-C     LAYER WATER, ICE, AIR CONTENTS
+C     INITIALIZE LAYER WATER, ICE, AIR CONTENTS
 C
-C     PSISE,PSISA=water potential at saturation,air entry (MPa)
+C     PSISE=water potential at saturation (MPa)
 C     PTDS=particle density (Mg m-3)
-C     POROS=total porosity
-C     VOLA,VOLAH=micropore,macropore volume
-C     THW,THI=initial soil water,ice content
-C     VOLW,VOLWH=micropore,macropore water volume(m3)
-C     VOLI,VOLIH=micropore,macropore ice volume(m3)
-C     VOLP=total air volume (m3)
+C     POROS=total porosity (m3 m-3)
+C     VOLA,VOLAH=micropore,macropore volume (m3 unit-1)
+C     THW,THI=initial soil water,ice content from soil file (m3 m-3)
+C     VOLW,VOLWH=micropore,macropore water volume (m3 unit-1)
+C     VOLI,VOLIH=micropore,macropore ice volume(m3 unit-1)
+C     VOLP=total air volume (m3 unit-1)
 C
       PSISE(L,NY,NX)=PSIPS
       ROXYF(L,NY,NX)=0.0
@@ -1064,7 +1100,7 @@ C
       VOLAI(L,NY,NX)=VOLA(L,NY,NX)
       VOLAH(L,NY,NX)=FHOL(L,NY,NX)*VOLTI(L,NY,NX)
 C
-C     LAYER HEAT CONTENTS
+C     HEAT CONTENTS OF LAYER SOLIDS FOR CALCULATING HEAT CAPACITY
 C
 C     SAND,SILT,CLAY=sand,silt,clay mass (Mg)
 C     VORGC,VMINL,VSAND=volumetric fractions of SOC,non-sand,sand
@@ -1087,12 +1123,14 @@ C
 C
 C     INITIAL SOIL WATER AND ICE CONTENTS
 C
-C     THW,THI=initial soil water,ice concentrations from soil file
-C     THETW,THETI=soil water,ice concentrations at start of run
+C     THW,THI=initial soil water,ice concentrations from soil file 
+C        (m3 m-3)
+C     THETW,THETI=soil water,ice concentrations at start of run 
+C        (m3 m-3)
 C     VOLW,VOLI,VOLWH,VOLIH=soil water,ice contents in
-C        micropore,macropore fractions
-C     VOLA,VOLP=soil air-filled,total porosity
-C     VHCP=soil volumetric heat capacity 
+C        micropore,macropore fractions (m3 unit-1)
+C     VOLA,VOLP=soil air-filled,total porosity (m3 unit-1)
+C     VHCP=soil volumetric heat capacity (MJ K-1 unit-1)
 C
       IF(ISOIL(1,L,NY,NX).EQ.0.AND.ISOIL(2,L,NY,NX).EQ.0)THEN
       IF(THW(L,NY,NX).GT.1.0)THEN
@@ -1102,7 +1140,7 @@ C
       ELSEIF(THW(L,NY,NX).EQ.0.0)THEN 
       THETW(L,NY,NX)=WP(L,NY,NX)
       ELSEIF(THW(L,NY,NX).LT.0.0)THEN 
-      THETW(L,NY,NX)=0.0
+      THETW(L,NY,NX)=1.0E-03
       ELSE
       THETW(L,NY,NX)=THW(L,NY,NX)
       ENDIF
@@ -1139,7 +1177,7 @@ C     INITIALIZE SURFACE LITTER
 C
       BKVL(L,NY,NX)=1.82E-06*ORGC(L,NY,NX)
       VOLA(L,NY,NX)=AMAX1(0.0,VOLR(NY,NX)-BKVL(L,NY,NX)/1.30)
-      VOLW(L,NY,NX)=4.0E-06*ORGC(L,NY,NX)
+      VOLW(L,NY,NX)=8.0E-06*ORGC(L,NY,NX)
       VOLI(L,NY,NX)=0.0
       VOLP(L,NY,NX)=AMAX1(0.0,VOLA(L,NY,NX)-VOLW(L,NY,NX)
      2-VOLI(L,NY,NX))
@@ -1168,7 +1206,7 @@ C
       TCS(L,NY,NX)=ATCS(NY,NX)
       VOLV(L,NY,NX)=0.0
 C
-C     INITIALIZE SOM VARIABLES
+C     INITIALIZE SOM KINETIC RATIOS
 C
 C     CNOSC,CPOSC=N:C,P:C ratios of SOC kinetic components
 C     CFOSC=fraction of SOC in kinetic components
@@ -1223,11 +1261,12 @@ C
 C
 C     MICROBIAL BIOMASS,RESIDUE, DOC, ADSORBED
 C
-C     OSCI,OSNI,OSPI=initial SOC,SON,SOP mass in each complex (g)
+C     OSCI,OSNI,OSPI=initial SOC,SON,SOP mass in each complex(g unit-1)
 C     OMCK,ORCK,OQCK,OHCK=fractions of SOC in biomass,litter,DOC,
-C        adsorbed C
-C     OSCM=total biomass in each complex (g)
+C        adsorbed C (g unit-1)
+C     OSCM=total biomass in each complex (g unit-1)
 C     DCKR,DCKM=parameters to initialize microbial biomass from SOC
+C     OMCI=initial biomass fraction of each microbial kinetic fraction C        M in each substrate complex K from DATA
 C
       TOSCI=0.0
       TOSNI=0.0
@@ -1302,17 +1341,23 @@ C     ENDIF
 C
 C     MICROBIAL C, N AND P
 C
-C     OMC,OMN,OMP=microbial C,N,P
-C     OMCI=microbial biomass content in litter 
-C     OMCF,OMCA=heterotrophic,autotrophic biomass composition 
-C        in litter 
+C     OMC,OMN,OMP=microbial C,N,P (g unit-1)
+C     OMCI=initial biomass fraction of each microbial kinetic fraction C        M in each substrate complex K from DATA
+C     OMCF,OMCA=initial fractions N in heterotrophic (K=1,4), 
+C        autotrophic (K=5) microbial populations from DATA 
 C     CNOMC,CPOMC=maximum N:C and P:C ratios in microbial biomass
 C     OSCX,OSNX,OSPX=remaining unallocated SOC,SON,SOP  
+C     K=woody(0),fine(1),manure(2),POC(3),humus (4), autotrophic (5)
+C     N:K=0,4: aerobic heterotrophs (1), denitrifiers (2), fungus (3),
+C        fermenters (4), methanogens (5), aerobic diazotrophs, (6),
+C        anaerobic diazotrophs (7)
+C      :K=5: NH3 oxidizers (1), NO2 oxidizers (2), methanogens (2),
+C         methanotrophs (5)    
 C
       DO 7990 N=1,7
       DO 7985 M=1,3
       OMC(M,N,5,L,NY,NX)=0.0 
-      OMN(M,N,5,L,NY,NX)=0.0 
+      OMN(M,N,5,L,NY,NX)=0.0
       OMP(M,N,5,L,NY,NX)=0.0
 7985  CONTINUE
 7990  CONTINUE
@@ -1340,7 +1385,7 @@ C
 C
 C     MICROBIAL RESIDUE C, N AND P
 C
-C     ORC,ORN,ORP=microbial residue C,N,P
+C     ORC,ORN,ORP=microbial residue C,N,P (g unit-1)
 C     ORCI=allocation of microbial residue to kinetic components 
 C
       DO 8985 M=1,2
@@ -1354,8 +1399,8 @@ C
 C
 C     DOC, DON AND DOP
 C
-C     OQC,OQN,OQP,OQA=DOC,DON,DOP,acetate in micropores (g)
-C     OQCH,OQNH,OQPH,OQAH=DOC,DON,DOP,acetate in macropores (g)
+C     OQC,OQN,OQP,OQA=DOC,DON,DOP,acetate in micropores (g unit-1)
+C     OQCH,OQNH,OQPH,OQAH=DOC,DON,DOP,acetate in macropores (g unit-1)
 C
       OQC(K,L,NY,NX)=X*AMAX1(0.0,OSCM(K)*OQCK(K)*FOSCI)
       OQN(K,L,NY,NX)=AMAX1(0.0,OQC(K,L,NY,NX)*CNOSCT(KK)*FOSNI)
@@ -1371,7 +1416,7 @@ C
 C
 C     ADSORBED C, N AND P
 C
-C     OHC,OHN,OHP,OHA=adsorbed C,N,P,acetate
+C     OHC,OHN,OHP,OHA=adsorbed C,N,P,acetate (g unit-1)
 C
       OHC(K,L,NY,NX)=X*AMAX1(0.0,OSCM(K)*OHCK(K)*FOSCI)
       OHN(K,L,NY,NX)=AMAX1(0.0,OHC(K,L,NY,NX)*CNOSCT(KK)*FOSNI)
@@ -1383,7 +1428,7 @@ C
 C
 C     HUMUS C, N AND P
 C
-C     OSC,OAA,OSN,OSP=SOC,colonized SOC,SON,SOP
+C     OSC,OSA,OSN,OSP=SOC,colonized SOC,SON,SOP (g unit-1)
 C
       DO 8980 M=1,4
       OSC(M,K,L,NY,NX)=AMAX1(0.0,CFOSC(M,K,L,NY,NX)*(OSCI(K)-OSCX(K)))
@@ -1500,9 +1545,9 @@ C
 6980  CONTINUE
 6995  CONTINUE
 C
-C     ORGC,ORGCC=total SOC,charcoal
-C     ORGN,ORGNC=total SON,charcoal N
-C     ORGR=total litter content
+C     ORGC,ORGCC=total SOC,charcoal(g unit-1)
+C     ORGN,ORGNC=total SON,charcoal N (g unit-1)
+C     ORGR=total litter content (g unit-1)
 C
       ORGC(L,NY,NX)=OC
       ORGCC(L,NY,NX)=OCC
@@ -1511,7 +1556,8 @@ C
       ORGCX(L,NY,NX)=ORGC(L,NY,NX)
       ORGR(L,NY,NX)=RC
 C
-C     INITIALIZE FERTILIZER ARRAYS
+C     INITIALIZE FERTILIZER ARRAYS USED TO HOLD FERTILIZER REMAINING
+C     FROM FERTILIZER INPUTS IN ‘READS.F’
 C
       ZNH4FA(L,NY,NX)=0.0
       ZNH3FA(L,NY,NX)=0.0
@@ -1566,6 +1612,7 @@ C
       ZNFN0(L,NY,NX)=0.0
       HCBFL(L,NY,NX)=0.0
 1200  CONTINUE
+      HCBFG(NY,NX)=0.0
 C
 C     SURFACE SOIL LAYER MINERAL HEAT CAPACITY
 C

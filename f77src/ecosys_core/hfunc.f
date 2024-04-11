@@ -39,16 +39,16 @@ C     PSILM=minimum canopy turgor potential for leaf expansion (MPa)
 C     PSILX=minimum canopy water potential for leafout of drought-
 C        deciduous PFT (MPa) 
 C     PSILY=minimum canopy water potential for leafoff of drought-
-C        deciduous PFT (MPa
+C        deciduous PFT (MPa)
 C     GSTGG,GSTGR=normalized growth stage durations for vegetative,
 C        reproductive phenology
-C     VRNE=maximum hours for leafout,leafoff
+C     VRNE=maximum hours for leafout,leafoff (h)
 C     NBX=maximum branch number for PFT defined by IBTYP in PFT file
 C
-      PARAMETER (PSILM=0.1,PSILX=1.0)
+      PARAMETER (PSILM=0.1,PSILX=-0.1)
       PARAMETER(GSTGG=2.00,GSTGR=0.667,VRNE=3600.0)
-      PARAMETER (CNKI=1.0E+02,CPKI=1.0E+03)
-      DATA PSILY/-200.0,-2.0,-2.0,-2.0/
+      PARAMETER(CNKIC=1.0E-02,CPKIC=1.0E-03)
+      DATA PSILY/-150.0,-1.5,-1.5,-1.5/
       DATA NBX /5,1,1,5,5,5/
       DO 9995 NX=NHW,NHE
       DO 9990 NY=NVN,NVS
@@ -56,8 +56,8 @@ C
       IF(DATAP(NZ,NY,NX).NE.'NO')THEN
 C
 C     DATAP=PFT file name
-C     PPT=total biome population
-C     PP=PFT population
+C     PPT=total biome population (n)
+C     PP=PFT population (n)
 C
       PPT(NY,NX)=PPT(NY,NX)+PP(NZ,NY,NX)
 C
@@ -115,7 +115,7 @@ C
       IF(IDTH(NZ,NY,NX).EQ.1)THEN 
       IFLGC(NZ,NY,NX)=0
       ENDIF
-C     WRITE(*,4444)'IFLGC',I,J,NFZ,NX,NY,NZ,DATAP(NZ,NY,NX),IYRC
+C      WRITE(*,4444)'IFLGC',I,J,NFZ,NX,NY,NZ,DATAP(NZ,NY,NX),IYRC
 C    2,IDAY0(NZ,NY,NX),IDAYH(NZ,NY,NX),IYR0(NZ,NY,NX),IYRH(NZ,NY,NX)
 C    3,IDTHP(NZ,NY,NX),IDTHR(NZ,NY,NX),IDTH(NZ,NY,NX),IFLGC(NZ,NY,NX)
 C    4,IFLGT(NY,NX),PP(NZ,NY,NX)
@@ -137,13 +137,14 @@ C
       NG(NZ,NY,NX)=MIN(NI(NZ,NY,NX),MAX(NG(NZ,NY,NX),NU(NY,NX)))
       NB1(NZ,NY,NX)=1
       NBTX=1.0E+06
+      SALTP=0.0
 C
 C     TOTAL PLANT NON-STRUCTURAL C, N, P
 C
 C     CPOOL*,ZPOOL*,PPOOL*=non-structural C,N,P in
-C        branch(NB),canopy(g)
-C     CPOLN*,ZPOLN*,PPOLN*=non-structural C,N,P in 
-C        branch,canopy symbiotic N2-fixing bacteria (g)
+C        branch(NB),canopy (g C,N,P)
+C     CPOLN*,ZPOLN*,PPOLN*=non-structural C,N,P in symbiotic N2-fixing
+C        bacteria of branch,canopy (g C,N,P)
 C     NB1=main branch number
 C
       DO 140 NB=1,NBR(NZ,NY,NX)
@@ -154,6 +155,11 @@ C
       CPOLNP(NZ,NY,NX)=CPOLNP(NZ,NY,NX)+CPOLNB(NB,NZ,NY,NX)
       ZPOLNP(NZ,NY,NX)=ZPOLNP(NZ,NY,NX)+ZPOLNB(NB,NZ,NY,NX)
       PPOLNP(NZ,NY,NX)=PPOLNP(NZ,NY,NX)+PPOLNB(NB,NZ,NY,NX)
+      IF(ISALTG.NE.0)THEN
+      SALTP=SALTP+ZALQ(NB,NZ,NY,NX)+ZFEQ(NB,NZ,NY,NX) 
+     2+ZCAQ(NB,NZ,NY,NX)+ZMGQ(NB,NZ,NY,NX)+ZNAQ(NB,NZ,NY,NX)
+     3+ZKAQ(NB,NZ,NY,NX)+ZSOQ(NB,NZ,NY,NX)+ZCLQ(NB,NZ,NY,NX)
+      ENDIF
       IF(NBTB(NB,NZ,NY,NX).LT.NBTX)THEN
       NB1(NZ,NY,NX)=NB
       NBTX=NBTB(NB,NZ,NY,NX)
@@ -163,12 +169,12 @@ C
 C
 C     NON-STRUCTURAL C, N, P CONCENTRATIONS IN ROOT
 C
-C     WTRTL=root mass(g)
+C     WTRTL=root mass (g C)
 C     CPOOLR,ZPOOLR,PPOOLR=non-structural C,N,P in root(N=1),
-C        mycorrhizae(N=2)(g)
+C        mycorrhizae(N=2)(g C,N,P)
 C     CCPOLR,CZPOLR,CPPOLR=non-structural C,N,P concentration in
-C        root(N=1),mycorrhizae(N=2)(g g-1)
-C     WTRTL=root or mycorrhizal C mass (g)
+C        root(N=1),mycorrhizae(N=2)(g g-1 C,N,P)
+C     WTRTL=root or mycorrhizal C mass (g C)
 C
       DO 180 N=1,MY(NZ,NY,NX)
       DO 160 L=NU(NY,NX),NI(NZ,NY,NX)
@@ -179,27 +185,40 @@ C
      2/(WTRTL(N,L,NZ,NY,NX)+ZPOOLR(N,L,NZ,NY,NX)))
       CPPOLR(N,L,NZ,NY,NX)=AMAX1(0.0,PPOOLR(N,L,NZ,NY,NX)
      2/(WTRTL(N,L,NZ,NY,NX)+PPOOLR(N,L,NZ,NY,NX)))
+      IF(ISALTG.NE.0)THEN
+      SALTR=ZALR(N,L,NZ,NY,NX)+ZFER(N,L,NZ,NY,NX)
+     2+ZCAR(N,L,NZ,NY,NX)+ZMGR(N,L,NZ,NY,NX)+ZNAR(N,L,NZ,NY,NX)
+     3+ZKAR(N,L,NZ,NY,NX)+ZSOR(N,L,NZ,NY,NX)+ZCLR(N,L,NZ,NY,NX)
+      CSALTR(N,L,NZ,NY,NX)=AMAX1(0.0,SALTR
+     2/(WTRTL(N,L,NZ,NY,NX)+SALTR))
+      ELSE
+      CSALTR(N,L,NZ,NY,NX)=0.0
+      ENDIF
       ELSE
       CCPOLR(N,L,NZ,NY,NX)=1.0
       CZPOLR(N,L,NZ,NY,NX)=1.0
       CPPOLR(N,L,NZ,NY,NX)=1.0
+      CSALTR(N,L,NZ,NY,NX)=0.0
       ENDIF
-C     WRITE(*,3223)'HFUNC',I,J,NZ,L,N
-C    2,CPOOLR(N,L,NZ,NY,NX),WTRTL(N,L,NZ,NY,NX)
-3223  FORMAT(A8,5I4,12E12.4)
+C     WRITE(*,3223)'CSALTR',I,J,NFZ,NZ,L,N
+C    2,CSALTR(N,L,NZ,NY,NX),SALTR,ZALR(N,L,NZ,NY,NX)
+C    3,ZFER(N,L,NZ,NY,NX),ZCAR(N,L,NZ,NY,NX),ZMGR(N,L,NZ,NY,NX)
+C    3,ZNAR(N,L,NZ,NY,NX),ZKAR(N,L,NZ,NY,NX),ZSOR(N,L,NZ,NY,NX)
+C    4,ZCLR(N,L,NZ,NY,NX),WTRTL(N,L,NZ,NY,NX)
+3223  FORMAT(A8,6I4,20E12.4)
 160   CONTINUE
 180   CONTINUE
 C
 C     NON-STRUCTURAL C, N, P CONCENTRATIONS IN SHOOT
 C
 C     CCPOLP,CZPOLP,CPPOLP=nonstructural C,N,P concentration 
-C        in canopy(g g-1)
+C        in canopy (g g-1 C,N,P)
 C     CCPLNP=nonstructural C concentration in canopy N2-fixing
-C        bacteria
+C        bacteria (g g-1 C,N,P)
 C     CCPOLB,CZPOLB,CPPOLB=nonstructural C,N,P concentration 
-C        in branch(g g-1)
-C     WTLS,WTLSB=canopy,branch leaf+petiole or sheath mass
-C     FDBKP=N or P inhibition of CO2 fixation (for output only)
+C        in branch (g g-1 C,N,P)
+C     WTLS,WTLSB=canopy,branch leaf+petiole or sheath mass (g C)
+C     FDBKP=N or P inhibition of canopy CO2 fixation (for output only)
 C
       IF(WTLS(NZ,NY,NX).GT.ZEROP2(NZ,NY,NX))THEN
       CCPOLP(NZ,NY,NX)=AMAX1(0.0,CPOOLP(NZ,NY,NX)
@@ -210,16 +229,30 @@ C
      2/(WTLS(NZ,NY,NX)+ZPOOLP(NZ,NY,NX)))
       CPPOLP(NZ,NY,NX)=AMAX1(0.0,PPOOLP(NZ,NY,NX)
      2/(WTLS(NZ,NY,NX)+PPOOLP(NZ,NY,NX)))
+      CSALTP(NZ,NY,NX)=AMAX1(0.0,SALTP
+     2/(WTLS(NZ,NY,NX)+SALTP))
       ELSE
       CCPOLP(NZ,NY,NX)=1.0
       CCPLNP(NZ,NY,NX)=1.0
       CZPOLP(NZ,NY,NX)=1.0
       CPPOLP(NZ,NY,NX)=1.0
+      CSALTP(NZ,NY,NX)=0.0
       ENDIF
+C     WRITE(*,3224)'CSALTP',I,J,NFZ,NZ,NBR(NZ,NY,NX) 
+C    2,CSALTP(NZ,NY,NX),SALTP,WTLS(NZ,NY,NX),CCPOLP(NZ,NY,NX)
+C    3,(ZALQ(NB,NZ,NY,NX),NB=1,NBR(NZ,NY,NX))
+C    3,(ZFEQ(NB,NZ,NY,NX),NB=1,NBR(NZ,NY,NX))
+C    3,(ZCAQ(NB,NZ,NY,NX),NB=1,NBR(NZ,NY,NX))
+C    3,(ZMGQ(NB,NZ,NY,NX),NB=1,NBR(NZ,NY,NX))
+C    3,(ZNAQ(NB,NZ,NY,NX),NB=1,NBR(NZ,NY,NX))
+C    3,(ZKAQ(NB,NZ,NY,NX),NB=1,NBR(NZ,NY,NX))
+C    3,(ZSOQ(NB,NZ,NY,NX),NB=1,NBR(NZ,NY,NX))
+C    3,(ZCLQ(NB,NZ,NY,NX),NB=1,NBR(NZ,NY,NX))
+3224  FORMAT(A8,5I4,60E12.4)
       FDBKP(NZ,NY,NX)=AMIN1(CZPOLP(NZ,NY,NX)
-     3/(CZPOLP(NZ,NY,NX)+CCPOLP(NZ,NY,NX)/CNKI)
+     3/(CZPOLP(NZ,NY,NX)+CCPOLP(NZ,NY,NX)*CNKIC)
      4,CPPOLP(NZ,NY,NX)
-     5/(CPPOLP(NZ,NY,NX)+CCPOLP(NZ,NY,NX)/CPKI))
+     5/(CPPOLP(NZ,NY,NX)+CCPOLP(NZ,NY,NX)*CPKIC))
       DO 190 NB=1,NBR(NZ,NY,NX)
       IF(WTLSB(NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
       CCPOLB(NB,NZ,NY,NX)=AMAX1(0.0,CPOOL(NB,NZ,NY,NX)
@@ -238,11 +271,13 @@ C
 C     EMERGENCE DATE FROM COTYLEDON HEIGHT, LEAF AREA, ROOT DEPTH
 C
 C     IDAY(1,=emergence date
-C     ARLFP,ARSTP=leaf,stalk areas
-C     HTCTL=hypocotyledon height
-C     SDPTH=seeding depth
-C     RTDP1=primary root depth
+C     ARLFP,ARSTP=leaf,stalk areas (m2)
+C     HTCTL=hypocotyledon height (m)
+C     SDPTH=seeding depth (m)
+C     RTDP1=primary root depth (m)
 C
+      IF(IDAY(1,NB1(NZ,NY,NX),NZ,NY,NX).EQ.0)THEN
+      ARLSP=ARLFP(NZ,NY,NX)+ARSTP(NZ,NY,NX)
 C     IF(NZ.EQ.2)THEN
 C     WRITE(*,223)'EMERG',I,J,NFZ,NZ,NB1(NZ,NY,NX),IFLGC(NZ,NY,NX)
 C    2,IDAY(1,NB1(NZ,NY,NX),NZ,NY,NX),HTCTL(NZ,NY,NX),SDPTH(NZ,NY,NX)
@@ -250,8 +285,6 @@ C    3,ARLSP,RTDP1(1,1,NZ,NY,NX),WTRVC(NZ,NY,NX),PPX(NZ,NY,NX)
 C    4,PPZ(NZ,NY,NX),PP(NZ,NY,NX)
 223   FORMAT(A8,7I4,12E12.4)
 C     ENDIF
-      IF(IDAY(1,NB1(NZ,NY,NX),NZ,NY,NX).EQ.0)THEN
-      ARLSP=ARLFP(NZ,NY,NX)+ARSTP(NZ,NY,NX)
       IF((HTCTL(NZ,NY,NX).GT.SDPTH(NZ,NY,NX))
      2.AND.(ARLSP.GT.ZEROP2(NZ,NY,NX))
      3.AND.(RTDP1(1,1,NZ,NY,NX).GT.SDPTH(NZ,NY,NX)+1.0E-06))THEN
@@ -263,22 +296,24 @@ C     ADD BRANCH TO SHOOT IF PLANT GROWTH STAGE, SHOOT NON-STRUCTURAL
 C     CONCENTRATION PERMIT
 C
 C     IFLGI=PFT initialization flag:0=no,1=yes
-C     PSIRG=root turgor potential
+C     PSIRG=root turgor potential (MPa)
 C     ISTYP=growth habit from PFT file
 C     IDAY(2,=floral initiation date
 C     NBR=primary root axis number
-C     WTRVC=nonstructural C storage
-C     PB=nonstructural C concentration needed for branching
+C     WTRVC=nonstructural C storage (g C)
+C     PB=nonstructural C concentration needed for branching (g C g C-1)
 C     IDTHB=branch life flag:0=living,1=dead
 C     PSTG=node number
-C     FNOD=scales node number for perennial vegetation (e.g. trees)
-C     NNOD=number of concurrently growing nodes
+C     FNOD=scales node number for perennial vegetation from ‘startq.f’
+C        (e.g. trees)
+C     NNOD=number of concurrently growing nodes from ‘startq.f’
 C     XTLI,GROUP=node number at planting,floral initiation   
 C
 C     IF(NZ.EQ.2)THEN
 C     WRITE(*,224)'HFUNC',I,J,NFZ,IFLGI(NZ,NY,NX),IFLGC(NZ,NY,NX)
 C    2,NNOD(NZ,NY,NX),ISTYP(NZ,NY,NX),IDAY(2,NB1(NZ,NY,NX),NZ,NY,NX)
-C    3,NBT(NZ,NY,NX),NBR(NZ,NY,NX),IDTHB(NB,NZ,NY,NX),NB1(NZ,NY,NX)
+C    3,NBT(NZ,NY,NX),NBR(NZ,NY,NX),IDTHB(NB1(NZ,NY,NX),NZ,NY,NX)
+C    3,NB1(NZ,NY,NX)
 C    2,TCG(NZ,NY,NX),PSIRG(1,NG(NZ,NY,NX),NZ,NY,NX)
 C    3,PSILM,WTRVC(NZ,NY,NX),CCPOLP(NZ,NY,NX)
 C    5,PB(NZ,NY,NX),PSTG(NB1(NZ,NY,NX),NZ,NY,NX) 
@@ -325,10 +360,11 @@ C     ADD AXIS TO ROOT IF PLANT GROWTH STAGE, ROOT NON-STRUCTURAL C
 C     CONCENTRATION PERMIT
 C
 C     PR=minimum nonstructural C concentration needed for root 
-C        branching in site file
-C     PSIRG,PSILM=current,minimum root water potential
+C        branching in site file (g C g C-1)
+C     PSIRG,PSILM=current,minimum root water potential (MPa)
 C     NRT=root axis number (max 10)
-C     PSTG=number of nodes initiated 
+C     PSTG=number of nodes initiated
+C     IDTHR:roots alive=0,dead=1 
 C
       IF(PSIRG(1,NG(NZ,NY,NX),NZ,NY,NX).GT.PSILM)THEN
       IF(NRT(NZ,NY,NX).EQ.0.OR.PSTG(NB1(NZ,NY,NX),NZ,NY,NX)
@@ -343,7 +379,6 @@ C
       ENDIF
       ENDIF
       ENDIF
-2224  FORMAT(A8,6I4)
 C
 C     THE REST OF THE SUBROUTINE MODELS THE PHENOLOGY OF EACH BRANCH
 C
@@ -351,7 +386,8 @@ C     IDAY(1,=emergence date (0=not emerged)
 C     IFLGI=PFT initialization flag:0=no,1=yes
 C     IDTHB=branch life flag:0=living,1=dead
 C     IFLGA,IFLGE=flags for initializing leafout,leafoff
-C     VRNS=leafout hours
+C        :0=enable,1=disable
+C     VRNS=accumulated leafout hours (h)
 C     ISTYP=growth habit:0=annual,1=perennial from PFT file 
 C     IWTYP=phenology type:1=cold deciduous from PFT file 
 C
@@ -375,20 +411,22 @@ C     FROM TEMPERATURE FUNCTION CALCULATED IN 'UPTAKE' AND
 C     RATES AT 25C ENTERED IN 'READQ' EXCEPT WHEN DORMANT
 C
 C     IWTYP=phenology type from PFT file
-C     VRNF,VRNX=leafoff hours,hours required for leafoff 
-C     PSTG=node number
+C     VRNF,VRNX=hours accumulated,hours required for leafoff
+C        from PFT file (h) 
+C     PSTG=current node number
 C     PSTGI=node number at floral initiation
-C     GROUPI=node number required for floral initiation
-C     TKG,TKCO=canopy temperature,canopy temp used in Arrhenius eqn
-C     OFFST=shift in Arrhenius curve for thermal adaptation
-C     TFNP=temperature function for phenology (25 oC =1 )
-C     8.313,710.0=gas constant,enthalpy
-C     60000,197500,218500=energy of activn,high,low temperature
-C        inactivation(KJ mol-1)
+C     GROUPI=node number required for floral initiation from PFT file 
+C     TKG,TKCO=canopy temperature,canopy acclimated temperature (K)
+C     OFFST=shift in Arrhenius curve for thermal acclimation (K)
+C     TFNP=temperature function for phenology (25 oC =1)
+C     8.313,710.0=gas constant,enthalpy (J mol-1)
+C     60000,197500,218500=energy of activation,high,low temperature
+C        inactivation (J mol-1)
 C     IDAY(2,=floral initiation date (0=not initiated)
-C     RNI,RLA=rates of node initiation,leaf appearance
-C     XRNI,XRLA=rate of node initiation,leaf appearance at 25 oC (h-1)
-C     XNFH=time step from ‘wthr.f’
+C     RNI,RLA=rates of node initiation,leaf appearance (t-1)
+C     XRNI,XRLA=rate of node initiation,leaf appearance at 25 oC 
+C        from PFT file (h-1)
+C     XNFH=time step for biological fluxes from ‘wthr.f’ (h t-1)    
 C
 C     IF(NZ.EQ.3)THEN
 C     WRITE(*,4648)'RLA',I,J,NFZ,NZ,NB,IDAY(2,NB,NZ,NY,NX)
@@ -419,11 +457,11 @@ C     NODE INITIATION AND LEAF APPEARANCE RATES SLOWED
 C     BY LOW TURGOR OR O2
 C
 C     IDAY(2,=floral initiation date (0=not initiated)
-C     PSILT=leaf water potential
+C     PSILT=leaf water potential (MPa)
 C     WFNG=water stress effect on phenology
-C     OSTR=O2 root uptake:demand
+C     OSTR=O2 root uptake:demand (g O g O-1)
 C     OFNG=OSTR effect on phenology
-C     RNI,RLA=rates of node initiation,leaf appearance
+C     RNI,RLA=rates of node initiation,leaf appearance (t-1)
 C
       IF(ISTYP(NZ,NY,NX).EQ.0
      2.AND.IDAY(2,NB,NZ,NY,NX).EQ.0)THEN
@@ -439,6 +477,7 @@ C     ACCUMULATE NODE INITIATION AND LEAF APPEARANCE RATES
 C     INTO TOTAL NUMBER OF NODES AND LEAVES
 C
 C     PSTG,VSTG=number of nodes initiated,leaves appeared
+C     RNI,RLA=rates of node initiation,leaf appearance (t-1)
 C
       PSTG(NB,NZ,NY,NX)=PSTG(NB,NZ,NY,NX)+RNI
       VSTG(NB,NZ,NY,NX)=VSTG(NB,NZ,NY,NX)+RLA
@@ -448,14 +487,17 @@ C     VEGETATIVE AND REPRODUCTIVE GROWTH STAGES. THIS PROGRESSION
 C     IS USED TO SET START AND END DATES FOR GROWTH STAGES BELOW
 C
 C     IDAY(2,=floral initiation date (0=not initiated)
+C     IDAY(6,=anthesis date (0=not initiated)
 C     GSTGI=vegetative node number normalized for maturity group
+C     PSTG=current node number
 C     PSTGI=node number at floral initiation
 C     GROUPI=node number required for floral initiation
-C     DGSTGI,TGSTGI=hourly,total change in GSTGI
+C     DGSTGI,TGSTGI=current,total change in GSTGI
 C     GSTGF=reproductive node number normalized for maturity group
 C     PSTGF=node number at flowering
 C     DGSTGF,TGSTGF=hourly,total change in GSTGF
-C     IFLGG=PFT senescence flag
+C     IFLGG=PFT senescence flag for remobilizing C,N,P from lowest
+C        node:1=enabled,0=disabled
 C
       IF(IDAY(2,NB,NZ,NY,NX).NE.0)THEN
       GSTGI(NB,NZ,NY,NX)=(PSTG(NB,NZ,NY,NX)-PSTGI(NB,NZ,NY,NX))
@@ -483,11 +525,12 @@ C     IDAY(2,=floral initiation date (0=not initiated)
 C     PSTG=number of nodes initiated
 C     PSTGI=node number at floral initiation
 C     GROUP=node number required for floral initiation
-C     VRNS,VRNL=leafout hours,hours required for leafout 
-C     DYLX,DLYN=daylength of previous,current day
+C     VRNS,VRNL=hours accumulated,hours required for leafout 
+C        from PFT file (h) 
+C     DYLX,DLYN=daylength of previous,current day (h)
 C     ISTYP=growth habit from PFT file
 C     IWTYP=phenology type from PFT file
-C     ZC,DPTHS=canopy height,snowpack depth
+C     ZC,DPTHS=canopy height,snowpack depth (m)
 C
       IF(IDAY(2,NB,NZ,NY,NX).EQ.0)THEN
       IF(PSTG(NB,NZ,NY,NX).GT.GROUP(NB,NZ,NY,NX)+PSTGI(NB,NZ,NY,NX)
@@ -505,8 +548,8 @@ C     AND ON MATURITY GROUP, CRITICAL PHOTOPERIOD AND PHOTOPERIOD
 C     SENSITIVITY ENTERED IN 'READQ'
 C
 C     IPTYP=photoperiod type from PFT file
-C     PPD=photoperiod sensitivity
-C     XDL=critical photoperiod from PFT file
+C     PPD=photoperiod sensitivity (h)
+C     XDL=critical photoperiod from PFT file (h)
 C     IDAY(2,=date of floral initiation
 C     VSTGX=node number on date of floral initiation 
 C
@@ -550,8 +593,9 @@ C     GSTGI=vegetative node number normalized for maturity group
 C     GSTGG=normalized growth stage durations for vegetative phenology
 C     ISTYP=growth habit from PFT file
 C     IWTYP=phenology type from PFT file
-C     DYLX,DLYN=daylength of previous,current day
-C     VRNF,VRNX=leafoff hours,hours required for leafoff
+C     DYLX,DLYN=daylength of previous,current day (h)
+C     VRNF,VRNX=hours accumulated,hours required for leafoff
+C        from PFT file (h) 
 C     IFLGE=flag for enabling leafout:0=enable,1=disable
 C
       ELSEIF(IDAY(3,NB,NZ,NY,NX).EQ.0)THEN
@@ -571,7 +615,8 @@ C     ISTYP,IWTYP,IPTYP=growth habit,phenology,photoperiod type
 C        from PFT file
 C     GSTGI=vegetative node number normalized for maturity group
 C     GSTGG=normalized growth stage durations for vegetative phenology
-C     VRNF,VRNX=leafoff hours,hours required for leafoff
+C     VRNF,VRNX=hours accumulated,hours required for leafoff
+C        from PFT file (h) 
 C     IFLGE=flag for enabling leafout:0=enable,1=disable
 C
       ELSEIF(IDAY(4,NB,NZ,NY,NX).EQ.0)THEN
@@ -595,7 +640,8 @@ C     ISTYP,IWTYP,IPTYP=growth habit,phenology,photoperiod type
 C        from PFT file
 C     GSTGI=vegetative node number normalized for maturity group
 C     GSTGG=normalized growth stage durations for vegetative phenology
-C     VRNF,VRNX=leafoff hours,hours required for leafoff
+C     VRNF,VRNX=hours accumulated,hours required for leafoff
+C        from PFT file (h) 
 C     IFLGE=flag for enabling leafout:0=enable,1=disable
 C
       ELSEIF(IDAY(5,NB,NZ,NY,NX).EQ.0)THEN
@@ -620,8 +666,9 @@ C     PSTGI=node number at floral initiation
 C     ISTYP,IWTYP,IPTYP=growth habit,phenology,photoperiod type 
 C        from PFT file
 C     IFLGE=flag for enabling leafout:0=enable,1=disable
-C     VRNF,VRNX=leafoff hours,hours required for leafoff
-C     DYLX,DLYN=daylength of previous,current day
+C     VRNF,VRNX=hours accumulated,hours required for leafoff
+C        from PFT file (h) 
+C     DYLX,DLYN=daylength of previous,current day (h)
 C     PSTGF=number of nodes at anthesis 
 C
       ELSEIF(IDAY(6,NB,NZ,NY,NX).EQ.0)THEN
@@ -649,9 +696,10 @@ C     GSTGR=normalized growth stage durations for reproductive
 C        phenology
 C     ISTYP,IWTYP,IPTYP=growth habit,phenology,photoperiod type 
 C        from PFT file
-C     DYLX,DLYN=daylength of previous,current day
+C     DYLX,DLYN=daylength of previous,current day (h)
 C     IFLGE=flag for enabling leafout:0=enable,1=disable
-C     VRNF,VRNX=leafoff hours,hours required for leafoff
+C     VRNF,VRNX=hours accumulated,hours required for leafoff
+C        from PFT file (h) 
 C
       ELSEIF(IDAY(7,NB,NZ,NY,NX).EQ.0)THEN
       IF(GSTGF(NB,NZ,NY,NX).GT.0.50*GSTGR 
@@ -695,10 +743,13 @@ C
       ENDIF
       ENDIF
 C
+C     FLAG TO REMOBILIZE C,N,P FROM LOWEST NODE
+C
 C     KVSTG=integer of most recent leaf number currently growing
 C     VSTG=number of leaves appeared
 C     VSTGX=node number on date of floral initiation 
-C     IFLGP=flag for remobilization
+C     IFLGP=flag for remobilization from lowest
+C        node:1=enabled,0=disabled
 C     KLEAF=number of leaves currently active
 C
       KVSTGX=KVSTG(NB,NZ,NY,NX)
@@ -717,8 +768,10 @@ C
 C
 C     PHENOLOGY
 C
-C     DYLX,DLYN=daylength of previous,current day
-C     VRNY,VRNZ=hourly counter for lengthening,shortening photoperiods
+C     DYLX,DLYN=daylength of previous,current day (h)
+C     VRNY,VRNZ=counter for lengthening,shortening photoperiods (h)
+C     XNFH=time step for biological fluxes from ‘wthr.f’ (h t-1)    
+C     XNFH=time step for biological fluxes from ‘wthr.f’ (h t-1)    
 C   
       IF(IDTHB(NB,NZ,NY,NX).EQ.0.OR.IFLGI(NZ,NY,NX).EQ.1)THEN
       IF(DYLN(NY,NX).GE.DYLX(NY,NX))THEN
@@ -732,12 +785,11 @@ C
 C     CALCULATE EVERGREEN PHENOLOGY DURING LENGTHENING PHOTOPERIODS
 C
 C     IWTYP=phenology type from PFT file
-C     DYLX,DLYN=daylength of previous,current day
-C     VRNS,VRNF=leafout,leafoff hours 
-C     VRNY=hourly counter for lengthening photoperiods
-C     ALAT=latitude from site file
+C     DYLX,DLYN=daylength of previous,current day (h)
+C     VRNS,VRNF=accumulated leafout,leafoff hours (h)
+C     VRNY=counter for lengthening photoperiods (h)
+C     ALAT=latitude from site file (+ve=N,-ve=S)
 C     IFLGF=flag for enabling leafoff:0=enable,1=disable
-C     ALAT=latitude
 C
       IF(IWTYP(NZ,NY,NX).EQ.0)THEN
       IF(DYLN(NY,NX).GE.DYLX(NY,NX))THEN
@@ -752,10 +804,10 @@ C
 C
 C     CALCULATE EVERGREEN PHENOLOGY DURING SHORTENING PHOTOPERIODS
 C
-C     VRNS,VRNF=leafout,leafoff hours 
-C     VRNZ=hourly counter for shortening photoperiods
+C     VRNS,VRNF=accumulated leafout,leafoff hours (h)
+C     VRNZ=counter for shortening photoperiods (h)
 C     IFLGE=flag for enabling leafout:0=enable,1=disable
-C     ALAT=latitude from site file
+C     ALAT=latitude from site file (+ve=N,-ve=S)
 C
       IF(DYLN(NY,NX).LT.DYLX(NY,NX))THEN
       VRNF(NB,NZ,NY,NX)=VRNZ(NB,NZ,NY,NX)
@@ -771,13 +823,15 @@ C     CALCULATE WINTER DECIDUOUS PHENOLOGY BY ACCUMULATING HOURS ABOVE
 C     SPECIFIED TEMPERATURE DURING LENGTHENING PHOTOPERIODS
 C
 C     IWTYP=phenology type from PFT file
-C     DYLX,DLYN=daylength of previous,current day
-C     VRNS,VRNL=leafout hours,hours required for leafout 
-C     VRNF,VRNX=leafoff hours,hours required for leafoff
+C     DYLX,DLYN=daylength of previous,current day (h)
+C     VRNS,VRNL=hours accumulated,hours required for leafout 
+C        from PFT file (h) 
+C     VRNF,VRNX=hours accumulated,hours required for leafoff
+C        from PFT file (h) 
 C     IFLGE,IFLGF=flag for enabling leafout,leafoff:0=enable,1=disable
 C     TCG,TCZ,CTC=canopy temperature,leafout threshold temperature,
-C        chilling temp
-C     ALAT=latitude from site file
+C        chilling temp (oC)
+C     ALAT=latitude from site file (+ve=N,-ve=S)
 C     IDAY(2,=date of floral initiation
 C
       ELSEIF(IWTYP(NZ,NY,NX).EQ.1)THEN
@@ -809,12 +863,14 @@ C
 C     CALCULATE WINTER DECIDUOUS PHENOLOGY BY ACCUMULATING HOURS BELOW 
 C     SPECIFIED TEMPERATURE DURING SHORTENING PHOTOPERIODS
 C
-C     DYLX,DLYN=daylength of previous,current day
-C     VRNS,VRNL=leafout hours,hours required for leafout 
-C     VRNF,VRNX=leafoff hours,hours required for leafoff
+C     DYLX,DLYN=daylength of previous,current day (h)
+C     VRNS,VRNL=hours accumulated,hours required for leafout 
+C        from PFT file (h) 
+C     VRNF,VRNX=hours accumulated,hours required for leafoff
+C        from PFT file (h) 
 C     IFLGE,IFLGF=flag for enabling leafout,leafoff:0=enable,1=disable
-C     TCG,TCZ,CTC=canopy temp,leafout threshold temp,chilling temp
-C     ALAT=latitude from site file
+C     TCG,TCZ,CTC=canopy temp,leafout threshold temp,chilling temp (oC)
+C     ALAT=latitude from site file (+ve=N,-ve=S)
 C     IDAY(2,=date of floral initiation
 C
       IF((DYLN(NY,NX).LT.DYLX(NY,NX)
@@ -844,18 +900,21 @@ C     CALCULATE DROUGHT DECIDUOUS PHENOLOGY BY ACCUMULATING HOURS
 C     ABOVE SPECIFIED TURGOR POTENTIAL DURING DORMANCY
 C
 C     IWTYP=phenology type from PFT file
-C     VRNS,VRNL=leafout hours,hours required for leafout 
-C     VRNF=leafoff hours
+C     VRNS,VRNL=hours accumulated,hours required for leafout 
+C        from PFT file (h) 
+C     VRNF=hours accumulated for leafoff (h)
 C     IFLGE,IFLGF=flag for enabling leafout,leafoff:0=enable,1=disable
-C     PSILT=canopy total water potential
-C     PSILX,PSILY=minimum canopy water potential for leafout,leafoff 
-C     ALAT=latitude from site file
+C     PSILT=canopy total water potential (MPa)
+C     PSILX,PSILY=minimum canopy water potential for leafout,leafoff
+C        (MPa) 
+C     ALAT=latitude from site file (+ve=N,-ve=S)
 C     IDAY(2,=date of floral initiation
+C     XNFH=time step for biological fluxes from ‘wthr.f’ (h t-1)    
 C
       ELSEIF(IWTYP(NZ,NY,NX).EQ.2.OR.IWTYP(NZ,NY,NX).EQ.4
      2.OR.IWTYP(NZ,NY,NX).EQ.5)THEN
       IF(IFLGE(NB,NZ,NY,NX).EQ.0)THEN
-      IF(PSILG(NZ,NY,NX).GE.PSILX)THEN
+      IF(PSILT(NZ,NY,NX).GE.PSILX)THEN
       VRNS(NB,NZ,NY,NX)=VRNS(NB,NZ,NY,NX)+1.0*XNFH 
       ENDIF
       IF(VRNS(NB,NZ,NY,NX).LT.VRNL(NB,NZ,NY,NX))THEN
@@ -873,15 +932,18 @@ C
 C     CALCULATE DROUGHT DECIDUOUS PHENOLOGY BY ACCUMULATING HOURS 
 C     BELOW SPECIFIED WATER POTENTIAL DURING GROWING SEASON 
 C
-C     VRNS=leafout hours,hours required for leafout 
-C     VRNF,VRNX=leafoff hours,hours required for leafoff
+C     VRNS,VRNL=hours accumulated,hours required for leafout 
+C        from PFT file (h) 
+C     VRNF,VRNX=hours accumulated,hours required for leafoff
+C        from PFT file (h) 
 C     IFLGE,IFLGF=flag for enabling leafout,leafoff:0=enable,1=disable
-C     PSILT=canopy total water potential
-C     PSILX,PSILY=minimum canopy water potential for leafout,leafoff 
-C     ALAT=latitude from site file
+C     PSILT=canopy total water potential (MPa)
+C     PSILX,PSILY=minimum canopy water potential for leafout,leafoff
+C        (MPa) 
+C     ALAT=latitude from site file (+ve=N,-ve=S)
 C     IDAY(2,=date of floral initiation
-C     VRNY,VRNZ=hourly counter for lengthening,shortening photoperiods
-C     VRNE=maximum hours for leafout,leafoff
+C     VRNY,VRNZ=counter for lengthening,shortening photoperiods (h)
+C     VRNE=maximum hours for leafout,leafoff (h)
 C
       IF(IFLGE(NB,NZ,NY,NX).EQ.1
      3.AND.IFLGF(NB,NZ,NY,NX).EQ.0)THEN
@@ -909,14 +971,17 @@ C     HOURS ABOVE SPECIFIED TEMPERATURE OR WATER POTENTIAL DURING
 C     LENGTHENING PHOTOPERIODS
 C
 C     IWTYP=phenology type from PFT file
-C     DYLX,DLYN=daylength of previous,current day
-C     VRNS,VRNL=leafout hours,hours required for leafout 
-C     VRNF,VRNX=leafoff hours,hours required for leafoff
-C     PSILT=canopy total water potential
-C     PSILX,PSILY=minimum canopy water potential for leafout,leafoff 
+C     DYLX,DLYN=daylength of previous,current day (h)
+C     VRNS,VRNL=hours accumulated,hours required for leafout 
+C        from PFT file (h) 
+C     VRNF,VRNX=hours accumulated,hours required for leafoff
+C        from PFT file (h) 
+C     PSILT=canopy total water potential (MPa)
+C     PSILX,PSILY=minimum canopy water potential for leafout,leafoff
+C        (MPa) 
 C     IFLGE,IFLGF=flag for enabling leafout,leafoff:0=enable,1=disable
-C     TCG,TCZ,CTC=canopy temp,leafout threshold temp,chilling temp
-C     ALAT=latitude from site file
+C     TCG,TCZ,CTC=canopy temp,leafout threshold temp,chilling temp (oC)
+C     ALAT=latitude from site file (+ve=N,-ve=S)
 C     IDAY(2,=date of floral initiation
 C
       ELSEIF(IWTYP(NZ,NY,NX).EQ.3)THEN
@@ -947,14 +1012,17 @@ C     CALCULATE WINTER AND DROUGHT DECIDUOUS PHENOLOGY BY ACCUMULATING
 C     HOURS BELOW SPECIFIED TEMPERATURE OR WATER POTENTIAL DURING
 C     SHORTENING PHOTOPERIODS
 C
-C     DYLX,DLYN=daylength of previous,current day
-C     VRNS,VRNL=leafout hours,hours required for leafout 
-C     VRNF,VRNX=leafoff hours,hours required for leafoff
+C     DYLX,DLYN=daylength of previous,current day (h)
+C     VRNS,VRNL=hours accumulated,hours required for leafout 
+C        from PFT file (h) 
+C     VRNF,VRNX=hours accumulated,hours required for leafoff
+C        from PFT file (h) 
 C     IFLGE,IFLGF=flag for enabling leafout,leafoff:0=enable,1=disable
-C     TCG,TCZ,CTC=canopy temp,leafout threshold temp,chilling temp
-C     PSILT=canopy total water potential
+C     TCG,TCZ,CTC=canopy temp,leafout threshold temp,chilling temp (oC)
+C     PSILT=canopy total water potential (MPa)
 C     PSILX,PSILY=minimum canopy water potential for leafout,leafoff 
-C     ALAT=latitude from site file
+C        (MPa)
+C     ALAT=latitude from site file (+ve=N,-ve=S)
 C     IDAY(2,=date of floral initiation
 C
       IF((DYLN(NY,NX).LT.DYLX(NY,NX).OR.DYLN(NY,NX) 
@@ -975,8 +1043,8 @@ C
 C
 C     WATER STRESS INDICATOR
 C
-C     PSILT=canopy total water potential
-C     PSILY=minimum canopy water potential for leafoff 
+C     PSILT=canopy total water potential (MPa)
+C     PSILY=minimum canopy water potential for leafoff (MPa) 
 C     WSTR=number of hours PSILT < PSILY (for output only) 
 C
       IF(PSILT(NZ,NY,NX).LT.PSILY(IGTYP(NZ,NY,NX)))THEN
@@ -990,4 +1058,5 @@ C
 9995  CONTINUE
       RETURN
       END
+
 

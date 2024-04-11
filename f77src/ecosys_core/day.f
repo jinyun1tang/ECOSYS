@@ -60,7 +60,7 @@ C
       NN=N
 500   CONTINUE
 C
-C     WRITE DAILY MAX MIN ACCUMULATORS FOR WEATHER VARIABLES
+C     INITIALIZE DAILY MAX MIN ACCUMULATORS FOR WEATHER VARIABLES
 C     FOR USE IN OUTPUT FILES
 C
 501   DO 955 NX=NHW,NHE
@@ -78,6 +78,7 @@ C
 945   CONTINUE
 C
 C     RESET ANNUAL FLUX ACCUMULATORS AT START OF ANNUAL CYCLE
+C
 C     ALAT=latitude +ve=N,-ve=S
 C
       IF((ALAT(NY,NX).GE.0.0.AND.I.EQ.1)
@@ -128,6 +129,7 @@ C
       TNPP(NY,NX)=0.0
       TRAU(NY,NX)=0.0
       TCAN(NY,NX)=0.0
+      TXCO2(NY,NX)=0.0
       XHVSTC(NY,NX)=0.0
       XHVSTN(NY,NX)=0.0
       XHVSTP(NY,NX)=0.0
@@ -205,6 +207,7 @@ C
       ENDIF
 C
 C     TIME STEP OF WEATHER DATA
+C
 C     IWTHR=weather data type:1=daily,2=hourly for first (1) 
 C        or second (2) scene in current year
 C     ITYPE=weather data type:1=daily,2=hourly
@@ -226,7 +229,7 @@ C     TMPX,TMPN=maximum,minimum daily temperature from weather file
 C     DWPT=daily vapor pressure from weather file
 C     TAVG*,AMP*,VAVG*,VMP*=daily averages, amplitudes of
 C        temperatures, vapor pressures to calculate hourly
-C        values in wthr.f 
+C        values in ‘wthr.f’ 
 C
       IF(ITYPE.EQ.1)THEN
       IF(IETYP(NY,NX).GE.-1)THEN
@@ -261,7 +264,9 @@ C     MODIFIERS TO TEMPERATURE, RADIATION, WIND, HUMIDITY,
 C     PRECIPITATION, IRRIGATION, CO2 AND N INPUTS FROM CLIMATE CHANGES 
 C     ENTERED IN OPTION FILE IN 'READS.F'
 C
-C     ICLM=type of climate change 1=step,2=incremental
+C     ICLM=type of climate change 
+C        :1=step change
+C        :2=incremental change (annual calculated daily)
 C     TDTPX,TDTPN=change in maximum,minimum temperature
 C     TDRAD,TDWND,TDHUM=change in radiation,windspeed,vapor pressure
 C     TDPRC,TDIRRI=change in precipitation,irrigation
@@ -311,9 +316,16 @@ C
 C     ATTRIBUTE MIXING COEFFICIENTS TO TILLAGE EVENTS 
 C     FROM SOIL MANAGEMENT FILE IN 'READS'
 C
-C     ITILL=soil disturbance type 1-20:tillage,21=litter removal,
-C        22=fire,23-24=drainage
-C     XCORP=soil mixing fraction used in redist.f
+C     ITILL=soil disturbance type 1-10:tillage including crop
+C        soil and surface litter mixing within tillage depth
+C        = disturbance type/10  
+C                                 11-20:tillage not including crop
+C        soil and surface litter mixing within tillage depth
+C        = (disturbance type – 10)/10  
+C                                 21:surface litter removal
+C                                 22:fire
+C                                 23-24:natural, artificial drainage
+C     XCORP=soil mixing fraction used in ‘redist.f’
 C
 C     IF ALL PLANT SPECIES ARE TILLED
 C
@@ -392,3 +404,4 @@ C    3,(RRIG(J,I,NY,NX),J=1,24)
 9995  CONTINUE
       RETURN
       END
+

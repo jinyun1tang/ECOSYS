@@ -30,30 +30,34 @@ C
       include "blk16.h"
       include "blk18a.h"
       include "blk18b.h"
-      CHARACTER*16 DATA(30),DATAP(JP,JY,JX)
+      CHARACTER*16 DATA(30),DATAC(30,250,250),DATAP(JP,JY,JX)
       CHARACTER*3 CHOICE(102,20)
       CHARACTER*8 CDATE
       DIMENSION CNOPC(4),CPOPC(4)
 C
-C     VSTK=stalk volume:mass (g m-3)
-C     FDMPM=minimum canopy dry matter concentration (g g-1)
+C     VSTK=stalk volume:mass (m3 g C-1)
+C     FDMPM=canopy dry matter concentration at full hydration 
+C        (g C g FW-1)
 C     FARS=stalk sapwood thickness (m)
 C
-      DATA VSTK,FDMPM,FARS/4.0E-06,0.16,0.01/
+      DATA VSTK,FDMPM,FARS/4.0E-06,0.16,0.0025/
 C
 C     INITIALIZE SHOOT GROWTH VARIABLES
 C
-C     IFLGN=0:take values from readq.f
-C          =1:retain existing values
+C     IFLGN=0:take values from ‘readq.f’
+C          =1:retain existing values from ‘routp.f’
 C     IFLGC=PFT flag:0=not alive,1=alive
 C     IYR0,IDAY0,IYRH,IDAYH=year,day of planting,harvesting
-C     PPI,PPX=initial,current population (m-2)
-C     WTRVC,WTRVN,WTRVP=initial seed stotage C,N,P stocks (g)
-C     CF,CFI=current,initial clumping factor
+C     PPI,PPX=initial,current plant population (n m-2)
+C     PP=current plant population (n)
+C     AREA=grid cell area (m2)
+C     WTRVC,WTRVN,WTRVP=initial seed storage C,N,P stocks (g)
+C     CF,CFI=current,initial clumping factor from PFT file
 C     RSMH=cuticular resistance to water (h m-1)
 C     RCMX=cuticular resistance to CO2 (s m-1)
-C     CNWS,CPWS=protein:N,protein:P ratios
-C     CWSRT=maximum root protein concentration (g g-1)
+C     CNWS,CPWS=protein:N,protein:P ratios from CNRT and CPRT in PFT
+C        file (g g N,P-1)
+C     CWSRT=maximum root protein concentration (g g C-1)
 C     O2I=intercellular O2 concentration in C3,C4 PFT (umol mol-1)
 C
       DO 9995 NX=NHWQ,NHEQ
@@ -70,8 +74,10 @@ C
       IF(PPI(NZ,NY,NX).GT.0.0)THEN
       PP(NZ,NY,NX)=PPI(NZ,NY,NX)*AREA(3,NU(NY,NX),NY,NX)
       PPZ(NZ,NY,NX)=PPI(NZ,NY,NX)
+      PPX(NZ,NY,NX)=PPZ(NZ,NY,NX) 
       ELSE
       PP(NZ,NY,NX)=PPZ(NZ,NY,NX)*AREA(3,NU(NY,NX),NY,NX)
+      PPX(NZ,NY,NX)=PPZ(NZ,NY,NX) 
       ENDIF
       ELSE
       PP(NZ,NY,NX)=PPX(NZ,NY,NX)*AREA(3,NU(NY,NX),NY,NX)
@@ -104,12 +110,14 @@ C     IF(DATAP(NZ,NY,NX).NE.'NO')THEN
       O2I(NZ,NY,NX)=3.96E+05
       ENDIF
 C
-C     FRACTIONS OF PLANT LITTER ALLOCATED TO KINETIC COMPONENTS
-C     PROTEIN(*,1),CH2O(*,2),CELLULOSE(*,3),LIGNIN(*,4) IN SOIL LITTER
+C     FRACTIONS OF PLANT ORGANS ALLOCATED TO KINETIC COMPONENTS
+C     IN LITTER DEPENDING ON PLANT PROPERTIES IN PFT FILE
 C
-C     CFOPC=fraction of plant litter allocated in nonstructural(0,*),
-C        foliar(1,*),non-foliar(2,*),stalk(3,*),root(4,*), 
-C        coarse woody (5,*)
+C     CFOPC=fraction of plant litter allocated 
+C     in nonstructural(0,*),foliar(1,*),non-foliar(2,*),stalk(3,*), 
+C        root(4,*), coarse woody (5,*) organs
+C     to protein(*,1),ch2o(*,2),cellulose(*,3),lignin(*,4) 
+C        kinetic components in litter 
 C
 C     NONSTRUCTURAL
 C
@@ -252,7 +260,7 @@ C
 C
 C     INITIALIZE C-N AND C-P RATIOS IN PLANT LITTER
 C
-C     CNOPC,CPOPC=fractions to allocate N,P to kinetic components
+C     CNOPC,CPOPC=fractions to allocate litter N,P to kinetic components
 C     CFOPN,CFOPP=distribution of litter N,P to kinetic components
 C
       CNOPC(1)=0.020
@@ -297,13 +305,16 @@ C
 C
 C     PFT THERMAL ACCLIMATION
 C
-C     TCZD,TCXC=base threshold temperature for leafout,leafoff (oC)
+C     TCZD,TCXD=base threshold temperature for leafout,leafoff (oC)
 C     ZTYP,ZTYPI=dynamic,initial thermal adaptation zone from PFT file
 C     OFFST=shift in Arrhenius curve for thermal adaptation (oC)
 C     TCZ,TCX=threshold temperature for leafout,leafoff (oC)
-C     HTC=high temperature threshold for grain number loss (oC)
-C     SSTX=sensitivity to HTC (seeds oC-1 h-1 above HTC)
-C     ICTYP=3:C3,=4:C4 from plant species file
+C     HTC=high temperature threshold for grain number loss during 
+C        post-anthesis seed set (oC)
+C     SSTX=sen1sitivity of seed set to TCC < CTC,TCC > HTC 
+C        (fraction of set seeds oC-1 h-1)
+C     TCC=canopy surface temperature (oC)
+C     ICTYP=3:C3,=4:C4 from PFT file
 C
       TCZD=5.00
       TCXD=7.50
@@ -313,43 +324,32 @@ C
       TCX(NZ,NY,NX)=AMIN1(15.0,TCXD-OFFST(NZ,NY,NX))
       IF(ICTYP(NZ,NY,NX).EQ.3)THEN
       IF(DATAP(NZ,NY,NX)(1:4).EQ.'soyb')THEN
-      HTC(NZ,NY,NX)=30.0+3.0*ZTYP(NZ,NY,NX)
+      HTC(NZ,NY,NX)=32.5+2.0*ZTYP(NZ,NY,NX)
       SSTX(NZ,NY,NX)=0.002
       ELSE
-      HTC(NZ,NY,NX)=27.0+3.0*ZTYP(NZ,NY,NX)
-      SSTX(NZ,NY,NX)=0.002
-      ENDIF
-      ELSE
-      HTC(NZ,NY,NX)=27.0+3.0*ZTYP(NZ,NY,NX)
+      HTC(NZ,NY,NX)=27.5+2.0*ZTYP(NZ,NY,NX)
       SSTX(NZ,NY,NX)=0.005
       ENDIF
+      ELSE
+      HTC(NZ,NY,NX)=27.5+2.0*ZTYP(NZ,NY,NX)
+      SSTX(NZ,NY,NX)=0.005
+      ENDIF
+C     WRITE(*,3233)'DATAP',NX,NY,NZ
+C    2,DATAP(NZ,NY,NX),DATAP(NZ,NY,NX)(1:4),HTC(NZ,NY,NX)
+3233  FORMAT(A8,3I4,2A16,1E12.4)
 C
 C     SEED CHARACTERISTICS
 C
 C     SDVL,SDLG,SDAR=seed volume(m3),length(m),area(m2)
 C     GRDM=seed C mass (g) from PFT file
-C
-      SDVL(NZ,NY,NX)=GRDM(NZ,NY,NX)*5.0E-06
-      SDLG(NZ,NY,NX)=2.0*(0.75*SDVL(NZ,NY,NX)/3.1416)**0.33
-      SDAR(NZ,NY,NX)=4.0*3.1416*(SDLG(NZ,NY,NX)/2.0)**2
-C
-C     INITIALIZE ROOT(N=1),MYCORRHIZAL(N=2) DIMENSIONS, 
-C     UPTAKE PARAMETERS
-C
 C     SDPTH=seeding depth(m) from PFT management file
 C     CDPTHZ=depth to soil layer bottom from surface(m)
 C     NG,NIX,NINR=seeding,upper,lower rooting layer
 C     CNRTS,CPRTS=N,P root growth yield
-C     RRAD1M,RRAD2M=maximum primary,secondary mycorrhizal radius (m)
-C     PORT=mycorrhizal porosity
-C     UPMXZH,UPKMZH,UPMNZH=NH4 max uptake(g m-2 h-1),
-C        Km(uM),min concn (uM)      
-C     UPMXZO,UPKMZO,UPMNZO=NO3 max uptake(g m-2 h-1),
-C        Km(uM), min concn (uM)      
-C     UPMXPO,UPKMPO,UPMNPO=H2PO4 max uptake(g m-2 h-1),
-C        Km(uM),min concn (uM)      
-C     RSRR,RSRA=radial,axial root resistivity (m2 MPa-1 h-1)
 C
+      SDVL(NZ,NY,NX)=GRDM(NZ,NY,NX)*5.0E-06
+      SDLG(NZ,NY,NX)=2.0*(0.75*SDVL(NZ,NY,NX)/3.1416)**0.33
+      SDAR(NZ,NY,NX)=4.0*3.1416*(SDLG(NZ,NY,NX)/2.0)**2
       SDPTH(NZ,NY,NX)=SDPTHI(NZ,NY,NX)
       DO 9795 L=NU(NY,NX),NL(NY,NX)
       IF(SDPTH(NZ,NY,NX).GE.CDPTHZ(L-1,NY,NX)
@@ -363,6 +363,19 @@ C
 9795  CONTINUE
       CNRTS(NZ,NY,NX)=CNRT(NZ,NY,NX)*DMRT(NZ,NY,NX)
       CPRTS(NZ,NY,NX)=CPRT(NZ,NY,NX)*DMRT(NZ,NY,NX)
+C
+C     INITIALIZE MYCORRHIZAL(N=2) DIMENSIONS, UPTAKE PARAMETERS
+C
+C     RRAD1M,RRAD2M=maximum primary,secondary mycorrhizal radius (m)
+C     PORT=mycorrhizal porosity
+C     UPMXZH,UPKMZH,UPMNZH=NH4 max uptake(g m-2 h-1),
+C        Km(uM),min concn (uM)      
+C     UPMXZO,UPKMZO,UPMNZO=NO3 max uptake(g m-2 h-1),
+C        Km(uM), min concn (uM)      
+C     UPMXPO,UPKMPO,UPMNPO=H2PO4 max uptake(g m-2 h-1),
+C        Km(uM),min concn (uM)      
+C     RSRR,RSRA=radial,axial root resistivity (m2 MPa-1 h-1)
+C
       RRAD1M(2,NZ,NY,NX)=2.5E-06
       RRAD2M(2,NZ,NY,NX)=2.5E-06
       PORTI(2,NZ,NY,NX)=PORTI(1,NZ,NY,NX)
@@ -378,11 +391,13 @@ C
       RSRR(2,NZ,NY,NX)=1.0E+04
       RSRA(2,NZ,NY,NX)=1.0E+12
 C
-C     PORTX=tortuosity for gas transport
+C     INITIALIZE ROOT DIMENSIONS
+C
+C     PORT=root porosity from PFT file
 C     RRADP=path length for radial diffusion within root (m)
 C     DMVL=volume:C ratio (m3 g-1)
 C     RTLG1X,RTLG2X=specific primary,secondary root length (m g-1)
-C     RTAR1X,RTAR2X=specific primary,secondary root area (m2 g-1)
+C     RTAR1X,RTAR2X=primary,secondary root x-sectional area (m2)
 C
       DO 500 N=1,2
       PORT(N,NZ,NY,NX)=PORTI(N,NZ,NY,NX)
@@ -400,7 +415,11 @@ C    2*SQRT(0.25*(1.0-PORTI(N,NZ,NY,NX)))
       RTAR2X(N,NZ,NY,NX)=3.142*RRAD2X(N,NZ,NY,NX)**2
 500   CONTINUE
 C
-C     INITIALIZE PLANT PHENOLOGY 
+C     INITIALIZE PLANT PHENOLOGY FOR USE IN ‘HFUNC.F’
+C     FROMINPUTS IN PFT FILE 
+C
+C     GROUPI=plant maturity group
+C     XTLI=node number in seed at planting  
 C
       IFLGI(NZ,NY,NX)=0
       IDTHP(NZ,NY,NX)=0
@@ -418,7 +437,7 @@ C
       ENDIF
       IFLGF(NB,NZ,NY,NX)=0
       IFLGR(NB,NZ,NY,NX)=0
-      IFLGQ(NB,NZ,NY,NX)=0
+      FLGQ(NB,NZ,NY,NX)=0.0
       GROUP(NB,NZ,NY,NX)=GROUPI(NZ,NY,NX)
       PSTG(NB,NZ,NY,NX)=XTLI(NZ,NY,NX)
       PSTGI(NB,NZ,NY,NX)=PSTG(NB,NZ,NY,NX)
@@ -635,6 +654,10 @@ C
 C
 C     INITIALIZE STANDING DEAD VARIABLES
 C
+C     WTSTDI=mass of dead standing biomass at planting (g m-2)
+C        from PFT file
+C     CNSTK,CPSTK=N:C and P:C ratios in stalk from PFT file 
+C
       IF(IFLGN(NZ,NY,NX).EQ.0)THEN
       WTSTG(NZ,NY,NX)=0.0
       WTSTGN(NZ,NY,NX)=0.0
@@ -699,6 +722,7 @@ C
 C     INITIALIZE ROOT(N=1),MYCORRHIZAL(N=2) MORPHOLOGY AND BIOMASS
 C
 C     PSIRT,PSIRO,PSIRG=root,myco total,osmotic,turgor water potl(MPa)
+C     RRAD1M,RRAD2M=maximum primary,secondary mycorrhizal radius (m)
 C     CO2A,CO2P=root,myco gaseous,aqueous CO2 content (g)
 C     OXYA,OXYP=root,myco gaseous,aqueous O2 content (g)
 C
@@ -816,8 +840,8 @@ C     VOLWP,VOLWC=water volume in,on canopy (m3)
 C     CPOOL,ZPOOL,PPOOL=C,N,P in canopy nonstructural pools (g)
 C     WTRT1,WTRT1N,WTRT1P=C,N,P in primary root layer (g)
 C     RTWT1,RTWT1N,RTWT1P=total C,N,P in primary root (g)
-C     WTRTL,WTRTD=total root C mass (g)
-C     WSRTL=total root protein C mass (g)
+C     WTRTL,WTRTD=total root C mass (g C)
+C     WSRTL=total root protein mass (g)
 C     CPOOLR,ZPOOLR,PPOOLR=C,N,P in root,myco nonstructural pools (g)
 C
       WTLFBN(1,NZ,NY,NX)=CNGR(NZ,NY,NX)*WTLFB(1,NZ,NY,NX)
@@ -846,17 +870,10 @@ C
      2*CPOOLR(1,NG(NZ,NY,NX),NZ,NY,NX)
       PPOOLR(1,NG(NZ,NY,NX),NZ,NY,NX)=CPGR(NZ,NY,NX)
      2*CPOOLR(1,NG(NZ,NY,NX),NZ,NY,NX)
-C     ENDIF
       ENDIF
-C     IF(IGTYP(NZ,NY,NX).NE.0)THEN
-C     ZEROP(NZ,NY,NX)=ZERO*PP(NZ,NY,NX)
-C     ZEROQ(NZ,NY,NX)=ZERO*PP(NZ,NY,NX)/AREA(3,NU(NY,NX),NY,NX)
-C     ZEROP2(NZ,NY,NX)=ZERO2*PP(NZ,NY,NX)
-C     ELSE
       ZEROP(NZ,NY,NX)=ZERO*PP(NZ,NY,NX)
       ZEROQ(NZ,NY,NX)=ZERO*PP(NZ,NY,NX)/AREA(3,NU(NY,NX),NY,NX)
       ZEROP2(NZ,NY,NX)=ZERO2*PP(NZ,NY,NX)
-C     ENDIF
 9985  CONTINUE
 C
 C     FILL OUT UNUSED ARRAYS

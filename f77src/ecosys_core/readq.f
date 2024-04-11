@@ -32,8 +32,6 @@ C     PREFIX=path for files in current or higher level directory
 C     DATAP=plant species file name
 C
       IF(DATAP(NZ,NY,NX).NE.'NO')THEN
-C     WRITE(*,2233)'READQ',NX,NY,NZ,IETYP(NY,NX),DATAP(NZ,NY,NX) 
-2233  FORMAT(A8,4I4,2A16)
       OPEN(11,FILE=TRIM(PREFIX)//DATAP(NZ,NY,NX),STATUS='OLD')
       ENDIF
       IF(DATAM(NZ,NY,NX).NE.'NO')THEN
@@ -91,15 +89,16 @@ C
 C     PHOTOSYNTHETIC PROPERTIES
 C
 C     VCMX,VOMX=specific rubisco carboxylase,oxygenase activity 
-C        (umol C,O g-1 s-1)
-C     VCMX4=specific PEP carboxylase activity (umol g-1 s-1)
-C     XKCO2,XKO2,XKCO24=Km for VCMX,VOMX,VCMX4 (uM)
+C        at 25 oC (umol C,O g-1 s-1)
+C     VCMX4=specific PEP carboxylase activity at 25 oC (umol g-1 s-1)
+C     XKCO2,XKO2,XKCO24=Km for VCMX,VOMX,VCMX4 at 25 oC (uM)
 C     RUBP,PEPC=fraction of leaf protein in rubisco, PEP carboxylase
-C     ETMX=specific chlorophyll activity (umol e- g-1 s-1)
+C     ETMX=specific chlorophyll activity at 25 oC (umol e- g-1 s-1)
 C     CHL=fraction of leaf protein in mesophyll(C3), bundle sheath(C4)
 C        chlorophyll
 C     CHL4=fraction of leaf protein in mesophyll chlorophyll(C4)
-C     FCO2=intercellular:atmospheric CO2 concentration ratio 
+C     FCO2=intercellular:atmospheric CO2 concentration ratio
+C          usual values C3=0.70, C4=0.45 
 C
       READ(11,*)VCMX(NZ,NY,NX),VOMX(NZ,NY,NX),VCMX4(NZ,NY,NX)
      2,XKCO2(NZ,NY,NX),XKO2(NZ,NY,NX),XKCO24(NZ,NY,NX)
@@ -108,7 +107,8 @@ C
 C
 C     OPTICAL PROPERTIES
 C
-C     ALBP,ALBP,TAUR,TAUP=leaf SW,PAR albedo,transmission
+C     ALBP,ALBP=leaf SW,PAR albedo
+C     TAUR,TAUP=leaf SW,PAR transmission
 C
       READ(11,*)ALBR(NZ,NY,NX),ALBP(NZ,NY,NX),TAUR(NZ,NY,NX)
      2,TAUP(NZ,NY,NX)
@@ -122,9 +122,9 @@ C     WDLF=leaf length:width ratio
 C     PB=nonstructural C concentration needed for branching
 C     GROUPX=node number required to start floral initiation
 C     XTLI=node number in seed at planting  
-C     XDL=critical photoperiod (h) if IPTYP>0
-C        :<0=maximum daylength at summer solstice from site file
-C     XPPD=difference between XDL and photoperiod for floral induction C        (h)
+C     XDL=critical photoperiod for floral initiation (h) if IPTYP>0
+C        :<0=maximum daylength at summer solstice for latitude from site file
+C     XPPD=difference between XDL and photoperiod for floral induction (h)
 C
       READ(11,*)XRNI(NZ,NY,NX),XRLA(NZ,NY,NX),CTC(NZ,NY,NX)
      2,VRNLI,VRNXI,WDLF(NZ,NY,NX),PB(NZ,NY,NX)
@@ -135,13 +135,13 @@ C     MORPHOLOGICAL PROPERTIES
 C
 C     SLA1,SSL1,SNL1=growth in leaf area,petiole length,internode
 C        length vs growth in mass
-C     CLASS=fraction of leaf area in 0-22.5,45,67.5,90 deg. 
+C     CLASS=fraction of leaf area in 0-22.5,22.5-45,45-67.5,67.5-90 deg. 
 C        inclination classes
-C     CFI=initial clumping factor used in radiation interception
+C     CFI=initial clumping factor used for self-shading in radiation interception
 C     ANGBR,ANGSH=stem,petiole angle from horizontal (deg.)
 C     STMX=maximum potential seed sites from pre-anthesis 
 C        stalk growth
-C     SDMX=maximum seed number per STMX set during post-nthesis
+C     SDMX=maximum seed number per STMX during post-anthesis seed set
 C     GRMX=maximum seed size per SDMX (g)
 C     GRDM=seed size at planting (g)
 C     GFILL=grain filling rate at 25 oC (g seed-1 h-1)
@@ -158,9 +158,9 @@ C
 C     RRAD1M,RRAD2M=radius of primary,secondary roots (m)
 C     PORT=root porosity
 C     PR=nonstructural C concentration needed for root branching
-C     RSRR,RSRA=radial,axial root resistivity (m2 MPa-1 h-1)
+C     RSRR,RSRA=radial,axial root resistivity (MPa h m-3,MPa h m-2)
 C     PTSHT=rate constant for equilibrating shoot-root nonstructural 
-C        C concn
+C        C concentration
 C     RTFQ=secondary root branching frequency (m-1)
 C
       READ(11,*)RRAD1M(1,NZ,NY,NX),RRAD2M(1,NZ,NY,NX) 
@@ -170,11 +170,11 @@ C
 C     ROOT UPTAKE PARAMETERS
 C
 C     UPMXZH,UPKMZH,UPMNZH=NH4 max uptake (g m-2 h-1),
-C        Km (uM), min concn (uM)      
+C        Km (uM), min concentration (uM)      
 C     UPMXZO,UPKMZO,UPMNZO=NO3 max uptake (g m-2 h-1),
-C        Km (uM), min concn (uM)      
+C        Km (uM), min concentration (uM)      
 C     UPMXPO,UPKMPO,UPMNPO=H2PO4 max uptake (g m-2 h-1),
-C        Km (uM), min concn (uM)      
+C        Km (uM), min concentration (uM)      
 C
       READ(11,*)UPMXZH(1,NZ,NY,NX),UPKMZH(1,NZ,NY,NX)
      2,UPMNZH(1,NZ,NY,NX)
@@ -219,6 +219,8 @@ C     RE-CALCULATE PLANT INPUTS IN MODEL UNITS
 C
 C     ABSR,ABSP=leaf SW,PAR absorbtivity
 C
+C     2.5 converts g enzyme mass into g enzyme C
+C
       VCMX(NZ,NY,NX)=2.5*VCMX(NZ,NY,NX)
       VOMX(NZ,NY,NX)=2.5*VOMX(NZ,NY,NX)
       VCMX4(NZ,NY,NX)=2.5*VCMX4(NZ,NY,NX)
@@ -259,6 +261,14 @@ C     WRITE(*,1111)'CRITICAL DAYLENGTH',IGO,NZ,XDL(NZ,NY,NX)
 1111  FORMAT(A20,2I8,E12.4)
 C
 C     INITIALIZE INPUTS FOR PLANT MANAGEMENT 
+C
+C     IHVST=harvest type
+C     JHVST=termination type
+C     HVST=harvest management
+C     THIN=plant removal during harvest
+C     EHVST=harvest partitioning fractions
+C     IDAY0,IYR0=date,year of planting
+C     IDAYH,IYRH=date,year of harvesting 
 C
       DO 15 M=1,366
       IHVST(NZ,M,NY,NX)=-1
@@ -307,16 +317,19 @@ C                      :3=pruning
 C                      :4=animal grazing
 C                      :5=not used
 C                      :6=insect grazing
-C     JCUT=terminate PFT:0=no,1=yes,2=yes,but reseed
-C     HCUT=if harvesting:>0=cutting height
+C     JCUT=terminate PFT:0=no
+C                       :1=yes
+C                       :2=yes,but reseed for the next growing season
+C     HCUT=if harvesting:>0=cutting height (m)
 C                       :<0=fraction of LAI removed
 C         =if grazing   :grazer biomass (g FW m-2)
 C     PCUT=if harvesting:thinning,fraction of population removed
 C         =if grazing   :grazer consumption rate (g DW g FW-1 d-1)
 C     ECUT11,ECUT12,ECUT13,ECUT14=fraction of harvest removed from 
-C       plant as leaf, non-foliar, woody, standing dead (sum=1) 
+C       plant as 1:leaf, 2:non-foliar, 3:woody, 4:standing dead (sum=1) 
 C     ECUT21,ECUT22,ECUT23,ECUT24=fraction of ECUT11,ECUT12,ECUT13,
 C        ECUT14 removed from ecosystem as biomass, CO2
+C        ECUT1 – ECUT2 = fraction of harvest returned as litter
 C
       READ(12,*,END=540)DY,ICUT,JCUT,HCUT,PCUT
      2,ECUT11,ECUT12,ECUT13,ECUT14,ECUT21,ECUT22,ECUT23,ECUT24
@@ -358,7 +371,16 @@ C     IDY=IDY+0.5*(NTX-1)
       ENDIF
 C
 C     LOAD MODEL ARRAYS WITH PFT MANAGEMENT FOR SPECIFIED DATES
+C     FOR USE IN ‘GROSUB.F’
 C
+C     IHVST=harvest type
+C     JHVST=termination type
+C     HVST=harvest management
+C     THIN=plant removal during harvest
+C     EHVST=(1,:fraction of harvest removed from plant
+C           (2,:fraction of EHVST(1, removed from ecosystem
+C     EHVST(1,- EHVST(2,: fraction of harvest returned as litter
+
       IHVST(NZ,IDY,NY,NX)=ICUT
       JHVST(NZ,IDY,NY,NX)=JCUT
       HVST(NZ,IDY,NY,NX)=HCUT
@@ -372,7 +394,7 @@ C
       EHVST(2,3,NZ,IDY,NY,NX)=ECUT23
       EHVST(2,4,NZ,IDY,NY,NX)=ECUT24
 C
-C     IF ANIMAL OR INSECT GRAZING LOAD ALL DATES 
+C     IF ANIMAL OR INSECT GRAZING LOAD GRAZING PARAMETERS FOR ALL DATES 
 C     BETWEEN FIRST AND LAST
 C
       IF(IHVST(NZ,IDY,NY,NX).EQ.4.OR.IHVST(NZ,IDY,NY,NX).EQ.6)THEN
@@ -412,3 +434,4 @@ C
 9995  CONTINUE
       RETURN
       END
+

@@ -11,8 +11,7 @@
       CHARACTER*8 CDATE
       character*1024 str
       integer nz,nx,ny,n
-      integer :: failure
-      character(len=*), parameter :: modfile='splitc'
+      character(len=*), parameter :: modfile='splitc'      
       nz=1
       do nx=nhw,nhe
          do ny=nvn,nvs
@@ -20,8 +19,8 @@
          enddo
       enddo
       do N=1,10
-	if(datac(N+20,NE,NEX) .NE. 'NO')then
-	  close((N+30))
+      if(datac(N+20,NE,NEX) .NE. 'NO')then
+	    close((N+30))
           close((N+40))
 C          call splits(NHW,NHE,NVN,NVS,OUTS(N))
           call splits(NHW,NHE,NVN,NVS,outdir,OUTS(N), failure)
@@ -35,7 +34,6 @@ C          call splitp(NHW,NHE,NVN,NVS,nz,OUTP(N))
      2trim(outdir)//trim(OUTP(N))//' in '//trim(modfile),35)
           str = 'rm -f ' // OUTP(N)
           call system (str)
-
         endif
       enddo
       RETURN
