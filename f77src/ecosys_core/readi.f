@@ -27,6 +27,7 @@ C
       CHARACTER*1 TTYPE,CTYPE,IVAR(20),VAR(50),TYP(50)
       CHARACTER*80 PREFIX
       DIMENSION IDAT(20),DAT(50),DATK(50)
+      dimension datav(40)
       PARAMETER (TWILGT=0.06976)
 C
 C     OPEN OUTPUT LOGFILES,AND SITE,TOPOGRAPHY FILES FROM
@@ -138,7 +139,11 @@ C          :1=unimpeded flow
 C     DHI=width of each W-E landscape column (m)
 C     DVI=width of each N-S landscape row (m)  
 C
-      READ(1,*)ALATG,ALTIG,ATCAG,IDTBLG
+      READ(1,*)(datav(jj),jj=1,4)
+      ALATG=datav(1)
+      ALTIG=datav(2)
+      ATCAG=datav(3)
+      IDTBLG=int(datav(4))
       READ(1,*)OXYEG,Z2GEG,CO2EIG,CH4EG,Z2OEG,ZNH3EG
       READ(1,*)IETYPG,ISALTG,IERSNG,NCNG,DTBLIG,DTBLDIG,DTBLGG
       READ(1,*)RCHQNG,RCHQEG,RCHQSG,RCHQWG,RCHGNUG,RCHGEUG,RCHGSUG 
@@ -287,12 +292,33 @@ C     NL1,NL2=number of additional layers below NJ with,without
 C        data in soil file
 C     ISOILR=natural(0),reconstructed(1) soil profile 
 C
-      READ(9,*)PSIFC(NY,NX),PSIWP(NY,NX),ALBS(NY,NX),PH(0,NY,NX)
-     2,RSC(1,0,NY,NX),RSN(1,0,NY,NX),RSP(1,0,NY,NX)
-     3,RSC(0,0,NY,NX),RSN(0,0,NY,NX),RSP(0,0,NY,NX)
-     4,RSC(2,0,NY,NX),RSN(2,0,NY,NX),RSP(2,0,NY,NX)
-     5,IXTYP(1,NY,NX),IXTYP(2,NY,NX)
-     6,NUI(NY,NX),NJ(NY,NX),NL1,NL2,ISOILR(NY,NX)
+C      READ(9,*)PSIFC(NY,NX),PSIWP(NY,NX),ALBS(NY,NX),PH(0,NY,NX)
+C     2,RSC(1,0,NY,NX),RSN(1,0,NY,NX),RSP(1,0,NY,NX)
+C     3,RSC(0,0,NY,NX),RSN(0,0,NY,NX),RSP(0,0,NY,NX)
+C     4,RSC(2,0,NY,NX),RSN(2,0,NY,NX),RSP(2,0,NY,NX)
+C     5,IXTYP(1,NY,NX),IXTYP(2,NY,NX)
+C     6,NUI(NY,NX),NJ(NY,NX),NL1,NL2,ISOILR(NY,NX)
+      READ(9,*)(datav(jj),jj=1,20)
+      PSIFC(NY,NX)=datav(1)
+      PSIWP(NY,NX)=datav(2)
+      ALBS(NY,NX) =datav(3)
+      PH(0,NY,NX) =datav(4)
+      RSC(1,0,NY,NX) =datav(5)
+      RSN(1,0,NY,NX) =datav(6)
+      RSP(1,0,NY,NX) =datav(7)
+      RSC(0,0,NY,NX) =datav(8)
+      RSN(0,0,NY,NX) =datav(9)
+      RSP(0,0,NY,NX) =datav(10)
+      RSC(2,0,NY,NX) =datav(11)
+      RSN(2,0,NY,NX) =datav(12)
+      RSP(2,0,NY,NX) =datav(13)
+      IXTYP(1,NY,NX) =int(datav(14))
+      IXTYP(2,NY,NX) =int(datav(15))
+      NUI(NY,NX) = int(datav(16))
+      NJ(NY,NX)  =int(datav(17))
+      NL1=int(datav(18))
+      NL2=int(datav(19))
+      ISOILR(NY,NX)=int(datav(20))
       NU(NY,NX)=NUI(NY,NX)
       NK(NY,NX)=NJ(NY,NX)+1
       NM(NY,NX)=NJ(NY,NX)+NL1
