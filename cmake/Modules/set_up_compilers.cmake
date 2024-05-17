@@ -75,7 +75,6 @@ macro(set_up_compilers)
     else()
       set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -O2 -mp1 -r8 -i4 -align dcommons -auto-scalar -fimf-arch-consistency=true")
     endif()
-  elseif()
   
   elseif (CMAKE_Fortran_COMPILER_ID STREQUAL "Flang")
     set(CMAKE_Fortran_COMPILER /usr/local/bin/flang15)

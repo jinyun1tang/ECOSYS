@@ -47,7 +47,6 @@ math(EXPR NUM_BUILD_THREADS "${NUMBER_OF_CORES} + 1")
 include(set_up_platform)
 include(set_up_compilers)
 message("compilers set")
-set_up_compilers()
 # Make sure compilers are set. This must be done before enabling languages.
 if (NOT CMAKE_C_COMPILER)
   if (NOT $ENV{CC} STREQUAL "")
@@ -86,6 +85,7 @@ message("set fortran")
 enable_language(Fortran)
 message("ok")
 
+set_up_compilers()
 # We declare the project here.
 project (ecosys)
 
