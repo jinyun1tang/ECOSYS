@@ -501,6 +501,7 @@ C
       CDPTHZ(L,NY,NX)=0.0
       ORGC(L,NY,NX)=(RSC(0,L,NY,NX)+RSC(1,L,NY,NX)+RSC(2,L,NY,NX))
      2*AREA(3,L,NY,NX)
+C      write(234,*)'orgc0',ORGC(L,NY,NX)
       ORGCX(L,NY,NX)=ORGC(L,NY,NX)
       VOLR(NY,NX)=(RSC(0,L,NY,NX)*1.0E-06/BKRS(0)
      2+RSC(1,L,NY,NX)*1.0E-06/BKRS(1)+RSC(2,L,NY,NX)*1.0E-06/BKRS(2))
@@ -1454,6 +1455,7 @@ C
 6980  CONTINUE
 6995  CONTINUE
       ORGC(L,NY,NX)=OC
+C      if(L==0)write(234,*)'orgc',ORGC(L,NY,NX)
       ORGCX(L,NY,NX)=ORGC(L,NY,NX)
       ORGR(L,NY,NX)=RC
       ORGN(L,NY,NX)=ON

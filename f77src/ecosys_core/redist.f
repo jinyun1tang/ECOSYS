@@ -216,7 +216,6 @@ C
       OSN(M,K,0,NY,NX)=OSN(M,K,0,NY,NX)+ZSNT(M,K,0,NY,NX)
       OSP(M,K,0,NY,NX)=OSP(M,K,0,NY,NX)+PSNT(M,K,0,NY,NX)
       ORGC(0,NY,NX)=ORGC(0,NY,NX)+CSNT(M,K,0,NY,NX)
-      print*,'ORGC(0,NY,NX)',ORGC(0,NY,NX)
       RAINR=CSNT(M,K,0,NY,NX)*THETCX(K)
       HRAINR=RAINR*4.19*TKA(NY,NX)
       FLWR(NY,NX)=FLWR(NY,NX)+RAINR
@@ -4215,6 +4214,8 @@ C
 6975  CONTINUE
       OMCL(0,NY,NX)=0.0
       OMNL(0,NY,NX)=0.0
+      TOMLS(NY,JNX)=0.0
+      TOMLD(NY,NX)=0.0
       DO 6970 K=0,5
       IF(K.NE.3.AND.K.NE.4)THEN
 C
@@ -4231,12 +4232,21 @@ C
       TOPT(NY,NX)=TOPT(NY,NX)+OMP(M,N,K,0,NY,NX)
       OMCL(0,NY,NX)=OMCL(0,NY,NX)+OMC(M,N,K,0,NY,NX)
       OMNL(0,NY,NX)=OMNL(0,NY,NX)+OMN(M,N,K,0,NY,NX)
+
+C     total decomposers     
+      IF(K.NE.5)then
+      TOMLD(NY,NX)=TOMLD(NY,NX)+OMC(M,N,K,0,NY,NX)
+      endif
 6960  CONTINUE
       ENDIF
 6970  CONTINUE
+C     total microbial biomass     
+      TOMLS(NY,NX)=OMCL(0,NY,NX)
 C
 C     TOTAL MICROBIAL RESIDUE C,N,P
 C
+      OQCLT(NY,NX)=0.
+      OQALT(NY,NX)=0.
       DO 6900 K=0,2
       DO 6940 M=1,2
       DC=DC+ORC(M,K,0,NY,NX)
@@ -4247,6 +4257,8 @@ C
 C
 C     TOTAL DOC, DON, DOP
 C
+      OQCLT(NY,NX)=OQCLT(NY,NX)+OQC(K,0,NY,NX)
+      OQALT(NY,NX)=OQALT(NY,NX)+OQA(K,0,NY,NX)
       DC=DC+OQC(K,0,NY,NX)+OQCH(K,0,NY,NX)+OHC(K,0,NY,NX)
      2+OQA(K,0,NY,NX)+OQAH(K,0,NY,NX)+OHA(K,0,NY,NX)
       DN=DN+OQN(K,0,NY,NX)+OQNH(K,0,NY,NX)+OHN(K,0,NY,NX)
@@ -4263,9 +4275,9 @@ C
       RC0(K,NY,NX)=RC0(K,NY,NX)+OSC(M,K,0,NY,NX)
 6930  CONTINUE
 6900  CONTINUE
-      print*,'DC',DC
+C      print*,'DC',DC
       ORGC(0,NY,NX)=DC
-      print*,'ORGC(0,NY,NX)',DC
+C      print*,'ORGC(0,NY,NX)',DC
       ORGN(0,NY,NX)=DN
       ORGR(0,NY,NX)=DC
       TLRSDC=TLRSDC+DC
@@ -9400,6 +9412,7 @@ C    5,ORGC(NU(NY,NX),NY,NX)
 2223  FORMAT(A8,6I6,160F16.6)
 2224  FORMAT(A8,5I6,160F16.6)
 C     ENDIF
+      write(234,*)I+J/24.,ORGC(0,NY,NX),AREA(3,NU(NY,NX),NY,NX)
 9990  CONTINUE
 9995  CONTINUE
       RETURN

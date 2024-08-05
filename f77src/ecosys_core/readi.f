@@ -80,6 +80,7 @@ C      READ(1,*)ALATG,ALTIG,ATCAG,IDTBLG
       READ(1,*)(DHI(NX),NX=1,NHE)
       READ(1,*)(DVI(NY),NY=1,NVS)
       CLOSE(1)
+
       DO 9895 NX=NHW,NHE
       DO 9890 NY=NVN,NVS
       ALAT(NY,NX)=ALATG

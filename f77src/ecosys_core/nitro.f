@@ -526,6 +526,10 @@ C
       OXKX=OXKA
       ENDIF
       TFNG(N,K)=TFNX*WFNG
+C      if(L.eq.0 .and. j==12 .and. K.eq.1 
+C     2.and. (N.eq.1 .or. N.eq.3))then
+C      write(233,*)I+J/24.,N,K,TFNG(N,K),TFNX,WFNG
+C      endif
       TFNR(N,K)=TFNY
 C
 C     FOMA,FOMN=fraction of total active biomass C,N in each N and K
@@ -722,6 +726,10 @@ C
       FSBSTC=COQC(K,L,NY,NX)/(COQC(K,L,NY,NX)+OQKM)
       FSBSTA=COQA(K,L,NY,NX)/(COQA(K,L,NY,NX)+OQKA)
       FSBST=FOCA(K)*FSBSTC+FOAA(K)*FSBSTA
+C      if(L.eq.0 .and. K==1 .and. N<=3 .and. j==12)then
+C      write(171,*)I+J/24.,N,FSBSTC,FSBSTA,COQC(K,L,NY,NX)
+C     2,COQA(K,L,NY,NX),VOLWM(NPH,L,NY,NX)
+C      endif
       RGOCY=AMAX1(0.0,FCNP(N,K)*VMXO*WFNG*OMA(N,K))
       RGOCZ=RGOCY*FSBSTC*FOCA(K)*TFNX
       RGOAZ=RGOCY*FSBSTA*FOAA(K)*TFNX
@@ -2090,6 +2098,9 @@ C
       RMOMT=RMOMC(1,N,K)+RMOMC(2,N,K)
       RGOMT=AMAX1(0.0,RGOMO(N,K)-RMOMT)
       RXOMT=AMAX1(0.0,RMOMT-RGOMO(N,K))
+C      if(L.eq.0 .and. j==12 .and. K.eq.1 .and. N.le.3)then
+C      write(161,*)I+J/24.,N,RXOMT,RGOMO(N,K),RMOMT,OQC(K,L,NY,NX)
+C      endif
 C
 C     N2 FIXATION: N=(6) AEROBIC, (7) ANAEROBIC
 C     FROM GROWTH RESPIRATION, FIXATION ENERGY REQUIREMENT,
@@ -2161,6 +2172,10 @@ C
      2,CGOXC*CNQ(K)/FCN(N,K)))
       CGOMP(N,K)=AMAX1(0.0,AMIN1(OQP(K,L,NY,NX)*FOMK(N,K)
      2,CGOXC*CPQ(K)/FCP(N,K)))
+C      if(L.eq.0 .and. N.le.3 .and. j.eq.12)then
+C      write(131,*)I+J/24.,N,K,CGOXC/OMC(1,N,K,L,NY,NX),OQC(K,L,NY,NX)
+C     2,OQA(K,L,NY,NX)
+C      endif
       ELSE
       CGOQC(N,K)=CGOMX+CGOMD
       CGOAC(N,K)=0.0
@@ -2305,6 +2320,12 @@ C     CNOMA,CPOMA=N:C,P:C ratios of active biomass
 C     RDMMC,RDMMN,RDMMP=microbial C,N,P litterfall from senescence
 C     R3MMC,R3MMN,R3MMP=microbial C,N,P recycling from senescence
 C
+C      if(L.eq.0 .and. K.eq.1 .and. N.LE.3 
+C     2.and. j.eq.12)then
+C      write(141,*)I+J/24.,N,K,RXOMT,RMOMT
+C     2,RCCC,RXOMT.GT.ZEROS(NY,NX).AND.RMOMT.GT.ZEROS(NY,NX)
+C     3.AND.RCCC.GT.ZERO
+C      endif
       IF(RXOMT.GT.ZEROS(NY,NX).AND.RMOMT.GT.ZEROS(NY,NX)
      2.AND.RCCC.GT.ZERO)THEN
       FRM=RXOMT/RMOMT
@@ -2713,6 +2734,9 @@ C
       FCNK(K)=1.0
       FCPK(K)=1.0
       ENDIF
+C      if(L.eq.0 .and. K.eq.1 .and. j==12)then
+C      write(171,*)I+J/24.,FCNK(K),FCPK(K)
+C      endif
 C
 C     AQUEOUS CONCENTRATION OF BIOMASS TO CACULATE INHIBITION
 C     CONSTANT FOR DECOMPOSITION
@@ -2727,6 +2751,10 @@ C
       ELSE
       DCKD=DCKML*(1.0+COQCK/DCKI)
       ENDIF
+C     if(L.eq.0)then
+C      write(181,*)I+J/24.,K,DCKD,COQCK,DCKI
+C     2,VOLWZ
+C      endif
       IF(OSRH(K).GT.ZEROS(NY,NX))THEN
       IF(BKVL(L,NY,NX).GT.ZEROS(NY,NX))THEN
       COSC=OSRH(K)/BKVL(L,NY,NX)
@@ -2734,6 +2762,8 @@ C
       COSC=OSRH(K)/VOLY(L,NY,NX)
       ENDIF
       DFNS=COSC/(COSC+DCKD)
+
+
       OQCI=1.0/(1.0+COQC(K,L,NY,NX)/OQKI)
 C     IF(L.EQ.0.AND.J.EQ.15)THEN
 C     WRITE(*,4242)'COSC',I,J,L,K,DFNS,COSC,COQCK,DCKD,OSRH(K)
@@ -2764,6 +2794,7 @@ C
       CPS(M,K)=AMAX1(0.0,OSP(M,K,L,NY,NX)/OSC(M,K,L,NY,NX))
       RDOSC(M,K)=AMAX1(0.0,AMIN1(0.5*OSA(M,K,L,NY,NX)
      2,SPOSC(M,K)*ROQCK(K)*DFNS*OQCI*TFNX*OSA(M,K,L,NY,NX)/OSRH(K)))
+
 C    3*AMIN1(FCNK(K),FCPK(K))
       RDOSN(M,K)=AMAX1(0.0,AMIN1(OSN(M,K,L,NY,NX)
      2,CNS(M,K)*RDOSC(M,K)))/FCNK(K)
@@ -2816,6 +2847,7 @@ C
       RCOSN(M,K)=RDOSN(M,K)-RHOSN(M,K)
       RCOSP(M,K)=RDOSP(M,K)-RHOSP(M,K)
 805   CONTINUE
+C      if(L.eq.0)write(231,*)I+J/24.,K,RDOSC(:,K)
       ELSE
       DO 810 M=1,4
       RHOSC(M,K)=0.0
@@ -2826,6 +2858,7 @@ C
       RCOSP(M,K)=RDOSP(M,K)
 810   CONTINUE
       ENDIF
+      
       ELSE
       DO 780 M=1,4
       RDOSC(M,K)=0.0
@@ -3161,6 +3194,12 @@ C
       DO 540 M=1,2
       OMC(M,N,K,L,NY,NX)=OMC(M,N,K,L,NY,NX)+CGOMS(M,N,K)
      2-RXOMC(M,N,K)-RXMMC(M,N,K)
+C      if(L.eq.0 .and. M.eq.1 .and. K.eq.1 .and. N.LE.3 
+C     2.and. J.eq.12)then
+C      write(132,*)I+J/24.,N,K,CGOMS(M,N,K)
+C     2-RXOMC(M,N,K)-RXMMC(M,N,K),CGOMS(M,N,K)
+C     2,-RXOMC(M,N,K),-RXMMC(M,N,K)
+C      endif
       OMN(M,N,K,L,NY,NX)=OMN(M,N,K,L,NY,NX)+CGONS(M,N,K)
      2-RXOMN(M,N,K)-RXMMN(M,N,K)
       OMP(M,N,K,L,NY,NX)=OMP(M,N,K,L,NY,NX)+CGOPS(M,N,K)
