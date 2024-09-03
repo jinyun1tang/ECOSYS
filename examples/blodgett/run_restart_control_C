@@ -1,0 +1,163 @@
+echo "copied outputs_long_control/*st1980 . to ensure correct starting point"
+cp outputs_long_control/*st1980 .
+./ecosys_control_write.x << eor > logdl
+1 1 1 1
+st_1980
+tpUS_Blo2
+10 1
+1 1
+w2013C
+opt2013_s_1980
+sm
+pftUS_Blo_g_2
+hc
+hw
+NO
+NO
+hh
+dc
+dw
+dn
+NO
+dh
+1 1
+w2014C
+opt2014_s_1980
+sm
+pftUS_Blo_g_2
+hc
+hw
+NO
+NO
+hh
+dc
+dw
+dn
+NO
+dh
+1 1
+w2015C
+opt2015_s_1980
+sm
+pftUS_Blo_g_2
+hc
+hw
+NO
+NO
+hh
+dc
+dw
+dn
+NO
+dh
+1 1
+w2016C
+opt2016_s_1980
+sm
+pftUS_Blo_g_2
+hc
+hw
+NO
+NO
+hh
+dc
+dw
+dn
+NO
+dh
+1 1
+w2017C
+opt2017_s_1980
+sm
+pftUS_Blo_g_2
+hc
+hw
+NO
+NO
+hh
+dc
+dw
+dn
+NO
+dh
+1 1
+w2018C
+opt2018_s_1980
+sm
+pftUS_Blo_g_2
+hc
+hw
+NO
+NO
+hh
+dc
+dw
+dn
+NO
+dh
+1 1
+w2019C
+opt2019_s_1980
+sm
+pftUS_Blo_g_2
+hc
+hw
+NO
+NO
+hh
+dc
+dw
+dn
+NO
+dh
+1 1
+w2020C
+opt2020_s_1980
+sm
+pftUS_Blo_g_2
+hc
+hw
+NO
+NO
+hh
+dc
+dw
+dn
+NO
+dh
+1 1
+w2021C
+opt2021_s_1980
+sm
+pftUS_Blo_g_2
+hc
+hw
+NO
+NO
+hh
+dc
+dw
+dn
+NO
+dh
+1 1
+w2022C
+opt2022_s_1980
+sm
+pftUS_Blo_g_2
+hc
+hw
+NO
+NO
+hh
+dc
+dw
+dn
+NO
+dh
+0 0
+eor
+mv *st1980   outputs_restart_control/
+mv outputs/* outputs_restart_control/ 
+mv fort.991  outputs_restart_control/
+cp st_1980 sUS_Blo2 ENF234 outputs_restart_control/
