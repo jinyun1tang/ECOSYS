@@ -14,6 +14,7 @@ C
       CHARACTER*3 CHOICE(102,20)
       CHARACTER*8 CDATE
       CHARACTER*80 BUF,PREFIX
+      CHARACTER*100 LINE
       CALL GETCWD(BUF)
 C
 C     IDENTIFY OPERATING SYSTEM: DOS OR UNIX
@@ -40,8 +41,31 @@ C
       IGO=0
 C
 C     NUMBER OF COLUMNS AND ROWS
-C
-      READ(5,*)NHW,NVN,NHE,NVS,idispq
+C     
+      READ(5,'(A)')LINE
+
+      les=len(line)
+      ll=2
+      do while (les>=ll)
+      if(line(ll-1:ll-1).ne.' ' .and.
+     2line(ll:ll).eq.' ')nv=nv+1
+      ll=ll+1
+      enddo
+      idispq=0
+      initro=1
+      isolut=1
+      if(nvs==4)then
+      READ(line,*)NHW,NVN,NHE,NVS,idispq
+      elseif(nvs==5)then
+      READ(line,*)NHW,NVN,NHE,NVS,idispq,initro
+      elseif(nvs==6)then
+      READ(line,*)NHW,NVN,NHE,NVS,idispq,initro,isolut
+      else
+      READ(line,*)NHW,NVN,NHE,NVS
+      endif
+
+
+      
 C
 C     SITE FILE
 C
@@ -101,6 +125,7 @@ C
       DO 120 NE=1,NA(NEX)
       CALL SOIL(NA,ND,NT,NE,NAX,NDX,NTX,NEX,NHW,NHE,NVN,NVS)
       IGO=IGO+1
+      stop
 120   CONTINUE
 C
 C     SCRIPT COMPLETED, START NEXT SCRIPT

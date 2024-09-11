@@ -46,6 +46,7 @@ C
       PARAMETER(GSTGG=2.00,GSTGR=0.667,VRNE=3600.0)
       DATA PSILY/-200.0,-2.0,-2.0,-2.0/
       DATA NBX /5,1,1,1/
+      
       DO 9995 NX=NHW,NHE
       DO 9990 NY=NVN,NVS
       DO 9985 NZ=1,NP(NY,NX)

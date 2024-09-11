@@ -54,7 +54,7 @@ C
 C
 C     SWITCH OUT ECOSYS WEATHER HERE IF CESM WEATHER IS READ IN
 C
-C     IF …
+C     IF 
 C
 C     IWTHR=weather data type in first(1) or second(2) scene
 C     ITYPE=weather data type:1=daily,2=hourly
@@ -159,6 +159,7 @@ C     UA=wind speed
 C     TSNOW=temperature below which precipitation is snow (oC)
 C     PRECRI,PRECWI=rainfall,snowfall
 C
+      
       RADN(NY,NX)=SRADH(J,I)
       TCA(NY,NX)=TMPH(J,I)
       TKA(NY,NX)=TCA(NY,NX)+273.15

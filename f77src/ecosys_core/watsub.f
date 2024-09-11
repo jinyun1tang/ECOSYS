@@ -152,6 +152,7 @@ C
       ENDIF
 65    CONTINUE
 55    CONTINUE
+
       DO 30 L=NUM(NY,NX),NL(NY,NX)
 C
 C     ENTER STATE VARIABLES AND DRIVERS INTO LOCAL ARRAYS
@@ -170,6 +171,7 @@ C     THETW*,THETI*,THETP*=water,ice,air-filled porosity
 C     VHCP1,VHCM=volumetric heat capacities of total volume, solid
 C     VHCP1A,VHCP1B=volumetric heat capacities of micropore,macropore
 C
+
       PSISM1(L,NY,NX)=PSISM(L,NY,NX)
       VOLA1(L,NY,NX)=VOLA(L,NY,NX)
       VOLW1(L,NY,NX)=VOLW(L,NY,NX)
@@ -837,6 +839,7 @@ C     TTFLXL=total latent heat from freeze-thaw
 C     TFLWL,TFLWHL=net water flux in micropores,macropores
 C     THFLWL=net heat flux
 C
+
       DO 9885 L=NUM(NY,NX),NL(NY,NX)
       TWFLXL(L,NY,NX)=0.0
       TWFLXH(L,NY,NX)=0.0
@@ -897,6 +900,7 @@ C     ENDIF
       TORTH(M,L,NY,NX)=0.0
       ENDIF
 9885  CONTINUE
+
 C     IF(NX.EQ.4.AND.NY.EQ.5)THEN
 C     WRITE(*,3132)'FLQR1',I,J,M,NX,NY,FLY1(NY,NX),FLQ1(NY,NX)
 C    2,VHCPWM(M,1,NY,NX),VHCPWX(NY,NX)
