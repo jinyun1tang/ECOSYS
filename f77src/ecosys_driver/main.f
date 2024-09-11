@@ -63,8 +63,6 @@ C
       else
       READ(line,*)NHW,NVN,NHE,NVS
       endif
-
-
       
 C
 C     SITE FILE
@@ -124,8 +122,7 @@ C
       DO 120 NT=1,ND(NEX)
       DO 120 NE=1,NA(NEX)
       CALL SOIL(NA,ND,NT,NE,NAX,NDX,NTX,NEX,NHW,NHE,NVN,NVS)
-      IGO=IGO+1
-      stop
+      IGO=IGO+1      
 120   CONTINUE
 C
 C     SCRIPT COMPLETED, START NEXT SCRIPT
