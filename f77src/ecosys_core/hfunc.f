@@ -419,6 +419,14 @@ C     ISTYP=growth habit from PFT file
 C     IWTYP=phenology type from PFT file
 C     ZC,DPTHS=canopy height,snowpack depth
 C
+      if(i==1 .and. j==1)then
+      write(*,*)'writetet'
+      write(134,'(A10,2A4,9A9))')'doy','NB','NZ','emerge','initflora'
+     2,'jointin','elonga','headin','anthesis'
+     3,'initseed','seedno','seedmass'
+      endif
+      write(134,'(F10.4,2I4,9I9)')I+J/24.,NB,NZ,IDAY(1:9,NB,NZ,NY,NX)
+
       IF(IDAY(2,NB,NZ,NY,NX).EQ.0)THEN
       IF(PSTG(NB,NZ,NY,NX).GT.GROUP(NB,NZ,NY,NX)+PSTGI(NB,NZ,NY,NX)
      2.AND.((VRNS(NB,NZ,NY,NX).GE.VRNL(NB,NZ,NY,NX))

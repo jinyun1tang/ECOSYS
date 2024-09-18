@@ -6913,7 +6913,13 @@ C     TRANSFER ABOVE-GROUND C,N,P AT HARVEST OR DISTURBANCE
 C
 C     IHVST=harvest type:0=none,1=grain,2=all above-ground
 C                       ,3=pruning,4=grazing,5=fire,6=herbivory
-C
+
+Ci
+      write(139,*)I+J/24.,NZ,'doharv'
+     2,IHVST(NZ,I,NY,NX),J.EQ.INT(ZNOON(NY,NX))
+     2,IHVST(NZ,I,NY,NX).NE.4.AND.IHVST(NZ,I,NY,NX).NE.6
+     3,(IHVST(NZ,I,NY,NX).EQ.4.OR.IHVST(NZ,I,NY,NX).EQ.6)
+
       IF((IHVST(NZ,I,NY,NX).GE.0.AND.J.EQ.INT(ZNOON(NY,NX))
      2.AND.IHVST(NZ,I,NY,NX).NE.4.AND.IHVST(NZ,I,NY,NX).NE.6)
      3.OR.(IHVST(NZ,I,NY,NX).EQ.4.OR.IHVST(NZ,I,NY,NX).EQ.6))THEN
@@ -7946,10 +7952,22 @@ C     TGSTGI=total change in vegve node number normalized for maturity group
 C     TGSTGF=total change in reprve node number normalized for maturity group
 C     FLG4=number of hours with no grain fill
 C     IFLGA=flag for initializing leafout
-C
+Ci
+      write(139,*)I+J/24.,NB,NZ,'cut'
+     2,(IBTYP(NZ,NY,NX).EQ.0.OR.IGTYP(NZ,NY,NX).LE.1)
+     2.AND.(IHVST(NZ,I,NY,NX).NE.4.AND.IHVST(NZ,I,NY,NX).NE.6)
+     3.AND.ZC(NZ,NY,NX).GT.HVST(NZ,I,NY,NX)
+
       IF((IBTYP(NZ,NY,NX).EQ.0.OR.IGTYP(NZ,NY,NX).LE.1)
      2.AND.(IHVST(NZ,I,NY,NX).NE.4.AND.IHVST(NZ,I,NY,NX).NE.6)
      3.AND.ZC(NZ,NY,NX).GT.HVST(NZ,I,NY,NX))THEN
+
+      write(139,*)I+J/24.,NB,NZ,'reset cut'
+     2,(IWTYP(NZ,NY,NX).NE.0.AND.VRNF(NB,NZ,NY,NX)
+     2.LE.FVRN(IWTYP(NZ,NY,NX))*VRNX(NB,NZ,NY,NX))
+     3.OR.(IWTYP(NZ,NY,NX).EQ.0
+     4.AND.IDAY(1,NB,NZ,NY,NX).NE.0)
+
       IF((IWTYP(NZ,NY,NX).NE.0.AND.VRNF(NB,NZ,NY,NX)
      2.LE.FVRN(IWTYP(NZ,NY,NX))*VRNX(NB,NZ,NY,NX))
      3.OR.(IWTYP(NZ,NY,NX).EQ.0
