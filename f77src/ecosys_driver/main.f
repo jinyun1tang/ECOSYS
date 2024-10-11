@@ -7,6 +7,8 @@ C
       include "filec.h"
       include "files.h"
       include "blkc.h"
+      include "blk17.h"      
+      
       DIMENSION NA(250),ND(250)
       CHARACTER*16 DATA(30),DATAC(30,250,250),DATAP(JP,JY,JX)
      2,DATAM(JP,JY,JX),DATAX(JP),DATAY(JP),DATAZ(JP,JY,JX)
@@ -14,6 +16,8 @@ C
       CHARACTER*3 CHOICE(102,20)
       CHARACTER*8 CDATE
       CHARACTER*80 BUF,PREFIX
+
+      ICOR=(/1,-1,0,0,1,1,2,3,3,4,4,5/)
       CALL GETCWD(BUF)
 C
 C     IDENTIFY OPERATING SYSTEM: DOS OR UNIX
