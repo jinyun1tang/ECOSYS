@@ -53,7 +53,7 @@ configure_file(filec.h  filec.h COPYONLY)
 configure_file(files.h  files.h COPYONLY)
 configure_file(parameters.h parameters.h COPYONLY)
 set(ECOSYS_SOURCES 
-	BLOCKDATA001.f
+#	BLOCKDATA001.f
 	day.f
 	endrun.f
 	erosion.f
