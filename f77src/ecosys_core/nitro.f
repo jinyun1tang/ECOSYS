@@ -202,6 +202,9 @@ C
       THETR=VOLW(0,NY,NX)/VOLR(NY,NX)
       THETZ=AMAX1(0.0,THETR-THETY(L,NY,NX))
       VOLWZ=THETZ*VOLR(NY,NX)
+      if(IYRC==1980)then
+      write(116,*)I+J/24.,THETZ,VOLW(0,NY,NX),VOLR(NY,NX)
+      endif
 C     IF((I/30)*30.EQ.I.AND.J.EQ.15.AND.L.EQ.0)THEN
 C     WRITE(*,8825)'THETZ',I,J,L,THETR,THETZ,VOLWZ,VOLWRX(NY,NX)
 C    2,VOLW(0,NY,NX),POROS(L,NY,NX),FC(0,NY,NX),WP(0,NY,NX)
@@ -2758,6 +2761,10 @@ C     TFNX=temperature stress effect
 C     OSRH=total SOC
 C     FCNK,FCPK=N,P limitation to microbial activity in each K
 C
+      if(IYRC==1980 .and. L==0)then
+      write(115,*)I+J/24.,K,ROQCK(K),VOLWZ,COSC
+     2,DCKD,COQC(K,L,NY,NX),TFNX
+      endif
       DO 785 M=1,4
       IF(OSC(M,K,L,NY,NX).GT.ZEROS(NY,NX))THEN
       CNS(M,K)=AMAX1(0.0,OSN(M,K,L,NY,NX)/OSC(M,K,L,NY,NX))
