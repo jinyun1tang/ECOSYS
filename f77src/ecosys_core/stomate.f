@@ -22,14 +22,14 @@ C
       DIMENSION FLG4Y(0:5)
 C
 C     QNTM=quantum efficiency (umol e- umol-1 PAR)
-C     CURV=shape parameter for e- transport response to PAR
+C     CURV*=shape parameter for e- transport response to PAR 
 C     ELEC3,ELEC4=e- requirement for rubisco,PEP carboxylation
 C        (umol e- umol CO2)
 C     CNKIC,CPKIC=nonstruct N,P inhibition constant on rubisco 
 C        (g N,P g-1 C)
 C     RSMY=minimum stomatal resistance for CO2 uptake (h m-1)
 C     ATRPZ=hours to full dehardening of conifers in spring (h)
-C     COMP4=C4 CO2 compensation point (uM)
+C     COMP4=C4 CO2 compensation point from PARAMETER (uM)
 C     FDML=leaf water content at full hydration (g g-1 C)
 C     FBS,FMP=leaf water content in bundle sheath, mesophyll (g g C-1)
 C     C4KI=nonstructural C inhibition constant on PEP carboxylase (uM) 
@@ -37,7 +37,7 @@ C     FLG4Y=number of hours with no grain fill to terminate annuals
 C
       PARAMETER (QNTM=0.45,CURV=0.70,CURV2=2.0*CURV,CURV4=4.0*CURV
      2,ELEC3=4.5,ELEC4=3.0)
-      PARAMETER(CNKIC=1.0E-02,CPKIC=1.0E-03)
+      PARAMETER(CNKIC=2.5E-02,CPKIC=2.5E-03)
       PARAMETER (RSMY=2.78E-03,ATRPZ=250.0)
       PARAMETER (COMP4=0.5,FDML=6.0,FBS=0.2*FDML,FMP=0.8*FDML
      2,C4KI=5.0E+06)
@@ -75,8 +75,9 @@ C
 C     ARRHENIUS FUNCTIONS FOR CARBOXYLATION AND OXYGENATION
 C
 C     TKC,TKCO=current,adapted canopy temperature (oC)
-C     OFFST=shift in temperature function for thermal adaptation (oC)
-C     TFN1,TFN2,TFNE=temperature function for carboxylation,
+C     OFFST=shift in temperature function for thermal adaptation 
+C        from ‘startq.f’ (oC)
+C     TFN1,TFN2,TFNE=Arrhenius temperature functions for carboxylation,
 C        oxygenation,e- transport (25 oC =1)
 C     8.313,710.0=gas constant,enthalpy (J mol-1 K-1)
 C     197500,222500=energy of high,low temp inactivation (J mol-1)
@@ -126,7 +127,7 @@ C     CCPOLB,CZPOLB,CPPOLB=nonstructural C,N,P concentration in branch
 C        (g C,N,P) g C-1)
 C     FDBK=N,P feedback inhibition on C3 CO2 fixation
 C     CNKIC,CPKIC=nonstructural N,P inhibition constant on rubisco
-C        activity (g N,P g C-1)
+C        activity from PARAMETER (g N,P g C-1)
 C
       IF(CCPOLB(NB,NZ,NY,NX).GT.ZERO)THEN
       FDBK(NB,NZ,NY,NX)=AMIN1(CZPOLB(NB,NZ,NY,NX)
@@ -137,15 +138,17 @@ C
       FDBK(NB,NZ,NY,NX)=1.0
       ENDIF
 C
-C     CHILLING 
+C     FURTHER FEEDBACK ON C3 CARBOXYLATION FROM CHILLING 
 C
 C     CHILL,HEAT=accumulated chilling,heating hours used to limit 
 C        CO2 fixation (h)
+C     FDBK=further inhibition on C3 CO2 fixation from chilling,heating 
 C
 C     FDBK(NB,NZ,NY,NX)=FDBK(NB,NZ,NY,NX)/(1.0+0.25*CHILL(NZ,NY,NX))
       FDBK(NB,NZ,NY,NX)=FDBK(NB,NZ,NY,NX)/(1.0+HEAT(NZ,NY,NX))
 C
-C     DEHARDENING OF EVERGREENS IN SPRING
+C     FURTHER FEEDBACK ON C3 CARBOXYLATION FROM DEHARDENING OF
+C     EVERGREENS WITH WARMING IN SPRING
 C
 C     IWTYP=phenology type:0=evergreen
 C                         :1=cold deciduous
@@ -160,19 +163,22 @@ C              :5=semi-evergreen
 C     ATRP=hours above threshold temperature for dehardening 
 C        since leafout (h)
 C     ATRPZ=hours to full dehardening in spring (h) 
+C     FDBK=hardening inhibition on C3 CO2 fixation
 C
       IF(IWTYP(NZ,NY,NX).NE.0.AND.IBTYP(NZ,NY,NX).GE.2)THEN
       FDBK(NB,NZ,NY,NX)=FDBK(NB,NZ,NY,NX)*AMAX1(0.0,AMIN1(1.0
      2,ATRP(NB,NZ,NY,NX)/ATRPZ))
       ENDIF
 C
-C     TERMINATION OF ANNUALS 
+C     FURTHER FEEDBACK ON C3,C4 CARBOXYLATION FROM TERMINATION OF 
+C     ANNUALS AFTER GRAIN FILL IS COMPLETED 
 C
 C     ISTYP=growth habit:0=annual,1=perennial from PFT file
-C     FDBKX=termination feedback inhibition on C3 CO2
+C     FDBKX=termination feedback inhibition on C3,C4 CO2 fixation
 C     FLG4=number of hours with no grain fill after start of 
 C        grain fill (h)
-C     FLG4Y=number of hours with no grain fill to terminate annuals (h)
+C     FLG4Y=number of hours with no grain fill to terminate annuals
+C        from DATA (h)
 C
       IF(ISTYP(NZ,NY,NX).EQ.0.AND.FLG4(NB,NZ,NY,NX).GT.0.0)THEN
       FDBKX(NB,NZ,NY,NX)=AMAX1(0.0
@@ -192,7 +198,7 @@ C    5,TCC(NZ,NY,NX),HEAT(NZ,NY,NX)
 4242  FORMAT(A8,6I4,20E12.4)
 C     ENDIF
 C
-C     FOR EACH NODE
+C     SET PHOTOSYNTHETIC CAPACITY FOR EACH NODE
 C
 C     IDTHB=branch life flag:0=living,1=dead
 C     ARLF,WGLF,WSLF=leaf area,C,protein C (m2,g C,g)
@@ -203,7 +209,6 @@ C
       IF(ARLF(K,NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX)
      2.AND.WGLF(K,NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
       WSDN=WSLF(K,NB,NZ,NY,NX)/ARLF(K,NB,NZ,NY,NX)
-C    2*AMIN1(1.0,100.0*ARLF(K,NB,NZ,NY,NX)/WGLF(K,NB,NZ,NY,NX))
 C     IF((I/60)*60.EQ.I.AND.NFZ.EQ.1.AND.J.EQ.15)THEN
 C     WRITE(*,2125)'WSDN',I,J,NFZ,NX,NY,NZ,NB,K,WSDN
 C    2,WGLF(K,NB,NZ,NY,NX),WSLF(K,NB,NZ,NY,NX)
@@ -218,7 +223,7 @@ C     ENDIF
       ENDIF
       IF(WSDN.GT.ZERO)THEN
 C
-C     C4 PHOTOSYNTHESIS
+C     POTENTIAL C4 PHOTOSYNTHESIS
 C
 C     ICTYP=photosynthesis type:3=C3,4=C4 from PFT file
 C
@@ -231,9 +236,12 @@ C        bundle sheath (uM)
 C     CPOOL4,CO2B=C4 nonstructural C mass in mesophyll,
 C        bundle sheath (g C)
 C     WGLF=leaf C mass (g C)
-C     FBS,FMP=leaf water content in bundle sheath, mesophyll (g g C-1)
-C     FDBK4=N,P feedback inhibition on C4 CO2 fixation 
-C     C4KI=nonstructural C inhibition constant on PEP carboxylase (uM) 
+C     FBS,FMP=leaf water content in bundle sheath, mesophyll 
+C        from PARAMETER(g g C-1)
+C     FDBKX=termination feedback inhibition on C3 CO2 fixation
+C     FDBK4=N,P feedback inhibition on C3,C4 CO2 fixation 
+C     C4KI=nonstructural C inhibition constant on PEP carboxylase 
+C        from PARAMETER (uM) 
 C
       CC4M=AMAX1(0.0,0.021E+09*CPOOL4(K,NB,NZ,NY,NX)
      2/(WGLF(K,NB,NZ,NY,NX)*FMP))
@@ -264,7 +272,7 @@ C        from PFT file
 C     TFN1=temperature function for carboxylation
 C     VCDN4=surficial density of PEP carboxylase in mesophyll (g m-2)
 C     CO2L=intercellular CO2 concentrations (uM)
-C     COMP4=C4 CO2 compensation point (uM)
+C     COMP4=C4 CO2 compensation point from PARAMETER (uM)
 C     XKCO24=Km for VCMX4 from PFT file (uM)
 C
       VCGR4(K,NB,NZ,NY,NX)=VCMX4(NZ,NY,NX)*TFN1*VCDN4
@@ -276,21 +284,21 @@ C
 C     ETGR4=light saturated e- transport rate (umol m-2 s-1)
 C     ETMX=specific chlorophyll activity at 25 oC (umol e- g-1 s-1)
 C        from PFT file
-C     TFNE=temperature function for e- transport 
+C     TFNE=Arrhenius temperature function for e- transport 
 C     ETDN4=surficial density of chlorophyll in mesophyll (g m-2) 
 C     CBXN4=PEP caboxylation efficiency (umol CO2 per umol e-)
 C     CO2L=intercellular CO2 concentrations (uM)
-C     COMP4=C4 CO2 compensation point (uM)
-C     ELEC4=e- requirement for PEP carboxylation (umol e- umol CO2-1)
+C     COMP4=C4 CO2 compensation point from PARAMETER (uM)
+C     ELEC4=e- requirement for PEP carboxylation from PARAMETER 
+C        (umol e- umol CO2-1)
 C
       ETGR4(K,NB,NZ,NY,NX)=ETMX(NZ,NY,NX)*TFNE*ETDN4
       CBXN4(K,NB,NZ,NY,NX)=AMAX1(0.0,(CO2L(NZ,NY,NX)-COMP4)
      2/(ELEC4*CO2L(NZ,NY,NX)+10.5*COMP4))
 C
-C     FOR EACH CANOPY LAYER
+C     POTENTIAL C4 FIXATION FOR EACH CANOPY LAYER
 C
 C     ARLFL=leaf area
-C     SURFX=unself-shaded leaf surface area
 C
       DO 2700 L=JC,1,-1
       IF(ARLFL(L,K,NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
@@ -310,11 +318,12 @@ C
 C
 C     LIGHT-LIMITED CARBOXYLATION RATES
 C
-C     QNTM=quantum efficiency (umol e- umol-1 PAR)
+C     QNTM=quantum efficiency from PARAMETER (umol e- umol-1 PAR)
 C     PAR=direct PAR flux from ‘hour1.f’ (umol m-2 s-1)
 C     ETGR4=light saturated e- transport rate (umol m-2 s-1)
 C     ETLF4=light-limited e- transport rate (umol m-2 s-1)
-C     CURV=shape parameter for e- transport response to PAR
+C     CURV=shape parameter for e- transport response to PAR 
+C        from PARAMETER 
 C     EGRO4=light-limited PEP carboxylation rate (umol m-2 s-1)
 C     CBXN4=PEP caboxylation efficiency (umol CO2 per umol e-)
 C
@@ -330,7 +339,7 @@ C     VGRO4=PEP carboxylation rate limited by CO2 (umol m-2 s-1)
 C     EGRO4=light-limited PEP carboxylation rate (umol m-2 s-1)
 C     FDBK4=N,P feedback inhibition on C4 CO2 fixation
 C     CH2O=total PEP carboxylation rate (umol s-1)  
-C     SURFX=unself-shaded leaf surface area (m2(
+C     SURFX=unself-shaded leaf surface area from ‘uptake.f’ (m2)
 C     TAUS=fraction of direct radiation transmitted from layer above
 C        from ‘hour1.f’
 C
@@ -357,11 +366,12 @@ C
 C
 C     LIGHT-LIMITED CARBOXYLATION RATES
 C
-C     QNTM=quantum efficiency (umol e- umol-1 PAR)
+C     QNTM=quantum efficiency from PARAMETER(umol e- umol-1 PAR)
 C     PARDIF=diffuse PAR flux from ‘hour1.f’ (umol m-2 s-1)
 C     ETGR4=light saturated e- transport rate (umol m-2 s-1)
 C     ETLF4=light-limited e- transport rate (umol m-2 s-1)
-C     CURV=shape parameter for e- transport response to PAR
+C     CURV*=shape parameter for e- transport response to PAR 
+C        from PARAMETER 
 C     EGRO4=light-limited PEP carboxylation rate (umol m-2 s-1)
 C     CBXN4=PEP caboxylation efficiency (umol CO2 per umol e-)
 C
@@ -377,7 +387,7 @@ C     VGRO4=PEP carboxylation rate limited by CO2 (umol m-2 s-1)
 C     EGRO4=light-limited PEP carboxylation rate (umol m-2 s-1)
 C     FDBK4=N,P feedback inhibition on C4 CO2 fixation 
 C     CH2O=total PEP carboxylation rate (umol s-1)  
-C     SURFX=unself-shaded leaf surface area from ‘hour1.f’ (m2)
+C     SURFX=unself-shaded leaf surface area from ‘uptake.f’ (m2)
 C     TAU0=fraction of diffuse radiation transmitted from layer above
 C        from ‘hour1.f’
 C
@@ -415,10 +425,10 @@ C
 C     VCGRO=rubisco carboxylation rate unlimited by CO2 (umol m-2 s-1)
 C     VCMX=specific rubisco carboxylation activity from PFT file 
 C        (umol g-1 s-1 at 25 oC)
-C     TFN1=temperature function for carboxylation
+C     TFN1=Arrhenius temperature function for carboxylation
 C     VCDN=surficial density of rubisco in bundle sheath (g m-2)
 C     VOGRO=rubisco oxygenation rate (umol m-2 s-1)
-C     TFN2=temperature function for oxygenation
+C     TFN2= Arrhenius temperature function for oxygenation
 C     COMPL=C3 CO2 compensation point (uM)
 C     CO2L,O2L=intercellular CO2,O2 concentrations (uM)
 C     XKCO2L,XKCO2O=Km for rubisco carboxylation without,with O2 (uM)
@@ -438,19 +448,19 @@ C
 C     ETGRO=light-limited rubisco carboxylation rate (umol m-2 s-1)
 C     ETMX=specific chlorophyll activity from PFT file 
 C        (umol g-1 s-1 at 25 oC))
-C     TFNE=temperature function for e- transport 
+C     TFNE=Arrhenius temperature function for e- transport 
 C     ETDN=surficial density of chlorophyll in bundle sheath (g m-2)
 C     CBXN=rubisco caboxylation efficiency (umol CO2 per umol e-)
 C     CO2L=intercellular CO2 concentrations (uM)
 C     COMPL=C3 CO2 compensation point (uM)
-C     ELEC3=e- requirement for rubisco carboxylation 
+C     ELEC3=e- requirement for rubisco carboxylation from PARAMETER 
 C        (umol e- umol CO2)
 C
       ETGRO(K,NB,NZ,NY,NX)=ETMX(NZ,NY,NX)*TFNE*ETDN
       CBXN(K,NB,NZ,NY,NX)=AMAX1(0.0,(CCBS-COMPL(K,NB,NZ,NY,NX))
      2/(ELEC3*CCBS+10.5*COMPL(K,NB,NZ,NY,NX)))
 C
-C     C3 PHOTOSYNTHESIS
+C     POTENTIAL C3 PHOTOSYNTHESIS
 C
       ELSE
 C
@@ -472,10 +482,10 @@ C
 C     VCGRO=rubisco carboxylation rate unlimited by CO2 (umol m-2 s-1)
 C     VCMX=specific rubisco carboxylation activity from PFT file
 C        (umol g-1 s-1 at 25 oC)
-C     TFN1=temperature function for carboxylation
+C     TFN1=Arrhenius temperature function for carboxylation
 C     VCDN=surficial density of rubisco in mesophyll (g m-2)
 C     VOGRO=rubisco oxygenation rate (umol m-2 s-1)
-C     TFN2=temperature function for oxygenation
+C     TFN2=Arrhenius temperature function for oxygenation
 C     COMPL=C3 CO2 compensation point (uM)
 C     CO2L,O2L=intercellular CO2,O2 concentrations (uM)
 C     XKCO2L,XKCO2O=Km for rubisco carboxylation without,with O2 (uM)
@@ -495,12 +505,12 @@ C
 C     ETGRO=light-limited rubisco carboxylation rate (umol m-2 s-1)
 C     ETMX=specific chlorophyll activity from PFT file
 C        (umol g-1 s-1 at 25 oC))
-C     TFNE=temperature function for e- transport 
+C     TFNE= Arrhenius temperature function for e- transport 
 C     ETDN=surficial density of chlorophyll in mesophyll (g m-2)
 C     CBXN=rubisco caboxylation efficiency (umol CO2 per umol e-)
 C     CO2L=intercellular CO2 concentrations (uM)
 C     COMPL=C3 CO2 compensation point (uM)
-C     ELEC3=e- requirement for rubisco carboxylation 
+C     ELEC3=e- requirement for rubisco carboxylation from PARAMETER 
 C        (umol e- umol CO2)
 C
       ETGRO(K,NB,NZ,NY,NX)=ETMX(NZ,NY,NX)*TFNE*ETDN
@@ -511,7 +521,7 @@ C
 C     FOR EACH CANOPY LAYER
 C
 C     ARLFL=node leaf area in canopy layer
-C     SURFX=unself-shaded leaf surface area from ‘hour1.f’
+C     SURFX=unself-shaded leaf surface area from ‘uptake.f’ (m2)
 C
       DO 3700 L=JC,1,-1
       IF(ARLFL(L,K,NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
@@ -530,11 +540,12 @@ C
 C
 C     LIGHT-LIMITED CARBOXYLATION RATES
 C
-C     QNTM=quantum efficiency (umol e- umol-1 PAR)
+C     QNTM=quantum efficiency from PARAMETER (umol e- umol-1 PAR)
 C     PAR=direct PAR flux from ‘hour1.f’ (umol m-2 s-1)
 C     ETGRO=light saturated e- transport rate (umol m-2 s-1)
 C     ETLF=light-limited e- transport rate (umol m-2 s-1)
-C     CURV=shape parameter for e- transport response to PAR
+C     CURV*=shape parameter for e- transport response to PAR 
+C        from PARAMETER 
 C     EGRO=light-limited rubisco carboxylation rate (umol m-2 s-1)
 C     CBXN=rubisco caboxylation efficiency (umol CO2 per umol e-)
 C
@@ -551,7 +562,7 @@ C     VGRO=rubisco carboxylation rate limited by CO2 (umol m-2 s-1)
 C     EGRO=light-limited rubisco carboxylation rate (umol m-2 s-1)
 C     FDBK=N,P feedback inhibition on C3 CO2 fixation
 C     CH2O=total rubisco carboxylation rate (umol s-1)  
-C     SURFX=unself-shaded leaf surface area (m2)
+C     SURFX=unself-shaded leaf surface area from ‘uptake.f’ (m2)
 C     TAUS=fraction of direct radiation transmitted from layer above
 C        from ‘hour1.f’
 C
@@ -576,11 +587,12 @@ C
 C
 C     LIGHT-LIMITED CARBOXYLATION RATES
 C
-C     QNTM=quantum efficiency (umol e- umol-1 PAR)
+C     QNTM=quantum efficiency from PARAMETER (umol e- umol-1 PAR)
 C     PARDIF=diffuse PAR flux from ‘hour1.f’(umol m-2 s-1)
 C     ETGR=light saturated e- transport rate (umol m-2 s-1)
 C     ETLF=light-limited e- transport rate (umol m-2 s-1)
-C     CURV=shape parameter for e- transport response to PAR
+C     CURV*=shape parameter for e- transport response to PAR 
+C        from PARAMETER 
 C     EGRO=light-limited rubisco carboxylation rate (umol m-2 s-1)
 C     CBXN=rubisco caboxylation efficiency (umol CO2 per umol e-)
 C
@@ -597,7 +609,7 @@ C     VGRO=rubisco carboxylation rate limited by CO2 (umol m-2 s-1)
 C     EGRO=light-limited rubisco carboxylation rate (umol m-2 s-1)
 C     CH2O=total rubisco carboxylation rate (umol s-1)  
 C     FDBK=N,P feedback inhibition on C3 CO2 fixation 
-C     SURFX=unself-shaded leaf surface area (m2)
+C     SURFX=unself-shaded leaf surface area from ‘uptake.f’ (m2)
 C     TAU0=fraction of diffuse radiation transmitted from layer above
 C        from ‘hour1.f’
 C
@@ -631,13 +643,14 @@ C     DIFFERENCE DIVIDED BY TOTAL CO2 FIXATION
 C
 C     RSX,RSMN=minimum canopy stomatal resistance to CO2,H2O 
 C     used in ‘grosub.f’,’uptake.f’(h m-1)
-C     RSMH=cuticular resistance to water from ‘startq.f’ (h m-1)
+C     RSMH=cuticular resistance to water from PFT file through
+C        ‘startq.f’ (h m-1)
 C     RSMY=minimum stomatal resistance for CO2 uptake (h m-1)
 C     CH2O=total PEP(C4) or rubisco(C3) carboxylation rate (umol s-1)  
 C     FRADP=fraction of radiation received by each PFT canopy
 C        from ‘hour1.f’
 C     DCO2=difference between atmospheric and intercellular CO2
-C        concentration (umol m-3)
+C        concentration set in PFT file (umol m-3)
 C     AREA=area of grid cell (m2)
 C
       IF(CH2O.GT.ZEROP(NZ,NY,NX))THEN

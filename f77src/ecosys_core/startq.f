@@ -45,7 +45,7 @@ C
 C     INITIALIZE SHOOT GROWTH VARIABLES
 C
 C     IFLGN=0:take values from ‘readq.f’
-C          =1:retain existing values from ‘routp.f’
+C          =1:retain values read from ‘routp.f’
 C     IFLGC=PFT flag:0=not alive,1=alive
 C     IYR0,IDAY0,IYRH,IDAYH=year,day of planting,harvesting
 C     PPI,PPX=initial,current plant population (n m-2)
@@ -245,10 +245,10 @@ C
 C     CONIFEROUS TREES
 C
       ELSE
-      CFOPC(4,1,NZ,NY,NX)=0.059
-      CFOPC(4,2,NZ,NY,NX)=0.308
-      CFOPC(4,3,NZ,NY,NX)=0.464
-      CFOPC(4,4,NZ,NY,NX)=0.169
+      CFOPC(4,1,NZ,NY,NX)=0.07
+      CFOPC(4,2,NZ,NY,NX)=0.25
+      CFOPC(4,3,NZ,NY,NX)=0.38
+      CFOPC(4,4,NZ,NY,NX)=0.30
       ENDIF
 C
 C     COARSE WOODY LITTER FROM BOLES AND ROOTS
@@ -308,31 +308,40 @@ C
 C     TCZD,TCXD=base threshold temperature for leafout,leafoff (oC)
 C     ZTYP,ZTYPI=dynamic,initial thermal adaptation zone from PFT file
 C     OFFST=shift in Arrhenius curve for thermal adaptation (oC)
-C     TCZ,TCX=threshold temperature for leafout,leafoff (oC)
+C     TCZ,TCX=threshold temperature for leafout,leafoff adjusted 
+C        for ZTYP (oC)
 C     HTC=high temperature threshold for grain number loss during 
-C        post-anthesis seed set (oC)
+C        post-anthesis seed set adjusted for ZTYP (oC)
 C     SSTX=sen1sitivity of seed set to TCC < CTC,TCC > HTC 
-C        (fraction of set seeds oC-1 h-1)
-C     TCC=canopy surface temperature (oC)
+C        in ‘grosub.f’ (fraction of set seeds oC-1 h-1)
 C     ICTYP=3:C3,=4:C4 from PFT file
 C
       TCZD=5.00
-      TCXD=7.50
+      TCXD=12.50
       ZTYP(NZ,NY,NX)=ZTYPI(NZ,NY,NX)
+      IF(ZTYP(NZ,NY,NX).LE.3.0)THEN
       OFFST(NZ,NY,NX)=2.50*(3.0-ZTYP(NZ,NY,NX))
+      ELSE
+      OFFST(NZ,NY,NX)=1.25*(3.0-ZTYP(NZ,NY,NX))
+      ENDIF
       TCZ(NZ,NY,NX)=TCZD-OFFST(NZ,NY,NX)
       TCX(NZ,NY,NX)=AMIN1(15.0,TCXD-OFFST(NZ,NY,NX))
       IF(ICTYP(NZ,NY,NX).EQ.3)THEN
       IF(DATAP(NZ,NY,NX)(1:4).EQ.'soyb')THEN
-      HTC(NZ,NY,NX)=32.5+2.0*ZTYP(NZ,NY,NX)
+      HTC(NZ,NY,NX)=35.0+2.0*ZTYP(NZ,NY,NX)
       SSTX(NZ,NY,NX)=0.002
       ELSE
       HTC(NZ,NY,NX)=27.5+2.0*ZTYP(NZ,NY,NX)
       SSTX(NZ,NY,NX)=0.005
       ENDIF
       ELSE
-      HTC(NZ,NY,NX)=27.5+2.0*ZTYP(NZ,NY,NX)
-      SSTX(NZ,NY,NX)=0.005
+      IF(DATAP(NZ,NY,NX)(1:4).EQ.'maiz')THEN
+      HTC(NZ,NY,NX)=30.0+2.0*ZTYP(NZ,NY,NX)
+      SSTX(NZ,NY,NX)=0.010
+      ELSE
+      HTC(NZ,NY,NX)=32.5+2.0*ZTYP(NZ,NY,NX)
+      SSTX(NZ,NY,NX)=0.002
+      ENDIF
       ENDIF
 C     WRITE(*,3233)'DATAP',NX,NY,NZ
 C    2,DATAP(NZ,NY,NX),DATAP(NZ,NY,NX)(1:4),HTC(NZ,NY,NX)
@@ -365,6 +374,7 @@ C
       CPRTS(NZ,NY,NX)=CPRT(NZ,NY,NX)*DMRT(NZ,NY,NX)
 C
 C     INITIALIZE MYCORRHIZAL(N=2) DIMENSIONS, UPTAKE PARAMETERS
+C     FROM ROOT (N=1) DIMENSIONS, UPTAKE PARAMETERS 
 C
 C     RRAD1M,RRAD2M=maximum primary,secondary mycorrhizal radius (m)
 C     PORT=mycorrhizal porosity
@@ -388,10 +398,10 @@ C
       UPMXPO(2,NZ,NY,NX)=UPMXPO(1,NZ,NY,NX)
       UPKMPO(2,NZ,NY,NX)=UPKMPO(1,NZ,NY,NX)
       UPMNPO(2,NZ,NY,NX)=UPMNPO(1,NZ,NY,NX)
-      RSRR(2,NZ,NY,NX)=1.0E+04
-      RSRA(2,NZ,NY,NX)=1.0E+12
+      RSRR(2,NZ,NY,NX)=RSRR(1,NZ,NY,NX)
+      RSRA(2,NZ,NY,NX)=RSRA(1,NZ,NY,NX)
 C
-C     INITIALIZE ROOT DIMENSIONS
+C     INITIALIZE ROOT, MYCORRHIZAL DIMENSIONS
 C
 C     PORT=root porosity from PFT file
 C     RRADP=path length for radial diffusion within root (m)
@@ -416,10 +426,11 @@ C    2*SQRT(0.25*(1.0-PORTI(N,NZ,NY,NX)))
 500   CONTINUE
 C
 C     INITIALIZE PLANT PHENOLOGY FOR USE IN ‘HFUNC.F’
-C     FROMINPUTS IN PFT FILE 
+C     FROM INPUTS IN PFT FILE 
 C
-C     GROUPI=plant maturity group
-C     XTLI=node number in seed at planting  
+C     GROUPI=plant maturity group from PFT file
+C     XTLI=node number in seed at planting from PFT file
+C     IFLG*=flags used to guide phenological development  
 C
       IFLGI(NZ,NY,NX)=0
       IDTHP(NZ,NY,NX)=0
@@ -703,7 +714,7 @@ C
       VPQC(NZ,NY,NX)=2.173E-03/TKQC(NZ,NY,NX)
      2*0.61*EXP(5360.0*(3.661E-03-1.0/TKQC(NZ,NY,NX)))
       TKQD(NZ,NY,NX)=ATKA(NY,NX)
-      VPQD(NZ,NY,NX)= 2.173E-03/TKQD(NZ,NY,NX)
+      VPQD(NZ,NY,NX)=2.173E-03/TKQD(NZ,NY,NX)
      2*0.61*EXP(5360.0*(3.661E-03-1.0/TKQD(NZ,NY,NX)))
       TCC(NZ,NY,NX)=ATCA(NY,NX)
       TKC(NZ,NY,NX)=ATKA(NY,NX)

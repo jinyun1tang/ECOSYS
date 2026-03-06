@@ -25,8 +25,6 @@ C
       CHARACTER*4 CHARY
       CHARACTER*1 TTYPE,CTYPE,IVAR(20),VAR(50),TYP(50)
       CHARACTER*80 PREFIX
-      CHARACTER*100 LINE
-      dimension datav(50)
       DIMENSION IDAT(20),DAT(50),DATK(50),OUT(50)
       PARAMETER (TWILGT=0.06976)
       DATA IFLGY,IYRX,IYRD/0,0,0/
@@ -180,6 +178,8 @@ C
 C     OPEN CHECKPOINT FILES FOR SOIL VARIABLES
 C
 C     IDATE=year label for checkpoint files from start of original run
+C        if resuming from earlier run IDATA(9)
+C        if starting new run IDATA(3)
 C     DATA(1)=site file name
 C     W,N=water+heat,nutrient checkpoint files
 C     DATA(20)=’YES’:find checkpoint files and resume from original run
@@ -258,28 +258,15 @@ C
       READ(3,'(2A1,2I2,50A1)')TTYPE,CTYPE,NI,NN,(IVAR(K),K=1,NI)
      2,(VAR(K),K=1,NN)
       READ(3,'(50A1)')(TYP(K),K=1,NN)
-      read(3,*)datav(1:3)
-      Z0G=datav(1)
-      IFLGW=int(datav(2))
-      ZNOONG=datav(3)
-C      READ(3,*)Z0G,IFLGW,ZNOONG
-
-C      READ(3,*)PHRG,CN4RIG,CNORIG,CPORG,CALRG,CFERG,CCARG,CMGRG,CNARG
-C     2,CKARG,CSORG,CCLRG
-      READ(3,'(A)')LINE
-      READ(LINE,*)PHRG,CN4RIG,CNORIG,CPORG,CALRG,CFERG,CCARG,CMGRG,CNARG
+      READ(3,*)Z0G,IFLGW,ZNOONG
+      READ(3,*)PHRG,CN4RIG,CNORIG,CPORG,CALRG,CFERG,CCARG,CMGRG,CNARG
      2,CKARG,CSORG,CCLRG
-
       DO 55 K=1,NN
       DATK(K)=0.0
 55    CONTINUE
       IH=1
-C60    READ(3,*,END=110)(IDAT(K),K=1,NI),(DAT(K),K=1,NN)
+60    READ(3,*,END=110)(IDAT(K),K=1,NI),(DAT(K),K=1,NN)
 C     WRITE(*,61)'MET',(IDAT(K),K=1,NI),(DAT(K),K=1,NN)
-60    read(3,*,END=110)(datav(k),k=1,NI),(DAT(K),K=1,NN)
-      do k = 1, ni
-      idat(k)=int(datav(k))
-      enddo 
 61    FORMAT(A8,4I6,50E12.4)
 C
 C     READ DAILY WEATHER DATA AND CONVERT TO MODEL UNITS
@@ -722,7 +709,7 @@ C
       IX=365
       ENDIF
 C
-C     CALCULATE PRECIPITATION SOLUTE CONCENTRATIONS IN MOLE UNITS
+C     CONVERT PRECIPITATION SOLUTE CONCENTRATIONS INTO MOLE UNITS
 C
       CN4RIG=CN4RIG/14.0
       CNORIG=CNORIG/14.0
@@ -738,7 +725,7 @@ C
       CSORG=CSORG/32.0
       CCLRG=CCLRG/35.5
 C
-C     ALLOCATE PECIITATION ION CONCENTRATIONS TO GRID CELLS IN
+C     ALLOCATE PRECIPITATION ION CONCENTRATIONS TO GRID CELLS IN
 C     LANDSCAPE
 C
       DO 8970 NX=NHW,NHE
@@ -763,6 +750,8 @@ C
 8970  CONTINUE
 C
 C     DERIVE END DATES FOR SCENE FROM TIME VARIABLES
+C        IDAYR=end day
+C        IYRR=end year
 C
       ICHECK=0
       IF(TTYPE.EQ.'H'.AND.J.NE.24)ICHECK=1
@@ -785,7 +774,8 @@ C
 C     ROWN,ROWO,ROWP=row spacing for band NH4, NO3 and PO4
 C        fertilizer applications (m)
 C     ITILL,DCORP=disturbance type,intensity
-C     FERT,IYTYP,FDPTH=fertilizer amount,type,application depth (g m-2,m)
+C     FERT,IYTYP,FDPTH=fertilizer amount,type,application depth 
+C        (g m-2,m)
 C     RRIG=irrigation timing,depth (h,m)
 C     PHQX,CN4QX,CNOQX,CPOQX,CALQX,CFEQX,CCAQX,CMGQX,CNAQX,CKAQX, 
 C     CSOQX,CCLQX=pH,NH4,NO3,H2PO4,Al,Fe,Ca,Mg,Na,K,SO4,Cl 
@@ -799,7 +789,7 @@ C
       ROWO(NY,NX)=0.0
       ROWP(NY,NX)=0.0
       DO 325 I=1,366
-      ITILL(I,NY,NX)=0
+      ITILL(I,NY,NX)=-1
       DCORP(I,NY,NX)=0.0
 325   CONTINUE
       DO 40 I=1,366
@@ -833,7 +823,7 @@ C
 9985  CONTINUE
 9980  CONTINUE
 C
-C     READ LAND MANAGEMENT FILE DATAC(9 LOADED IN 'MAIN'.
+C     READ LAND MANAGEMENT FILE DATAC(9 LOADED IN 'MAIN.F'.
 C     THIS FILE CONTAINS NAMES OF DISTURBANCE DATA(8),
 C     FERTILIZER DATA(5) AND IRRIGATION DATA(6) FILES
 C
@@ -869,11 +859,15 @@ C        = (disturbance type – 10)/10
 C                                 21:surface litter removal
 C                                 22:fire
 C                                 23-24:natural, artificial drainage
-C     DDIST=tillage (1-20), drainage (23-24): depth (m)
+C     DDIST=tillage (1-20): depth (m) 
 C          =surface litter removal (21): fraction (0 - 1) 
 C          =fire (22): energy (kW m-2) (likely 25 - 75)
+C          =drainage (23-24): depth (m)
 C
-C     if disturbance 24 is indicated:
+295   CONTINUE
+      READ(10,*,END=305)DY,IDIST,DDIST
+C
+C     if disturbance 24 (artificial drainage) is selected:
 C 
 C     RCHGNAG,RCHGEAG,RCHGSAG,RCHGWAG=distance to N,E,S,W external
 C        artificial water table (m) 
@@ -882,8 +876,6 @@ C        N,E,S,W subsurface exchange with external artificial water
 C        table :0=no flow
 C              :1=unimpeded flow 
 C
-295   CONTINUE
-      READ(10,*,END=305)DY,IDIST,DDIST
       IF(IDIST.EQ.24)THEN
       READ(10,*)RCHGNAG,RCHGEAG,RCHGSAG,RCHGWAG
      2,RCHGNBG,RCHGEBG,RCHGSBG,RCHGWBG
@@ -903,7 +895,7 @@ C     IF(IDY2.GE.7)IDY=IDY+0.5*(NTX-1)
 3530  CONTINUE
 C
 C     ENTER DISTURBANCE PROPERTIES TO GRID CELLS 
-C     IN EACH LANDSCAPE UNIT
+C     IN EACH LANDSCAPE UNIT DEFINED IN THE SOIL TOPOGRAPHY FILE
 C
       DO 8995 NX=NH1,NH2
       DO 8990 NY=NV1,NV2
@@ -918,8 +910,8 @@ C
       RCHGEBZ(NY,NX)=RCHGEBG
       RCHGSBZ(NY,NX)=RCHGSBG
       RCHGWBZ(NY,NX)=RCHGWBG
-      WRITE(*,1001)'READS',NY,NX,RCHGNAG,RCHGEAG,RCHGSAG,RCHGWAG
-     2,RCHGNBG,RCHGEBG,RCHGSBG,RCHGWBG,RCHGEA(NY,NX),RCHGEB(NY,NX)
+C     WRITE(*,1001)'READS',NY,NX,RCHGNAG,RCHGEAG,RCHGSAG,RCHGWAG
+C    2,RCHGNBG,RCHGEBG,RCHGSBG,RCHGWBG,RCHGEA(NY,NX),RCHGEB(NY,NX)
 1001  FORMAT(A8,2I4,10E12.4)
       ENDIF
 8990  CONTINUE
@@ -1004,6 +996,10 @@ C     IF(IDY2.GE.7)IDY=IDY+0.5*(NTX-1)
       GO TO 1530
 1525  IDY=IDY1
 1530  CONTINUE
+C
+C     FOR ALL GRID CELLS IN EACH LANDSCAPE UNIT DEFINED IN THE 
+C     SOIL TOPOGRAPHY FILE
+C
       DO 8985 NX=NH1,NH2
       DO 8980 NY=NV1,NV2
 C
@@ -1071,12 +1067,14 @@ C
       IF(DATA(6)(1:4).EQ.'auto')THEN
 C
 C     DST,DEN=start,end dates,hours DDMMHHHH
-C     IFLGVX=flag for irrigation criterion,0=SWC,1=canopy water potl 
+C     IFLGVX=flag for irrigation criterion
+C        :0=SWC (m3 m-3)
+C        :1=canopy water potential (MPa) 
 C     FIRRX=remaining SWC calculated from CIRRX to WP(IFLGV=0) 
 C        or minimum canopy water potential(IFLGV=1), to trigger
 C        irrigation
-C     CIRRX= fraction of FC to which irrigation will raise SWC
-C     DIRRX= depth to which water depletion and rewatering is
+C     CIRRX=fraction of FC to which irrigation will raise SWC
+C     DIRRX=depth to which water depletion and rewatering is
 C        calculated (m)
 C     WDPTHI=depth at which irrigation is applied (0=surface) (m)
 C     PHQX,CN4QX,CNOQX,CPOQX,CALQX,CFEQX,CCAQX,CMGQX,CNAQX,CKAQX, 
@@ -1112,7 +1110,7 @@ C
       IHRE=IDY3
 C
 C     TRANSFER AUTOMATED IRRIGATION INPUTS TO MODEL ARRAYS
-C     FOR EACH LANDSCAPE UNIT 
+C     FOR ALL GRID CELLS IN EACH LANDSCAPE UNIT 
 C
       DO 7965 NX=NH1,NH2
       DO 7960 NY=NV1,NV2
@@ -1170,8 +1168,8 @@ C
 2525  IDY=IDY1
 2530  CONTINUE
 C
-C     ENTER IRRIGATION AMOUNTS INTO MODEL ARRAY
-C     FOR EACH LANDSCAPE UNIT
+C     ENTER AUTOMATED IRRIGATION AMOUNTS INTO MODEL ARRAY
+C     FOR ALL GRID CELLS IN EACH LANDSCAPE UNIT
 C
       RRH=RR/(JEN-(JST-1))
       DO 8965 NX=NH1,NH2

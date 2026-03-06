@@ -33,9 +33,9 @@ C
 C
 C     OPEN AND NAME OUTPUT FILES
 C
-C     DATAC(21-30)=output file names from runscript read in ï¿½main.fï¿½ 
+C     DATAC(21-30)=output file names from runscript read in ‘main.f’ 
 C     PREFIX=path for files in current or higher level directory 
-C        from ï¿½main.fï¿½
+C        from ‘main.f’
 C     IYRC=current year
 C     OUTFILS=output file name for grid cell, year
 C
@@ -330,7 +330,7 @@ C
       DO 1026 L=1,50
       IF(CHOICE(L,N-20).EQ.'YES')THEN
       M=M+1
-      IF(L.EQ.1)HEAD(M)='RESIDUE_C'
+      IF(L.EQ.1)HEAD(M)='LIT+POM_C'
       IF(L.EQ.2)HEAD(M)='HUMUS_C'
       IF(L.EQ.3)HEAD(M)='AMENDED_C'
       IF(L.EQ.4)HEAD(M)='LITTER_C'
@@ -373,7 +373,7 @@ C
       IF(L.EQ.46)HEAD(M)='ECO_NPP'
       IF(L.EQ.47)HEAD(M)='ECO_RH'
       IF(L.EQ.48)HEAD(M)='FIRE_CH4_EMIT'
-      IF(L.EQ.49)HEAD(M)='TTL_DIC'
+      IF(L.EQ.49)HEAD(M)='TTL_INORG_C'
       IF(L.EQ.50)HEAD(M)='STG_DEAD'
       ENDIF
 1026  CONTINUE
@@ -447,7 +447,7 @@ C
       DO 1028 L=1,50
       IF(CHOICE(L,N-20).EQ.'YES')THEN
       M=M+1
-      IF(L.EQ.1)HEAD(M)='RESIDUE_N'
+      IF(L.EQ.1)HEAD(M)='LIT+POM_N'
       IF(L.EQ.2)HEAD(M)='HUMUS_N'
       IF(L.EQ.3)HEAD(M)='FERTZR_N'
       IF(L.EQ.4)HEAD(M)='NET_PL_EXCH_N'
@@ -508,7 +508,7 @@ C
       DO 1029 L=1,50
       IF(CHOICE(L,N-20).EQ.'YES')THEN
       M=M+1
-      IF(L.EQ.1)HEAD(M)='RESIDUE_P'
+      IF(L.EQ.1)HEAD(M)='LIT+POM_P'
       IF(L.EQ.2)HEAD(M)='HUMUS_P'
       IF(L.EQ.3)HEAD(M)='FERTZR_P'
       IF(L.EQ.4)HEAD(M)='NET_PL_EXCH_P'

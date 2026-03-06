@@ -188,8 +188,10 @@ C
 C
 C     CALCULATE DAYLENGTH FROM SOLAR ANGLE
 C
-C     DYLX,DLYN=daylength of previous,current day
-C     ALAT=latitude
+C     AZI,DEC=solar azimuth, declination used to calculate 
+C        solar angles in ‘wthr.f’ (rad)
+C     DYLX,DLYN=daylength of previous,current day (h)
+C     ALAT=latitude from site file (o)
 C
       XI=I
       IF(I.EQ.366)XI=365.5
@@ -208,6 +210,7 @@ C
 C
 C     TIME STEP OF WEATHER DATA
 C
+C     IGO:=0,first scene in first scenario.
 C     IWTHR=weather data type:1=daily,2=hourly for first (1) 
 C        or second (2) scene in current year
 C     ITYPE=weather data type:1=daily,2=hourly
@@ -221,15 +224,16 @@ C
 C     PARAMETERS FOR CALCULATING HOURLY RADIATION, TEMPERATURE
 C     AND VAPOR PRESSURE FROM DAILY VALUES READ IN WEATHER FILE
 C
-C     DLYN=daylength
-C     SRAD=daily radiation from weather file
-C     RMAX=maximum hourly radiation
+C     DLYN=daylength (h)
+C     SRAD=daily radiation from weather file (MJ m-2 d-1)
+C     RMAX=maximum hourly radiation (MJ m-2 h-1)
 C     I2,I,I3=previous,current,next day
 C     TMPX,TMPN=maximum,minimum daily temperature from weather file
-C     DWPT=daily vapor pressure from weather file
+C        (oC)
+C     DWPT=daily vapor pressure from weather file (kPa)
 C     TAVG*,AMP*,VAVG*,VMP*=daily averages, amplitudes of
 C        temperatures, vapor pressures to calculate hourly
-C        values in ‘wthr.f’ 
+C        values in ‘wthr.f’ (oC, kPa)
 C
       IF(ITYPE.EQ.1)THEN
       IF(IETYP(NY,NX).GE.-1)THEN
@@ -267,10 +271,11 @@ C
 C     ICLM=type of climate change 
 C        :1=step change
 C        :2=incremental change (annual calculated daily)
-C     TDTPX,TDTPN=change in maximum,minimum temperature
-C     TDRAD,TDWND,TDHUM=change in radiation,windspeed,vapor pressure
-C     TDPRC,TDIRRI=change in precipitation,irrigation
-C     TDCO2,TDCN4,TDCNO=change in CO2,NH4,NO3 concentration 
+C     TDTPX,TDTPN=change in maximum,minimum temperature (oC)
+C     TDRAD,TDWND,TDHUM=relative change in radiation,windspeed
+C        vapor pressure
+C     TDPRC,TDIRRI=relative change in precipitation,irrigation
+C     TDCO2,TDCN4,TDCNO=relative change in CO2,NH4,NO3 concentration 
 C        in precipitation
 C     LYRC=number of days in current year      
 C
@@ -329,15 +334,17 @@ C     XCORP=soil mixing fraction used in ‘redist.f’
 C
 C     IF ALL PLANT SPECIES ARE TILLED
 C
-      IF(ITILL(I,NY,NX).LE.10)THEN
-      CORP=AMIN1(1.0,AMAX1(0.0,ITILL(I,NY,NX)/10.0))
+      IF(ITILL(I,NY,NX).GE.0.AND.ITILL(I,NY,NX).LE.10)THEN
+      CORP=AMIN1(1.0,AMAX1(0.05,ITILL(I,NY,NX)/10.0))
       XCORP(NY,NX)=1.0-CORP
 C
 C     IF ALL PLANT SPECIES ARE TILLED EXCEPT NZ=1 (EG CROP)
 C
-      ELSEIF(ITILL(I,NY,NX).LE.20)THEN      
-      CORP=AMIN1(1.0,AMAX1(0.0,(ITILL(I,NY,NX)-10.0)/10.0))
+      ELSEIF(ITILL(I,NY,NX).GE.11.AND.ITILL(I,NY,NX).LE.20)THEN      
+      CORP=AMIN1(1.0,AMAX1(0.05,(ITILL(I,NY,NX)-10.0)/10.0))
       XCORP(NY,NX)=1.0-CORP
+      ELSE
+      XCORP(NY,NX)=1.0
       ENDIF
 C     WRITE(*,2227)'TILL',I,ITILL(I,NY,NX),CORP,XCORP(NY,NX)
 2227  FORMAT(A8,2I4,12E12.4)
@@ -346,23 +353,24 @@ C     AUTOMATIC IRRIGATION IF SELECTED
 C
 C     DATA(6)=irrigation file name
 C     IIRRA=start,finish dates(1,2),hours(3,4) of automated irrigation
-C     DIRRX=depth to which water depletion and rewatering is
-C        calculated(1)
-C     DIRRA=depth to,at which irrigation is applied(1,2)
-C     CDPTH(NU(NY,NX)-1,NY,NX)=surface elevation 
+C        from ‘reads.f’
+C     DIRRA=depth to(1),at(2) which irrigation is applied 
+C        from ‘reads.f’ (m)
+C     CDPTH(NU(NY,NX)-1,NY,NX)=surface elevation (m) 
 C     POROS,FC,WP=water content at saturation,field capacity,
-C        wilting point
-C     CIRRA= fraction of FC to which irrigation will raise SWC
+C        wilting point (m3 m-3)
+C     CIRRA=fraction of FC to which irrigation will raise SWC
 C     FW=fraction of soil layer in irrigation zone
-C     FZ=SWC below which irrigation is triggered 
-C     VOLX,VOLW,VOLI=total,water,ice volume
-C     IFLGV=flag for irrigation criterion,0=SWC,1=canopy water
-C        potential 
-C     FIRRA=remaining SWC calculated from CIRRA above WP (IFLGV=0),
+C     FZ=SWC below which irrigation is triggered (m3 m-3) 
+C     VOLX,VOLW,VOLI=total,water,ice volume (m3)
+C     IFLGV=flag for irrigation criterion from ‘reads.f’
+C        :0=SWC (m3 m-3)
+C        :1=canopy water potential (MPa) 
+C     FIRRA=remaining SWC calculated from CIRRA above WP(IFLGV=0),
 C        or minimum canopy water potential(IFLGV=1), 
-C        to trigger irrigation
-C     RR=total irrigation requirement
-C     RRIG=hourly irrigation amount applied in wthr.f
+C        to trigger irrigation from ‘reads.f’
+C     RR=total irrigation requirement (m3 m-2)
+C     RRIG=hourly irrigation amount applied in ‘wthr.f’
 C
       IF(DATA(6)(1:4).EQ.'auto')THEN
       IF(I.GE.IIRRA(1,NY,NX).AND.I.LE.IIRRA(2,NY,NX))THEN
@@ -372,7 +380,7 @@ C
       DIRRA1=DIRRA(1,NY,NX)+CDPTH(NU(NY,NX)-1,NY,NX)
       DIRRA2=DIRRA(2,NY,NX)+CDPTH(NU(NY,NX)-1,NY,NX)
       DO 165 L=NU(NY,NX),NL(NY,NX)
-      IF(CDPTH(L-1,NY,NX).LT.DIRRA1)THEN
+      IF(CDPTHZ(L-1,NY,NX).LT.DIRRA1)THEN
       FW=AMIN1(1.0,(DIRRA1-CDPTH(L-1,NY,NX))
      2/(CDPTH(L,NY,NX)-CDPTH(L-1,NY,NX)))
       FZ=AMIN1(POROS(L,NY,NX),WP(L,NY,NX)+CIRRA(NY,NX)

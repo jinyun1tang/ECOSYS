@@ -53,6 +53,9 @@ C
       DO 9995 NX=NHW,NHE
       DO 9990 NY=NVN,NVS
       DO 9985 NZ=1,NP(NY,NX)
+C
+C     IF PFT EXISTS
+C
       IF(DATAP(NZ,NY,NX).NE.'NO')THEN
 C
 C     DATAP=PFT file name
@@ -62,7 +65,6 @@ C
       PPT(NY,NX)=PPT(NY,NX)+PP(NZ,NY,NX)
 C
 C     SET CROP FLAG ACCORDING TO PLANTING, HARVEST DATES, DEATH,
-C     1 = ALIVE, 0 = NOT ALIVE
 C
 C     IDAY0,IYR0,IDAYH,IYRH=day,year of planting,harvesting
 C     IYRC=current year
@@ -70,6 +72,8 @@ C     IDATA(3)=start year of current scenario
 C     IDTH=PFT flag:0=alive,1=dead    
 C     IFLGC=PFT flag:0=not active,1=active
 C     IFLGT=number of active PFT
+C     IFLGN=0:take values from ‘readq.f’ in ‘startq.f’
+C          =1:retain values read from ‘routp.f’ in ‘startq.f’
 C
       IF(J.EQ.1.AND.NFZ.EQ.1)THEN
       IF(IDAY0(NZ,NY,NX).LE.IDAYH(NZ,NY,NX)
@@ -115,7 +119,7 @@ C
       IF(IDTH(NZ,NY,NX).EQ.1)THEN 
       IFLGC(NZ,NY,NX)=0
       ENDIF
-C      WRITE(*,4444)'IFLGC',I,J,NFZ,NX,NY,NZ,DATAP(NZ,NY,NX),IYRC
+C     WRITE(*,4444)'IFLGC',I,J,NFZ,NX,NY,NZ,DATAP(NZ,NY,NX),IYRC
 C    2,IDAY0(NZ,NY,NX),IDAYH(NZ,NY,NX),IYR0(NZ,NY,NX),IYRH(NZ,NY,NX)
 C    3,IDTHP(NZ,NY,NX),IDTHR(NZ,NY,NX),IDTH(NZ,NY,NX),IFLGC(NZ,NY,NX)
 C    4,IFLGT(NY,NX),PP(NZ,NY,NX)
@@ -145,6 +149,13 @@ C     CPOOL*,ZPOOL*,PPOOL*=non-structural C,N,P in
 C        branch(NB),canopy (g C,N,P)
 C     CPOLN*,ZPOLN*,PPOLN*=non-structural C,N,P in symbiotic N2-fixing
 C        bacteria of branch,canopy (g C,N,P)
+C     ISALTG:0=salt concentrations entered in soil file generate
+C              equilibrium concentrations that remain static during
+C              model run
+C           :1=salt equilibrium concentrations are solved
+C              dynamically in ‘solute.f’ and transported in ‘trnsfrs.f’ 
+C     SALTP=total canopy salt content from branch salt contents 
+C        Z*Q (mol): AL=Al,FE=Fe,CA=Ca,MG=Mg,NA=Na,KA=K,SO=S,CL=Cl 
 C     NB1=main branch number
 C
       DO 140 NB=1,NBR(NZ,NY,NX)
@@ -167,7 +178,7 @@ C
       ENDIF
 140   CONTINUE
 C
-C     NON-STRUCTURAL C, N, P CONCENTRATIONS IN ROOT
+C     NON-STRUCTURAL C, N, P CONCENTRATIONS IN ROOT, MYCORRHIZAE
 C
 C     WTRTL=root mass (g C)
 C     CPOOLR,ZPOOLR,PPOOLR=non-structural C,N,P in root(N=1),
@@ -175,6 +186,14 @@ C        mycorrhizae(N=2)(g C,N,P)
 C     CCPOLR,CZPOLR,CPPOLR=non-structural C,N,P concentration in
 C        root(N=1),mycorrhizae(N=2)(g g-1 C,N,P)
 C     WTRTL=root or mycorrhizal C mass (g C)
+C     ISALTG:0=salt concentrations entered in soil file generate
+C              equilibrium concentrations that remain static during
+C              model run
+C           :1=salt equilibrium concentrations are solved
+C              dynamically in ‘solute.f’ and transported in ‘trnsfrs.f’ 
+C     SALTR=total salt content from root,mycorrhizal salt contents 
+C        Z*R (mol): AL=Al,FE=Fe,CA=Ca,MG=Mg,NA=Na,KA=K,SO=S,CL=Cl 
+C     CSALTR=total root,mycorrhizal salt concentration (mol g C-1)
 C
       DO 180 N=1,MY(NZ,NY,NX)
       DO 160 L=NU(NY,NX),NI(NZ,NY,NX)
@@ -217,6 +236,7 @@ C     CCPLNP=nonstructural C concentration in canopy N2-fixing
 C        bacteria (g g-1 C,N,P)
 C     CCPOLB,CZPOLB,CPPOLB=nonstructural C,N,P concentration 
 C        in branch (g g-1 C,N,P)
+C     CSALTP=total canopy salt concentration (mol g C-1)
 C     WTLS,WTLSB=canopy,branch leaf+petiole or sheath mass (g C)
 C     FDBKP=N or P inhibition of canopy CO2 fixation (for output only)
 C
@@ -249,10 +269,17 @@ C    3,(ZKAQ(NB,NZ,NY,NX),NB=1,NBR(NZ,NY,NX))
 C    3,(ZSOQ(NB,NZ,NY,NX),NB=1,NBR(NZ,NY,NX))
 C    3,(ZCLQ(NB,NZ,NY,NX),NB=1,NBR(NZ,NY,NX))
 3224  FORMAT(A8,5I4,60E12.4)
+      IF(CCPOLP(NZ,NY,NX).GT.ZERO2)THEN
       FDBKP(NZ,NY,NX)=AMIN1(CZPOLP(NZ,NY,NX)
      3/(CZPOLP(NZ,NY,NX)+CCPOLP(NZ,NY,NX)*CNKIC)
      4,CPPOLP(NZ,NY,NX)
      5/(CPPOLP(NZ,NY,NX)+CCPOLP(NZ,NY,NX)*CPKIC))
+      ELSE
+      FDBKP(NZ,NY,NX)=1.0
+      ENDIF
+C
+C     NON-STRUCTURAL C, N, P CONCENTRATIONS IN BRANCH
+C
       DO 190 NB=1,NBR(NZ,NY,NX)
       IF(WTLSB(NB,NZ,NY,NX).GT.ZEROP(NZ,NY,NX))THEN
       CCPOLB(NB,NZ,NY,NX)=AMAX1(0.0,CPOOL(NB,NZ,NY,NX)
@@ -418,7 +445,7 @@ C     PSTGI=node number at floral initiation
 C     GROUPI=node number required for floral initiation from PFT file 
 C     TKG,TKCO=canopy temperature,canopy acclimated temperature (K)
 C     OFFST=shift in Arrhenius curve for thermal acclimation (K)
-C     TFNP=temperature function for phenology (25 oC =1)
+C     TFNP= Arrhenius temperature function for phenology (25 oC =1)
 C     8.313,710.0=gas constant,enthalpy (J mol-1)
 C     60000,197500,218500=energy of activation,high,low temperature
 C        inactivation (J mol-1)
@@ -444,9 +471,9 @@ C     ENDIF
       RNI=0.0
       RLA=0.0
       ELSE
-      TKCO=TKG(NZ,NY,NX)+OFFST(NZ,NY,NX)
-      RTK=8.3143*TKCO
-      STK=710.0*TKCO
+      TKGO=TKG(NZ,NY,NX)+OFFST(NZ,NY,NX)
+      RTK=8.3143*TKGO
+      STK=710.0*TKGO
       ACTV=1.0+EXP((197500-STK)/RTK)+EXP((STK-218500)/RTK)
       TFNP=EXP(24.269-60000/RTK)/ACTV
       RNI=AMAX1(0.0,XRNI(NZ,NY,NX)*TFNP*XNFH)
@@ -465,7 +492,7 @@ C     RNI,RLA=rates of node initiation,leaf appearance (t-1)
 C
       IF(ISTYP(NZ,NY,NX).EQ.0
      2.AND.IDAY(2,NB,NZ,NY,NX).EQ.0)THEN
-      WFNG=EXP(0.10*PSILT(NZ,NY,NX))
+      WFNG=AMIN1(1.0,AMAX1(0.0,PSILG(NZ,NY,NX)-PSILM))
       RNI=RNI*WFNG 
       RLA=RLA*WFNG
       OFNG=OSTR(NZ,NY,NX)**0.25
@@ -766,7 +793,7 @@ C
       IFLGP(NB,NZ,NY,NX)=0
       ENDIF
 C
-C     PHENOLOGY
+C     PHENOLOGY DETERMINING TIMES OF LEAFOUT, LEAFOFF
 C
 C     DYLX,DLYN=daylength of previous,current day (h)
 C     VRNY,VRNZ=counter for lengthening,shortening photoperiods (h)
@@ -947,8 +974,15 @@ C     VRNE=maximum hours for leafout,leafoff (h)
 C
       IF(IFLGE(NB,NZ,NY,NX).EQ.1
      3.AND.IFLGF(NB,NZ,NY,NX).EQ.0)THEN
+      IF(IDAY(1,NB1(NZ,NY,NX),NZ,NY,NX).NE.0)THEN
       IF(PSILT(NZ,NY,NX).LT.PSILY(IGTYP(NZ,NY,NX)))THEN
       VRNF(NB,NZ,NY,NX)=VRNF(NB,NZ,NY,NX)+1.0*XNFH 
+      ENDIF
+      ELSE
+      IF(PSIST(NU(NY,NX),NY,NX).LT.PSILY(IGTYP(NZ,NY,NX))
+     2.OR.PSIST(0,NY,NX).LT.PSILY(IGTYP(NZ,NY,NX)))THEN
+      VRNF(NB,NZ,NY,NX)=VRNF(NB,NZ,NY,NX)+1.0*XNFH 
+      ENDIF
       ENDIF
       IF(IWTYP(NZ,NY,NX).EQ.4)THEN
       IF(VRNZ(NB,NZ,NY,NX).GT.VRNE)THEN
@@ -1041,15 +1075,16 @@ C
       ENDIF
 2010  CONTINUE
 C
-C     WATER STRESS INDICATOR
+C     COLD OR WATER STRESS INDICATOR
 C
 C     PSILT=canopy total water potential (MPa)
 C     PSILY=minimum canopy water potential for leafoff (MPa) 
-C     WSTR=number of hours PSILT < PSILY (for output only) 
+C     WSTR=number of hours PSIST < PSILY (for output only) 
 C
-      IF(PSILT(NZ,NY,NX).LT.PSILY(IGTYP(NZ,NY,NX)))THEN
-      WSTR(NZ,NY,NX)=WSTR(NZ,NY,NX)+1.0*XNFH 
-      ENDIF
+C     IF(PSIST(NU(NY,NX),NY,NX).LT.PSILY(IGTYP(NZ,NY,NX))
+C    2.OR.PSIST(0,NY,NX).LT.PSILY(IGTYP(NZ,NY,NX)))THEN
+      WSTR(NZ,NY,NX)=VRNF(NB1(NZ,NY,NX),NZ,NY,NX) 
+C     ENDIF
       ENDIF
       ENDIF
       ENDIF

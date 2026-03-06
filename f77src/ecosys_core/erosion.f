@@ -22,9 +22,11 @@ C
       DIMENSION RERSED(2,2,JV,JH),TERSED(JY,JX),RDTSED(JY,JX)
      2,FVOLIM(JY,JX),FVOLWM(JY,JX),FERSNM(JY,JX),RERSED0(JY,JX)
 C
-C     INTERNAL TIME STEP AT WHICH SEDIMENT DETACHMENT AND TRANSPORT
-C     IS CALCULATED. DETACHMENT IS THE SUM OF THAT BY RAINFALL AND
-C     OVERLAND FLOW
+C     EROSION ARISES FROM TRANSPORT OF DETACHED SEDIMENT IN OVERLAND
+C     FLOW. DETACHMENT IS THE SUM OF THAT BY RAINFALL AND OVERLAND FLOW
+C
+C     NPH=time step for sediment transport from ‘wthr.f’
+C        as for water transport in ‘watsub.f’
 C
       DO 30 M=1,NPH
       DO 9895 NX=NHW,NHE
@@ -51,7 +53,7 @@ C
       FVOLIM(NY,NX)=AMIN1(1.0,AMAX1(0.0,XVOLIM(M,NY,NX)/VOLWG(NY,NX)))
       FERSNM(NY,NX)=(1.0-FVOLIM(NY,NX))*FVOLWM(NY,NX) 
 C
-C     DETACHMENT BY RAINFALL WHEN SURFACE WATER IS PRESENT
+C     SEDIMENT DETACHMENT BY RAINFALL WHEN SURFACE WATER IS PRESENT
 C
 C     BKDS=surface soil bulk density (0=water,>0=soil) (Mg m-3)
 C     ENGYPM=total rainfall energy impact from ‘watsub.f’ (J t-1)
@@ -90,7 +92,7 @@ C    2,SED(NY,NX),DETR
 C    2,PRECA(NY,NX)*1000.0,PRECD(NY,NX),PRECB(NY,NX),DETS(NY,NX) 
 C    3,FSNX(NY,NX),FVOLIM(NY,NX),XVOLWM(M,NY,NX),ENGYPM(M,NY,NX)
 C    4,DETW,VOLWM(M,NU(NY,NX),NY,NX),VOLA(NU(NY,NX),NY,NX)
-1117  FORMAT(A8,6I4,20E12.4)
+1117  FORMAT(A8,6I4,30E12.4)
       ENDIF
 C
 C     DEPOSITION OF SEDIMENT TO SOIL SURFACE FROM IMMOBILE SURFACE
@@ -110,17 +112,16 @@ C     AREA=grid cell surface area (m2)
 C     FMPR=1.0-(coarse fragment+macropore) fraction
 C     XNPHX=time step for water fluxes from ‘wthr.f’ (h t-1)
 C
-      SEDX=SED(NY,NX)+RDTSED(NY,NX)
       IF(BKDS(NU(NY,NX),NY,NX).GT.ZERO
-     2.AND.SEDX.GT.ZEROS(NY,NX)
-     3.AND.XVOLTM(M,NY,NX).LE.VOLWG(NY,NX)
+     2.AND.SED(NY,NX).GT.ZEROS(NY,NX)
+     3.AND.XVOLWM(M,NY,NX).GT.ZEROS(NY,NX)
      4.AND.FERSNM(NY,NX).GT.ZERO)THEN
-      CSEDD=AMAX1(0.0,SEDX/XVOLWM(M,NY,NX))
-      DEPI=AMAX1(-SEDX 
+      CSEDD=AMAX1(0.0,SED(NY,NX)/XVOLWM(M,NY,NX))
+      DEPI=AMAX1(-SED(NY,NX) 
      2,VLS(NY,NX)*(0.0-CSEDD)*AREA(3,NU(NY,NX),NY,NX) 
      3*FERSNM(NY,NX)*FMPR(NU(NY,NX),NY,NX)*XNPHX)
       RDTSED(NY,NX)=RDTSED(NY,NX)+DEPI
-C     WRITE(*,1117)'DEPI',I,J,NFZ,M,NX,NY,RDTSED(NY,NX),SEDX,DEPI
+C     WRITE(*,1117)'DEPI',I,J,NFZ,M,NX,NY,RDTSED(NY,NX),SED(NY,NX),DEPI
 C    2,CSEDD,FVOLIM(NY,NX),FVOLWM(NY,NX),FERSNM(NY,NX)
 C    3,VLS(NY,NX),XVOLWM(M,NY,NX)
       ENDIF
@@ -155,18 +156,18 @@ C     RDTSED=sediment detachment rate (Mg t-1)
 C     XNPHX=time step for water fluxes from ‘wthr.f’ (h t-1)
 C
       IF(BKDS(NU(NY,NX),NY,NX).GT.ZERO
-     3.AND.XVOLTM(M,NY,NX).GT.VOLWG(NY,NX)
+     3.AND.XVOLWM(M,NY,NX).GT.VOLWG(NY,NX)
      3.AND.FERSNM(NY,NX).GT.ZERO)THEN
       STPR=1.0E+02*QRV(M,NY,NX)*ABS(SLOPE(0,NY,NX))
       CSEDX=PTDSNU(NY,NX)*CER(NY,NX)*AMAX1(0.0,STPR-0.4)**XER(NY,NX)
-      CSEDD=AMAX1(0.0,SEDX/XVOLWM(M,NY,NX))
+      CSEDD=AMAX1(0.0,SED(NY,NX)/XVOLWM(M,NY,NX))
       IF(CSEDX.GT.CSEDD)THEN
       DETI=AMIN1(BKVL(NU(NY,NX),NY,NX)*XNPXX 
      2,DETE(NY,NX)*VLS(NY,NX)*(CSEDX-CSEDD)*AREA(3,NU(NY,NX),NY,NX) 
      3*FERSNM(NY,NX)*FMPR(NU(NY,NX),NY,NX)*XNPHX)
       ELSE
-      IF(SEDX.GT.ZEROS(NY,NX))THEN
-      DETI=AMAX1(-SEDX 
+      IF(SED(NY,NX).GT.ZEROS(NY,NX))THEN
+      DETI=AMAX1(-SED(NY,NX) 
      2,VLS(NY,NX)*(CSEDX-CSEDD)*AREA(3,NU(NY,NX),NY,NX) 
      3*FERSNM(NY,NX)*FMPR(NU(NY,NX),NY,NX)*XNPHX)
       ELSE
@@ -174,12 +175,14 @@ C
       ENDIF
       ENDIF
       RDTSED(NY,NX)=RDTSED(NY,NX)+DETI
+C     IF(DETI.GT.0.0)THEN
 C     WRITE(*,1112)'DETI',I,J,NFZ,M,NX,NY,RDTSED(NY,NX)
-C    2,SED(NY,NX),DETI
-C    2,QRM(M,NY,NX),QRV(M,NY,NX),SEDX,XVOLWM(M,NY,NX),XVOLTM(M,NY,NX)  
+C    2,DETI,QRM(M,NY,NX),QRV(M,NY,NX)
+C    2,SED(NY,NX),XVOLWM(M,NY,NX),XVOLTM(M,NY,NX)  
 C    4,VOLWG(NY,NX),STPR,CSEDX,CSEDD,VLS(NY,NX),PTDSNU(NY,NX)
 C    5,DETE(NY,NX),SLOPE(0,NY,NX),ZM(NY,NX),FERSNM(NY,NX)
 1112  FORMAT(A8,6I4,30E12.4)
+C     ENDIF
       ENDIF
 C
 C     TRANSPORT OF SEDIMENT IN OVERLAND FLOW FROM SEDIMENT
@@ -205,8 +208,7 @@ C
       IF(XVOLWM(M,N2,N1).GT.ZEROS2(N2,N1))THEN
       SEDX=SED(N2,N1)+RDTSED(N2,N1)
       CSEDE=AMAX1(0.0,SEDX/XVOLWM(M,N2,N1))
-      RERSED0(N2,N1)=AMIN1(SEDX,CSEDE*QRM(M,N2,N1)
-     2*(1.0-FVOLIM(N2,N1)))
+      RERSED0(N2,N1)=AMIN1(SEDX,CSEDE*QRM(M,N2,N1))
       ELSE
       RERSED0(N2,N1)=0.0
       ENDIF
@@ -214,11 +216,12 @@ C
 C     IF(RERSED0(N2,N1).GT.ZEROS(N2,N1))THEN
 C     WRITE(*,1121)'RERSED0',I,J,NFZ,M,N1,N2
 C    2,RERSED0(N2,N1),QRM(M,N2,N1),XVOLWM(M,N2,N1)
-C    3,SED(N2,N1),RDTSED(N2,N1),CSEDE,FVOLIM(N2,N1)
+C    3,SED(N2,N1),RDTSED(N2,N1),SEDX,CSEDE
 1121  FORMAT(A8,6I4,12E12.4)
 C     ENDIF
 C
-C     LOCATE INTERNAL BOUNDARIES
+C     LOCATE INTERNAL BOUNDARIES FOR SEDIMENT RESISTRIBUTION
+C     WITHIN LANDSCAPE
 C
 C     RERSED0=sediment transport down hillslope (Mg t-1)
 C     N2,N1=NY,NX of source grid cell
@@ -325,20 +328,8 @@ C
       IF(IERSNG.EQ.1.OR.IERSNG.EQ.3)THEN
       N1=NX
       N2=NY
-      IF(QRM(M,N2,N1).LE.0.0
-     2.OR.BKDS(NU(N2,N1),N2,N1).LE.ZERO)THEN
-      RERSED0(N2,N1)=0.0
-      ELSE
-      IF(XVOLWM(M,N2,N1).GT.ZEROS2(N2,N1))THEN
-      SEDX=SED(NY,NX)+RDTSED(NY,NX)
-      CSEDE=AMAX1(0.0,SEDX/XVOLWM(M,N2,N1))
-      RERSED0(N2,N1)=AMIN1(SEDX,CSEDE*QRM(M,N2,N1))
-      ELSE
-      RERSED0(N2,N1)=0.0
-      ENDIF
-      ENDIF
 C
-C     LOCATE EXTERNAL BOUNDARIES
+C     LOCATE EXTERNAL BOUNDARIES FOR SEDIMENT TRANSPORT
 C
 C     M5,M4=NY,NX of destination grid cell
 C     N5,N4=NY,NX of destination grid cell E or S
@@ -552,9 +543,10 @@ C
 C
 C     SOIL MINERAL EROSION
 C
-C     sediment code:SAN=sand,SIL=silt,CLA=clay (Mg t-1)
-C                  :CEC=cation exchange capacity (mol t-1)
-C                  :AEC=anion exchange capacity (mol t-1)
+C     sediment code
+C        :SAN=sand,SIL=silt,CLA=clay (Mg t-1)
+C        :CEC=cation exchange capacity (mol t-1)
+C        :AEC=anion exchange capacity (mol t-1)
 C
       XSANER(N,2,N5,N4)=FSEDER*SAND(NU(N2,N1),N2,N1)
       XSILER(N,2,N5,N4)=FSEDER*SILT(NU(N2,N1),N2,N1)
@@ -771,9 +763,10 @@ C
 C
 C     SOIL MINERAL EROSION
 C
-C     sediment code:SAN=sand,SIL=silt,CLA=clay (Mg t-1)
-C                  :CEC=cation exchange capacity (mol t-1)
-C                  :AEC=anion exchange capacity (mol t-1)
+C     sediment code
+C        :SAN=sand,SIL=silt,CLA=clay (Mg t-1)
+C        :CEC=cation exchange capacity (mol t-1)
+C        :AEC=anion exchange capacity (mol t-1)
 C
       XSANER(N,1,N5B,N4B)=FSEDER*SAND(NU(N2,N1),N2,N1)
       XSILER(N,1,N5B,N4B)=FSEDER*SILT(NU(N2,N1),N2,N1)
@@ -783,8 +776,9 @@ C
 C
 C     EROSION FROM FERTILIZER POOLS (mol t-1)
 C
-C     sediment code:NH4,NH3,NHU,NO3=NH4,NH3,urea,NO3 in non-band
-C                  :NH4B,NH3B,NHUB,NO3B=NH4,NH3,urea,NO3 in band
+C     sediment code
+C        :NH4,NH3,NHU,NO3=NH4,NH3,urea,NO3 in non-band
+C        :NH4B,NH3B,NHUB,NO3B=NH4,NH3,urea,NO3 in band
 C
       XNH4ER(N,1,N5B,N4B)=FSEDER*ZNH4FA(NU(N2,N1),N2,N1)
       XNH3ER(N,1,N5B,N4B)=FSEDER*ZNH3FA(NU(N2,N1),N2,N1)
@@ -1173,9 +1167,10 @@ C
 C
 C     SOIL MINERAL EROSION
 C
-C     sediment code:SAN=sand,SIL=silt,CLA=clay (Mg t-1)
-C                  :CEC=cation exchange capacity (mol t-1)
-C                  :AEC=anion exchange capacity (mol t-1)
+C     sediment code
+C        :SAN=sand,SIL=silt,CLA=clay (Mg t-1)
+C        :CEC=cation exchange capacity (mol t-1)
+C        :AEC=anion exchange capacity (mol t-1)
 C
       XSANER(N,NN,M5,M4)=FSEDER*SAND(NU(N2,N1),N2,N1)
       XSILER(N,NN,M5,M4)=FSEDER*SILT(NU(N2,N1),N2,N1)
@@ -1264,7 +1259,8 @@ C
 C
 C     EROSION OF ORGANIC MATTER (g t-1)
 C
-C     sediment code:OMC=microbial biomass
+C     sediment code
+C        :OMC=microbial biomass
 C        :ORC=microbial residue
 C        :OQC,OQCH=DOC in micropores,macropores
 C        :OQA,OQAH=acetate in micropores,macropores

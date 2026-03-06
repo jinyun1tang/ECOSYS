@@ -41,22 +41,17 @@ C
       include "blk21a.h"
       include "blk21b.h"
       DIMENSION PRECRI(JY,JX),PRECWI(JY,JX),PRECII(JY,JX) 
-     2,PRECUI(JY,JX),RADN(JY,JX),VPS(JY,JX)
+     2,PRECUI(JY,JX),VPS(JY,JX)
 C
-C     CDIR,CDIF=fraction of solar SW,sky diffuse radiation in visible
-C        band
-C     PDIR,PDIF=PAR:SW ratio (umol s-1/(MJ h-1)) 
 C     TSNOW=temperature below which precipitation is snow (oC)
-C     TCMBS=minimum temperature used to identify fire event (K)
+C     TCMBS,TCMBL=minimum temperature used to identify fire event
+C        in canopy,soil (K)
 C
-      PARAMETER (CDIR=0.42,CDIF=0.58,PDIR=1269.4,PDIF=1269.4)
       PARAMETER (TSNOW=-0.25,TWILGT=0.06976,TCMBS=373.15,TCMBL=348.15)
       XJ=J
       DOY=I-1+XJ/24
 C
-C     SWITCH OUT ECOSYS WEATHER HERE IF CESM WEATHER IS READ IN
-C
-C     IF …
+C     SWITCH OUT ECOSYS WEATHER HERE IF WEATHER IS READ IN FROM CESM
 C
 C     IWTHR=weather data type in first(1) or second(2) scene
 C     ITYPE=weather data type:1=daily,2=hourly
@@ -69,7 +64,7 @@ C
 C
 C     CALCULATE HOURLY TEMPERATURE, RADIATION, WINDSPEED, VAPOR
 C     PRESSURE AND PRECIPITATION FROM DAILY WEATHER ARRAYS 
-C     LOADED IN 'READS'
+C     LOADED IN 'READS.F'
 C
 C     TKAX,VPAX=air temperature, vapor pressure from previous hour
 C       (K,kPa) used to interpolate for next time step in ‘hour1.f’
@@ -78,9 +73,11 @@ C
       DO 9915 NX=NHW,NHE
       DO 9910 NY=NVN,NVS
       IF(I.EQ.ISTART.AND.J.EQ.1)THEN
+      RADX(NY,NX)=0.0
       TKAX(NY,NX)=ATKA(NY,NX)
       VPAX(NY,NX)=0.0
       ELSE
+      RADX(NY,NX)=RADN(NY,NX)
       TKAX(NY,NX)=TKA(NY,NX)
       VPAX(NY,NX)=VPA(NY,NX)
       ENDIF
@@ -90,10 +87,10 @@ C        :-2=phytotron
 C        :-1=open top chamber
 C        :0=no climate specified
 C        :2-digit Koppen climate zone, appended to all plant
-C               species files:
+C               species files in ‘readq.f’
 C     RADN=hourly SW radiation (MJ m-2 h-1)
 C     RMAX=maximum hourly radiation from ‘day.f’ (MJ m-2 h-1)
-C     ZNOON=time of solar noon
+C     ZNOON=time of solar noon from weather file
 C     DYLN=daylength (h)
 C
       IF(IETYP(NY,NX).NE.-2)THEN
@@ -147,14 +144,14 @@ C
 C     TSNOW=temperature below which precipitation is snow (oC)
 C     PRECRI,PRECWI=rainfall,snowfall (m3 m-2 h-1)
 C
-      IF(J.GE.13.AND.J.LE.24)THEN
+      IF(J.GE.13.AND.J.LE.16)THEN
       IF(TCA(NY,NX).GT.TSNOW)THEN
-      PRECRI(NY,NX)=RAIN(I)/12.0
+      PRECRI(NY,NX)=RAIN(I)/4.0
       PRECWI(NY,NX)=0.0
       ELSE
       PRECRI(NY,NX)=0.0
-      PRECWI(NY,NX)=RAIN(I)/12.0
-      IF(PRECWI(NY,NX).LT.0.1E-03)PRECWI(NY,NX)=0.0
+      PRECWI(NY,NX)=RAIN(I)/4.0
+C     IF(PRECWI(NY,NX).LT.0.1E-03)PRECWI(NY,NX)=0.0
       ENDIF
       ELSE
       PRECRI(NY,NX)=0.0
@@ -167,21 +164,24 @@ C     CALCULATE HOURLY TEMPERATURE, RADIATION, WINDSPEED, VAPOR
 C     PRESSURE AND PRECIPITATION FROM HOURLY WEATHER ARRAYS 
 C     LOADED IN 'READS'
 C
-C     TKAX,VPAX=air temperature, vapor pressure from previous hour
-C       (K,kPa) used to interpolate for next time step in ‘hour1.f’
+C     RADX,TKAX,VPAX=SW radiation. air temperature, vapor pressure from 
+C        previous hour (MJ m-2 h-1,K,kPa) used to interpolate for next
+C        time step in ‘hour1.f’
 C
       ELSE
       DO 9935 NX=NHW,NHE
       DO 9930 NY=NVN,NVS
       IF(I.EQ.ISTART.AND.J.EQ.1)THEN
+      RADX(NY,NX)=0.0
       TKAX(NY,NX)=ATKA(NY,NX)
       VPAX(NY,NX)=0.0
       ELSE
+      RADX(NY,NX)=RADN(NY,NX)
       TKAX(NY,NX)=TKA(NY,NX)
       VPAX(NY,NX)=VPA(NY,NX)
       ENDIF
-C     WRITE(*,6633)'TKAX',I,J,NY,NX,ISTART,IBEGIN
-C    2,TKAX(NY,NX),ATKA(NY,NX)
+C     WRITE(*,6633)'RADX',I,J,NY,NX,ISTART,IBEGIN
+C    2,RADX(NY,NX),RADN(NY,NX)
 6633  FORMAT(A8,6I4,30E12.4)
 C
 C     RADN=SW radiation at horizontal surface (MJ m-2 h-1)
@@ -204,7 +204,7 @@ C
       ELSE
       PRECRI(NY,NX)=0.0
       PRECWI(NY,NX)=RAINH(J,I)
-      IF(PRECWI(NY,NX).LT.0.1E-03)PRECWI(NY,NX)=0.0
+C     IF(PRECWI(NY,NX).LT.0.1E-03)PRECWI(NY,NX)=0.0
       ENDIF
 9930  CONTINUE
 9935  CONTINUE
@@ -219,6 +219,8 @@ C
 C
 C     IF OUTDOORS
 C
+C     AZI,DEC=solar azimuth, declination calculated in ‘readi.f’(rad)
+C     ZNOON=time of solar noon from weather file
 C     SSIN,SSINN=sine solar angle of current,next hour
 C     RADZ=solar constant at horizontal surface (MJ m-2 h-1)
 C     RADN=SW radiation at horizontal surface (MJ m-2 h-1)
@@ -230,21 +232,8 @@ C
      2+DEC*COS(.2618*(ZNOON(NY,NX)-(J+0.5))))
       IF(RADN(NY,NX).LE.0.0)SSIN(NY,NX)=0.0
       IF(SSIN(NY,NX).LE.-TWILGT)RADN(NY,NX)=0.0
-      RADZ=4.896*AMAX1(0.0,SSIN(NY,NX))
-      RADN(NY,NX)=AMIN1(RADZ,RADN(NY,NX))
-C
-C     DIRECT VS DIFFUSE RADIATION IN SOLAR OR SKY BEAMS
-C
-C     RADF=diffuse radiation at horizontal surface (MJ m-2 h-1)
-C     RADS,RADY,RAPS,RAPY=direct,diffuse SW,PAR in solar beam 
-C        (MJ m-2 h-1)
-C
-      RADF=AMIN1(RADN(NY,NX),0.5*(RADZ-RADN(NY,NX)))
-      RADS(NY,NX)=(RADN(NY,NX)-RADF)/SSIN(NY,NX)
-      RADS(NY,NX)=AMIN1(4.167,RADS(NY,NX))
-      RADY(NY,NX)=RADF/TYSIN
-      RAPS(NY,NX)=RADS(NY,NX)*CDIR*PDIR
-      RAPY(NY,NX)=RADY(NY,NX)*CDIF*PDIF
+      RADZ(NY,NX)=4.896*AMAX1(0.0,SSIN(NY,NX))
+      RADN(NY,NX)=AMIN1(RADZ(NY,NX),RADN(NY,NX))
 C
 C     ATMOSPHERIC RADIATIVE PROPERTIES AFM 139:171
 C
@@ -252,8 +241,8 @@ C     CLD=cloudiness factor for EMM
 C     EMM=sky emissivity
 C     VPK,TKA=vapor pressure,temperature (kPa,K)     
 C
-      IF(RADZ.GT.ZERO)THEN
-      CLD=AMIN1(1.0,AMAX1(0.2,2.33-3.33*RADN(NY,NX)/RADZ))
+      IF(RADZ(NY,NX).GT.ZERO)THEN
+      CLD=AMIN1(1.0,AMAX1(0.2,2.33-3.33*RADN(NY,NX)/RADZ(NY,NX)))
       ELSE
       CLD=0.2
       ENDIF
@@ -276,8 +265,9 @@ C
 C     LONGWAVE RADIATION
 C
 C     XRADH=longwave radiation from weather file (MJ m-2 h-1) 
-C     THSX=if XRADH>0: longwave radiation from weather file 
-C         =if XRADH=0: longwave radiation from atmospheric properties 
+C     THSX=if XRADH>0: longwave radiation taken from weather file 
+C         =if XRADH=0: longwave radiation calculated from atmospheric
+C          properties 
 C     EMM=sky emissivity
 C     TKA=air temperature (K)
 C
@@ -331,12 +321,12 @@ C     RADIATION, WINDSPEED,VAPOR PRESSURE, PRECIPITATION, IRRIGATION
 C     AND CO2
 C
 C     ICLM=changes to data in weather file (0=none,1=step,2=transient)
-C        from option file
+C        from option file read in ‘reads.f’
 C     N=season or month
 C
       IF(ICLM.EQ.1.OR.ICLM.EQ.2)THEN
 C
-C     SEASONAL CHANGES
+C     SEASONAL CHANGES (REQUIRES 4 SETS OF VALUES IN OPTION FILE)
 C
       IF(I.GT.334.OR.I.LE.59)THEN
       N=1
@@ -522,14 +512,16 @@ C
       TRAI(NY,NX)=TRAI(NY,NX)+(PRECRI(NY,NX)+PRECWI(NY,NX)
      2+PRECII(NY,NX)+PRECUI(NY,NX))*1000.0
       IF(I.EQ.ISTART.AND.J.EQ.1)THEN
+      DRADN(NY,NX)=0.0
       DTKA(NY,NX)=0.0
       DVPA(NY,NX)=0.0
       ELSE
+      DRADN(NY,NX)=RADN(NY,NX)-RADX(NY,NX)
       DTKA(NY,NX)=TKA(NY,NX)-TKAX(NY,NX)
       DVPA(NY,NX)=VPA(NY,NX)-VPAX(NY,NX)
       ENDIF
 C
-C     WATER AND HEAT INPUTS TO GRID CELLS
+C     SCALE WATER AND HEAT INPUTS TO GRID CELLS
 C
 C     AREA=area of grid cell (m2)
 C
@@ -624,7 +616,7 @@ C
       XNPYX=XNPHX*XNPS 
       XNPZX=XNPHX*XNPR 
       XNPQX=XNPHX*XNPS*XNPRS 
-      XNPXX=AMIN1(1.0,4.0*XNPH) 
+      XNPXX=XNPH 
       XNPSX=XNPXX*XNPS
       XNPRX=XNPXX*XNPR 
       XNPSRX=XNPXX*XNPS*XNPRS 

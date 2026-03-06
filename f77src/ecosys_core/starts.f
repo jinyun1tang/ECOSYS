@@ -25,19 +25,20 @@ C
      5,OSCX(0:4),OSNX(0:4),OSPX(0:4),OMCK(0:4),ORCK(0:4),OQCK(0:4)
      6,OHCK(0:4),TOSCK(0:4),TOSNK(0:4),TOSPK(0:4),TORGL(JZ)
 C
-C     DCKR,DCKM=parameters to initialize microbial biomass from SOC
+C     DCKR,DCKM=parameters to initialize microbial biomass from SOC 
+C        (g C g C-1)
 C     RDN=degree radian-1
 C     OMCI,ORCI=initial allocation of microbial biomass, residue 
-C        to kinetic components
+C        to kinetic components (g C g C-1)
 C     OMCK,ORCK,OQCK,OHCK=initial fractions of SOC in biomass, litter,
-C        DOC, adsorbed C
+C        DOC, adsorbed C (g C g C-1)
 C     OMCF,OMCA=initial fractions N in heterotrophic (K=1,4), 
 C        autotrophic (K=5) microbial populations
 C        composition in SOC
 C     CNRH,CPRH=default N:C,P:C ratios in SOC complexes
 C        woody(0),fine(1),manure(2),POC(3),humus (4)
 C     BKRS=dry bulk density of woody(0),fine(1),manure(2) litter 
-C        (Mg m-3) 
+C        (Mg C m-3) 
 C     FORGC=minimum SOC for organic soil (g Mg-1)
 C     PSIPS,PSIHY,PSISX=saturation, hygroscopic, minimum 
 C        water potential (MPa)
@@ -72,25 +73,25 @@ C
       DATA OMCA/0.06,0.02,0.01,0.0,0.01,0.0,0.0/
       DATA CNRH/3.33E-02,3.33E-02,3.33E-02,5.00E-02,12.50E-02/
       DATA CPRH/3.33E-03,3.33E-03,3.33E-03,5.00E-03,12.50E-03/
-      DATA BKRS/0.100,0.0167,0.025/
-      DATA FORGC/0.1E+06/
-      DATA PSIPS,PSIHY,PSISX/-0.5E-03,-1.5E+02,-1.5E+12/
+      DATA BKRS/0.100,0.0125,0.025/
+      DATA FORGC/0.11E+06/
+      DATA PSIPS,PSIHY,PSISX/-0.5E-03,-1.5E+04,-1.5E+12/
       DATA FCI,WPI/0.05,0.025/ 
       DATA CDPTHSI/0.05,0.125,0.25,0.50,1.00/
       DATA POROQ/0.66/
-      DATA RIX0,RIXF,RIY/-0.3,-2.4,0.075/
-      DATA RABM,RABZ/0.278E-02,0.278E-01/
+      DATA RIX0,RIXF,RIY/-0.3,-0.7,0.075/
+      DATA RABM,RABZ/0.139E-02,0.139E-01/
       DATA GCBCO,GCBCH,GCBC4,TCMBX/0.0375,0.0125,0.0743,473.15/
       DATA COXYGK,CCH4GK,COXYGL,CCH4GL/2.1E+03,1.0E+01
      2,2.8E+00,0.5E-02/
       DATA VAP,VAPS,OXKM/2465.0,2834.0,0.064/
 C
-C     ZERO,ZERO2=mimimum values used for all calculations
+C     ZERO,ZERO2=minimum values used for all calculations
 C     THETPI=ice porosity (m3 m-3)
 C     DENSI=ice density (Mg m-3)
 C
       ZERO=1.0E-15
-      ZERO2=1.0E-09
+      ZERO2=1.0E-06
       TAREA=0.0
       THETX=1.0E-03
       THETPI=0.00
@@ -132,7 +133,7 @@ C
 C     ZSIN,ZCOS=sine,cosine of leaf inclination class
 C     ZAZI=leaf azimuth class
 C     YAZI,YSIN,YCOS=sky azimuth,sine,cosine of sky azimuth
-C     OMEGA,OMEGX=incident angle of diffuse radiation at
+C     OMEGA,OMEGX=fraction of diffuse radiation intensity at
 C        leaf,horizontal surface
 C     IALBY:1=backscattering,2=forward scattering of sky radiation
 C
@@ -231,15 +232,15 @@ C
       DO 95 K=0,5
       DO 95 N=1,7
       IF(K.LE.4.AND.N.EQ.3)THEN
-      CNOMC(1,N,K)=0.15
-      CNOMC(2,N,K)=0.09
-      CPOMC(1,N,K)=0.015
-      CPOMC(2,N,K)=0.009
+      CNOMC(1,N,K)=0.111
+      CNOMC(2,N,K)=0.083
+      CPOMC(1,N,K)=0.0111
+      CPOMC(2,N,K)=0.0083
       ELSE
-      CNOMC(1,N,K)=0.225
-      CNOMC(2,N,K)=0.135
-      CPOMC(1,N,K)=0.0225
-      CPOMC(2,N,K)=0.0135
+      CNOMC(1,N,K)=0.167
+      CNOMC(2,N,K)=0.125
+      CPOMC(1,N,K)=0.0167
+      CPOMC(2,N,K)=0.0125
       ENDIF
       CNOMC(3,N,K)=FL(1)*CNOMC(1,N,K)+FL(2)*CNOMC(2,N,K)
       CPOMC(3,N,K)=FL(1)*CPOMC(1,N,K)+FL(2)*CPOMC(2,N,K)
@@ -247,6 +248,7 @@ C
 C
 C     CALCULATE ELEVATION OF EACH GRID CELL
 C
+C     ZEROS,ZEROS2=zero scaled to grid cell area
 C     GAZI=ground surface azimuth (rad)
 C     GSIN,GCOS=sine,cosine of ground surface (rad)
 C     OMEGAG=incident sky angle at ground surface (rad)
@@ -267,7 +269,7 @@ C
       GAZI(NY,NX)=ASP(NY,NX)/RDN
       GSINA(NY,NX)=ABS(SIN(GAZI(NY,NX)))
       GCOSA(NY,NX)=ABS(COS(GAZI(NY,NX)))
-      SLOPE(0,NY,NX)=AMAX1(1.745E-04,SIN(SL(NY,NX)/RDN))
+      SLOPE(0,NY,NX)=AMAX1(1.745E-03,SIN(SL(NY,NX)/RDN))
       IF(ASP(NY,NX).GE.0.0.AND.ASP(NY,NX).LT.90.0)THEN
       SLOPE(1,NY,NX)=-SLOPE(0,NY,NX)*COS(ASP(NY,NX)/RDN)
       SLOPE(2,NY,NX)=SLOPE(0,NY,NX)*SIN(ASP(NY,NX)/RDN)
@@ -307,6 +309,7 @@ C
       FSLOPE(1,NY,NX)=0.5
       FSLOPE(2,NY,NX)=0.5
       ENDIF
+      FWIDTH(NY,NX)=FSLOPE(1,NY,NX)*DV(NY,NX)+FSLOPE(2,NY,NX)*DH(NY,NX)
       GSIN(NY,NX)=SLOPE(0,NY,NX)
       GCOS(NY,NX)=SQRT(1.0-GSIN(NY,NX)**2)
       DO 240 N=1,4
@@ -500,9 +503,13 @@ C     MICROBIAL THERMAL ADAPTATION
 C
 C     OFFSET=shift in Arrhenius curve calculated from ATCS 
 C        used in ‘nitro.f’ (oC)
-C     ATCS=mean annual soil temperature (OC)
+C     ATCS=mean annual soil temperature (oC)
 C
-      OFFSET(NY,NX)=0.333*(15.0-AMAX1(0.0,AMIN1(30.0,ATCS(NY,NX))))
+      IF(ATCS(NY,NX).LE.15.0)THEN
+      OFFSET(NY,NX)=0.333*(15.0-AMAX1(0.0,ATCS(NY,NX)))
+      ELSE
+      OFFSET(NY,NX)=0.167*(15.0-AMIN1(30.0,ATCS(NY,NX)))
+      ENDIF
 C     WRITE(*,2222)'OFFSET',OFFSET(NY,NX),ATCS(NY,NX)
 2222  FORMAT(A8,2E12.4)
 C
@@ -527,7 +534,7 @@ C     surface litter:L=0,soil layer:L>0
 C     DLYR,AREA=layer thickness (m),x-sectional area:1=EW,2=NS,
 C        3=vertical (m2)
 C     ORGC=organic C content (g Mg-1)
-C     VOLT,VOLX=volume soil layer including,excluding macropores+rock
+C     VOLT,VOLX=soil layer volume including,excluding macropores+rock
 C        (m3 unit-1)
 C     VOLR=volume of surface litter (m3 unit-1)
 C     BKVL=mass of surface, soil layer (Mg unit-1)
@@ -591,7 +598,7 @@ C     TKW,TCW=later temperature K,oC
 C     VHCPW=layer volumetric heat capacity (MJ m-3 K-1)
 C
       CDPTHS(0,NY,NX)=0.0
-      DENS0(NY,NX)=0.075
+      DENS0(NY,NX)=0.05
       VOLSS(NY,NX)=DPTHS(NY,NX)*DENS0(NY,NX)*DH(NY,NX)*DV(NY,NX)
       VOLWS(NY,NX)=0.0
       VOLIS(NY,NX)=0.0
@@ -640,9 +647,10 @@ C     DPTHSK=depth at which soil heat sink-source calculated (m)
 C     TCNDG=assumed thermal conductivity below lower soil boundary 
 C        (MJ m-1 K-1 h-1)
 C     TKSD=deep source/sink temperature from geothermal flux (K)
+C     2.052E-04=geothermal flux of 57 mW m-2 (MJ m-2 h-1)
 C
       VHCPWX(NY,NX)=8.380E-04*AREA(3,NU(NY,NX),NY,NX)
-      VHCPRX(NY,NX)=4.190E-05*AREA(3,NU(NY,NX),NY,NX)
+      VHCPRX(NY,NX)=8.380E-05*AREA(3,NU(NY,NX),NY,NX)
       VHCPNX(NY,NX)=4.190E-03*AREA(3,NU(NY,NX),NY,NX)
       DPTHSK(NY,NX)=AMAX1(10.0,CDPTH(NL(NY,NX),NY,NX)+1.0)
       TCS(0,NY,NX)=ATCS(NY,NX)
@@ -692,7 +700,7 @@ C
       DTBLZ(NY,NX)=DTBLI(NY,NX)-(ALTZ(NY,NX)-ALT(NY,NX))
      2*(1.0-DTBLG(NY,NX))
       DTBLD(NY,NX)=AMAX1(0.0,DTBLDI(NY,NX)-(ALTZ(NY,NX)-ALT(NY,NX))
-     2*(1.0-DTBLG(NY,NX)))
+     2*(1.0-DTBLDG(NY,NX)))
       ELSE
       DTBLZ(NY,NX)=0.0
       DTBLD(NY,NX)=0.0
@@ -753,12 +761,7 @@ C
       TORGL(L)=TORGC+CORGL*BKVL(L,NY,NX)/AREA(3,L,NY,NX)*0.5
       TORGC=TORGC+CORGL*BKVL(L,NY,NX)/AREA(3,L,NY,NX)
 1190  CONTINUE
-      TORGM=AMAX1(2.0E+03,AMIN1(5.0E+03,0.25*TORGL(NJ(NY,NX))))
-      IF(TORGM.GT.ZERO)THEN
-      HCX=LOG(0.5)/TORGM
-      ELSE
-      HCX=0.0
-      ENDIF
+      TORGM=AMIN1(5.0E+03,0.25*TORGL(NJ(NY,NX)))
 C
 C     ALLOCATE LITTER,SOC TO WOODY,NON-WOODY,MANURE,POC AND HUMUS
 C
@@ -991,8 +994,6 @@ C     NATURAL SOILS
 C
       IF(ISOILR(NY,NX).EQ.0)THEN
 C
-C     DRYLAND SOIL
-C
 C     CORGC,FORGC=SOC,minimum SOC for organic soil(g Mg-1)
 C     DPTH,DTBLZ=depth to layer midpoint,external water table(m)
 C     FC0=partitioning to less resistant component at DPTH=0
@@ -1003,36 +1004,49 @@ C     DTBLZ=depth of external water table (m)
 C     HCX=shape parameter for depth effect on partitioning 
 C     TORGL=accumulated humus down to soil layer (g m-2)
 C
-      IF(CORGC(L,NY,NX).LE.FORGC.OR
-     2.DPTH(L,NY,NX).LE.DTBLZ(NY,NX)
-     2+CDPTH(NU(NY,NX),NY,NX)-CDPTHG)THEN
-      FCY=0.60
+C     DRYLAND SOIL
+C
+C     IF(CORGC(L,NY,NX).LE.FORGC.AND
+C    2.DPTH(L,NY,NX).LE.DTBLZ(NY,NX)
+C    2+CDPTH(NU(NY,NX),NY,NX)-CDPTHG)THEN
+      IF(DPTH(L,NY,NX).LE.DTBLZ(NY,NX)
+     2+CDPTH(NU(NY,NX),NY,NX)-CDPTHG)THEN 
+      FCY=0.20
       IF(CORGCX(4).GT.ZERO)THEN
       FC0=FCY*EXP(-5.0*(AMIN1(CORGNX(4),10.0*CORGPX(4))
      2/CORGCX(4)))
       ELSE
       FC0=FCY
+      ENDIF
+      IF(TORGM.GT.ZERO)THEN
+      HCX=LOG(0.5)/TORGM
+      ELSE
+      HCX=0.0
       ENDIF
       FCX=EXP(HCX*TORGL(L))
 C
-C     WETLAND
+C     WETLAND SOIL
 C
       ELSE
-      FCY=0.60
-      IF(CORGCX(4).GT.ZERO)THEN
-      FC0=FCY*EXP(-5.0*(AMIN1(CORGNX(4),10.0*CORGPX(4))
-     2/CORGCX(4)))
-      ELSE
+      FCY=0.20
+C     IF(CORGCX(4).GT.ZERO)THEN
+C     FC0=FCY*EXP(-5.0*(AMIN1(CORGNX(4),10.0*CORGPX(4))
+C    2/CORGCX(4)))
+C     ELSE
       FC0=FCY
+C     ENDIF
+      IF(TORGM.GT.ZERO)THEN
+      HCX=LOG(1.0)/TORGM
+      ELSE
+      HCX=0.0
       ENDIF
-C     FCX=(EXP(HCX*TORGL(L)))**0.5
       FCX=EXP(HCX*TORGL(L))
       ENDIF
 C
 C     RECONSTRUCTED SOILS
 C
       ELSE
-      FCY=0.30
+      FCY=0.20
       IF(CORGCX(4).GT.ZERO)THEN
       FC0=FCY*EXP(-5.0*(AMIN1(CORGNX(4),10.0*CORGPX(4))
      2/CORGCX(4)))
@@ -1060,11 +1074,12 @@ C     CFOMC=fraction of microbial litter allocated to humus components
 C
       CFOMC(1,L,NY,NX)=3.0*FC1/(2.0*FC1+1.0)
       CFOMC(2,L,NY,NX)=1.0-CFOMC(1,L,NY,NX)
-C     WRITE(*,5432)'PART',L,FC0,FC1,FCX,HCX,TORGM,TORGL(L) 
+C     WRITE(*,5432)'PART',L,FC1,FC0,FCX,HCX,TORGM,TORGL(L) 
 C    2,CORGCX(4),CORGNX(4),CORGPX(4),DPTH(L,NY,NX),DTBLZ(NY,NX)
+C    2,CDPTH(NU(NY,NX),NY,NX),CDPTHG 
 C    3,CDPTH(NU(NY,NX),NY,NX),CDPTHG,CORGC(L,NY,NX),FORGC
-C    4,EXP(HCX*TORGL(L)) 
-5432  FORMAT(A8,I4,20E12.4)
+C    4,CFOMC(1,L,NY,NX),CFOMC(2,L,NY,NX) 
+5432  FORMAT(A8,I4,30E12.4)
       ENDIF
 C
 C     INITIALIZE LAYER WATER, ICE, AIR CONTENTS
@@ -1310,15 +1325,15 @@ C
       ELSE
       IF(BKVL(L,NY,NX).GT.ZEROS(NY,NX))THEN
       IF(K.LE.2)THEN
-      OSCM(K)=DCKR*CORGCX(K)*BKVL(L,NY,NX)
+      OSCM(K)=DCKR*BKVL(L,NY,NX)*CORGCX(K)
       ELSE
-      OSCM(K)=FCX*CORGCX(K)*BKVL(L,NY,NX)*DCKM/(CORGCX(4)+DCKM) 
+      OSCM(K)=FCX*BKVL(L,NY,NX)*DCKM*CORGCX(K)/(CORGCX(4)+DCKM) 
       ENDIF
       ELSE
       IF(K.LE.2)THEN
-      OSCM(K)=DCKR*CORGCX(K)*VOLT(L,NY,NX)
+      OSCM(K)=DCKR*VOLT(L,NY,NX)*CORGCX(K)
       ELSE
-      OSCM(K)=FCX*CORGCX(K)*VOLT(L,NY,NX)*DCKM/(CORGCX(4)+DCKM) 
+      OSCM(K)=FCX*VOLT(L,NY,NX)*DCKM*CORGCX(K)/(CORGCX(4)+DCKM) 
       ENDIF
       ENDIF
 C     IF(L.EQ.NU(NY,NX))THEN
@@ -1464,7 +1479,9 @@ C
       OCC=0.0
       ONC=0.0
       OPC=0.0
-      RC=0.0
+      DC=0.0
+      DN=0.0
+      DP=0.0
       IF(L.EQ.0)THEN
       DO 6975 K=0,5
       RC0(K,NY,NX)=0.0
@@ -1473,7 +1490,9 @@ C
       DO 6990 K=0,5
       DO 6990 N=1,7
       IF(K.LE.2)THEN
-      RC=RC+OMC(3,N,K,L,NY,NX)
+      DC=DC+OMC(3,N,K,L,NY,NX)
+      DN=DN+OMN(3,N,K,L,NY,NX)
+      DP=DP+OMP(3,N,K,L,NY,NX)
       ENDIF
 C
 C     INITIALIZE ARRAYS FOR ORGANIC TRANSFORMATIONS IN ‘nitro.f’
@@ -1495,8 +1514,8 @@ C
       OC=OC+OMC(M,N,K,L,NY,NX)
       ON=ON+OMN(M,N,K,L,NY,NX)
       OP=OP+OMP(M,N,K,L,NY,NX)
-      IF(K.LE.2)THEN
-      RC=RC+OMC(M,N,K,L,NY,NX)
+      IF(K.LE.3)THEN
+      DC=DC+OMC(M,N,K,L,NY,NX)
       ENDIF
       RC0(K,NY,NX)=RC0(K,NY,NX)+OMC(M,N,K,L,NY,NX)
 6990  CONTINUE
@@ -1505,8 +1524,10 @@ C
       OC=OC+ORC(M,K,L,NY,NX)
       ON=ON+ORN(M,K,L,NY,NX)
       OP=OP+ORP(M,K,L,NY,NX)
-      IF(K.LE.2)THEN
-      RC=RC+ORC(M,K,L,NY,NX)
+      IF(K.LE.3)THEN
+      DC=DC+ORC(M,K,L,NY,NX)
+      DN=DN+ORN(M,K,L,NY,NX)
+      DP=DP+ORP(M,K,L,NY,NX)
       ENDIF
       IF(L.EQ.0)THEN
       RC0(K,NY,NX)=RC0(K,NY,NX)+ORC(M,K,L,NY,NX)
@@ -1517,10 +1538,11 @@ C
       ON=ON+OQN(K,L,NY,NX)+OQNH(K,L,NY,NX)+OHN(K,L,NY,NX)
       OP=OP+OQP(K,L,NY,NX)+OQPH(K,L,NY,NX)+OHP(K,L,NY,NX)
       OC=OC+OQA(K,L,NY,NX)+OQAH(K,L,NY,NX)
-      IF(K.LE.2)THEN
-      RC=RC+OQC(K,L,NY,NX)+OQCH(K,L,NY,NX)+OHC(K,L,NY,NX)
+      IF(K.LE.3)THEN
+      DC=DC+OQC(K,L,NY,NX)+OQCH(K,L,NY,NX)+OHC(K,L,NY,NX)
      2+OQA(K,L,NY,NX)+OQAH(K,L,NY,NX)+OHA(K,L,NY,NX)
-      RC=RC+OQA(K,L,NY,NX)+OQAH(K,L,NY,NX)
+      DN=DN+OQN(K,L,NY,NX)+OQNH(K,L,NY,NX)+OHN(K,L,NY,NX)
+      DP=DP+OQP(K,L,NY,NX)+OQPH(K,L,NY,NX)+OHP(K,L,NY,NX)
       ENDIF
       IF(L.EQ.0)THEN
       RC0(K,NY,NX)=RC0(K,NY,NX)+OQC(K,L,NY,NX)+OQCH(K,L,NY,NX)
@@ -1536,8 +1558,10 @@ C
       ONC=ONC+OSN(M,K,L,NY,NX)
       OPC=OPC+OSP(M,K,L,NY,NX)
       ENDIF
-      IF(K.LE.2)THEN
-      RC=RC+OSC(M,K,L,NY,NX)
+      IF(K.LE.3)THEN
+      DC=DC+OSC(M,K,L,NY,NX)
+      DN=DN+OSN(M,K,L,NY,NX)
+      DP=DP+OSP(M,K,L,NY,NX)
       ENDIF
       IF(L.EQ.0)THEN
       RC0(K,NY,NX)=RC0(K,NY,NX)+OSC(M,K,L,NY,NX)
@@ -1554,7 +1578,7 @@ C
       ORGN(L,NY,NX)=ON
       ORGNC(L,NY,NX)=ONC
       ORGCX(L,NY,NX)=ORGC(L,NY,NX)
-      ORGR(L,NY,NX)=RC
+      ORGR(L,NY,NX)=DC
 C
 C     INITIALIZE FERTILIZER ARRAYS USED TO HOLD FERTILIZER REMAINING
 C     FROM FERTILIZER INPUTS IN ‘READS.F’
@@ -1617,7 +1641,8 @@ C
 C     SURFACE SOIL LAYER MINERAL HEAT CAPACITY
 C
       BKVLNM(NY,NX)=AMAX1(0.0,SAND(NU(NY,NX),NY,NX)
-     2+SILT(NU(NY,NX),NY,NX)+CLAY(NU(NY,NX),NY,NX)) 
+     2+SILT(NU(NY,NX),NY,NX)+CLAY(NU(NY,NX),NY,NX))
+      VOLW(0,NY,NX)=8.0E-06*ORGC(0,NY,NX) 
 9890  CONTINUE
 9895  CONTINUE
       RETURN

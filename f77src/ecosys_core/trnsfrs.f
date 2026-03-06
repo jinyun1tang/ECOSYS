@@ -339,7 +339,7 @@ C
 C
 C     TIME STEPS FOR SOLUTE FLUX CALCULATIONS
 C
-      VFLWX=XNPH
+      VFLWX=XNPHX
       DO 9995 NX=NHW,NHE
       DO 9990 NY=NVN,NVS
 C
@@ -355,7 +355,8 @@ C     INITIALIZE LITTER STATE VARIABLES USED IN GAS, SOLUTE FLUX
 C     CALCULATIONS
 C
 C     Z*,Z*2=litter solute contents (g)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -365,7 +366,8 @@ C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C
@@ -421,7 +423,8 @@ C     VHCPWM,VHCPWX=current,minimum volumetric heat capacity
 C        of snowpack (MJ K-1)
 C     X*BLS=aggregated solute flux to snowpack used in ‘redist.f’ 
 C        (mol t-1) 
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -430,7 +433,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C     FLQGQ,FLQGI=water flux to snowpack from rain,irrigation from
@@ -643,7 +647,8 @@ C     FLQGQ,FLQGI=water flux to snowpack from rain,irrigation
 C        from ‘watsub.f’ (m3 t-1)
 C     C*R,C*Q=precipitation,irrigation solute concentrations 
 C        from weather, irrigation files (mol m-3)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -652,7 +657,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -1024,7 +1030,8 @@ C     ENTERED IN SITE FILE
 C
 C     R*BLS,R*FL0,R*FL1,R*FL2=solute flux to snowpack,surface
 C        litter,soil surface non-band,band (mol t-1) 
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -1033,7 +1040,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -1176,7 +1184,8 @@ C
 C     INITIAL SOLUTES IN SNOWPACK
 C
 C     Z*W=solute content in snowpack (mol)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -1185,7 +1194,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C
@@ -1240,6 +1250,30 @@ C        (mol t-1)
 C     TR*=solute transformations from ‘solute.f’ (mol t-1)
 C     XNPH=time step for solute fluxes from ‘wthr.f’ (t t-1)
 C
+      RZAL2(0,NY,NX)=-TRAL(0,NY,NX)*XNPH 
+      RZFE2(0,NY,NX)=-TRFE(0,NY,NX)*XNPH 
+      RZHY2(0,NY,NX)=-TRHY(0,NY,NX)*XNPH 
+      RZCA2(0,NY,NX)=-TRCA(0,NY,NX)*XNPH 
+      RZMG2(0,NY,NX)=-TRMG(0,NY,NX)*XNPH 
+      RZNA2(0,NY,NX)=-TRNA(0,NY,NX)*XNPH 
+      RZKA2(0,NY,NX)=-TRKA(0,NY,NX)*XNPH 
+      RZOH2(0,NY,NX)=-TROH(0,NY,NX)*XNPH 
+      RZSO42(0,NY,NX)=-TRSO4(0,NY,NX)*XNPH 
+      RZCL2(0,NY,NX)=0.0
+      RZCO32(0,NY,NX)=0.0
+      RZHCO32(0,NY,NX)=-TRHCO(0,NY,NX)*XNPH 
+      ZAL2(0,NY,NX)=ZAL2(0,NY,NX)-RZAL2(0,NY,NX) 
+      ZFE2(0,NY,NX)=ZFE2(0,NY,NX)-RZFE2(0,NY,NX) 
+      ZHY2(0,NY,NX)=ZHY2(0,NY,NX)-RZHY2(0,NY,NX) 
+      ZCA2(0,NY,NX)=ZCA2(0,NY,NX)-RZCA2(0,NY,NX)
+      ZMG2(0,NY,NX)=ZMG2(0,NY,NX)-RZMG2(0,NY,NX)
+      ZNA2(0,NY,NX)=ZNA2(0,NY,NX)-RZNA2(0,NY,NX)
+      ZKA2(0,NY,NX)=ZKA2(0,NY,NX)-RZKA2(0,NY,NX)
+      ZOH2(0,NY,NX)=ZOH2(0,NY,NX)-RZOH2(0,NY,NX)
+      ZSO42(0,NY,NX)=ZSO42(0,NY,NX)-RZSO42(0,NY,NX) 
+      ZCL2(0,NY,NX)=ZCL2(0,NY,NX)-RZCL2(0,NY,NX)
+      ZCO32(0,NY,NX)=ZCO32(0,NY,NX)-RZCO32(0,NY,NX)
+      ZHCO32(0,NY,NX)=ZHCO32(0,NY,NX)-RZHCO32(0,NY,NX) 
       DO 10 L=NU(NY,NX),NL(NY,NX)
       RZAL2(L,NY,NX)=-TRAL(L,NY,NX)*XNPH
       RZFE2(L,NY,NX)=-TRFE(L,NY,NX)*XNPH
@@ -1297,7 +1331,8 @@ C
 C     FLU=subsurface water flux from ‘watsub.f’ (m3 t-1)
 C     R*FLU,R*FBU=subsurface solute flux in non-band,band (mol t-1)
 C     C*Q=irrigation solute concentrations (mol m-3)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -1306,7 +1341,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
@@ -1365,7 +1401,8 @@ C
 C     SUB-HOURLY SOLUTE FLUXES FROM SUBSURFACE IRRIGATION
 C
 C     R*FLZ,R*FBZ=subsurface solute flux in non-band,band (mol t-1)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -1374,7 +1411,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C     XNPH=time step for solute fluxes from wthr.f (t t-1)
@@ -1456,7 +1494,8 @@ C     TO STORE SUB-HOURLY CHANGES DURING FLUX CALCULATIONS
 C     INCLUDING TRANSFORMATIONS FROM REACTIONS IN SOLUTE.F
 C
 C     Z*,Z*2=soil solute contents (mol)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -1465,7 +1504,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -1821,7 +1861,8 @@ C
 C     *2=solute content (mol)
 C     RZ*2=solute transformation at time step for flux calculations
 C        (mol t-1)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -1830,7 +1871,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -2135,7 +2177,7 @@ C     VOLWSL=snowpack water content (m3)
 C     FLQRM,FLQSM,FLQHM=total water flux to litter,soil
 C        micropore,macropore from ‘watsub.f’ (m3 t-1)
 C     VFLWS=snowpack water flux:content (t-1)
-C     CVRD,BARE=litter cover fraction,1-CVRD from ‘watsub.f’ 
+C     CVRDW,BAREW=litter cover fraction incl water,1-CVRDW from ‘watsub.f’ 
 C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
 C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
 C     R*S0=solute flux to surface litter (mol t-1)
@@ -2147,8 +2189,8 @@ C
       VFLWS=AMAX1(0.0,AMIN1(1.0,(FLQSM(M,NY,NX)+FLQHM(M,NY,NX))
      2/VOLWSL(L,NY,NX)))
       ELSE
-      VFLWR=CVRD(NY,NX)
-      VFLWS=BARE(NY,NX)
+      VFLWR=CVRDW(NY,NX)
+      VFLWS=BAREW(NY,NX)
       ENDIF
       VFLWPO4=VFLWS*VLPO4(NU(NY,NX),NY,NX)
       VFLWPOB=VFLWS*VLPOB(NU(NY,NX),NY,NX)
@@ -2263,7 +2305,8 @@ C     VOLWM=litter water volume (m3)
 C     VFLW=litter-soil water flux:litter water conyent (t-1)
 C     RFL*=soil-litter convective solute flux (mol t-1)
 C     Z*2=litter solute content (mol)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -2272,7 +2315,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -2346,7 +2390,8 @@ C     VOLWM=litter water volume
 C     VFLW=litter-soil water flux:soil water content (t-1)
 C     RFL*=soil-litter convective solute flux
 C     Z*2=soil solute content
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -2355,7 +2400,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -2493,7 +2539,8 @@ C
       CSO42=AMAX1(0.0,ZSO42(NU(NY,NX),NY,NX)/VOLWM(M,NU(NY,NX),NY,NX))
       CCL2=AMAX1(0.0,ZCL2(NU(NY,NX),NY,NX)/VOLWM(M,NU(NY,NX),NY,NX))
       CCO32=AMAX1(0.0,ZCO32(NU(NY,NX),NY,NX)/VOLWM(M,NU(NY,NX),NY,NX))
-      CHCO32=AMAX1(0.0,ZHCO32(NU(NY,NX),NY,NX)/VOLWM(M,NU(NY,NX),NY,NX))
+      CHCO32=AMAX1(0.0,ZHCO32(NU(NY,NX),NY,NX)
+     2/VOLWM(M,NU(NY,NX),NY,NX))
       CAL12=AMAX1(0.0,ZAL12(NU(NY,NX),NY,NX)/VOLWM(M,NU(NY,NX),NY,NX))
       CAL22=AMAX1(0.0,ZAL22(NU(NY,NX),NY,NX)/VOLWM(M,NU(NY,NX),NY,NX))
       CAL32=AMAX1(0.0,ZAL32(NU(NY,NX),NY,NX)/VOLWM(M,NU(NY,NX),NY,NX))
@@ -2561,13 +2608,14 @@ C     DIFFUSIVITIES IN RESIDUE AND SOIL SURFACE
 C
 C     DLYR0,DLYR1=litter, soil surface thickness (m)    
 C     TORT=tortuosity from ‘hour1.f’ 
-C     CVRD,BARE=litter cover fraction,1-CVRD from ‘watsub.f’
+C     CVRDW,BAREW=litter cover fraction incl water,1-CVRDW from ‘watsub.f’
 C     DISPN=dispersivity (m t-1)
 C     AREA=grid cell area (m2)
 C     FLWRM=litter-soil water flux from ‘watsub.f’ (m3 t-1)
 C     DIF*=aqueous diffusivity-dispersivity in soil surface (m3 t-1) 
 C     *SGL2=solute diffusivity (m2 t-1)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -2576,7 +2624,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -2584,7 +2633,7 @@ C
       DLYR0=AMAX1(ZERO2,DLYR(3,0,NY,NX))
       DLYR1=AMAX1(ZERO2,DLYR(3,NU(NY,NX),NY,NX))
       TORTL=(TORT(M,0,NY,NX)+TORT(M,NU(NY,NX),NY,NX))
-     2/(DLYR0+DLYR1)*CVRD(NY,NX)
+     2/(DLYR0+DLYR1)*CVRDW(NY,NX)
       DISPN=DISP(3,NU(NY,NX),NY,NX)
      2*AMIN1(VFLWX,ABS(FLWRM(M,NY,NX)/AREA(3,NU(NY,NX),NY,NX)))
       DIFPO=(POSGL2(NU(NY,NX),NY,NX)*TORTL+DISPN)
@@ -2624,7 +2673,8 @@ C        soil surface in non-band,band (mol t-1)
 C     DIF*=aqueous diffusivity-dispersivity between litter and 
 C        soil surface (m3 t-1)
 C     C*1,C*2=solute concentration in litter,soil surface (mol m-3)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -2633,7 +2683,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -2756,7 +2807,8 @@ C     R*S0=solute flux to surface litter (mol t-1)
 C     R*S1,R*B1=solute flux to soil surface non-band,band (mol t-1) 
 C     DFV*=diffusive solute flux between litter and soil surface
 C       (mol t-1)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -2765,7 +2817,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -3039,13 +3092,17 @@ C    2,XHYFLS(3,0,NY,NX),RHYFLS0,RFLHY,DFVHY
 C    2,ZHY2(0,NY,NX),VFLW,DIFHY,CHY1,CHY2
 C    2,XHYFLS(3,NU(NY,NX),NY,NX),RHYFLS1,RFLHY,DFVHY
 C    3,ZHY2(NU(NY,NX),NY,NX),CHY1,CHY2,VOLWM(M,NU(NY,NX),NY,NX)
-C    4,RZHY2(NU(NY,NX),NY,NX)  
+C    4,RZHY2(0,NY,NX),RZHY2(NU(NY,NX),NY,NX)  
 C    3,FLQRQ(NY,NX),FLQGQ(NY,NX),FLQRI(NY,NX),FLQGQ(NY,NX)
 C    2,CHYR(NY,NX),CHYQ(I,NY,NX)
 C     WRITE(*,443)'XOHFLS',I,J,NFZ,M,NX,NY
 C    2,XOHFLS(3,NU(NY,NX),NY,NX),ROHFLS1,RFLOH,DFVOH 
 C    2,VFLW,ZOH2(NU(NY,NX),NY,NX),ZOHH2(NU(NY,NX),NY,NX)
 C    3,ZOH2(0,NY,NX)
+C     WRITE(*,443)'XCAFLS',I,J,NFZ,M,NX,NY
+C    2,XCAFLS(3,0,NY,NX),RCAFLS0,RFLCA,DFVCA 
+C    3,XCAFLS(3,NU(NY,NX),NY,NX),RCAFLS1,RFLCA,DFVCA
+C    4,VFLW,FLWRM(M,NY,NX),ZCA2(0,NY,NX),ZCA2(NU(NY,NX),NY,NX)
 C     WRITE(*,443)'XSOFLS',I,J,NFZ,M,NX,NY
 C    2,RSOFLS(3,0,NY,NX),RSOFL0(NY,NX),RSOFLS0,RFLSO,DFVSO
 C    2,ZSO42(0,NY,NX),VFLW,DIFSO,CSO41,CSO42,VOLWM(M,0,NY,NX)
@@ -3057,7 +3114,7 @@ C    2,CSOR(NY,NX),CSOQ(I,NY,NX)
 C     WRITE(*,443)'XHYSIS',I,J,NFZ,M,NX,NY
 C    2,XHYSIS(3,0,NY,NX),RHYSIS0,RFLHYS,DFVHYS
 C    3,XHYSIS(3,NU(NY,NX),NY,NX),RHYSIS1,RFLHYS,DFVHYS 
-443   FORMAT(A8,6I4,30F16.8)
+443   FORMAT(A8,6I4,30E12.4)
 C     ENDIF
 C
 C     MACROPORE-MICROPORE SOLUTE EXCHANGE IN SOIL
@@ -3071,7 +3128,8 @@ C     RFL*=convective macropore-micropore solute transfer (mol t-1)
 C     *H2,*2=macropore,micropore solute content
 C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
 C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -3080,7 +3138,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -3298,7 +3357,8 @@ C     VOLWM,VOLWHM=micropore,macropore water volume (m3)
 C     XFRS*VOLT=maximum macropore volume for solute transfer (m3 t-1)
 C     DFV*=diffusive macropore-micropore solute transfer (mol t-1) 
 C     *H2,*2=macropore,micropore solute content (mol)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -3307,7 +3367,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -3545,7 +3606,8 @@ C        and micropores (mol t-1)
 C     RFL*=convective flux between macropores and micropores (mol t-1) 
 C     DFV*=diffusive solute flux between macropores and micropores 
 C        (mol t-1) 
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -3554,7 +3616,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -3615,7 +3678,8 @@ C     X*FXS=aggregated convective+diffusive solute flux between
 C        macropores and micropores (mol t-1) 
 C     R*FXS=total convective+diffusive solute flux between 
 C        macropores and micropores (mol t-1)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -3624,7 +3688,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -3745,7 +3810,8 @@ C     VOLWM=litter water volume from ‘watsub.f’ (m3)
 C     VFLW=litter water flux/content (t-1)
 C     RQR*0,RQS*0=solute flux in runoff, snow drift (mol t-1) 
 C     Z*2=litter solute content (mol)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -3754,7 +3820,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -3982,7 +4049,8 @@ C     QRM=runoff from ‘watsub.f’ (m3 t-1)
 C     RQR*0=solute flux in runoff (mol t-1) 
 C     FQRM=partitions RQR*0 into EW(N=1),NS(N=2) directions 
 C     RQR*=solute flux in runoff in EW(N=1),NS(N=2) directions(mol t-1)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -3991,7 +4059,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -4141,7 +4210,8 @@ C
 C     RQR*0=solute flux in runoff (mol t-1)
 C     FQRM=partitions RQR*0 into EW(N=1),NS(N=2) directions
 C     RQR*=solute flux in runoff in EW(N=1),NS(N=2) directions(mol t-1)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -4150,7 +4220,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -4389,7 +4460,8 @@ C     QSTN=EW(N=1),NS(N=2) snow transfer from ‘watsub.f’ (m3 t-1)
 C     FQSM=partitions RQS*0 into EW(N=1),NS(N=2) directions 
 C     RQS*0=solute flux in snow transfer (mol t-1)
 C     RQS*=EW(N=1),NS(N=2) solute flux in snow transfer (mol t-1) 
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -4398,7 +4470,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -4843,7 +4916,8 @@ C     VOLWM=micropore water content from ‘watsub.f’ (m3)
 C     VFLW=micropore water flux/content (t-1)
 C     RFL*S,RFL*B =solute diffusive flux through micropore
 C        in non-band,band (mol t-1)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -4852,7 +4926,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -5004,7 +5079,8 @@ C     THETW=volumetric water concentration (m3 m-3)
 C     C*1,C*2=solute concentration in source,destination layer 
 C        (mol m-3)
 C     *S2,*B2=soil solute content in non-band,band (mol)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -5013,7 +5089,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -5176,7 +5253,8 @@ C     AREA=grid cell area (m2)
 C     FLWM=water flux through soil micropore from ‘watsub.f’ (m3 t-1) 
 C     DIF*=aqueous diffusivity-dispersivity through micropore (m3 t-1)
 C     *SGL2=solute diffusivity (m2 t-1)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -5185,7 +5263,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -5358,7 +5437,8 @@ C     RFH*=solute diffusive flux through macropore (mol t-1)
 C     *SH2,*BH2=macropore solute content in non-band,band (mol)
 C     R*FXS=convective+diffusive solute flux between macropores 
 C        and micropores (mol t-1)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -5367,7 +5447,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -5671,7 +5752,8 @@ C     C*H1,C*H2=macropore solute concentration in source,
 C        destination layer (mol m-3) 
 C     *H2=macropore solute content (mol)
 C     VOLWHM=macropore water content (m3( 
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -5680,7 +5762,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -5793,7 +5876,8 @@ C     AREA=grid cell area (m2)
 C     FLWHM=water flux through soil macropore from ‘watsub.f’ (m3 t-1) 
 C     DIF*=aqueous diffusivity-dispersivity through macropore (m3 t-1)
 C     *SGL2=solute diffusivity (m2 t-1)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -5802,7 +5886,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -5948,7 +6033,8 @@ C     R*FHS=convective+diffusive solute flux through macropores
 C        (mol t-1)
 C     R*FHW,R*FHB=convective + diffusive solute flux through
 C        macropores in non-band,band (mol t-1)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -5957,7 +6043,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -6183,7 +6270,7 @@ C
       XC1BHB(N,N6,N5,N4)=XC1BHB(N,N6,N5,N4)+RC1BHB(N,N6,N5,N4)
       XC2BHB(N,N6,N5,N4)=XC2BHB(N,N6,N5,N4)+RC2BHB(N,N6,N5,N4)
       XM1BHB(N,N6,N5,N4)=XM1BHB(N,N6,N5,N4)+RM1BHB(N,N6,N5,N4)
-C     IF(N3.EQ.NU(NY,NX))THEN
+      IF(N3.EQ.NU(NY,NX))THEN
 C     WRITE(*,445)'XHYFLSL',I,J,NFZ,M,N4,N5,N6,N
 C    2,XHYFLS(N,N6,N5,N4),RHYFLS(N,N6,N5,N4),RFLHY,DFVHY
 C    3,VFLWZ,VFLWX,FLWM(M,N,N6,N5,N4)
@@ -6209,8 +6296,8 @@ C    2,XHYSIS(N,N6,N5,N4),RHYSIS(N,N6,N5,N4),RFLHYS,DFVHYS
 C    3,VFLW,FLWM(M,N,N6,N5,N4)
 C    3,DIFHS,CHYS1,CHY22,ZHYSI2(N3,N2,N1),ZHYSI2(N6,N5,N4)
 C    4,VOLWM(M,N3,N2,N1),VOLWM(M,N6,N5,N4)
-445   FORMAT(A8,8I4,20F16.8)
-C     ENDIF
+445   FORMAT(A8,8I4,20E12.4)
+      ENDIF
 C
 C     MACROPORE-MICROPORE SOLUTE EXCHANGE WITHIN SOIL
 C     LAYER FROM WATER EXCHANGE IN 'WATSUB' AND
@@ -6229,7 +6316,8 @@ C     RFL*=convective macropore-micropore solute transfer (mol t-1)
 C     *H2,*2=macropore,micropore solute content (mol)
 C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
 C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -6238,7 +6326,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -6456,7 +6545,8 @@ C        (m3)
 C     DFV*S,DFV*B=diffusive solute flux between macro- and micropore
 C        in non-band,band (mol t-1)
 C     *2,*H2=solute content of micropores,macropores (mol)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -6465,7 +6555,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -6649,7 +6740,8 @@ C     R*FXS,R*FXB=total convective+diffusive solute flux between
 C        macro- and micropore in non-band,band (mol t-1)
 C     RFL*=convective flux between macro- and micropore (mol t-1)
 C     DFV*=diffusive solute flux between macro- and micropore (mol t-1) 
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -6658,7 +6750,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -7163,7 +7256,8 @@ C        (m3 t-1)
 C     RQR*0=solute flux in runoff (mol t-1)
 C     RQR*=solute flux in runoff in EW(N=1),NS(N=2) directions(mol t-1)
 C     FQRM=partitions RQR*0 into EW(N=1),NS(N=2) directions 
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -7172,7 +7266,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -7616,7 +7711,8 @@ C     VFLW= micropore water flux:content (t-1)
 C     R*FLS=convective solute flux through micropores (mol t-1)
 C     R*FLW,R*FLB=convective solute flux through micropores 
 C        in non-band,band (mol t-1)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -7625,7 +7721,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -8095,7 +8192,8 @@ C     VOLWHM=macropore water content from ‘watsub.f’ (m3)
 C     VFLW=macropore water flux:content (t-1) 
 C     RFH*S=solute diffusive flux through macropore (m3 t-1)
 C     *H2=solute content (mol)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -8104,7 +8202,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -8565,7 +8664,8 @@ C     TQR*=net overland solute flux (mol t-1)
 C     RQR*=overland solute flux (mol t-1)
 C     TQS*=net solute flux in snow transfer (mol t-1)
 C     RQS*=solute flux in snow transfer (mol t-1)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -8574,7 +8674,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -9045,7 +9146,8 @@ C     T*FHS=net convective+diffusive solute flux through macropores
 C     R*FHS=convective+diffusive solute flux through macropores
 C     R*FHW,R*FHB=convective+diffusive solute flux through
 C        macropores in non-band,band
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -9054,7 +9156,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -9386,7 +9489,8 @@ C
 C     *W2=solute content of snowpack (mol)
 C     TQS*=net overland solute flux in snow (mol t-1) 
 C     T*BLS=net solute flux in snowpack (mol t-1)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -9395,7 +9499,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -9498,7 +9603,8 @@ C        soil surface (mol t-1)
 C     R*FLW,R*FLB=convective + diffusive solute flux into litter 
 C        from non-band,band (mol t-1)
 C     TQR*=net overland solute flux (mol t-1)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -9507,7 +9613,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band
@@ -9567,7 +9674,8 @@ C        (mol t-1)
 C     R*FXS=convective + diffusive solute flux between macropores 
 C        and micropores (mol t-1)
 C     R*FLZ,R*FBZ=subsurface solute flux in non-band,band (mol t-1)
-C     salt code:*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
+C     salt code
+C        :*HY*=H+,*OH*=OH-,*AL*=Al3+,*FE*=Fe3+,*CA*=Ca2+
 C        :*MG*=Mg2+,*NA*=Na+,*KA*=K+,*SO4*=SO42-,*CL*=Cl-
 C        :*CO3*=CO32-,*HCO3*=HCO3-,*CO2*=CO2,*ALO1*=AlOH2-
 C        :*ALOH2=AlOH2-,*ALOH3*=AlOH3,*ALOH4*=AlOH4+,*ALS*=AlSO4+
@@ -9576,7 +9684,8 @@ C        :*FES*=FeSO4+,*CAO*=CaOH,*CAC*=CaCO3,*CAH*=CaHCO3-
 C        :*CAS*=CaSO4,*MGO*=MgOH,*MGC*=MgCO3,*MHG*=MgHCO3-
 C        :*MGS*=MgSO4,*NAC*=NaCO3-,*NAS*=NaSO4-,*KAS*=KSO4-
 C        :*HYSI*=H4SiO4
-C     phosphorus code:*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
+C     phosphorus code
+C        :*H0P*=PO43-,*H3P*=H3PO4,*F1P*=FeHPO42-
 C        :*F2P*=F1H2PO4-,*C0P*=CaPO4,*C1P*=CaHPO4,*C2P*=CaH2PO4+
 C        :*M1P*=MgHPO4,*COO*=COOH-
 C        :*1=non-band,*B=band

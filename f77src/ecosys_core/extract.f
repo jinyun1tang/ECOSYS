@@ -55,7 +55,7 @@ C        (g C,N,P t-1)
 C     WTSTGT=total standing dead C,N,P mass (g C,N,P)
 C     WTSTG=PFT standing dead C,N,P mass (g C,N,P)
 C     CSNC,ZSNC,PSNC=PFT C,N,P litterfall from ‘grosub.f’ (g C,N,P t-1)
-C     CSNT,ZSNT,PSNT=C,N,P litterfall from all PFT (g C,N,P t-1)
+C     CSNT,ZSNT,PSNT=total C,N,P litterfall from all PFT (g C,N,P t-1)
 C
       ZCSNC(NY,NX)=ZCSNC(NY,NX)+HCSNC(NZ,NY,NX)
       ZZSNC(NY,NX)=ZZSNC(NY,NX)+HZSNC(NZ,NY,NX)
@@ -85,7 +85,7 @@ C           :1=salt equilibrium concentrations are solved
 C              dynamically in ‘solute.f’ and transported in ‘trnsfrs.f’ 
 C     *SNC=PFT salt litterfall from ‘grosub.f’ (mol t-1)
 C     *SNT=salt litterfall from all PFT (mol t-1)
-C     salt code:AL=Al,FE=Fe,CA=Ca,GM=Mg,AN=Na,AK=K,SO=SO4,CL=Cl
+C        salt code:AL=Al,FE=Fe,CA=Ca,GM=Mg,AN=Na,AK=K,SO=SO4,CL=Cl
 C
       IF(ISALTG.NE.0)THEN
       ALSNT(L,NY,NX)=ALSNT(L,NY,NX)+ALSNC(L,NZ,NY,NX)
@@ -127,6 +127,9 @@ C
       PSNIT(NY,NX)=PSNIT(NY,NX)+PSNI(NZ,NY,NX)
       ENDIF
 9985  CONTINUE
+C
+C     INITIALIZE LEAF, STALK, STANDKING DEAD AREAS
+C
       ARLFC(NY,NX)=0.0
       ARSTC(NY,NX)=0.0
       ARSDC(NY,NX)=0.0
@@ -137,7 +140,7 @@ C
       ARSDT(L,NY,NX)=0.0
 915   CONTINUE
 C
-C     FIRE
+C     IF FIRE 
 C
 C     ICHKF=fire flag:0=no fire,1=fire)
 C
@@ -157,7 +160,7 @@ C     COXYGK,CCH4GK=M-M constant for O2,CH4 combustion (umol mol-1)
 C     RCGOK=O2-limited total C combustion of all PFT (g C t-1)
 C     RCHOK=CH4,O2-unlimited CH4 combustion (g C t-1)
 C     FCOGC,FCHGC=fraction of aerobic,anaerobic C combustion to CO2
-C     FCC=fraction of aerobic C combustion to charcoal
+C     FCC=fraction of total C combustion to charcoal
 C     RC4OK=CH4,O2-limited CH4 combustion (g C t-1)
 C     CH4Q=canopy air CH4 concentration (umol mol-1)
 C
@@ -177,7 +180,7 @@ C
       RC4OK=AMIN1(RCHOK*CH4Q(NY,NX)/(CH4Q(NY,NX)+CCH4GK)
      2*OXYQ(NY,NX)/(OXYQ(NY,NX)+COXYGK),(OXYC(NY,NX)-ROGOK)/2.667)
 C
-C     NET O2,CO2,CH4 FLUXES
+C     NET O2,CO2,CH4 FLUXES FROM FIRE
 C
 C     XCNET,XHNET,XONET=total CO2,CH4,O2 exchange by all PFT canopies
 C        (g C,C,O t-1)
@@ -219,6 +222,10 @@ C     COMBUST SHOOT
 C
 C     FCOMN,FGOMN=fraction of N combustion to NH4, gaseous NOX
 C     FCOMP,FCOGP=fraction of P combustion to H2PO4, gaseous POX
+C     FCOMNX=maximum fraction of N combustion to NH4 from PARAMETER
+C     FCOMPX=maximum fraction of P combustion to H2PO4 from PARAMETER 
+C     FCOMNY=minimum fraction of N combustion to NH4 from PARAMETER 
+C     FCOMPY=minimum fraction of P combustion to H2PO4 from PARAMETER 
 C     TFNCOC,TFNCOD=temperature function used to partition combusted
 C        living,standing dead N,P from ‘grosub.f’ 
 C     HCBFCZ=heat released by living canopy combustion (MJ t-1)
@@ -237,7 +244,7 @@ C        WTGRB,WTGRBN,WTGRBP=grain C,N,P mass
 C        CPOLNB,ZPOLNB,PPOLNB=nonstructural C,N,P in bacteria
 C        WTNDB,WTNDBN,WTNDBP=bacterial C,N,P mass
 C     WTSTDG(5,=standing dead charcoal (g C)
-C     FCC=fraction of aerobic C combustion to charcoal
+C     FCC=fraction of total C combustion to charcoal
 C     ZNH4S(0=litter NH4 (g N)
 C     H2PO4(0=litter H2PO4 (g P)
 C     FCBOX,FCBCH=fraction of C combusted aerobically,anaerobically
@@ -276,7 +283,7 @@ C
       Z4M=Z4M+RCMBN*FCOMN 
       P4M=P4M+RCMBP*FCOMP
 C
-C     SALT FROM SHOOT
+C     SALT RELEASED FROM COMBUSTED SHOOT
 C
 C     ISALTG:0=salt concentrations entered in soil file generate
 C              equilibrium concentrations that remain static during
@@ -285,7 +292,8 @@ C           :1=salt equilibrium concentrations are solved
 C              dynamically in ‘solute.f’ and transported in ‘trnsfrs.f’ 
 C     R*Q=salt combustion rate for each PFT shoot pool (mol t-1)
 C     Z*=salt in soil (mol)
-C     salt code:AL=Al,FE=Fe,CA=Ca,MG=Mg,NA=Na,KA=K,SO=SO4,CL=Cl
+C        salt code:AL=Al,FE=Fe,CA=Ca,MG=Mg,NA=Na,KA=K,SO=SO4,CL=Cl
+C     TIONIN=total salt input flux (mol)
 C
       IF(ISALTG.NE.0)THEN
       ZAL(0,NY,NX)=ZAL(0,NY,NX)+RZALQ(NB,NZ,NY,NX)
@@ -317,7 +325,7 @@ C     R*=C,N,P combustion rate for each PFT C pool (g C,N,P t-1)
 C        PFT pool code (g C,N,P):
 C        WTSTDG,WTSTDN,WTSTDP=standing dead C,N,P mass
 C     WTSTDG(5,=standing dead charcoal (g C)
-C     FCC=fraction of aerobic C combustion to charcoal
+C     FCC=fraction of total C combustion to charcoal
 C     ZNH4S(0=litter NH4 (g N)
 C     H2PO4(0=litter H2PO4 (g P)
 C     FCBOX,FCBCH=fraction of C combusted aerobically,anaerobically
@@ -357,9 +365,8 @@ C     COMBUST STANDING DEAD CHARCOAL
 C
 C     R*=C,N,P combustion rate for each PFT C pool from ‘grosub.f’ 
 C        (g C,N,P t-1)
-C        PFT pool code (g C,N,P):
-C        WTSTDG(5,WTSTDN(5,WTSTDP(5=charcoal C,N,P mass
-C     FCC=fraction of aerobic C combustion to charcoal
+C     WTSTDG(5,WTSTDN(5,WTSTDP(5=charcoal C,N,P mass  (g C)
+C     FCC=fraction of total C combustion to charcoal
 C     ZNH4S(0=litter NH4 (g N)
 C     H2PO4(0=litter H2PO4 (g P)
 C     FCBOX,FCBCH=fraction of C combusted aerobically,anaerobically
@@ -406,6 +413,12 @@ C     ENDIF
 C
 C     COMBUST ROOT
 C
+C     FCOMN,FGOMN=fraction of N combustion to NH4, gaseous NOX
+C     FCOMP,FCOGP=fraction of P combustion to H2PO4, gaseous POX
+C     FCOMNX=maximum fraction of N combustion to NH4 from PARAMETER
+C     FCOMPX=maximum fraction of P combustion to H2PO4 from PARAMETER 
+C     FCOMNY=minimum fraction of N combustion to NH4 from PARAMETER 
+C     FCOMPY=minimum fraction of P combustion to H2PO4 from PARAMETER 
 C     RCGSKR=total root C combustion of PFT from ‘grosub.f’ (g C t-1)
 C     R*=C,N,P combustion rate for each PFT C pool from ‘grosub.f’ 
 C        (g C,N,P t-1)
@@ -418,7 +431,7 @@ C        CPOOLN,ZPOOLN,PPOOLN=nonstructural C,N,P in bacteria
 C        WTNDL,WTNDLN,WTNDLP=bacterial C,N,P mass
 C        WTRVC=storage C,N,P
 C     OSC(5=soil charcoal (g C)
-C     FCC=fraction of aerobic C combustion to charcoal
+C     FCC=fraction of total C combustion to charcoal
 C     FCBOX,FCBCH=fraction of soil+root C combusted aerobically,
 C        anaerobically
 C     RCGOX,RCHOX=O2-limited soil+root aerobic,anaerobic combustion 
@@ -440,7 +453,8 @@ C
       Z4M=0.0
       P4M=0.0
       DO 8880 L=NU(NY,NX),NJ(NY,NX)
-      IF(RCGSKR(L,NZ,NY,NX).GT.ZEROP2(NZ,NY,NX))THEN
+      IF(RCGSK(L,NY,NX).GT.ZEROP2(NZ,NY,NX)
+     2.AND.RCGOX(L,NY,NX)+RCHOX(L,NY,NX).GT.ZEROP2(NZ,NY,NX))THEN
       FCOMN=FCOMNY+(FCOMNX-FCOMNY)*(1.0-TFNCOS(L,NY,NX))
       FCOGN=1.0-FCOMN
       FCOMP=FCOMPY+(FCOMPX-FCOMPY)*(1.0-TFNCOS(L,NY,NX))
@@ -514,8 +528,7 @@ C    8,FCBOXR*FCOGP
 5569  FORMAT(A8,7I4,40F14.6)
 C     ENDIF
 C
-C     SALT FROM ROOTS
-C
+C     SALT RELEASED FROM COMBUSTED ROOTS
 C
 C     ISALTG:0=salt concentrations entered in soil file generate
 C              equilibrium concentrations that remain static during
@@ -524,7 +537,8 @@ C           :1=salt equilibrium concentrations are solved
 C              dynamically in ‘solute.f’ and transported in ‘trnsfrs.f’ 
 C     R*R=salt combustion rate for each PFT root pool (mol t-1)
 C     Z*=salt in soil (mol)
-C     salt code:AL=Al,FE=Fe,CA=Ca,MG=Mg,NA=Na,KA=K,SO=SO4,CL=Cl
+C        salt code:AL=Al,FE=Fe,CA=Ca,MG=Mg,NA=Na,KA=K,SO=SO4,CL=Cl
+C     TIONIN=total salt input flux (mol)
 C
       IF(ISALTG.NE.0)THEN
       DO 8886 N=1,MY(NZ,NY,NX)
@@ -551,6 +565,13 @@ C    3,RZKAR(N,L,NZ,NY,NX),RZSOR(N,L,NZ,NY,NX),RZCLR(N,L,NZ,NY,NX)
 C
 C     BOUNDARY FLUXES FROM ROOTS TO SOIL
 C
+C     CO2GIN=cumulative surface gas C exchange (g C)
+C     ZCSNC=total net root-soil C exchange (g C t-1) 
+C     TZIN=cumulative surface aqueous NH4,NH3,NO3 exchange (g N)
+C     TPIN=cumulative surface H2PO4,HPO4 exchange (g P)
+C     VCO2R,VCH4R,VNOXR,VPOXR=total CO2,CH4,NOX,POX emissions from fire
+C        (g C,C,N,P t-1)
+C
       CO2GIN=CO2GIN+COX+CHX
       ZCSNC(NY,NX)=ZCSNC(NY,NX)+COR
       TZIN=TZIN+Z4M
@@ -569,7 +590,7 @@ C     END FIRE
 C
       DO 9975 NZ=1,NP(NY,NX)
 C
-C     DEAD AND LIVING TRANSFERS
+C     TOTAL DEAD AND LIVING TRANSFERS FOR USE IN REDIST.F
 C
 C     ARSTT,ARSTD=total,PFT standing dead surface area (m2)
 C     TRN=all canopy+standing dead net SW+LW radiation (MJ h-1)
@@ -659,12 +680,12 @@ C
       DO 100 N=1,MY(NZ,NY,NX)
       DO 100 L=NU(NY,NX),NI(NZ,NY,NX)
 C
-C     TOTAL ROOT DENSITY
+C     TOTAL ROOT DENSITY FROM PFT DENSITY 
 C
 C     RTDNT=total root length density (m m-3) 
-C     RTDNP=PFT root length density per plant (m m-3)
+C     RTDNP=PFT root length density per plant from ‘grosub.f’ (m m-3)
 C     TUPWTR=total root water uptake (m3 t-1)
-C     UPWTR=PFT root water uptake (m3 t-1)
+C     UPWTR=PFT root water uptake from ‘uptake.f’ (m3 t-1)
 C     TUPHT=total convective heat in root water uptake (MJ t-1)
 C     TKS=soil temperature (K)
 C     PP=PFT population (n)
@@ -675,19 +696,20 @@ C
      2*PP(NZ,NY,NX)/AREA(3,L,NY,NX)
       ENDIF
 C
-C     TOTAL WATER UPTAKE
+C     TOTAL WATER UPTAKE FROM PFT UPTAKE IN UPTAKE.F
 C
       TUPWTR(L,NY,NX)=TUPWTR(L,NY,NX)+UPWTR(N,L,NZ,NY,NX)
       TUPHT(L,NY,NX)=TUPHT(L,NY,NX)+UPWTR(N,L,NZ,NY,NX)
      2*4.19*TKS(L,NY,NX)
 C
-C     ROOT GAS CONTENTS FROM FLUXES IN 'UPTAKE'
+C     ROOT GAS CONTENTS FROM PFT FLUXES
 C
 C     *A,*P=PFT root gaseous, aqueous gas content
 C        gas code (g C,O,C,N,N,H t-1):
 C        CO=CO2,OX=O2,CH=CH4,N2=N2O,NH=NH3,H2=H2
-C     R*FLA=root gaseous-atmosphere CO2 exchange (g C t-1)
-C     R*DFA=root aqueous-gaseous CO2 exchange (g C t-1)
+C     R*FLA=root gaseous-atmosphere CO2 exchange from ‘uptake.f’ 
+C        (g C t-1)
+C     R*DFA=root aqueous-gaseous CO2 exchange from ‘uptake.f’ (g C t-1)
 C
       CO2A(N,L,NZ,NY,NX)=CO2A(N,L,NZ,NY,NX)+RCOFLA(N,L,NZ,NY,NX)
      2-RCODFA(N,L,NZ,NY,NX)
@@ -718,7 +740,8 @@ C     TOTAL ROOT GAS CONTENTS
 C
 C     TL*P=total root gas content
 C     *A,*P=PFT root gaseous, aqueous gas content
-C        gas code (g C,O,C,N,N,H):
+C        (g C,O,C,N,N,H)
+C     gas code:
 C        CO=CO2,OX=O2,CH=CH4,N2=N2O,NH=NH3,H2=H2
 C
       TLCO2P(L,NY,NX)=TLCO2P(L,NY,NX)+CO2P(N,L,NZ,NY,NX)
@@ -745,7 +768,7 @@ C    5,RCHDFA(N,L,NZ,NY,NX),RUPCHS(N,L,NZ,NY,NX),RCHFLA(N,L,NZ,NY,NX)
 5566  FORMAT(A8,8I4,20E12.4)
 C     ENDIF
 C
-C     TOTAL ROOT BOUNDARY GAS AND SOLUTE FLUXES
+C     TOTAL ROOT BOUNDARY GAS AND SOLUTE FLUXES FROM PFT FLUXES 
 C
 C     T*FLA=total root gaseous-atmosphere gas exchange
 C     R*FLA=PFT root gaseous-atmosphere gas exchange
@@ -754,7 +777,7 @@ C        CO=CO2,OX=O2,CH=CH4,N2=N2O,NH=NH3,H2=H2
 C     TUP*S,TUP*B=total root-soil gas, solute exchange in 
 C        non-band,band
 C     RUP*S,RUP*B*=PFT root-soil gas, solute exchange in non-band,band
-C        solute code (g N,P t-1):
+C        solute code from ‘uptake.f’ (g N,P t-1):
 C        NH4=NH4,NO3=NO3,H2P=H2PO4,H1P=H1PO4 in non-band
 C        NHB=NH4,NOB=NO3,H2B=H2PO4,H1B=H1PO4 in band
 C
@@ -793,8 +816,7 @@ C    2,RUPN2S(N,L,NZ,NY,NX)
 4141  FORMAT(A8,8I4,12F16.8)
 C     ENDIF
 C
-C     SALT UPTAKE
-C
+C     TOTAL SALT UPTAKE FROM PFT UPTAKE
 C
 C     ISALTG:0=salt concentrations entered in soil file generate
 C              equilibrium concentrations that remain static during
@@ -821,12 +843,12 @@ C    2,RUPZSO(N,L,NZ,NY,NX)
 C     ENDIF
       ENDIF
 C
-C     TOTAL ROOT C,N,P EXUDATION
+C     TOTAL ROOT C,N,P EXUDATION FROM PFT EXUDATION 
 C
 C     TDFOMC,TDFOMN,TDFOMP=total root-soil nonstructural C,N,P
 C        exchange (g C,N,P t-1)
 C     RDFOMC,RDFOMN,RDFOMP=PFT root-soil nonstructural C,N,P 
-C        exchange (g C,N,P t-1) 
+C        exchange from ‘uptake.f’(g C,N,P t-1) 
 C
       DO 195 K=0,4
       TDFOMC(K,L,NY,NX)=TDFOMC(K,L,NY,NX)-RDFOMC(N,K,L,NZ,NY,NX)
@@ -888,7 +910,7 @@ C
 C     TOTAL ROOT N2 FIXATION BY ALL PLANT SPECIES
 C
 C     TUPNF=total root N2 fixation (g N t-1)
-C     RUPNF=PFT root N2 fixation (g N t-1)
+C     RUPNF=PFT root N2 fixation from ‘grosub.f’ (g N t-1)
 C
       DO 85 L=NU(NY,NX),NI(NZ,NY,NX)
       TUPNF(L,NY,NX)=TUPNF(L,NY,NX)+RUPNF(L,NZ,NY,NX)
@@ -937,7 +959,7 @@ C
 C     TOTAL CANOPY NH3 EXCHANGE AND EXUDATION
 C
 C     RNH3B,RNH3C=PFT NH3 flux between atmosphere and branch,canopy 
-C        (g N t-1)
+C        from ‘uptake.f’(g N t-1)
 C     TNH3C=total NH3 flux between atmosphere and canopy (g N t-1)
 C
       RNH3C(NZ,NY,NX)=0.0

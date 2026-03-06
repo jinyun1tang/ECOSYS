@@ -80,7 +80,7 @@ C
      2,CQSG=7.08E-06,OGSG=6.43E-02,OLSG=8.57E-06,ZGSG=5.57E-02
      3,ZLSG=7.34E-06,Z2SG=5.57E-02,ZVSG=5.72E-06,ZHSG=6.67E-02
      4,ZNSG=4.00E-06,ZOSG=6.00E-06,POSG=3.00E-06,OCSG=1.0E-08
-     5,ONSG=1.0E-08,OPSG=1.0E-08,OASG=3.64E-06,WGSG=7.70E-02
+     5,ONSG=1.0E-08,OPSG=1.0E-08,OASG=3.64E-06,WGSG=8.96E-02
      6,ALSG=5.0E-06,FESG=5.0E-06,HYSG=5.0E-06,CASG=5.0E-06
      7,GMSG=5.0E-06,ANSG=5.0E-06,AKSG=5.0E-06,OHSG=5.0E-06
      8,C3SG=5.0E-06,HCSG=5.0E-06,SOSG=5.0E-06,CLSX=5.0E-06
@@ -98,6 +98,8 @@ C
 C
 C     ALBRW,ALBPW=stalk albedo for shortwave,PAR
 C     ALBRD,ALBPD=standing dead albedo for shortwave,PAR
+C     ABSRW,ABSPW=stalk absorptivity for shortwave,PAR
+C     ABSRD,ABSPD=standing dead absorptivity for shortwave,PAR
 C     VISCW=water viscosity (Mg m-1 s)
 C     BKDSX=maximm soil bulk density
 C     ZSX,ZSW=ground,snowpack or water surface roughness (m)
@@ -107,19 +109,23 @@ C     THETPW=minimum air-filled porosity for saturation (m3 m-3)
 C     WBNDX=minimum fertilizer band width, depth (m)
 C     FSCNV=fraction of Ksat at which air entry water potential
 C        is calculated 
+C     CDIR,CDIF=fraction of solar SW,sky diffuse radiation in visible
+C        band
+C     PDIR,PDIF=PAR:SW ratio (umol s-1/(MJ h-1)) 
 C
       PARAMETER (ALBRW=0.1,ALBPW=0.1,ABSRW=1.0-ALBRW,ABSPW=1.0-ALBPW
      2,ALBRD=0.1,ALBPD=0.1,ABSRD=1.0-ALBRD,ABSPD=1.0-ALBPD)
       PARAMETER (VISCW=1.0E-06,BKDSX=1.89,ZSX=0.025,ZSW=0.005,CFW=0.5
      2,FORGW=0.25E+06,DTHETW=1.0E-06,THETPW=1.0E-03,THETWP=1.0-THETPW 
-     3,WBNDX=0.01,FSCNV=0.2)
+     3,WBNDX=0.025,FSCNV=0.1,ZSM=0.01,PHKI=0.316)
+      PARAMETER (CDIR=0.42,CDIF=0.58,PDIR=1269.4,PDIF=1269.4)
 C
 C     XVOLWC=foliar water retention capacity for IGTYP=0,3 (m3 m-2)
-C     THETRX=litter water retention capaciity for woody(0), fine(1)
+C     THETRX=litter water retention capacity for woody(0), fine(1)
 C        manure(2) surface litter (m3 g C-1) 
 C
       DATA XVOLWC/5.0E-04,2.5E-04,2.5E-04,2.5E-04/
-      DATA THETRX/2.0E-06,8.0E-06,8.0E-06/
+      DATA THETRX/2.0E-06,5.0E-06,5.0E-06/
       REAL*4 TFACL,TFACG,TFACW,TFACR,TFACA
       XJ=J
       DOY=I-1+XJ/24
@@ -211,6 +217,7 @@ C     FERTILIZER APPLICATIONS OCCUR AT SOLAR NOON
 C
       IF(J.EQ.INT(ZNOON(NY,NX)))THEN
 C
+C     ZNOON=time of solar noon from weather file
 C     FERT=array used to carry daily fertilizer applications
 C        from ‘reads.f’
 C     NH4,NH3,UREA,NO3 fertilizer application (g N m-2)
@@ -303,12 +310,16 @@ C
       WDNHB(L,NY,NX)=0.0
       ENDIF
       IF(DLYR(3,L,NY,NX).GT.ZERO2)THEN
-      VLNHB(L,NY,NX)=AMIN1(0.999,WDNHB(L,NY,NX)/ROWN(NY,NX)
+      VLNHB(L,NY,NX)=AMIN1(0.9999,WDNHB(L,NY,NX)/ROWN(NY,NX)
      2*DPNHB(L,NY,NX)/DLYR(3,L,NY,NX))
       ELSE
       VLNHB(L,NY,NX)=0.0
       ENDIF
       VLNH4(L,NY,NX)=1.0-VLNHB(L,NY,NX)
+C
+C     REDISTRIBUTE NON-BAND, BAND SOLUBLE, EXCHANGEABLE
+C     NH4 STATE VARIABLES WITH CHANGES IN NH4 BAND VOLUME 
+C
       ZNH4T=ZNH4S(L,NY,NX)+ZNH4B(L,NY,NX)
       ZNH3T=ZNH3S(L,NY,NX)+ZNH3B(L,NY,NX)
       XN4T=XN4(L,NY,NX)+XNB(L,NY,NX)
@@ -318,6 +329,10 @@ C
       ZNH3B(L,NY,NX)=ZNH3T*VLNHB(L,NY,NX)
       XN4(L,NY,NX)=XN4T*VLNH4(L,NY,NX)
       XNB(L,NY,NX)=XN4T*VLNHB(L,NY,NX)
+C     WRITE(*,2344)'LFD',I,J,NFZ,NX,NY,L,LFDPTH,FDPTH(I,NY,NX)
+C    2,VLNH4(L,NY,NX),VLNHB(L,NY,NX),ZNH4S(L,NY,NX),ZNH4B(L,NY,NX)
+C    3,ZNH3S(L,NY,NX),ZNH3B(L,NY,NX)
+2344  FORMAT(A8,7I4,20E12.4)
 50    CONTINUE
       DPNH4(NY,NX)=FDPTHF
       DPNHX(NY,NX)=DPNH4(NY,NX)-WBNDX
@@ -348,12 +363,16 @@ C
       WDNOB(L,NY,NX)=0.0
       ENDIF
       IF(DLYR(3,L,NY,NX).GT.ZERO2)THEN
-      VLNOB(L,NY,NX)=AMIN1(0.999,WDNOB(L,NY,NX)/ROWO(NY,NX)
+      VLNOB(L,NY,NX)=AMIN1(0.9999,WDNOB(L,NY,NX)/ROWO(NY,NX)
      2*DPNOB(L,NY,NX)/DLYR(3,L,NY,NX))
       ELSE
       VLNOB(L,NY,NX)=0.0
       ENDIF
       VLNO3(L,NY,NX)=1.0-VLNOB(L,NY,NX)
+C
+C     REDISTRIBUTE NON-BAND, BAND SOLUBLE
+C     NO3 STATE VARIABLES WITH CHANGES IN NO3 BAND VOLUME 
+C
       ZNO3T=ZNO3S(L,NY,NX)+ZNO3B(L,NY,NX)
       ZNO2T=ZNO2S(L,NY,NX)+ZNO2B(L,NY,NX)
       ZNO3S(L,NY,NX)=ZNO3T*VLNO3(L,NY,NX)
@@ -398,11 +417,15 @@ C
       WDPOB(L,NY,NX)=0.0
       ENDIF
       IF(DLYR(3,L,NY,NX).GT.ZERO2)THEN
-      VLPOB(L,NY,NX)=AMIN1(0.999,WDPOB(L,NY,NX)/ROWP(NY,NX)
+      VLPOB(L,NY,NX)=AMIN1(0.9999,WDPOB(L,NY,NX)/ROWP(NY,NX)
      2*DPPOB(L,NY,NX)/DLYR(3,L,NY,NX))
       ELSE
       VLPOB(L,NY,NX)=0.0
       ENDIF
+C
+C     REDISTRIBUTE NON-BAND, BAND SOLUBLE, EXCHANGEABLE, PRECIPITATED
+C     PO4 STATE VARIABLES WITH CHANGES IN PO4 BAND VOLUME 
+C
       VLPO4(L,NY,NX)=1.0-VLPOB(L,NY,NX)
       H0PO4T=H0PO4(L,NY,NX)+H0POB(L,NY,NX)
       H1PO4T=H1PO4(L,NY,NX)+H1POB(L,NY,NX)
@@ -907,6 +930,7 @@ C     ARLFS,ARLSS=leaf+stalk area of combined,each PFT canopy (m2)
 C     ZL(L-1=height to bottom of canopy layer (m)
 C     DPTHS,DPTH0=snowpack, water depths above surface roughness (m)
 C     ARLFL,ARSTK=leaf,stalk areas of PFT (m2)
+C     RADZ=solar constant at horizontal surface (MJ m-2 h-1)
 C     RAD,RAP=vertical direct+diffuse SW,PAR (MJ m-2 h-1,umol m-2 s-1)
 C     RADS,RADY,RAPS,RAPY=solar beam direct,diffuse SW,PAR
 C        (MJ m-2 h-1,umol m-2 s-1) 
@@ -919,8 +943,26 @@ C     CFX=clumping factor for self-shading
 C     ARLFP=canopy leaf area (m2)
 C
       IF(SSIN(NY,NX).GT.ZERO)THEN
+C
+C     DIRECT VS DIFFUSE RADIATION IN SOLAR OR SKY BEAMS
+C
+C     RADF=diffuse radiation at horizontal surface (MJ m-2 h-1)
+C     RADS,RADY,RAPS,RAPY=direct,diffuse SW,PAR in solar beam 
+C        (MJ m-2 h-1)
+C
+      RADM=RADX(NY,NX)+XNFZ*XNFH*DRADN(NY,NX)
+      RADF=AMAX1(0.0,AMIN1(RADM,0.5*(RADZ(NY,NX)-RADM)))
+      RADS(NY,NX)=AMIN1(4.167,(RADM-RADF)/SSIN(NY,NX))
+      RADY(NY,NX)=RADF/TYSIN
+      RAPS(NY,NX)=RADS(NY,NX)*CDIR*PDIR
+      RAPY(NY,NX)=RADY(NY,NX)*CDIF*PDIF
       RAD(NY,NX)=RADS(NY,NX)*SSIN(NY,NX)+RADY(NY,NX)*TYSIN
       RAP(NY,NX)=RAPS(NY,NX)*SSIN(NY,NX)+RAPY(NY,NX)*TYSIN
+C     WRITE(*,6637)'RADM',I,J,NFZ,NY,NX 
+C    2,RADM,RADX(NY,NX),DRADN(NY,NX),XNFZ,XNFH
+C    3,RADF,RADZ(NY,NX),RADS(NY,NX),SSIN(NY,NX)
+C    4,RADY(NY,NX),TYSIN,RAD(NY,NX) 
+6637  FORMAT(A8,5I4,30E12.4)
       ELSE
       RADS(NY,NX)=0.0
       RADY(NY,NX)=0.0
@@ -943,7 +985,8 @@ C
 C     ANGLE BETWEEN SUN AND GROUND SURFACE
 C
 C     SAZI,SCOS=solar azimuth,cosine of solar angle
-C     BETAG=incident solar angle at ground surface
+C     BETAG=fraction of solar radiation intensity 
+C        at ground surface
 C     GCOS,GSIN=cos,sin of ground surface
 C     ZNOON=hour of solar noon from weather file
 C
@@ -976,9 +1019,9 @@ C
 C     ANGLES BETWEEN SUN OR SKY ZONES AND FOLIAR SURFACES
 C
 C     ZAZI=leaf azimuth (rad)
-C     BETA,BETX=incident angle of direct radiation at leaf,
-C        horizontal surface (rad)
-C     ZAGL=determines forward vs back scattering
+C     BETA,BETX=fraction of direct radiation intensity at leaf,
+C        horizontal surface
+C     ZAGL=determines forward vs back scattering (rad)
 C     IALBS=flag for forward (2) vs back (1) scattering
 C
       DO 1100 M=1,4
@@ -1016,6 +1059,7 @@ C        (MJ m-2 h-1,umol m-2 s-1)
 C     RAFYL,RAFPL=forward scattered diffuse SW,PAR flux
 C        (MJ m-2 h-1,umol m-2 s-1)
 C     TAUS,TAUY=fraction of direct,diffuse radiation transmitted 
+C     XAREA,YAREA=grid cell total, azimuth area (m2)
 C
       DO 1100 NZ=1,NP(NY,NX)
       RDNDIR(N,M,NZ,NY,NX)=RADSA(NZ,NY,NX)*ABS(BETA(N,M))
@@ -1024,6 +1068,10 @@ C
       PARDIR(N,M,NZ,NY,NX)=RAPSA(NZ,NY,NX)*ABS(BETA(N,M))
       PARDIW(N,M,NZ,NY,NX)=RAPWA(NZ,NY,NX)*ABS(BETA(N,M))
       PARDID(N,M,NZ,NY,NX)=RAPDA(NZ,NY,NX)*ABS(BETA(N,M))
+C     WRITE(*,6635)'RDNDIR',I,J,NFZ,NY,NX,NZ,N,M
+C    2,RDNDIR(N,M,NZ,NY,NX),RADSA(NZ,NY,NX),ABS(BETA(N,M))
+C    3,PARDIR(N,M,NZ,NY,NX),RAPSA(NZ,NY,NX),ABS(BETA(N,M))     
+6635  FORMAT(A8,8I4,30E12.4)
       DO 1100 L=1,JC
       PARDIF(N,M,L,NZ,NY,NX)=0.0
       PAR(N,M,L,NZ,NY,NX)=PARDIR(N,M,NZ,NY,NX)
@@ -1041,8 +1089,8 @@ C
 C     RESET ARRAYS OF SUNLIT AND SHADED LEAF AREAS IN DIFFERENT
 C     LAYERS AND ANGLE CLASSES
 C
-C     TSURF,TSURFB,SURF,SURFB=leaf,stalk total,PFT surface area for
-C        interception (m2 m-2)
+C     TSURF,TSURFB,SURF,SURFB=leaf,stalk total,node surface
+C        area for interception (m2 m-2)
 C     TSURFD,SURFD=standing dead total,PFT surface area for
 C        interception (m2 m-2)
 C     ZL(L-1=height to bottom of canopy layer (m)
@@ -1089,6 +1137,7 @@ C        intercepted
 C     ZL(L-1=height to bottom of canopy layer (m)
 C     DPTHS,DPTH0=depth of snowpack,surface water+ice above surface
 C        roughness (m)
+C     TAUY=transmission of diffuse radiation to next lower layer   
 C
       DO 1800 L=JC,1,-1
       IF(ZL(L-1,NY,NX).GE.DPTHS(NY,NX)-ZERO
@@ -1175,19 +1224,22 @@ C
 C     LEAF SURFACE AREA IN EACH INCLINATION CLASS N, AZIMUTH CLASS M,
 C     LAYER L AND SPECIES NZ
 C
-C     TSURFY=unself-shaded leaf area (m2)
-C     TSURFZ=unself-shaded leaf area in each azimuth class (m2 m-2)
+C     TSURFY=nonself-shaded leaf area (m2)
+C     TSURFZ=nonself-shaded leaf area in each azimuth class (m2 m-2)
 C     TSURFS=TSURFY with shading from canopy layers above (m2)
 C     TSURFX=TSURFS (m2 m-2) 
-C     TSURWY=unself-shaded stalk area (m2)
-C     TSURWZ=unself-shaded stalk area in each azimuth class (m2 m-2)
+C     TSURWY=nonself-shaded stalk area (m2)
+C     TSURWZ=nonself-shaded stalk area in each azimuth class (m2 m-2)
 C     TSURWS=TSURWY with shading from canopy layers above (m2)
 C     TSURWX=TSURWS (m2 m-2)
-C     TSURDY=unself-shaded standing dead area (m2) 
-C     TSURDZ=unself-shaded standing dead area in each azimuth
+C     TSURDY=nonself-shaded standing dead area (m2) 
+C     TSURDZ=nonself-shaded standing dead area in each azimuth
 C        class (m2 m-2)
 C     TSURDS=TSURDY with shading from canopy layers above (m2)
 C     TSURDX=TSURDS (m2 m-2) 
+C     XAREA,YAREA=grid cell total, azimuth area (m2)
+C     TAUS=transmission of direct radiation 
+C        to next lower layer  
 C
       DO 1600 N=1,4
       TSURFY=TSURF(N,L,NZ,NY,NX)*CFX(NZ,NY,NX)
@@ -1209,6 +1261,8 @@ C
 C     RADS*,RADP*=SW,PAR absorption (MJ h-1,umol s-1)
 C     STOPZ=accumulated horizontal area of intercepted direct
 C        radiation (m2 m-2)
+C     BETX=fraction of direct radiation intensity at
+C        horizontal surface 
 C     IALBS=flag for forward (2) vs back (1) scattering
 C
       DO 1700 M=1,4
@@ -1247,8 +1301,12 @@ C     RADYN,RADYW,RAPYN,RAPYW=diffuse SW,PAR flux absorbed by
 C        leaf,stalk surfaces (MJ m-2 h-1,umol m-2 s-1)
 C     RADYD,RAPYD= diffuse SW,PAR flux absorbed by
 C        standing dead surfaces (MJ m-2 h-1,umol m-2 s-1)
-C     OMEGA=incident angle of diffuse radiation 
+C     OMEGA=fraction of diffuse radiation intensity at leaf surface 
 C     PAR,PARDIF=direct,diffuse PAR flux (umol m-2 s-1)
+C     ABSR,ABSP=leaf absorptivity for SW, PAR from ‘readq.f’
+C     ABSRW,ABSPW=stalk absorptivity for shortwave,PAR from PARAMETER
+C     ABSRD,ABSPD=standing dead absorptivity for shortwave,PAR from
+C        PARAMETER 
 C
       DO 1750 NN=1,4
       RADYN=RADYL*OMEGA(M,N,NN)*ABSR(NZ,NY,NX)
@@ -1262,8 +1320,13 @@ C
 C
 C     ABSORPTION OF DIFFUSE RADIATION BY SHADED LEAF SURFACES
 C
+C     TSURFY=nonself-shaded leaf area (m2)
+C     TSURWY=nonself-shaded stalk area (m2)
+C     TSURDY=nonself-shaded standing dead area (m2) 
 C     STOPYZ=accumulated horizontal area of intercepted diffuse
 C        radiation (m2 m-2)
+C     OMEGX=fraction of diffuse radiation intensity at
+C        horizontal surface from ‘starts.f’
 C
       RAYSL(NZ,NY,NX)=RAYSL(NZ,NY,NX)+TSURFY*RADYN
       RAYSW(NZ,NY,NX)=RAYSW(NZ,NY,NX)+TSURWY*RADYW
@@ -1459,6 +1522,10 @@ C
       RADQ(NZ,NY,NX)=RADQ(NZ,NY,NX)+RADZT 
       TRADC(NY,NX)=TRADC(NY,NX)+RADST+RADWT+RADDT 
       TRAPC(NY,NX)=TRAPC(NY,NX)+RADPT+RADQT+RADZT 
+C     WRITE(*,6636)'RADC',I,J,NFZ,NY,NX,NZ,L
+C    2,RADC(NZ,NY,NX),RADST,RADWT
+C    3,RADP(NZ,NY,NX),RADPT,RADQT     
+6636  FORMAT(A8,7I4,30E12.4)
 1530  CONTINUE
       STOPS=STOPS+STOPSZ
       STOPY=STOPY+STOPYZ
@@ -1485,7 +1552,8 @@ C     RADS,RAPS =solar beam direct SW,PAR flux
 C     TAUS,TAUY=transmission of direct,diffuse radiation below canopy   
 C     RADYL,RAPYL=solar beam diffuse SW,PAR flux
 C     RASG,RAPG=total SW,PAR at ground surface
-C     BETAG,OMEGAG=incident solar,sky angle at ground surface
+C     BETAG,OMEGAG=fraction of solar,sky radiation intensity 
+C        at ground surface
 C     RADG=total direct+diffuse SW at ground surface
 C
       RADSG=RADS(NY,NX)*TAUS(1,NY,NX)
@@ -1513,13 +1581,13 @@ C     TRADG,TRAPG=SW,PAR absorbed by ground surface
 C        (MJ h-1,umol s-1)
 C
       IF(VHCPW(1,NY,NX).GT.VHCPWX(NY,NX))THEN
-      ALBW=(0.85*VOLSSL(1,NY,NX)+0.30*VOLISL(1,NY,NX)
+      ALBW=(0.90*VOLSSL(1,NY,NX)+0.30*VOLISL(1,NY,NX)
      2+0.06*VOLWSL(1,NY,NX)) 
      2/(VOLSSL(1,NY,NX)+VOLISL(1,NY,NX)+VOLWSL(1,NY,NX))
       FSNOW=AMIN1((DPTHS(NY,NX)/0.07)**2,1.0)
       ALBG=FSNOW*ALBW+(1.0-FSNOW)*ALBS(NY,NX)
       ELSE
-      IF(VOLX(NU(NY,NX),NY,NX).GT.ZEROS2(NY,NX))THEN
+      IF(VOLX(NU(NY,NX),NY,NX).GT.ZEROS(NY,NX))THEN
       THETW1=AMIN1(POROS(NU(NY,NX),NY,NX)
      2,VOLW(NU(NY,NX),NY,NX)/VOLY(NU(NY,NX),NY,NX))
       ELSE
@@ -1555,10 +1623,11 @@ C        each PFT
 C     ZL(L-1=height to bottom of canopy layer (m)
 C     DPTHS,DPTH0=depth of snowpack, surface litter 
 C        above surface roughness (m)
-C     TSURFY=unself-shaded leaf area (m2)    
-C     TSURWY=unself-shaded stalk area (m2)
-C     TSURDY=unself-shaded standing dead area (m2)
+C     TSURFY=nonself-shaded leaf area (m2)    
+C     TSURWY=nonself-shaded stalk area (m2)
+C     TSURDY=nonself-shaded standing dead area (m2)
 C     PAR,PARDIF=direct,diffuse PAR flux (MJ m-2 h-1,umol m-2 s-1)
+C     OMEGA=fraction of diffuse radiation intensity at leaf surface 
 C
       RADYL=0.0
       RAPYL=0.0
@@ -1626,7 +1695,8 @@ C
 C     RASG=SW radiation at ground surface (MJ m-2 h-1)
 C     RADS,RADY=solar beam direct,diffuse SW
 C        (MJ m-2 h-1) 
-C     BETAG,OMEGAG=incident solar,sky angle at ground surface
+C     BETAG,OMEGAG=fraction of solar,sky radiation intensity 
+C        at ground surface
 C     RADG=SW radiation at ground surface (MJ h-1)
 C
       ELSE
@@ -1660,8 +1730,10 @@ C
 C     ZT,ZC=heights of combined canopy,PFT canopy (m)
 C     JC=top canopy layer number set in ‘parameter.h’
 C     ZL=height to top of each canopy layer (m)
-C     ARLFC,ARSTC=leaf,stalk area of combined canopy (m2)
-C     ARLFT,ARSTT=leaf,stalk area of combined canopy layer (m2)
+C     ARLFC,ARSTC,ARSDC=leaf,stalk,standing dead area of combined
+C        canopy (m2)
+C     ARLFT,ARSTT,ARSDT=leaf,stalk,standing dead area of combined
+C        canopy layer (m2)
 C
       ZL(JC,NY,NX)=ZT(NY,NX)+0.01
       ZL1(JC,NY,NX)=ZL(JC,NY,NX)
@@ -1707,11 +1779,15 @@ C     ENDIF
 C
 C     CANOPY RETENTION OF PRECIPITATION
 C
-C     XVOLWC=foliar surface water retention (m3) 
-C     ARLFP,ARSTP=leaf,stalk area of PFT (m2)
-C     FLWC=foliar water retention of precipitation by PFT (m3 h-1)
+C     XVOLWC=surface water retention capacity for IGTYP=0,3 from DATA
+C        (m3 m-2)
+C     ARLFP,ARSTP,ARSTG=leaf,stalk,standing dead area of PFT (m2)
+C     VOLWC,VOLWQ=leaf+stalk,standing dead surface water content (m3) 
+C     FLWC=leaf+stalk water retention of precipitation by PFT (m3 h-1)
 C     FLWD=standing dead water retention of precipitation by PFT 
 C        (m3 h-1)
+C     FRADP,FRADQ=fraction of incoming radiation 
+C        received by each PFT canopy, standing dead 
 C     TFLWC,TFLWCI=total water retention,interception 
 C        by combined canopy (m3 h-1)
 C     PRECA=precipitation+irrigation (m3 h-1)
@@ -1769,14 +1845,11 @@ C
 C     IFLGS=disturbance flag (0=no disturbance,>0=disturbance)
 C     VOLT=layer volume (0=surface litter) (m3)
 C     BKDS,BKDSI=current,initial bulk density (Mg m-3)
-C     THETY,THETZ=water content at hygroscopic (PSIHY),
-C        minimum (PSISX) water potentials set in ‘starts.f’ (m3 m-3)
-C     THETS=water concentration at air entry potential (m3 m-3) 
 C
 C     WRITE(*,1116)'IFLGS',IYRC,I,J,NFZ,IFLGS(NY,NX)
 1116  FORMAT(A8,5I6) 
       IF(IFLGS(NY,NX).NE.0)THEN
-      IF(VOLT(0,NY,NX).GT.ZEROS2(NY,NX))THEN
+      IF(VOLT(0,NY,NX).GT.ZEROS(NY,NX))THEN
       BKDS(0,NY,NX)=BKVL(0,NY,NX)/VOLT(0,NY,NX)
       ELSE
       BKDS(0,NY,NX)=BKRS(1)
@@ -1793,29 +1866,36 @@ C        (m3 m-3)
 C     PSL,FCL,WPL=log POROS0,FC,WP
 C     FCD,PSD=FCL-WPL,PSL-FCL
 C     SRP=parameter for deviation from linear log-log water retention
+C        between POROS0 and FC 
 C     YKL=pore interaction term for litter hydraulic conductivity
+C     HCN=parameter for deviation from linear log-log water retention
+C        below WP 
 C     PSIHY,PSISX=hygroscopic, minimum water potential from 
 C        ‘starts.f’ (MPa)
-C     THETY,THETZ=litter water concentration at PSIHY,PSISX (m3 m-3)
+C     THETY,THETZ=litter water content at hygroscopic (PSIHY),
+C        minimum (PSISX) water potentials set in ‘starts.f’ (m3 m-3)
 C     
       VOLWRX(NY,NX)=AMAX1(0.0,THETRX(0)*RC0(0,NY,NX)
      2+THETRX(1)*RC0(1,NY,NX)+THETRX(2)*RC0(2,NY,NX))
       VOLR(NY,NX)=1.0E-06*AMAX1(0.0,RC0(0,NY,NX)/BKRS(0)
      2+RC0(1,NY,NX)/BKRS(1)+RC0(2,NY,NX)/BKRS(2))
+C     WRITE(*,1112)'VOLR0',I,J,NFZ,NX,NY,VOLR(NY,NX),VOLW(0,NY,NX)
+C    2,RC0(0,NY,NX),RC0(1,NY,NX),RC0(2,NY,NX)
       IF(VOLR(NY,NX).GT.ZEROS(NY,NX))THEN
       POROS0(NY,NX)=VOLWRX(NY,NX)/VOLR(NY,NX)
       ELSE
       POROS0(NY,NX)=THETRX(1)/BKRS(1)
       ENDIF
       FC(0,NY,NX)=0.500*POROS0(NY,NX)
-      WP(0,NY,NX)=0.125*POROS0(NY,NX)
+      WP(0,NY,NX)=0.250*POROS0(NY,NX)
       PSL(0,NY,NX)=LOG(POROS0(NY,NX))
       FCL(0,NY,NX)=LOG(FC(0,NY,NX))
       WPL(0,NY,NX)=LOG(WP(0,NY,NX))
       PSD(0,NY,NX)=PSL(0,NY,NX)-FCL(0,NY,NX)
       FCD(0,NY,NX)=FCL(0,NY,NX)-WPL(0,NY,NX)
-      SRP(0,NY,NX)=0.33
-      YKL(0,NY,NX)=1.00
+      SRP(0,NY,NX)=1.00
+      YKL(0,NY,NX)=1.33
+      HCN(0,NY,NX)=1.00
       THETY(0,NY,NX)=EXP((PSIMX(NY,NX)-LOG(-PSIHY))
      2*FCD(0,NY,NX)/PSIMD(NY,NX)+FCL(0,NY,NX))
       THETZ(0,NY,NX)=EXP((PSIMX(NY,NX)-LOG(-PSISX))
@@ -1828,7 +1908,11 @@ C     ENDIF
 C
 C     SET SURFACE LITTER HYDRAULIC CONDUCTIVITY
 C
-C     SRP=parameter for deviation from linear log-log water retention 
+C     SRP=parameter for deviation from linear log-log water retention
+C        between POROS0 and FC 
+C     YKL=pore interaction term for litter hydraulic conductivity
+C     HCN=parameter for deviation from linear log-log water retention
+C        below WP 
 C     PSIMX,PSIMN,PSIMS=log water potential at FC,WP,POROS
 C     PSISD,PSIMD=PSIMX-PSIMS,PSIMN-PSIMX
 C     FC,WP=water contents at field capacity,wilting point(MPa) 
@@ -1837,6 +1921,8 @@ C     FCD,PSD=FCL-WPL,PSL-FCL
 C     THETK,PSISK=micropore class water content,potential (m3 m-3,MPa)
 C     HCND=lateral(1,2),vertical(3) litter hydraulic conductivity
 C        (m2 h-1 MPa-1) 
+C     FSCNV=fraction of Ksat at which air entry water potential
+C        is calculated from PARAMETER 
 C     PSISA,THETS=water potential,concentration at air entry potential
 C        (MPa,m3 m-3) 
 C
@@ -1844,10 +1930,14 @@ C
       DO 1220 K=1,100
       XK=K-1
       THETK(K)=POROS0(NY,NX)-(XK/100.0*POROS0(NY,NX))
-      IF(THETK(K).LT.FC(0,NY,NX))THEN
-      PSISK(K)=AMAX1(PSISX,-EXP(PSIMX(NY,NX)
-     2+((FCL(0,NY,NX)-LOG(THETK(K)))
+      IF(THETK(K).LT.WP(0,NY,NX))THEN
+      PSISK(K)=AMAX1(PSISX,-EXP(PSIMN(NY,NX)
+     2+HCN(0,NY,NX)*((WPL(0,NY,NX)-LOG(THETK(K)))
      3/FCD(0,NY,NX)*PSIMD(NY,NX))))
+      ELSEIF(THETK(K).LT.FC(0,NY,NX))THEN
+      PSISK(K)=-EXP(PSIMX(NY,NX)
+     2+((FCL(0,NY,NX)-LOG(THETK(K)))
+     3/FCD(0,NY,NX)*PSIMD(NY,NX)))
       ELSEIF(THETK(K).LT.POROS0(NY,NX))THEN 
       PSISK(K)=AMAX1(PSISX,-EXP(PSIMS(NY,NX)
      2+((AMAX1(0.0,(PSL(0,NY,NX)-LOG(THETK(K))))
@@ -1888,109 +1978,13 @@ C
 C     RESET SOIL LAYER PHYSICAL PROPERTIES (DENSITY, TEXTURE)
 C     AFTER DISTURBANCES (E.G. TILLAGE, EROSION)
 C
-      DO 9975 L=NUI(NY,NX),NLI(NY,NX)
-C
-C     ISALTG:0=salt concentrations entered in soil file generate
-C              equilibrium concentrations that remain static during
-C              model run
-C           :1=salt equilibrium concentrations are solved
-C              dynamically in ‘solute.f’ and transported in ‘trnsfrs.f’ 
-C     BKVL=soil mass (Mg)
-C     BKDS=soil bulk density from soil file (Mg m-3)
-C     VOLW=soil layer volume (m3)
-C     C*=concentration
-C        ORGC=SOC (g m-3)
-C        SAND=sand,SILT=silt,CLAY=clay (Mg Mg-1)
-C     PTDS=particle density (Mg m-3)
-C     PTDSNU=particle density of surface layer for use in ‘erosion.f’ 
-C        (Mg m-3) 
-C     POROS=porosity used in diffusivity (m3 m-3)
-C     VOLA,VOLW,VOLI,VOLP=total,water-,ice-,air-filled micropore
-C        volume (m3)
-C     VOLAH,VOLWH,VOLIH,VOLPH=total,water-,ice-,air-filled macropore
-C        volume (m3)
-C     SSA=soil surface area (m2 m-3)
-C
-      BKVL(L,NY,NX)=BKDS(L,NY,NX)*VOLX(L,NY,NX)
-      IF(BKVL(L,NY,NX).GT.ZEROS(NY,NX))THEN
-      CORGC(L,NY,NX)=AMIN1(0.55E+06,ORGC(L,NY,NX)/BKVL(L,NY,NX))
-      CSAND(L,NY,NX)=SAND(L,NY,NX)/BKVL(L,NY,NX)
-      CSILT(L,NY,NX)=SILT(L,NY,NX)/BKVL(L,NY,NX)
-      CCLAY(L,NY,NX)=CLAY(L,NY,NX)/BKVL(L,NY,NX)
-      ELSE
-      CORGC(L,NY,NX)=0.0
-      CSAND(L,NY,NX)=0.0
-      CSILT(L,NY,NX)=0.0
-      CCLAY(L,NY,NX)=0.0
-      ENDIF
-      IF(ISALTG.NE.0)THEN
-      SSA(L,NY,NX)=(0.3*CSAND(L,NY,NX)+2.2*CSILT(L,NY,NX)
-     2+8.0*CCLAY(L,NY,NX))*BKDS(L,NY,NX) 
-      ENDIF
-C
-C     SOIL HEAT CAPACITY AND THERMAL CONDUCTIVITY OF SOLID PHASE
-C     FROM SOC AND TEXTURE
-C
-C     CORGCM=SOM concentration (Mg DM Mg-1)
-C     VORGC,VMINL,VSAND=volume fractions of SOC,mineral,sand (m3 m-3)
-C     VHCM=soil solid fraction heat capacity (MJ K-1)
-C     BKDS,PTDS=soil bulk, particle density (Mg m-3)
-C     STC,DTC=weighted thermal conductivity of soil solid component
-C        used to calculate soil thermal conductivity in ‘watsub.f’
-C        (m MJ h-1 K-1)
-C     POROS=porosity (m3 m-3)
-C
-      IF(BKDS(L,NY,NX).GT.ZERO)THEN
-      CORGCM=AMAX1(0.0,AMIN1(1.0,1.82E-06*CORGC(L,NY,NX)))
-      PTDS=1.30*CORGCM+2.66*(1.0-CORGCM)
-      BKPT=BKDS(L,NY,NX)/PTDS 
-      XV=1.0/(CORGCM+CSILT(L,NY,NX)+CCLAY(L,NY,NX)+CSAND(L,NY,NX))
-      VORGC=CORGCM*XV*BKPT 
-      VMINL=(CSILT(L,NY,NX)+CCLAY(L,NY,NX))*XV*BKPT 
-      VSAND=CSAND(L,NY,NX)*XV*BKPT
-      VHCM(L,NY,NX)=((2.496*VORGC+2.385*VMINL+2.128*VSAND)
-     2*FMPR(L,NY,NX)+2.128*ROCK(L,NY,NX))*VOLT(L,NY,NX)
-      STC(L,NY,NX)=(1.253*VORGC*9.050E-04+0.514*VMINL*1.056E-02
-     2+0.386*VSAND*2.112E-02)*FMPR(L,NY,NX)
-     3+0.514*ROCK(L,NY,NX)*1.056E-02
-      DTC(L,NY,NX)=(1.253*VORGC+0.514*VMINL+0.386*VSAND)
-     2*FMPR(L,NY,NX)+0.514*ROCK(L,NY,NX)
-      IF(L.EQ.NU(NY,NX))THEN
-      POROS(L,NY,NX)=AMAX1(POROS(L,NY,NX),1.0-(BKDS(L,NY,NX)/PTDS))
-      ELSE
-      POROS(L,NY,NX)=1.0-(BKDS(L,NY,NX)/PTDS)
-      ENDIF
-      ELSE
-      VHCM(L,NY,NX)=0.0
-      STC(L,NY,NX)=0.0
-      DTC(L,NY,NX)=0.0
-      POROS(L,NY,NX)=1.0
-      ENDIF
-      VOLA(L,NY,NX)=POROS(L,NY,NX)*VOLY(L,NY,NX)
-      VOLAH(L,NY,NX)=FHOL(L,NY,NX)*VOLT(L,NY,NX)
-C
-C     EHUM=fraction of microbial decomposition product allocated to
-C        humus in ‘nitro.f’
-C     CCLAY=clay concentration (Mg Mg-1) 
-C
-      EHUM(L,NY,NX)=0.25+0.25*AMIN1(0.33,CCLAY(L,NY,NX))
-C    2+0.167E-06*CORGC(L,NY,NX)
-C     IF(I.GT.200.AND.L.EQ.1)THEN
-C     WRITE(*,3331)'VHCP',I,J,NFZ,NX,NY,L
-C    2,POROS(L,NY,NX),BKDS(L,NY,NX),PTDS,CORGC(L,NY,NX)
-C    3,BKVL(L,NY,NX),VOLT(L,NY,NX)
-C    2,EHUM(L,NY,NX),CCLAY(L,NY,NX)
-C    4,VOLA(L,NY,NX),POROS(L,NY,NX),VOLY(L,NY,NX)
-C    5,VOLT(L,NY,NX),VOLX(L,NY,NX),AREA(3,L,NY,NX),DLYR(3,L,NY,NX)
-C    6,VHCM(L,NY,NX),VORGC,VMINL,VSAND
-C    7,FMPR(L,NY,NX),ROCK(L,NY,NX),VOLT(L,NY,NX) 
-C    3,CSILT(L,NY,NX),CSAND(L,NY,NX),CORGCM,BKPT,XV
-C    4,ORGC(L,NY,NX),CORGC(L,NY,NX),BKVL(L,NY,NX) 
-3331  FORMAT(A8,6I4,30E12.4)
-C     ENDIF
+      DO 9975 L=NU(NY,NX),NL(NY,NX)
 C
 C     SRP=parameter for deviation from linear log-log water retention
-C     YKL=pore interaction term for litter hydraulic conductivity
+C        between POROS0 and FC 
+C     YKL=pore interaction term for soil hydraulic conductivity
+C     HCN=parameter for deviation from linear log-log water retention
+C        below WP 
 C     PSIMX,PSIMN,PSIMS=log water potential at FC,WP,POROS
 C     PSISD,PSIMD=PSIMX-PSIMS,PSIMN-PSIMX
 C     FC,WP=water contents at field capacity,wilting point (m3 m-3)
@@ -1998,15 +1992,16 @@ C     PSL,FCL,WPL=log POROS,FC,WP
 C     FCD,PSD=FCL-WPL,PSL-FCL
 C
       IF(CORGC(L,NY,NX).GT.FORGC)THEN
-      SRP(L,NY,NX)=0.33
-      YKL(L,NY,NX)=1.00
+      SRP(L,NY,NX)=0.67
+      YKL(L,NY,NX)=1.33
       ELSEIF(CORGC(L,NY,NX).GT.0.5*FORGC)THEN
-      SRP(L,NY,NX)=0.33
-      YKL(L,NY,NX)=1.00
+      SRP(L,NY,NX)=0.67
+      YKL(L,NY,NX)=1.33
       ELSE
-      SRP(L,NY,NX)=0.33
-      YKL(L,NY,NX)=1.00
+      SRP(L,NY,NX)=0.67
+      YKL(L,NY,NX)=1.33
       ENDIF
+      HCN(L,NY,NX)=0.67
       PSL(L,NY,NX)=LOG(POROS(L,NY,NX))
       IF((ISOIL(1,L,NY,NX).EQ.0.AND.ISOIL(2,L,NY,NX).EQ.0) 
      2.OR.DATA(20).EQ.'YES')THEN
@@ -2016,11 +2011,12 @@ C
       FCD(L,NY,NX)=FCL(L,NY,NX)-WPL(L,NY,NX)
       ELSE 
 C
-C     DEFAULT SOIL HYDROLOGIC PPTYS (FIELD CAPACITY, WILTING POINT)
-C     IF ACTUAL VALUES WERE NOT INPUT TO THE SOIL FILE
+C     DEFAULT SOIL FIELD CAPACITY, WILTING POINT
+C        IF ACTUAL VALUES WERE NOT INPUT TO THE SOIL FILE
 C
 C     THW,THI=initial soil water,ice content from soil file (m3 m-3)
-C     ISOIL=flag indicating FC(1,) or WP(2,) unknown from soil file
+C     ISOIL=flag indicating FC(1,) or WP(2,) unknown from soil file in
+C        ‘readi.f’
 C     CORGC,FORGC=SOC concentration, minimum CORGC for organic soils
 C        set in ‘starts.f’(g Mg-1)
 C     FC,WP=water contents at field capacity,wilting point (m3 m-3)
@@ -2120,7 +2116,7 @@ C
       VOLP(L,NY,NX)=AMAX1(0.0,VOLA(L,NY,NX)-VOLW(L,NY,NX)
      2-VOLI(L,NY,NX))+AMAX1(0.0,VOLAH(L,NY,NX)-VOLWH(L,NY,NX)
      3-VOLIH(L,NY,NX))
-      IF(VOLT(L,NY,NX).GT.ZEROS2(NY,NX))THEN
+      IF(VOLT(L,NY,NX).GT.ZEROS(NY,NX))THEN
       THETP(L,NY,NX)=VOLP(L,NY,NX)/VOLY(L,NY,NX)
       ELSE
       THETP(L,NY,NX)=0.0
@@ -2135,8 +2131,8 @@ C
       THETZ(L,NY,NX)=ZERO2
       ENDIF
 C
-C     SATURATED HYDRAULIC CONDUCTIVITY FROM SWC AT SATURATION VS.
-C     -0.033 MPA (MINERAL SOILS) IF NOT ENTERED IN SOIL FILE IN 'READS'
+C     DEFAULT SOIL SATURATED HYDRAULIC CONDUCTIVITY
+C        IF ACTUAL VALUES WERE NOT INPUT TO THE SOIL FILE
 C
 C     SCNV,SCNH=vertical,lateral saturated hydraulic conductivity 
 C        (m2 h-1 MPa-1)
@@ -2146,6 +2142,7 @@ C        set in ‘starts.f’ (g m-3)
 C     POROS=soil porosity (m3 m-3)
 C     PSL,FCL,WPL=log POROS,FC,WP
 C     FCD,PSD=FCL-WPL,PSL-FCL
+C     BKDS=bulk density from soil file (Mg m-3)
 C
       IF(ISOIL(3,L,NY,NX).EQ.1)THEN
       IF(CORGC(L,NY,NX).LT.FORGW)THEN
@@ -2186,12 +2183,18 @@ C
 C     THETK,PSISK=micropore class water content,potential (m3 m-3,MPa)
 C     HCND=lateral(1,2),vertical(3) micropore hydraulic conductivity
 C        (m2 h-1 MPa-1) 
-C     SRP=parameter for deviation from linear log-log water retention 
+C     SRP=parameter for deviation from linear log-log water retention
+C        between POROS0 and FC 
+C     YKL=pore interaction term for soil hydraulic conductivity
+C     HCN=parameter for deviation from linear log-log water retention
+C        below WP 
 C     PSIMX,PSIMN,PSIMS=log water potential at FC,WP,POROS
 C     PSISD,PSIMD=PSIMX-PSIMS,PSIMN-PSIMX
 C     FC,WP=water contents at field capacity,wilting point (m3 m-3)
 C     PSL,FCL,WPL=log POROS,FC,WP
 C     FCD,PSD=FCL-WPL,PSL-FCL
+C     FSCNV=fraction of Ksat at which air entry water potential
+C        is calculated from PARAMETER 
 C     PSISA,THETS=water potential,concentration at air entry potential
 C        (MPa,m3 m-3) 
 C     
@@ -2200,14 +2203,18 @@ C     IF(BKVL(L,NY,NX).GT.ZEROS(NY,NX))THEN
       DO 1320 K=1,100
       XK=K-1
       THETK(K)=POROS(L,NY,NX)-(XK/100.0*POROS(L,NY,NX))
-      IF(THETK(K).LT.FC(L,NY,NX))THEN
-      PSISK(K)=AMAX1(PSISX,-EXP(PSIMX(NY,NX)
-     2+((FCL(L,NY,NX)-LOG(THETK(K)))
+      IF(THETK(K).LT.WP(L,NY,NX))THEN
+      PSISK(K)=AMAX1(PSISX,-EXP(PSIMN(NY,NX)
+     2+HCN(L,NY,NX)*((WPL(L,NY,NX)-LOG(THETK(K)))
      3/FCD(L,NY,NX)*PSIMD(NY,NX))))
+      ELSEIF(THETK(K).LT.FC(L,NY,NX))THEN
+      PSISK(K)=-EXP(PSIMX(NY,NX)
+     2+((FCL(L,NY,NX)-LOG(THETK(K)))
+     3/FCD(L,NY,NX)*PSIMD(NY,NX)))
       ELSEIF(THETK(K).LT.POROS(L,NY,NX)-DTHETW)THEN 
-      PSISK(K)=AMAX1(PSISX,-EXP(PSIMS(NY,NX)
+      PSISK(K)=-EXP(PSIMS(NY,NX)
      2+((AMAX1(0.0,(PSL(L,NY,NX)-LOG(THETK(K))))
-     3/PSD(L,NY,NX))**SRP(L,NY,NX)*PSISD(NY,NX))))
+     3/PSD(L,NY,NX))**SRP(L,NY,NX)*PSISD(NY,NX)))
       ELSE
       PSISK(K)=PSISE(L,NY,NX)
       ENDIF
@@ -2238,7 +2245,7 @@ C     WRITE(*,3536)'HCND',I,J,NFZ,NX,NY,L,N,K
 C    2,HCND(N,K,L,NY,NX),THETK(K),PSISK(K) 
 C    2,SCNV(L,NY,NX),PSL(L,NY,NX),LOG(THETK(K)),POROS(L,NY,NX)
 C    2,FC(L,NY,NX),WP(L,NY,NX),YK,SUM1/SUM2
-C    3,SRP(L,NY,NX),YKL(L,NY,NX)
+C    3,SRP(L,NY,NX),YKL(L,NY,NX),HCN(L,NY,NX)
 C    4,CORGC(L,NY,NX),THETS(L,NY,NX),PSISA(L,NY,NX)
 3536  FORMAT(A8,8I4,30E12.4)
 C     ENDIF
@@ -2251,8 +2258,11 @@ C     FRACTION ENTERED IN 'READS'
 C
 C     PHOL,NHOL,HRAD=path length between, number,radius of macropores
 C        (m)
+C     VOLTI=soil layer volume including macropores+rock
+C        (m3)
 C     CNDH=macropore hydraulic conductivity (m2 h-1 MPa-1)
 C     VISCW=water viscosity (Mg m-1 s)
+C     TCS=soil temperature (oC)
 C
       HRAD(L,NY,NX)=0.5E-03
       NHOL(L,NY,NX)=INT(VOLAH(L,NY,NX)/(3.1416*HRAD(L,NY,NX)**2
@@ -2280,9 +2290,6 @@ C     CDPTH(NU(NY,NX)-1,NY,NX)=soil surface elevation (m)
 C     ZS,ZSW=soil,water surface roughness (m)
 C     VOLWD=soil surface water retention capacity (m3)
 C     VOLWG=VOLWD accounting for above-ground water table (m3)
-C     CCLAY,CSILT,CSAND=soil surface sand,silt,clay concentrations
-C        used to calculate soil erodibility in ‘erosion.f’ (Mg Mg-1)
-C     BKVL=soil mass (Mg)
 C     
       IF(IDTBL(NY,NX).LE.1.OR.IDTBL(NY,NX).EQ.3)THEN
       DTBLX(NY,NX)=DTBLZ(NY,NX)
@@ -2308,18 +2315,23 @@ C     ENDIF
       ZS(NY,NX)=ZSW
       ELSE
       ZS(NY,NX)=ZSX
-      ENDIF
-      VOLWD(NY,NX)=AMAX1(ZSX,0.112*ZS(NY,NX)+3.10*ZS(NY,NX)**2
+      ENDIF	
+      VOLWD(NY,NX)=AMAX1(ZSW,0.112*ZS(NY,NX)+3.10*ZS(NY,NX)**2
      2-0.012*ZS(NY,NX)*SLOPE(0,NY,NX))*AREA(3,NU(NY,NX),NY,NX)
       VOLWG(NY,NX)=AMAX1(VOLWD(NY,NX)
      2,-(DTBLX(NY,NX)-CDPTH(NU(NY,NX)-1,NY,NX))
      3*AREA(3,NU(NY,NX),NY,NX))
-C     WRITE(*,6631)'VOLWG',I,J,NY,NX,NU(NY,NX),VOLWG(NY,NX)
+C     WRITE(*,6631)'VOLWG',I,J,NFZ,NY,NX,NU(NY,NX),VOLWG(NY,NX)
 C    2,DTBLX(NY,NX),CDPTH(NU(NY,NX)-1,NY,NX)
 C    3,AREA(3,NU(NY,NX),NY,NX),VOLWD(NY,NX),ZS(NY,NX),SLOPE(0,NY,NX)
-6631  FORMAT(A8,5I4,12E12.4)
+6631  FORMAT(A8,6I4,12E12.4)
       DPTH(NU(NY,NX),NY,NX)=CDPTH(NU(NY,NX),NY,NX)
      2-0.5*DLYR(3,NU(NY,NX),NY,NX)
+C
+C     CCLAY,CSILT,CSAND=soil surface sand,silt,clay concentrations
+C        used to calculate soil erodibility in ‘erosion.f’ (Mg Mg-1)
+C     BKVL=soil mass (Mg)
+C
       IF(BKVL(NU(NY,NX),NY,NX).GT.ZEROS(NY,NX))THEN
       CCLAY(NU(NY,NX),NY,NX)=CLAY(NU(NY,NX),NY,NX)
      2/BKVL(NU(NY,NX),NY,NX)
@@ -2333,13 +2345,6 @@ C    3,AREA(3,NU(NY,NX),NY,NX),VOLWD(NY,NX),ZS(NY,NX),SLOPE(0,NY,NX)
       CSAND(NU(NY,NX),NY,NX)=0.0
       ENDIF
 C
-C     EHUM=fraction of microbial decomposition product allocated to
-C        humus in ‘nitro.f’
-C 
-      EHUM(0,NY,NX)=0.25+0.25*AMIN1(0.33,CCLAY(NU(NY,NX),NY,NX))
-C    2+0.167E-06*CORGC(NU(NY,NX),NY,NX)
-C     CCLAY=clay concentration (Mg Mg-1) 
-C
 C     IFLGS=reset disturbance flag
 C
       IFLGS(NY,NX)=0
@@ -2347,7 +2352,7 @@ C
 C
 C     THINGS DONE IN ALL SUBHOURLY CYCLES OF EACH HOUR
 C
-C     TKAM,VPAM=interpolation for NFH from change in hourly air
+C     TKAM,VPAM=interpolated TKA,VPA for NFH from change in hourly air
 C        temperature DTKA and vapor pressure DVPA in ‘wthr.f’ (K,kPa)
 C
       IF(I.EQ.ISTART.AND.J.EQ.1)THEN
@@ -2438,6 +2443,9 @@ C
      2*EXP(0.456-0.0152*TCQ(NY,NX))
       CN2Q(NY,NX)=CZ2OE(NY,NX)*SN2OX/EXP(AN2OX)
      2*EXP(0.897-0.0299*TCQ(NY,NX))
+C     WRITE(*,3329)'COXQ',I,J,NFZ,NX,NY,COXQ(NY,NX)
+C    2,COXYE(NY,NX),SOXYX,EXP(AOXYX),AOXYX
+C    2,TCQ(NY,NX),OXYQ(NY,NX),TKQ(NY,NX)
 3329  FORMAT(A8,5I4,20E12.4)
 9140  CONTINUE
 9145  CONTINUE
@@ -2858,11 +2866,18 @@ C
       DO 9995 NX=NHW,NHE
       DO 9990 NY=NVN,NVS
 C
+C     EHUM=fraction of microbial decomposition product allocated to
+C        humus in ‘nitro.f’
+C     CCLAY=soil surface clay concentration (Mg Mg-1) 
+C 
+      EHUM(0,NY,NX)=0.25+0.20*AMIN1(0.50,CCLAY(NU(NY,NX),NY,NX))
+C    2+0.167E-06*CORGC(NU(NY,NX),NY,NX)
+C
 C     PARAMETERS FOR SURFACE ROUGHNESS IN RUNOFF 
 C
 C     CORGC=SOC concentration in surface soil layer (g Mg-1)
 C     CSAND,CSILT,CCLAY=sand,silt,clay concentrations in 
-C        surface soil layer (Mg Mg-1)
+C        surface soil layer NU (Mg Mg-1)
 C     D50=average particle size in soil surface layer (um)
 C     ZD50=particle size effect on surface roughness 
 C     VOLR=surface litter volume (m3)
@@ -2873,18 +2888,21 @@ C     ZS=soil surface roughness (m)
 C     ARSTT=stalk area of combined canopy layer from ‘extract.f’ (m2)
 C
       ORGCZ=AMAX1(0.0,ORGC(NU(NY,NX),NY,NX))
+      ORGRZ=AMAX1(0.0,ORGR(NU(NY,NX),NY,NX))
       BKVLNU(NY,NX)=AMAX1(BKVL(NU(NY,NX),NY,NX),BKVLNM(NY,NX)
      3+1.82E-06*ORGCZ) 
       BKVLNX=SAND(NU(NY,NX),NY,NX)+SILT(NU(NY,NX),NY,NX)
      2+CLAY(NU(NY,NX),NY,NX)+1.82E-06*ORGCZ
       IF(BKVLNX.GT.ZEROS(NY,NX))THEN
       CORGM=1.82E-06*ORGCZ/BKVLNX
+      CORRM=1.82E-06*ORGRZ/BKVLNX
       CORGC(NU(NY,NX),NY,NX)=0.55E+06*CORGM
       CSAND(NU(NY,NX),NY,NX)=SAND(NU(NY,NX),NY,NX)/BKVLNX
       CSILT(NU(NY,NX),NY,NX)=SILT(NU(NY,NX),NY,NX)/BKVLNX
       CCLAY(NU(NY,NX),NY,NX)=CLAY(NU(NY,NX),NY,NX)/BKVLNX
       ELSE
       CORGM=0.0
+      CORRM=0.0
       CORGC(NU(NY,NX),NY,NX)=0.0
       CSAND(NU(NY,NX),NY,NX)=0.0
       CSILT(NU(NY,NX),NY,NX)=1.0
@@ -2896,19 +2914,20 @@ C    3,ORGC(NU(NY,NX),NY,NX),ORGCZ,BKVLNX
 C    4,SAND(NU(NY,NX),NY,NX),SILT(NU(NY,NX),NY,NX)
 C    5,CLAY(NU(NY,NX),NY,NX)
 2423  FORMAT(A8,5I4,20E12.4)
+      CORGH=CORGM-CORRM 
       D50=1.0*CCLAY(NU(NY,NX),NY,NX)+10.0*CSILT(NU(NY,NX),NY,NX)
-     2+100.0*CSAND(NU(NY,NX),NY,NX)+100.0*CORGM
+     2+100.0*CSAND(NU(NY,NX),NY,NX)+10.0*CORGH+100.0*CORRM 
       ZD50=0.041*(1.0E-06*D50)**0.167
-      ZM(NY,NX)=ZS(NY,NX)+ZD50+5.0*VOLR(NY,NX)/AREA(3,0,NY,NX)
-     2+0.1*ARSTT(1,NY,NX)*ZS(NY,NX)
-     3/(AMAX1(ZS(NY,NX),ZL(1,NY,NX))*AREA(3,0,NY,NX))
+      ZM(NY,NX)=ZD50+ZSM 
+     2+1.0*AMIN1(ZSM,VOLR(NY,NX)/AREA(3,0,NY,NX))
+     2+0.1*ARSTT(1,NY,NX)/AREA(3,0,NY,NX)*ZSM/AMAX1(ZSM,ZL(1,NY,NX))
 C
 C     PARAMETERS FOR COHESION, EROSIVITY USED IN SURFACE SEDIMENT 
 C     TRANSPORT IN 'EROSION.F' FROM EUROSEM MODEL
 C
 C     CORGCM=SOM concentration (Mg Mg-1)
 C     CSAND,CSILT,CCLAY=sand,silt,clay concentrations in 
-C        surface soil layer (Mg Mg-1)
+C        surface soil layer NU (Mg Mg-1)
 C     CER,XER=parameters for runoff transport capacity 
 C     DETS=soil detachability from rainfall impact (g J-1) 
 C     D50=average particle size in soil surface layer (um)  
@@ -2923,24 +2942,28 @@ C
       IF(IERSNG.NE.0)THEN
       CER(NY,NX)=((D50+5.0)/0.32)**(-0.6)
       XER(NY,NX)=((D50+5.0)/300.0)**0.25
-      DETS(NY,NX)=1.0E-06*(1.0+2.0*(1.0-CSILT(NU(NY,NX),NY,NX)-CORGM))
-      COHS=2.0+20.0*CORGM+20.0*CCLAY(NU(NY,NX),NY,NX)
-     2+10.0*(1.0-EXP(-1.0E-06*RTDNT(NU(NY,NX),NY,NX)))
-     3+20.0*THETI(1,NY,NX)
+      DETS(NY,NX)=1.0E-06*(1.5+2.5*(1.0-CSILT(NU(NY,NX),NY,NX)-CORRM))
+      COHS=2.0+5.0*CORRM+5.0*CORGH+5.0*CCLAY(NU(NY,NX),NY,NX)
+     3+5.0*(1.0-EXP(-1.0E-05*RTDNT(NU(NY,NX),NY,NX)))
+C    4+10.0*THETI(NU(NY,NX),NY,NX)
       DETE(NY,NX)=0.79*EXP(-0.85*COHS)
       PTDSNU(NY,NX)=1.30*CORGM+2.66*(1.0-CORGM)
       VISCWL=VISCW*EXP(0.533-0.0267*TCS(0,NY,NX))
       VLS(NY,NX)=3.6E+03*9.8*(PTDSNU(NY,NX)-1.0)
      2*(1.0E-06*D50)**2/(18.0*VISCWL)
+C     IF(NFZ.EQ.NFH)THEN
 C     WRITE(*,1118)'COHS',I,J,NFZ,NX,NY,NU(NY,NX),COHS,DETE(NY,NX)
-C    2,ZM(NY,NX),VLS(NY,NX),D50,ZD50,PTDSNU(NY,NX),CORGM
-C    3,RTDNT(NU(NY,NX),NY,NX),VOLR(NY,NX)/AREA(3,0,NY,NX)
-C    3,ORGC(0,NY,NX)
-C    3,CCLAY(NU(NY,NX),NY,NX),CSILT(NU(NY,NX),NY,NX)
-C    4,CSAND(NU(NY,NX),NY,NX),CORGM,CORGC(NU(NY,NX),NY,NX)
-C    5,BKVL(NU(NY,NX),NY,NX),BKVLNX
+C    2,ZM(NY,NX),ZD50,ZSM
+C    2,1.0*AMIN1(ZSM,VOLR(NY,NX)/AREA(3,0,NY,NX)) 
+C    2,0.1*ARSTT(1,NY,NX)/AREA(3,0,NY,NX)*ZSM/AMAX1(ZSM,ZL(1,NY,NX))
+C    2,VLS(NY,NX),D50,PTDSNU(NY,NX)
+C    3,VOLR(NY,NX)/AREA(3,0,NY,NX),ARSTT(1,NY,NX)/AREA(3,0,NY,NX)
+C    3,ORGC(0,NY,NX),CCLAY(NU(NY,NX),NY,NX),CSILT(NU(NY,NX),NY,NX)
+C    4,CSAND(NU(NY,NX),NY,NX),CORGM,CORRM,RTDNT(NU(NY,NX),NY,NX)
+C    5,CORGC(NU(NY,NX),NY,NX),BKVL(NU(NY,NX),NY,NX),BKVLNX
 C    3,VISCWL,TCS(0,NY,NX)
-1118  FORMAT(A8,6I4,20E12.4)
+1118  FORMAT(A8,6I4,30E12.4)
+C     ENDIF
       ENDIF
 C
 C     RESET SUBHOURLY ACCUMULATORS
@@ -3178,6 +3201,37 @@ C
 7900  CONTINUE
       ORGCX(L,NY,NX)=OC
       ENDIF
+C
+C     pH effect on maintenance respiration 
+C        (Functional Ecology 2016, 30, 658–669)
+C
+C     FPH=pH effect on maintenance respiration
+C     PHKI=AHY at which FPH doubles
+C     AHY=H+ activity (mol m-3)
+C     PH=pH from ‘solute.f’
+C
+C     ZALT=ZAL(L,NY,NX)+ZALOH1(L,NY,NX)+ZALOH2(L,NY,NX)
+C    5+ZALOH3(L,NY,NX)+ZALOH4(L,NY,NX)+ZALS(L,NY,NX)
+C     IF(VOLW(L,NY,NX).GT.ZEROS(NY,NX))THEN
+C     CALT=AMAX1(0.0,ZALT/VOLW(L,NY,NX))
+C     ELSE
+C     CALT=AMAX1(0.0,ZALT/VOLX(L,NY,NX))
+C     ENDIF
+      AHY=1.0E+03*10**(-PH(L,NY,NX))
+      FPH(L,NY,NX)=1.0+AMIN1(4.0,AHY/PHKI)
+C     IF((I/30)*30.EQ.I.AND.J.EQ.24.AND.NFZ.EQ.NFH)THEN
+C     CAL1=AMAX1(ZERO,ZAL(L,NY,NX)/VOLW(L,NY,NX))
+C     CALO1=AMAX1(ZERO,ZALOH1(L,NY,NX)/VOLW(L,NY,NX))
+C     CALO2=AMAX1(ZERO,ZALOH2(L,NY,NX)/VOLW(L,NY,NX))
+C     CALO3=AMAX1(ZERO,ZALOH3(L,NY,NX)/VOLW(L,NY,NX))
+C     CALO4=AMAX1(ZERO,ZALOH4(L,NY,NX)/VOLW(L,NY,NX))
+C     CALS1=AMAX1(ZERO,ZALS(L,NY,NX)/VOLW(L,NY,NX))
+C     WRITE(*,5567)'FPH',I,J,NFZ,NX,NY,L 
+C    2,FPH(L,NY,NX),PH(L,NY,NX),AHY 
+C    3,CAL1,CALO1,CALO2,CALO3,CALO4,CALS1
+C    3,CAL1+CALO1+CALO2+CALO3+CALO4+CALS1
+5567  FORMAT(A8,6I4,30E12.4)
+C     ENDIF
 9875  CONTINUE
 C
 C     RESET FLUX ARRAYS
@@ -3186,6 +3240,61 @@ C
       IFLGY=0
       ICHKA=0
       DO 9985 L=0,NLI(NY,NX)
+C
+C     FRACTIONS OF NH4, NO3, H2PO4 AND HPO4 IN NON-BAND, BAND
+C     USED IN NITRO.F AND UPTAKE.F
+C
+C     FNH4S,FNHBS=fractions of total NH4+ in non-band,band
+C     FNO3S,FNO3B=fractions of total NO3- in non-band,band
+C     FH1PS,FH1PB=fractions of total HPO42- in non-band,band
+C     FH2PS,FH2PB=fractions of total H2PO4- in non-band,band
+C
+      ZNH4SX=AMAX1(0.0,ZNH4S(L,NY,NX))
+      ZNH4BX=AMAX1(0.0,ZNH4B(L,NY,NX))
+      ZNH4T=ZNH4SX+ZNH4BX
+      IF(ZNH4T.GT.ZEROS(NY,NX))THEN
+      FNH4S(L,NY,NX)=ZNH4SX/ZNH4T
+      FNHBS(L,NY,NX)=ZNH4BX/ZNH4T
+      ELSE
+      FNH4S(L,NY,NX)=VLNH4(L,NY,NX)
+      FNHBS(L,NY,NX)=VLNHB(L,NY,NX)
+      ENDIF
+      ZNO3SX=AMAX1(0.0,ZNO3S(L,NY,NX))
+      ZNO3BX=AMAX1(0.0,ZNO3B(L,NY,NX))
+      ZNO3T=ZNO3SX+ZNO3BX
+      IF(ZNO3T.GT.ZEROS(NY,NX))THEN
+      FNO3S(L,NY,NX)=ZNO3SX/ZNO3T
+      FNO3B(L,NY,NX)=ZNO3BX/ZNO3T
+      ELSE
+      FNO3S(L,NY,NX)=VLNO3(L,NY,NX)
+      FNO3B(L,NY,NX)=VLNOB(L,NY,NX)
+      ENDIF
+      H1PO4X=AMAX1(0.0,H1PO4(L,NY,NX))
+      H1POBX=AMAX1(0.0,H1POB(L,NY,NX))
+      H1POT=H1PO4X+H1POBX
+      IF(H1POT.GT.ZEROS(NY,NX))THEN
+      FH1PS(L,NY,NX)=H1PO4X/H1POT
+      FH1PB(L,NY,NX)=H1POBX/H1POT
+      ELSE
+      FH1PS(L,NY,NX)=VLPO4(L,NY,NX)
+      FH1PB(L,NY,NX)=VLPOB(L,NY,NX)
+      ENDIF
+      H2PO4X=AMAX1(0.0,H2PO4(L,NY,NX))
+      H2POBX=AMAX1(0.0,H2POB(L,NY,NX))
+      H2POT=H2PO4X+H2POBX
+      IF(H2POT.GT.ZEROS(NY,NX))THEN
+      FH2PS(L,NY,NX)=H2PO4X/H2POT
+      FH2PB(L,NY,NX)=H2POBX/H2POT
+      ELSE
+      FH2PS(L,NY,NX)=VLPO4(L,NY,NX)
+      FH2PB(L,NY,NX)=VLPOB(L,NY,NX)
+      ENDIF
+C     WRITE(*,443)'FNH4S',I,J,NFZ,NX,NY,L
+C    2,FNH4S(L,NY,NX),ZNH4SX,ZNH4T,VLNH4(L,NY,NX)
+C    3,FNHBS(L,NY,NX),ZNH4BX,ZNH4T,VLNHB(L,NY,NX)
+C
+C     RESET FLUX ARRAYS
+C 
       TRN4S(L,NY,NX)=0.0
       TRN3S(L,NY,NX)=0.0
       XZHYS(L,NY,NX)=0.0
@@ -3218,6 +3327,7 @@ C
       TBH2O(L,NY,NX)=0.0
       TRCO3(L,NY,NX)=0.0
       TRHCO(L,NY,NX)=0.0
+      TRCO2(L,NY,NX)=0.0
       TRALOH(L,NY,NX)=0.0
       TRFEOH(L,NY,NX)=0.0
       TRCACO(L,NY,NX)=0.0
@@ -3230,7 +3340,7 @@ C
       TRXNA(L,NY,NX)=0.0
       TRXKA(L,NY,NX)=0.0
       TRSO4(L,NY,NX)=0.0
-      IF(L.GE.NUI(NY,NX))THEN
+      IF(L.NE.0)THEN
       FINH(L,NY,NX)=0.0
       TCO2S(L,NY,NX)=0.0
       TCO2P(L,NY,NX)=0.0
@@ -3280,7 +3390,6 @@ C
       TRN2B(L,NY,NX)=0.0
       TRH1B(L,NY,NX)=0.0
       TRH2B(L,NY,NX)=0.0
-      TRCO2(L,NY,NX)=0.0
       TRAL1(L,NY,NX)=0.0
       TRAL2(L,NY,NX)=0.0
       TRAL3(L,NY,NX)=0.0
@@ -3427,6 +3536,9 @@ C        (m2,m)
 C     VOLT,VOLX,VOLY=layer volume including,excluding rock,macropores
 C        (m3)
 C     VOLP=soil air-filled porosity (m3)
+C     VOLA,VOLAH=soil micropore,macropore volume (m3)
+C     VOLW,VOLI=soil micropore water,ice volume (m3)
+C     VOLWH,VOLIH=soil macropore water,ice volume (m3)
 C     THETW,THETI,THETP=soil micropore water,ice,air concentration 
 C        (m3 m-3)
 C     THETPZ=soil micropore+macropore air concentration (m3 m-3)
@@ -3464,8 +3576,8 @@ C     ENDIF
       ENDIF
       THETPZ(L,NY,NX)=AMAX1(0.0,POROS(L,NY,NX)-THETW(L,NY,NX)
      2-THETI(L,NY,NX)) 
-C     IF(L.EQ.7)THEN
-C     WRITE(*,1117)'BKDS',I,J,L 
+C     IF(NX.EQ.1.AND.L.EQ.7)THEN
+C     WRITE(*,1117)'BKDS',I,J,NFZ,NX,NY,L 
 C    3,BKDS(L,NY,NX),BKDSI(L,NY,NX),BKVL(L,NY,NX)
 C    4,DLYR(3,L,NY,NX),DLYRI(3,L,NY,NX)
 C    2,CORGC(L,NY,NX),ORGC(L,NY,NX)
@@ -3474,12 +3586,114 @@ C    7,VOLY(L,NY,NX),VOLW(L,NY,NX),VOLI(L,NY,NX)
 C    7,VOLWH(L,NY,NX),VOLIH(L,NY,NX)
 C    8,THETWZ(L,NY,NX),THETIZ(L,NY,NX)
 C    9,THETWZ(L,NY,NX)+THETIZ(L,NY,NX)
-1117  FORMAT(A8,3I4,30E14.6)
+1117  FORMAT(A8,6I4,30E14.6)
+C     ENDIF
+C
+C     ISALTG:0=salt concentrations entered in soil file generate
+C              equilibrium concentrations that remain static during
+C              model run
+C           :1=salt equilibrium concentrations are solved
+C              dynamically in ‘solute.f’ and transported in ‘trnsfrs.f’ 
+C     BKVL=soil mass (Mg)
+C     BKDS=soil bulk density from soil file (Mg m-3)
+C     C*=concentration
+C        ORGC=SOC (g m-3)
+C        SAND=sand,SILT=silt,CLAY=clay (Mg Mg-1)
+C     PTDS=particle density (Mg m-3)
+C     PTDSNU=particle density of surface layer for use in ‘erosion.f’ 
+C        (Mg m-3) 
+C     POROS=porosity used in diffusivity (m3 m-3)
+C     VOLA,VOLW,VOLI,VOLP=total,water-,ice-,air-filled micropore
+C        volume (m3)
+C     VOLAH,VOLWH,VOLIH,VOLPH=total,water-,ice-,air-filled macropore
+C        volume (m3)
+C     SSA=soil surface area (m2 m-3)
+C
+      BKVL(L,NY,NX)=BKDS(L,NY,NX)*VOLX(L,NY,NX)
+      IF(BKVL(L,NY,NX).GT.ZEROS(NY,NX))THEN
+      CORGC(L,NY,NX)=AMIN1(0.55E+06,ORGC(L,NY,NX)/BKVL(L,NY,NX))
+      CSAND(L,NY,NX)=SAND(L,NY,NX)/BKVL(L,NY,NX)
+      CSILT(L,NY,NX)=SILT(L,NY,NX)/BKVL(L,NY,NX)
+      CCLAY(L,NY,NX)=CLAY(L,NY,NX)/BKVL(L,NY,NX)
+      ELSE
+      CORGC(L,NY,NX)=0.0
+      CSAND(L,NY,NX)=0.0
+      CSILT(L,NY,NX)=0.0
+      CCLAY(L,NY,NX)=0.0
+      ENDIF
+      IF(ISALTG.NE.0)THEN
+      SSA(L,NY,NX)=(0.3*CSAND(L,NY,NX)+2.2*CSILT(L,NY,NX)
+     2+8.0*CCLAY(L,NY,NX))*BKDS(L,NY,NX) 
+      ENDIF
+C
+C     SOIL HEAT CAPACITY AND THERMAL CONDUCTIVITY OF SOLID PHASE
+C     FROM SOC AND TEXTURE
+C
+C     CORGCM=SOM concentration (Mg DM Mg-1)
+C     CORGC=SOC concentration from soil file and ‘starts.f’(g Mg-1)
+C     CSAND,CSILT,CCLAY=sand,silt,clay concentrations (g Mg-1)
+C        from soil file and ‘readi.f’
+C     VORGC,VMINL,VSAND=volume fractions of SOC,mineral,sand (m3 m-3)
+C     VHCM=soil solid fraction heat capacity (MJ K-1)
+C     BKDS,PTDS=soil bulk, particle density (Mg m-3)
+C     STC,DTC=weighted thermal conductivity of soil solid component
+C        used to calculate soil thermal conductivity in ‘watsub.f’
+C        (m MJ h-1 K-1)
+C     POROS=porosity (m3 m-3)
+C
+      IF(BKVL(L,NY,NX).GT.ZERO)THEN
+      CORGCM=AMAX1(0.0,AMIN1(1.0,1.82E-06*CORGC(L,NY,NX)))
+      PTDS=1.30*CORGCM+2.66*(1.0-CORGCM)
+      BKPT=BKDS(L,NY,NX)/PTDS 
+      XV=AMIN1(1.0,1.0
+     2/(CORGCM+CSILT(L,NY,NX)+CCLAY(L,NY,NX)+CSAND(L,NY,NX)))
+      VORGC=CORGCM*XV*BKPT 
+      VMINL=(CSILT(L,NY,NX)+CCLAY(L,NY,NX))*XV*BKPT 
+      VSAND=CSAND(L,NY,NX)*XV*BKPT
+      VHCM(L,NY,NX)=((2.496*VORGC+2.385*VMINL+2.128*VSAND)
+     2*FMPR(L,NY,NX)+2.128*ROCK(L,NY,NX))*VOLT(L,NY,NX)
+      STC(L,NY,NX)=(1.253*VORGC*9.050E-04+0.514*VMINL*1.056E-02
+     2+0.386*VSAND*2.112E-02)*FMPR(L,NY,NX)
+     3+0.514*ROCK(L,NY,NX)*1.056E-02
+      DTC(L,NY,NX)=(1.253*VORGC+0.514*VMINL+0.386*VSAND)
+     2*FMPR(L,NY,NX)+0.514*ROCK(L,NY,NX)
+      IF(L.EQ.NU(NY,NX))THEN
+      POROS(L,NY,NX)=AMAX1(POROS(L,NY,NX),1.0-(BKDS(L,NY,NX)/PTDS))
+      ELSE
+      POROS(L,NY,NX)=1.0-(BKDS(L,NY,NX)/PTDS)
+      ENDIF
+      ELSE
+      VHCM(L,NY,NX)=0.0
+      STC(L,NY,NX)=0.0
+      DTC(L,NY,NX)=0.0
+      POROS(L,NY,NX)=1.0
+      ENDIF
+      VOLA(L,NY,NX)=POROS(L,NY,NX)*VOLY(L,NY,NX)
+      VOLAH(L,NY,NX)=FHOL(L,NY,NX)*VOLT(L,NY,NX)
+C
+C     EHUM=fraction of microbial decomposition product allocated to
+C        humus in ‘nitro.f’
+C     CCLAY=clay concentration (Mg Mg-1) 
+C
+      EHUM(L,NY,NX)=0.25+0.20*AMIN1(0.50,CCLAY(L,NY,NX))
+C    2+0.167E-06*CORGC(L,NY,NX)
+C     IF(L.EQ.NL(NY,NX))THEN
+C     WRITE(*,3331)'VHCP',I,J,NFZ,NX,NY,L,NL(NY,NX)
+C    2,POROS(L,NY,NX),BKDS(L,NY,NX),PTDS,CORGC(L,NY,NX)
+C    3,BKVL(L,NY,NX),VOLT(L,NY,NX),VOLX(L,NY,NX)
+C    2,EHUM(L,NY,NX),CCLAY(L,NY,NX)
+C    4,VOLA(L,NY,NX),POROS(L,NY,NX),VOLY(L,NY,NX)
+C    5,AREA(3,L,NY,NX),DLYR(3,L,NY,NX)
+C    6,VHCM(L,NY,NX),VORGC,VMINL,VSAND
+C    7,FMPR(L,NY,NX),ROCK(L,NY,NX) 
+C    3,CSILT(L,NY,NX),CSAND(L,NY,NX),CORGCM,BKPT,XV
+C    4,ORGC(L,NY,NX),CORGC(L,NY,NX) 
+3331  FORMAT(A8,7I4,30E12.4)
 C     ENDIF
 C
 C     GAS CONCENTRATIONS FROM MASS/AIR-FILLED POROSITY
 C
-C     VOLP,VOLW=soil air,water content (m3)
+C     VOLP,VOLW=soil air,water volume (m3)
 C     C*G=soil gas gaseous concentration (g m-3)
 C     C*S=soil gas aqueous concentration (g m-3)
 C
@@ -3515,17 +3729,6 @@ C
       CZ2OS(L,NY,NX)=0.0
       CH2GS(L,NY,NX)=0.0
       ENDIF
-C
-C     CORGC=SOC concentration (g Mg-1)
-C     ORGC,BKVL=SOC (g), soil mass (Mg)
-C
-      IF(BKVL(L,NY,NX).GT.ZEROS(NY,NX))THEN
-      CORGC(L,NY,NX)=AMIN1(0.55E+06,ORGC(L,NY,NX)/BKVL(L,NY,NX))
-      ELSE
-      CORGC(L,NY,NX)=0.0
-      ENDIF
-C     WRITE(*,1113)'CORGC',I,J,NFZ,NX,NY,L,CORGC(L,NY,NX)
-C    2,ORGC(L,NY,NX),BKVL(L,NY,NX),BKDS(L,NY,NX),VOLX(L,NY,NX)
 C
 C     CALCULATE SOIL CONCENTRATIONS OF NH4, NH3, NO3, PO4
 C     IN BAND AND NON-BAND ZONES
@@ -3718,7 +3921,7 @@ C
       HCSGL(L,NY,NX)=HCSG*TFACL
       SOSGL(L,NY,NX)=SOSG*TFACL
       CLSXL(L,NY,NX)=CLSX*TFACL
-      IF(L.NE.0)THEN
+C     IF(L.NE.0)THEN
       TRALSI(L,NY,NX)=0.0
       TRFESI(L,NY,NX)=0.0
       TRCASI(L,NY,NX)=0.0
@@ -3726,7 +3929,7 @@ C
       TRNASI(L,NY,NX)=0.0
       TRKASI(L,NY,NX)=0.0
       HSSGL(L,NY,NX)=HSSG*TFACL
-      ENDIF
+C     ENDIF
       ENDIF
 C
 C     TOTAL SOIL ION CONCENTRATION AND SOIL ELECTRICAL CONDUCTIVITY 
@@ -3736,12 +3939,12 @@ C        anions A (mol)
 C     CSTR=ion strength
 C     A*=activity coefficients 
 C     CION=total ion activity (mol m-3)
-C     VOLW=soil water content (m3)
+C     VOLW=soil water volume (m3)
 C     ECND=total electrical conductivity (dS m-1)
 C     solute code:HY=H+,OH=OH-,AL=Al3+,FE=Fe3+,CA=Ca2+,MG=Mg2+,NA=Na+
 C            :KA=K+,CO3=CO32-,HCO3=HCO3-,SO4=SO42-,CL=Cl-,NO3S=NO3-     
 C
-      IF(VOLW(L,NY,NX).GT.ZEROS2(NY,NX))THEN
+      IF(VOLW(L,NY,NX).GT.ZEROS(NY,NX))THEN
       ZC3=ZAL(L,NY,NX)+ZFE(L,NY,NX)
       ZA3=H0PO4(L,NY,NX)+H0POB(L,NY,NX)
       ZC2=ZCA(L,NY,NX)+ZMG(L,NY,NX)+ZALOH1(L,NY,NX)+ZFEOH1(L,NY,NX)
@@ -3760,7 +3963,7 @@ C
       ZN=ZALOH3(L,NY,NX)+ZFEOH3(L,NY,NX)+ZCAC(L,NY,NX)+ZCAS(L,NY,NX)
      4+ZMGC(L,NY,NX)+ZMGS(L,NY,NX)+H3PO4(L,NY,NX)+ZCA1P(L,NY,NX)
      5+ZMG1P(L,NY,NX)+H3POB(L,NY,NX)+ZCA1PB(L,NY,NX)+ZMG1PB(L,NY,NX)
-      CSTR=AMAX1(0.0,1.0E-03*(9.0*(ZC3+ZA3)+4.0*(ZC2+ZA2)
+      CSTR=AMAX1(0.0,0.5E-03*(9.0*(ZC3+ZA3)+4.0*(ZC2+ZA2)
      2+ZC1+ZA1)/VOLW(L,NY,NX))
       CSTRQ=SQRT(CSTR)
       CSTRX=CSTRQ/(1.0+CSTRQ)-0.20*CSTR
@@ -3777,11 +3980,11 @@ C
      2+(ZC1+ZA1)*A1(L,NY,NX)+ZN)/VOLW(L,NY,NX))
       ECND(L,NY,NX)=0.06*(3.0*(ZC3+ZA3)+2.0*(ZC2+ZA2)+ZC1+ZA1)
      2/VOLW(L,NY,NX)
-C     IF((I/30)*30.EQ.I.AND.J.EQ.1.AND.NFZ.EQ.1)THEN
-C     WRITE(*,1113)'CIONL',I,J,NFZ,NX,NY,L,CION,CSTRX
-C    2,A1(L,NY,NX),A2(L,NY,NX),A3(L,NY,NX)
-C    2,ZC3,ZA3,ZC2,ZA2,ZC1,ZA1,ZN,VOLW(L,NY,NX)
-C    3,ZAL(L,NY,NX),ZFE(L,NY,NX)
+      IF((I/30)*30.EQ.I.AND.J.EQ.24.AND.NFZ.EQ.NFH)THEN
+      WRITE(*,1113)'CIONL',I,J,NFZ,NX,NY,L,CION,CSTRX,ECND(L,NY,NX)
+     2,VOLW(L,NY,NX),A1(L,NY,NX),A2(L,NY,NX),A3(L,NY,NX)
+     2,ZC3,ZA3,ZC2,ZA2,ZC1,ZA1,ZN,-8.3143E-06*TKS(L,NY,NX)*CION 
+     3,ZAL(L,NY,NX),ZFE(L,NY,NX)
 C    3,H0PO4(L,NY,NX),H0POB(L,NY,NX)
 C    2,ZCA(L,NY,NX),ZMG(L,NY,NX),ZALOH1(L,NY,NX),ZFEOH1(L,NY,NX)
 C    2,ZFE2P(L,NY,NX),ZFE2PB(L,NY,NX)
@@ -3792,14 +3995,14 @@ C    1,ZNA(L,NY,NX),ZKA(L,NY,NX),ZALOH2(L,NY,NX),ZFEOH2(L,NY,NX)
 C    1,ZALS(L,NY,NX),ZFES(L,NY,NX),ZCAO(L,NY,NX),ZCAH(L,NY,NX)
 C    1,ZMGO(L,NY,NX),ZMGH(L,NY,NX),ZFE1P(L,NY,NX),ZFE1PB(L,NY,NX)
 C    1,ZCA2P(L,NY,NX),ZCA2PB(L,NY,NX)
-C    1,ZNO3S(L,NY,NX)/14.0,ZNO3B(L,NY,NX)/14.0,ZOH(L,NY,NX)
-C    1,ZHCO3(L,NY,NX),ZCL(L,NY,NX),ZALOH4(L,NY,NX),ZFEOH4(L,NY,NX)
+     1,ZNO3S(L,NY,NX)/14.0,ZNO3B(L,NY,NX)/14.0,ZOH(L,NY,NX)
+     1,ZHCO3(L,NY,NX),ZCL(L,NY,NX),ZALOH4(L,NY,NX),ZFEOH4(L,NY,NX)
 C    1,ZNAC(L,NY,NX),ZNAS(L,NY,NX),ZKAS(L,NY,NX),H2PO4(L,NY,NX)/31.0
 C    1,H2POB(L,NY,NX)/31.0,ZCA0P(L,NY,NX),ZCA0PB(L,NY,NX)
 C    N,ZALOH3(L,NY,NX),ZFEOH3(L,NY,NX),ZCAC(L,NY,NX),ZCAS(L,NY,NX)
 C    N,ZMGC(L,NY,NX),ZMGS(L,NY,NX),H3PO4(L,NY,NX),ZCA1P(L,NY,NX)
 C    N,ZMG1P(L,NY,NX),H3POB(L,NY,NX),ZCA1PB(L,NY,NX),ZMG1PB(L,NY,NX)
-C     ENDIF
+      ENDIF
       ELSE
       CSTR=0.0
       CION=0.0
@@ -3843,8 +4046,14 @@ C     BKVL=soil mass (Mg):0=water
 C     FC,WP,POROS=water contents at field capacity,wilting point,
 C        saturation (m3 m-3)
 C     VOLW=soil water volume (m3)
+C     VOLT,VOLX,VOLY=layer volume including,excluding rock,macropores
+C        (m3)
 C     PSISM,PSISE=matric,saturation water potential (MPa)
-C     SRP=parameter for deviation from linear log-log water retention 
+C     SRP=parameter for deviation from linear log-log water retention
+C        between POROS0 and FC 
+C     YKL=pore interaction term for litter hydraulic conductivity
+C     HCN=parameter for deviation from linear log-log water retention
+C        below WP 
 C     PSL,FCL,WPL=log POROS,FC,WP
 C     FCD,PSD=FCL-WPL,PSL-FCL
 C     FCI,WPI=FC,WP of ice (m3 m-3) from ‘starts.f’
@@ -3854,10 +4063,14 @@ C
      2.AND.VOLY(L,NY,NX).GT.ZEROS(NY,NX))THEN
       THETW1=AMAX1(0.0,AMIN1(POROS(L,NY,NX) 
      2,VOLW(L,NY,NX)/VOLY(L,NY,NX)))
-      IF(THETW1.LT.FC(L,NY,NX))THEN
-      PSISM(L,NY,NX)=AMAX1(PSISX,-EXP(PSIMX(NY,NX)
-     2+((FCL(L,NY,NX)-LOG(THETW1))
+      IF(THETW1.LT.WP(L,NY,NX))THEN
+      PSISM(L,NY,NX)=AMAX1(PSISX,-EXP(PSIMN(NY,NX)
+     2+HCN(L,NY,NX)*((WPL(L,NY,NX)-LOG(THETW1))
      3/FCD(L,NY,NX)*PSIMD(NY,NX))))
+      ELSEIF(THETW1.LT.FC(L,NY,NX))THEN
+      PSISM(L,NY,NX)=-EXP(PSIMX(NY,NX)
+     2+((FCL(L,NY,NX)-LOG(THETW1))
+     3/FCD(L,NY,NX)*PSIMD(NY,NX)))
       ELSEIF(THETW1.LT.POROS(L,NY,NX)-DTHETW)THEN 
       PSISM(L,NY,NX)=-EXP(PSIMS(NY,NX)
      2+((AMAX1(0.0,(PSL(L,NY,NX)-LOG(THETW1)))
@@ -3865,21 +4078,25 @@ C
       ELSE
       PSISM(L,NY,NX)=PSISE(L,NY,NX)
       ENDIF
-      ELSEIF(VOLX(L,NY,NX).GT.ZEROS2(NY,NX))THEN
+      ELSEIF(VOLX(L,NY,NX).GT.ZEROS(NY,NX))THEN
       FCX=FCI*THETI(L,NY,NX)
       WPX=WPI*THETI(L,NY,NX)
       FCLX=LOG(FCX)
       WPLX=LOG(WPX)
       PSDX=PSL(L,NY,NX)-FCLX
       FCDX=FCLX-WPLX
-      IF(THETW(L,NY,NX).LT.FCX)THEN
-      PSISM(L,NY,NX)=AMAX1(PSISX,-EXP(PSIMX(NY,NX)
-     2+((FCLX-LOG(THETW(L,NY,NX)))
+      IF(THETW(L,NY,NX).LT.WPX)THEN
+      PSISM(L,NY,NX)=AMAX1(PSISX,-EXP(PSIMN(NY,NX)
+     2+HCN(L,NY,NX)*((WPLX-LOG(THETW(L,NY,NX)))
      3/FCDX*PSIMD(NY,NX))))
+      ELSEIF(THETW(L,NY,NX).LT.FCX)THEN
+      PSISM(L,NY,NX)=-EXP(PSIMX(NY,NX)
+     2+((FCLX-LOG(THETW(L,NY,NX)))
+     3/FCDX*PSIMD(NY,NX)))
       ELSEIF(THETW(L,NY,NX).LT.POROS(L,NY,NX)-DTHETW)THEN 
       PSISM(L,NY,NX)=-EXP(PSIMS(NY,NX)
      2+((AMAX1(0.0,(PSL(L,NY,NX)-LOG(THETW(L,NY,NX))))
-     3/PSDX)*PSISD(NY,NX)))
+     3/PSDX)**SRP(L,NY,NX)*PSISD(NY,NX)))
       ELSE
       PSISM(L,NY,NX)=PSISE(L,NY,NX)
       ENDIF
@@ -3905,7 +4122,7 @@ C     WRITE(*,1113)'PSISM1',I,J,NFZ,NX,NY,L,PSISM(L,NY,NX)
 C    2,BKVL(L,NY,NX),THETW(L,NY,NX),THETW1,VOLX(L,NY,NX) 
 C    2,FC(L,NY,NX),WP(L,NY,NX),POROS(L,NY,NX),VOLP(L,NY,NX)
 C    3,VOLW(L,NY,NX),VOLI(L,NY,NX),VOLA(L,NY,NX),VOLT(L,NY,NX)
-C    4,CDPTH(L,NY,NX),DPTH(L,NY,NX),CDPTHZ(L,NY,NX),DPTHZ(L,NY,NX)
+C    4,CDPTH(L,NY,NX),DPTH(L,NY,NX),CDPTH(L,NY,NX),DPTHZ(L,NY,NX)
 C    5,DLYR(3,L,NY,NX),PSIST(L,NY,NX),PSISO(L,NY,NX),TKS(L,NY,NX),CION
 C    2,PSISH(L,NY,NX),TKS(L,NY,NX),VOLW(L,NY,NX)
 C    3,FCD(L,NY,NX),PSD(L,NY,NX) 
@@ -3986,6 +4203,8 @@ C
 C     OUTPUT FOR WATER TABLE DEPTH
 C
 C     IDTBL=water table flag from site file
+C     IFLGY=water table present
+C        0=not present, 1=present
 C     THETPZ,THETPW=current,minimum air-filled porosity for water
 C        table calculation (m3 m-3)
 C     DPTH,DTBLX=depth of soil layer midpoint, water table (m)
@@ -3996,7 +4215,7 @@ C     DPTHT=water table depth (m)
 C     CDPTH=depth to bottom of soil layer (m)
 C     DLYR=thickness of soil layer (m)
 C
-      IF(IDTBL(NY,NX).NE.0)THEN
+      IF(IDTBL(NY,NX).NE.0.AND.VOLT(L,NY,NX).GT.ZEROS(NY,NX))THEN
       IF(IFLGY.EQ.0)THEN
       IF(THETPZ(L,NY,NX).LT.THETPW.OR.L.EQ.NL(NY,NX))THEN
       IFLGY=1
@@ -4026,11 +4245,11 @@ C
       DPTHT(NY,NX)=CDPTH(L-1,NY,NX)
      2-AMAX1(0.0,(VOLW(0,NY,NX)-VOLWRX(NY,NX))/AREA(3,0,NY,NX))
       ENDIF
-C     IF(J.EQ.24.AND.NFZ.EQ.1)THEN
+C     IF(NX.EQ.1.AND.J.EQ.24.AND.NFZ.EQ.1)THEN
 C     WRITE(*,5353)'DPTHT',I,J,NFZ,NX,NY,L,L-1,IFLGY,DPTHT(NY,NX)
 C    2,DTBLX(NY,NX),CDPTH(L-1,NY,NX),DLYR(3,L-1,NY,NX),DPTH(L-1,NY,NX) 
-C    4,POROS(L-1,NY,NX),THETW1,THETW(L-1,NY,NX),THETS(L-1,NY,NX)
-C    4,THETPZ(L-1,NY,NX),THETPZ(L,NY,NX),THETPX,VOLR(NY,NX)
+C    4,POROS(L-1,NY,NX),THETW1,THETW(L+1,NY,NX),THETS(L+1,NY,NX)
+C    4,THETPZ(L+1,NY,NX),THETPZ(L,NY,NX),THETPX,VOLR(NY,NX)
 C    4,AMAX1(0.0,(VOLW(0,NY,NX)-VOLWRX(NY,NX))/AREA(3,0,NY,NX)) 
 5353  FORMAT(A8,8I4,30E12.4)
 C     ENDIF
@@ -4062,9 +4281,13 @@ C        osmotic,gravitational,total water potential (MPa)
 C     PSL,FCL,WPL=log POROS,FC,WP
 C     FCD,PSD=FCL-WPL,PSL-FCL
 C
+      VOLWRX(NY,NX)=AMAX1(0.0,THETRX(0)*RC0(0,NY,NX)
+     2+THETRX(1)*RC0(1,NY,NX)+THETRX(2)*RC0(2,NY,NX))
       TVOLG0=AMAX1(0.0,VOLW(0,NY,NX)+VOLI(0,NY,NX)-VOLWRX(NY,NX))
+      VOLR(NY,NX)=1.0E-06*AMAX1(0.0,RC0(0,NY,NX)/BKRS(0)
+     2+RC0(1,NY,NX)/BKRS(1)+RC0(2,NY,NX)/BKRS(2))
       VOLT(0,NY,NX)=TVOLG0+VOLR(NY,NX)
-      IF(VOLT(0,NY,NX).GT.ZEROS2(NY,NX))THEN
+      IF(VOLT(0,NY,NX).GT.ZEROS(NY,NX))THEN
       VOLX(0,NY,NX)=VOLT(0,NY,NX)
       IF(BKDS(NU(NY,NX),NY,NX).LE.ZERO)THEN
       VOLY(0,NY,NX)=VOLW(0,NY,NX)+VOLI(0,NY,NX)
@@ -4091,12 +4314,16 @@ C
       ENDIF
       DLYR(3,0,NY,NX)=VOLX(0,NY,NX)/AREA(3,0,NY,NX)
       IF(VOLR(NY,NX).GT.ZEROS(NY,NX)
-     2.AND.VOLW(0,NY,NX).GT.ZEROS2(NY,NX))THEN
+     2.AND.VOLW(0,NY,NX).GT.ZEROS(NY,NX))THEN
       THETWR=AMIN1(VOLWRX(NY,NX),VOLW(0,NY,NX))/VOLR(NY,NX)
-      IF(THETWR.LT.FC(0,NY,NX))THEN
-      PSISM(0,NY,NX)=AMAX1(PSISX,-EXP(PSIMX(NY,NX)
-     2+((FCL(0,NY,NX)-LOG(THETWR))
+      IF(THETWR.LT.WP(0,NY,NX))THEN
+      PSISM(0,NY,NX)=AMAX1(PSISX,-EXP(PSIMN(NY,NX)
+     2+HCN(0,NY,NX)*((WPL(0,NY,NX)-LOG(THETWR))
      3/FCD(0,NY,NX)*PSIMD(NY,NX))))
+      ELSEIF(THETWR.LT.FC(0,NY,NX))THEN
+      PSISM(0,NY,NX)=-EXP(PSIMX(NY,NX)
+     2+((FCL(0,NY,NX)-LOG(THETWR))
+     3/FCD(0,NY,NX)*PSIMD(NY,NX)))
       ELSEIF(THETWR.LT.POROS(0,NY,NX))THEN 
       PSISM(0,NY,NX)=-EXP(PSIMS(NY,NX)
      2+((AMAX1(0.0,(PSL(0,NY,NX)-LOG(THETWR)))
@@ -4116,10 +4343,8 @@ C     VOLW=soil water content (m3)
 C     ECND=total electrical conductivity (dS m-1)
 C     solute code:HY=H+,OH=OH-,AL=Al3+,FE=Fe3+,CA=Ca2+,MG=Mg2+,NA=Na+
 C            :KA=K+,CO3=CO32-,HCO3=HCO3-,SO4=SO42-,CL=Cl-,NO3S=NO3- 
-C     PSISO,PSISH,PSISM,PSIST=litter osmotic, gravimetric, 
-C        matric, total water potential (MPa)    
 C
-      IF(VOLW(0,NY,NX).GT.ZEROS2(NY,NX))THEN
+      IF(VOLW(0,NY,NX).GT.ZEROS(NY,NX))THEN
       ZC3=ZAL(0,NY,NX)+ZFE(0,NY,NX)
       ZA3=H0PO4(0,NY,NX)
       ZC2=ZCA(0,NY,NX)+ZMG(0,NY,NX)+ZALOH1(0,NY,NX)+ZFEOH1(0,NY,NX)
@@ -4137,12 +4362,13 @@ C
       ZN=ZALOH3(0,NY,NX)+ZFEOH3(0,NY,NX)+ZCAC(0,NY,NX)+ZCAS(0,NY,NX)
      4+ZMGC(0,NY,NX)+ZMGS(0,NY,NX)+H3PO4(0,NY,NX)+ZCA1P(0,NY,NX)
      5+ZMG1P(0,NY,NX) 
-      CSTR=AMAX1(0.0,1.0E-03*(9.0*(ZC3+ZA3)+4.0*(ZC2+ZA2)
+      CSTR=AMAX1(0.0,0.5E-03*(9.0*(ZC3+ZA3)+4.0*(ZC2+ZA2)
      2+ZC1+ZA1)/VOLW(0,NY,NX))
       CSTRQ=SQRT(CSTR)
       CSTRX=CSTRQ/(1.0+CSTRQ)-0.20*CSTR
 C
 C     ACTIVITY COEFFICIENTS CALCULATED FROM ION STRENGTH
+C     (DEBYE-HUCKEL)
 C
       A1(0,NY,NX)=AMIN1(1.0,10.0**(-0.509*1.0*CSTRX))
       A2(0,NY,NX)=AMIN1(1.0,10.0**(-0.509*4.0*CSTRX))
@@ -4159,11 +4385,11 @@ C
       A2(0,NY,NX)=1.0
       A3(0,NY,NX)=1.0
       ENDIF
-C     IF((I/30)*30.EQ.I.AND.J.EQ.1.AND.NFZ.EQ.1)THEN
-C     WRITE(*,1112)'CION0',I,J,NFZ,NX,NY,CION,CSTR
-C    2,A1(0,NY,NX),A2(0,NY,NX),A3(0,NY,NX)
-C    2,ZC3,ZA3,ZC2,ZA2,ZC1,ZA1,ZN,VOLW(0,NY,NX)
-C    3,ZAL(0,NY,NX),ZFE(0,NY,NX)
+      IF((I/30)*30.EQ.I.AND.J.EQ.1.AND.NFZ.EQ.1)THEN
+      WRITE(*,1112)'CION0',I,J,NFZ,NX,NY,CION,CSTR
+     2,A1(0,NY,NX),A2(0,NY,NX),A3(0,NY,NX)
+     2,ZC3,ZA3,ZC2,ZA2,ZC1,ZA1,ZN,VOLW(0,NY,NX)
+     3,ZAL(0,NY,NX),ZFE(0,NY,NX)
 C    3,H0PO4(0,NY,NX)
 C    2,ZCA(0,NY,NX),ZMG(0,NY,NX),ZALOH1(0,NY,NX),ZFEOH1(0,NY,NX)
 C    2,ZFE2P(0,NY,NX) 
@@ -4173,15 +4399,25 @@ C    1,ZNA(0,NY,NX),ZKA(0,NY,NX),ZALOH2(0,NY,NX),ZFEOH2(0,NY,NX)
 C    1,ZALS(0,NY,NX),ZFES(0,NY,NX),ZCAO(0,NY,NX),ZCAH(0,NY,NX)
 C    1,ZMGO(0,NY,NX),ZMGH(0,NY,NX),ZFE1P(0,NY,NX) 
 C    1,ZCA2P(0,NY,NX) 
-C    1,ZNO3S(0,NY,NX)/14.0,ZOH(0,NY,NX)
-C    1,ZHCO3(0,NY,NX),ZCL(0,NY,NX),ZALOH4(0,NY,NX),ZFEOH4(0,NY,NX)
+     1,ZNO3S(0,NY,NX)/14.0,ZOH(0,NY,NX)
+     1,ZHCO3(0,NY,NX),ZCL(0,NY,NX),ZALOH4(0,NY,NX),ZFEOH4(0,NY,NX)
 C    1,ZNAC(0,NY,NX),ZNAS(0,NY,NX),ZKAS(0,NY,NX) 
 C    1,H2PO4(0,NY,NX)/31.0,ZCA0P(0,NY,NX) 
 C    N,ZALOH3(0,NY,NX),ZFEOH3(0,NY,NX),ZCAC(0,NY,NX),ZCAS(0,NY,NX)
 C    N,ZMGC(0,NY,NX),ZMGS(0,NY,NX),H3PO4(0,NY,NX),ZCA1P(0,NY,NX)
 C    N,ZMG1P(0,NY,NX) 
 1112  FORMAT(A8,5I4,50E12.4)
-C     ENDIF
+      ENDIF
+C
+C     LITTER OSMOTIC, GRAVIMETRIC AND MATRIC WATER POTENTIALS
+C
+C     PSISM,PSISO,PSISH,PSIST=matric,osmotic,gravimetric,
+C        total water potential (MPa)
+C     TKS=litter temperature (K)
+C     CION=total ion activity (mol m-3)
+C     ALT=soil surface altitude (m)
+C     DPTH=depth to mid-point of soil layer (m)
+C
       PSISO(0,NY,NX)=-8.3143E-06*TKS(0,NY,NX)*CION 
       PSISH(0,NY,NX)=0.0098*(ALT(NY,NX)-CDPTH(NU(NY,NX)-1,NY,NX)
      2+0.5*DLYR(3,0,NY,NX))
@@ -4268,7 +4504,7 @@ C     S*L,S*X=gas solubility at current temperature,25 oC (g m-3/g m-3)
 C        :CO2=CO2,CH4=CH4,OXY=O2,N2G=N2g,N2O=N2O,NH3=NH3,H2G=H2
 C     C*S=litter gas aqueous concentration (g m-3)
 C        :CO2=CO2,CH4=CH4,OXY=O2,N2G=N2g,N2O=N2O,NH3=NH3,H2G=H2
-C     VOLW=litter water content (m3)
+C     VOLW=litter water volume (m3)
 C     
       IF(VOLP(0,NY,NX).GT.ZEROS2(NY,NX))THEN
       CCO2G(0,NY,NX)=AMAX1(0.0,CO2G(0,NY,NX)/VOLP(0,NY,NX))
@@ -4320,7 +4556,7 @@ C
 C     TFACG,TFACL=temperature effect on gaseous,aqueous diffusivity
 C     TKS=litter temperature (K)
 C     *SGL= gaseous,aqueous diffusivity for gases,solutes listed in
-C     *SG PARAMETER statement above (m2 h-1)
+C        *SG PARAMETER statement above (m2 h-1)
 C
       TFACG=(TKS(0,NY,NX)/298.15)**1.75
       TFACL=(TKS(0,NY,NX)/298.15)**6
@@ -4517,7 +4753,8 @@ C     ENDIF
 C
 C     CANOPY ZERO PLANE AND ROUGHNESS HEIGHTS
 C
-C     ARLFC,ARSTC=leaf,stalk area of combined canopy (m2 m-2)
+C     ARLFC,ARSTC,ARSDC=leaf,stalk,standing dead area of 
+C        combined canopy (m2 m-2)
 C     DPTHS,DPTH0=snowpack,surface water depths above surface roughness C        (m)
 C     ZT,ZD,ZR=canopy,zero plane displacement,roughness height (m)
 C     ZZ=reference height for wind speed (m)
@@ -4576,6 +4813,324 @@ C    2,RABX(NY,NX),RIBX(NY,NX),ZZ,ZD(NY,NX),ZE,ZR(NY,NX),UA(NY,NX)
 C    3,ARLSG
 6632  FORMAT(A8,7I4,30E12.4)
 C     ENDIF
+C
+C     CHANGE IN WIDTHS AND DEPTHS OF FERTILIZER BANDS FROM
+C     VERTICAL AND HORIZONTAL DIFFUSION DRIVEN BY CONCENTRATION
+C     DIFFERENCES BETWEEN BAND AND NON-BAND SOIL ZONES
+C
+      DO 9986 L=NU(NY,NX),NL(NY,NX)
+C
+C     NH4 FERTILIZER BAND
+C
+C     IFNHB=banded NH4 fertilizer flag (0=no band,1=band)
+C     ROWN=NH4 fertilizer band row width from fertilizer file (m)
+C     CDPTH=depth to bottom of soil layer (m)
+C     DPNH4=NH4 fertilizer band depth (m) 
+C
+      IF(IFNHB(NY,NX).EQ.1.AND.ROWN(NY,NX).GT.0.0)THEN
+      IF(L.EQ.NU(NY,NX).OR.CDPTH(L-1,NY,NX).LT.DPNH4(NY,NX))THEN
+C
+C     NH4 BAND WIDTH
+C
+C     DWNH4=change in NH4 fertilizer band width (m t-1)
+C     WDNHB=layer NH4 fertilizer band width (m)
+C     ZNSGL=NH4 diffusivity from ‘hour1.f’ (m2 h-1)
+C     TORT=tortuosity from ‘watsub.f’
+C     XNFH=time step for solute fluxes from ‘wthr.f’ (h t-1)
+C
+      IF(DPNHB(L,NY,NX).GT.ZERO)THEN
+      DWNH4=0.5*SQRT(ZNSGL(L,NY,NX)*TORT(NPH,L,NY,NX))*XNFH
+      WDNHB(L,NY,NX)=AMIN1(ROWN(NY,NX),WDNHB(L,NY,NX)+DWNH4)
+      ELSE
+      DWNH4=0.0
+      WDNHB(L,NY,NX)=0.0
+      ENDIF
+C
+C     NH4 BAND DEPTH
+C
+C     CDPTH=depth to bottom of soil layer (m)
+C     DPNH4,DPNHB,WDNHB=total,layer NH4 fertilizer band depth,width (m)
+C
+      IF(CDPTH(L,NY,NX).GE.DPNHX(NY,NX)
+     2.AND.CDPTH(L-1,NY,NX).LT.DPNHX(NY,NX))THEN
+      DPNHX(NY,NX)=AMAX1(0.0,DPNHX(NY,NX)-DWNH4)
+      DPNHB(L,NY,NX)=AMIN1(DLYR(3,L,NY,NX),DPNHB(L,NY,NX)+DWNH4)
+      ENDIF
+      IF(L.GT.NU(NY,NX).AND.DPNHX(NY,NX).LT.CDPTH(L-1,NY,NX)
+     2.AND.VLNHB(L-1,NY,NX).LT.ZEROS(NY,NX))THEN
+      DPNHB(L-1,NY,NX)=CDPTH(L-1,NY,NX)-DPNHX(NY,NX)
+      WDNHB(L-1,NY,NX)=WDNHB(L,NY,NX)
+      ENDIF
+      IF(CDPTH(L,NY,NX).GE.DPNH4(NY,NX)
+     2.AND.CDPTH(L-1,NY,NX).LT.DPNH4(NY,NX))THEN
+      DPNH4(NY,NX)=DPNH4(NY,NX)+DWNH4 
+      DPNHB(L,NY,NX)=AMIN1(DLYR(3,L,NY,NX),DPNHB(L,NY,NX)+DWNH4)
+      ENDIF
+      IF(DPNH4(NY,NX).GT.CDPTH(L,NY,NX)
+     2.AND.DPNHX(NY,NX).LE.CDPTH(L-1,NY,NX)
+     2.AND.VLNHB(L+1,NY,NX).LT.ZEROS(NY,NX))THEN
+      WDNHB(L+1,NY,NX)=WDNHB(L,NY,NX)
+      DPNHB(L+1,NY,NX)=DPNH4(NY,NX)-CDPTH(L,NY,NX)
+      ENDIF
+C
+C     FRACTION OF SOIL LAYER OCCUPIED BY NH4 BAND
+C     FROM BAND WIDTH X DEPTH
+C
+C     VLNH4,VLNHB=fraction of soil volume in NH4 non-band,band
+C     DLYR=soil layer thickness (m)
+C     FVLNH4=relative change in VLNH4 (t-1)
+C     DPNHB,WDNHB=NH4 fertilizer band depth,width (m)
+C     ROWN=NH4 fertilizer band row width from fertilizer file (m)
+C
+      XVLNH4=VLNH4(L,NY,NX)
+      IF(DLYR(3,L,NY,NX).GT.ZERO)THEN
+      VLNHB(L,NY,NX)=AMAX1(0.0,AMIN1(0.9999,WDNHB(L,NY,NX) 
+     2/ROWN(NY,NX)*DPNHB(L,NY,NX)/DLYR(3,L,NY,NX)))
+      ELSE
+      VLNHB(L,NY,NX)=0.0
+      ENDIF
+      VLNH4(L,NY,NX)=1.0-VLNHB(L,NY,NX)
+      FVLNH4(L,NY,NX)=AMIN1(0.0,(VLNH4(L,NY,NX)-XVLNH4)/XVLNH4)
+C
+C     AMALGAMATE NH4 BAND WITH NON-BAND IF BAND NO LONGER EXISTS
+C
+      ELSE
+      FVLNH4(L,NY,NX)=0.0
+      DPNHB(L,NY,NX)=0.0
+      WDNHB(L,NY,NX)=0.0
+      VLNH4(L,NY,NX)=1.0
+      VLNHB(L,NY,NX)=0.0
+      ZNH4S(L,NY,NX)=ZNH4S(L,NY,NX)+ZNH4B(L,NY,NX)
+      ZNH3S(L,NY,NX)=ZNH3S(L,NY,NX)+ZNH3B(L,NY,NX)
+      ZNH4B(L,NY,NX)=0.0
+      ZNH3B(L,NY,NX)=0.0
+      XN4(L,NY,NX)=XN4(L,NY,NX)+XNB(L,NY,NX)
+      XNB(L,NY,NX)=0.0
+      ZNH4FA(L,NY,NX)=ZNH4FA(L,NY,NX)+ZNH4FB(L,NY,NX)
+      ZNH3FA(L,NY,NX)=ZNH3FA(L,NY,NX)+ZNH3FB(L,NY,NX)
+      ZNHUFA(L,NY,NX)=ZNHUFA(L,NY,NX)+ZNHUFB(L,NY,NX)
+      ZNH4FB(L,NY,NX)=0.0 
+      ZNH3FB(L,NY,NX)=0.0 
+      ZNHUFB(L,NY,NX)=0.0 
+      ENDIF
+      ENDIF
+C
+C     NO3 FERTILIZER BAND
+C
+C     IFNOB=banded NO3 fertilizer flag (m)
+C     ROWO=NO3 fertilizer band row width from fertilizer file (m)
+C     CDPTH=depth to bottom of soil layer (m)
+C     DPNO3=NO3 fertilizer band depth (m) 
+C
+      IF(IFNOB(NY,NX).EQ.1.AND.ROWO(NY,NX).GT.0.0)THEN
+      IF(L.EQ.NU(NY,NX).OR.CDPTH(L-1,NY,NX).LT.DPNO3(NY,NX))THEN
+C
+C     NO3 BAND WIDTH
+C
+C     DWNO3=change in NO3 fertilizer band width (m t-1)
+C     WDNOB=layer NO3 fertilizer band width (m)
+C     ZOSGL=NO3 diffusivity from ‘hour1.f’ (m2 h-1)
+C     TORT=tortuosity from ‘watsub.f’
+C     XNFH=time step for solute fluxes from ‘wthr.f’ (h t-1)
+C
+      IF(DPNOB(L,NY,NX).GT.ZERO)THEN
+      DWNO3=0.5*SQRT(ZOSGL(L,NY,NX)*TORT(NPH,L,NY,NX))*XNFH
+      WDNOB(L,NY,NX)=AMIN1(ROWO(NY,NX),WDNOB(L,NY,NX)+DWNO3)
+      ELSE
+      DWNO3=0.0
+      WDNOB(L,NY,NX)=0.0
+      ENDIF
+C
+C     NO3 BAND DEPTH
+C
+C     CDPTH=depth to bottom of soil layer (m)
+C     DPNO3,DPNOB=total,layer NO3 fertilizer band depth (m)
+C
+      IF(CDPTH(L,NY,NX).GE.DPNOX(NY,NX)
+     2.AND.CDPTH(L-1,NY,NX).LT.DPNOX(NY,NX))THEN
+      DPNOX(NY,NX)=AMAX1(0.0,DPNOX(NY,NX)-DWNO3)
+      DPNOB(L,NY,NX)=AMIN1(DLYR(3,L,NY,NX),DPNOB(L,NY,NX)+DWNO3)
+      ENDIF
+      IF(L.GT.NU(NY,NX).AND.DPNOX(NY,NX).LT.CDPTH(L-1,NY,NX)
+     2.AND.VLNOB(L-1,NY,NX).LT.ZEROS(NY,NX))THEN
+      DPNOB(L-1,NY,NX)=CDPTH(L-1,NY,NX)-DPNOX(NY,NX)
+      WDNOB(L-1,NY,NX)=WDNOB(L,NY,NX)
+      ENDIF
+      IF(CDPTH(L,NY,NX).GE.DPNO3(NY,NX)
+     2.AND.CDPTH(L-1,NY,NX).LT.DPNO3(NY,NX))THEN
+      DPNO3(NY,NX)=DPNO3(NY,NX)+DWNO3 
+      DPNOB(L,NY,NX)=AMIN1(DLYR(3,L,NY,NX),DPNOB(L,NY,NX)+DWNO3)
+      ENDIF
+      IF(DPNO3(NY,NX).GT.CDPTH(L,NY,NX)
+     2.AND.DPNOX(NY,NX).LE.CDPTH(L-1,NY,NX)
+     2.AND.VLNOB(L+1,NY,NX).LT.ZEROS(NY,NX))THEN
+      WDNOB(L+1,NY,NX)=WDNOB(L,NY,NX)
+      DPNOB(L+1,NY,NX)=DPNO3(NY,NX)-CDPTH(L,NY,NX)
+      ENDIF
+C
+C     FRACTION OF SOIL LAYER OCCUPIED BY NO3 BAND
+C     FROM BAND WIDTH X DEPTH
+C
+C     VLNO3,VLNOB=fraction of soil volume in NO3 non-band,band
+C     DLYR=soil layer thickness (m)
+C     FVLNO3=relative change in VLNO3
+C     DPNOB,WDNOB=NO3 fertilizer band depth,width (m)
+C     ROWO=NO3 fertilizer band row width from fertilizer file (m)
+C
+      XVLNO3=VLNO3(L,NY,NX)
+      IF(DLYR(3,L,NY,NX).GT.ZERO)THEN
+      VLNOB(L,NY,NX)=AMAX1(0.0,AMIN1(0.9999,WDNOB(L,NY,NX) 
+     2/ROWO(NY,NX)*DPNOB(L,NY,NX)/DLYR(3,L,NY,NX)))
+      ELSE
+      VLNOB(L,NY,NX)=0.0
+      ENDIF
+      VLNO3(L,NY,NX)=1.0-VLNOB(L,NY,NX)
+      FVLNO3(L,NY,NX)=AMIN1(0.0,(VLNO3(L,NY,NX)-XVLNO3)/XVLNO3)
+C
+C     AMALGAMATE NO3 BAND WITH NON-BAND IF BAND NO LONGER EXISTS 
+C
+      ELSE
+      FVLNO3(L,NY,NX)=0.0
+      DPNOB(L,NY,NX)=0.0
+      WDNOB(L,NY,NX)=0.0
+      VLNO3(L,NY,NX)=1.0
+      VLNOB(L,NY,NX)=0.0
+      ZNO3S(L,NY,NX)=ZNO3S(L,NY,NX)+ZNO3B(L,NY,NX)
+      ZNO2S(L,NY,NX)=ZNO2S(L,NY,NX)+ZNO2B(L,NY,NX)
+      ZNO3B(L,NY,NX)=0.0
+      ZNO2B(L,NY,NX)=0.0
+      ZNO3FA(L,NY,NX)=ZNO3FA(L,NY,NX)+ZNO3FB(L,NY,NX)
+      ZNO3FB(L,NY,NX)=0.0 
+      ENDIF
+      ENDIF
+C
+C     PO4 FERTILIZER BAND
+C
+C     IFPOB=banded H2PO4 fertilizer flag (m)
+C     ROWP=H2PO4 fertilizer band row width from fertilizer file (m)
+C     CDPTH=depth to bottom of soil layer (m)
+C     DPPO4=H2PO4 fertilizer band depth (m) 
+C
+      IF(IFPOB(NY,NX).EQ.1.AND.ROWP(NY,NX).GT.0.0)THEN
+      IF(L.EQ.NU(NY,NX).OR.CDPTH(L-1,NY,NX).LT.DPPO4(NY,NX))THEN
+C
+C     PO4 BAND WIDTH
+C
+C     DWPO4=change in H2PO4 fertilizer band width (m)
+C     WDPO4=layer H2PO4 fertilizer band width (m)
+C     POSGL=H2PO4 diffusivity from ‘hour1.f’ (m2 h-1)
+C     TORT=tortuosity from ‘watsub.f’
+C     XNFH=time step for solute fluxes from ‘wthr.f’ (h t-1)
+C
+      IF(DPPOB(L,NY,NX).GT.ZERO)THEN
+      DWPO4=0.5*SQRT(POSGL(L,NY,NX)*TORT(NPH,L,NY,NX))*XNFH
+      WDPOB(L,NY,NX)=AMIN1(ROWP(NY,NX),WDPOB(L,NY,NX)+DWPO4)
+      ELSE
+      DWPO4=0.0
+      WDPOB(L,NY,NX)=0.0
+      ENDIF
+C
+C     PO4 BAND DEPTH
+C
+C     CDPTH=depth to bottom of soil layer (m)
+C     DPPO4,DPPOB=total,layer H2PO4 fertilizer band depth (m)
+C
+      IF(CDPTH(L,NY,NX).GE.DPPOX(NY,NX)
+     2.AND.CDPTH(L-1,NY,NX).LT.DPPOX(NY,NX))THEN
+      DPPOX(NY,NX)=AMAX1(0.0,DPPOX(NY,NX)-DWPO4)
+      DPPOB(L,NY,NX)=AMIN1(DLYR(3,L,NY,NX),DPPOB(L,NY,NX)+DWPO4)
+      ENDIF
+      IF(L.GT.NU(NY,NX).AND.DPPOX(NY,NX).LT.CDPTH(L-1,NY,NX)
+     2.AND.VLPOB(L-1,NY,NX).LT.ZEROS(NY,NX))THEN
+      DPPOB(L-1,NY,NX)=CDPTH(L-1,NY,NX)-DPPOX(NY,NX)
+      WDPOB(L-1,NY,NX)=WDPOB(L,NY,NX)
+      ENDIF
+      IF(CDPTH(L,NY,NX).GE.DPPO4(NY,NX)
+     2.AND.CDPTH(L-1,NY,NX).LT.DPPO4(NY,NX))THEN
+      DPPO4(NY,NX)=DPPO4(NY,NX)+DWPO4 
+      DPPOB(L,NY,NX)=AMIN1(DLYR(3,L,NY,NX),DPPOB(L,NY,NX)+DWPO4)
+      ENDIF
+      IF(DPPO4(NY,NX).GT.CDPTH(L,NY,NX)
+     2.AND.DPPOX(NY,NX).LE.CDPTH(L-1,NY,NX)
+     2.AND.VLPOB(L+1,NY,NX).LT.ZEROS(NY,NX))THEN
+      WDPOB(L+1,NY,NX)=WDPOB(L,NY,NX)
+      DPPOB(L+1,NY,NX)=DPPO4(NY,NX)-CDPTH(L,NY,NX)
+      ENDIF
+C
+C     FRACTION OF SOIL LAYER OCCUPIED BY PO4 BAND
+C     FROM BAND WIDTH X DEPTH
+C
+C     VLPO4,VLPOB=fraction of soil volume in H2PO4 non-band,band
+C     DLYR=soil layer thickness (m)
+C     FVLPO4=relative change in VLPO4 (t-1)
+C     DPPOB,WDPOB=PO4 fertilizer band depth,width (m)
+C     ROWP=PO4 fertilizer band row width from fertilizer file (m)
+C     D*=transfer of solute,adsorbed,precipitated HPO4,H2PO4 (mol t-1)
+C     TR*=net P transformation (mol t-1) 
+C
+      XVLPO4=VLPO4(L,NY,NX)
+      IF(DLYR(3,L,NY,NX).GT.ZERO)THEN
+      VLPOB(L,NY,NX)=AMAX1(0.0,AMIN1(0.9999,WDPOB(L,NY,NX)
+     2/ROWP(NY,NX)*DPPOB(L,NY,NX)/DLYR(3,L,NY,NX)))
+      ELSE
+      VLPOB(L,NY,NX)=0.0
+      ENDIF
+      VLPO4(L,NY,NX)=1.0-VLPOB(L,NY,NX)
+      FVLPO4(L,NY,NX)=AMIN1(0.0,(VLPO4(L,NY,NX)-XVLPO4)/XVLPO4)
+C
+C     AMALGAMATE PO4 BAND WITH NON-BAND IF BAND NO LONGER EXISTS 
+C
+      ELSE
+      FVLPO4(L,NY,NX)=0.0
+      DPPOB(L,NY,NX)=0.0
+      WDPOB(L,NY,NX)=0.0
+      VLPOB(L,NY,NX)=0.0
+      VLPO4(L,NY,NX)=1.0
+      H1PO4(L,NY,NX)=H1PO4(L,NY,NX)+H1POB(L,NY,NX)
+      H2PO4(L,NY,NX)=H2PO4(L,NY,NX)+H2POB(L,NY,NX)
+      H1POB(L,NY,NX)=0.0
+      H2POB(L,NY,NX)=0.0
+      XOH0(L,NY,NX)=XOH0(L,NY,NX)+XOH0B(L,NY,NX)
+      XOH1(L,NY,NX)=XOH1(L,NY,NX)+XOH1B(L,NY,NX)
+      XOH2(L,NY,NX)=XOH2(L,NY,NX)+XOH2B(L,NY,NX)
+      XH1P(L,NY,NX)=XH1P(L,NY,NX)+XH1PB(L,NY,NX)
+      XH2P(L,NY,NX)=XH2P(L,NY,NX)+XH2PB(L,NY,NX)
+      XOH0B(L,NY,NX)=0.0
+      XOH1B(L,NY,NX)=0.0
+      XOH2B(L,NY,NX)=0.0
+      XH1PB(L,NY,NX)=0.0
+      XH2PB(L,NY,NX)=0.0
+      PALPO(L,NY,NX)=PALPO(L,NY,NX)+PALPB(L,NY,NX)
+      PFEPO(L,NY,NX)=PFEPO(L,NY,NX)+PFEPB(L,NY,NX)
+      PCAPD(L,NY,NX)=PCAPD(L,NY,NX)+PCPDB(L,NY,NX)
+      PCAPH(L,NY,NX)=PCAPH(L,NY,NX)+PCPHB(L,NY,NX)
+      PCAPM(L,NY,NX)=PCAPM(L,NY,NX)+PCPMB(L,NY,NX)
+      PALPB(L,NY,NX)=0.0
+      PFEPB(L,NY,NX)=0.0
+      PCPDB(L,NY,NX)=0.0
+      PCPHB(L,NY,NX)=0.0
+      PCPMB(L,NY,NX)=0.0
+      IF(ISALTG.NE.0)THEN
+      H0PO4(L,NY,NX)=H0PO4(L,NY,NX)+H0POB(L,NY,NX)
+      H3PO4(L,NY,NX)=H3PO4(L,NY,NX)+H3POB(L,NY,NX)
+      ZFE1P(L,NY,NX)=ZFE1P(L,NY,NX)+ZFE1PB(L,NY,NX)
+      ZFE2P(L,NY,NX)=ZFE2P(L,NY,NX)+ZFE2PB(L,NY,NX)
+      ZCA0P(L,NY,NX)=ZCA0P(L,NY,NX)+ZCA0PB(L,NY,NX)
+      ZCA1P(L,NY,NX)=ZCA1P(L,NY,NX)+ZCA1PB(L,NY,NX)
+      ZCA2P(L,NY,NX)=ZCA2P(L,NY,NX)+ZCA2PB(L,NY,NX)
+      ZMG1P(L,NY,NX)=ZMG1P(L,NY,NX)+ZMG1PB(L,NY,NX)
+      H0POB(L,NY,NX)=0.0
+      H3POB(L,NY,NX)=0.0
+      ZFE1PB(L,NY,NX)=0.0
+      ZFE2PB(L,NY,NX)=0.0
+      ZCA0PB(L,NY,NX)=0.0
+      ZCA1PB(L,NY,NX)=0.0
+      ZCA2PB(L,NY,NX)=0.0
+      ZMG1PB(L,NY,NX)=0.0
+      ENDIF
+      ENDIF
+      ENDIF
+9986  CONTINUE
 9990  CONTINUE
 9995  CONTINUE
       RETURN

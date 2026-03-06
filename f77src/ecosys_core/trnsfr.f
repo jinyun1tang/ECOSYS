@@ -197,7 +197,7 @@ C
       PARAMETER (FCOMCX=0.0,FCHMCX=0.5)
       REAL*4 CCO2SQ,CCH4SQ,COXYSQ,CZ2GSQ,CZ2OSQ,CNH3SQ
      2,CNH3BQ,CH2GSQ
-      VFLWX=XNPH
+      VFLWX=XNPHX
       DO 9995 NX=NHW,NHE
       DO 9990 NY=NVN,NVS
 C
@@ -225,7 +225,8 @@ C     XH2PS=net change in H2PO4 from ‘nitro.f’ (g P t-1)
 C     TRH2P=H2PO4 dissolution from ‘solute.f’ (g P t-1)
 C     XH1PS=net change in HPO4 from ‘nitro.f’ (g P t-1)
 C     TRH1P=HPO4 dissolution from ‘solute.f’ (g P t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -301,7 +302,8 @@ C     INITIALIZE SURFACE SOLUTE FLUXES FROM ATMOSPHERE
 C
 C     X*FLS,X*FHS=aggregated solute flux in macropores,micropores
 C        used in ‘redist.f’ (g t-1) 
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -332,7 +334,8 @@ C     VHCPWM,VHCPWX=current,minimum volumetric heat capacity
 C        of snowpack (MJ K-1)
 C     X*BLS=aggregated solute flux to snowpack used in ‘redist.f’ 
 C        (g t-1) 
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -340,8 +343,9 @@ C     FLQGQ,FLQGI=water flux to snowpack from rain,irrigation
 C        from ‘watsub.f’ (m3 t-1)
 C     C*R,C*Q=precipitation,irrigation solute concentrations 
 C        from weather, irrigation files (mol m-3)
-C     gas code:*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
-C             :*NH*=NH3,*H2*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C
       IF(PRECW(NY,NX).GT.0.0.OR.(PRECR(NY,NX).GT.0.0
      2.AND.VHCPWM(1,1,NY,NX).GT.VHCPWX(NY,NX)))THEN
@@ -371,7 +375,8 @@ C     IF RAINFALL AND IRRIGATION IS ZERO IF SNOWPACK IS PRESENT
 C
 C     X*FLS,X*FLB=aggregated solute flux to micropores in 
 C        non-band,band used in ‘redist.f’ (g t-1) 
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -422,7 +427,8 @@ C     X*BLS=aggregated solute flux to snowpack used in ‘redist.f’
 C        (g t-1) 
 C     X*FLS,X*FLB=aggregated solute flux to surface litter,soil
 C        surface used in ‘redist.f’ micropore non-band,band (g t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -432,8 +438,9 @@ C     FLQGQ,FLQGI=water flux to snowpack from rain,irrigation
 C        from ‘watsub.f’ (m3 t-1)
 C     C*R,C*Q=precipitation,irrigation solute concentrations 
 C        from weather, irrigation files (mol m-3)
-C     gas code:*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
-C             :*NH*=NH3,*H2*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C
       XCOBLS(1,NY,NX)=0.0
       XCHBLS(1,NY,NX)=0.0
@@ -573,12 +580,14 @@ C     ENTERED IN SITE FILE
 C
 C     R*BLS,R*FL0,R*FL1,R*FL2=solute flux to snowpack,surface
 C        litter,soil surface non-band,band (g t-1) 
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
-C     gas code:*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
-C             :*NH*=NH3,*H2*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C     XNPH=time step for solute fluxes from ‘wthr.f’ (t t-1)
 C
       DO 9845 K=0,2
@@ -642,7 +651,8 @@ C     TRANSFORMATIONS IN 'NITRO' + ROOT EXCHANGE IN 'EXTRACT'
 C     + EQUILIBRIA REACTIONS IN 'SOLUTE' AT SUB-HOURLY TIME STEP
 C
 C     *SGL2=solute diffusivity from *SGL in ‘hour1.f’ (m2 t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -718,8 +728,9 @@ C     CHY0=H concentration (g H m-3)
 C     PH=pH
 C     FLWU,TUPWTR=total root water uptake from ‘extract.f’ (m3 t-1)
 C     R*SK2=net flux from ‘nitro.f’, ‘uptake.f’, ‘solute.f’ (g t-1)
-C     gas code:*VP*=vapor,*CO*=CO2,*CH*=CH4,*OX*=O2,*NG*=N2,*N2*=N2O,
-C             :*N3*=NH3,*HG*=H2
+C     gas code
+C        :*VP*=vapor,*CO*=CO2,*CH*=CH4,*OX*=O2,*NG*=N2,*N2*=N2O,
+C        :*N3*=NH3,*HG*=H2
 C     RCO2O=net soil CO2 uptake from ‘nitro.f’ (g C t-1)
 C     RCH4O=net soil CH4 uptake from ‘nitro.f’ (g C t-1)
 C     RN2G=total soil N2 production from ‘nitro.f’ (g N t-1) 
@@ -802,7 +813,8 @@ C     SOLUTE FLUXES FROM SUBSURFACE IRRIGATION
 C
 C     FLU=subsurface water flux from ‘watsub.f’ (m3 t-1)
 C     R*FLU,R*FBU=subsurface solute flux in non-band,band (g t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -830,7 +842,8 @@ C
 C     SUB-HOURLY SOLUTE FLUXES FROM SUBSURFACE IRRIGATION
 C
 C     R*FLZ,R*FBZ=subsurface solute flux in non-band,band (g t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -856,7 +869,8 @@ C
 C     GAS AND SOLUTE DIFFUSIVITIES AT SUB-HOURLY TIME STEP
 C
 C     *SGL2=solute diffusivity from *SGL in ‘hour1.f’ (m2 t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -932,9 +946,10 @@ C
       OQPH2(K,L,NY,NX)=OQPH(K,L,NY,NX)
       OQAH2(K,L,NY,NX)=OQAH(K,L,NY,NX)
 C     IF(L.EQ.1)THEN
-C     WRITE(*,449)'OQCI',I,J,NX,NY,L,K,OQC2(K,L,NY,NX),OQC(K,L,NY,NX)
-C    2,XOQCS(K,L,NY,NX)
-449   FORMAT(A8,6I4,12E12.4)
+C     WRITE(*,449)'OQCI',I,J,NFZ,NX,NY,L,K
+C    2,OQC2(K,L,NY,NX),OQC(K,L,NY,NX),XOQCS(K,L,NY,NX)
+C    2,OQA2(K,L,NY,NX),OQA(K,L,NY,NX),XOQAS(K,L,NY,NX)
+449   FORMAT(A8,7I4,12E12.4)
 C     ENDIF
 9980  CONTINUE
       ZNH4S2(L,NY,NX)=ZNH4S(L,NY,NX) 
@@ -1024,8 +1039,9 @@ C
       OQN2(K,0,NY,NX)=OQN2(K,0,NY,NX)-RONSK2(K,0,NY,NX)
       OQP2(K,0,NY,NX)=OQP2(K,0,NY,NX)-ROPSK2(K,0,NY,NX)
       OQA2(K,0,NY,NX)=OQA2(K,0,NY,NX)-ROASK2(K,0,NY,NX)
-C     WRITE(*,8789)'OQC2K',I,J,NFZ,M,MM,NX,NY,K
+C     WRITE(*,8789)'OQC20',I,J,NFZ,M,MM,NX,NY,K
 C    2,OQC2(K,0,NY,NX),ROCSK2(K,0,NY,NX)
+C    2,OQA2(K,0,NY,NX),ROASK2(K,0,NY,NX)
 9880  CONTINUE
       TQRCOS(NY,NX)=0.0
       TQRCHS(NY,NX)=0.0
@@ -1117,8 +1133,9 @@ C     AQUEOUS GAS SINKS
 C
 C     C*S2=litter aqueous gas content (g m-3)
 C     R*SK2=total flux from ‘nitro.f’, ‘uptake.f’, ‘solute.f’ (g t-1)
-C     gas code:*CO*=CO2,*CH*=CH4,*OX*=O2,*NG*=N2,*N2*=N2O,
-C             :*N3*=NH3,*HG*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C
       CO2S2(0,NY,NX)=CO2S2(0,NY,NX)-RCOSK2(0,NY,NX)
       CH4S2(0,NY,NX)=CH4S2(0,NY,NX)-RCHSK2(0,NY,NX)
@@ -1165,6 +1182,9 @@ C
       OQN2(K,L,NY,NX)=OQN2(K,L,NY,NX)-RONSK2(K,L,NY,NX)
       OQP2(K,L,NY,NX)=OQP2(K,L,NY,NX)-ROPSK2(K,L,NY,NX)
       OQA2(K,L,NY,NX)=OQA2(K,L,NY,NX)-ROASK2(K,L,NY,NX)
+C     WRITE(*,8789)'OQC2L',I,J,NFZ,M,MM,NX,NY,K
+C    2,OQC2(K,L,NY,NX),ROCSK2(K,L,NY,NX)
+C    2,OQA2(K,L,NY,NX),ROASK2(K,L,NY,NX)
 9875  CONTINUE
       TCOFLS(L,NY,NX)=0.0
       TCHFLS(L,NY,NX)=0.0
@@ -1295,8 +1315,9 @@ C     AQUEOUS GAS SINKS
 C
 C     C*S2=soil aqueous gas content (g)
 C     R*SK2=total flux from ‘nitro.f’,‘uptake.f’,‘solute.f’ (g t-1)
-C     gas code:*VP*=vapor,*CO*=CO2,*CH*=CH4,*OX*=O2,*NG*=N2,*N2*=N2O,
-C             :*N3*=NH3,*HG*=H2
+C     gas code
+C        :*VP*=vapor,*CO*=CO2,*CH*=CH4,*OX*=O2,*NG*=N2,*N2*=N2O,
+C        :*N3*=NH3,*HG*=H2
 C
       VOLV2(L,NY,NX)=VOLV2(L,NY,NX)-RVPSK2(L,NY,NX) 
       CO2S2(L,NY,NX)=CO2S2(L,NY,NX)-RCOSK2(L,NY,NX) 
@@ -1413,8 +1434,8 @@ C
       VFLWS=AMAX1(0.0,AMIN1(1.0,(FLQSM(M,NY,NX)+FLQHM(M,NY,NX))
      2/VOLWSL(L,NY,NX)))
       ELSE
-      VFLWR=CVRD(NY,NX)
-      VFLWS=BARE(NY,NX)
+      VFLWR=CVRDW(NY,NX)
+      VFLWS=BAREW(NY,NX)
       ENDIF
       VFLWNH4=VFLWS*VLNH4(NU(NY,NX),NY,NX)
       VFLWNHB=VFLWS*VLNHB(NU(NY,NX),NY,NX)
@@ -1491,7 +1512,8 @@ C     VOLWM=micropore water-filled porosity from ‘watsub.f’ (m3)
 C     TORT=tortuosity from ‘hour1.f’
 C     DLYR0=litter thickness (m) 
 C     *SGL2=solute diffusivity (m2 t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -1507,7 +1529,7 @@ C
      2.AND.VOLWM(M,0,NY,NX).GT.ZEROS2(NY,NX))THEN
       DLYR0=AMAX1(ZERO2,DLYR(3,0,NY,NX))
       TORT0=2.0*TORT(M,0,NY,NX)*AREA(3,NU(NY,NX),NY,NX)
-     2/DLYR0*CVRD(NY,NX)
+     2/DLYR0*CVRDW(NY,NX)
       DFGSCO=CLSGL2(0,NY,NX)*TORT0 
       DFGSCH=CQSGL2(0,NY,NX)*TORT0 
       DFGSOX=OLSGL2(0,NY,NX)*TORT0 
@@ -1550,8 +1572,9 @@ C        from ‘watsub.f’ (m t-1)
 C     C*E=atmospheric gas concentration from ‘hour1.f’ (g m-3)
 C     C*Q=equilibrium gas concentration at litter surface (g m-3)
 C     S*L=solubility of gas in water from ‘hour1.f’ (g m-3/(g m-3)) 
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C     DFGS*=effective solute diffusivity (m t-1)
 C 
       CCO2GQ=(PARR(M,NY,NX)*CCO2E(NY,NX)*SCO2L(0,NY,NX)+DFGSCO*CCO2S1)
@@ -1577,8 +1600,9 @@ C     R*DFR=gas exchange between atmosphere and surface litter water
 C        (g t-1)
 C     X*DFR=aggregated gas exchange between atmosphere and surface
 C        litter water used in ‘redist.f’ (g t-1)
-C     gas code:*CO*=CO2,*CH*=CH4,*OX*=O2,*NG*=N2,*N2*=N2O,
-C             :*N3*=NH3,*HG*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C     C*E=atmospheric gas concentration from ‘hour1.f’ (g m-3)
 C     C*Q=equilibrium gas concentration at litter surface (g m-3)
 C     VOLWM=litter water volume (m3)
@@ -1639,7 +1663,8 @@ C
 C     VOLWM=micropore water-filled porosity from ‘watsub.f’ (m3)
 C     TORT=tortuosity from ‘hour1.f’ 
 C     *SGL2=solute diffusivity (m2 t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -1743,8 +1768,9 @@ C        ‘watsub.f’ (m t-1)
 C     C*E=atmospheric gas concentration from ‘hour1.f’ (g m-3)
 C     C*Q=equilibrium gas concentration at soil surface (g m-3)
 C     S*L=solubility of gas in water from ‘hour1.f’ (g m-3/(g m-3)) 
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C     DFGS*=effective solute diffusivity (m t-1)
 C
       CCO2GQ=(PARG(M,NY,NX)*CCO2E(NY,NX)*SCO2L(NU(NY,NX),NY,NX) 
@@ -1772,8 +1798,9 @@ C     R*DFS=gas exchange between atmosphere and soil surface water
 C        (g t-1)
 C     X*DFS=aggregated gas exchange between atmosphere and soil
 C        surface water used in ‘redist.f’ (g t-1)
-C     gas code:*CO*=CO2,*CH*=CH4,*OX*=O2,*NG*=N2,*N2*=N2O,
-C             :*N3*=NH3,*HG*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C     C*E=atmospheric gas concentration from ‘hour1.f’ (g m-3)
 C     C*Q=equilibrium gas concentration at soil surface (g m-3)
 C     VOLWM=litter water volume (m3)
@@ -1867,7 +1894,8 @@ C     VOLWM=litter water volume (m3)
 C     VFLW=litter-soil water flux/litter water content (t-1)
 C     RFL*=soil-litter convective solute flux (g t-1)
 C     *S2=litter solute content (g)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -1915,7 +1943,8 @@ C     VOLWM=micropore water-filled porosity from ‘watsub.f’ (m3)
 C     VFLW= litter-soil water flux/soil water content (t-1)
 C     RFL*=soil-litter convective solute flux (g t-1)
 C     *S2=soil solute content (g)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -1962,7 +1991,7 @@ C
 C     VOLT,DLYR,AREA=soil surface volume, thickness, area (m3,m,m2)
 C     VOLWM=micropore water-filled porosity from ‘watsub.f’ (m3)
 C
-      IF((VOLT(0,NY,NX).GT.ZEROS2(NY,NX).AND.CVRD(NY,NX).GT.ZERO 
+      IF((VOLT(0,NY,NX).GT.ZEROS2(NY,NX).AND.CVRDW(NY,NX).GT.ZERO 
      2.AND.VOLWM(M,0,NY,NX).GT.ZEROS2(NY,NX))
      3.AND.(VOLWM(M,NU(NY,NX),NY,NX).GT.ZEROS2(NY,NX)))THEN
 C
@@ -1977,7 +2006,8 @@ C     FLWRM=litter-soil water flux from ‘watsub.f’ (m3 t-1)
 C     DIF*0,DIF*1=aqueous diffusivity-dispersivity in litter, 
 C        soil surface (m t-1)
 C     *SGL2=solute diffusivity (m2 t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -1985,8 +2015,8 @@ C     DIF*=effective aqueous diffusivity-dispersivity between litter
 C        and soil surface (m3 t-1)
 C     AREA=grid cell area (m2)
 C
-      TORT0=2.0*TORT(M,0,NY,NX)*CVRD(NY,NX)/DLYR0
-      TORT1=2.0*TORT(M,NU(NY,NX),NY,NX)*CVRD(NY,NX)/DLYR1 
+      TORT0=2.0*TORT(M,0,NY,NX)*CVRDW(NY,NX)/DLYR0
+      TORT1=2.0*TORT(M,NU(NY,NX),NY,NX)*CVRDW(NY,NX)/DLYR1 
       DISPN=DISP(3,NU(NY,NX),NY,NX)
      2*AMIN1(VFLWX,ABS(FLWRM(M,NY,NX)/AREA(3,NU(NY,NX),NY,NX)))
       DIFOC0=(OCSGL2(0,NY,NX)*TORT0+DISPN)
@@ -2036,12 +2066,14 @@ C     DFV*S,DFV*B=diffusive solute flux between litter and soil
 C        surface in non-band,band (g t-1)
 C     DIF*=effective aqueous diffusivity-dispersivity between litter 
 C        and soil surface (m3 t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C     C*1,C*2=solute concentration in litter,soil surface
 C
       DO 8805 K=0,2
@@ -2102,7 +2134,8 @@ C     R*FLS=convective+diffusive solute flux between litter,
 C        soil surface (g t-1)
 C     R*FLW,R*FLB=convective+diffusive solute flux into soil 
 C        in non-band,band (g t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -2311,7 +2344,8 @@ C     VFLW=macropore water flux/content (t-1)
 C     RFL*=convective macropore-micropore solute transfer (g t-1) 
 C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
 C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -2445,7 +2479,8 @@ C
 C     VOLWM,VOLWHM=micropore,macropore water volume (m3)
 C     XFRS*VOLT=maximum macropore volume for solute transfer (m3 t-1)
 C     DFV*=diffusive macropore-micropore solute transfer (g t-1) 
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -2573,7 +2608,8 @@ C        and micropores (g t-1)
 C     RFL*=convective flux between macropores and micropores (g t-1)
 C     DFV*=diffusive solute flux between macropores and micropores 
 C        (g t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -2609,7 +2645,8 @@ C     X*FXS=aggregated convective+diffusive solute flux between
 C        macropores and micropores used in ‘redist.f’ (g t-1) 
 C     R*FXS=total convective+diffusive solute flux between 
 C        macropores and micropores (g t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -2681,7 +2718,8 @@ C     IN SOIL SURFACE LAYER
 C
 C     QRM=runoff from ‘watsub.f’ (m3 t-1)
 C     RQR*0=solute flux in runoff (g t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -2749,8 +2787,9 @@ C     VOLSL(1,=snowpack surface volume from ‘redist.f’ (m3)
 C     VFLW=snowpack flux/content (t-1)
 C     RQS*=snowpack solute drift (g t-1)
 C     *W2(1,=solute content of snowpack surface (g)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
-C             :N4=NH4,N3=NH3,NO=NO3,1P=HPO4,HP=H2PO4 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C        :N4=NH4,N3=NH3,NO=NO3,1P=HPO4,HP=H2PO4 
 C
       IF(QST(M,N2,N1).GT.ZEROS(N2,N1))THEN
       IF(VOLSL(1,N2,N1).GT.ZEROS2(N2,N1))THEN
@@ -2821,7 +2860,8 @@ C        (m3 t-1)
 C     FQRM=partitions RQR*0 into EW(N=1),NS(N=2) directions 
 C     RQR*0=solute flux in runoff (g t-1)
 C     RQR*=solute flux in runoff in EW(N=1),NS(N=2) directions (g t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -2854,7 +2894,8 @@ C     ACCUMULATE FLUXES USED IN REDIST.F
 C
 C     XQR*=aggregated solute flux in runoff used in ‘redist.f’ (g t-1)
 C     RQR*=solute flux in runoff in EW(N=1),NS(N=2) directions (g t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -2905,7 +2946,8 @@ C        (m3 t-1)
 C     FQRM=partitions RQR*0 into EW(N=1),NS(N=2) directions 
 C     RQR*0=solute flux in runoff (g t-1)
 C     RQR*=solute flux in runoff in EW(N=1),NS(N=2) directions (g t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -3024,7 +3066,8 @@ C     QSTN=EW(N=1),NS(N=2) snow transfer from ‘watsub.f’ (m3 t-1)
 C     FQSM=partitions RQS*0 into EW(N=1),NS(N=2) directions 
 C     RQS*0=solute flux in snow transfer (g t-1)
 C     RQS*=EW(N=1),NS(N=2) solute flux in snow transfer (g t-1) 
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -3166,8 +3209,9 @@ C     DLYR=litter layer thickness (m)
 C     AREA=grid cell area (m2)
 C     D*G=effective gaseous diffusivity in litter (m3 t-1)
 C     *SGL2=gaseous diffusivity in air from *SGL in ‘hour1.f’ (m2 t-1)
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C
       DFLG2=AMAX1(0.0,THETPM(M,0,NY,NX))*POROQ
      2*THETPM(M,0,NY,NX)/POROS(0,NY,NX)
@@ -3184,8 +3228,9 @@ C     LITTER GAS CONCENTRATIONS
 C
 C     C*G2=litter gaseous concentration (g m-3)
 C     *G2=litter gaseous content (g)
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C     VOLPM=litter air-filled porosity (m3)
 C
       CCO2G2=AMAX1(0.0,CO2G2(0,NY,NX)
@@ -3216,8 +3261,9 @@ C        from ‘watsub.f’ (m3 t-1)
 C     DFV*G=diffusive gas flux (g t-1)
 C     C*E=atmospheric gas concentration from ‘hour1.f’ (g m-3)
 C     C*G2=gaseous concentration in litter (g m-3)
-C     gas code:*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
-C             :*NH*=NH3,*H2*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C
       DCO2GQ=DCO2G(3,0,NY,NX)*PARRCO(NY,NX)
      2/(DCO2G(3,0,NY,NX)+PARRCO(NY,NX))
@@ -3258,8 +3304,9 @@ C     V*G2=molar gas content (mol)
 C     VTATM=molar gas content at litter temperature (mol)
 C     VTGAS=total molar gas concentration in litter (mol) 
 C     RFL*G=convective gas flux (g t-1)
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2,VPR=vapor
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C
       VVPRG2=AMAX1(0.0,VOLV2(0,NY,NX)*1.0E+06/18.0)
       VCO2G2=AMAX1(0.0,CO2G2(0,NY,NX)/12.0)
@@ -3299,8 +3346,9 @@ C
 C     TOTAL LITTER GAS FLUX FROM DIFFUSIVE + CONVECTIVE FLUX
 C
 C     R*FLG=convective+diffusive gas flux (g t-1)
-C     gas code:*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
-C             :*NH*=NH3,*HG*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C     DFV*G=diffusive gas flux (g t-1)
 C     RFL*G=convective gas flux (g t-1)
 C
@@ -3370,15 +3418,15 @@ C        (m3)
 C     VOLW*=equivalent aqueous volume for gas (m3)
 C     S*L=solubility of gas in water from ‘hour1.f’ (g m-3/(g m-3))
 C     C*G=gas concentration (g m-3)
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C     R*DFG=surface gas volatilization (g t-1)
 C     DFGS=rate constant for air-water gas exchange from ‘watsub.f’ 
 C        (t-1)
 C     *G2,*S2=gaseous,aqueous gas content (g)
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -3494,8 +3542,9 @@ C     DLYR=soil layer thickness (m)
 C     AREA=grid cell area (m2)
 C     D*G=gaseous diffusivity in soil (m3 t-1)
 C     *SGL2=gaseous diffusivity in air  (m2 t-1)
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C
       DFLG2=AMAX1(0.0,THETPM(M,NU(NY,NX),NY,NX))*POROQ
      2*THETPM(M,NU(NY,NX),NY,NX)/POROS(NU(NY,NX),NY,NX)
@@ -3512,8 +3561,9 @@ C     SOIL SURFACE GAS CONCENTRATIONS
 C
 C     C*G2=soil gaseous concentration (g m-3)
 C     *G2=soil gaseous content (g)
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C     VOLPM=soil air-filled porosity (m3)
 C
       CCO2G2=AMAX1(0.0,CO2G2(NU(NY,NX),NY,NX)
@@ -3577,8 +3627,9 @@ C     V*G2=molar gas volume (mol)
 C     VTATM=molar gas concentration at soil temperature (mol)
 C     VTGAS=total molar gas concentration in soil (mol) 
 C     RFL*G=convective gas flux (g t-1)
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C
       VVPRG2=AMAX1(0.0,VOLV2(NU(NY,NX),NY,NX)*1.0E+06/18.0)
       VCO2G2=AMAX1(0.0,CO2G2(NU(NY,NX),NY,NX)/12.0)
@@ -3618,8 +3669,9 @@ C
 C     TOTAL SOIL GAS FLUX FROM DIFFUSIVE + CONVECTIVE FLUX
 C
 C     R*FLG=convective+diffusive gas flux (g t-1)
-C     gas code:*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
-C             :*NH*=NH3,*HG*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C     DFV*G=diffusive gas flux (g t-1)
 C     RFL*G=convective gas flux (g t-1)
 C
@@ -3684,9 +3736,11 @@ C     AND TRANSFER COEFFICIENT 'DFGS' FROM 'WATSUB'
 C
 C     VOLWM=micropore water-filled porosity from ‘watsub.f’ (m3)
 C     VOLW*=equivalent aqueous volume for gas (m3)
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -3957,8 +4011,9 @@ C     GASEOUS SOLUBILITIES
 C
 C     VOLWM=micropore water content from ‘watsub.f’ (m3)
 C     VOLW*=equivalent aqueous volume for gas (m3)
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C     S*L=solubility of gas in water from ‘hour1.f’ (g m-3/(g m-3)) 
 C     
       IF(N.EQ.3)THEN
@@ -3983,7 +4038,8 @@ C     FLWM=water flux through soil micropore from ‘watsub.f’ (m3 t-1)
 C     VOLWM=micropore water content from ‘watsub.f’ (m3)
 C     VFLW=micropore water flux/content (t-1)
 C     RFL*S=solute diffusive flux through micropore (g t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -4075,9 +4131,11 @@ C     MICROPORE CONCENTRATIONS FROM WATER-FILLED POROSITY
 C     IN CURRENT AND ADJACENT GRID CELLS
 C
 C     C*1,C*2=solute concentration in source,destination layer (g m-3)
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -4199,7 +4257,8 @@ C     AREA=grid cell area in direction of flux (m2)
 C     FLWM=water flux through soil micropore from ‘watsub.f’ (m3 t-1) 
 C     DIF*=aqueous diffusivity-dispersivity through micropore (m3 t-1)
 C     *SGL2=solute diffusivity (m2 t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -4315,7 +4374,8 @@ C
       ENDIF
 C
 C     RFH*=solute convective flux through macropore (g t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -4499,9 +4559,11 @@ C     C*H1,C*H2=macropore solute concentration in source,destination
 C        layer (g m-3) 
 C     *H2=macropore solute content (g)
 C     VOLWHM=macropore water content from ‘watsub.f’ (m3)
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -4628,7 +4690,8 @@ C     AREA=grid cell area in direction of flux (m2)
 C     FLWHM=water flux through soil macropore from ‘watsub.f’ (m3 t-1) 
 C     DIF*=aqueous diffusivity-dispersivity through macropore (m3 t-1)
 C     *SGL2=solute diffusivity from ‘hour1.f’ (m2 t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -4734,7 +4797,8 @@ C        in non-band,band (g t-1)
 C     R*FHS=convective+diffusive solute flux through macropores (g t-1)
 C     R*FHW,R*FHB=convective + diffusive solute flux through macropores
 C        in non-band,band (g t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -4759,7 +4823,7 @@ C    3,COQC1(K),COQC2(K),OQC2(K,N3,N2,N1),OQC2(K,N6,N5,N4)
 C    4,VOLWM(M,N3,N2,N1),VOLWM(M,N6,N5,N4) 
 C    2,ROAFLS(K,N,N6,N5,N4),RFLOA(K),DFVOA(K),DIFOA
 C    3,COQA1(K),COQA2(K),OQA2(K,N3,N2,N1),VOLWM(M,N3,N2,N1)
-C    4,OQA2(K,N6,N5,N4),VOLWM(M,N6,N5,N4) 
+C     4,OQA2(K,N6,N5,N4),VOLWM(M,N6,N5,N4) 
 C     WRITE(*,447)'ROAFHS',I,J,NFZ,N4,N5,N6,M,MM,N,K
 C    2,ROCFHS(K,N,N6,N5,N4),RFHOC(K),DFHOC(K),DIFOC
 C    3,COQCH1(K),COQCH2(K),OQCH2(K,N3,N2,N1),OQCH2(K,N6,N5,N4) 
@@ -4932,7 +4996,8 @@ C     VOLWM,VOLWHM=micropore,macropore water content (m3)
 C     RFL*=convective macropore-micropore solute transfer (g t-1) 
 C     VLNH4,VLNO3,VLPO4=non-band NH4,NO3,PO4 volume fraction
 C     VLNHB,VLNOB,VLPOB=band NH4,NO3,PO4 volume fraction
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -5044,7 +5109,8 @@ C        (m3)
 C     XFRS*VOLT=maximum macropore volume for solute transfer (m3 t-1)
 C     DFV*S,DFV*B=diffusive solute flux between macro- and micropore in
 C        non-band,band (g t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -5143,7 +5209,8 @@ C     TOTAL CONVECTIVE +DIFFUSIVE TRANSFER BETWEEN MACROPOES AND MICROPORES
 C
 C     R*FXS,R*FXB=total convective + diffusive solute flux between
 C        macro- and micropore in non-band,band (g t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -5241,8 +5308,9 @@ C     D*G=gaseous diffusivity in soil (m3 t-1)
 C     CND*1,CND*2=gaseous conductance in source,destination 
 C        layer (m3 t-1) 
 C     *SGL2=gaseous diffusivity in air (m2 t-1)
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C
       DFLG2=2.0*AMAX1(0.0,THETPM(M,N3,N2,N1))*POROQ
      2*THETPM(M,N3,N2,N1)/POROS(N3,N2,N1)
@@ -5270,8 +5338,9 @@ C
 C     D*G=gaseous diffusivity in soil (m3 t-1)
 C     CND*1,CND*2=gaseous conductance in source,destination 
 C        layer (m3 t-1) 
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C
       DCO2G(N,N6,N5,N4)=(CNDC1*CNDC2)/(CNDC1+CNDC2)
       DCH4G(N,N6,N5,N4)=(CND41*CND42)/(CND41+CND42)
@@ -5287,8 +5356,9 @@ C
 C     C*G1,C*G2=gaseous concentration in source,destination layer 
 C        (g m-3)
 C     *G2=gaseous content (g)
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C     VOLPM=air-filled volume (m3)
 C
       CCO2G1=AMAX1(0.0,CO2G2(N3,N2,N1)/VOLPM(M,N3,N2,N1))
@@ -5332,8 +5402,9 @@ C     V*G2=molar gas content (mol)
 C     VTATM=molar gas concentration at soil temperature (mol)
 C     VTGAS=total molar gas concentration in soil (mol) 
 C     RFL*G=convective gas flux (g t-1)
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2,VPR=vapor
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C
       VVPRG1=AMAX1(0.0,VOLV2(N3,N2,N1)*1.0E+06/18.0)
       VCO2G1=AMAX1(0.0,CO2G2(N3,N2,N1)/12.0)
@@ -5382,8 +5453,9 @@ C
 C     TOTAL SOIL GAS FLUX FROM DIFFUSIVE + CONVECTIVE FLUX
 C
 C     R*FLG=total convective+diffusive gas flux (g t-1)
-C     gas code:*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
-C             :*NH*=NH3,*HG*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C     DFV*G=diffusive gas flux (g t-1)
 C     RFL*G=convective gas flux (g t-1)
 C
@@ -5435,15 +5507,17 @@ C     AND TRANSFER COEFFICIENT 'DFGS' FROM 'WATSUB'
 C
 C     THETPM,VOLWPM=air-filled porosity,volume (m3 m-3,m3)
 C     R*DFG=water-air gas flux (g t-1)
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C     DFGS=rate constant for air-water gas exchange from ‘watsub.f’ 
 C        (t-1)
 C     *G2,*S2=gaseous,aqueous gas content (g)
 C     VOLW*=equivalent aqueous volume for gas (m3)
 C
       IF(N.EQ.3)THEN
-      IF(THETPM(M,N6,N5,N4).GT.THETX)THEN
+      IF(THETPM(M,N6,N5,N4).GT.THETX
+     2.AND.VOLWM(M,N6,N5,N4).GT.ZEROS2(N5,N4))THEN
       RCODFG(N6,N5,N4)=DFGS(M,N6,N5,N4)*(AMAX1(ZEROS(N2,N1)
      2,CO2G2(N6,N5,N4))*VOLWCO(N6,N5,N4) 
      3-CO2S2(N6,N5,N4)*VOLPM(M,N6,N5,N4))
@@ -5697,8 +5771,9 @@ C     C*S2=soil aqueous gas content (g)
 C     R*DFS=gas exchange between atmosphere and soil surface water 
 C        (g t-1)
 C     S*X=molar solubility of gas in water (g m-3/(mol m-3)) 
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C
       IF(N3.EQ.NU(N2,N1))THEN
       VCO2G2=(CO2S2(N3,N2,N1)+RCODFS(NY,NX))/SCO2X
@@ -5734,8 +5809,9 @@ C     PROPORTIONAL REMOVAL OF EXCESS AQUEOUS GASES
 C
 C     VGBBL=excess gas content (mol t-1)
 C     R*BBL=bubble flux (g t-1)
-C     gas code:*CO*=CO2,*CH*=CH4,*OX*=O2,*NG*=N2,*N2*=N2O,
-C             :*N3*=NH3,*HG*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C     V*G2=molar gas content (mol)
 C     VTGAS=total molar gas content (mol) 
 C     S*X=molar solubility of gas in water (g m-3/(mol m-3)) 
@@ -5755,8 +5831,9 @@ C
 C     ACCUMULATE FLUXES USED IN REDIST.F
 C
 C     X*BBL=aggregated bubble flux used in ‘redist.f’ (g t-1) 
-C     gas code:*CO*=CO2,*CH*=CH4,*OX*=O2,*NG*=N2,*N2*=N2O,
-C             :*N3*=NH3,*HG*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C
       XCOBBL(N3,N2,N1)=XCOBBL(N3,N2,N1)+RCOBBL(N3,N2,N1)
       XCHBBL(N3,N2,N1)=XCHBBL(N3,N2,N1)+RCHBBL(N3,N2,N1)
@@ -5954,7 +6031,8 @@ C        (m3 t-1)
 C     RQR*0=solute flux in runoff (g t-1)
 C     RQR*=solute flux in runoff in EW(N=1),NS(N=2) directions (g t-1)
 C     FQRM=partitions RQR*0 into EW(N=1),NS(N=2) directions 
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -6091,7 +6169,8 @@ C     QSTN=EW(N=1),NS(N=2) snow transfer from ‘watsub.f’ (m3 t-1)
 C     FQSM=partitions RQS*0 into EW(N=1),NS(N=2) directions 
 C     RQS*0=solute flux in snow transfer (g t-1)
 C     RQS*=EW(N=1),NS(N=2) solute flux in snow transfer (g t-1) 
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -6166,7 +6245,8 @@ C     *2=soil solute content (g)
 C     R*FLS=convective solute flux through micropores (g t-1)
 C     R*FLW,R*FLB=convective solute flux through micropores 
 C        in non-band,band (g t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -6410,7 +6490,8 @@ C     VFLW=macropore water flux/content (t-1)
 C     RFH*S =solute diffusive flux through macropore in (g t-1)
 C     RFH*W,RFH*B=solute diffusive flux through macropore in 
 C        non-band,band (g t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -6636,8 +6717,9 @@ C     FLWM,FLWHM=micropore,macropore water flux from ‘watsub.f’(m3 t-1)
 C     VOLPM=air-filled volume (m3)
 C     VFLW=gas flux/content (t-1)
 C     R*FLG=convective gas flux (g t-1)
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C     XNPT=time step for gas fluxes from ‘wthr.f’ (t t-1)
 C
 C     FLGM=-(FLWM(M,N,M6,M5,M4)+FLWHM(M,N,M6,M5,M4))*XNPT
@@ -6714,7 +6796,8 @@ C     TQR*=net overland solute flux (g t-1)
 C     RQR*=overland solute flux (g t-1)
 C     TQS*=net solute flux in snow transfer (g t-1)
 C     RQS*=solute flux in snow transfer (g t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -6818,7 +6901,8 @@ C     VHCPWM,VHCPWX=current,minimum volumetric heat capacity
 C        of snowpack (MJ K-1)
 C     T*BLS=net solute flux in snowpack (g t-1)
 C     R*BLS=solute flux in snowpack (g t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C
@@ -6899,7 +6983,8 @@ C        (g t-1)
 C     R*FHS=convective+diffusive solute flux through macropores (g t-1)
 C     R*FHW,R*FHB=convective+diffusive solute flux through
 C        macropores in non-band,band (g t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -7067,8 +7152,9 @@ C     NET GAS FLUX
 C
 C     T*FLG=net convective+diffusive gas flux (g t-1)
 C     R*FLG=convective+diffusive gas flux (g t-1)
-C     gas code:*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
-C             :*NH*=NH3,*HG*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C
       IF(VOLX(N3,N2,N1).GT.ZEROS2(N2,N1))THEN
       TCOFLG(N3,N2,N1)=TCOFLG(N3,N2,N1)+RCOFLG(N,N3,N2,N1)
@@ -7112,8 +7198,9 @@ C
 C     *W2=solute content of snowpack (g)
 C     TQS*=net overland solute flux in snow (g t-1) 
 C     T*BLS=net solute flux in snowpack (g t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
-C             :N4=NH4,N3=NH3,NO=NO3,1P=HPO4,HP=H2PO4 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C        :N4=NH4,N3=NH3,NO=NO3,1P=HPO4,HP=H2PO4 
 C
       CO2W2(1,NY,NX)=CO2W2(1,NY,NX)+TQSCOS(NY,NX)
       CH4W2(1,NY,NX)=CH4W2(1,NY,NX)+TQSCHS(NY,NX)
@@ -7167,7 +7254,8 @@ C        surface (g t-1)
 C     R*FLW,R*FLB=convective + diffusive solute flux into litter 
 C        from non-band,band (g t-1)
 C     TQR*=net overland solute flux (g t-1)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -7179,6 +7267,7 @@ C
       OQA2(K,0,NY,NX)=OQA2(K,0,NY,NX)+ROAFLS(K,3,0,NY,NX)
 C     WRITE(*,8789)'OQC2F',I,J,NFZ,M,MM,NX,NY,K
 C    2,OQC2(K,0,NY,NX),ROCFLS(K,3,0,NY,NX)
+C    2,OQA2(K,0,NY,NX),ROAFLS(K,3,0,NY,NX)
 9681  CONTINUE
       CO2S2(0,NY,NX)=CO2S2(0,NY,NX)+RCODFR(NY,NX)+RCOFLS(3,0,NY,NX)
       CH4S2(0,NY,NX)=CH4S2(0,NY,NX)+RCHDFR(NY,NX)+RCHFLS(3,0,NY,NX)
@@ -7263,7 +7352,8 @@ C     AND ROOT EXCHANGE IN 'NITRO' AND 'UPTAKE', AND EQUILIBRIUM
 C     REACTIONS IN 'SOLUTE'
 C
 C     *S2,*B2=micropore solute content in non-band,band (g)
-C     solute code:CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
+C     solute code
+C        :CO=CO2,CH=CH4,OX=O2,NG=N2,N2=N2O,HG=H2 
 C        :OC=DOC,ON=DON,OP=DOP,OA=acetate
 C        :NH4=NH4,NH3=NH3,NO3=NO3,NO2=NO2,P14=HPO4,PO4=H2PO4 non-band
 C        :N4B=NH4,N3B=NH3,NOB=NO3,N2B=NO2,P1B=HPO4,POB=H2PO4 band
@@ -7312,6 +7402,10 @@ C
      2-ROPFXS(K,L,NY,NX)
       OQAH2(K,L,NY,NX)=OQAH2(K,L,NY,NX)+TOAFHS(K,L,NY,NX)
      2-ROAFXS(K,L,NY,NX)
+C     WRITE(*,450)'OQCR',I,J,NFZ,NX,NY,L,K
+C    2,OQC2(K,L,NY,NX),TOCFLS(K,L,NY,NX),ROCFXS(K,L,NY,NX)
+C    2,OQA2(K,L,NY,NX),TOAFLS(K,L,NY,NX),ROAFXS(K,L,NY,NX)
+450   FORMAT(A8,7I4,12E12.4)
 9675  CONTINUE
       ZNH4S2(L,NY,NX)=ZNH4S2(L,NY,NX)+TN4FLW(L,NY,NX)+RN4FXW(L,NY,NX)
      2+RN4FLZ(L,NY,NX)
@@ -7369,8 +7463,9 @@ C
 C     *G2,*S2=soil gas, solute content (g)
 C     R*DFG=water-air gas flux (g t-1)
 C     T*FLG=net convective+diffusive gas flux (g t-1)
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C
       IF(VOLX(L,NY,NX).GT.ZEROS2(NY,NX))THEN
       CO2S2(L,NY,NX)=CO2S2(L,NY,NX)+RCODFG(L,NY,NX)
@@ -7390,7 +7485,7 @@ C
      2-RNBDFG(L,NY,NX)
       H2GG2(L,NY,NX)=H2GG2(L,NY,NX)+THGFLG(L,NY,NX)-RHGDFG(L,NY,NX)
       ENDIF
-      IF(L.EQ.NU(NY,NX))THEN
+C     IF(L.EQ.NU(NY,NX))THEN
 C     DO 9676 K=0,4
 C     WRITE(*,446)'OQCH2',I,J,NFZ,NX,NY,L,M,MM,K,OQCH2(K,L,NY,NX)
 C    2,TOCFHS(K,L,NY,NX),ROCFXS(K,L,NY,NX),ROCSK2(K,L,NY,NX)
@@ -7483,7 +7578,7 @@ C    2,THGFLS(L,NY,NX),RHGFXS(L,NY,NX),RHGFLZ(L,NY,NX),RHGDFG(L,NY,NX)
 C    2,RHGBBL(L,NY,NX),RHGDFS(NY,NX),RHGSK2(L,NY,NX)
 C    3,H2GG2(L,NY,NX),THGFLG(L,NY,NX),RHGDFG(L,NY,NX)
 444   FORMAT(A8,8I4,40E14.6)
-      ENDIF
+C     ENDIF
 9685  CONTINUE
 C
 C     GAS EXCHANGE IN SURFACE LITTER
@@ -7491,8 +7586,9 @@ C
 C     *S2=litter aqueous gas content (g)
 C     R*FLG=convective+diffusive gas flux (g t-1)
 C     R*DFG=litter-atmosphere gas flux (g t-1)
-C     gas code:*CO2*=CO2,*OXY*=O2,*CH4*=CH4,*Z2G*=N2,*Z2O*=N2O
-C             :*ZN3*=NH3,*H2G*=H2
+C     gas code
+C        :*CO*=CO2,*OX*=O2,*CH*=CH4,*NG*=N2,*N2*=N2O,
+C        :*NH*=NH3,*H2*=H2
 C
       CO2G2(0,NY,NX)=CO2G2(0,NY,NX)+RCOFLG(3,0,NY,NX)-RCODFG(0,NY,NX)
       CH4G2(0,NY,NX)=CH4G2(0,NY,NX)+RCHFLG(3,0,NY,NX)-RCHDFG(0,NY,NX)

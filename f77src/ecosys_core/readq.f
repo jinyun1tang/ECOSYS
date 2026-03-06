@@ -21,6 +21,10 @@ C
       CHARACTER*8 CDATE
       CHARACTER*80 PREFIX
       PARAMETER (TWILGT=0.06976)
+C
+C     FOR ALL GRID CELLS IN EACH LANDSCAPE UNIT DEFINED IN THE PLANT
+C     MANAGEMENT FILE READ IN ROUTQ.F
+C
       DO 9995 NX=NHW,NHE
       DO 9990 NY=NVN,NVS
       DO 9985 NZ=1,NP(NY,NX)	
@@ -48,8 +52,8 @@ C     ICTYP=photosynthesis type:3=C3,4=C4
 C     IGTYP=root profile
 C              :0=shallow (eg bryophytes)
 C              :1=intermediate(herbaceous)
-C              :2=deep (trees)
-C              :3=deeper 
+C              :2=intermediate (trees)
+C              :3=deep 
 C          =turnover of above-ground biomass
 C              :0 or 1:all above-ground (herbaceous),
 C              :>1: foliage and twigs (trees) 
@@ -89,11 +93,13 @@ C
 C     PHOTOSYNTHETIC PROPERTIES
 C
 C     VCMX,VOMX=specific rubisco carboxylase,oxygenase activity 
-C        at 25 oC (umol C,O g-1 s-1)
-C     VCMX4=specific PEP carboxylase activity at 25 oC (umol g-1 s-1)
+C        at 25 oC (umol C,O g enzyme-1 s-1)
+C     VCMX4=specific PEP carboxylase activity at 25 oC (umol g enzyme-1
+C        s-1)
 C     XKCO2,XKO2,XKCO24=Km for VCMX,VOMX,VCMX4 at 25 oC (uM)
 C     RUBP,PEPC=fraction of leaf protein in rubisco, PEP carboxylase
-C     ETMX=specific chlorophyll activity at 25 oC (umol e- g-1 s-1)
+C     ETMX=specific chlorophyll activity at 25 oC (umol e- g enzyme-1
+C        s-1)
 C     CHL=fraction of leaf protein in mesophyll(C3), bundle sheath(C4)
 C        chlorophyll
 C     CHL4=fraction of leaf protein in mesophyll chlorophyll(C4)
@@ -118,13 +124,20 @@ C
 C     XRNI,XRLA=rate of node initiation,leaf appearance at 25oC (h-1)
 C     CTC=chilling temperature for CO2 fixation, seed loss (oC)
 C     VRNLI,VRNXI=hour requirement for spring leafout,autumn leafoff
+C        cold deciduous: hours above, below canopy temperature 
+C           under lengthening, shortening daylengths set in ‘startq.f’
+C        drought deciduous: hours above, below canopy water potential 
+C           set in ‘hfunc.f’
+C        evergreen: hours after winter, summer solstice
 C     WDLF=leaf length:width ratio
-C     PB=nonstructural C concentration needed for branching
+C     PB=nonstructural C concentration needed for branching (g C g C-1)
 C     GROUPX=node number required to start floral initiation
 C     XTLI=node number in seed at planting  
 C     XDL=critical photoperiod for floral initiation (h) if IPTYP>0
-C        :<0=maximum daylength at summer solstice for latitude from site file
-C     XPPD=difference between XDL and photoperiod for floral induction (h)
+C        :if <0=maximum daylength at summer solstice for latitude from
+C           site file
+C     XPPD=difference between XDL and photoperiod for floral induction
+C        (h)
 C
       READ(11,*)XRNI(NZ,NY,NX),XRLA(NZ,NY,NX),CTC(NZ,NY,NX)
      2,VRNLI,VRNXI,WDLF(NZ,NY,NX),PB(NZ,NY,NX)
@@ -134,18 +147,21 @@ C
 C     MORPHOLOGICAL PROPERTIES
 C
 C     SLA1,SSL1,SNL1=growth in leaf area,petiole length,internode
-C        length vs growth in mass
-C     CLASS=fraction of leaf area in 0-22.5,22.5-45,45-67.5,67.5-90 deg. 
-C        inclination classes
-C     CFI=initial clumping factor used for self-shading in radiation interception
-C     ANGBR,ANGSH=stem,petiole angle from horizontal (deg.)
-C     STMX=maximum potential seed sites from pre-anthesis 
-C        stalk growth
+C        length vs growth in mass (m2,m g C-1)
+C     CLASS=fraction of leaf area in 0-22.5,22.5-45,45-67.5,67.5-90
+C        deg. inclination classes
+C     CFI=initial clumping factor used for self-shading for radiation
+C        interception in ‘hour1.f’
+C     ANGBR,ANGSH=stem,petiole angle from horizontal (deg.) used for
+C        foliar height calculations in ‘grosub.f’
+C     STMX=maximum potential seed sites calculated from pre-anthesis 
+C        stalk growth in ‘grosub.f’
 C     SDMX=maximum seed number per STMX during post-anthesis seed set
-C     GRMX=maximum seed size per SDMX (g)
+C        in ‘grosub.f’
+C     GRMX=maximum seed size per SDMX in ‘grosub.f’ (g)
 C     GRDM=seed size at planting (g)
 C     GFILL=grain filling rate at 25 oC (g seed-1 h-1)
-C     WTSTDI=mass of dead standing biomass at planting (g m-2) 
+C     WTSTDI=mass of dead standing biomass at planting (g C m-2) 
 C
       READ(11,*)SLA1(NZ,NY,NX),SSL1(NZ,NY,NX),SNL1(NZ,NY,NX)
       READ(11,*)(CLASS(N,NZ,NY,NX),N=1,4),CFI(NZ,NY,NX) 
@@ -156,11 +172,14 @@ C
 C     ROOT CHARACTERISTICS
 C
 C     RRAD1M,RRAD2M=radius of primary,secondary roots (m)
-C     PORT=root porosity
-C     PR=nonstructural C concentration needed for root branching
-C     RSRR,RSRA=radial,axial root resistivity (MPa h m-3,MPa h m-2)
+C     PORT=root porosity (*m3 m-3)
+C     PR=nonstructural C concentration needed for root branching 
+C        (g C g C-1)
+C     RSRR=radial root resistivity (MPa h m-3)
+C     RSRA=axial root resistivity at RRAD2M=0.1E-03 m 
+C        (MPa h m-2)
 C     PTSHT=rate constant for equilibrating shoot-root nonstructural 
-C        C concentration
+C        C concentration m(h-1)
 C     RTFQ=secondary root branching frequency (m-1)
 C
       READ(11,*)RRAD1M(1,NZ,NY,NX),RRAD2M(1,NZ,NY,NX) 
@@ -169,11 +188,11 @@ C
 C
 C     ROOT UPTAKE PARAMETERS
 C
-C     UPMXZH,UPKMZH,UPMNZH=NH4 max uptake (g m-2 h-1),
+C     UPMXZH,UPKMZH,UPMNZH=NH4 max uptake (g N m-2 h-1),
 C        Km (uM), min concentration (uM)      
-C     UPMXZO,UPKMZO,UPMNZO=NO3 max uptake (g m-2 h-1),
+C     UPMXZO,UPKMZO,UPMNZO=NO3 max uptake (g N m-2 h-1),
 C        Km (uM), min concentration (uM)      
-C     UPMXPO,UPKMPO,UPMNPO=H2PO4 max uptake (g m-2 h-1),
+C     UPMXPO,UPKMPO,UPMNPO=H2PO4 max uptake (g P m-2 h-1),
 C        Km (uM), min concentration (uM)      
 C
       READ(11,*)UPMXZH(1,NZ,NY,NX),UPKMZH(1,NZ,NY,NX)
@@ -194,7 +213,7 @@ C
 C
 C     ORGAN GROWTH YIELDS
 C
-C     DM*=DM-C production vs nonstructural C consumption (g g-1)
+C     DM*=DM-C production vs nonstructural C consumption (g C g C-1)
 C     *LF=leaf,*SHE=petiole,*STK=stalk,*RSV=stalk reserve,*HSK=husk
 C     *EAR=ear,*GR=grain,*RT=root,*ND=bacteria in root nodule,canopy
 C
@@ -260,7 +279,7 @@ C
 C     WRITE(*,1111)'CRITICAL DAYLENGTH',IGO,NZ,XDL(NZ,NY,NX)
 1111  FORMAT(A20,2I8,E12.4)
 C
-C     INITIALIZE INPUTS FOR PLANT MANAGEMENT 
+C     INITIALIZE INPUT ARRAYS FOR PLANT MANAGEMENT 
 C
 C     IHVST=harvest type
 C     JHVST=termination type
